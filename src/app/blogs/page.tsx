@@ -44,21 +44,6 @@ export default function BlogIndex() {
     },
     {
       id: 2,
-      title: "Transform Your Videos with Keyframing: The Secret to Dynamic Visuals in 2025",
-      excerpt: "Reality check: If your videos feel static, you’re losing viewers. Keyframing with Scenith creates dynamic, scroll-stopping content in minutes.",
-      category: "Video Editing",
-      readTime: "5 min read",
-      publishDate: "2025-08-18",
-      author: "Scenith Team",
-      image: "🎥",
-      gradient: "linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%)",
-      tags: ["Keyframing", "Video Editing", "Animation", "Productivity"],
-      featured: false,
-      views: "8.7K",
-      slug: "transform-videos-with-keyframing",
-    },
-    {
-      id: 3,
       title: "How to Reach 4000 Hours of YouTube Watch Time Fast in 2025",
       excerpt: "Discover how to hit 4000 hours of YouTube watch time fast using AI-powered subtitles with Scenith. Boost viewer retention and skyrocket your channel’s growth.",
       category: "YouTube Growth",
@@ -87,7 +72,7 @@ export default function BlogIndex() {
   const scrollToSection = (sectionId: string) => {
     const section = document.getElementById(sectionId);
     if (section) {
-      const navHeight = document.querySelector(`.${styles.navBar}`)?.getBoundingClientRect().height || 80;
+      const navHeight = document.querySelector('.nav-bar')?.getBoundingClientRect().height || 80;
       window.scrollTo({
         top: section.offsetTop - navHeight - 20,
         behavior: 'smooth',
@@ -117,7 +102,7 @@ export default function BlogIndex() {
           content="Discover cutting-edge techniques, AI-powered tools, and tutorials to transform your video content creation with Scenith’s blog."
         />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://scenith.in/blog" />
+        <meta property="og:url" content="https://scenith.in/blogs" />
         <meta property="og:image" content="/images/blog-og.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Scenith | Video Editing & AI Tools Blog" />
@@ -126,7 +111,7 @@ export default function BlogIndex() {
           content="Discover cutting-edge techniques, AI-powered tools, and tutorials to transform your video content creation with Scenith’s blog."
         />
         <meta name="twitter:image" content="/images/blog-og.jpg" />
-        <link rel="canonical" href="https://scenith.in/blog" />
+        <link rel="canonical" href="https://scenith.in/blogs" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -145,13 +130,12 @@ export default function BlogIndex() {
                 },
               },
               datePublished: '2025-08-19',
-              url: 'https://scenith.in/blog',
+              url: 'https://scenith.in/blogs',
             }),
           }}
         />
       </Head>
-      <div className={styles.blogContainer}>
-        {/* Hero Section */}
+      <div className={styles.blogContainer} id="blog-section">
         <div className={styles.heroSectionBlog}>
           <div className={styles.heroContentBlog}>
             <div className={styles.heroBadgeBlog}>
@@ -165,8 +149,6 @@ export default function BlogIndex() {
               Discover cutting-edge techniques, insider tips, and game-changing tools that will
               transform your video content creation process forever.
             </p>
-
-            {/* Search Bar */}
             <div className={styles.searchContainer}>
               <div className={styles.searchBox}>
                 <div className={styles.searchIcon}>🔍</div>
@@ -180,8 +162,6 @@ export default function BlogIndex() {
               </div>
             </div>
           </div>
-
-          {/* Floating Elements */}
           <div className={styles.floatingElements}>
             <div className={`${styles.floatingCard} ${styles.card1}`}>🎬</div>
             <div className={`${styles.floatingCard} ${styles.card2}`}>⚡</div>
@@ -190,8 +170,7 @@ export default function BlogIndex() {
           </div>
         </div>
 
-        {/* Category Filter */}
-        <div className={styles.filterSection}>
+        <div className={styles.filterSection} id="filter-section">
           <div className={styles.filterContainer}>
             <h3 className={styles.filterTitle}>Browse by Category</h3>
             <div className={styles.categoryFilters}>
@@ -208,17 +187,15 @@ export default function BlogIndex() {
           </div>
         </div>
 
-        {/* Blog Posts Grid */}
         <div className={styles.postsSection}>
           <div className={styles.postsContainer}>
-            {/* Featured Post */}
             {filteredPosts.find((post) => post.featured) && (
               <div className={styles.featuredSection}>
                 <h2 className={styles.sectionTitle}>🔥 Featured Article</h2>
                 {filteredPosts
                   .filter((post) => post.featured)
                   .map((post) => (
-                    <Link href={`/blog/${post.slug}`} key={post.id}>
+                    <Link href={`/blogs/${post.slug}`} key={post.id}>
                       <div
                         className={styles.featuredCard}
                         onMouseEnter={() => setHoveredCard(`featured-${post.id}`)}
@@ -261,7 +238,6 @@ export default function BlogIndex() {
               </div>
             )}
 
-            {/* Regular Posts */}
             <div className={styles.regularPosts}>
               <h2 className={styles.sectionTitle}>📖 Latest Articles</h2>
               <div className={styles.postsGrid}>
@@ -275,7 +251,7 @@ export default function BlogIndex() {
                   filteredPosts
                     .filter((post) => !post.featured)
                     .map((post) => (
-                      <Link href={`/blog/${post.slug}`} key={post.id}>
+                      <Link href={`/blogs/${post.slug}`} key={post.id}>
                         <div
                           className={`${styles.postCard} ${hoveredCard === post.id.toString() ? styles.hovered : ''}`}
                           onMouseEnter={() => setHoveredCard(post.id.toString())}
@@ -318,7 +294,6 @@ export default function BlogIndex() {
           </div>
         </div>
 
-        {/* Newsletter Section */}
         <div className={styles.newsletterSection}>
           <div className={styles.newsletterContainer}>
             <div className={styles.newsletterContent}>

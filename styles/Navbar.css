@@ -1,0 +1,306 @@
+/* Import Montserrat font for consistency */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+/* Navigation Bar */
+.nav-bar {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 1000px;
+  background: rgba(255, 255, 255, 0.95); /* Light translucent background */
+  z-index: 1000;
+  padding: 12px 24px;
+  border-radius: 50px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: background-color 0.3s ease, backdrop-filter 0.3s ease, transform 0.3s ease;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  font-family: 'Montserrat', sans-serif;
+}
+
+.nav-bar:hover {
+  transform: translateX(-50%) translateY(-3px);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
+}
+
+.nav-bar.scrolled {
+  background: rgba(255, 255, 255, 0.98);
+  -webkit-backdrop-filter: blur(15px);
+  backdrop-filter: blur(15px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Nav content wrapper */
+.nav-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Hamburger menu button */
+.hamburger-menu {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #1E293B; /* Dark text for contrast */
+  cursor: pointer;
+  padding: 5px;
+  transition: color 0.3s ease;
+}
+
+.hamburger-menu:hover {
+  color: #8B5CF6; /* Purple on hover */
+}
+
+/* Nav links container */
+.nav-links {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+/* Individual nav link */
+.nav-link {
+  background: none;
+  border: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  padding: 8px 16px;
+  background: linear-gradient(90deg, #3B82F6, #8B5CF6); /* Blue to purple */
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.nav-link:hover {
+  transform: translateY(-2px);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -4px;
+  left: 50%;
+  background: linear-gradient(90deg, #3B82F6, #8B5CF6);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.nav-link.active {
+  font-weight: 700;
+}
+
+.nav-link.active::after {
+  width: 100%;
+}
+
+/* Branding Container */
+.branding-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  cursor: pointer;
+}
+
+.branding-container h1 {
+  font-size: 26px;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, #3B82F6, #8B5CF6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 2.5s infinite;
+  display: flex;
+}
+
+.branding-container .letter {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.branding-container .letter:hover {
+  transform: translateY(-2px);
+}
+
+.branding-container .logo-element {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #3B82F6;
+  border-radius: 50%;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: bounce 0.5s infinite, moveOverLetters 7s infinite;
+  z-index: 15;
+}
+
+.branding-container .logo-element::before {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: linear-gradient(45deg, #3B82F6, #8B5CF6);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+}
+
+/* Animations */
+@keyframes shimmer {
+  0% { background-position: -200%; }
+  100% { background-position: 200%; }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes moveOverLetters {
+  0% { left: calc(50% + var(--nav-s)); }
+  7.14% { left: calc(50% + var(--nav-c)); }
+  14.28% { left: calc(50% + var(--nav-e)); }
+  21.42% { left: calc(50% + var(--nav-n)); }
+  28.56% { left: calc(50% + var(--nav-i)); }
+  35.7% { left: calc(50% + var(--nav-t)); }
+  42.84% { left: calc(50% + var(--nav-h)); }
+  50% { left: calc(50% + var(--nav-h)); }
+  57.14% { left: calc(50% + var(--nav-t)); }
+  64.28% { left: calc(50% + var(--nav-i)); }
+  71.42% { left: calc(50% + var(--nav-n)); }
+  78.56% { left: calc(50% + var(--nav-e)); }
+  85.7% { left: calc(50% + var(--nav-c)); }
+  92.84% { left: calc(50% + var(--nav-s)); }
+  100% { left: calc(50% + var(--nav-s)); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  :root {
+    --nav-s: -61px;
+    --nav-c: -41px;
+    --nav-e: -20px;
+    --nav-n: 0px;
+    --nav-i: 20px;
+    --nav-t: 41px;
+    --nav-h: 56px;
+  }
+
+  .nav-bar {
+    width: 90%;
+    padding: 8px 15px;
+  }
+
+  .hamburger-menu {
+    display: block;
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    position: absolute;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 400px;
+    background: rgba(255, 255, 255, 0.98);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    padding: 15px 0;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  .nav-link {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+  }
+
+  .branding-container h1 {
+    font-size: 22px;
+  }
+
+  .branding-container .logo-element {
+    width: 20px;
+    height: 20px;
+  }
+
+  .branding-container .logo-element::before {
+    width: 6px;
+    height: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --nav-s: -55px;
+    --nav-c: -36.5px;
+    --nav-e: -18px;
+    --nav-n: 0px;
+    --nav-i: 18px;
+    --nav-t: 36.5px;
+    --nav-h: 50px;
+  }
+
+  .nav-bar {
+    width: 95%;
+    max-width: 350px;
+    padding: 8px 15px;
+  }
+
+  .nav-links {
+    top: 50px;
+    width: 90%;
+    max-width: 300px;
+  }
+
+  .nav-link {
+    font-size: 0.85rem;
+    padding: 8px 12px;
+  }
+
+  .branding-container h1 {
+    font-size: 20px;
+  }
+
+  .branding-container .logo-element {
+    width: 20px;
+    height: 20px;
+  }
+
+  .branding-container .logo-element::before {
+    width: 6px;
+    height: 6px;
+  }
+}

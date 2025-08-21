@@ -8,6 +8,17 @@ import styles from '../../../../styles/HowToAddSubtitlesToVideo.module.css';
 export default function HowToAddSubtitlesToVideo() {
   const [showQuickStart, setShowQuickStart] = useState<boolean>(false);
 
+  const scrollToSection = (sectionId: string) => {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      const navHeight = document.querySelector('.nav-bar')?.getBoundingClientRect().height || 80;
+      window.scrollTo({
+        top: section.offsetTop - navHeight - 20,
+        behavior: 'smooth',
+      });
+    }
+  };
+
   return (
     <>
       <Head>
@@ -27,7 +38,7 @@ export default function HowToAddSubtitlesToVideo() {
           content="Discover the fastest way to add subtitles to your videos with AI. Save hours and increase views by 40%. Try Scenith for free!"
         />
         <meta property="og:type" content="article" />
-        <meta property="og:url" content="https://yourwebsite.com/blog/how-to-add-subtitles-to-video" />
+        <meta property="og:url" content="https://scenith.in/blogs/how-to-add-subtitles-to-video" />
         <meta property="og:image" content="/images/subtitle-guide-og.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Stop Wasting Hours on Subtitles: Add Them to Any Video in 30 Seconds (2025)" />
@@ -36,7 +47,7 @@ export default function HowToAddSubtitlesToVideo() {
           content="Discover the fastest way to add subtitles to your videos with AI. Save hours and increase views by 40%. Try Scenith for free!"
         />
         <meta name="twitter:image" content="/images/subtitle-guide-og.jpg" />
-        <link rel="canonical" href="https://yourwebsite.com/blog/how-to-add-subtitles-to-video" />
+        <link rel="canonical" href="https://scenith.in/blogs/how-to-add-subtitles-to-video" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -61,7 +72,7 @@ export default function HowToAddSubtitlesToVideo() {
               datePublished: '2025-08-19',
               mainEntityOfPage: {
                 '@type': 'WebPage',
-                '@id': 'https://yourwebsite.com/blog/how-to-add-subtitles-to-video',
+                '@id': 'https://scenith.in/blogs/how-to-add-subtitles-to-video',
               },
             }),
           }}
@@ -95,7 +106,7 @@ export default function HowToAddSubtitlesToVideo() {
               <p>Skip to <strong>AI Method</strong> below - it's what 87% of smart creators use now.</p>
               <button
                 className={styles.quickCta}
-                onClick={() => document.getElementById('ai-method')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => scrollToSection('ai-method')}
               >
                 Show Me the AI Method →
               </button>
@@ -220,7 +231,7 @@ export default function HowToAddSubtitlesToVideo() {
             </div>
 
             <div className={styles.ctaPrimary}>
-              <Link href="/login">
+              <Link href="/try-scenith">
                 <button className={styles.ctaButtonMain}>Try it for FREE on SCENITH! →</button>
               </Link>
               <p className={styles.ctaSubtext}>Join 50,000+ creators who stopped wasting time on subtitles</p>
@@ -326,7 +337,7 @@ export default function HowToAddSubtitlesToVideo() {
             <div className={styles.benefit}>📈 Increase views by 40%</div>
           </div>
 
-          <Link href="/login">
+          <Link href="/try-scenith">
             <button className={styles.ctaButtonFinal}>Try it for FREE on SCENITH! →</button>
           </Link>
           <p className={styles.ctaSubtext}>No credit card needed - start now!</p>

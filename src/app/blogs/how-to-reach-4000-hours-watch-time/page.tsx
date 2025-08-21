@@ -8,6 +8,17 @@ import styles from '../../../../styles/HowToReach4000HoursWatchTime.module.css';
 export default function HowToReach4000HoursWatchTime() {
   const [showQuickTips, setShowQuickTips] = useState<boolean>(false);
 
+  const scrollToSection = (sectionId: string) => {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      const navHeight = document.querySelector('.nav-bar')?.getBoundingClientRect().height || 80;
+      window.scrollTo({
+        top: section.offsetTop - navHeight - 20,
+        behavior: 'smooth',
+      });
+    }
+  };
+
   return (
     <>
       <Head>
@@ -27,7 +38,7 @@ export default function HowToReach4000HoursWatchTime() {
           content="Unlock YouTube’s 4000-hour watch time goal with AI subtitles. Learn how Scenith’s 30-second subtitle tool boosts retention and accelerates channel growth."
         />
         <meta property="og:type" content="article" />
-        <meta property="og:url" content="https://yourwebsite.com/blog/how-to-reach-4000-hours-watch-time" />
+        <meta property="og:url" content="https://scenith.in/blogs/how-to-reach-4000-hours-watch-time" />
         <meta property="og:image" content="/images/youtube-watch-time-og.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="How to Reach 4000 Hours of YouTube Watch Time Fast in 2025" />
@@ -36,7 +47,7 @@ export default function HowToReach4000HoursWatchTime() {
           content="Unlock YouTube’s 4000-hour watch time goal with AI subtitles. Learn how Scenith’s 30-second subtitle tool boosts retention and accelerates channel growth."
         />
         <meta name="twitter:image" content="/images/youtube-watch-time-og.jpg" />
-        <link rel="canonical" href="https://yourwebsite.com/blog/how-to-reach-4000-hours-watch-time" />
+        <link rel="canonical" href="https://scenith.in/blogs/how-to-reach-4000-hours-watch-time" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -61,7 +72,7 @@ export default function HowToReach4000HoursWatchTime() {
               datePublished: '2025-08-19',
               mainEntityOfPage: {
                 '@type': 'WebPage',
-                '@id': 'https://yourwebsite.com/blog/how-to-reach-4000-hours-watch-time',
+                '@id': 'https://scenith.in/blogs/how-to-reach-4000-hours-watch-time',
               },
             }),
           }}
@@ -93,7 +104,7 @@ export default function HowToReach4000HoursWatchTime() {
               <p>Jump to the <strong>AI Subtitles Solution</strong> below—it’s what top creators use to hit 4000 hours fast.</p>
               <button
                 className={styles.quickCta}
-                onClick={() => document.getElementById('ai-subtitles')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => scrollToSection('ai-subtitles')}
               >
                 Show Me the AI Solution →
               </button>
@@ -219,7 +230,7 @@ export default function HowToReach4000HoursWatchTime() {
             </div>
 
             <div className={styles.ctaPrimary}>
-              <Link href="/login">
+              <Link href="/try-scenith">
                 <button className={styles.ctaButtonMain}>Try Scenith for FREE! →</button>
               </Link>
               <p className={styles.ctaSubtext}>Join 50,000+ creators boosting their YouTube watch time</p>
@@ -327,7 +338,7 @@ export default function HowToReach4000HoursWatchTime() {
             <div className={styles.benefit}>📈 Up to 2x watch time</div>
           </div>
 
-          <Link href="/login">
+          <Link href="/try-scenith">
             <button className={styles.ctaButtonFinal}>Try Scenith for FREE! →</button>
           </Link>
           <p className={styles.ctaSubtext}>No credit card needed—start boosting your watch time now!</p>
