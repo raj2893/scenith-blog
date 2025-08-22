@@ -57,6 +57,21 @@ export default function BlogIndex() {
       views: "10.2K",
       slug: "how-to-reach-4000-hours-watch-time",
     },
+    {
+      id: 3,
+      title: "How to Use Layers in Video Editing with Scenith (2025)",
+      excerpt: "Learn how to use layers in video editing with Scenith to create professional-looking videos. Master the Transform panel and boost your video’s engagement.",
+      category: "Video Editing",
+      readTime: "4 min read",
+      publishDate: "2025-08-22",
+      author: "Scenith Team",
+      image: "🎬",
+      gradient: "linear-gradient(135deg, #00b894 0%, #38a169 100%)",
+      tags: ["Video Editing", "Layers", "Scenith", "Tutorials"],
+      featured: false,
+      views: "8.7K",
+      slug: "how-to-use-layers-in-video-editing",
+    },    
   ];
 
   const categories = ['all', 'AI Tools', 'Video Editing', 'YouTube Growth', 'Productivity', 'Tutorials'];
@@ -92,7 +107,7 @@ export default function BlogIndex() {
         />
         <meta
           name="keywords"
-          content="video editing, AI tools, YouTube growth, subtitles, keyframing, productivity, Scenith"
+          content="video editing, AI tools, YouTube growth, subtitles, layers, productivity, Scenith"
         />
         <meta name="author" content="Scenith" />
         <meta name="robots" content="index, follow" />
@@ -129,7 +144,7 @@ export default function BlogIndex() {
                   url: '/images/logo.png',
                 },
               },
-              datePublished: '2025-08-19',
+              datePublished: '2025-08-22',
               url: 'https://scenith.in/blogs',
             }),
           }}
@@ -309,10 +324,10 @@ export default function BlogIndex() {
                   placeholder="Enter your email address..."
                   className={styles.newsletterInput}
                 />
-                <button className={styles.newsletterBtn}>Subscribe Free →</button>
+                <button className={styles.newsletterBtn}>No Subscription Needed →</button>
               </div>
               <p className={styles.newsletterDisclaimer}>
-                ✨ Join 25,000+ creators • Unsubscribe anytime • Zero spam
+                ✨ Join 25,000+ creators • FOR FREE • Zero spam
               </p>
             </div>
           </div>

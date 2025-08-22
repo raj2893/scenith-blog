@@ -31,13 +31,14 @@ const Footer = () => {
   const navigationLinks = [
     { label: 'Home', path: '/' },
     { label: 'Blogs', path: '/blogs' },
-    { label: 'Features', path: '/features' },
-    { label: 'Tutorials', path: '/tutorials' },
+    { label: 'Features', path: '/' },
+    { label: 'Tutorials', path: '/' },
   ];
 
   const resourceLinks = [
     { label: 'How to Add Subtitles', path: '/blogs/how-to-add-subtitles-to-video' },
     { label: 'How to Reach 4000 Hours of Watch Time on YouTube', path: '/blogs/how-to-reach-4000-hours-watch-time' },
+    { label: 'How to Use Layers in Video Editing', path: '/blogs/how-to-use-layers-in-video-editing' },
     { label: 'Tutorials', path: '/', sectionId: 'tutorials-section' },
   ];
 
