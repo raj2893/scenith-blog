@@ -11,7 +11,7 @@ export default function HowToReach4000HoursWatchTime() {
   const scrollToSection = (sectionId: string) => {
     const section = document.getElementById(sectionId);
     if (section) {
-      const navHeight = document.querySelector('.nav-bar')?.getBoundingClientRect().height || 80;
+      const navHeight = document.querySelector('.nav-bar')?.getBoundingClientRect().height || 60;
       window.scrollTo({
         top: section.offsetTop - navHeight - 20,
         behavior: 'smooth',
@@ -209,7 +209,7 @@ export default function HowToReach4000HoursWatchTime() {
               </div>
             </div>
 
-            <div className={styles.prosConsModern}>
+            <div className={styles.prosCons}>
               <div className={styles.pros}>
                 <h4>✅ Why Creators Love Scenith:</h4>
                 <ul>
@@ -230,8 +230,8 @@ export default function HowToReach4000HoursWatchTime() {
             </div>
 
             <div className={styles.ctaPrimary}>
-              <Link href="/try-scenith">
-                <button className={styles.ctaButtonMain}>Try Scenith for FREE! →</button>
+              <Link href="https://scenith.in/dashboard">
+                <button className={styles.ctaButton}>Try Scenith for FREE! →</button>
               </Link>
               <p className={styles.ctaSubtext}>Join 50,000+ creators boosting their YouTube watch time</p>
             </div>
@@ -303,22 +303,22 @@ export default function HowToReach4000HoursWatchTime() {
 
         <section className={styles.blogSection}>
           <h2>Pro Tips to Maximize Watch Time with Subtitles</h2>
-          <div className={styles.tipsModern}>
-            <div className={styles.tipModern}>
+          <div className={styles.tips}>
+            <div className={styles.tip}>
               <div className={styles.tipIcon}>🎯</div>
               <div>
                 <h4>Capture Attention Early</h4>
                 <p>Use bold, animated subtitles in the first 10 seconds to hook viewers instantly.</p>
               </div>
             </div>
-            <div className={styles.tipModern}>
+            <div className={styles.tip}>
               <div className={styles.tipIcon}>📱</div>
               <div>
                 <h4>Optimize for Mobile</h4>
                 <p>Ensure subtitles are legible on small screens, where 80% of viewers watch.</p>
               </div>
             </div>
-            <div className={styles.tipModern}>
+            <div className={styles.tip}>
               <div className={styles.tipIcon}>🔥</div>
               <div>
                 <h4>Highlight Key Moments</h4>
@@ -332,21 +332,21 @@ export default function HowToReach4000HoursWatchTime() {
           <h2>Ready to Hit 4000 Hours Faster?</h2>
           <p>Stop losing viewers to missing subtitles. Start with Scenith today and watch your retention soar.</p>
 
-          <div className={styles.ctaBenefitsFinal}>
+          <div className={styles.ctaBenefits}>
             <div className={styles.benefit}>✨ Subtitles in 30 seconds</div>
             <div className={styles.benefit}>🎨 50+ stylish designs</div>
             <div className={styles.benefit}>📈 Up to 2x watch time</div>
           </div>
 
-          <Link href="/try-scenith">
-            <button className={styles.ctaButtonFinal}>Try Scenith for FREE! →</button>
+          <Link href="https://scenith.in/dashboard">
+            <button className={styles.ctaButton}>Try Scenith for FREE! →</button>
           </Link>
-          <p className={styles.ctaSubtext}>No credit card needed—start boosting your watch time now!</p>
+          <p className={styles.ctaSubtext}>No subscription needed—start boosting your watch time now!</p>
           <p className={styles.ctaSubtext}>Created a video with Scenith? Tag us on socials for a chance to be reshared!</p>
         </section>
 
         <section className={styles.blogSection}>
-          <div className={styles.faqQuick}>
+          <div className={styles.faq}>
             <h3>Quick Answers:</h3>
             <div className={styles.faqRow}>
               <strong>Do subtitles really increase watch time?</strong>

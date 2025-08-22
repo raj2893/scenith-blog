@@ -11,7 +11,7 @@ export default function HowToAddSubtitlesToVideo() {
   const scrollToSection = (sectionId: string) => {
     const section = document.getElementById(sectionId);
     if (section) {
-      const navHeight = document.querySelector('.nav-bar')?.getBoundingClientRect().height || 80;
+      const navHeight = document.querySelector('.nav-bar')?.getBoundingClientRect().height || 60;
       window.scrollTo({
         top: section.offsetTop - navHeight - 20,
         behavior: 'smooth',
@@ -210,7 +210,7 @@ export default function HowToAddSubtitlesToVideo() {
               </div>
             </div>
 
-            <div className={styles.prosConsModern}>
+            <div className={styles.prosCons}>
               <div className={styles.pros}>
                 <h4>✅ Why Everyone's Switching:</h4>
                 <ul>
@@ -231,8 +231,8 @@ export default function HowToAddSubtitlesToVideo() {
             </div>
 
             <div className={styles.ctaPrimary}>
-              <Link href="/try-scenith">
-                <button className={styles.ctaButtonMain}>Try it for FREE on SCENITH! →</button>
+              <Link href="https://scenith.in/dashboard">
+                <button className={styles.ctaButton}>Try it for FREE on SCENITH! →</button>
               </Link>
               <p className={styles.ctaSubtext}>Join 50,000+ creators who stopped wasting time on subtitles</p>
             </div>
@@ -302,22 +302,22 @@ export default function HowToAddSubtitlesToVideo() {
 
         <section className={styles.blogSection}>
           <h2>Pro Tips for Maximum Subtitle Impact</h2>
-          <div className={styles.tipsModern}>
-            <div className={styles.tipModern}>
+          <div className={styles.tips}>
+            <div className={styles.tip}>
               <div className={styles.tipIcon}>🎯</div>
               <div>
                 <h4>Hook viewers in first 3 seconds</h4>
                 <p>Use bold, animated subtitles for your opening line - this is what stops the scroll</p>
               </div>
             </div>
-            <div className={styles.tipModern}>
+            <div className={styles.tip}>
               <div className={styles.tipIcon}>📱</div>
               <div>
                 <h4>Mobile-first sizing</h4>
                 <p>90% of viewers are on mobile - test your subtitles on a phone screen first</p>
               </div>
             </div>
-            <div className={styles.tipModern}>
+            <div className={styles.tip}>
               <div className={styles.tipIcon}>🔥</div>
               <div>
                 <h4>Highlight key words</h4>
@@ -331,20 +331,20 @@ export default function HowToAddSubtitlesToVideo() {
           <h2>Ready to Join 50,000+ Creators Who Stopped Wasting Time?</h2>
           <p>Every day you manually add subtitles is a day you could be creating more content instead.</p>
 
-          <div className={styles.ctaBenefitsFinal}>
+          <div className={styles.ctaBenefits}>
             <div className={styles.benefit}>✨ Generate subtitles in 30 seconds</div>
             <div className={styles.benefit}>🎨 50+ professional styles</div>
             <div className={styles.benefit}>📈 Increase views by 40%</div>
           </div>
 
-          <Link href="/try-scenith">
-            <button className={styles.ctaButtonFinal}>Try it for FREE on SCENITH! →</button>
+          <Link href="https://scenith.in/dashboard">
+            <button className={styles.ctaButton}>Try it for FREE on SCENITH! →</button>
           </Link>
-          <p className={styles.ctaSubtext}>No credit card needed - start now!</p>
+          <p className={styles.ctaSubtext}>No subscription needed - start now!</p>
         </section>
 
         <section className={styles.blogSection}>
-          <div className={styles.faqQuick}>
+          <div className={styles.faq}>
             <h3>Quick Answers:</h3>
             <div className={styles.faqRow}>
               <strong>What video formats work?</strong>

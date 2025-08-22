@@ -1,17 +1,20 @@
-/* Define a CSS custom property for navbar height */
 :root {
-  --navbar-height: 80px; /* Adjust based on your Navbar.js height */
+  --navbar-height: 60px;
+  --primary-color: #3182ce;
+  --accent-color: #10b981;
+  --text-color: #2c3e50;
+  --border-color: #e2e8f0;
+  --bg-light: #f8fafc;
 }
 
-/* Apply padding-top to shift content below the navbar */
 .blogContainer {
-  max-width: 900px;
+  max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   padding-top: calc(var(--navbar-height) + 20px);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   line-height: 1.6;
-  color: #2c3e50;
+  color: var(--text-color);
 }
 
 .blogHeader {
@@ -20,50 +23,49 @@
 }
 
 .blogTitle {
-  font-size: 2.2em;
-  font-weight: 800;
-  color: #1a202c;
-  margin-bottom: 15px;
-  line-height: 1.2;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: 10px;
 }
 
 .blogMeta {
-  color: #718096;
-  font-size: 0.9em;
+  color: #6b7280;
+  font-size: 0.9rem;
 }
 
 .attentionGrabber {
-  background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+  background: var(--primary-color);
   color: white;
-  padding: 25px;
-  border-radius: 12px;
-  margin-bottom: 25px;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
   text-align: center;
 }
 
 .introText {
-  font-size: 1.2em;
-  margin: 0;
+  font-size: 1.1rem;
   font-weight: 600;
+  margin: 0;
 }
 
 .quickDecision {
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 20px;
-  margin: 30px 0;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin: 20px 0;
 }
 
 .decisionBox {
-  padding: 25px;
-  border-radius: 12px;
-  border: 2px solid #e2e8f0;
-  background: #f8fafc;
+  padding: 20px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-light);
 }
 
 .recommended {
-  border-color: #10b981;
-  background: linear-gradient(135deg, #d4f4dd, #9ae6b4);
+  border-color: var(--accent-color);
+  background: #f0fff4;
 }
 
 .decisionHeader {
@@ -74,165 +76,153 @@
 }
 
 .badge {
-  background: #10b981;
+  background: var(--accent-color);
   color: white;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.8em;
-  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
 }
 
 .quickCta,
 .secondaryCta {
-  background: #3182ce;
+  background: var(--primary-color);
   color: white;
   border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
+  padding: 10px 20px;
+  border-radius: 6px;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.2s;
-  margin-top: 15px;
+  transition: background 0.2s;
+  margin-top: 10px;
 }
 
 .quickCta:hover,
 .secondaryCta:hover {
-  transform: translateY(-1px);
+  background: #2b6cb0;
 }
 
 .secondaryCta {
-  background: #718096;
+  background: #6b7280;
+}
+
+.secondaryCta:hover {
+  background: #5a6268;
 }
 
 .methodOverview {
-  background: #f1f5f9;
-  padding: 25px;
-  border-radius: 12px;
+  padding: 20px;
+  border-radius: 8px;
+  background: var(--bg-light);
   margin: 20px 0;
 }
 
 .methodGrid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 15px;
-  margin-top: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
 }
 
 .methodPreview {
   background: white;
   padding: 15px;
-  border-radius: 8px;
+  border-radius: 6px;
   text-align: center;
-  position: relative;
-  border: 2px solid #e2e8f0;
+  border: 1px solid var(--border-color);
 }
 
 .methodIcon {
-  font-size: 2em;
+  font-size: 1.5rem;
   margin-bottom: 8px;
 }
 
 .methodCard.featured {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border-radius: 15px;
-  padding: 35px;
-  margin: 30px 0;
-  position: relative;
-  overflow: hidden;
-}
-
-.methodCard.featured::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #ffd700, #ffed4e, #ffd700);
+  background: var(--bg-light);
+  border: 1px solid var(--accent-color);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
 }
 
 .methodHeader {
   display: flex;
-  gap: 15px;
-  margin-bottom: 25px;
+  gap: 10px;
+  margin-bottom: 15px;
   flex-wrap: wrap;
 }
 
 .difficulty,
 .time,
 .accuracy {
-  padding: 8px 16px;
-  border-radius: 25px;
-  font-size: 0.85em;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
   font-weight: 600;
 }
 
 .easy {
-  background: rgba(16, 185, 129, 0.2);
-  color: #10b981;
-  border: 2px solid #10b981;
+  background: #e6fffa;
+  color: var(--accent-color);
 }
 
 .time {
-  background: rgba(251, 191, 36, 0.2);
-  color: #f59e0b;
-  border: 2px solid #f59e0b;
+  background: #fefcbf;
+  color: #d69e2e;
 }
 
 .accuracy {
-  background: rgba(139, 92, 246, 0.2);
-  color: #8b5cf6;
-  border: 2px solid #8b5cf6;
+  background: #f3e8ff;
+  color: #805ad5;
 }
 
 .stepByStep {
-  margin: 25px 0;
+  margin: 20px 0;
 }
 
 .stepsVisual {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 15px;
-  margin: 25px 0;
+  gap: 10px;
+  margin: 15px 0;
   flex-wrap: wrap;
 }
 
 .step {
-  background: rgba(255, 255, 255, 0.2);
-  padding: 20px;
-  border-radius: 12px;
+  background: white;
+  padding: 15px;
+  border-radius: 6px;
   text-align: center;
-  min-width: 100px;
+  min-width: 80px;
+  border: 1px solid var(--border-color);
 }
 
 .stepNumber {
-  background: #ffd700;
-  color: #1a202c;
-  width: 30px;
-  height: 30px;
+  background: var(--accent-color);
+  color: white;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  margin: 0 auto 10px;
+  font-weight: 600;
+  margin: 0 auto 8px;
 }
 
 .stepArrow {
-  font-size: 1.5em;
-  color: #ffd700;
-  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--text-color);
 }
 
 .socialProof {
   display: flex;
   justify-content: space-around;
-  margin: 30px 0;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 25px;
-  border-radius: 12px;
+  margin: 20px 0;
+  padding: 15px;
+  border-radius: 6px;
+  background: white;
+  border: 1px solid var(--border-color);
 }
 
 .stat {
@@ -240,201 +230,178 @@
 }
 
 .statNumber {
-  font-size: 2.5em;
-  font-weight: 800;
-  color: #ffd700;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary-color);
 }
 
 .statLabel {
-  font-size: 0.9em;
-  opacity: 0.9;
+  font-size: 0.9rem;
+  color: #6b7280;
 }
 
-.prosConsModern {
+.prosCons {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 25px;
-  margin: 25px 0;
+  gap: 15px;
+  margin: 20px 0;
 }
 
 .pros,
 .cons {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 20px;
-  border-radius: 12px;
+  padding: 15px;
+  border-radius: 6px;
+  background: white;
+  border: 1px solid var(--border-color);
 }
 
 .ctaPrimary {
   text-align: center;
-  margin: 30px 0;
+  margin: 20px 0;
 }
 
-.ctaButtonMain {
-  background: #ffd700;
-  color: #1a202c;
+.ctaButton {
+  background: var(--accent-color);
+  color: white;
   border: none;
-  padding: 18px 40px;
-  border-radius: 50px;
-  font-size: 1.2em;
-  font-weight: 700;
+  padding: 12px 30px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+  transition: background 0.2s;
 }
 
-.ctaButtonMain:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+.ctaButton:hover {
+  background: #059669;
 }
 
 .ctaSubtext {
-  margin-top: 10px;
-  opacity: 0.9;
-  font-size: 0.9em;
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: #6b7280;
 }
 
 .oldMethods {
-  margin: 25px 0;
+  margin: 20px 0;
 }
 
 .oldMethod {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 15px;
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 10px;
 }
 
 .methodSummary {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .timeCost {
   background: #fed7d7;
   color: #c53030;
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 0.8em;
+  padding: 4px 10px;
+  border-radius: 10px;
+  font-size: 0.8rem;
   font-weight: 600;
 }
 
 .realityCheck {
-  background: #fef5e7;
+  background: #fefcbf;
   color: #d69e2e;
-  padding: 8px 15px;
+  padding: 6px 12px;
   border-radius: 6px;
-  font-weight: 600;
-  font-size: 0.9em;
-  margin-top: 10px;
+  font-size: 0.9rem;
+  margin-top: 8px;
 }
 
 .concernsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
-  margin: 25px 0;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+  margin: 20px 0;
 }
 
 .concernCard {
   background: white;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-  border-top: 4px solid #3182ce;
+  padding: 15px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
 }
 
-.tipsModern {
+.tips {
   display: grid;
-  gap: 20px;
-  margin: 25px 0;
+  gap: 15px;
+  margin: 20px 0;
 }
 
-.tipModern {
+.tip {
   display: flex;
   align-items: flex-start;
-  gap: 20px;
+  gap: 15px;
   background: white;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  padding: 15px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
 }
 
 .tipIcon {
-  font-size: 2em;
+  font-size: 1.5rem;
+  padding: 10px;
+  border-radius: 8px;
   background: #e6fffa;
-  padding: 15px;
-  border-radius: 12px;
 }
 
 .finalCtaSection {
-  background: linear-gradient(135deg, #1a202c, #2d3748);
+  background: var(--text-color);
   color: white;
-  padding: 40px;
-  border-radius: 15px;
+  padding: 30px;
+  border-radius: 8px;
   text-align: center;
-  margin: 40px 0;
+  margin: 30px 0;
 }
 
-.ctaBenefitsFinal {
+.ctaBenefits {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 15px;
-  margin: 25px 0;
-  max-width: 500px;
-  margin-left: auto;
-  margin-right: auto;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin: 20px auto;
+  max-width: 600px;
 }
 
 .benefit {
   background: rgba(255, 255, 255, 0.1);
-  padding: 12px;
-  border-radius: 8px;
+  padding: 10px;
+  border-radius: 6px;
   font-weight: 600;
 }
 
-.ctaButtonFinal {
-  background: #10b981;
-  color: white;
-  border: none;
-  padding: 20px 50px;
-  border-radius: 50px;
-  font-size: 1.3em;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
-}
-
-.ctaButtonFinal:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
-}
-
-.faqQuick {
-  background: #f8fafc;
-  padding: 25px;
-  border-radius: 12px;
+.faq {
+  background: var(--bg-light);
+  padding: 20px;
+  border-radius: 8px;
 }
 
 .faqRow {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 0;
-  border-bottom: 1px solid #e2e8f0;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .faqRow:last-child {
   border-bottom: none;
 }
 
-/* Mobile Responsive */
+/* Responsive */
 @media (max-width: 768px) {
   :root {
-    --navbar-height: 60px;
+    --navbar-height: 50px;
   }
 
   .quickDecision {
@@ -443,16 +410,27 @@
 
   .methodGrid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
   }
 
-  .methodPreview {
-    padding: 10px;
+  .prosCons {
+    grid-template-columns: 1fr;
+  }
+
+  .concernsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .ctaBenefits {
+    grid-template-columns: 1fr;
+  }
+
+  .blogTitle {
+    font-size: 1.8rem;
   }
 
   .stepsVisual {
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
   }
 
   .stepArrow {
@@ -461,39 +439,13 @@
 
   .socialProof {
     flex-direction: column;
-    gap: 20px;
-  }
-
-  .prosConsModern {
-    grid-template-columns: 1fr;
-  }
-
-  .concernsGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .ctaBenefitsFinal {
-    grid-template-columns: 1fr;
-  }
-
-  .blogTitle {
-    font-size: 1.6em;
-  }
-
-  .methodCard.featured {
-    padding: 25px;
-  }
-
-  .faqRow {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
+    gap: 15px;
   }
 }
 
 @media (max-width: 480px) {
   :root {
-    --navbar-height: 50px;
+    --navbar-height: 40px;
   }
 
   .blogContainer {
@@ -501,32 +453,20 @@
     padding-top: calc(var(--navbar-height) + 15px);
   }
 
-  .attentionGrabber {
-    padding: 20px;
-  }
-
-  .introText {
-    font-size: 1.1em;
+  .blogTitle {
+    font-size: 1.5rem;
   }
 
   .methodGrid {
     grid-template-columns: 1fr;
   }
 
-  .decisionBox {
-    padding: 20px;
-  }
-
-  .methodCard.featured {
-    padding: 20px;
-  }
-
   .finalCtaSection {
-    padding: 30px 20px;
+    padding: 20px;
   }
 
-  .ctaButtonFinal {
-    padding: 16px 30px;
-    font-size: 1.1em;
+  .ctaButton {
+    padding: 10px 20px;
+    font-size: 0.9rem;
   }
 }

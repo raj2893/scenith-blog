@@ -1,6 +1,17 @@
 /* Import Montserrat font for consistency */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
 
+/* CSS Custom Properties for Letter Positions */
+:root {
+  --nav-s: -78px;
+  --nav-c: -56px;
+  --nav-e: -34px;
+  --nav-n: -12px;
+  --nav-i: 10px;
+  --nav-t: 32px;
+  --nav-h: 54px;
+}
+
 /* Navigation Bar */
 .nav-bar {
   position: fixed;
