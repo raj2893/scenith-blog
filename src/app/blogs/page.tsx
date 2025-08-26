@@ -86,7 +86,22 @@ export default function BlogIndex() {
       featured: false,
       views: "5.0K",
       slug: "how-to-create-video-editing-project",
-    },     
+    },
+    {
+      id: 5,
+      title: "How to Upload and Organize Media in Scenith (2025)",
+      excerpt: "Learn how to upload and organize videos, photos, audio, and elements in Scenith’s Project Editor with this beginner-friendly guide for a seamless video editing workflow.",
+      category: "Video Editing",
+      readTime: "4 min read",
+      publishDate: "2025-08-26",
+      author: "Scenith Team",
+      image: "📂",
+      gradient: "linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%)",
+      tags: ["Video Editing", "Media Management", "Scenith", "Tutorials", "Beginner"],
+      featured: false,
+      views: "4.5K",
+      slug: "how-to-upload-media-for-editing",
+    },         
   ];
 
   const categories = ['all', 'AI Tools', 'Video Editing', 'YouTube Growth', 'Productivity', 'Tutorials'];
