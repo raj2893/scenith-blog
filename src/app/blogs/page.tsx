@@ -71,7 +71,22 @@ export default function BlogIndex() {
       featured: false,
       views: "8.7K",
       slug: "how-to-use-layers-in-video-editing",
-    },    
+    },
+    {
+      id: 4,
+      title: "How to Create a Video Editing Project in Scenith (2025)",
+      excerpt: "Learn how to create a video editing project in Scenith with this beginner-friendly guide. Discover easy steps to start your video project and choose the perfect settings.",
+      category: "Video Editing",
+      readTime: "3 min read",
+      publishDate: "2025-08-26",
+      author: "Scenith Team",
+      image: "🎥",
+      gradient: "linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%)",
+      tags: ["Video Editing", "Scenith", "Tutorials", "Beginner"],
+      featured: false,
+      views: "5.0K",
+      slug: "how-to-create-video-editing-project",
+    },     
   ];
 
   const categories = ['all', 'AI Tools', 'Video Editing', 'YouTube Growth', 'Productivity', 'Tutorials'];
