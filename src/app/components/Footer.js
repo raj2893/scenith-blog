@@ -39,6 +39,7 @@ const Footer = () => {
     { label: 'How to Add Subtitles', path: '/blogs/how-to-add-subtitles-to-video' },
     { label: 'How to Reach 4000 Hours of Watch Time on YouTube', path: '/blogs/how-to-reach-4000-hours-watch-time' },
     { label: 'How to Use Layers in Video Editing', path: '/blogs/how-to-use-layers-in-video-editing' },
+    { label: 'How to Create a Video Editing Project in Scenith', path: '/blogs/how-to-create-video-editing-project' },
     { label: 'Tutorials', path: '/', sectionId: 'tutorials-section' },
   ];
 
