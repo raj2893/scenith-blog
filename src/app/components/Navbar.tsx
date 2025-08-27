@@ -41,12 +41,16 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
   };
 
   // Blog-specific navigation links
-  const navLinks = [
+  const baseNavLinks = [
     { label: 'Home', path: '/' },
     { label: 'Blogs', path: '/blogs' },
     { label: 'Categories', sectionId: 'filter-section' },
     { label: 'Contact Us', sectionId: 'footer-section' },
   ];
+  
+  const navLinks = pathname.startsWith('/blogs/') && pathname !== '/blogs'
+    ? baseNavLinks.filter(link => link.label !== 'Categories')
+    : baseNavLinks;
 
   return (
     <nav className={`nav-bar ${isNavMenuOpen ? 'open' : ''}`}>
