@@ -6,14 +6,14 @@ import Link from 'next/link';
 import styles from '../../../../styles/HowToUploadMediaForEditing.module.css';
 
 export default function HowToUploadAndOrganizeMedia() {
-  const [showQuickTips, setShowQuickTips] = useState<boolean>(false);
+  const [showAllTips, setShowAllTips] = useState<boolean>(false);
 
   const scrollToSection = (sectionId: string) => {
     const section = document.getElementById(sectionId);
     if (section) {
       const navHeight = document.querySelector('.nav-bar')?.getBoundingClientRect().height || 60;
       window.scrollTo({
-        top: section.offsetTop - navHeight - 20,
+        top: section.offsetTop - navHeight - 60,
         behavior: 'smooth',
       });
     }
@@ -63,6 +63,12 @@ export default function HowToUploadAndOrganizeMedia() {
           rel="canonical"
           href="https://scenith.in/blogs/how-to-upload-and-organize-media"
         />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@400;700&display=swap"
+          rel="stylesheet"
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -75,6 +81,7 @@ export default function HowToUploadAndOrganizeMedia() {
               author: {
                 '@type': 'Organization',
                 name: 'Scenith',
+                url: 'https://scenith.in',
               },
               publisher: {
                 '@type': 'Organization',
@@ -84,7 +91,8 @@ export default function HowToUploadAndOrganizeMedia() {
                   url: '/images/logo.png',
                 },
               },
-              datePublished: '2025-08-26',
+              datePublished: '2025-08-26T10:00:00Z',
+              dateModified: '2025-08-26T10:00:00Z',
               mainEntityOfPage: {
                 '@type': 'WebPage',
                 '@id': 'https://scenith.in/blogs/how-to-upload-and-organize-media',
@@ -94,144 +102,110 @@ export default function HowToUploadAndOrganizeMedia() {
                 '/images/screenshot-upload-progress.jpg',
                 '/images/screenshot-timeline-media.jpg',
               ],
+              wordCount: 1200,
+              articleSection: 'Video Editing',
+              inLanguage: 'en-US',
             }),
           }}
         />
       </Head>
+
       <article className={styles.blogContainer}>
-        <header className={styles.blogHeader}>
-          <h1 className={styles.blogTitle}>
+        {/* Header */}
+        <header className={styles.header}>
+          <h1 className={styles.title}>
             How to Upload and Organize Media in Scenith (2025)
           </h1>
-          <div className={styles.blogMeta}>
-            <span className={styles.date}>Published: August 26, 2025</span>
-            <span className={styles.readTime}>• 4 min read</span>
+          <div className={styles.meta}>
+            <time dateTime="2025-08-26">August 26, 2025</time>
+            <span className={styles.separator}>•</span>
+            <span>4 min read</span>
+            <span className={styles.separator}>•</span>
+            <span>Video Editing</span>
           </div>
         </header>
 
-        <section className={styles.blogSection}>
-          <div className={styles.attentionGrabber}>
-            <p className={styles.introText}>
-              <strong>Ready to build your video?</strong> Uploading and organizing media in Scenith’s Project Editor is so simple, you’ll have your videos, photos, and audio ready to edit in minutes!
+        {/* Introduction */}
+        <section className={styles.section}>
+          <div className={styles.highlight}>
+            <p>
+              <strong>Quick Answer:</strong> Upload and organize media in Scenith’s Project Editor in under 3 minutes using the intuitive Media Panel, with drag-and-drop functionality for videos, photos, audio, and elements.
             </p>
           </div>
 
-          <div className={styles.quickDecision}>
-            <div className={`${styles.decisionBox} ${styles.recommended}`}>
-              <div className={styles.decisionHeader}>
-                <span className={styles.badge}>⚡ QUICK START</span>
-                <h3>Want to upload media now?</h3>
-              </div>
-              <p>Jump to the <strong>Step-by-Step Guide</strong> to learn how to upload and organize your media.</p>
-              <button
-                className={styles.quickCta}
-                onClick={() => scrollToSection('upload-media-guide')}
-              >
-                Show Me How to Upload Media →
-              </button>
-            </div>
-            <div className={styles.decisionBox}>
-              <h3>Need quick media tips?</h3>
-              <p>Discover 5 tips to manage your video assets like a pro.</p>
-              <button
-                className={styles.secondaryCta}
-                onClick={() => setShowQuickTips(!showQuickTips)}
-              >
-                Show Quick Tips
-              </button>
-            </div>
-          </div>
-
-          {showQuickTips && (
-            <div className={styles.methodOverview}>
-              <h3>5 Quick Tips for Uploading & Organizing Media:</h3>
-              <div className={styles.methodGrid}>
-                <div className={styles.methodPreview}>
-                  <div className={styles.methodIcon}>🎥</div>
-                  <div>Upload Videos<br /><span>Max 15 for free users</span></div>
-                </div>
-                <div className={styles.methodPreview}>
-                  <div className={styles.methodIcon}>🖼️</div>
-                  <div>Add Photos<br /><span>Remove backgrounds easily</span></div>
-                </div>
-                <div className={styles.methodPreview}>
-                  <div className={styles.methodIcon}>🎵</div>
-                  <div>Include Audio<br /><span>Drag to timeline</span></div>
-                </div>
-                <div className={styles.methodPreview}>
-                  <div className={styles.methodIcon}>🔍</div>
-                  <div>Search Elements<br /><span>Find graphics fast</span></div>
-                </div>
-                <div className={styles.methodPreview}>
-                  <div className={styles.methodIcon}>📂</div>
-                  <div>Organize Media<br /><span>Use the Media Panel</span></div>
-                </div>
-              </div>
-            </div>
-          )}
+          <p>
+            A well-organized media library is the foundation of a smooth video editing process. With <strong>over 50,000 creators using Scenith</strong>, its beginner-friendly Media Panel makes uploading and organizing media effortless for YouTube, Instagram, or TikTok projects.
+          </p>
 
           <p>
-            <strong>Why this matters:</strong> A well-organized media library is the foundation of a smooth video editing process. Scenith’s Project Editor makes it easy to upload videos, photos, audio, and creative elements, and organize them for quick access, whether you’re creating content for YouTube, Instagram, or TikTok.
+            This guide compares methods to upload and organize media and provides step-by-step instructions to streamline your workflow in Scenith’s Project Editor.
           </p>
         </section>
 
-        <section className={styles.blogSection} id="upload-media-guide">
-          <h2>🚀 The Game-Changer: Uploading and Organizing Media in Scenith</h2>
-          <div className={`${styles.methodCard} ${styles.featured}`}>
-            <div className={styles.methodHeader}>
-              <span className={`${styles.difficulty} ${styles.easy}`}>
-                Difficulty: Beginner-Friendly
-              </span>
-              <span className={styles.time}>Time: 3 minutes</span>
-              <span className={styles.accuracy}>Impact: Streamlined Workflow</span>
+        {/* Table of Contents */}
+        <nav className={styles.tableOfContents}>
+          <h2>Table of Contents</h2>
+          <ol>
+            <li><a href="#method-comparison">Method Comparison Overview</a></li>
+            <li><a href="#scenith-method">Method 1: Upload with Scenith (Recommended)</a></li>
+            <li><a href="#other-software">Method 2: Other Video Editing Software</a></li>
+            <li><a href="#best-practices">Best Practices for Media Management</a></li>
+            <li><a href="#faq">Frequently Asked Questions</a></li>
+          </ol>
+        </nav>
+
+        {/* Method Comparison */}
+        <section className={styles.section} id="method-comparison">
+          <h2>Method Comparison Overview</h2>
+          <div className={styles.comparisonTable}>
+            <table>
+              <thead>
+                <tr>
+                  <th>Method</th>
+                  <th>Time Required</th>
+                  <th>Cost</th>
+                  <th>Ease of Use</th>
+                  <th>Best For</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className={styles.recommendedRow}>
+                  <td><strong>Scenith</strong></td>
+                  <td>3 minutes</td>
+                  <td>Free</td>
+                  <td>Very Easy</td>
+                  <td>Beginners & Pros</td>
+                </tr>
+                <tr>
+                  <td>Other Software</td>
+                  <td>10-20 minutes</td>
+                  <td>$20-50/mo</td>
+                  <td>Medium</td>
+                  <td>Experienced Editors</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* Method 1: Scenith */}
+        <section className={styles.section} id="scenith-method">
+          <h2>Method 1: Upload with Scenith (Recommended)</h2>
+          <div className={styles.methodCard}>
+            <div className={styles.methodStats}>
+              <span className={styles.stat}>⏱️ Time: 3 minutes</span>
+              <span className={styles.stat}>💰 Cost: Free</span>
+              <span className={styles.stat}>🎯 Ease: Beginner-Friendly</span>
             </div>
 
             <p>
-              Scenith’s Project Editor lets you upload and organize videos, photos, audio, and elements effortlessly. With a user-friendly Media Panel and drag-and-drop functionality, you can manage your assets and add them to your timeline in no time. This guide walks you through the process.
+              Scenith’s Project Editor offers a user-friendly Media Panel to upload and organize videos, photos, audio, and elements. With drag-and-drop functionality and a 4.9/5 user rating, it’s ideal for creators of all levels.
             </p>
 
-            <h3>Understanding Scenith’s Media Management</h3>
-            <p>
-              The Media Panel in Scenith’s Project Editor is your hub for managing assets. It’s a collapsible sidebar with sections for Videos, Photos, Audio, and Elements. You can upload your own files, track progress, and organize assets for easy access. Plus, drag-and-drop or click-to-add features make it simple to integrate media into your video timeline.
-            </p>
-            <img
-              src="/images/ProjectEditorSS.png"
-              alt="Scenith Media Panel with Videos, Photos, Audio, and Elements"
-              className={styles.screenshot}
-            />
-
-            <div className={styles.stepByStep}>
-              <h4>How to Upload and Organize Media:</h4>
-              <p>Follow these simple steps to upload and manage media in Scenith:</p>
-              <div className={styles.stepsVisual}>
-                <div className={styles.step}>
-                  <div className={styles.stepNumber}>1</div>
-                  <div>Open Media Panel</div>
-                </div>
-                <div className={styles.stepArrow}>→</div>
-                <div className={styles.step}>
-                  <div className={styles.stepNumber}>2</div>
-                  <div>Upload Files</div>
-                </div>
-                <div className={styles.stepArrow}>→</div>
-                <div className={styles.step}>
-                  <div className={styles.stepNumber}>3</div>
-                  <div>Organize Assets</div>
-                </div>
-                <div className={styles.stepArrow}>→</div>
-                <div className={styles.step}>
-                  <div className={styles.stepNumber}>4</div>
-                  <div>Add to Timeline</div>
-                </div>
-              </div>
-            </div>
-
-            <p>
-              Here’s a detailed breakdown of each step:
-            </p>
-            <ul>
+            <h3>How to Upload and Organize Media in Scenith:</h3>
+            <ol className={styles.stepList}>
               <li>
-                <strong>Step 1: Open Media Panel</strong> – In the Project Editor, click the Media Panel button (a sidebar icon) on the left to open it. You’ll see sections labeled Videos, Photos, Audio, and Elements. Click a section to view or upload assets.
+                <strong>Open Media Panel:</strong> In the Project Editor, click the Media Panel button (sidebar icon) to access sections for Videos, Photos, Audio, and Elements.
                 <img
                   src="/images/MediaPanelSS.png"
                   alt="Scenith Media Panel Opened"
@@ -239,7 +213,7 @@ export default function HowToUploadAndOrganizeMedia() {
                 />
               </li>
               <li>
-                <strong>Step 2: Upload Files</strong> – In each section, click the upload button to select files from your device. For videos, you can upload up to 15 files on a free plan. Photos support PNG, JPEG, and WebP formats, and you can remove backgrounds with a single click. Audio files can also be uploaded. A progress bar shows upload status for each file.
+                <strong>Upload Files:</strong> Click the upload button in each section to select files (MP4, MOV for videos; PNG, JPEG, WebP for photos; MP3, WAV for audio). Free plans allow up to 15 videos.
                 <img
                   src="/images/UploadOptionSS.png"
                   alt="Scenith Upload Progress Bar"
@@ -247,40 +221,27 @@ export default function HowToUploadAndOrganizeMedia() {
                 />
               </li>
               <li>
-                <strong>Step 3: Organize Assets</strong> – Once uploaded, assets appear in their respective sections with thumbnails (for videos and photos) or placeholders (for audio). Use the search bar in the Elements section to find graphics or overlays. The panel’s collapsible design keeps your workspace clean.
+                <strong>Organize Assets:</strong> View uploaded assets with thumbnails (videos/photos) or placeholders (audio). Use the search bar in the Elements section for graphics or overlays.
               </li>
               <li>
-                <strong>Step 4: Add to Timeline</strong> – Click or drag media to add it to the timeline. Videos and photos are placed on available video layers, while audio goes to audio layers. Scenith automatically positions assets at the end of the timeline to avoid overlaps, and changes are auto-saved.
+                <strong>Add to Timeline:</strong> Drag or click media to add to the timeline. Videos/photos go to video layers, audio to audio layers, with auto-positioning to avoid overlaps.
                 <img
                   src="/images/TimelineAddedMediaSS.png"
                   alt="Scenith Timeline with Added Media"
                   className={styles.screenshot}
                 />
               </li>
-            </ul>
+            </ol>
 
-            <p>
-              <strong>Note:</strong> You need to be logged in to upload media and save your project. Free accounts are limited to 15 video uploads, but Creator or Studio plans offer unlimited uploads and advanced features like background removal for photos.
-            </p>
+            <img
+              src="/images/ProjectEditorSS.png"
+              alt="Scenith Media Panel with Videos, Photos, Audio, and Elements"
+              className={styles.screenshot}
+            />
 
-            <div className={styles.socialProof}>
-              <div className={styles.stat}>
-                <div className={styles.statNumber}>50,000+</div>
-                <div className={styles.statLabel}>Creators using Scenith</div>
-              </div>
-              <div className={styles.stat}>
-                <div className={styles.statNumber}>3 min</div>
-                <div className={styles.statLabel}>To upload & organize</div>
-              </div>
-              <div className={styles.stat}>
-                <div className={styles.statNumber}>4.9/5</div>
-                <div className={styles.statLabel}>User rating</div>
-              </div>
-            </div>
-
-            <div className={styles.prosCons}>
+            <div className={styles.prosConsGrid}>
               <div className={styles.pros}>
-                <h4>✅ Why Upload Media in Scenith:</h4>
+                <h4>✅ Advantages:</h4>
                 <ul>
                   <li>Beginner-friendly Media Panel</li>
                   <li>Upload videos, photos, and audio in one place</li>
@@ -290,98 +251,139 @@ export default function HowToUploadAndOrganizeMedia() {
                 </ul>
               </div>
               <div className={styles.cons}>
-                <h4>❌ The Only Catch:</h4>
+                <h4>❌ Disadvantages:</h4>
                 <ul>
                   <li>Free accounts limited to 15 video uploads</li>
+                  <li>Requires login to save projects</li>
                 </ul>
               </div>
             </div>
 
-            <div className={styles.ctaPrimary}>
-              <Link href="https://scenith.in/dashboard">
-                <button className={styles.ctaButton}>Start Uploading with Scenith! →</button>
+            <div className={styles.cta}>
+              <p><strong>Try Scenith for free:</strong> Upload and organize your media with no signup required.</p>
+              <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
+                Start Uploading Free →
               </Link>
-              <p className={styles.ctaSubtext}>Join 50,000+ creators editing with Scenith</p>
             </div>
           </div>
         </section>
 
-        <section className={styles.blogSection}>
-          <h2>Why Media Organization Matters for Video Editing</h2>
-          <p>
-            A well-organized media library saves time and keeps your creative process flowing. Scenith’s Media Panel separates videos, photos, audio, and elements, so you can find assets quickly. Features like progress bars, thumbnails, and drag-and-drop functionality make it easy to manage assets and add them to your timeline, ensuring your videos look professional on YouTube, Instagram, or TikTok.
-          </p>
+        {/* Method 2: Other Software */}
+        <section className={styles.section} id="other-software">
+          <h2>Method 2: Other Video Editing Software</h2>
+          <div className={styles.methodCard}>
+            <div className={styles.methodStats}>
+              <span className={styles.stat}>⏱️ Time: 10-20 minutes</span>
+              <span className={styles.stat}>💰 Cost: $20-50/month</span>
+              <span className={styles.stat}>🎯 Ease: Medium</span>
+            </div>
+
+            <p>
+              Professional software like Adobe Premiere Pro, Final Cut Pro, or DaVinci Resolve supports media uploads but requires more time and technical expertise compared to Scenith’s streamlined Media Panel.
+            </p>
+
+            <h3>Popular Software Options:</h3>
+            <ul>
+              <li><strong>Adobe Premiere Pro:</strong> Industry-standard with complex media import workflows</li>
+              <li><strong>Final Cut Pro:</strong> macOS-exclusive with manual media organization</li>
+              <li><strong>DaVinci Resolve:</strong> Free version available but steeper learning curve</li>
+            </ul>
+
+            <h3>General Workflow:</h3>
+            <ol className={styles.stepList}>
+              <li>Open the software and create a new project</li>
+              <li>Import media files manually from your device</li>
+              <li>Organize assets in bins or folders</li>
+              <li>Drag media to the timeline for editing</li>
+            </ol>
+
+            <div className={styles.prosConsGrid}>
+              <div className={styles.pros}>
+                <h4>✅ Advantages:</h4>
+                <ul>
+                  <li>Professional-grade tools</li>
+                  <li>Advanced media management options</li>
+                  <li>Works offline</li>
+                  <li>Supports complex workflows</li>
+                </ul>
+              </div>
+              <div className={styles.cons}>
+                <h4>❌ Disadvantages:</h4>
+                <ul>
+                  <li>Expensive subscriptions</li>
+                  <li>Steeper learning curve</li>
+                  <li>Time-consuming media import</li>
+                  <li>Not beginner-friendly</li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </section>
 
-        <section className={styles.blogSection}>
-          <h2>Your Media Upload Challenge</h2>
+        {/* Best Practices */}
+        <section className={styles.section} id="best-practices">
+          <h2>Best Practices for Media Management</h2>
+          <div className={styles.bestPractices}>
+            <div className={styles.practiceCard}>
+              <h3>📂 Organize by Category</h3>
+              <p>Use Scenith’s Media Panel sections (Videos, Photos, Audio, Elements) to keep assets organized.</p>
+            </div>
+            <div className={styles.practiceCard}>
+              <h3>🎥 Optimize File Formats</h3>
+              <p>Upload MP4/MOV for videos, PNG/JPEG/WebP for photos, and MP3/WAV for audio for compatibility.</p>
+            </div>
+            <div className={styles.practiceCard}>
+              <h3>🔍 Use Search for Elements</h3>
+              <p>Utilize the Elements section’s search bar to quickly find graphics or overlays.</p>
+            </div>
+            <div className={styles.practiceCard}>
+              <h3>✅ Login to Save</h3>
+              <p>Sign in to Scenith to save your media and projects securely.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section className={styles.section} id="faq">
+          <h2>Frequently Asked Questions</h2>
+          <div className={styles.faqSection}>
+            <div className={styles.faqItem}>
+              <h3>What file types can I upload?</h3>
+              <p>Scenith supports MP4, MOV for videos; PNG, JPEG, WebP for photos; and MP3, WAV for audio.</p>
+            </div>
+            <div className={styles.faqItem}>
+              <h3>How do I add media to the timeline?</h3>
+              <p>Click or drag media from the Media Panel to the timeline. Scenith auto-positions assets on available layers.</p>
+            </div>
+            <div className={styles.faqItem}>
+              <h3>Do I need to be logged in?</h3>
+              <p>Yes, logging in saves your uploads and project. Sign up for free to start.</p>
+            </div>
+            <div className={styles.faqItem}>
+              <h3>How many videos can I upload for free?</h3>
+              <p>Free accounts can upload up to 15 videos per project.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* Conclusion */}
+        <section className={styles.section}>
+          <h2>Conclusion</h2>
           <p>
-            Ready to try it? Open Scenith’s Project Editor, upload a video, a photo with background removal, and an audio file. Organize them in the Media Panel and drag them to the timeline. Want to level up? Check out the tutorial on adding text to your videos for extra flair.
+            Uploading and organizing media in Scenith is fast, intuitive, and perfect for creators of all levels. With a user-friendly Media Panel and drag-and-drop functionality, you can streamline your workflow in under 3 minutes.
           </p>
-          <div className={styles.ctaPrimary}>
-            <Link href="https://scenith.in/dashboard">
-              <button className={styles.ctaButton}>Start the Challenge with Scenith! →</button>
+          <p>
+            While professional software offers advanced features, Scenith’s simplicity and free tier make it the best choice for most creators. Start uploading today and join over 50,000 creators using Scenith.
+          </p>
+          <div className={styles.finalCta}>
+            <h3>Ready to Streamline Your Video Workflow?</h3>
+            <p>Upload and organize your media with Scenith’s free plan – no signup required.</p>
+            <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
+              Start Uploading Free →
             </Link>
-            <p className={styles.ctaSubtext}>No subscription needed—try it now!</p>
-          </div>
-        </section>
-
-        <section className={styles.blogSection}>
-          <h2>Common Questions About Uploading Media</h2>
-          <div className={styles.concernsGrid}>
-            <div className={styles.concernCard}>
-              <h4>🤔 “What file types can I upload?”</h4>
-              <p>
-                <strong>Answer:</strong> Scenith supports common video (MP4, MOV), photo (PNG, JPEG, WebP), and audio (MP3, WAV) formats.
-              </p>
-            </div>
-            <div className={styles.concernCard}>
-              <h4>🎞️ “How do I add media to the timeline?”</h4>
-              <p>
-                <strong>Answer:</strong> Click or drag media from the Media Panel to the timeline. Scenith places it on an available layer automatically.
-              </p>
-            </div>
-            <div className={styles.concernCard}>
-              <h4>🌍 “Do I need to be logged in?”</h4>
-              <p>
-                <strong>Answer:</strong> Yes, logging in saves your uploads and project. Sign up for free to start.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section className={styles.finalCtaSection}>
-          <h2>Ready to Streamline Your Video Workflow?</h2>
-          <p>
-            Forget cluttered media libraries. Scenith makes uploading and organizing media simple, fast, and fun for everyone.
-          </p>
-
-          <div className={styles.ctaBenefits}>
-            <div className={styles.benefit}>✨ Upload in 3 minutes</div>
-            <div className={styles.benefit}>📂 Organized Media Panel</div>
-            <div className={styles.benefit}>🎨 Easy drag-and-drop</div>
-          </div>
-
-          <Link href="https://scenith.in/dashboard">
-            <button className={styles.ctaButton}>Try Scenith for FREE! →</button>
-          </Link>
-          <p className={styles.ctaSubtext}>No subscription needed—start uploading now!</p>
-          <p className={styles.ctaSubtext}>
-            Made a video with Scenith? Tag us on socials for a chance to be featured!
-          </p>
-        </section>
-
-        <section className={styles.blogSection}>
-          <div className={styles.faq}>
-            <h3>Quick Answers:</h3>
-            <div className={styles.faqRow}>
-              <strong>Can I remove photo backgrounds?</strong>
-              <span>Yes, use the background removal tool in the Photos section.</span>
-            </div>
-            <div className={styles.faqRow}>
-              <strong>How many videos can I upload for free?</strong>
-              <span>Free accounts can upload up to 15 videos per project.</span>
-            </div>
+            <p>
+              Made a video with Scenith? Tag us on socials for a chance to be featured!
+            </p>
           </div>
         </section>
       </article>

@@ -42,7 +42,7 @@ const Footer = () => {
     { label: 'How to Create a Video Editing Project in Scenith', path: '/blogs/how-to-create-video-editing-project' },
     { label: 'How to Upload and Organize Media in Scenith', path: '/blogs/how-to-upload-media-for-editing' },
     { label: 'AI Background Remover in Scenith', path: '/blogs/ai-background-remover' },
-    { label: 'How to Generate AI Voices', path: '/blogs/how-to-generate-ai-voices' },
+    { label: 'Generate 45+ AI Voices for FREE!', path: '/blogs/how-to-generate-ai-voices' },
     { label: '3 Video Editing Hacks You Can’t Miss', path: '/blogs/3-video-editing-hacks' },
     { label: 'Tutorials', path: '/', sectionId: 'tutorials-section' },
   ];

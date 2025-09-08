@@ -6,14 +6,14 @@ import Link from 'next/link';
 import styles from '../../../../styles/HowToReach4000HoursWatchTime.module.css';
 
 export default function HowToReach4000HoursWatchTime() {
-  const [showQuickTips, setShowQuickTips] = useState<boolean>(false);
+  const [showAllTips, setShowAllTips] = useState<boolean>(false);
 
   const scrollToSection = (sectionId: string) => {
     const section = document.getElementById(sectionId);
     if (section) {
       const navHeight = document.querySelector('.nav-bar')?.getBoundingClientRect().height || 60;
       window.scrollTo({
-        top: section.offsetTop - navHeight - 20,
+        top: section.offsetTop - navHeight - 60, // Increased offset to prevent navbar overlap
         behavior: 'smooth',
       });
     }
@@ -29,25 +29,46 @@ export default function HowToReach4000HoursWatchTime() {
           name="description"
           content="Discover how to hit 4000 hours of YouTube watch time fast using AI-powered subtitles with Scenith. Learn why subtitles boost viewer retention and skyrocket your channel’s growth."
         />
-        <meta name="keywords" content="4000 hours watch time, YouTube monetization, AI subtitles, Scenith, YouTube growth, video accessibility" />
+        <meta
+          name="keywords"
+          content="4000 hours watch time, YouTube monetization, AI subtitles, Scenith, YouTube growth, video accessibility"
+        />
         <meta name="author" content="Scenith" />
         <meta name="robots" content="index, follow" />
-        <meta property="og:title" content="How to Reach 4000 Hours of YouTube Watch Time Fast in 2025" />
+        <meta
+          property="og:title"
+          content="How to Reach 4000 Hours of YouTube Watch Time Fast in 2025"
+        />
         <meta
           property="og:description"
           content="Unlock YouTube’s 4000-hour watch time goal with AI subtitles. Learn how Scenith’s 30-second subtitle tool boosts retention and accelerates channel growth."
         />
         <meta property="og:type" content="article" />
-        <meta property="og:url" content="https://scenith.in/blogs/how-to-reach-4000-hours-watch-time" />
+        <meta
+          property="og:url"
+          content="https://scenith.in/blogs/how-to-reach-4000-hours-watch-time"
+        />
         <meta property="og:image" content="/images/youtube-watch-time-og.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="How to Reach 4000 Hours of YouTube Watch Time Fast in 2025" />
+        <meta
+          name="twitter:title"
+          content="How to Reach 4000 Hours of YouTube Watch Time Fast in 2025"
+        />
         <meta
           name="twitter:description"
           content="Unlock YouTube’s 4000-hour watch time goal with AI subtitles. Learn how Scenith’s 30-second subtitle tool boosts retention and accelerates channel growth."
         />
         <meta name="twitter:image" content="/images/youtube-watch-time-og.jpg" />
-        <link rel="canonical" href="https://scenith.in/blogs/how-to-reach-4000-hours-watch-time" />
+        <link
+          rel="canonical"
+          href="https://scenith.in/blogs/how-to-reach-4000-hours-watch-time"
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@400;700&display=swap"
+          rel="stylesheet"
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -60,6 +81,7 @@ export default function HowToReach4000HoursWatchTime() {
               author: {
                 '@type': 'Organization',
                 name: 'Scenith',
+                url: 'https://scenith.in',
               },
               publisher: {
                 '@type': 'Organization',
@@ -69,293 +91,294 @@ export default function HowToReach4000HoursWatchTime() {
                   url: '/images/logo.png',
                 },
               },
-              datePublished: '2025-08-19',
+              datePublished: '2025-08-19T10:00:00Z',
+              dateModified: '2025-08-19T10:00:00Z',
               mainEntityOfPage: {
                 '@type': 'WebPage',
                 '@id': 'https://scenith.in/blogs/how-to-reach-4000-hours-watch-time',
               },
+              image: '/images/youtube-watch-time-og.jpg',
+              wordCount: 1500,
+              articleSection: 'YouTube Growth',
+              inLanguage: 'en-US',
             }),
           }}
         />
       </Head>
+
       <article className={styles.blogContainer}>
-        <header className={styles.blogHeader}>
-          <h1 className={styles.blogTitle}>How to Reach 4000 Hours of YouTube Watch Time Fast in 2025</h1>
-          <div className={styles.blogMeta}>
-            <span className={styles.date}>Published: August 19, 2025</span>
-            <span className={styles.readTime}>• 5 min read</span>
+        {/* Header */}
+        <header className={styles.header}>
+          <h1 className={styles.title}>
+            How to Reach 4000 Hours of YouTube Watch Time Fast in 2025
+          </h1>
+          <div className={styles.meta}>
+            <time dateTime="2025-08-19">August 19, 2025</time>
+            <span className={styles.separator}>•</span>
+            <span>5 min read</span>
+            <span className={styles.separator}>•</span>
+            <span>YouTube Growth</span>
           </div>
         </header>
 
-        <section className={styles.blogSection}>
-          <div className={styles.attentionGrabber}>
-            <p className={styles.introText}>
-              <strong>Reality check:</strong> You’re chasing YouTube’s 4000-hour watch time goal with
-              thumbnails and titles, but ignoring one simple trick that could double your viewer retention.
+        {/* Introduction */}
+        <section className={styles.section}>
+          <div className={styles.highlight}>
+            <p>
+              <strong>Quick Answer:</strong> The fastest way to reach 4000 hours of YouTube watch time in 2025 is by adding AI-powered subtitles with Scenith, boosting viewer retention by up to 2x in just 30 seconds.
             </p>
           </div>
 
-          <div className={styles.quickDecision}>
-            <div className={`${styles.decisionBox} ${styles.recommended}`}>
-              <div className={styles.decisionHeader}>
-                <span className={styles.badge}>⚡ FAST TRACK</span>
-                <h3>Want the secret to longer watch times?</h3>
-              </div>
-              <p>Jump to the <strong>AI Subtitles Solution</strong> below—it’s what top creators use to hit 4000 hours fast.</p>
-              <button
-                className={styles.quickCta}
-                onClick={() => scrollToSection('ai-subtitles')}
-              >
-                Show Me the AI Solution →
-              </button>
-            </div>
-            <div className={styles.decisionBox}>
-              <h3>Need quick tips to boost retention?</h3>
-              <p>Check out 5 proven strategies to keep viewers glued to your videos.</p>
-              <button className={styles.secondaryCta} onClick={() => setShowQuickTips(!showQuickTips)}>
-                Show Quick Tips
-              </button>
-            </div>
-          </div>
-
-          {showQuickTips && (
-            <div className={styles.methodOverview}>
-              <h3>5 Quick Tips to Boost Watch Time:</h3>
-              <div className={styles.methodGrid}>
-                <div className={styles.methodPreview}>
-                  <div className={styles.methodIcon}>📜</div>
-                  <div>Subtitles<br /><span>Double retention</span></div>
-                </div>
-                <div className={styles.methodPreview}>
-                  <div className={styles.methodIcon}>🎥</div>
-                  <div>Strong Hooks<br /><span>First 10 seconds</span></div>
-                </div>
-                <div className={styles.methodPreview}>
-                  <div className={styles.methodIcon}>🖼️</div>
-                  <div>Thumbnails<br /><span>Click appeal</span></div>
-                </div>
-                <div className={styles.methodPreview}>
-                  <div className={styles.methodIcon}>📊</div>
-                  <div>Engage Early<br /><span>Ask questions</span></div>
-                </div>
-                <div className={styles.methodPreview}>
-                  <div className={styles.methodIcon}>🔄</div>
-                  <div>Playlists<br /><span>Keep them watching</span></div>
-                </div>
-              </div>
-            </div>
-          )}
+          <p>
+            Hitting YouTube’s 4000-hour watch time goal for monetization is tough, but <strong>subtitles are a game-changer</strong>. With over 80% of videos watched without sound initially, subtitles keep viewers engaged longer, skyrocketing your watch time.
+          </p>
 
           <p>
-            <strong>Why this matters:</strong> Over 80% of YouTube videos are watched without sound
-            initially. Without subtitles, viewers leave in seconds, tanking your watch time and delaying
-            your 4000-hour monetization goal.
+            This guide compares strategies to boost watch time, with a focus on Scenith’s AI subtitles, and provides step-by-step instructions to help you reach 4000 hours fast.
           </p>
         </section>
 
-        <section className={styles.blogSection} id="ai-subtitles">
-          <h2>🚀 The Game-Changer: AI Subtitles with Scenith</h2>
-          <div className={`${styles.methodCard} ${styles.featured}`}>
-            <div className={styles.methodHeader}>
-              <span className={`${styles.difficulty} ${styles.easy}`}>Difficulty: Super Easy</span>
-              <span className={styles.time}>Time: 30 seconds</span>
-              <span className={styles.accuracy}>Retention: Up to 2x</span>
+        {/* Table of Contents */}
+        <nav className={styles.tableOfContents}>
+          <h2>Table of Contents</h2>
+          <ol>
+            <li><a href="#method-comparison">Method Comparison Overview</a></li>
+            <li><a href="#ai-subtitles">Method 1: AI Subtitles with Scenith (Recommended)</a></li>
+            <li><a href="#other-methods">Method 2: Other Strategies</a></li>
+            <li><a href="#best-practices">Best Practices for Subtitles</a></li>
+            <li><a href="#myths">Common Myths About Subtitles</a></li>
+            <li><a href="#faq">Frequently Asked Questions</a></li>
+          </ol>
+        </nav>
+
+        {/* Method Comparison */}
+        <section className={styles.section} id="method-comparison">
+          <h2>Method Comparison Overview</h2>
+          <div className={styles.comparisonTable}>
+            <table>
+              <thead>
+                <tr>
+                  <th>Method</th>
+                  <th>Time Required</th>
+                  <th>Cost</th>
+                  <th>Retention Boost</th>
+                  <th>Ease of Use</th>
+                  <th>Best For</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className={styles.recommendedRow}>
+                  <td><strong>AI Subtitles (Scenith)</strong></td>
+                  <td>30 seconds</td>
+                  <td>Free</td>
+                  <td>Up to 2x</td>
+                  <td>Very Easy</td>
+                  <td>All Creators</td>
+                </tr>
+                <tr>
+                  <td>Other Strategies</td>
+                  <td>1-5 hours</td>
+                  <td>Free-$50</td>
+                  <td>1.2-1.5x</td>
+                  <td>Medium</td>
+                  <td>Experienced Creators</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* Method 1: AI Subtitles with Scenith */}
+        <section className={styles.section} id="ai-subtitles">
+          <h2>Method 1: AI Subtitles with Scenith (Recommended)</h2>
+          <div className={styles.methodCard}>
+            <div className={styles.methodStats}>
+              <span className={styles.stat}>⏱️ Time: 30 seconds</span>
+              <span className={styles.stat}>💰 Cost: Free</span>
+              <span className={styles.stat}>🎯 Retention: Up to 2x</span>
             </div>
 
             <p>
-              Imagine adding professional subtitles to your YouTube videos in just 30 seconds. With{' '}
-              <strong>Scenith</strong>, you upload your video, click “Generate Subtitles,” and our AI
-              creates perfectly timed subtitles with 98% accuracy. No manual typing, no tedious timing
-              adjustments—just results.
+              Scenith’s AI subtitles generate professional captions in 30 seconds with 98% accuracy, doubling viewer retention by making videos accessible without sound.
             </p>
 
-            <div className={styles.stepByStep}>
-              <h4>4 Simple Steps:</h4>
-              <div className={styles.stepsVisual}>
-                <div className={styles.step}>
-                  <div className={styles.stepNumber}>1</div>
-                  <div>Upload Video</div>
-                </div>
-                <div className={styles.stepArrow}>→</div>
-                <div className={styles.step}>
-                  <div className={styles.stepNumber}>2</div>
-                  <div>Click “Generate”</div>
-                </div>
-                <div className={styles.stepArrow}>→</div>
-                <div className={styles.step}>
-                  <div className={styles.stepNumber}>3</div>
-                  <div>Choose Style</div>
-                </div>
-                <div className={styles.stepArrow}>→</div>
-                <div className={styles.step}>
-                  <div className={styles.stepNumber}>4</div>
-                  <div>Download</div>
-                </div>
-              </div>
-            </div>
+            <h3>How to Add Subtitles with Scenith:</h3>
+            <ol className={styles.stepList}>
+              <li>
+                <strong>Upload Video:</strong> Upload your video to Scenith’s dashboard (supports MP4, MOV, AVI).
+              </li>
+              <li>
+                <strong>Click “Generate”:</strong> Select “Generate Subtitles” and choose your language.
+              </li>
+              <li>
+                <strong>Choose Style:</strong> Pick from 50+ stylish designs to match your brand.
+              </li>
+              <li>
+                <strong>Download:</strong> Export your video with embedded subtitles or as an SRT file.
+              </li>
+            </ol>
 
-            <div className={styles.socialProof}>
-              <div className={styles.stat}>
-                <div className={styles.statNumber}>50,000+</div>
-                <div className={styles.statLabel}>Videos subtitled daily</div>
-              </div>
-              <div className={styles.stat}>
-                <div className={styles.statNumber}>2x</div>
-                <div className={styles.statLabel}>Average watch time</div>
-              </div>
-              <div className={styles.stat}>
-                <div className={styles.statNumber}>4.9/5</div>
-                <div className={styles.statLabel}>User rating</div>
-              </div>
-            </div>
+            <img
+              src="/images/scenith-subtitles.png"
+              alt="Scenith Subtitle Generation Interface"
+              className={styles.screenshot}
+            />
 
-            <div className={styles.prosCons}>
+            <div className={styles.prosConsGrid}>
               <div className={styles.pros}>
-                <h4>✅ Why Creators Love Scenith:</h4>
+                <h4>✅ Advantages:</h4>
                 <ul>
-                  <li>Subtitles in 30 seconds vs. hours of manual work</li>
+                  <li>Subtitles in 30 seconds vs. hours manually</li>
                   <li>98% accuracy, better than YouTube’s captions</li>
-                  <li>50+ stylish designs to match your brand</li>
-                  <li>Bulk edit subtitles with one click</li>
-                  <li>Increases watch time by up to 2x</li>
+                  <li>50+ stylish designs for branding</li>
+                  <li>Bulk editing with one click</li>
+                  <li>Up to 2x watch time increase</li>
                   <li>No editing skills needed</li>
                 </ul>
               </div>
               <div className={styles.cons}>
-                <h4>❌ The Only Catch:</h4>
+                <h4>❌ Disadvantages:</h4>
                 <ul>
-                  <li>Needs an internet connection</li>
+                  <li>Requires internet connection</li>
                 </ul>
               </div>
             </div>
 
-            <div className={styles.ctaPrimary}>
-              <Link href="https://scenith.in/dashboard">
-                <button className={styles.ctaButton}>Try Scenith for FREE! →</button>
+            <div className={styles.cta}>
+              <p><strong>Try Scenith for free:</strong> Add subtitles to your first video with no signup required.</p>
+              <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
+                Start Adding Subtitles Free →
               </Link>
-              <p className={styles.ctaSubtext}>Join 50,000+ creators boosting their YouTube watch time</p>
             </div>
           </div>
         </section>
 
-        <section className={styles.blogSection}>
-          <h2>Why Subtitles Are Your Secret Weapon</h2>
-          <p>
-            Subtitles do more than make your videos accessible—they keep viewers engaged. When someone
-            watches without sound (think public transport or late-night scrolling), subtitles let them
-            follow your story. This hooks them in the critical first 10 seconds, turning fleeting clicks
-            into long watch sessions. YouTube’s algorithm loves longer watch times, pushing your videos
-            to more viewers and accelerating your path to 4000 hours.
-          </p>
-        </section>
-
-        <section className={styles.blogSection}>
-          <h2>Other Ways to Boost Watch Time (But Subtitles Win)</h2>
-          <p>Here are other strategies creators use, and why they don’t beat subtitles:</p>
-
-          <div className={styles.oldMethods}>
-            <div className={styles.oldMethod}>
-              <div className={styles.methodSummary}>
-                <h4>🎥 More Videos</h4>
-                <div className={styles.timeCost}>Hours per video | High effort</div>
-              </div>
-              <p>Uploading more content sounds good, but each video takes hours to create, and without retention, it’s wasted effort.</p>
-              <div className={styles.realityCheck}>Reality: Quality over quantity wins on YouTube.</div>
+        {/* Method 2: Other Strategies */}
+        <section className={styles.section} id="other-methods">
+          <h2>Method 2: Other Strategies to Boost Watch Time</h2>
+          <div className={styles.methodCard}>
+            <div className={styles.methodStats}>
+              <span className={styles.stat}>⏱️ Time: 1-5 hours</span>
+              <span className={styles.stat}>💰 Cost: Free-$50</span>
+              <span className={styles.stat}>🎯 Retention: 1.2-1.5x</span>
             </div>
 
-            <div className={styles.oldMethod}>
-              <div className={styles.methodSummary}>
-                <h4>🖼️ Fancy Thumbnails</h4>
-                <div className={styles.timeCost}>1-2 hours | Moderate effort</div>
-              </div>
-              <p>Eye-catching thumbnails get clicks, but without subtitles, viewers leave quickly, hurting watch time.</p>
-              <div className={styles.realityCheck}>Reality: Clicks don’t matter if viewers don’t stay.</div>
-            </div>
+            <p>
+              While subtitles are the most effective, other strategies like thumbnails, titles, and playlists can help but require more effort and yield smaller retention boosts.
+            </p>
 
-            <div className={styles.oldMethod}>
-              <div className={styles.methodSummary}>
-                <h4>📝 Catchy Titles</h4>
-                <div className={styles.timeCost}>30 mins | Low effort</div>
+            <h3>Common Strategies:</h3>
+            <ul>
+              <li><strong>More Videos:</strong> Creating more content (hours per video, high effort).</li>
+              <li><strong>Fancy Thumbnails:</strong> Eye-catching designs (1-2 hours, moderate effort).</li>
+              <li><strong>Catchy Titles:</strong> Clickable titles (30 mins, low effort).</li>
+            </ul>
+
+            <h3>General Workflow:</h3>
+            <ol className={styles.stepList}>
+              <li>Create high-quality content or thumbnails.</li>
+              <li>Optimize titles for clicks.</li>
+              <li>Organize videos into playlists to encourage longer sessions.</li>
+              <li>Engage viewers early with questions or hooks.</li>
+            </ol>
+
+            <div className={styles.prosConsGrid}>
+              <div className={styles.pros}>
+                <h4>✅ Advantages:</h4>
+                <ul>
+                  <li>Increases clicks and engagement</li>
+                  <li>Some strategies are free</li>
+                  <li>Playlists keep viewers watching</li>
+                </ul>
               </div>
-              <p>Great titles attract viewers, but they won’t stick around if they can’t follow without sound.</p>
-              <div className={styles.realityCheck}>Reality: Titles alone can’t boost retention.</div>
+              <div className={styles.cons}>
+                <h4>❌ Disadvantages:</h4>
+                <ul>
+                  <li>Time-consuming (hours per video)</li>
+                  <li>Lower retention boost than subtitles</li>
+                  <li>Clicks don’t guarantee watch time</li>
+                </ul>
+              </div>
             </div>
           </div>
         </section>
 
-        <section className={styles.blogSection}>
+        {/* Best Practices */}
+        <section className={styles.section} id="best-practices">
+          <h2>Best Practices for Video Subtitles</h2>
+          <div className={styles.bestPractices}>
+            <div className={styles.practiceCard}>
+              <h3>🎯 Capture Attention Early</h3>
+              <p>Use bold, animated subtitles in the first 10 seconds to hook viewers instantly.</p>
+            </div>
+            <div className={styles.practiceCard}>
+              <h3>📱 Optimize for Mobile</h3>
+              <p>Ensure subtitles are legible on small screens, where 80% of viewers watch.</p>
+            </div>
+            <div className={styles.practiceCard}>
+              <h3>🔥 Highlight Key Moments</h3>
+              <p>Use color or animations to emphasize important words, boosting engagement.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* Common Myths */}
+        <section className={styles.section} id="myths">
           <h2>Common Myths About YouTube Subtitles</h2>
-          <div className={styles.concernsGrid}>
-            <div className={styles.concernCard}>
-              <h4>🤔 “Subtitles take too long to add”</h4>
-              <p><strong>Myth Busted:</strong> With Scenith, subtitles take 30 seconds, not hours. AI handles everything automatically.</p>
+          <div className={styles.bestPractices}>
+            <div className={styles.practiceCard}>
+              <h3>🤔 Subtitles Take Too Long</h3>
+              <p><strong>Myth Busted:</strong> Scenith generates subtitles in 30 seconds, not hours.</p>
             </div>
-            <div className={styles.concernCard}>
-              <h4>🎨 “Subtitles look boring”</h4>
-              <p><strong>Myth Busted:</strong> Choose from 50+ stylish designs, with custom fonts, colors, and animations to match your brand.</p>
+            <div className={styles.practiceCard}>
+              <h3>🎨 Subtitles Look Boring</h3>
+              <p><strong>Myth Busted:</strong> Choose from 50+ stylish designs with custom fonts and colors.</p>
             </div>
-            <div className={styles.concernCard}>
-              <h4>🌍 “They only work in English”</h4>
-              <p><strong>Myth Busted:</strong> Scenith supports multiple languages, generated in seconds, reaching global audiences.</p>
-            </div>
-          </div>
-        </section>
-
-        <section className={styles.blogSection}>
-          <h2>Pro Tips to Maximize Watch Time with Subtitles</h2>
-          <div className={styles.tips}>
-            <div className={styles.tip}>
-              <div className={styles.tipIcon}>🎯</div>
-              <div>
-                <h4>Capture Attention Early</h4>
-                <p>Use bold, animated subtitles in the first 10 seconds to hook viewers instantly.</p>
-              </div>
-            </div>
-            <div className={styles.tip}>
-              <div className={styles.tipIcon}>📱</div>
-              <div>
-                <h4>Optimize for Mobile</h4>
-                <p>Ensure subtitles are legible on small screens, where 80% of viewers watch.</p>
-              </div>
-            </div>
-            <div className={styles.tip}>
-              <div className={styles.tipIcon}>🔥</div>
-              <div>
-                <h4>Highlight Key Moments</h4>
-                <p>Use color or animations to emphasize important words, boosting engagement.</p>
-              </div>
+            <div className={styles.practiceCard}>
+              <h3>🌍 Only Work in English</h3>
+              <p><strong>Myth Busted:</strong> Scenith supports multiple languages for global audiences.</p>
             </div>
           </div>
         </section>
 
-        <section className={styles.finalCtaSection}>
-          <h2>Ready to Hit 4000 Hours Faster?</h2>
-          <p>Stop losing viewers to missing subtitles. Start with Scenith today and watch your retention soar.</p>
-
-          <div className={styles.ctaBenefits}>
-            <div className={styles.benefit}>✨ Subtitles in 30 seconds</div>
-            <div className={styles.benefit}>🎨 50+ stylish designs</div>
-            <div className={styles.benefit}>📈 Up to 2x watch time</div>
+        {/* FAQ */}
+        <section className={styles.section} id="faq">
+          <h2>Frequently Asked Questions</h2>
+          <div className={styles.faqSection}>
+            <div className={styles.faqItem}>
+              <h3>Do subtitles really increase watch time?</h3>
+              <p>Yes, creators report up to 2x longer watch times with subtitles.</p>
+            </div>
+            <div className={styles.faqItem}>
+              <h3>Is Scenith free to use?</h3>
+              <p>Yes, the subtitle feature is completely free, no premium plan needed.</p>
+            </div>
+            <div className={styles.faqItem}>
+              <h3>Why are subtitles so effective?</h3>
+              <p>Over 80% of videos are watched without sound initially. Subtitles keep viewers engaged, boosting retention.</p>
+            </div>
+            <div className={styles.faqItem}>
+              <h3>Can I customize subtitle styles?</h3>
+              <p>Yes, Scenith offers 50+ designs with custom fonts, colors, and animations.</p>
+            </div>
           </div>
-
-          <Link href="https://scenith.in/dashboard">
-            <button className={styles.ctaButton}>Try Scenith for FREE! →</button>
-          </Link>
-          <p className={styles.ctaSubtext}>No subscription needed—start boosting your watch time now!</p>
-          <p className={styles.ctaSubtext}>Created a video with Scenith? Tag us on socials for a chance to be reshared!</p>
         </section>
 
-        <section className={styles.blogSection}>
-          <div className={styles.faq}>
-            <h3>Quick Answers:</h3>
-            <div className={styles.faqRow}>
-              <strong>Do subtitles really increase watch time?</strong>
-              <span>Yes, creators report up to 2x longer watch times with subtitles.</span>
-            </div>
-            <div className={styles.faqRow}>
-              <strong>Is Scenith free to use?</strong>
-              <span>Yes, the subtitle feature is completely free, no premium plan needed.</span>
-            </div>
+        {/* Conclusion */}
+        <section className={styles.section}>
+          <h2>Conclusion</h2>
+          <p>
+            Reaching 4000 hours of YouTube watch time is easier with AI-powered subtitles. Scenith’s 30-second subtitle tool boosts retention by up to 2x, helping you hit monetization goals faster.
+          </p>
+          <p>
+            While thumbnails, titles, and playlists help, subtitles are the most effective way to keep viewers watching. Start with Scenith today and join 50,000+ creators growing their channels.
+          </p>
+          <div className={styles.finalCta}>
+            <h3>Ready to Hit 4000 Hours Faster?</h3>
+            <p>Add subtitles with Scenith’s free tool – no signup required.</p>
+            <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
+              Start Adding Subtitles Free →
+            </Link>
           </div>
         </section>
       </article>

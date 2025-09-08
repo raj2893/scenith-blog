@@ -6,14 +6,14 @@ import Link from 'next/link';
 import styles from '../../../../styles/HowToRemoveBackgroundFromImage.module.css';
 
 export default function HowToRemoveBackgroundFromImage() {
-  const [showQuickStart, setShowQuickStart] = useState<boolean>(false);
+  const [showAllMethods, setShowAllMethods] = useState<boolean>(false);
 
   const scrollToSection = (sectionId: string) => {
     const section = document.getElementById(sectionId);
     if (section) {
       const navHeight = document.querySelector('.nav-bar')?.getBoundingClientRect().height || 60;
       window.scrollTo({
-        top: section.offsetTop - navHeight - 20,
+        top: section.offsetTop - navHeight - 60,
         behavior: 'smooth',
       });
     }
@@ -29,25 +29,46 @@ export default function HowToRemoveBackgroundFromImage() {
           name="description"
           content="Learn how to remove backgrounds from images in seconds using AI tools like Scenith. Compare 4 methods, discover why AI is the best, and create professional visuals effortlessly."
         />
-        <meta name="keywords" content="remove image background, AI background removal, image editing, Scenith, professional visuals" />
+        <meta
+          name="keywords"
+          content="remove image background, AI background removal, image editing, Scenith, professional visuals"
+        />
         <meta name="author" content="Scenith" />
         <meta name="robots" content="index, follow" />
-        <meta property="og:title" content="Remove Background from Any Image in Seconds with AI (2025)" />
+        <meta
+          property="og:title"
+          content="Remove Background from Any Image in Seconds with AI (2025)"
+        />
         <meta
           property="og:description"
           content="Discover the fastest way to remove backgrounds from images with AI. Save hours and create stunning visuals. Try Scenith for free!"
         />
         <meta property="og:type" content="article" />
-        <meta property="og:url" content="https://scenith.in/blogs/how-to-remove-background-from-image" />
+        <meta
+          property="og:url"
+          content="https://scenith.in/blogs/how-to-remove-background-from-image"
+        />
         <meta property="og:image" content="/images/background-removal-og.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Remove Background from Any Image in Seconds with AI (2025)" />
+        <meta
+          name="twitter:title"
+          content="Remove Background from Any Image in Seconds with AI (2025)"
+        />
         <meta
           name="twitter:description"
           content="Discover the fastest way to remove backgrounds from images with AI. Save hours and create stunning visuals. Try Scenith for free!"
         />
         <meta name="twitter:image" content="/images/background-removal-og.jpg" />
-        <link rel="canonical" href="https://scenith.in/blogs/how-to-remove-background-from-image" />
+        <link
+          rel="canonical"
+          href="https://scenith.in/blogs/how-to-remove-background-from-image"
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@400;700&display=swap"
+          rel="stylesheet"
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -60,6 +81,7 @@ export default function HowToRemoveBackgroundFromImage() {
               author: {
                 '@type': 'Organization',
                 name: 'Scenith',
+                url: 'https://scenith.in',
               },
               publisher: {
                 '@type': 'Organization',
@@ -69,137 +91,143 @@ export default function HowToRemoveBackgroundFromImage() {
                   url: '/images/logo.png',
                 },
               },
-              datePublished: '2025-09-03',
+              datePublished: '2025-09-03T10:00:00Z',
+              dateModified: '2025-09-03T10:00:00Z',
               mainEntityOfPage: {
                 '@type': 'WebPage',
                 '@id': 'https://scenith.in/blogs/how-to-remove-background-from-image',
               },
+              image: '/images/background-removal-og.jpg',
+              wordCount: 1200,
+              articleSection: 'Image Editing',
+              inLanguage: 'en-US',
             }),
           }}
         />
       </Head>
+
       <article className={styles.blogContainer}>
-        <header className={styles.blogHeader}>
-          <h1 className={styles.blogTitle}>
+        {/* Header */}
+        <header className={styles.header}>
+          <h1 className={styles.title}>
             Remove Background from Any Image in Seconds with AI (2025)
           </h1>
-          <div className={styles.blogMeta}>
-            <span className={styles.date}>Published: September 03, 2025</span>
-            <span className={styles.readTime}>• 4 min read</span>
+          <div className={styles.meta}>
+            <time dateTime="2025-09-03">September 03, 2025</time>
+            <span className={styles.separator}>•</span>
+            <span>4 min read</span>
+            <span className={styles.separator}>•</span>
+            <span>Image Editing</span>
           </div>
         </header>
 
-        <section className={styles.blogSection}>
-          <div className={styles.attentionGrabber}>
-            <p className={styles.introText}>
-              <strong>Reality check:</strong> You're wasting hours manually editing image backgrounds when AI can do it in 10 seconds with 99% accuracy.
+        {/* Introduction */}
+        <section className={styles.section}>
+          <div className={styles.highlight}>
+            <p>
+              <strong>Quick Answer:</strong> Remove image backgrounds in 10 seconds with Scenith’s AI tool by uploading an image, clicking "Remove Background," and downloading the result, achieving 99% accuracy.
             </p>
           </div>
 
-          <div className={styles.quickDecision}>
-            <div className={`${styles.decisionBox} ${styles.recommended}`}>
-              <div className={styles.decisionHeader}>
-                <span className={styles.badge}>⚡ RECOMMENDED</span>
-                <h3>Want the 10-second solution?</h3>
-              </div>
-              <p>Skip to <strong>AI Method</strong> below - it's what 90% of creators use now.</p>
-              <button
-                className={styles.quickCta}
-                onClick={() => scrollToSection('ai-method')}
-              >
-                Show Me the AI Method →
-              </button>
-            </div>
-            <div className={styles.decisionBox}>
-              <h3>Want to see all options?</h3>
-              <p>I'll show you 4 methods (including the slow ones) so you understand why AI wins.</p>
-              <button className={styles.secondaryCta} onClick={() => setShowQuickStart(!showQuickStart)}>
-                Compare All Methods
-              </button>
-            </div>
-          </div>
-
-          {showQuickStart && (
-            <div className={styles.methodOverview}>
-              <h3>All 4 Methods at a Glance:</h3>
-              <div className={styles.methodGrid}>
-                <div className={styles.methodPreview}>
-                  <div className={styles.methodIcon}>🐌</div>
-                  <div>Manual<br /><span>2-4 hours</span></div>
-                </div>
-                <div className={styles.methodPreview}>
-                  <div className={styles.methodIcon}>💻</div>
-                  <div>Photoshop<br /><span>1-2 hours</span></div>
-                </div>
-                <div className={`${styles.methodPreview} ${styles.winner}`}>
-                  <div className={styles.methodIcon}>🤖</div>
-                  <div>AI (Scenith)<br /><span>10 seconds</span></div>
-                  <div className={styles.winnerBadge}>WINNER</div>
-                </div>
-                <div className={styles.methodPreview}>
-                  <div className={styles.methodIcon}>👨‍💻</div>
-                  <div>Freelancer<br /><span>1-2 days</span></div>
-                </div>
-              </div>
-            </div>
-          )}
+          <p>
+            Clean, background-free images can boost engagement by 35% on social media and e-commerce platforms. With <strong>over 30,000 images processed daily</strong>, Scenith’s AI background removal tool makes creating professional visuals effortless.
+          </p>
 
           <p>
-            <strong>Why this matters right now:</strong> Clean, background-free images increase engagement by 35% on social media and e-commerce platforms, making your visuals stand out instantly.
+            This guide compares four methods to remove image backgrounds and provides step-by-step instructions to use Scenith’s AI tool for stunning results in seconds.
           </p>
         </section>
 
-        <section className={styles.blogSection} id="ai-method">
-          <h2>🚀 The Game-Changer: AI Background Removal (What 90% Use Now)</h2>
-          <div className={`${styles.methodCard} ${styles.featured}`}>
-            <div className={styles.methodHeader}>
-              <span className={`${styles.difficulty} ${styles.easy}`}>Difficulty: Super Easy</span>
-              <span className={styles.time}>Time: 10 seconds</span>
-              <span className={styles.accuracy}>Accuracy: 99%</span>
+        {/* Table of Contents */}
+        <nav className={styles.tableOfContents}>
+          <h2>Table of Contents</h2>
+          <ol>
+            <li><a href="#method-comparison">Method Comparison Overview</a></li>
+            <li><a href="#scenith-method">Method 1: AI Background Removal with Scenith (Recommended)</a></li>
+            <li><a href="#other-methods">Method 2: Traditional Background Removal Methods</a></li>
+            <li><a href="#best-practices">Best Practices for Background Removal</a></li>
+            <li><a href="#faq">Frequently Asked Questions</a></li>
+          </ol>
+        </nav>
+
+        {/* Method Comparison */}
+        <section className={styles.section} id="method-comparison">
+          <h2>Method Comparison Overview</h2>
+          <div className={styles.comparisonTable}>
+            <table>
+              <thead>
+                <tr>
+                  <th>Method</th>
+                  <th>Time Required</th>
+                  <th>Cost</th>
+                  <th>Ease of Use</th>
+                  <th>Accuracy</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className={styles.recommendedRow}>
+                  <td><strong>Scenith AI</strong></td>
+                  <td>10 seconds</td>
+                  <td>Free</td>
+                  <td>Very Easy</td>
+                  <td>99%</td>
+                </tr>
+                <tr>
+                  <td>Manual Removal</td>
+                  <td>2-4 hours</td>
+                  <td>Free</td>
+                  <td>Hard</td>
+                  <td>Variable</td>
+                </tr>
+                <tr>
+                  <td>Photoshop</td>
+                  <td>1-2 hours</td>
+                  <td>$20/mo</td>
+                  <td>Medium</td>
+                  <td>High</td>
+                </tr>
+                <tr>
+                  <td>Hiring Freelancers</td>
+                  <td>1-2 days</td>
+                  <td>$30-$150</td>
+                  <td>Medium</td>
+                  <td>High</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* Method 1: Scenith */}
+        <section className={styles.section} id="scenith-method">
+          <h2>Method 1: AI Background Removal with Scenith (Recommended)</h2>
+          <div className={styles.methodCard}>
+            <div className={styles.methodStats}>
+              <span className={styles.stat}>⏱️ Time: 10 seconds</span>
+              <span className={styles.stat}>💰 Cost: Free</span>
+              <span className={styles.stat}>🎯 Ease: Beginner-Friendly</span>
             </div>
 
             <p>
-              Here's the truth: Modern AI tools like <strong>Scenith</strong> have revolutionized background removal. Upload your image, click one button, download the result. Done.
+              Scenith’s AI background removal tool delivers 99% accurate results in seconds, handling complex edges like hair or fur with ease. With a 4.8/5 user rating, it’s ideal for e-commerce, social media, or presentations.
             </p>
 
-            <div className={styles.stepByStep}>
-              <h4>Literally 3 clicks:</h4>
-              <div className={styles.stepsVisual}>
-                <div className={styles.step}>
-                  <div className={styles.stepNumber}>1</div>
-                  <div>Upload image</div>
-                </div>
-                <div className={styles.stepArrow}>→</div>
-                <div className={styles.step}>
-                  <div className={styles.stepNumber}>2</div>
-                  <div>Click "Remove Background"</div>
-                </div>
-                <div className={styles.stepArrow}>→</div>
-                <div className={styles.step}>
-                  <div className={styles.stepNumber}>3</div>
-                  <div>Download</div>
-                </div>
-              </div>
-            </div>
+            <h3>How to Remove Backgrounds in Scenith:</h3>
+            <ol className={styles.stepList}>
+              <li>
+                <strong>Upload Image:</strong> Upload your image (PNG, JPEG, JPG) to Scenith’s editor.
+              </li>
+              <li>
+                <strong>Click "Remove Background":</strong> Select the AI background removal tool with one click.
+              </li>
+              <li>
+                <strong>Download Result:</strong> Download the background-free image as a transparent PNG or other format.
+              </li>
+            </ol>
 
-            <div className={styles.socialProof}>
-              <div className={styles.stat}>
-                <div className={styles.statNumber}>30,000+</div>
-                <div className={styles.statLabel}>Images processed daily</div>
-              </div>
-              <div className={styles.stat}>
-                <div className={styles.statNumber}>99%</div>
-                <div className={styles.statLabel}>Accuracy rate</div>
-              </div>
-              <div className={styles.stat}>
-                <div className={styles.statNumber}>4.8/5</div>
-                <div className={styles.statLabel}>User rating</div>
-              </div>
-            </div>
-
-            <div className={styles.prosCons}>
+            <div className={styles.prosConsGrid}>
               <div className={styles.pros}>
-                <h4>✅ Why Everyone's Switching:</h4>
+                <h4>✅ Advantages:</h4>
                 <ul>
                   <li>10-second processing vs. hours of manual work</li>
                   <li>Handles complex edges like hair or fur perfectly</li>
@@ -210,7 +238,7 @@ export default function HowToRemoveBackgroundFromImage() {
                 </ul>
               </div>
               <div className={styles.cons}>
-                <h4>❌ The Only Downsides:</h4>
+                <h4>❌ Disadvantages:</h4>
                 <ul>
                   <li>Requires internet connection</li>
                   <li>Very large images may take slightly longer</li>
@@ -218,121 +246,128 @@ export default function HowToRemoveBackgroundFromImage() {
               </div>
             </div>
 
-            <div className={styles.ctaPrimary}>
-              <Link href="https://scenith.in/dashboard">
-                <button className={styles.ctaButton}>Try it for FREE on SCENITH! →</button>
+            <div className={styles.cta}>
+              <p><strong>Try Scenith for free:</strong> Remove backgrounds from images in seconds with no signup required.</p>
+              <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
+                Start Removing Free →
               </Link>
-              <p className={styles.ctaSubtext}>Join 30,000+ creators who create stunning visuals in seconds</p>
             </div>
           </div>
         </section>
 
-        <section className={styles.blogSection}>
-          <h2>Why the Old Methods Still Exist (But You Shouldn't Use Them)</h2>
-          <p>Here's a look at the other methods so you know what you're NOT missing:</p>
-
-          <div className={styles.oldMethods}>
-            <div className={styles.oldMethod}>
-              <div className={styles.methodSummary}>
-                <h4>🐌 Manual Background Removal</h4>
-                <div className={styles.timeCost}>2-4 hours | Free | Frustrating</div>
-              </div>
-              <p>Manually tracing edges with tools like the lasso in free software. Tedious and imprecise.</p>
-              <div className={styles.realityCheck}>Reality: Your time is worth more than free</div>
+        {/* Method 2: Other Methods */}
+        <section className={styles.section} id="other-methods">
+          <h2>Method 2: Traditional Background Removal Methods</h2>
+          <div className={styles.methodCard}>
+            <div className={styles.methodStats}>
+              <span className={styles.stat}>⏱️ Time: 1 hour–2 days</span>
+              <span className={styles.stat}>💰 Cost: Free-$150</span>
+              <span className={styles.stat}>🎯 Ease: Medium to Hard</span>
             </div>
 
-            <div className={styles.oldMethod}>
-              <div className={styles.methodSummary}>
-                <h4>💻 Photoshop</h4>
-                <div className={styles.timeCost}>1-2 hours | $20/month | Steep learning curve</div>
-              </div>
-              <p>Use Photoshop's tools like Quick Selection or Magic Wand, tweak layers, and refine edges manually.</p>
-              <div className={styles.realityCheck}>Reality: Why spend hours learning when AI does it instantly?</div>
-            </div>
+            <p>
+              Traditional methods like manual editing, Photoshop, or hiring freelancers are time-consuming and often require technical skills or high costs compared to Scenith’s AI solution.
+            </p>
 
-            <div className={styles.oldMethod}>
-              <div className={styles.methodSummary}>
-                <h4>👨‍💻 Hiring Freelancers</h4>
-                <div className={styles.timeCost}>1-2 days | $30-150 | Coordination hassle</div>
-              </div>
-              <p>Hire someone on Fiverr, wait for delivery, request revisions for imperfect results.</p>
-              <div className={styles.realityCheck}>Reality: More expensive and slower than AI</div>
-            </div>
-          </div>
-        </section>
+            <h3>Traditional Options:</h3>
+            <ul>
+              <li><strong>Manual Removal:</strong> Trace edges manually using free software like GIMP (2-4 hours, Free, tedious).</li>
+              <li><strong>Photoshop:</strong> Use Quick Selection or Magic Wand tools, tweak layers, and refine edges (1-2 hours, $20/month).</li>
+              <li><strong>Hiring Freelancers:</strong> Outsource to platforms like Fiverr, wait for delivery, and request revisions (1-2 days, $30-$150).</li>
+            </ul>
 
-        <section className={styles.blogSection}>
-          <h2>Common Concerns About AI Background Removal (Addressed)</h2>
-          <div className={styles.concernsGrid}>
-            <div className={styles.concernCard}>
-              <h4>🤔 "Is AI accurate for complex images?"</h4>
-              <p><strong>Answer:</strong> 99% accuracy, even with tricky edges like hair or transparent objects. Outperforms manual methods.</p>
-            </div>
-            <div className={styles.concernCard}>
-              <h4>🎨 "Can I edit the result?"</h4>
-              <p><strong>Yes:</strong> Download as PNG with transparency for easy editing in any design tool.</p>
-            </div>
-            <div className={styles.concernCard}>
-              <h4>🌍 "What file types are supported?"</h4>
-              <p><strong>Supported:</strong> PNG, JPEG, JPG - all major image formats work seamlessly.</p>
-            </div>
-          </div>
-        </section>
+            <h3>General Workflow:</h3>
+            <ol className={styles.stepList}>
+              <li>Upload or import the image to the editing tool</li>
+              <li>Select and remove the background manually or with tools</li>
+              <li>Refine edges and export as a transparent image</li>
+            </ol>
 
-        <section className={styles.blogSection}>
-          <h2>Pro Tips for Stunning Background-Free Images</h2>
-          <div className={styles.tips}>
-            <div className={styles.tip}>
-              <div className={styles.tipIcon}>🎯</div>
-              <div>
-                <h4>Choose high-contrast images</h4>
-                <p>Images with clear subject-background contrast yield the best AI results.</p>
+            <div className={styles.prosConsGrid}>
+              <div className={styles.pros}>
+                <h4>✅ Advantages:</h4>
+                <ul>
+                  <li>Manual methods are free (if you have time)</li>
+                  <li>Photoshop offers precise control</li>
+                  <li>Freelancers can deliver high-quality results</li>
+                  <li>Works offline (except freelancing)</li>
+                </ul>
               </div>
-            </div>
-            <div className={styles.tip}>
-              <div className={styles.tipIcon}>📱</div>
-              <div>
-                <h4>Optimize for platform</h4>
-                <p>Test your image on the target platform (e.g., Instagram, Amazon) to ensure it pops.</p>
-              </div>
-            </div>
-            <div className={styles.tip}>
-              <div className={styles.tipIcon}>🔥</div>
-              <div>
-                <h4>Add a new background</h4>
-                <p>Place your subject on a solid color or gradient for a professional look.</p>
+              <div className={styles.cons}>
+                <h4>❌ Disadvantages:</h4>
+                <ul>
+                  <li>Time-consuming (hours to days)</li>
+                  <li>Requires design skills or expensive software</li>
+                  <li>Freelancing involves coordination and costs</li>
+                  <li>Not beginner-friendly</li>
+                </ul>
               </div>
             </div>
           </div>
         </section>
 
-        <section className={styles.finalCtaSection}>
-          <h2>Ready to Create Stunning Visuals in Seconds?</h2>
-          <p>Every minute you spend manually editing is time you could be creating more content.</p>
-
-          <div className={styles.ctaBenefits}>
-            <div className={styles.benefit}>✨ Remove backgrounds in 10 seconds</div>
-            <div className={styles.benefit}>🎨 Perfect for any platform</div>
-            <div className={styles.benefit}>📈 Boost engagement by 35%</div>
+        {/* Best Practices */}
+        <section className={styles.section} id="best-practices">
+          <h2>Best Practices for Background Removal</h2>
+          <div className={styles.bestPractices}>
+            <div className={styles.practiceCard}>
+              <h3>🎯 Choose High-Contrast Images</h3>
+              <p>Images with clear subject-background contrast yield the best AI results.</p>
+            </div>
+            <div className={styles.practiceCard}>
+              <h3>📱 Optimize for Platform</h3>
+              <p>Test your image on the target platform (e.g., Instagram, Amazon) to ensure it pops.</p>
+            </div>
+            <div className={styles.practiceCard}>
+              <h3>🔥 Add a New Background</h3>
+              <p>Place your subject on a solid color or gradient for a professional look.</p>
+            </div>
+            <div className={styles.practiceCard}>
+              <h3>✅ Check Edge Details</h3>
+              <p>Review AI results for complex edges like hair to ensure precision.</p>
+            </div>
           </div>
-
-          <Link href="https://scenith.in/dashboard">
-            <button className={styles.ctaButton}>Try it for FREE on SCENITH! →</button>
-          </Link>
-          <p className={styles.ctaSubtext}>No subscription needed - start now!</p>
         </section>
 
-        <section className={styles.blogSection}>
-          <div className={styles.faq}>
-            <h3>Quick Answers:</h3>
-            <div className={styles.faqRow}>
-              <strong>What image formats work?</strong>
-              <span>PNG, JPEG, JPG - all major formats</span>
+        {/* FAQ */}
+        <section className={styles.section} id="faq">
+          <h2>Frequently Asked Questions</h2>
+          <div className={styles.faqSection}>
+            <div className={styles.faqItem}>
+              <h3>Is AI accurate for complex images?</h3>
+              <p>Yes, Scenith’s AI achieves 99% accuracy, even with tricky edges like hair or transparent objects.</p>
             </div>
-            <div className={styles.faqRow}>
-              <strong>Do I need a premium plan?</strong>
-              <span>Everything is free, no subscription required.</span>
+            <div className={styles.faqItem}>
+              <h3>Can I edit the result?</h3>
+              <p>Yes, download as PNG with transparency for easy editing in any design tool.</p>
             </div>
+            <div className={styles.faqItem}>
+              <h3>What file types are supported?</h3>
+              <p>PNG, JPEG, JPG – all major image formats work seamlessly.</p>
+            </div>
+            <div className={styles.faqItem}>
+              <h3>Do I need a premium plan?</h3>
+              <p>Everything is free, no subscription required.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* Conclusion */}
+        <section className={styles.section}>
+          <h2>Conclusion</h2>
+          <p>
+            Removing backgrounds with Scenith’s AI tool is fast, intuitive, and delivers professional results in seconds. With 99% accuracy and support for all major image formats, it’s the best choice for creators aiming to boost engagement by 35%.
+          </p>
+          <p>
+            Traditional methods like manual editing or Photoshop are slow and require skills. Start using Scenith’s AI tool today and join over 30,000 creators making stunning visuals effortlessly.
+          </p>
+          <div className={styles.finalCta}>
+            <h3>Ready to Create Stunning Visuals in Seconds?</h3>
+            <p>Remove backgrounds with Scenith’s free plan – no signup required.</p>
+            <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
+              Start Removing Free →
+            </Link>
+            <p>Join 30,000+ creators who create stunning visuals in seconds!</p>
           </div>
         </section>
       </article>
