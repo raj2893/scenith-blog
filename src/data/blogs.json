@@ -125,13 +125,13 @@
     "excerpt": "Learn how to create cinematic videos using Scenith’s seamless transition effects for YouTube, Instagram, and TikTok.",
     "category": "Video Editing",
     "readTime": "4 min",
-    "publishDate": "2025-09-10",
+    "publishDate": "2025-09-09",
     "author": "Scenith Team",
     "image": "🎞️",
     "gradient": "linear-gradient(135deg, #34d399 0%, #10b981 100%)",
     "tags": ["Transitions", "Cinematic", "Social Media"],
     "featured": false,
-    "slug": "effortless-transitions-cinematic-videos",
+    "slug": "effortless-transitions",
     "difficulty": "Beginner"
   },
   {
@@ -140,13 +140,13 @@
     "excerpt": "Discover how Scenith’s text animation tools can increase engagement on your YouTube, Instagram, and TikTok videos.",
     "category": "Video Editing",
     "readTime": "4 min",
-    "publishDate": "2025-09-12",
+    "publishDate": "2025-09-09",
     "author": "Scenith Team",
     "image": "✍️",
     "gradient": "linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)",
     "tags": ["Text Animations", "Engagement", "Social Media"],
     "featured": false,
-    "slug": "boost-engagement-text-animations",
+    "slug": "boost-engagement-with-text-animations-using-scenith",
     "difficulty": "Beginner"
   }
 ]
