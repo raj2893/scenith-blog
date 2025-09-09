@@ -168,7 +168,7 @@ export default function ThreeVideoEditingHacks() {
                 <tr className={styles.recommendedRow}>
                   <td><strong>Scenith AI</strong></td>
                   <td>Seconds</td>
-                  <td>Free-$19/mo</td>
+                  <td>Free</td>
                   <td>Very Easy</td>
                   <td>40% Engagement Boost</td>
                 </tr>
@@ -190,7 +190,7 @@ export default function ThreeVideoEditingHacks() {
           <div className={styles.methodCard}>
             <div className={styles.methodStats}>
               <span className={styles.stat}>⏱️ Time: Seconds</span>
-              <span className={styles.stat}>💰 Cost: Free-$19/month</span>
+              <span className={styles.stat}>💰 Cost: Free</span>
               <span className={styles.stat}>🎯 Ease: Beginner-Friendly</span>
             </div>
 

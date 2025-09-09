@@ -168,7 +168,7 @@ export default function HowToCreateVideoEditingProject() {
                 <tr className={styles.recommendedRow}>
                   <td><strong>Scenith</strong></td>
                   <td>2 minutes</td>
-                  <td>Free-$19/mo</td>
+                  <td>Free</td>
                   <td>Very Easy</td>
                   <td>Beginners & Pros</td>
                 </tr>
@@ -190,7 +190,7 @@ export default function HowToCreateVideoEditingProject() {
           <div className={styles.methodCard}>
             <div className={styles.methodStats}>
               <span className={styles.stat}>⏱️ Time: 2 minutes</span>
-              <span className={styles.stat}>💰 Cost: Free-$19/month</span>
+              <span className={styles.stat}>💰 Cost: Free</span>
               <span className={styles.stat}>🎯 Ease: Beginner-Friendly</span>
             </div>
 
