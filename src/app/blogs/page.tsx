@@ -52,7 +52,7 @@ export default function BlogIndex() {
   }, [searchTerm, selectedCategory, sortBy]);
 
   const filteredAndSortedPosts = () => {
-    let filtered = blogPosts.filter((post) => {
+    const filtered = blogPosts.filter((post) => {
       const matchesSearch =
         post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
