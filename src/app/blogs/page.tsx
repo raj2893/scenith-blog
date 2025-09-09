@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import styles from '../../../styles/BlogIndex.module.css';
+import blogsData from '@/data/blogs.json';
 
 interface BlogPost {
   id: number;
@@ -18,35 +19,18 @@ interface BlogPost {
   tags: string[];
   featured: boolean;
   slug: string;
-  difficulty?: 'Beginner' | 'Intermediate' | 'Advanced';
+  difficulty?: string;
 }
 
 export default function BlogIndex() {
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>(blogsData);
+
+  // No fetching needed
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [sortBy, setSortBy] = useState<string>('latest'); // Removed 'popular' option
+  const [sortBy, setSortBy] = useState<string>('latest');
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
   const postsPerPage = 10;
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
-        const response = await fetch(`${baseUrl}/api/blogs`);
-        if (!response.ok) throw new Error('Failed to fetch');
-        const data: BlogPost[] = await response.json();
-        setBlogPosts(data);
-      } catch (error) {
-        console.error('Error fetching blog posts:', error);
-        // Optional: Set fallback empty array or error state
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchPosts();
-  }, []);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -92,16 +76,6 @@ export default function BlogIndex() {
       year: 'numeric' 
     });
   };
-
-  if (loading) {
-    return (
-      <div className={styles.blogContainer}>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
-          <span>Loading posts...</span> {/* Replace with a spinner component */}
-        </div>
-      </div>
-    );
-  }
 
   return (
     <>
