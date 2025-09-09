@@ -44,6 +44,8 @@ const Footer = () => {
     { label: 'AI Background Remover in Scenith', path: '/blogs/ai-background-remover' },
     { label: 'Generate 45+ AI Voices for FREE!', path: '/blogs/how-to-generate-ai-voices' },
     { label: '3 Video Editing Hacks You Can’t Miss', path: '/blogs/3-video-editing-hacks' },
+    { label: 'Boost Engagement with Text Animations Using Scenith', path: '/blogs/boost-engagement-with-text-animations-using-scenith' },
+    { label: 'Effortless Transitions: Create Cinematic Videos with Scenith', path: '/blogs/effortless-transitions' },
     { label: 'Tutorials', path: '/', sectionId: 'tutorials-section' },
   ];
 
