@@ -33,7 +33,8 @@ export default function BlogIndex() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch('/api/blogs');
+        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+        const response = await fetch(`${baseUrl}/api/blogs`);
         if (!response.ok) throw new Error('Failed to fetch');
         const data: BlogPost[] = await response.json();
         setBlogPosts(data);
