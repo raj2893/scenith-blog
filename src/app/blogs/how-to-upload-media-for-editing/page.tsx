@@ -1,75 +1,26 @@
-"use client";
-
-import { useState } from 'react';
-import Head from 'next/head';
+import type { Metadata } from "next";
+import Script from "next/script";
 import Link from 'next/link';
 import styles from '../../../../styles/HowToUploadMediaForEditing.module.css';
 
-export default function HowToUploadAndOrganizeMedia() {
-  const [showAllTips, setShowAllTips] = useState<boolean>(false);
+export const metadata: Metadata = {
+  title: "Upload and Organize Media Like a Pro in Scenith Video Editor.",
+  description:
+    "Master the art of media organization for faster editing workflow and better project management.",
+  keywords: [
+    "video editing hacks",
+    "social media growth",
+    "AI subtitles",
+    "background removal",
+    "Scenith",
+  ],
+};
 
-  const scrollToSection = (sectionId: string) => {
-    const section = document.getElementById(sectionId);
-    if (section) {
-      const navHeight = document.querySelector('.nav-bar')?.getBoundingClientRect().height || 60;
-      window.scrollTo({
-        top: section.offsetTop - navHeight - 60,
-        behavior: 'smooth',
-      });
-    }
-  };
+export default function HowToUploadAndOrganizeMedia() {
 
   return (
     <>
-      <Head>
-        <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>How to Upload and Organize Media in Scenith (2025)</title>
-        <meta
-          name="description"
-          content="Learn how to upload and organize videos, photos, audio, and elements in Scenith’s Project Editor. Follow this beginner-friendly guide to streamline your video editing workflow."
-        />
-        <meta
-          name="keywords"
-          content="upload media Scenith, organize video assets, video editing for beginners, Scenith media panel, add videos to timeline, video editing workflow"
-        />
-        <meta name="author" content="Scenith" />
-        <meta name="robots" content="index, follow" />
-        <meta
-          property="og:title"
-          content="How to Upload and Organize Media in Scenith (2025)"
-        />
-        <meta
-          property="og:description"
-          content="Discover how to upload and organize videos, photos, audio, and elements in Scenith’s Project Editor with simple steps for a seamless video editing experience."
-        />
-        <meta property="og:type" content="article" />
-        <meta
-          property="og:url"
-          content="https://scenith.in/blogs/how-to-upload-and-organize-media"
-        />
-        <meta property="og:image" content="/images/upload-media-og.jpg" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta
-          name="twitter:title"
-          content="How to Upload and Organize Media in Scenith (2025)"
-        />
-        <meta
-          name="twitter:description"
-          content="Discover how to upload and organize videos, photos, audio, and elements in Scenith’s Project Editor with simple steps for a seamless video editing experience."
-        />
-        <meta name="twitter:image" content="/images/upload-media-og.jpg" />
-        <link
-          rel="canonical"
-          href="https://scenith.in/blogs/how-to-upload-and-organize-media"
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@400;700&display=swap"
-          rel="stylesheet"
-        />
-        <script
+        <Script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
@@ -108,7 +59,6 @@ export default function HowToUploadAndOrganizeMedia() {
             }),
           }}
         />
-      </Head>
 
       <article className={styles.blogContainer}>
         {/* Header */}

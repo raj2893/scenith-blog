@@ -1,75 +1,26 @@
-"use client";
-
-import { useState } from 'react';
-import Head from 'next/head';
+import type { Metadata } from "next";
+import Script from "next/script";
 import Link from 'next/link';
 import styles from '../../../../styles/HowToUseLayersInVideoEditing.module.css';
 
-export default function HowToUseLayersInVideoEditing() {
-  const [showAllTips, setShowAllTips] = useState<boolean>(false);
+export const metadata: Metadata = {
+  title: "Master the use of Layers in Video Editing.",
+  description:
+    "Learn advanced layering techniques to create professional-looking videos with depth and visual appeal.",
+  keywords: [
+    "video editing hacks",
+    "social media growth",
+    "AI subtitles",
+    "background removal",
+    "Scenith",
+  ],
+};
 
-  const scrollToSection = (sectionId: string) => {
-    const section = document.getElementById(sectionId);
-    if (section) {
-      const navHeight = document.querySelector('.nav-bar')?.getBoundingClientRect().height || 60;
-      window.scrollTo({
-        top: section.offsetTop - navHeight - 60,
-        behavior: 'smooth',
-      });
-    }
-  };
+export default function HowToUseLayersInVideoEditing() {
 
   return (
     <>
-      <Head>
-        <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>How to Use Layers in Video Editing with Scenith (2025)</title>
-        <meta
-          name="description"
-          content="Learn how to use layers in video editing with Scenith to create professional-looking videos. Master the Transform panel and boost your video’s engagement."
-        />
-        <meta
-          name="keywords"
-          content="video editing layers, Scenith, Transform panel, video editing tutorial, YouTube video editing, video layers"
-        />
-        <meta name="author" content="Scenith" />
-        <meta name="robots" content="index, follow" />
-        <meta
-          property="og:title"
-          content="How to Use Layers in Video Editing with Scenith (2025)"
-        />
-        <meta
-          property="og:description"
-          content="Discover how to use layers in Scenith to create professional videos. Learn to adjust positioning with the Transform panel and engage viewers effectively."
-        />
-        <meta property="og:type" content="article" />
-        <meta
-          property="og:url"
-          content="https://scenith.in/blogs/how-to-use-layers-in-video-editing"
-        />
-        <meta property="og:image" content="/images/layers-guide-og.jpg" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta
-          name="twitter:title"
-          content="How to Use Layers in Video Editing with Scenith (2025)"
-        />
-        <meta
-          name="twitter:description"
-          content="Discover how to use layers in Scenith to create professional videos. Learn to adjust positioning with the Transform panel and engage viewers effectively."
-        />
-        <meta name="twitter:image" content="/images/layers-guide-og.jpg" />
-        <link
-          rel="canonical"
-          href="https://scenith.in/blogs/how-to-use-layers-in-video-editing"
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@400;700&display=swap"
-          rel="stylesheet"
-        />
-        <script
+        <Script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
@@ -104,7 +55,6 @@ export default function HowToUseLayersInVideoEditing() {
             }),
           }}
         />
-      </Head>
 
       <article className={styles.blogContainer}>
         {/* Header */}

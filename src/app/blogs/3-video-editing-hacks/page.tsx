@@ -1,75 +1,26 @@
-"use client";
+import type { Metadata } from "next";
+import Script from "next/script";
+import Link from "next/link";
+import styles from "../../../../styles/ThreeVideoEditingHacks.module.css";
 
-import { useState } from 'react';
-import Head from 'next/head';
-import Link from 'next/link';
-import styles from '../../../../styles/ThreeVideoEditingHacks.module.css';
+export const metadata: Metadata = {
+  title: "3 Video Editing Hacks to Skyrocket Your Social Media Growth (2025)",
+  description:
+    "Discover 3 game-changing video editing hacks to boost retention and grow your social media. Learn fast cuts, AI subtitles, and background removal with Scenith.",
+  keywords: [
+    "video editing hacks",
+    "social media growth",
+    "AI subtitles",
+    "background removal",
+    "Scenith",
+  ],
+};
 
 export default function ThreeVideoEditingHacks() {
-  const [showAllHacks, setShowAllHacks] = useState<boolean>(false);
-
-  const scrollToSection = (sectionId: string) => {
-    const section = document.getElementById(sectionId);
-    if (section) {
-      const navHeight = document.querySelector('.nav-bar')?.getBoundingClientRect().height || 60;
-      window.scrollTo({
-        top: section.offsetTop - navHeight - 60,
-        behavior: 'smooth',
-      });
-    }
-  };
 
   return (
     <>
-      <Head>
-        <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>3 Video Editing Hacks to Skyrocket Your Social Media Growth (2025)</title>
-        <meta
-          name="description"
-          content="Discover 3 game-changing video editing hacks to boost retention and grow your social media. Learn fast cuts, AI subtitles, and background removal with Scenith."
-        />
-        <meta
-          name="keywords"
-          content="video editing hacks, social media growth, AI subtitles, background removal, Scenith"
-        />
-        <meta name="author" content="Scenith" />
-        <meta name="robots" content="index, follow" />
-        <meta
-          property="og:title"
-          content="3 Video Editing Hacks to Skyrocket Your Social Media Growth (2025)"
-        />
-        <meta
-          property="og:description"
-          content="Want to grow your social media? These 3 video editing hacks—fast cuts, AI subtitles, and background removal—will boost retention by 40%. Try Scenith for free!"
-        />
-        <meta property="og:type" content="article" />
-        <meta
-          property="og:url"
-          content="https://scenith.in/blogs/three-video-editing-hacks"
-        />
-        <meta property="og:image" content="/images/video-editing-hacks-og.jpg" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta
-          name="twitter:title"
-          content="3 Video Editing Hacks to Skyrocket Your Social Media Growth (2025)"
-        />
-        <meta
-          name="twitter:description"
-          content="Want to grow your social media? These 3 video editing hacks—fast cuts, AI subtitles, and background removal—will boost retention by 40%. Try Scenith for free!"
-        />
-        <meta name="twitter:image" content="/images/video-editing-hacks-og.jpg" />
-        <link
-          rel="canonical"
-          href="https://scenith.in/blogs/three-video-editing-hacks"
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@400;700&display=swap"
-          rel="stylesheet"
-        />
-        <script
+        <Script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
@@ -104,7 +55,6 @@ export default function ThreeVideoEditingHacks() {
             }),
           }}
         />
-      </Head>
 
       <article className={styles.blogContainer}>
         {/* Header */}

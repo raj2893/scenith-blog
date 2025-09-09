@@ -1,75 +1,26 @@
-"use client";
-
-import { useState } from 'react';
-import Head from 'next/head';
+import type { Metadata } from "next";
+import Script from "next/script";
 import Link from 'next/link';
 import styles from '../../../../styles/HowToReach4000HoursWatchTime.module.css';
 
-export default function HowToReach4000HoursWatchTime() {
-  const [showAllTips, setShowAllTips] = useState<boolean>(false);
+export const metadata: Metadata = {
+  title: "How to Reach 4000 Hours of YouTube Watch Time Fast in 2025.",
+  description:
+    "Discover proven strategies to hit 4000 hours of YouTube watch time using AI-powered subtitles and engagement tactics.",
+  keywords: [
+    "video editing hacks",
+    "social media growth",
+    "AI subtitles",
+    "background removal",
+    "Scenith",
+  ],
+};
 
-  const scrollToSection = (sectionId: string) => {
-    const section = document.getElementById(sectionId);
-    if (section) {
-      const navHeight = document.querySelector('.nav-bar')?.getBoundingClientRect().height || 60;
-      window.scrollTo({
-        top: section.offsetTop - navHeight - 60, // Increased offset to prevent navbar overlap
-        behavior: 'smooth',
-      });
-    }
-  };
+export default function HowToReach4000HoursWatchTime() {
 
   return (
     <>
-      <Head>
-        <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>How to Reach 4000 Hours of YouTube Watch Time Fast in 2025</title>
-        <meta
-          name="description"
-          content="Discover how to hit 4000 hours of YouTube watch time fast using AI-powered subtitles with Scenith. Learn why subtitles boost viewer retention and skyrocket your channel’s growth."
-        />
-        <meta
-          name="keywords"
-          content="4000 hours watch time, YouTube monetization, AI subtitles, Scenith, YouTube growth, video accessibility"
-        />
-        <meta name="author" content="Scenith" />
-        <meta name="robots" content="index, follow" />
-        <meta
-          property="og:title"
-          content="How to Reach 4000 Hours of YouTube Watch Time Fast in 2025"
-        />
-        <meta
-          property="og:description"
-          content="Unlock YouTube’s 4000-hour watch time goal with AI subtitles. Learn how Scenith’s 30-second subtitle tool boosts retention and accelerates channel growth."
-        />
-        <meta property="og:type" content="article" />
-        <meta
-          property="og:url"
-          content="https://scenith.in/blogs/how-to-reach-4000-hours-watch-time"
-        />
-        <meta property="og:image" content="/images/youtube-watch-time-og.jpg" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta
-          name="twitter:title"
-          content="How to Reach 4000 Hours of YouTube Watch Time Fast in 2025"
-        />
-        <meta
-          name="twitter:description"
-          content="Unlock YouTube’s 4000-hour watch time goal with AI subtitles. Learn how Scenith’s 30-second subtitle tool boosts retention and accelerates channel growth."
-        />
-        <meta name="twitter:image" content="/images/youtube-watch-time-og.jpg" />
-        <link
-          rel="canonical"
-          href="https://scenith.in/blogs/how-to-reach-4000-hours-watch-time"
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@400;700&display=swap"
-          rel="stylesheet"
-        />
-        <script
+        <Script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
@@ -104,7 +55,6 @@ export default function HowToReach4000HoursWatchTime() {
             }),
           }}
         />
-      </Head>
 
       <article className={styles.blogContainer}>
         {/* Header */}

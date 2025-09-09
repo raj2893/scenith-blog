@@ -1,75 +1,26 @@
-"use client";
-
-import { useState } from 'react';
-import Head from 'next/head';
+import type { Metadata } from "next";
+import Script from "next/script";
 import Link from 'next/link';
 import styles from '../../../../styles/HowToGenerateAIVoices.module.css';
 
-export default function HowToGenerateAIVoices() {
-  const [showAllMethods, setShowAllMethods] = useState<boolean>(false);
+export const metadata: Metadata = {
+  title: "Generate Realistic AI Voices for Your Videos for FREE.",
+  description:
+    "Transform your content with AI-generated voices that sound incredibly natural and engaging like a real human.",
+  keywords: [
+    "video editing hacks",
+    "social media growth",
+    "AI subtitles",
+    "background removal",
+    "Scenith",
+  ],
+};
 
-  const scrollToSection = (sectionId: string) => {
-    const section = document.getElementById(sectionId);
-    if (section) {
-      const navHeight = document.querySelector('.nav-bar')?.getBoundingClientRect().height || 60;
-      window.scrollTo({
-        top: section.offsetTop - navHeight - 60,
-        behavior: 'smooth',
-      });
-    }
-  };
+export default function HowToGenerateAIVoices() {
 
   return (
     <>
-      <Head>
-        <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Create Stunning AI Voices in Seconds for Your Videos (2025)</title>
-        <meta
-          name="description"
-          content="Learn how to generate AI voices for videos in seconds using tools like Scenith. Compare 4 methods, discover why AI is the best, and enhance your content with lifelike voiceovers."
-        />
-        <meta
-          name="keywords"
-          content="AI voice generation, text-to-speech, video voiceovers, Scenith, AI audio"
-        />
-        <meta name="author" content="Scenith" />
-        <meta name="robots" content="index, follow" />
-        <meta
-          property="og:title"
-          content="Create Stunning AI Voices in Seconds for Your Videos (2025)"
-        />
-        <meta
-          property="og:description"
-          content="Discover the fastest way to generate AI voices for your videos with Scenith. Save hours and add professional voiceovers effortlessly. Try it for free!"
-        />
-        <meta property="og:type" content="article" />
-        <meta
-          property="og:url"
-          content="https://scenith.in/blogs/how-to-generate-ai-voices"
-        />
-        <meta property="og:image" content="/images/ai-voices-og.jpg" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta
-          name="twitter:title"
-          content="Create Stunning AI Voices in Seconds for Your Videos (2025)"
-        />
-        <meta
-          name="twitter:description"
-          content="Discover the fastest way to generate AI voices for your videos with Scenith. Save hours and add professional voiceovers effortlessly. Try it for free!"
-        />
-        <meta name="twitter:image" content="/images/ai-voices-og.jpg" />
-        <link
-          rel="canonical"
-          href="https://scenith.in/blogs/how-to-generate-ai-voices"
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@400;700&display=swap"
-          rel="stylesheet"
-        />
-        <script
+        <Script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
@@ -104,8 +55,6 @@ export default function HowToGenerateAIVoices() {
             }),
           }}
         />
-      </Head>
-
       <article className={styles.blogContainer}>
         {/* Header */}
         <header className={styles.header}>

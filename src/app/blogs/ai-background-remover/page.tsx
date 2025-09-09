@@ -1,75 +1,26 @@
-"use client";
-
-import { useState } from 'react';
-import Head from 'next/head';
+import type { Metadata } from "next";
+import Script from "next/script";
 import Link from 'next/link';
 import styles from '../../../../styles/HowToRemoveBackgroundFromImage.module.css';
 
-export default function HowToRemoveBackgroundFromImage() {
-  const [showAllMethods, setShowAllMethods] = useState<boolean>(false);
+export const metadata: Metadata = {
+  title: "AI Background Remover: Remove Image Backgrounds Instantly",
+  description:
+    "Learn how to remove image backgrounds with AI technology for professional-looking green screen effects.",
+  keywords: [
+    "video editing hacks",
+    "social media growth",
+    "AI subtitles",
+    "background removal",
+    "Scenith",
+  ],
+};
 
-  const scrollToSection = (sectionId: string) => {
-    const section = document.getElementById(sectionId);
-    if (section) {
-      const navHeight = document.querySelector('.nav-bar')?.getBoundingClientRect().height || 60;
-      window.scrollTo({
-        top: section.offsetTop - navHeight - 60,
-        behavior: 'smooth',
-      });
-    }
-  };
+export default function HowToRemoveBackgroundFromImage() {
 
   return (
     <>
-      <Head>
-        <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Remove Background from Any Image in Seconds with AI (2025)</title>
-        <meta
-          name="description"
-          content="Learn how to remove backgrounds from images in seconds using AI tools like Scenith. Compare 4 methods, discover why AI is the best, and create professional visuals effortlessly."
-        />
-        <meta
-          name="keywords"
-          content="remove image background, AI background removal, image editing, Scenith, professional visuals"
-        />
-        <meta name="author" content="Scenith" />
-        <meta name="robots" content="index, follow" />
-        <meta
-          property="og:title"
-          content="Remove Background from Any Image in Seconds with AI (2025)"
-        />
-        <meta
-          property="og:description"
-          content="Discover the fastest way to remove backgrounds from images with AI. Save hours and create stunning visuals. Try Scenith for free!"
-        />
-        <meta property="og:type" content="article" />
-        <meta
-          property="og:url"
-          content="https://scenith.in/blogs/how-to-remove-background-from-image"
-        />
-        <meta property="og:image" content="/images/background-removal-og.jpg" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta
-          name="twitter:title"
-          content="Remove Background from Any Image in Seconds with AI (2025)"
-        />
-        <meta
-          name="twitter:description"
-          content="Discover the fastest way to remove backgrounds from images with AI. Save hours and create stunning visuals. Try Scenith for free!"
-        />
-        <meta name="twitter:image" content="/images/background-removal-og.jpg" />
-        <link
-          rel="canonical"
-          href="https://scenith.in/blogs/how-to-remove-background-from-image"
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@400;700&display=swap"
-          rel="stylesheet"
-        />
-        <script
+        <Script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
@@ -104,7 +55,6 @@ export default function HowToRemoveBackgroundFromImage() {
             }),
           }}
         />
-      </Head>
 
       <article className={styles.blogContainer}>
         {/* Header */}

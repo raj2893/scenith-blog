@@ -1,75 +1,26 @@
-"use client";
-
-import { useState } from 'react';
-import Head from 'next/head';
+import type { Metadata } from "next";
+import Script from "next/script";
 import Link from 'next/link';
 import styles from '../../../../styles/HowToCreateVideoEditingProject.module.css';
 
-export default function HowToCreateVideoEditingProject() {
-  const [showAllTips, setShowAllTips] = useState<boolean>(false);
+export const metadata: Metadata = {
+  title: "Create Your First Video Editing Project in 2025.",
+  description:
+    "Discover 3 game-changing video editing hacks to boost retention and grow your social media. Learn fast cuts, AI subtitles, and background removal with Scenith.",
+  keywords: [
+    "video editing hacks",
+    "social media growth",
+    "AI subtitles",
+    "background removal",
+    "Scenith",
+  ],
+};
 
-  const scrollToSection = (sectionId: string) => {
-    const section = document.getElementById(sectionId);
-    if (section) {
-      const navHeight = document.querySelector('.nav-bar')?.getBoundingClientRect().height || 60;
-      window.scrollTo({
-        top: section.offsetTop - navHeight - 60,
-        behavior: 'smooth',
-      });
-    }
-  };
+export default function HowToCreateVideoEditingProject() {
 
   return (
     <>
-      <Head>
-        <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>How to Create a Video Editing Project in Scenith: 2025 Guide</title>
-        <meta
-          name="description"
-          content="Learn how to create a video editing project in Scenith with this beginner-friendly guide. Compare methods and follow step-by-step instructions to start your video project."
-        />
-        <meta
-          name="keywords"
-          content="create video editing project, Scenith, video editing for beginners, start video project, video editing settings, YouTube video editing"
-        />
-        <meta name="author" content="Scenith" />
-        <meta name="robots" content="index, follow" />
-        <meta
-          property="og:title"
-          content="How to Create a Video Editing Project in Scenith: 2025 Guide"
-        />
-        <meta
-          property="og:description"
-          content="Learn how to create a video editing project in Scenith with simple steps. Compare methods and choose the right settings for YouTube, Instagram, and more."
-        />
-        <meta property="og:type" content="article" />
-        <meta
-          property="og:url"
-          content="https://scenith.in/blogs/how-to-create-video-editing-project"
-        />
-        <meta property="og:image" content="/images/create-project-og.jpg" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta
-          name="twitter:title"
-          content="How to Create a Video Editing Project in Scenith: 2025 Guide"
-        />
-        <meta
-          name="twitter:description"
-          content="Learn how to create a video editing project in Scenith with simple steps. Compare methods and choose the right settings for YouTube, Instagram, and more."
-        />
-        <meta name="twitter:image" content="/images/create-project-og.jpg" />
-        <link
-          rel="canonical"
-          href="https://scenith.in/blogs/how-to-create-video-editing-project"
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@400;700&display=swap"
-          rel="stylesheet"
-        />
-        <script
+        <Script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
@@ -104,7 +55,6 @@ export default function HowToCreateVideoEditingProject() {
             }),
           }}
         />
-      </Head>
 
       <article className={styles.blogContainer}>
         {/* Header */}

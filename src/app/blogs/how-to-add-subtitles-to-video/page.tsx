@@ -1,63 +1,28 @@
-"use client";
-
-import { useState } from 'react';
-import Head from 'next/head';
+import type { Metadata } from "next";
+import Script from "next/script";
 import Link from 'next/link';
 import styles from '../../../../styles/HowToAddSubtitlesToVideo.module.css';
 
-export default function HowToAddSubtitlesToVideo() {
-  const [showAllMethods, setShowAllMethods] = useState<boolean>(false);
+export const metadata: Metadata = {
+  title: "Stop Wasting Hours on Subtitles: Add Them to Any Video in 30 Seconds",
+  description:
+    "Reality check: You're probably spending 3-5 hours manually typing subtitles when AI can do it in 30 seconds with 98% accuracy.",
+  keywords: [
+    "video editing hacks",
+    "social media growth",
+    "AI subtitles",
+    "background removal",
+    "Scenith",
+  ],
+};
 
-  const scrollToSection = (sectionId: string) => {
-    const section = document.getElementById(sectionId);
-    if (section) {
-      const navHeight = document.querySelector('.nav-bar')?.getBoundingClientRect().height || 60;
-      window.scrollTo({
-        top: section.offsetTop - navHeight - 20,
-        behavior: 'smooth',
-      });
-    }
-  };
+export default function HowToAddSubtitlesToVideo() {
 
   return (
     <>
-      <Head>
-        <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>How to Add Subtitles to Video: 5 Methods Compared (2025 Guide)</title>
-        <meta
-          name="description"
-          content="Learn how to add subtitles to videos using 5 different methods. Compare AI tools, manual methods, and software options. Complete guide with step-by-step instructions."
-        />
-        <meta name="keywords" content="add subtitles to video, video subtitles, AI subtitles, subtitle generator, video accessibility, closed captions" />
-        <meta name="author" content="Scenith" />
-        <meta name="robots" content="index, follow" />
-        
-        {/* Open Graph */}
-        <meta property="og:title" content="How to Add Subtitles to Video: 5 Methods Compared (2025 Guide)" />
-        <meta property="og:description" content="Complete guide to adding subtitles to videos. Compare AI tools, manual methods, and software options with step-by-step instructions." />
-        <meta property="og:type" content="article" />
-        <meta property="og:url" content="https://scenith.in/blogs/how-to-add-subtitles-to-video" />
-        <meta property="og:image" content="/images/subtitle-guide-og.jpg" />
-        
-        {/* Twitter */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="How to Add Subtitles to Video: 5 Methods Compared (2025 Guide)" />
-        <meta name="twitter:description" content="Complete guide to adding subtitles to videos. Compare AI tools, manual methods, and software options." />
-        <meta name="twitter:image" content="/images/subtitle-guide-og.jpg" />
-        
-        <link rel="canonical" href="https://scenith.in/blogs/how-to-add-subtitles-to-video" />
-        
-        {/* Google Fonts */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link 
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@400;700&display=swap" 
-          rel="stylesheet"
-        />
         
         {/* Structured Data */}
-        <script
+        <Script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
@@ -91,7 +56,6 @@ export default function HowToAddSubtitlesToVideo() {
             }),
           }}
         />
-      </Head>
 
       <article className={styles.blogContainer}>
         {/* Header */}
