@@ -21,6 +21,7 @@ export default function HowToGenerateAIVoices() {
   return (
     <>
         <Script
+          id="ld-json-how-to-generate-ai-voices"
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({

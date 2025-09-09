@@ -21,6 +21,7 @@ export default function HowToUploadAndOrganizeMedia() {
   return (
     <>
         <Script
+          id="ld-json-how-to-upload-media-for-editing"
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({

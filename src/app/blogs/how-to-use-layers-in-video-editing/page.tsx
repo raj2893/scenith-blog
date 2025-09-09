@@ -21,6 +21,7 @@ export default function HowToUseLayersInVideoEditing() {
   return (
     <>
         <Script
+          id="ld-json-how-to-use-layers-in-video-editing"
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({

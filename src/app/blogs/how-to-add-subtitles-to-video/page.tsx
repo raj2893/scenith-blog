@@ -23,6 +23,7 @@ export default function HowToAddSubtitlesToVideo() {
         
         {/* Structured Data */}
         <Script
+          id="ld-json-how-to-add-subtitles-to-video"
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({

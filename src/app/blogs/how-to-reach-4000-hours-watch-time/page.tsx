@@ -21,6 +21,7 @@ export default function HowToReach4000HoursWatchTime() {
   return (
     <>
         <Script
+          id="ld-json-how-to-reach-4000-hours-watch-time"
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({

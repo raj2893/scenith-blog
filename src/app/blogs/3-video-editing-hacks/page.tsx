@@ -21,6 +21,7 @@ export default function ThreeVideoEditingHacks() {
   return (
     <>
         <Script
+          id="ld-json-video-editing-hacks"
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({

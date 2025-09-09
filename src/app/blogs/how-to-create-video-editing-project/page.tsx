@@ -21,6 +21,7 @@ export default function HowToCreateVideoEditingProject() {
   return (
     <>
         <Script
+          id="ld-json-how-to-create-video-editing-project"
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({

@@ -21,6 +21,7 @@ export default function HowToRemoveBackgroundFromImage() {
   return (
     <>
         <Script
+          id="ld-json-how-to-remove-background-from-image"
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
