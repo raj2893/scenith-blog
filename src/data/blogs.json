@@ -208,20 +208,5 @@
     "featured": false,
     "slug": "how-to-make-videos-accessible-for-the-deaf-community",
     "difficulty": "Beginner"
-  },
-  {
-    "id": 15,
-    "title": "The 3-Second Rule: Why 87% of Viewers Skip Your Videos (And How to Fix It)",
-    "excerpt": "Learn why most viewers skip videos within 3 seconds and discover proven editing techniques to hook your audience from the first frame. Increase retention by 340%.",
-    "category": "Social Media Growth",
-    "readTime": "6 min",
-    "publishDate": "2025-09-10",
-    "author": "Scenith Team",
-    "image": "⚡",
-    "gradient": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-    "tags": ["Hook Techniques", "Engagement", "Retention", "Social Media"],
-    "featured": true,
-    "slug": "three-second-rule",
-    "difficulty": "Intermediate"
   }
 ]
