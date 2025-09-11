@@ -20,15 +20,6 @@ interface StandaloneImage {
   errorMessage?: string;
 }
 
-interface UserProfile {
-  email: string;
-  firstName: string;
-  lastName: string;
-  picture: string | null;
-  googleAuth: boolean;
-  role: string;
-}
-
 const BackgroundRemoval: React.FC = () => {
   const router = useRouter();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
