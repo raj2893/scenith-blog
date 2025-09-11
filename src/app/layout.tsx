@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import '../../styles/globals.css';
 import Navbar from '../app/components/Navbar';
 import Footer from '../app/components/Footer';
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -99,6 +100,12 @@ export default function RootLayout({
         <Navbar pageType="blogs" />
         <main>{children}</main>
         <Footer />
+        <Script
+          src="https://accounts.google.com/gsi/client"
+          strategy="beforeInteractive"
+          async
+          defer
+        />        
       </body>
     </html>
   );
