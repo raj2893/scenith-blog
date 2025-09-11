@@ -283,5 +283,65 @@
     "featured": false,
     "slug": "voiceover-mistakes-beginners-make",
     "difficulty": "Beginner"
-  }  
+  },
+  {
+    "id": 20,
+    "title": "Why Laptop Editing Beats Phone Editing",
+    "excerpt": "Discover why laptop editing with Scenith outperforms phone apps for professional video results.",
+    "category": "Video Editing",
+    "readTime": "4 min",
+    "publishDate": "2025-09-30",
+    "author": "Scenith Team",
+    "image": "🖥️",
+    "gradient": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    "tags": ["Laptop Editing", "Phone Editing", "Professional Videos"],
+    "featured": false,
+    "slug": "why-laptop-editing-beats-phone-editing",
+    "difficulty": "Beginner"
+  },
+  {
+    "id": 21,
+    "title": "Keyboard Shortcuts Every Video Editor Needs",
+    "excerpt": "Boost your editing speed with essential keyboard shortcuts using Scenith’s web-based platform.",
+    "category": "Video Editing",
+    "readTime": "4 min",
+    "publishDate": "2025-10-02",
+    "author": "Scenith Team",
+    "image": "⌨️",
+    "gradient": "linear-gradient(135deg, #34d399 0%, #10b981 100%)",
+    "tags": ["Keyboard Shortcuts", "Editing Efficiency", "Video Production"],
+    "featured": false,
+    "slug": "keyboard-shortcuts-every-video-editor-needs",
+    "difficulty": "Beginner"
+  },
+  {
+    "id": 22,
+    "title": "Timeline Editing Tricks Mobile Apps Can’t Do",
+    "excerpt": "Master advanced timeline editing tricks with Scenith that mobile apps can’t match.",
+    "category": "Video Editing",
+    "readTime": "4 min",
+    "publishDate": "2025-10-04",
+    "author": "Scenith Team",
+    "image": "🎬",
+    "gradient": "linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)",
+    "tags": ["Timeline Editing", "Advanced Tricks", "Professional Editing"],
+    "featured": false,
+    "slug": "timeline-editing-tricks-mobile-apps-cant-do",
+    "difficulty": "Intermediate"
+  },
+  {
+    "id": 23,
+    "title": "Multi-Track Editing for Professional Results",
+    "excerpt": "Learn multi-track editing in Scenith for professional video results on YouTube and social media.",
+    "category": "Video Editing",
+    "readTime": "4 min",
+    "publishDate": "2025-10-06",
+    "author": "Scenith Team",
+    "image": "📽️",
+    "gradient": "linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%)",
+    "tags": ["Multi-Track Editing", "Professional Videos", "Timeline Editing"],
+    "featured": false,
+    "slug": "multi-track-editing-for-professional-results",
+    "difficulty": "Intermediate"
+  }
 ]
