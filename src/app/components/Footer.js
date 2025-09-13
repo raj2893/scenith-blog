@@ -33,6 +33,7 @@ const Footer = () => {
     { label: 'Blogs', path: '/blogs' },
     { label: 'Features', path: '/' },
     { label: 'Tutorials', path: '/' },
+    { label: 'Privacy Policy', path: '/privacy-policy' },
   ];
 
   const resourceLinks = [
