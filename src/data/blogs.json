@@ -343,5 +343,20 @@
     "featured": false,
     "slug": "multi-track-editing-for-professional-results",
     "difficulty": "Intermediate"
+  },
+  {
+    "id": 24,
+    "title": "Scenith's AI Features: How to Use Them for Video Editing",
+    "excerpt": "Discover Scenith's AI tools for background removal, subtitles, and text-to-speech to create professional videos effortlessly.",
+    "category": "Video Editing",
+    "readTime": "5 min",
+    "publishDate": "2025-09-13",
+    "author": "Scenith Team",
+    "image": "🤖",
+    "gradient": "linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)",
+    "tags": ["AI Tools", "Background Removal", "Subtitles", "Text-to-Speech"],
+    "featured": true,
+    "slug": "sceniths-ai-features-how-to-use-them",
+    "difficulty": "Beginner"
   }
 ]

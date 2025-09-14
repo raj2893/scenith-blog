@@ -174,7 +174,7 @@ export default function HowToAddSubtitlesToVideo() {
         {/* Method 1: AI Subtitle Generation */}
         <section className={styles.section} id="ai-method">
           <h2>Method 1: AI Subtitle Generation (Recommended)</h2>
-          
+
           <div className={styles.methodCard}>
             <div className={styles.methodStats}>
               <span className={styles.stat}>⏱️ Time: 30 seconds</span>
@@ -183,7 +183,7 @@ export default function HowToAddSubtitlesToVideo() {
             </div>
 
             <p>
-              AI-powered subtitle generation has revolutionized how we add captions to videos. Modern AI tools can 
+              AI-powered subtitle generation has revolutionized how we add captions to videos. Modern AI tools can
               transcribe speech with near-perfect accuracy and automatically sync the text with your video timeline.
             </p>
 
@@ -240,7 +240,7 @@ export default function HowToAddSubtitlesToVideo() {
         {/* Method 2: YouTube Auto-Captions */}
         <section className={styles.section} id="youtube-method">
           <h2>Method 2: YouTube Auto-Captions</h2>
-          
+
           <div className={styles.methodCard}>
             <div className={styles.methodStats}>
               <span className={styles.stat}>⏱️ Time: 30-60 minutes</span>
@@ -249,7 +249,7 @@ export default function HowToAddSubtitlesToVideo() {
             </div>
 
             <p>
-              YouTube automatically generates captions for uploaded videos, which you can then download and use elsewhere. 
+              YouTube automatically generates captions for uploaded videos, which you can then download and use elsewhere.
               While free, the accuracy is lower than dedicated AI tools.
             </p>
 
@@ -289,7 +289,7 @@ export default function HowToAddSubtitlesToVideo() {
         {/* Method 3: Manual Creation */}
         <section className={styles.section} id="manual-method">
           <h2>Method 3: Manual Subtitle Creation</h2>
-          
+
           <div className={styles.methodCard}>
             <div className={styles.methodStats}>
               <span className={styles.stat}>⏱️ Time: 3-5 hours</span>
@@ -298,7 +298,7 @@ export default function HowToAddSubtitlesToVideo() {
             </div>
 
             <p>
-              Manual subtitle creation involves typing out every word while watching your video. While time-consuming, 
+              Manual subtitle creation involves typing out every word while watching your video. While time-consuming,
               it offers perfect accuracy and complete control over timing and formatting.
             </p>
 
@@ -347,7 +347,7 @@ export default function HowToAddSubtitlesToVideo() {
         {/* Method 4: Professional Software */}
         <section className={styles.section} id="software-method">
           <h2>Method 4: Professional Video Software</h2>
-          
+
           <div className={styles.methodCard}>
             <div className={styles.methodStats}>
               <span className={styles.stat}>⏱️ Time: 1-2 hours</span>
@@ -356,7 +356,7 @@ export default function HowToAddSubtitlesToVideo() {
             </div>
 
             <p>
-              Professional video editing software like Adobe Premiere Pro, Final Cut Pro, and DaVinci Resolve now include 
+              Professional video editing software like Adobe Premiere Pro, Final Cut Pro, and DaVinci Resolve now include
               auto-transcription features. This method works well if you're already using these tools for video editing.
             </p>
 
@@ -403,7 +403,7 @@ export default function HowToAddSubtitlesToVideo() {
         {/* Method 5: Freelancers */}
         <section className={styles.section} id="freelancer-method">
           <h2>Method 5: Hiring Freelancers</h2>
-          
+
           <div className={styles.methodCard}>
             <div className={styles.methodStats}>
               <span className={styles.stat}>⏱️ Time: 2-3 days</span>
@@ -412,7 +412,7 @@ export default function HowToAddSubtitlesToVideo() {
             </div>
 
             <p>
-              Hiring freelancers can be effective for one-time projects or when you need human expertise for complex content. 
+              Hiring freelancers can be effective for one-time projects or when you need human expertise for complex content.
               However, it's typically the most expensive option per video.
             </p>
 
@@ -459,23 +459,23 @@ export default function HowToAddSubtitlesToVideo() {
         {/* Best Practices */}
         <section className={styles.section} id="best-practices">
           <h2>Best Practices for Video Subtitles</h2>
-          
+
           <div className={styles.bestPractices}>
             <div className={styles.practiceCard}>
               <h3>📱 Mobile Optimization</h3>
               <p>Ensure subtitles are readable on mobile devices with appropriate font sizes and positioning.</p>
             </div>
-            
+
             <div className={styles.practiceCard}>
               <h3>⏰ Timing Guidelines</h3>
               <p>Keep subtitle duration between 1-6 seconds. Viewers need time to read while watching.</p>
             </div>
-            
+
             <div className={styles.practiceCard}>
               <h3>📝 Text Length</h3>
               <p>Limit subtitles to 2 lines with maximum 42 characters per line for optimal readability.</p>
             </div>
-            
+
             <div className={styles.practiceCard}>
               <h3>🎨 Visual Design</h3>
               <p>Use high contrast colors, clear fonts, and consider adding background or outlines for readability.</p>
@@ -486,23 +486,23 @@ export default function HowToAddSubtitlesToVideo() {
         {/* FAQ */}
         <section className={styles.section} id="faq">
           <h2>Frequently Asked Questions</h2>
-          
+
           <div className={styles.faqSection}>
             <div className={styles.faqItem}>
               <h3>What video formats support subtitles?</h3>
               <p>Most common video formats (MP4, MOV, AVI, MKV) support embedded subtitles. For web use, MP4 with WebVTT subtitles is recommended.</p>
             </div>
-            
+
             <div className={styles.faqItem}>
               <h3>What's the difference between subtitles and captions?</h3>
               <p>Subtitles typically show dialogue only, while captions include dialogue, sound effects, and speaker identification for accessibility.</p>
             </div>
-            
+
             <div className={styles.faqItem}>
               <h3>How much do AI subtitle tools cost?</h3>
               <p>Most AI tools offer free tiers with limitations. Premium plans typically range from $10-30/month for unlimited usage and advanced features.</p>
             </div>
-            
+
             <div className={styles.faqItem}>
               <h3>Can I edit AI-generated subtitles?</h3>
               <p>Yes, all AI tools allow you to edit the generated text, adjust timing, and customize appearance before exporting.</p>
@@ -514,16 +514,16 @@ export default function HowToAddSubtitlesToVideo() {
         <section className={styles.section}>
           <h2>Conclusion</h2>
           <p>
-            Adding subtitles to videos is essential in 2025, and AI-powered tools have made the process incredibly simple and fast. 
+            Adding subtitles to videos is essential in 2025, and AI-powered tools have made the process incredibly simple and fast.
             While manual methods offer perfect accuracy, they're not practical for regular content creation.
           </p>
-          
+
           <p>
-            For most creators and businesses, <strong>AI subtitle generation</strong> offers the best balance of speed, accuracy, 
-            and cost-effectiveness. Tools like Scenith can generate professional subtitles in seconds, letting you focus on 
+            For most creators and businesses, <strong>AI subtitle generation</strong> offers the best balance of speed, accuracy,
+            and cost-effectiveness. Tools like Scenith can generate professional subtitles in seconds, letting you focus on
             creating great content instead of spending hours on transcription.
           </p>
-          
+
           <div className={styles.finalCta}>
             <h3>Ready to Add Subtitles in 30 Seconds?</h3>
             <p>Try Scenith's AI subtitle generation free – no signup required for your first video.</p>
