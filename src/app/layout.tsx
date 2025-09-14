@@ -16,10 +16,6 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: {
-    default: 'Scenith Blogs - Professional Video Editing Platform',
-    template: '%s | Scenith'
-  },
   description: 'Master video editing with AI-powered tools, tutorials, and professional features. Create stunning videos with automated subtitles, layers, and advanced editing capabilities.',
   keywords: [
     'video editing',
