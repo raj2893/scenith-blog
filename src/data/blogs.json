@@ -355,7 +355,7 @@
     "image": "🤖",
     "gradient": "linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)",
     "tags": ["AI Tools", "Background Removal", "Subtitles", "Text-to-Speech"],
-    "featured": true,
+    "featured": false,
     "slug": "how-to-use-ai-features-in-scenith",
     "difficulty": "Beginner"
   },
