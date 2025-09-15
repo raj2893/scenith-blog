@@ -30,7 +30,7 @@ export default function BlogIndex() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [sortBy, setSortBy] = useState<string>('latest');
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const postsPerPage = 10;
+  const postsPerPage = 50;
 
   useEffect(() => {
     setCurrentPage(1);

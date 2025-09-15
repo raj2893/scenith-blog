@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import '../../styles/globals.css';
 import Navbar from '../app/components/Navbar';
 import Footer from '../app/components/Footer';
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,10 +16,6 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: {
-    default: 'Scenith Blogs - Professional Video Editing Platform',
-    template: '%s | Scenith'
-  },
   description: 'Master video editing with AI-powered tools, tutorials, and professional features. Create stunning videos with automated subtitles, layers, and advanced editing capabilities.',
   keywords: [
     'video editing',
@@ -99,6 +96,12 @@ export default function RootLayout({
         <Navbar pageType="blogs" />
         <main>{children}</main>
         <Footer />
+        <Script
+          src="https://accounts.google.com/gsi/client"
+          strategy="beforeInteractive"
+          async
+          defer
+        />        
       </body>
     </html>
   );

@@ -18,6 +18,9 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
   const navigate = (path: string) => {
     if (path.startsWith('/blogs')) {
       router.push(path);
+    } 
+    else if (path.startsWith('/background-removal')){
+      router.push(path);
     } else {
       window.location.href = `https://scenith.in${path}`;
     }
@@ -43,6 +46,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
   // Blog-specific navigation links
   const baseNavLinks = [
     { label: 'Home', path: '/' },
+    { label: 'Background Remover', path: '/background-removal' },
     { label: 'Blogs', path: '/blogs' },
     { label: 'Categories', sectionId: 'filter-section' },
     { label: 'Contact Us', sectionId: 'footer-section' },
