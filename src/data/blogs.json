@@ -355,8 +355,8 @@
     "image": "🤖",
     "gradient": "linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)",
     "tags": ["AI Tools", "Background Removal", "Subtitles", "Text-to-Speech"],
-    "featured": true,
-    "slug": "how-to-use-ai-features-in-scenith",
+    "featured": false,
+    "slug": "sceniths-ai-features-how-to-use-them",
     "difficulty": "Beginner"
   },
   {
@@ -477,6 +477,6 @@
     "tags": ["Viral Video", "Video Editing", "Analysis", "Engagement"],
     "featured": false,
     "slug": "viral-video-anatomy-frame-by-frame-analysis",
-    "difficulty": "Intermediate"
+    "difficulty": "Intermediate"  
   }  
 ]
