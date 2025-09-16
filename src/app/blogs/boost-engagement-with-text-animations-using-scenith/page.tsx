@@ -14,6 +14,25 @@ export const metadata: Metadata = {
     "social media videos",
     "video editing tips",
   ],
+  alternates: {
+    canonical: "/blogs/boost-engagement-text-animations",
+  },
+  openGraph: {
+    title: "Boost Engagement with Text Animations Using Scenith (2025)",
+    description:
+      "Learn how to add dynamic text animations with Scenith to boost engagement on YouTube, Instagram, and TikTok videos.",
+    url: "https://scenith.in/blogs/boost-engagement-text-animations",
+    siteName: "Scenith",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Boost Engagement with Text Animations Using Scenith (2025)",
+    description:
+      "Learn how to add dynamic text animations with Scenith to boost engagement on YouTube, Instagram, and TikTok videos.",
+    creator: "@scenith",
+  },
 };
 
 export default function TextAnimations() {
@@ -48,8 +67,6 @@ export default function TextAnimations() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/boost-engagement-text-animations',
             },
-            image: '/images/text-animations-guide-og.jpg',
-            wordCount: 1150,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

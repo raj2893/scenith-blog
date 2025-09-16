@@ -14,6 +14,25 @@ export const metadata: Metadata = {
     "background removal",
     "Scenith",
   ],
+  alternates: {
+    canonical: "/blogs/three-video-editing-hacks",
+  },
+  openGraph: {
+    title: "3 Video Editing Hacks to Skyrocket Your Social Media Growth (2025)",
+    description:
+      "Discover 3 game-changing video editing hacks to boost retention and grow your social media. Learn fast cuts, AI subtitles, and background removal with Scenith.",
+    url: "https://scenith.in/blogs/three-video-editing-hacks",
+    siteName: "Scenith",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "3 Video Editing Hacks to Skyrocket Your Social Media Growth (2025)",
+    description:
+      "Discover 3 game-changing video editing hacks to boost retention and grow your social media. Learn fast cuts, AI subtitles, and background removal with Scenith.",
+    creator: "@scenith",
+  },
 };
 
 export default function ThreeVideoEditingHacks() {
@@ -49,8 +68,6 @@ export default function ThreeVideoEditingHacks() {
                 '@type': 'WebPage',
                 '@id': 'https://scenith.in/blogs/three-video-editing-hacks',
               },
-              image: '/images/video-editing-hacks-og.jpg',
-              wordCount: 1200,
               articleSection: 'Video Editing',
               inLanguage: 'en-US',
             }),

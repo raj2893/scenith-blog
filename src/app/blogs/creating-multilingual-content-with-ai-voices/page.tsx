@@ -14,6 +14,25 @@ export const metadata: Metadata = {
     "Scenith",
     "global reach",
   ],
+  alternates: {
+    canonical: "/blogs/creating-multilingual-content-with-ai-voices",
+  },
+  openGraph: {
+    title: "Creating Multilingual Content with AI Voices (2025)",
+    description:
+      "Learn how to create multilingual video content using Scenith’s AI voices to reach global audiences.",
+    url: "https://scenith.in/blogs/creating-multilingual-content-with-ai-voices",
+    siteName: "Scenith",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Creating Multilingual Content with AI Voices (2025)",
+    description:
+      "Learn how to create multilingual video content using Scenith’s AI voices to reach global audiences.",
+    creator: "@scenith",
+  },
 };
 
 export default function MultilingualContentAIVoices() {
@@ -48,8 +67,6 @@ export default function MultilingualContentAIVoices() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/creating-multilingual-content-with-ai-voices',
             },
-            image: '/images/multilingual-content-og.jpg',
-            wordCount: 1150,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

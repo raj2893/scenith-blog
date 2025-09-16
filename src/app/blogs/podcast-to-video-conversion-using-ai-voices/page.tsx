@@ -14,6 +14,25 @@ export const metadata: Metadata = {
     "Scenith",
     "vodcasts",
   ],
+  alternates: {
+    canonical: "/blogs/podcast-to-video-conversion-using-ai-voices",
+  },
+  openGraph: {
+    title: "Podcast to Video Conversion Using AI Voices (2025)",
+    description:
+      "Learn how to convert podcasts into engaging videos using Scenith’s AI voices and editing tools.",
+    url: "https://scenith.in/blogs/podcast-to-video-conversion-using-ai-voices",
+    siteName: "Scenith",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Podcast to Video Conversion Using AI Voices (2025)",
+    description:
+      "Learn how to convert podcasts into engaging videos using Scenith’s AI voices and editing tools.",
+    creator: "@scenith",
+  },
 };
 
 export default function PodcastToVideoAIVoices() {
@@ -48,8 +67,6 @@ export default function PodcastToVideoAIVoices() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/podcast-to-video-conversion-using-ai-voices',
             },
-            image: '/images/podcast-to-video-og.jpg',
-            wordCount: 1150,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

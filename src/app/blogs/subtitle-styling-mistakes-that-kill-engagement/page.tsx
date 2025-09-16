@@ -14,6 +14,25 @@ export const metadata: Metadata = {
     "video captions",
     "social media videos",
   ],
+  alternates: {
+    canonical: "/blogs/subtitle-styling-mistakes-that-kill-engagement",
+  },
+  openGraph: {
+    title: "Subtitle Styling Mistakes That Kill Engagement (2025)",
+    description:
+      "Avoid common subtitle styling mistakes with Scenith to create engaging, readable captions for your videos.",
+    url: "https://scenith.in/blogs/subtitle-styling-mistakes-that-kill-engagement",
+    siteName: "Scenith",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Subtitle Styling Mistakes That Kill Engagement (2025)",
+    description:
+      "Avoid common subtitle styling mistakes with Scenith to create engaging, readable captions for your videos.",
+    creator: "@scenith",
+  },
 };
 
 export default function SubtitleStylingMistakes() {
@@ -48,8 +67,6 @@ export default function SubtitleStylingMistakes() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/subtitle-styling-mistakes-that-kill-engagement',
             },
-            image: '/images/subtitle-mistakes-og.jpg',
-            wordCount: 1100,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

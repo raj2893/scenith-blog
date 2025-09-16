@@ -4,7 +4,7 @@ import Link from 'next/link';
 import styles from '../../../../styles/HowToGenerateAIVoices.module.css';
 
 export const metadata: Metadata = {
-  title: "Generate Realistic AI Voices for Your Videos for FREE.",
+  title: "Generate Realistic AI Voices for Your Videos for FREE",
   description:
     "Transform your content with AI-generated voices that sound incredibly natural and engaging like a real human.",
   keywords: [
@@ -14,6 +14,25 @@ export const metadata: Metadata = {
     "background removal",
     "Scenith",
   ],
+  alternates: {
+    canonical: "/blogs/how-to-generate-ai-voices",
+  },
+  openGraph: {
+    title: "Generate Realistic AI Voices for Your Videos for FREE",
+    description:
+      "Learn how to generate AI voices for videos in seconds using tools like Scenith. Compare 4 methods, discover why AI is the best, and enhance your content with lifelike voiceovers.",
+    url: "https://scenith.in/blogs/how-to-generate-ai-voices",
+    siteName: "Scenith",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Generate Realistic AI Voices for Your Videos for FREE",
+    description:
+      "Learn how to generate AI voices for videos in seconds using tools like Scenith. Compare 4 methods, discover why AI is the best, and enhance your content with lifelike voiceovers.",
+    creator: "@scenith",
+  },
 };
 
 export default function HowToGenerateAIVoices() {
@@ -49,8 +68,6 @@ export default function HowToGenerateAIVoices() {
                 '@type': 'WebPage',
                 '@id': 'https://scenith.in/blogs/how-to-generate-ai-voices',
               },
-              image: '/images/ai-voices-og.jpg',
-              wordCount: 1200,
               articleSection: 'Video Editing',
               inLanguage: 'en-US',
             }),

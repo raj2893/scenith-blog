@@ -14,6 +14,25 @@ export const metadata: Metadata = {
     "Scenith",
     "subtitle accuracy",
   ],
+  alternates: {
+    canonical: "/blogs/ai-subtitles-vs-manual-subtitles-accuracy-test",
+  },
+  openGraph: {
+    title: "AI Subtitles vs. Manual Subtitles: Accuracy Test (2025)",
+    description:
+      "Compare AI subtitles with manual subtitles for accuracy and speed using Scenith’s AI tools for video editing.",
+    url: "https://scenith.in/blogs/ai-subtitles-vs-manual-subtitles-accuracy-test",
+    siteName: "Scenith",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AI Subtitles vs. Manual Subtitles: Accuracy Test (2025)",
+    description:
+      "Compare AI subtitles with manual subtitles for accuracy and speed using Scenith’s AI tools for video editing.",
+    creator: "@scenith",
+  },
 };
 
 export default function AISubtitlesVsManual() {
@@ -48,8 +67,6 @@ export default function AISubtitlesVsManual() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/ai-subtitles-vs-manual-subtitles-accuracy-test',
             },
-            image: '/images/ai-subtitles-og.jpg',
-            wordCount: 1150,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

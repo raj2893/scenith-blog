@@ -14,6 +14,25 @@ export const metadata: Metadata = {
     "Scenith",
     "social media videos",
   ],
+  alternates: {
+    canonical: "/blogs/why-90-percent-viewers-watch-videos-without-sound",
+  },
+  openGraph: {
+    title: "Why 90% of Viewers Watch Videos Without Sound (2025)",
+    description:
+      "Discover why 90% of viewers watch videos on mute and how Scenith’s AI subtitles can boost engagement for silent viewers.",
+    url: "https://scenith.in/blogs/why-90-percent-viewers-watch-videos-without-sound",
+    siteName: "Scenith",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Why 90% of Viewers Watch Videos Without Sound (2025)",
+    description:
+      "Discover why 90% of viewers watch videos on mute and how Scenith’s AI subtitles can boost engagement for silent viewers.",
+    creator: "@scenith",
+  },
 };
 
 export default function ViewersWithoutSound() {
@@ -48,8 +67,6 @@ export default function ViewersWithoutSound() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/why-90-percent-viewers-watch-videos-without-sound',
             },
-            image: '/images/viewers-without-sound-og.jpg',
-            wordCount: 1100,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

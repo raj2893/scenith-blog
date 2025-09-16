@@ -4,7 +4,7 @@ import Link from 'next/link';
 import styles from '../../../../styles/HowToUseLayersInVideoEditing.module.css';
 
 export const metadata: Metadata = {
-  title: "Master the use of Layers in Video Editing.",
+  title: "Master the use of Layers in Video Editing",
   description:
     "Learn advanced layering techniques to create professional-looking videos with depth and visual appeal.",
   keywords: [
@@ -14,6 +14,25 @@ export const metadata: Metadata = {
     "background removal",
     "Scenith",
   ],
+  alternates: {
+    canonical: "/blogs/how-to-use-layers-in-video-editing",
+  },
+  openGraph: {
+    title: "Master the use of Layers in Video Editing",
+    description:
+      "Learn how to use layers in video editing with Scenith to create professional-looking videos. Master the Transform panel and boost your video’s engagement.",
+    url: "https://scenith.in/blogs/how-to-use-layers-in-video-editing",
+    siteName: "Scenith",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Master the use of Layers in Video Editing",
+    description:
+      "Learn how to use layers in video editing with Scenith to create professional-looking videos. Master the Transform panel and boost your video’s engagement.",
+    creator: "@scenith",
+  },
 };
 
 export default function HowToUseLayersInVideoEditing() {
@@ -49,8 +68,6 @@ export default function HowToUseLayersInVideoEditing() {
                 '@type': 'WebPage',
                 '@id': 'https://scenith.in/blogs/how-to-use-layers-in-video-editing',
               },
-              image: '/images/layers-guide-og.jpg',
-              wordCount: 1200,
               articleSection: 'Video Editing',
               inLanguage: 'en-US',
             }),

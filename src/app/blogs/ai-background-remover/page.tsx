@@ -14,6 +14,25 @@ export const metadata: Metadata = {
     "background removal",
     "Scenith",
   ],
+  alternates: {
+    canonical: "/blogs/ai-background-remover",
+  },
+  openGraph: {
+    title: "AI Background Remover: Remove Image Backgrounds Instantly",
+    description:
+      "Learn how to remove backgrounds from images in seconds using AI tools like Scenith. Compare 4 methods, discover why AI is the best, and create professional visuals effortlessly.",
+    url: "https://scenith.in/blogs/ai-background-remover",
+    siteName: "Scenith",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AI Background Remover: Remove Image Backgrounds Instantly",
+    description:
+      "Learn how to remove backgrounds from images in seconds using AI tools like Scenith. Compare 4 methods, discover why AI is the best, and create professional visuals effortlessly.",
+    creator: "@scenith",
+  },
 };
 
 export default function HowToRemoveBackgroundFromImage() {
@@ -47,10 +66,8 @@ export default function HowToRemoveBackgroundFromImage() {
               dateModified: '2025-09-03T10:00:00Z',
               mainEntityOfPage: {
                 '@type': 'WebPage',
-                '@id': 'https://scenith.in/blogs/how-to-remove-background-from-image',
+                '@id': 'https://scenith.in/blogs/ai-background-remover',
               },
-              image: '/images/background-removal-og.jpg',
-              wordCount: 1200,
               articleSection: 'Image Editing',
               inLanguage: 'en-US',
             }),

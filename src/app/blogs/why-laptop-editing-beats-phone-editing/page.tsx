@@ -14,6 +14,22 @@ export const metadata: Metadata = {
     "video editing software",
     "professional editing",
   ],
+  openGraph: {
+    title: "Why Laptop Editing Beats Phone Editing (2025)",
+    description:
+      "Discover why laptop editing with Scenith outperforms phone editing for creating professional videos.",
+    url: 'https://scenith.in/blogs/why-laptop-editing-beats-phone-editing',
+    siteName: 'Scenith',
+    locale: 'en_US',
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Why Laptop Editing Beats Phone Editing (2025)",
+    description:
+      "Discover why laptop editing with Scenith outperforms phone editing for creating professional videos.",
+    creator: '@scenith',
+  },  
 };
 
 export default function LaptopVsPhoneEditing() {
@@ -39,7 +55,6 @@ export default function LaptopVsPhoneEditing() {
               name: 'Scenith',
               logo: {
                 '@type': 'ImageObject',
-                url: '/images/logo.png',
               },
             },
             datePublished: '2025-09-30T10:00:00Z',
@@ -48,8 +63,6 @@ export default function LaptopVsPhoneEditing() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/why-laptop-editing-beats-phone-editing',
             },
-            image: '/images/laptop-vs-phone-editing-og.jpg',
-            wordCount: 1100,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),
