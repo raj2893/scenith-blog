@@ -92,6 +92,23 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        {/* ✅ Google Analytics 4 */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-GV9N09RZ1B"
+          strategy="afterInteractive"
+        />
+        <Script id="ga4-script" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-GV9N09RZ1B', {
+              page_path: window.location.pathname,
+            });
+          `}
+        </Script>
+      </head>      
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <Navbar pageType="blogs" />
         <main>{children}</main>
