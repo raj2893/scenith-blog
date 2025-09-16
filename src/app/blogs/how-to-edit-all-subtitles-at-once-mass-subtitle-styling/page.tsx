@@ -14,6 +14,22 @@ export const metadata: Metadata = {
     "video editing",
     "caption consistency",
   ],
+  openGraph: {
+    title: "How to Edit All Subtitles at Once: Mass Subtitle Styling (2025)",
+    description:
+      "Learn how to edit all subtitles at once with Scenith’s mass subtitle styling tool to save hours and create consistent, engaging captions for your videos.",
+    url: 'https://scenith.in/blogs/how-to-edit-all-subtitles-at-once-mass-subtitle-styling',
+    siteName: 'Scenith',
+    locale: 'en_US',
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "How to Edit All Subtitles at Once: Mass Subtitle Styling (2025)",
+    description:
+      "Learn how to edit all subtitles at once with Scenith’s mass subtitle styling tool to save hours and create consistent, engaging captions for your videos.",
+    creator: '@scenith',
+  },
 };
 
 export default function MassSubtitleStyling() {
@@ -48,8 +64,6 @@ export default function MassSubtitleStyling() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/how-to-edit-all-subtitles-at-once-mass-subtitle-styling',
             },
-            image: '/images/mass-subtitle-styling-og.jpg',
-            wordCount: 1500,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

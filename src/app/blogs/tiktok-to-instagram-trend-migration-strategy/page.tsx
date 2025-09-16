@@ -14,6 +14,22 @@ export const metadata: Metadata = {
     "social media strategy",
     "video editing",
   ],
+  openGraph: {
+    title: "TikTok to Instagram Trend Migration Strategy (2025)",
+    description:
+      "Learn how to adapt TikTok trends for Instagram Reels using Scenith’s AI tools to maximize reach and engagement.",
+    url: 'https://scenith.in/blogs/tiktok-to-instagram-trend-migration-strategy',
+    siteName: 'Scenith',
+    locale: 'en_US',
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "TikTok to Instagram Trend Migration Strategy (2025)",
+    description:
+      "Learn how to adapt TikTok trends for Instagram Reels using Scenith’s AI tools to maximize reach and engagement.",
+    creator: '@scenith',
+  },
 };
 
 export default function TikTokToInstagramTrends() {
@@ -48,8 +64,6 @@ export default function TikTokToInstagramTrends() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/tiktok-to-instagram-trend-migration-strategy',
             },
-            image: '/images/tiktok-to-instagram-trends-og.jpg',
-            wordCount: 1100,
             articleSection: 'Social Media Growth',
             inLanguage: 'en-US',
           }),
