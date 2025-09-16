@@ -14,6 +14,22 @@ export const metadata: Metadata = {
     "Scenith",
     "AI tools",
   ],
+  openGraph: {
+    title: "Subtitle Consistency Across Entire Video: One-Click Solution (2025)",
+    description:
+      "Achieve uniform subtitles across your video with Scenith’s one-click styling tool for professional, engaging captions in seconds.",
+    url: 'https://scenith.in/blogs/subtitle-consistency-across-entire-video-one-click-solution',
+    siteName: 'Scenith',
+    locale: 'en_US',
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Subtitle Consistency Across Entire Video: One-Click Solution (2025)",
+    description:
+      "Achieve uniform subtitles across your video with Scenith’s one-click styling tool for professional, engaging captions in seconds.",
+    creator: '@scenith',
+  },
 };
 
 export default function SubtitleConsistencyOneClick() {
@@ -48,8 +64,6 @@ export default function SubtitleConsistencyOneClick() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/subtitle-consistency-across-entire-video-one-click-solution',
             },
-            image: '/images/subtitle-consistency-og.jpg',
-            wordCount: 1500,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

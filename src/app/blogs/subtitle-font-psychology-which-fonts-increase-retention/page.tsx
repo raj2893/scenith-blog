@@ -14,6 +14,22 @@ export const metadata: Metadata = {
     "Scenith",
     "retention",
   ],
+  openGraph: {
+    title: "Subtitle Font Psychology: Which Fonts Increase Retention (2025)",
+    description:
+      "Explore how font choice impacts viewer retention and use Scenith to select the best subtitle fonts for your videos.",
+    url: 'https://scenith.in/blogs/subtitle-font-psychology-which-fonts-increase-retention',
+    siteName: 'Scenith',
+    locale: 'en_US',
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Subtitle Font Psychology: Which Fonts Increase Retention (2025)",
+    description:
+      "Explore how font choice impacts viewer retention and use Scenith to select the best subtitle fonts for your videos.",
+    creator: '@scenith',
+  },
 };
 
 export default function SubtitleFontPsychology() {
@@ -48,8 +64,6 @@ export default function SubtitleFontPsychology() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/subtitle-font-psychology-which-fonts-increase-retention',
             },
-            image: '/images/subtitle-font-psychology-og.jpg',
-            wordCount: 1500,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

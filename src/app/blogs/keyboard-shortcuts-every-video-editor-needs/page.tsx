@@ -14,8 +14,23 @@ export const metadata: Metadata = {
     "editing efficiency",
     "video production",
   ],
+  openGraph: {
+    title: "Keyboard Shortcuts Every Video Editor Needs (2025)",
+    description:
+      "Boost your video editing speed with essential keyboard shortcuts using Scenith’s web-based platform.",
+    url: 'https://scenith.in/blogs/keyboard-shortcuts-every-video-editor-needs',
+    siteName: 'Scenith',
+    locale: 'en_US',
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Keyboard Shortcuts Every Video Editor Needs (2025)",
+    description:
+      "Boost your video editing speed with essential keyboard shortcuts using Scenith’s web-based platform.",
+    creator: '@scenith',
+  },
 };
-
 export default function KeyboardShortcutsVideoEditing() {
   return (
     <>
@@ -48,8 +63,6 @@ export default function KeyboardShortcutsVideoEditing() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/keyboard-shortcuts-every-video-editor-needs',
             },
-            image: '/images/keyboard-shortcuts-og.jpg',
-            wordCount: 1100,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

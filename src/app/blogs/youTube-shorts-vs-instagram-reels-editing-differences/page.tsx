@@ -14,6 +14,22 @@ export const metadata: Metadata = {
     "Scenith",
     "short-form content",
   ],
+  openGraph: {
+    title: "YouTube Shorts vs. Instagram Reels: Editing Differences (2025)",
+    description:
+      "Explore the key editing differences between YouTube Shorts and Instagram Reels to optimize your short-form content with Scenith’s AI-powered tools.",
+    url: 'https://scenith.in/blogs/youtube-shorts-vs-instagram-reels-editing-differences',
+    siteName: 'Scenith',
+    locale: 'en_US',
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "YouTube Shorts vs. Instagram Reels: Editing Differences (2025)",
+    description:
+      "Explore the key editing differences between YouTube Shorts and Instagram Reels to optimize your short-form content with Scenith’s AI-powered tools.",
+    creator: '@scenith',
+  },
 };
 
 export default function YouTubeShortsVsInstagramReels() {
@@ -48,8 +64,6 @@ export default function YouTubeShortsVsInstagramReels() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/youtube-shorts-vs-instagram-reels-editing-differences',
             },
-            image: '/images/youtube-shorts-vs-reels-og.jpg',
-            wordCount: 1100,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

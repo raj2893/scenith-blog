@@ -14,6 +14,22 @@ export const metadata: Metadata = {
     "professional editing",
     "multi-track editing",
   ],
+  openGraph: {
+    title: "Timeline Editing Tricks Mobile Apps Can’t Do (2025)",
+    description:
+      "Master advanced timeline editing tricks with Scenith that mobile apps can’t match for professional videos.",
+    url: 'https://scenith.in/blogs/timeline-editing-tricks-mobile-apps-cant-do',
+    siteName: 'Scenith',
+    locale: 'en_US',
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Timeline Editing Tricks Mobile Apps Can’t Do (2025)",
+    description:
+      "Master advanced timeline editing tricks with Scenith that mobile apps can’t match for professional videos.",
+    creator: '@scenith',
+  },
 };
 
 export default function TimelineEditingTricks() {
@@ -48,8 +64,6 @@ export default function TimelineEditingTricks() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/timeline-editing-tricks-mobile-apps-cant-do',
             },
-            image: '/images/timeline-tricks-og.jpg',
-            wordCount: 1150,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

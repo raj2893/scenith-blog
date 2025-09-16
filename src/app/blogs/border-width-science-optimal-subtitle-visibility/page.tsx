@@ -14,6 +14,22 @@ export const metadata: Metadata = {
     "Scenith",
     "visibility",
   ],
+  openGraph: {
+    title: "Border Width Science: Optimal Subtitle Visibility (2025)",
+    description:
+      "Discover the science behind subtitle border width and how Scenith optimizes visibility for maximum viewer engagement.",
+    url: 'https://scenith.in/blogs/border-width-science-optimal-subtitle-visibility',
+    siteName: 'Scenith',
+    locale: 'en_US',
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Border Width Science: Optimal Subtitle Visibility (2025)",
+    description:
+      "Discover the science behind subtitle border width and how Scenith optimizes visibility for maximum viewer engagement.",
+    creator: '@scenith',
+  },
 };
 
 export default function BorderWidthScience() {
@@ -48,8 +64,6 @@ export default function BorderWidthScience() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/border-width-science-optimal-subtitle-visibility',
             },
-            image: '/images/border-width-science-og.jpg',
-            wordCount: 1500,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

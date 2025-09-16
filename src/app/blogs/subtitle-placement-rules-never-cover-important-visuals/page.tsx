@@ -14,6 +14,22 @@ export const metadata: Metadata = {
     "Scenith",
     "visuals",
   ],
+  openGraph: {
+    title: "Subtitle Placement Rules: Never Cover Important Visuals (2025)",
+    description:
+      "Learn subtitle placement rules with Scenith to ensure captions enhance, not obscure, your video’s key visuals.",
+    url: 'https://scenith.in/blogs/subtitle-placement-rules-never-cover-important-visuals',
+    siteName: 'Scenith',
+    locale: 'en_US',
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Subtitle Placement Rules: Never Cover Important Visuals (2025)",
+    description:
+      "Learn subtitle placement rules with Scenith to ensure captions enhance, not obscure, your video’s key visuals.",
+    creator: '@scenith',
+  },
 };
 
 export default function SubtitlePlacementRules() {
@@ -48,8 +64,6 @@ export default function SubtitlePlacementRules() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/subtitle-placement-rules-never-cover-important-visuals',
             },
-            image: '/images/subtitle-placement-rules-og.jpg',
-            wordCount: 1500,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

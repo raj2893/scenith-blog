@@ -48,8 +48,6 @@ export default function AspectRatioGuide() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/aspect-ratio-guide-for-every-platform-2025',
             },
-            image: '/images/aspect-ratio-guide-og.jpg',
-            wordCount: 1100,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

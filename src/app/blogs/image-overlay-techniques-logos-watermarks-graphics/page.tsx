@@ -14,6 +14,22 @@ export const metadata: Metadata = {
     "video editing",
     "Scenith",
   ],
+  openGraph: {
+    title: "Image Overlay Techniques: Logos Watermarks Graphics (2025)",
+    description:
+      "Explore image overlay techniques for logos, watermarks, and graphics in Scenith to brand your videos professionally.",
+    url: 'https://scenith.in/blogs/image-overlay-techniques-logos-watermarks-graphics',
+    siteName: 'Scenith',
+    locale: 'en_US',
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Image Overlay Techniques: Logos Watermarks Graphics (2025)",
+    description:
+      "Explore image overlay techniques for logos, watermarks, and graphics in Scenith to brand your videos professionally.",
+    creator: '@scenith',
+  },
 };
 
 export default function ImageOverlayTechniques() {
@@ -48,8 +64,6 @@ export default function ImageOverlayTechniques() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/image-overlay-techniques-logos-watermarks-graphics',
             },
-            image: '/images/image-overlay-og.jpg',
-            wordCount: 1500,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

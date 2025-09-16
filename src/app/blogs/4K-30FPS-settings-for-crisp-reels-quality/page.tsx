@@ -14,6 +14,22 @@ export const metadata: Metadata = {
     "Scenith",
     "video quality",
   ],
+  openGraph: {
+    title: "4K 30FPS Settings for Crisp Reels Quality (2025)",
+    description:
+      "Learn the best 4K 30FPS settings in Scenith to create crystal-clear Instagram Reels that stand out on any screen.",
+    url: 'https://scenith.in/blogs/4k-30fps-settings-crisp-reels-quality',
+    siteName: 'Scenith',
+    locale: 'en_US',
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "4K 30FPS Settings for Crisp Reels Quality (2025)",
+    description:
+      "Learn the best 4K 30FPS settings in Scenith to create crystal-clear Instagram Reels that stand out on any screen.",
+    creator: '@scenith',
+  },
 };
 
 export default function FourK30FPSSettings() {
@@ -48,8 +64,6 @@ export default function FourK30FPSSettings() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/4k-30fps-settings-crisp-reels-quality',
             },
-            image: '/images/4k-reels-quality-og.jpg',
-            wordCount: 1100,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

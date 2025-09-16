@@ -14,6 +14,22 @@ export const metadata: Metadata = {
     "video editing",
     "Scenith",
   ],
+  openGraph: {
+    title: "Audio Layer Mixing: Background Music Voiceover Balance (2025)",
+    description:
+      "Learn audio layer mixing techniques for balancing background music and voiceover in Scenith to create professional, engaging videos.",
+    url: 'https://scenith.in/blogs/audio-layer-mixing-background-music-voiceover-balance',
+    siteName: 'Scenith',
+    locale: 'en_US',
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Audio Layer Mixing: Background Music Voiceover Balance (2025)",
+    description:
+      "Learn audio layer mixing techniques for balancing background music and voiceover in Scenith to create professional, engaging videos.",
+    creator: '@scenith',
+  },
 };
 
 export default function AudioLayerMixing() {
@@ -48,8 +64,6 @@ export default function AudioLayerMixing() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/audio-layer-mixing-background-music-voiceover-balance',
             },
-            image: '/images/audio-mixing-og.jpg',
-            wordCount: 1500,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

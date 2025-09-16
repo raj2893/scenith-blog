@@ -14,6 +14,23 @@ export const metadata: Metadata = {
     "Scenith",
     "AI tools",
   ],
+  openGraph: {
+    title: "Global Subtitle Changes: Font, Color, Background in Seconds (2025)",
+    description:
+      "Apply global font, color, and background changes to subtitles with Scenith’s AI tools for fast, consistent video captions.",
+    url: 'https://scenith.in/blogs/global-subtitle-changes-font-color-background-in-seconds',
+    siteName: 'Scenith',
+    locale: 'en_US',
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Global Subtitle Changes: Font, Color, Background in Seconds (2025)",
+    description:
+      "Apply global font, color, and background changes to subtitles with Scenith’s AI tools for fast, consistent video captions.",
+    images: ['/images/global-subtitle-changes-og.jpg'],
+    creator: '@scenith',
+  },
 };
 
 export default function GlobalSubtitleChanges() {
@@ -48,8 +65,6 @@ export default function GlobalSubtitleChanges() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/global-subtitle-changes-font-color-background-in-seconds',
             },
-            image: '/images/global-subtitle-changes-og.jpg',
-            wordCount: 1500,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

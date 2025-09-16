@@ -14,6 +14,22 @@ export const metadata: Metadata = {
     "Scenith",
     "video editing",
   ],
+  openGraph: {
+    title: "Exposure Lock Techniques for Consistent Reel Lighting (2025)",
+    description:
+      "Master exposure lock techniques with Scenith to ensure consistent lighting in your Instagram Reels for a professional look.",
+    url: 'https://scenith.in/blogs/exposure-lock-techniques-consistent-reel-lighting',
+    siteName: 'Scenith',
+    locale: 'en_US',
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Exposure Lock Techniques for Consistent Reel Lighting (2025)",
+    description:
+      "Master exposure lock techniques with Scenith to ensure consistent lighting in your Instagram Reels for a professional look.",
+    creator: '@scenith',
+  },
 };
 
 export default function ExposureLockTechniques() {
@@ -48,8 +64,6 @@ export default function ExposureLockTechniques() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/exposure-lock-techniques-consistent-reel-lighting',
             },
-            image: '/images/exposure-lock-reels-og.jpg',
-            wordCount: 1100,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),
