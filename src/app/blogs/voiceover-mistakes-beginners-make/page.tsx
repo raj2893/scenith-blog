@@ -14,6 +14,25 @@ export const metadata: Metadata = {
     "Scenith",
     "narration tips",
   ],
+  alternates: {
+    canonical: "/blogs/voiceover-mistakes-beginners-make",
+  },
+  openGraph: {
+    title: "Voiceover Mistakes Beginners Make (2025)",
+    description:
+      "Avoid common voiceover mistakes with Scenith’s AI voice tools to create professional narration for videos.",
+    url: "https://scenith.in/blogs/voiceover-mistakes-beginners-make",
+    siteName: "Scenith",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Voiceover Mistakes Beginners Make (2025)",
+    description:
+      "Avoid common voiceover mistakes with Scenith’s AI voice tools to create professional narration for videos.",
+    creator: "@scenith",
+  },
 };
 
 export default function VoiceoverMistakesBeginners() {
@@ -39,7 +58,6 @@ export default function VoiceoverMistakesBeginners() {
               name: 'Scenith',
               logo: {
                 '@type': 'ImageObject',
-                url: '/images/logo.png',
               },
             },
             datePublished: '2025-09-28T10:00:00Z',
@@ -48,8 +66,6 @@ export default function VoiceoverMistakesBeginners() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/voiceover-mistakes-beginners-make',
             },
-            image: '/images/voiceover-mistakes-og.jpg',
-            wordCount: 1100,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

@@ -14,6 +14,25 @@ export const metadata: Metadata = {
     "background removal",
     "Scenith",
   ],
+  alternates: {
+    canonical: "/blogs/how-to-add-subtitles-to-video",
+  },
+  openGraph: {
+    title: "Stop Wasting Hours on Subtitles: Add Them to Any Video in 30 Seconds",
+    description:
+      "Learn how to add subtitles to videos using 5 different methods. Compare AI tools, manual methods, and software options. Complete guide with step-by-step instructions.",
+    url: "https://scenith.in/blogs/how-to-add-subtitles-to-video",
+    siteName: "Scenith",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Stop Wasting Hours on Subtitles: Add Them to Any Video in 30 Seconds",
+    description:
+      "Learn how to add subtitles to videos using 5 different methods. Compare AI tools, manual methods, and software options. Complete guide with step-by-step instructions.",
+    creator: "@scenith",
+  },
 };
 
 export default function HowToAddSubtitlesToVideo() {
@@ -50,8 +69,6 @@ export default function HowToAddSubtitlesToVideo() {
                 '@type': 'WebPage',
                 '@id': 'https://scenith.in/blogs/how-to-add-subtitles-to-video',
               },
-              image: 'https://scenith.in/images/subtitle-guide-og.jpg',
-              wordCount: 2500,
               articleSection: 'Video Editing',
               inLanguage: 'en-US'
             }),

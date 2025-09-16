@@ -14,6 +14,25 @@ export const metadata: Metadata = {
     "Scenith",
     "video captions",
   ],
+  alternates: {
+    canonical: "/blogs/how-to-make-videos-accessible-for-deaf-community",
+  },
+  openGraph: {
+    title: "How to Make Videos Accessible for the Deaf Community (2025)",
+    description:
+      "Learn how to create accessible videos for the deaf community using Scenith’s AI subtitles and captioning tools.",
+    url: "https://scenith.in/blogs/how-to-make-videos-accessible-for-deaf-community",
+    siteName: "Scenith",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "How to Make Videos Accessible for the Deaf Community (2025)",
+    description:
+      "Learn how to create accessible videos for the deaf community using Scenith’s AI subtitles and captioning tools.",
+    creator: "@scenith",
+  },
 };
 
 export default function AccessibleVideosDeafCommunity() {
@@ -48,8 +67,6 @@ export default function AccessibleVideosDeafCommunity() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/how-to-make-videos-accessible-for-deaf-community',
             },
-            image: '/images/accessible-videos-og.jpg',
-            wordCount: 1150,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

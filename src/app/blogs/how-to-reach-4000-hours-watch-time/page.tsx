@@ -4,7 +4,7 @@ import Link from 'next/link';
 import styles from '../../../../styles/HowToReach4000HoursWatchTime.module.css';
 
 export const metadata: Metadata = {
-  title: "How to Reach 4000 Hours of YouTube Watch Time Fast in 2025.",
+  title: "How to Reach 4000 Hours of YouTube Watch Time Fast in 2025",
   description:
     "Discover proven strategies to hit 4000 hours of YouTube watch time using AI-powered subtitles and engagement tactics.",
   keywords: [
@@ -14,6 +14,25 @@ export const metadata: Metadata = {
     "background removal",
     "Scenith",
   ],
+  alternates: {
+    canonical: "/blogs/how-to-reach-4000-hours-watch-time",
+  },
+  openGraph: {
+    title: "How to Reach 4000 Hours of YouTube Watch Time Fast in 2025",
+    description:
+      "Discover how to hit 4000 hours of YouTube watch time fast using AI-powered subtitles with Scenith. Learn why subtitles boost viewer retention and skyrocket your channel’s growth.",
+    url: "https://scenith.in/blogs/how-to-reach-4000-hours-watch-time",
+    siteName: "Scenith",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "How to Reach 4000 Hours of YouTube Watch Time Fast in 2025",
+    description:
+      "Discover how to hit 4000 hours of YouTube watch time fast using AI-powered subtitles with Scenith. Learn why subtitles boost viewer retention and skyrocket your channel’s growth.",
+    creator: "@scenith",
+  },
 };
 
 export default function HowToReach4000HoursWatchTime() {

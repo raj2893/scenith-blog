@@ -14,6 +14,25 @@ export const metadata: Metadata = {
     "social media content",
     "video editing tips",
   ],
+  alternates: {
+    canonical: "/blogs/effortless-transitions-cinematic-videos",
+  },
+  openGraph: {
+    title: "Effortless Transitions: Create Cinematic Videos with Scenith (2025)",
+    description:
+      "Learn how to create cinematic videos using Scenith’s transition effects. Master seamless transitions for YouTube, Instagram, and TikTok in minutes.",
+    url: "https://scenith.in/blogs/effortless-transitions-cinematic-videos",
+    siteName: "Scenith",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Effortless Transitions: Create Cinematic Videos with Scenith (2025)",
+    description:
+      "Learn how to create cinematic videos using Scenith’s transition effects. Master seamless transitions for YouTube, Instagram, and TikTok in minutes.",
+    creator: "@scenith",
+  },
 };
 
 export default function EffortlessTransitions() {
@@ -48,8 +67,6 @@ export default function EffortlessTransitions() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/effortless-transitions-cinematic-videos',
             },
-            image: '/images/transitions-guide-og.jpg',
-            wordCount: 1100,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

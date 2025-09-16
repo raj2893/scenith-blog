@@ -15,6 +15,25 @@ export const metadata: Metadata = {
     "text to speech",
     "video editing tools",
   ],
+  alternates: {
+    canonical: "/blogs/how-to-use-ai-features-in-scenith",
+  },
+  openGraph: {
+    title: "Scenith's AI Features: How to Use Them for Video Editing (2025)",
+    description:
+      "Discover Scenith's AI tools for background removal, subtitles, and text-to-speech. Learn how to use them to create professional videos effortlessly.",
+    url: "https://scenith.in/blogs/how-to-use-ai-features-in-scenith",
+    siteName: "Scenith",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Scenith's AI Features: How to Use Them for Video Editing (2025)",
+    description:
+      "Discover Scenith's AI tools for background removal, subtitles, and text-to-speech. Learn how to use them to create professional videos effortlessly.",
+    creator: "@scenith",
+  },
 };
 
 export default function ScenithAI() {
@@ -47,10 +66,8 @@ export default function ScenithAI() {
             dateModified: '2025-09-13T10:00:00Z',
             mainEntityOfPage: {
               '@type': 'WebPage',
-              '@id': 'https://scenith.in/blogs/sceniths-ai-features-how-to-use-them',
+              '@id': 'https://scenith.in/blogs/how-to-use-ai-features-in-scenith',
             },
-            image: '/images/scenith-ai-og.jpg',
-            wordCount: 2500,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

@@ -4,9 +4,9 @@ import Link from 'next/link';
 import styles from '../../../../styles/HowToCreateVideoEditingProject.module.css';
 
 export const metadata: Metadata = {
-  title: "Create Your First Video Editing Project in 2025.",
+  title: "Create Your First Video Editing Project in 2025",
   description:
-    "Discover 3 game-changing video editing hacks to boost retention and grow your social media. Learn fast cuts, AI subtitles, and background removal with Scenith.",
+    "Discover how to create a video editing project in Scenith with this beginner-friendly guide. Compare methods and follow step-by-step instructions to start your video project.",
   keywords: [
     "video editing hacks",
     "social media growth",
@@ -14,6 +14,25 @@ export const metadata: Metadata = {
     "background removal",
     "Scenith",
   ],
+  alternates: {
+    canonical: "/blogs/how-to-create-video-editing-project",
+  },
+  openGraph: {
+    title: "Create Your First Video Editing Project in 2025",
+    description:
+      "Learn how to create a video editing project in Scenith with this beginner-friendly guide. Compare methods and follow step-by-step instructions to start your video project.",
+    url: "https://scenith.in/blogs/how-to-create-video-editing-project",
+    siteName: "Scenith",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Create Your First Video Editing Project in 2025",
+    description:
+      "Learn how to create a video editing project in Scenith with this beginner-friendly guide. Compare methods and follow step-by-step instructions to start your video project.",
+    creator: "@scenith",
+  },
 };
 
 export default function HowToCreateVideoEditingProject() {
@@ -49,8 +68,6 @@ export default function HowToCreateVideoEditingProject() {
                 '@type': 'WebPage',
                 '@id': 'https://scenith.in/blogs/how-to-create-video-editing-project',
               },
-              image: '/images/create-project-og.jpg',
-              wordCount: 1500,
               articleSection: 'Video Editing',
               inLanguage: 'en-US',
             }),

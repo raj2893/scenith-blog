@@ -4,58 +4,75 @@ import Link from 'next/link';
 import styles from '../../../../styles/ThreeSecondRule.module.css';
 
 export const metadata: Metadata = {
-  title: "Why 87% of Viewers Skip Your Videos (And How to Fix It) : The 3-Second Rule",
+  title: "Why 87% of Viewers Skip Your Videos (And How to Fix It): The 3-Second Rule",
   description:
     "Learn why most viewers skip videos within 3 seconds and discover proven editing techniques to hook your audience from the first frame. Increase retention by 340%.",
   keywords: [
     "video hook examples",
     "increase video retention",
-    "social media engagement", 
+    "social media engagement",
     "video editing tips",
     "viral video techniques",
-    "Scenith"
+    "Scenith",
   ],
+  alternates: {
+    canonical: "/blogs/three-second-rule",
+  },
+  openGraph: {
+    title: "Why 87% of Viewers Skip Your Videos (And How to Fix It): The 3-Second Rule",
+    description:
+      "Learn why most viewers skip videos within 3 seconds and discover proven editing techniques to hook your audience from the first frame. Increase retention by 340%.",
+    url: "https://scenith.in/blogs/three-second-rule",
+    siteName: "Scenith",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Why 87% of Viewers Skip Your Videos (And How to Fix It): The 3-Second Rule",
+    description:
+      "Learn why most viewers skip videos within 3 seconds and discover proven editing techniques to hook your audience from the first frame. Increase retention by 340%.",
+    creator: "@scenith",
+  },
 };
 
 export default function ThreeSecondRule() {
-
   return (
     <>
-        <Script
-          id="ld-json-three-second-rule"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'Article',
-              headline: 'The 3-Second Rule: Why 87% of Viewers Skip Your Videos (And How to Fix It)',
-              description: 'Learn why most viewers skip videos within 3 seconds and discover proven editing techniques to hook your audience from the first frame. Increase retention by 340%.',
-              author: {
-                '@type': 'Organization',
-                name: 'Scenith',
-                url: 'https://scenith.in'
+      <Script
+        id="ld-json-three-second-rule"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Article',
+            headline: 'The 3-Second Rule: Why 87% of Viewers Skip Your Videos (And How to Fix It)',
+            description:
+              'Learn why most viewers skip videos within 3 seconds and discover proven editing techniques to hook your audience from the first frame. Increase retention by 340%.',
+            author: {
+              '@type': 'Organization',
+              name: 'Scenith',
+              url: 'https://scenith.in',
+            },
+            publisher: {
+              '@type': 'Organization',
+              name: 'Scenith',
+              logo: {
+                '@type': 'ImageObject',
+                url: 'https://scenith.in/images/logo.png',
               },
-              publisher: {
-                '@type': 'Organization',
-                name: 'Scenith',
-                logo: {
-                  '@type': 'ImageObject',
-                  url: 'https://scenith.in/images/logo.png',
-                },
-              },
-              datePublished: '2025-09-10T10:00:00Z',
-              dateModified: '2025-09-10T10:00:00Z',
-              mainEntityOfPage: {
-                '@type': 'WebPage',
-                '@id': 'https://scenith.in/blogs/three-second-rule',
-              },
-              image: 'https://scenith.in/images/three-second-rule-og.jpg',
-              wordCount: 2800,
-              articleSection: 'Social Media Growth',
-              inLanguage: 'en-US'
-            }),
-          }}
-        />
+            },
+            datePublished: '2025-09-10T10:00:00Z',
+            dateModified: '2025-09-10T10:00:00Z',
+            mainEntityOfPage: {
+              '@type': 'WebPage',
+              '@id': 'https://scenith.in/blogs/three-second-rule',
+            },
+            articleSection: 'Social Media Growth',
+            inLanguage: 'en-US',
+          }),
+        }}
+      />
 
       <article className={styles.blogContainer}>
         {/* Header */}

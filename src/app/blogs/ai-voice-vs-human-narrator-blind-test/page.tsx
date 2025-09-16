@@ -14,6 +14,25 @@ export const metadata: Metadata = {
     "Scenith",
     "audio editing",
   ],
+  alternates: {
+    canonical: "/blogs/ai-voice-vs-human-narrator-blind-test",
+  },
+  openGraph: {
+    title: "AI Voice vs. Human Narrator: Blind Test (2025)",
+    description:
+      "Discover how Scenith’s AI voices stack up against human narrators in a blind test for video content creation.",
+    url: "https://scenith.in/blogs/ai-voice-vs-human-narrator-blind-test",
+    siteName: "Scenith",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AI Voice vs. Human Narrator: Blind Test (2025)",
+    description:
+      "Discover how Scenith’s AI voices stack up against human narrators in a blind test for video content creation.",
+    creator: "@scenith",
+  },
 };
 
 export default function AIVoiceVsHumanNarrator() {
@@ -48,8 +67,6 @@ export default function AIVoiceVsHumanNarrator() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/ai-voice-vs-human-narrator-blind-test',
             },
-            image: '/images/ai-voice-blind-test-og.jpg',
-            wordCount: 1100,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

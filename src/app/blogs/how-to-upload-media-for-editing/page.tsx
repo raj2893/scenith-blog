@@ -4,7 +4,7 @@ import Link from 'next/link';
 import styles from '../../../../styles/HowToUploadMediaForEditing.module.css';
 
 export const metadata: Metadata = {
-  title: "Upload and Organize Media Like a Pro in Scenith Video Editor.",
+  title: "Upload and Organize Media Like a Pro in Scenith Video Editor",
   description:
     "Master the art of media organization for faster editing workflow and better project management.",
   keywords: [
@@ -14,6 +14,25 @@ export const metadata: Metadata = {
     "background removal",
     "Scenith",
   ],
+  alternates: {
+    canonical: "/blogs/how-to-upload-and-organize-media",
+  },
+  openGraph: {
+    title: "Upload and Organize Media Like a Pro in Scenith Video Editor",
+    description:
+      "Learn how to upload and organize videos, photos, audio, and elements in Scenith’s Project Editor with this beginner-friendly guide for a seamless video editing workflow.",
+    url: "https://scenith.in/blogs/how-to-upload-and-organize-media",
+    siteName: "Scenith",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Upload and Organize Media Like a Pro in Scenith Video Editor",
+    description:
+      "Learn how to upload and organize videos, photos, audio, and elements in Scenith’s Project Editor with this beginner-friendly guide for a seamless video editing workflow.",
+    creator: "@scenith",
+  },
 };
 
 export default function HowToUploadAndOrganizeMedia() {
@@ -49,12 +68,6 @@ export default function HowToUploadAndOrganizeMedia() {
                 '@type': 'WebPage',
                 '@id': 'https://scenith.in/blogs/how-to-upload-and-organize-media',
               },
-              image: [
-                '/images/screenshot-media-panel.jpg',
-                '/images/screenshot-upload-progress.jpg',
-                '/images/screenshot-timeline-media.jpg',
-              ],
-              wordCount: 1200,
               articleSection: 'Video Editing',
               inLanguage: 'en-US',
             }),
