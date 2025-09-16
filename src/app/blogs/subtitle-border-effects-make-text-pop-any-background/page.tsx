@@ -14,6 +14,22 @@ export const metadata: Metadata = {
     "Scenith",
     "readability",
   ],
+  openGraph: {
+    title: "Subtitle Border Effects: Make Text Pop Against Any Background (2025)",
+    description:
+      "Learn how to use subtitle border effects in Scenith to ensure your captions stand out against any video background.",
+    url: 'https://scenith.in/blogs/subtitle-border-effects-make-text-pop-any-background',
+    siteName: 'Scenith',
+    locale: 'en_US',
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Subtitle Border Effects: Make Text Pop Against Any Background (2025)",
+    description:
+      "Learn how to use subtitle border effects in Scenith to ensure your captions stand out against any video background.",
+    creator: '@scenith',
+  },
 };
 
 export default function SubtitleBorderEffects() {
@@ -48,8 +64,6 @@ export default function SubtitleBorderEffects() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/subtitle-border-effects-make-text-pop-any-background',
             },
-            image: '/images/subtitle-border-effects-og.jpg',
-            wordCount: 1500,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

@@ -14,6 +14,22 @@ export const metadata: Metadata = {
     "Scenith",
     "background",
   ],
+  openGraph: {
+    title: "Background Color vs. Transparent Subtitles: Readability Test (2025)",
+    description:
+      "Compare background color and transparent subtitles in Scenith to find the best option for readability and engagement.",
+    url: 'https://scenith.in/blogs/background-color-vs-transparent-subtitles-readability-test',
+    siteName: 'Scenith',
+    locale: 'en_US',
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Background Color vs. Transparent Subtitles: Readability Test (2025)",
+    description:
+      "Compare background color and transparent subtitles in Scenith to find the best option for readability and engagement.",
+    creator: '@scenith',
+  },
 };
 
 export default function BackgroundVsTransparentSubtitles() {
@@ -48,8 +64,6 @@ export default function BackgroundVsTransparentSubtitles() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/background-color-vs-transparent-subtitles-readability-test',
             },
-            image: '/images/background-vs-transparent-og.jpg',
-            wordCount: 1500,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

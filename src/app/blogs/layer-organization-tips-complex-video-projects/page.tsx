@@ -14,6 +14,22 @@ export const metadata: Metadata = {
     "Scenith",
     "timeline management",
   ],
+  openGraph: {
+    title: "Layer Organization Tips for Complex Video Projects (2025)",
+    description:
+      "Discover essential layer organization tips for handling complex video projects with Scenith’s tools to maintain efficiency and creativity.",
+    url: 'https://scenith.in/blogs/layer-organization-tips-complex-video-projects',
+    siteName: 'Scenith',
+    locale: 'en_US',
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Layer Organization Tips for Complex Video Projects (2025)",
+    description:
+      "Discover essential layer organization tips for handling complex video projects with Scenith’s tools to maintain efficiency and creativity.",
+    creator: '@scenith',
+  },
 };
 
 export default function LayerOrganizationTips() {
@@ -48,8 +64,6 @@ export default function LayerOrganizationTips() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/layer-organization-tips-complex-video-projects',
             },
-            image: '/images/layer-organization-og.jpg',
-            wordCount: 1500,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

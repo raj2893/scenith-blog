@@ -14,6 +14,23 @@ export const metadata: Metadata = {
     "video analysis",
     "social media engagement",
   ],
+  openGraph: {
+    title: "Viral Video Anatomy: Frame-by-Frame Analysis (2025)",
+    description:
+      "Break down the anatomy of a viral video with Scenith’s editing tools to understand what makes content go viral.",
+    url: 'https://scenith.in/blogs/viral-video-anatomy-frame-by-frame-analysis',
+    siteName: 'Scenith',
+    locale: 'en_US',
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Viral Video Anatomy: Frame-by-Frame Analysis (2025)",
+    description:
+      "Break down the anatomy of a viral video with Scenith’s editing tools to understand what makes content go viral.",
+    images: ['/images/viral-video-anatomy-og.jpg'],
+    creator: '@scenith',
+  },
 };
 
 export default function ViralVideoAnatomy() {
@@ -48,8 +65,6 @@ export default function ViralVideoAnatomy() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/viral-video-anatomy-frame-by-frame-analysis',
             },
-            image: '/images/viral-video-anatomy-og.jpg',
-            wordCount: 1100,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

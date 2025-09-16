@@ -14,6 +14,22 @@ export const metadata: Metadata = {
     "professional videos",
     "timeline editing",
   ],
+  openGraph: {
+    title: "Multi-Track Editing for Professional Results (2025)",
+    description:
+      "Learn how to use multi-track editing in Scenith for professional video results on YouTube, Instagram, and TikTok.",
+    url: 'https://scenith.in/blogs/multi-track-editing-for-professional-results',
+    siteName: 'Scenith',
+    locale: 'en_US',
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Multi-Track Editing for Professional Results (2025)",
+    description:
+      "Learn how to use multi-track editing in Scenith for professional video results on YouTube, Instagram, and TikTok.",
+    creator: '@scenith',
+  },
 };
 
 export default function MultiTrackEditing() {
@@ -48,8 +64,6 @@ export default function MultiTrackEditing() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/multi-track-editing-for-professional-results',
             },
-            image: '/images/multi-track-editing-og.jpg',
-            wordCount: 1150,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

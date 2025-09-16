@@ -14,6 +14,22 @@ export const metadata: Metadata = {
     "trending effects",
     "social media videos",
   ],
+  openGraph: {
+    title: "TikTok Trending Transitions Recreated in Scenith (2025)",
+    description:
+      "Learn how to recreate TikTok’s trending transitions using Scenith’s AI-powered tools to create viral-worthy videos in minutes.",
+    url: 'https://scenith.in/blogs/tiktok-trending-transitions-recreated-in-scenith',
+    siteName: 'Scenith',
+    locale: 'en_US',
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "TikTok Trending Transitions Recreated in Scenith (2025)",
+    description:
+      "Learn how to recreate TikTok’s trending transitions using Scenith’s AI-powered tools to create viral-worthy videos in minutes.",
+    creator: '@scenith',
+  },
 };
 
 export default function TikTokTrendingTransitions() {
@@ -48,8 +64,6 @@ export default function TikTokTrendingTransitions() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/tiktok-trending-transitions-recreated-in-scenith',
             },
-            image: '/images/tiktok-transitions-og.jpg',
-            wordCount: 1100,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

@@ -14,6 +14,22 @@ export const metadata: Metadata = {
     "Scenith",
     "multi-view",
   ],
+  openGraph: {
+    title: "Split Screen Videos: Dual Layer Editing Guide (2025)",
+    description:
+      "Create split screen videos with dual layers in Scenith for reactions and comparisons, using crop and position tools.",
+    url: 'https://scenith.in/blogs/split-screen-videos-dual-layer-editing-guide',
+    siteName: 'Scenith',
+    locale: 'en_US',
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Split Screen Videos: Dual Layer Editing Guide (2025)",
+    description:
+      "Create split screen videos with dual layers in Scenith for reactions and comparisons, using crop and position tools.",
+    creator: '@scenith',
+  },
 };
 
 export default function SplitScreenVideos() {
@@ -48,8 +64,6 @@ export default function SplitScreenVideos() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/split-screen-videos-dual-layer-editing-guide',
             },
-            image: '/images/split-screen-og.jpg',
-            wordCount: 1500,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

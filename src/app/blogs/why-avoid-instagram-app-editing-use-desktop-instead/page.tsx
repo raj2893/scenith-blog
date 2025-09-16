@@ -14,6 +14,22 @@ export const metadata: Metadata = {
     "video editing",
     "professional videos",
   ],
+  openGraph: {
+    title: "Why Avoid Instagram App Editing? Use Desktop Instead (2025)",
+    description:
+      "Discover why desktop editing with Scenith outperforms Instagram’s in-app editor for professional Reels and higher engagement.",
+    url: 'https://scenith.in/blogs/why-avoid-instagram-app-editing-use-desktop-instead',
+    siteName: 'Scenith',
+    locale: 'en_US',
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Why Avoid Instagram App Editing? Use Desktop Instead (2025)",
+    description:
+      "Discover why desktop editing with Scenith outperforms Instagram’s in-app editor for professional Reels and higher engagement.",
+    creator: '@scenith',
+  },
 };
 
 export default function AvoidInstagramAppEditing() {
@@ -48,8 +64,6 @@ export default function AvoidInstagramAppEditing() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/why-avoid-instagram-app-editing-use-desktop-instead',
             },
-            image: '/images/instagram-desktop-editing-og.jpg',
-            wordCount: 1100,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

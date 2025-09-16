@@ -14,6 +14,22 @@ export const metadata: Metadata = {
     "Scenith",
     "compositing",
   ],
+  openGraph: {
+    title: "Layer Priority Management: What Shows on Top (2025)",
+    description:
+      "Learn layer priority management in Scenith to control what shows on top in your video edits for seamless compositing.",
+    url: 'https://scenith.in/blogs/layer-priority-management-what-shows-on-top',
+    siteName: 'Scenith',
+    locale: 'en_US',
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Layer Priority Management: What Shows on Top (2025)",
+    description:
+      "Learn layer priority management in Scenith to control what shows on top in your video edits for seamless compositing.",
+    creator: '@scenith',
+  },
 };
 
 export default function LayerPriorityManagement() {
@@ -48,8 +64,6 @@ export default function LayerPriorityManagement() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/layer-priority-management-what-shows-on-top',
             },
-            image: '/images/layer-priority-og.jpg',
-            wordCount: 1500,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

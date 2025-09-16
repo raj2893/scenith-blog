@@ -14,6 +14,22 @@ export const metadata: Metadata = {
     "Scenith",
     "time-saving",
   ],
+  openGraph: {
+    title: "Batch Subtitle Formatting: Save Hours of Editing Time (2025)",
+    description:
+      "Discover how Scenith’s batch subtitle formatting tool saves hours by applying consistent styles to all captions instantly.",
+    url: 'https://scenith.in/blogs/batch-subtitle-formatting-save-hours-of-editing-time',
+    siteName: 'Scenith',
+    locale: 'en_US',
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Batch Subtitle Formatting: Save Hours of Editing Time (2025)",
+    description:
+      "Discover how Scenith’s batch subtitle formatting tool saves hours by applying consistent styles to all captions instantly.",
+    creator: '@scenith',
+  },
 };
 
 export default function BatchSubtitleFormatting() {
@@ -48,8 +64,6 @@ export default function BatchSubtitleFormatting() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/batch-subtitle-formatting-save-hours-of-editing-time',
             },
-            image: '/images/batch-subtitle-formatting-og.jpg',
-            wordCount: 1500,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

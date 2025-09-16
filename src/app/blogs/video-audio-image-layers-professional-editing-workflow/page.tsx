@@ -14,6 +14,22 @@ export const metadata: Metadata = {
     "video editing workflow",
     "Scenith",
   ],
+  openGraph: {
+    title: "Video Audio Image Layers: Professional Editing Workflow (2025)",
+    description:
+      "Master professional video editing workflows using layers for video, audio, and images with Scenith’s intuitive tools to create dynamic, engaging content.",
+    url: 'https://scenith.in/blogs/video-audio-image-layers-professional-editing-workflow',
+    siteName: 'Scenith',
+    locale: 'en_US',
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Video Audio Image Layers: Professional Editing Workflow (2025)",
+    description:
+      "Master professional video editing workflows using layers for video, audio, and images with Scenith’s intuitive tools to create dynamic, engaging content.",
+    creator: '@scenith',
+  },
 };
 
 export default function VideoAudioImageLayers() {
@@ -48,8 +64,6 @@ export default function VideoAudioImageLayers() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/video-audio-image-layers-professional-editing-workflow',
             },
-            image: '/images/video-layers-workflow-og.jpg',
-            wordCount: 1500,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),

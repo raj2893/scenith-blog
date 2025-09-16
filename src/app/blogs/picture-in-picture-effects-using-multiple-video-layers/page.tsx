@@ -14,6 +14,22 @@ export const metadata: Metadata = {
     "video editing",
     "Scenith",
   ],
+  openGraph: {
+    title: "Picture in Picture Effects Using Multiple Video Layers (2025)",
+    description:
+      "Create picture-in-picture effects with multiple video layers in Scenith for engaging tutorials and reactions.",
+    url: 'https://scenith.in/blogs/picture-in-picture-effects-using-multiple-video-layers',
+    siteName: 'Scenith',
+    locale: 'en_US',
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Picture in Picture Effects Using Multiple Video Layers (2025)",
+    description:
+      "Create picture-in-picture effects with multiple video layers in Scenith for engaging tutorials and reactions.",
+    creator: '@scenith',
+  },
 };
 
 export default function PictureInPictureEffects() {
@@ -48,8 +64,6 @@ export default function PictureInPictureEffects() {
               '@type': 'WebPage',
               '@id': 'https://scenith.in/blogs/picture-in-picture-effects-using-multiple-video-layers',
             },
-            image: '/images/pip-effects-og.jpg',
-            wordCount: 1500,
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
           }),
