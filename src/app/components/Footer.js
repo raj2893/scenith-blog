@@ -30,6 +30,8 @@ const Footer = () => {
 
   const navigationLinks = [
     { label: 'Home', path: '/' },
+    { label: 'AI Background Remover', path: '/background-removal' },
+    { label: 'AI Voices', path: '/ai-voice-generation' },
     { label: 'Blogs', path: '/blogs' },
     { label: 'Features', path: '/' },
     { label: 'Tutorials', path: '/' },
