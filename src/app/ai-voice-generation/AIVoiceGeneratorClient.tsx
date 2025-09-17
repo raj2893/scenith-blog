@@ -322,7 +322,8 @@ const AIVoiceGeneratorClient: React.FC = () => {
     if (generatedAudio) {
       const link = document.createElement('a');
       link.href = generatedAudio;
-      link.download = 'ai-voice.mp3';
+      link.setAttribute('download', 'ai-generated-voice.mp3'); // Specify the filename
+      link.setAttribute('target', '_blank'); // Optional: Ensures compatibility
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
