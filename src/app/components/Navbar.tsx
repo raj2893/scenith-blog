@@ -46,6 +46,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
   // Blog-specific navigation links
   const baseNavLinks = [
     { label: 'Home', path: '/' },
+    { label: 'AI VOICES', path: '/ai-voice-generation' },
     { label: 'Background Remover', path: '/background-removal' },
     { label: 'Blogs', path: '/blogs' },
     { label: 'Categories', sectionId: 'filter-section' },
