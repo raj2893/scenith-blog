@@ -318,15 +318,33 @@ const AIVoiceGeneratorClient: React.FC = () => {
     }
   };
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (generatedAudio) {
-      const link = document.createElement('a');
-      link.href = generatedAudio;
-      link.setAttribute('download', 'ai-generated-voice.mp3'); // Specify the filename
-      link.setAttribute('target', '_blank'); // Optional: Ensures compatibility
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      try {
+        // Fetch the audio file as a blob
+        const response = await fetch(generatedAudio);
+        const blob = await response.blob();
+        
+        // Create a blob URL
+        const blobUrl = window.URL.createObjectURL(blob);
+        
+        // Create download link
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = `ai-voice-${Date.now()}.mp3`; // Add timestamp for unique filename
+        
+        // Trigger download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Clean up the blob URL
+        window.URL.revokeObjectURL(blobUrl);
+      } catch (error) {
+        console.error('Download failed:', error);
+        // Fallback to opening in new tab if download fails
+        window.open(generatedAudio, '_blank');
+      }
     }
   };
 
