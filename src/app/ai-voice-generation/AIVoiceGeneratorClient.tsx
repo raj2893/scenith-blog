@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import axios from 'axios';
@@ -32,6 +32,94 @@ interface LoginFormData {
   email: string;
   password: string;
 }
+
+const CustomAudioPlayer = ({ src }: { src: string }) => {
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+
+  const togglePlayPause = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      setCurrentTime(audioRef.current.currentTime);
+    }
+  };
+
+  const handleLoadedMetadata = () => {
+    if (audioRef.current) {
+      setDuration(audioRef.current.duration);
+    }
+  };
+
+  const handleEnded = () => {
+    setIsPlaying(false);
+    setCurrentTime(0);
+  };
+
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  };
+
+  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (audioRef.current) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const width = rect.width;
+      const newTime = (clickX / width) * duration;
+      audioRef.current.currentTime = newTime;
+      setCurrentTime(newTime);
+    }
+  };
+
+  return (
+    <div className="custom-audio-player">
+      <audio
+        ref={audioRef}
+        src={src}
+        onTimeUpdate={handleTimeUpdate}
+        onLoadedMetadata={handleLoadedMetadata}
+        onEnded={handleEnded}
+        style={{ display: 'none' }}
+      />
+      
+      <div className="audio-controls">
+        <button 
+          onClick={togglePlayPause} 
+          className="play-pause-button"
+          aria-label={isPlaying ? 'Pause audio' : 'Play audio'}
+        >
+          {isPlaying ? '⏸️' : '▶️'}
+        </button>
+        
+        <div className="time-info">
+          <span>{formatTime(currentTime)}</span>
+          <span>/</span>
+          <span>{formatTime(duration)}</span>
+        </div>
+      </div>
+      
+      <div className="progress-bar" onClick={handleSeek}>
+        <div 
+          className="progress-fill" 
+          style={{ width: `${duration ? (currentTime / duration) * 100 : 0}%` }}
+        />
+      </div>
+    </div>
+  );
+};
 
 const AIVoiceGeneratorClient: React.FC = () => {
   const router = useRouter();
@@ -222,7 +310,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
 
   // Fetch unique languages and genders for dropdowns
   useEffect(() => {
-    if (!requireLogin()) return;
+    if (!isLoggedIn) return;
     const fetchMetadata = async () => {
       try {
         const response = await fetch(`${API_BASE_URL}/api/ai-voices/get-all-voices`, {
@@ -248,7 +336,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
   // Fetch filtered voices based on language and gender
   useEffect(() => {
     const fetchFilteredVoices = async () => {
-      if (!requireLogin()) return;
+      if (!isLoggedIn) return;
       try {
         let url = `${API_BASE_URL}/api/ai-voices/get-all-voices`;
         if (filterLanguage && filterGender) {
@@ -276,7 +364,10 @@ const AIVoiceGeneratorClient: React.FC = () => {
   }, [filterLanguage, filterGender, isLoggedIn]);
 
   const handleGenerateAiAudio = async () => {
-    if (!requireLogin()) return;
+    if (!isLoggedIn) {
+      setShowLoginModal(true);
+      return;
+    }
     if (!aiVoiceText.trim() || !selectedVoice) {
       setError('Please enter text and select a voice.');
       return;
@@ -311,6 +402,16 @@ const AIVoiceGeneratorClient: React.FC = () => {
 
       const data = await response.json();
       setGeneratedAudio(`${CDN_URL}/${data.audioPath}`);
+      
+      setTimeout(() => {
+        const audioSection = document.querySelector('.audio-output-section');
+        if (audioSection) {
+          audioSection.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center' 
+          });
+        }
+      }, 100);
     } catch (err: any) {
       setError(err.message || 'Failed to generate audio.');
     } finally {
@@ -438,7 +539,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
                 <button
                   className="cta-button generate-voice-button"
                   onClick={handleGenerateAiAudio}
-                  disabled={!isLoggedIn || !aiVoiceText.trim() || !selectedVoice || isGenerating}
+                  disabled={isLoggedIn && (!aiVoiceText.trim() || !selectedVoice) || isGenerating}
                   aria-label="Generate AI voice from text"
                 >
                   {isGenerating ? 'Generating...' : isLoggedIn ? 'Generate AI Voice' : 'Login to Generate'}
@@ -525,9 +626,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
                   viewport={{ once: true }}
                 >
                   <h2 id="audio-output-title">Your Generated Audio</h2>
-                  <audio controls src={generatedAudio} className="audio-player">
-                    Your browser does not support the audio element.
-                  </audio>
+                  <CustomAudioPlayer src={generatedAudio} />
                   <button onClick={handleDownload} className="cta-button download-button" aria-label="Download generated audio as MP3">
                     Download MP3
                   </button>
