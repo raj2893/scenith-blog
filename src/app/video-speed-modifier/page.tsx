@@ -1,36 +1,42 @@
-import type { Metadata } from 'next';
-import VideoSpeedAdjusterClient from './VideoSpeedAdjusterClient';
+import type { Metadata } from "next";
+import VideoSpeedClient from './VideoSpeedClient';
 
 export const metadata: Metadata = {
-  title: 'Free Video Speed Adjuster - Change Video Speed Online | SCENITH',
-  description: 'Adjust the speed of your videos online for free. Upload, modify speed with a slider, preview, and download your video instantly.',
+  title: 'FREE AI Video Speed Editor - Adjust Video Speed Online | SCENITH',
+  description: 'Adjust the playback speed of your videos instantly from 0.5x to 15x for free. Create slow-motion or time-lapse effects with ease. Perfect for creators, filmmakers, and marketers.',
   keywords: [
-    'video speed adjuster',
-    'change video speed',
-    'video speed editor',
-    'online video speed changer',
+    'AI video speed editor',
+    'free video editor',
+    'video speed changer',
+    'slow motion video',
+    'time-lapse video',
+    'video speed adjustment',
+    'online video editor',
+    'video speed control',
     'free video speed tool',
-    'video playback speed',
-    'speed up video',
-    'slow down video',
+    'adjust video speed',
+    'video editing tool',
+    'free video processing',
+    'video speed editor',
+    'professional video speed',
   ],
   openGraph: {
-    title: 'Free Video Speed Adjuster - Change Video Speed Online',
-    description: 'Easily adjust video speed with our free online tool. Upload, set speed, preview, and download in seconds.',
+    title: 'Free AI Video Speed Editor - Adjust Speed in Seconds',
+    description: 'Change video playback speed effortlessly with our free online tool. Perfect for slow-motion, time-lapse, or custom-paced videos.',
     type: 'website',
     images: [
       {
-        url: '/images/og-video-speed-adjuster.jpg',
+        url: '/images/og-video-speed-hero.jpg',
         width: 1200,
         height: 630,
-        alt: 'Scenith Video Speed Adjuster Tool',
+        alt: 'Scenith AI Video Speed Editor',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Free Video Speed Adjuster - Change Speed in Seconds',
-    description: 'Modify video speed online with our free tool. Perfect for creating slow-motion or fast-paced videos.',
+    title: 'Free AI Video Speed Editor - Adjust Speed in Seconds',
+    description: 'Transform videos with precise speed control from 0.5x to 15x. Free online tool for dynamic video effects and instant MP4 downloads!',
     images: ['/images/twitter-card-video-speed.jpg'],
   },
   robots: {
@@ -38,10 +44,10 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: '/video-speed-adjuster',
+    canonical: '/video-speed',
   },
 };
 
-export default function VideoSpeedAdjusterPage() {
-  return <VideoSpeedAdjusterClient />;
+export default function VideoSpeedPage() {
+  return <VideoSpeedClient />;
 }
