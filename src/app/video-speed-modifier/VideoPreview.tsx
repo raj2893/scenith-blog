@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useMemo } from 'react';
 import '../../../styles/tools/VideoPreview.css';
 
 interface VideoLayer {
@@ -27,7 +27,7 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
   isPlaying,
   canvasDimensions,
   setIsPlaying,
-  containerHeight = 'auto',
+  containerHeight = '400px',
   projectId,
 }) => {
   const [scale, setScale] = useState(1);
@@ -35,40 +35,37 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
   const previewContainerRef = useRef<HTMLDivElement>(null);
   const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});
 
+  // Memoize videoLayers to prevent unnecessary re-renders
+  const memoizedVideoLayers = useMemo(() => videoLayers, [videoLayers]);
+
   // Scale the canvas to fit the container while maintaining aspect ratio
   useEffect(() => {
     if (previewContainerRef.current) {
       const calculateSize = () => {
-        const containerWidth = previewContainerRef.current!.clientWidth;
+        const containerWidth = Math.min(previewContainerRef.current!.clientWidth, 600);
         const containerHeightPx =
           containerHeight && containerHeight !== 'auto'
             ? parseFloat(containerHeight)
-            : previewContainerRef.current!.clientHeight;
-        const canvasAspectRatio = canvasDimensions.width / canvasDimensions.height;
+            : Math.min(previewContainerRef.current!.clientHeight, 400);
 
-        let newScale = Math.min(
-          containerWidth / canvasDimensions.width,
-          containerHeightPx / canvasDimensions.height
-        );
+        // Simplified scaling: fit video within container
+        const videoWidth = videoDimensions[memoizedVideoLayers[0]?.id]?.width || canvasDimensions.width;
+        const videoHeight = videoDimensions[memoizedVideoLayers[0]?.id]?.height || canvasDimensions.height;
+        const newScale = Math.min(containerWidth / videoWidth, containerHeightPx / videoHeight, 1.0);
 
-        const minPreviewHeight = 100;
-        const minScale = minPreviewHeight / canvasDimensions.height;
-        const maxScale = 1.0;
-
-        newScale = Math.max(minScale, Math.min(maxScale, newScale));
         setScale(newScale);
 
-        const canvasWrapper = document.querySelector('.canvas-wrapper') as HTMLElement | null;
+        const canvasWrapper = previewContainerRef.current!.querySelector('.canvas-wrapper') as HTMLElement | null;
         if (canvasWrapper) {
           canvasWrapper.style.transform = `scale(${newScale})`;
-          canvasWrapper.style.width = `${canvasDimensions.width}px`;
-          canvasWrapper.style.height = `${canvasDimensions.height}px`;
+          canvasWrapper.style.width = `${videoWidth}px`;
+          canvasWrapper.style.height = `${videoHeight}px`;
         }
 
-        const previewArea = document.querySelector('.preview-area') as HTMLElement | null;
+        const previewArea = previewContainerRef.current!.querySelector('.preview-area') as HTMLElement | null;
         if (previewArea) {
-          previewArea.style.width = `${canvasDimensions.width * newScale}px`;
-          previewArea.style.height = `${canvasDimensions.height * newScale}px`;
+          previewArea.style.width = `${videoWidth * newScale}px`;
+          previewArea.style.height = `${videoHeight * newScale}px`;
         }
       };
 
@@ -76,11 +73,11 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
       window.addEventListener('resize', calculateSize);
       return () => window.removeEventListener('resize', calculateSize);
     }
-  }, [canvasDimensions, containerHeight]);
+  }, [canvasDimensions, containerHeight, videoDimensions, memoizedVideoLayers]);
 
   // Handle video playback and speed
   useEffect(() => {
-    const visibleElements = videoLayers.filter((element) => {
+    const visibleElements = memoizedVideoLayers.filter((element) => {
       const itemStartTime = element.startTime || 0;
       const itemEndTime = itemStartTime + element.duration;
       return currentTime >= itemStartTime && currentTime < itemEndTime;
@@ -89,25 +86,41 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
     visibleElements.forEach((element) => {
       const videoRef = videoRefs.current[element.id];
       if (videoRef) {
-        videoRef.src = element.filePath;
-        videoRef.crossOrigin = 'anonymous';
-        videoRef.playbackRate = element.speed;
+        console.log(`Setting video src: ${element.filePath}, speed: ${element.speed}`);
+        if (videoRef.src !== element.filePath) {
+          videoRef.src = element.filePath;
+          videoRef.load();
+        }
+        videoRef.playbackRate = Math.max(0.1, Math.min(15.0, element.speed));
 
         const localTime = currentTime - element.startTime;
         const adjustedTime = localTime * element.speed;
 
-        if (Math.abs(videoRef.currentTime - adjustedTime) > 0.05) {
+        if (Math.abs(videoRef.currentTime - adjustedTime) > 0.1) {
           videoRef.currentTime = adjustedTime;
         }
 
         if (isPlaying) {
-          videoRef.play().catch((error) => console.error('Playback error:', error));
+          videoRef.play().catch((error) => {
+            console.error('Playback error:', error);
+            if (error.name === 'NotAllowedError') {
+              setIsPlaying(false);
+              alert('Playback blocked. Please interact with the page or click play.');
+            }
+          });
         } else {
           videoRef.pause();
         }
 
+        videoRef.onended = () => {
+          setIsPlaying(false);
+          videoRef.currentTime = 0;
+          console.log(`Video ${element.id} ended`);
+        };
+
         if (!videoDimensions[element.id]) {
           videoRef.onloadedmetadata = () => {
+            console.log(`Video metadata loaded: ${element.id}, width: ${videoRef.videoWidth}, height: ${videoRef.videoHeight}`);
             setVideoDimensions((prev) => ({
               ...prev,
               [element.id]: {
@@ -117,6 +130,13 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
             }));
           };
         }
+
+        videoRef.oncanplay = () => {
+          console.log(`Video ${element.id} can play`);
+          // Log computed styles for debugging
+          const styles = window.getComputedStyle(videoRef);
+          console.log(`Video ${element.id} computed styles: display=${styles.display}, width=${styles.width}, height=${styles.height}, left=${styles.left}, top=${styles.top}`);
+        };
       }
     });
 
@@ -126,52 +146,36 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
         videoRef.pause();
       }
     });
-  }, [currentTime, isPlaying, videoLayers]);
+  }, [currentTime, isPlaying, memoizedVideoLayers, setIsPlaying]);
 
   return (
     <div className="video-preview-container" ref={previewContainerRef}>
       <div className="preview-area">
-        <div
-          className="canvas-wrapper"
-          style={{
-            width: `${canvasDimensions.width}px`,
-            height: `${canvasDimensions.height}px`,
-            position: 'relative',
-            overflow: 'hidden',
-            backgroundColor: 'black',
-            transformOrigin: 'top left',
-          }}
-        >
-          {videoLayers.map((element) => {
+        <div className="canvas-wrapper">
+          {memoizedVideoLayers.length === 0 && (
+            <div className="no-video-message">No video loaded</div>
+          )}
+          {memoizedVideoLayers.map((element) => {
             const videoWidth = videoDimensions[element.id]?.width || canvasDimensions.width;
             const videoHeight = videoDimensions[element.id]?.height || canvasDimensions.height;
-            const centerX = canvasDimensions.width / 2 - videoWidth / 2;
-            const centerY = canvasDimensions.height / 2 - videoHeight / 2;
+            const centerX = (canvasDimensions.width - videoWidth) / 2;
+            const centerY = (canvasDimensions.height - videoHeight) / 2;
 
             return (
               <div
                 key={element.id}
-                style={{
-                  position: 'absolute',
-                  left: `${centerX}px`,
-                  top: `${centerY}px`,
-                  width: `${videoWidth}px`,
-                  height: `${videoHeight}px`,
-                  zIndex: 0,
-                }}
+                className="video-container"
               >
                 <video
-                  ref={(el) => { videoRefs.current[element.id] = el; }}
-                  className="preview-video"
-                  crossOrigin="anonymous"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'contain',
-                    display: 'block',
+                  ref={(el) => {
+                    videoRefs.current[element.id] = el;
                   }}
+                  className="preview-video"
+                  muted
+                  autoPlay={isPlaying}
                   onError={(e) => console.error(`Error loading video ${element.filePath}:`, e)}
                   onLoadedData={() => {
+                    console.log(`Video data loaded: ${element.id}`);
                     if (videoRefs.current[element.id] && !videoDimensions[element.id]) {
                       setVideoDimensions((prev) => ({
                         ...prev,
@@ -182,7 +186,14 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
                       }));
                     }
                   }}
+                  onCanPlay={() => {
+                    console.log(`Video ${element.id} is ready to play`);
+                  }}
                 />
+                {/* Fallback message if video is not visible */}
+                <div className="video-fallback">
+                  Video element loaded but not visible. Check console for styles.
+                </div>
               </div>
             );
           })}

@@ -109,6 +109,9 @@
 
 .speed-control {
   margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .speed-control label {
@@ -120,6 +123,7 @@
 
 .speed-control input[type="range"] {
   width: 100%;
+  max-width: 300px;
   margin: 10px 0;
 }
 
@@ -462,6 +466,8 @@
 
 .google-button {
   margin: 20px 0;
+  display: flex;
+  justify-content: center;
 }
 
 .toggle-auth-button {
@@ -496,6 +502,10 @@
   .hero-description {
     font-size: 1rem;
   }
+
+  .video-preview-container {
+    max-width: 100%;
+  }
 }
 
 @media (max-width: 480px) {
@@ -523,5 +533,9 @@
 
   .auth-container h1 {
     font-size: 1.8rem;
+  }
+
+  .video-preview-container {
+    max-width: 100%;
   }
 }

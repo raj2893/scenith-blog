@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { motion } from 'framer-motion';
@@ -20,17 +20,27 @@ interface UserProfile {
 }
 
 interface Video {
-  id: string;
+  id: number;
   fileName: string;
   status: string;
   speed: number;
   cdnUrl?: string;
 }
 
-const CustomVideoPlayer = ({ src, playbackRate }: { src: string; playbackRate: number }) => {
+const CustomVideoPlayer = ({
+  src,
+  playbackRate,
+  setIsPlaying,
+  setCurrentTime,
+}: {
+  src: string;
+  playbackRate: number;
+  setIsPlaying: (isPlaying: boolean) => void;
+  setCurrentTime: (time: number) => void;
+}) => {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
+  const [isPlaying, setIsPlayingState] = useState(false);
+  const [currentTime, setCurrentTimeState] = useState(0);
   const [duration, setDuration] = useState(0);
 
   useEffect(() => {
@@ -39,6 +49,21 @@ const CustomVideoPlayer = ({ src, playbackRate }: { src: string; playbackRate: n
     }
   }, [playbackRate]);
 
+  useEffect(() => {
+    if (videoRef.current) {
+      const video = videoRef.current;
+      const handleEnded = () => {
+        setIsPlayingState(false);
+        setIsPlaying(false);
+        setCurrentTimeState(0);
+        setCurrentTime(0);
+        video.currentTime = 0;
+      };
+      video.addEventListener('ended', handleEnded);
+      return () => video.removeEventListener('ended', handleEnded);
+    }
+  }, [setIsPlaying, setCurrentTime]);
+
   const togglePlayPause = () => {
     if (videoRef.current) {
       if (isPlaying) {
@@ -46,13 +71,17 @@ const CustomVideoPlayer = ({ src, playbackRate }: { src: string; playbackRate: n
       } else {
         videoRef.current.play().catch((e) => console.error('Video playback error:', e));
       }
+      setIsPlayingState(!isPlaying);
       setIsPlaying(!isPlaying);
     }
   };
 
   const handleTimeUpdate = () => {
     if (videoRef.current) {
-      setCurrentTime(videoRef.current.currentTime);
+      // Throttle updates to reduce re-renders
+      const newTime = Math.round(videoRef.current.currentTime * 10) / 10;
+      setCurrentTimeState(newTime);
+      setCurrentTime(newTime);
     }
   };
 
@@ -112,14 +141,16 @@ const VideoSpeedAdjusterClient: React.FC = () => {
   const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [speed, setSpeed] = useState<number>(1.0);
-  const [videoId, setVideoId] = useState<string | null>(null);
+  const [videoId, setVideoId] = useState<number | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isExporting, setIsExporting] = useState<boolean>(false);
   const [exportStatus, setExportStatus] = useState<string>('');
   const [cdnUrl, setCdnUrl] = useState<string | null>(null);
   const [userVideos, setUserVideos] = useState<Video[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [videoDimensions, setVideoDimensions] = useState<{ width: number; height: number } | null>(null);
+  const [videoDimensions, setVideoDimensions] = useState<{ width: number; height: number }>({ width: 1080, height: 1920 }); // Fallback
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [currentTime, setCurrentTime] = useState<number>(0);
 
   // Check auth status
   useEffect(() => {
@@ -154,6 +185,64 @@ const VideoSpeedAdjusterClient: React.FC = () => {
         });
     }
   }, []);
+
+  // Handle Google Sign-In
+  const handleGoogleLogin = useCallback(async (credentialResponse: any) => {
+    setIsLoggingIn(true);
+    setLoginError(null);
+    try {
+      const response = await axios.post(`${API_BASE_URL}/auth/google`, {
+        token: credentialResponse.credential,
+      });
+      localStorage.setItem('token', response.data.token);
+      const res = await axios.get(`${API_BASE_URL}/auth/me`, {
+        headers: { Authorization: `Bearer ${response.data.token}` },
+      });
+      const fullName = res.data.name || '';
+      const nameParts = fullName.trim().split(' ');
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+      setUserProfile({
+        email: res.data.email || '',
+        firstName,
+        lastName,
+        picture: res.data.picture || null,
+        googleAuth: true,
+        role: res.data.role || 'BASIC',
+      });
+      setIsLoggedIn(true);
+      setShowLoginModal(false);
+      fetchUserVideos(response.data.token);
+    } catch (error: any) {
+      setLoginError(error.response?.data?.message || 'Google login failed');
+    } finally {
+      setIsLoggingIn(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    const initializeGoogleSignIn = () => {
+      if (window.google && window.google.accounts) {
+        window.google.accounts.id.initialize({
+          client_id: '475177334034-ufjdi8pebqvbgf9ogv0gs85nq9588a8m.apps.googleusercontent.com',
+          callback: handleGoogleLogin,
+        });
+        const buttonElement = document.getElementById('googleSignInButton');
+        if (buttonElement) {
+          window.google.accounts.id.renderButton(buttonElement, {
+            theme: 'outline',
+            size: 'large',
+            width: 300,
+          });
+        }
+      } else {
+        setTimeout(initializeGoogleSignIn, 100);
+      }
+    };
+    if (showLoginModal) {
+      initializeGoogleSignIn();
+    }
+  }, [showLoginModal, handleGoogleLogin]);
 
   // Fetch user videos
   const fetchUserVideos = async (token: string) => {
@@ -246,11 +335,16 @@ const VideoSpeedAdjusterClient: React.FC = () => {
     setVideoFile(file);
     setError(null);
     setPreviewUrl(URL.createObjectURL(file));
+    setIsPlaying(false);
+    setCurrentTime(0);
 
     const videoElement = document.createElement('video');
     videoElement.src = URL.createObjectURL(file);
     videoElement.onloadedmetadata = () => {
-      setVideoDimensions({ width: videoElement.videoWidth, height: videoElement.videoHeight });
+      setVideoDimensions({
+        width: videoElement.videoWidth || 1080,
+        height: videoElement.videoHeight || 1920,
+      });
       URL.revokeObjectURL(videoElement.src);
     };
 
@@ -265,7 +359,7 @@ const VideoSpeedAdjusterClient: React.FC = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      setVideoId(response.data.videoId);
+      setVideoId(response.data.id);
     } catch (error: any) {
       setError(error.response?.data?.message || 'Failed to upload video.');
     }
@@ -325,7 +419,7 @@ const VideoSpeedAdjusterClient: React.FC = () => {
       });
       setExportStatus(response.data.status);
       if (response.data.status === 'completed') {
-        setCdnUrl(`${CDN_URL}/${response.data.cdnPath}`);
+        setCdnUrl(response.data.cdnUrl);
         setIsExporting(false);
         fetchUserVideos(localStorage.getItem('token')!);
       } else {
@@ -382,7 +476,7 @@ const VideoSpeedAdjusterClient: React.FC = () => {
                   className="video-upload-input"
                   aria-label="Upload video file"
                 />
-                {previewUrl && videoDimensions && (
+                {previewUrl && (
                   <div className="preview-section">
                     <h3>Preview</h3>
                     <VideoPreview
@@ -393,18 +487,23 @@ const VideoSpeedAdjusterClient: React.FC = () => {
                           filePath: previewUrl,
                           startTime: 0,
                           duration: Infinity,
-                          speed: speed,
+                          speed,
                         },
                       ]}
                       audioLayers={[]}
-                      currentTime={0}
-                      isPlaying={false}
+                      currentTime={currentTime}
+                      isPlaying={isPlaying}
                       canvasDimensions={videoDimensions}
-                      setIsPlaying={() => {}}
-                      containerHeight="auto"
+                      setIsPlaying={setIsPlaying}
+                      containerHeight="400px"
                       projectId="temp"
                     />
-                    <CustomVideoPlayer src={previewUrl} playbackRate={speed} />
+                    <CustomVideoPlayer
+                      src={previewUrl}
+                      playbackRate={speed}
+                      setIsPlaying={setIsPlaying}
+                      setCurrentTime={setCurrentTime}
+                    />
                     <div className="speed-control">
                       <label htmlFor="speed-slider">Speed: {speed.toFixed(1)}x</label>
                       <input
