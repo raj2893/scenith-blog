@@ -722,5 +722,24 @@
     "featured": false,
     "slug": "split-screen-videos-dual-layer-editing-guide",
     "difficulty": "Beginner"
-  }
+  },
+{
+    "id": 49,
+    "title": "Free AI Voice Generator: Create Lifelike Voices Online in Seconds",
+    "excerpt": "Discover how to create realistic AI voices for free with Scenith’s AI Voice Generator. Transform text into natural-sounding speech for videos, podcasts, and more in just seconds.",
+    "category": "AI Tools",
+    "readTime": "5 min",
+    "publishDate": "2025-09-23",
+    "author": "Scenith Team",
+    "image": "🎤",
+    "gradient": "linear-gradient(135deg, #764ba2 0%, #667eea 100%)",
+    "tags": [
+      "AI Voice Generator",
+      "Text to Speech",
+      "Free AI Tools"
+    ],
+    "featured": true,
+    "slug": "free-ai-voice-generator",
+    "difficulty": "Beginner"
+  }  
 ]
