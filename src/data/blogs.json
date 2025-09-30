@@ -741,5 +741,20 @@
     "featured": false,
     "slug": "free-ai-voice-generator-online",
     "difficulty": "Beginner"
+  },
+{
+    "id": 50,
+    "title": "Audio Keyframe Animations: Mastering Volume Swells and Dips (2025)",
+    "excerpt": "Learn how to use audio keyframe animations in Scenith to create dynamic volume swells and dips, enhancing your video editing with professional sound design.",
+    "category": "Video Editing",
+    "readTime": "6 min",
+    "publishDate": "2025-09-22",
+    "author": "Scenith Team",
+    "image": "🎶",
+    "gradient": "linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%)",
+    "tags": ["Audio Keyframes", "Volume Swells", "Volume Dips", "Sound Design"],
+    "featured": false,
+    "slug": "audio-keyframe-animations-volume-swells-dips",
+    "difficulty": "Beginner"
   }  
 ]

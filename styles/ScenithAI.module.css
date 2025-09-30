@@ -421,6 +421,13 @@
   transform: scale(1.02);
 }
 
+.highlightedLink {
+  color: var(--primary-color); /* Matches your theme's primary color */
+  text-decoration: underline; /* Underline to indicate a link */
+  font-weight: 600; /* Slightly bolder text */
+  transition: color 0.2s ease; /* Smooth color transition on hover */
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   :root {
