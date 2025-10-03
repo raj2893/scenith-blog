@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import axios from "axios";
 import { motion } from "framer-motion";
-import { FaTimes } from "react-icons/fa";
+import { FaTimes, FaArrowUp } from "react-icons/fa";
 import { API_BASE_URL, CDN_URL } from "../config";
 import "../../../styles/tools/CompressMedia.css";
 
@@ -58,6 +58,8 @@ const CompressMediaClient: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [mediaList, setMediaList] = useState<MediaItem[]>([]);
   const [uploadSuccess, setUploadSuccess] = useState<string | null>(null);
+  const [editingMediaId, setEditingMediaId] = useState<number | null>(null);
+  const [newTargetSize, setNewTargetSize] = useState<string>("");
 
   // Handle scroll for navbar styling
   useEffect(() => {
@@ -304,6 +306,28 @@ const CompressMediaClient: React.FC = () => {
     }
   };
 
+  const handleUpdateTargetSize = async (mediaId: number) => {
+    if (!newTargetSize.match(/^\d+(KB|MB)$/)) {
+      setError("Please specify a valid target size (e.g., 500KB or 2MB).");
+      return;
+    }
+    try {
+      const response = await axios.patch(
+        `${API_BASE_URL}/api/compression/update-target-size/${mediaId}`,
+        { targetSize: newTargetSize },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+      setMediaList(mediaList.map((item) => (item.id === mediaId ? response.data : item)));
+      setEditingMediaId(null);
+      setNewTargetSize("");
+      setError(null);
+    } catch (error: any) {
+      setError(error.response?.data?.message || "Failed to update target size.");
+    }
+  };  
+
   // Smooth scrolling
   const scrollToSection = (sectionId: string) => {
     const section = document.getElementById(sectionId);
@@ -378,17 +402,30 @@ const CompressMediaClient: React.FC = () => {
             Reduce the size of your images (JPEG, PNG, HEIC) and videos without losing quality. Perfect for web, social media, and content creation. Free, fast, and easy to use!
           </p>
           <div className="hero-cta-section">
-            <div className="main-content">
+            <motion.div
+              className="upload-card"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <h3>Compress Your Media</h3>
+              <p>Upload images or videos and set your desired file size.</p>
               <div className="upload-section">
-                <input
-                  type="file"
-                  id="media-upload"
-                  accept="image/jpeg,image/png,image/heic,video/*"
-                  onChange={handleFileChange}
-                  disabled={!isLoggedIn || isUploading}
-                  className="media-upload-input"
-                  aria-label="Upload image or video"
-                />
+                <div className="upload-button-container">
+                  <input
+                    type="file"
+                    id="media-upload"
+                    accept="image/jpeg,image/png,image/heic,video/*"
+                    onChange={handleFileChange}
+                    disabled={!isLoggedIn || isUploading}
+                    className="media-upload-input hidden"
+                    aria-label="Upload image or video"
+                  />
+                  <label htmlFor="media-upload" className="custom-upload-button">
+                    <FaArrowUp className="upload-icon" />
+                    {file ? file.name : "Upload Media"}
+                  </label>
+                </div>
                 <div className="target-size-section">
                   <input
                     type="text"
@@ -405,82 +442,149 @@ const CompressMediaClient: React.FC = () => {
                     disabled={isUploading || (isLoggedIn && (!file || !targetSize.match(/^\d+(KB|MB)$/)))}
                     aria-label={isLoggedIn ? "Upload media for compression" : "Sign in to compress media"}
                   >
-                    {isUploading ? "Uploading..." : isLoggedIn ? "Upload Media" : "Sign in / Login to compress"}
+                    {isUploading ? (
+                      <span className="uploading-spinner">Uploading...</span>
+                    ) : isLoggedIn ? (
+                      "Upload & Prepare"
+                    ) : (
+                      "Sign in / Login"
+                    )}
                   </button>
                 </div>
+                {isUploading && (
+                  <div className="progress-bar">
+                    <motion.div
+                      className="progress-fill"
+                      initial={{ width: 0 }}
+                      animate={{ width: "100%" }}
+                      transition={{ duration: 2, ease: "easeInOut" }}
+                    />
+                  </div>
+                )}
                 {uploadSuccess && <div className="success-message">{uploadSuccess}</div>}
+                {error && (
+                  <div className="error-message" role="alert">
+                    {error}
+                  </div>
+                )}
               </div>
-
-              <div className="media-list-section">
-                <div className="fixed-header">
-                  <h3>Your Media</h3>
-                </div>
-                <div className="scrollable-media">
-                  {mediaList.length === 0 ? (
-                    <div className="empty-state">
-                      {isLoggedIn ? "No media uploaded yet." : "Login to view your media."}
-                    </div>
-                  ) : (
-                    <div className="media-list">
-                      {mediaList.map((media) => (
-                        <div key={media.id} className="media-item">
-                          <div className="media-details">
-                            <div className="media-title">{media.originalFileName}</div>
-                            <div className="media-info">
-                              <span>Status: {media.status}</span>
-                              <span>Target Size: {media.targetSize}</span>
-                              {media.errorMessage && <span>Error: {media.errorMessage}</span>}
-                            </div>
-                            {media.status === "UPLOADED" && (
-                              <button
-                                onClick={() => handleCompress(media.id)}
-                                className="cta-button compress-button"
-                                disabled={isCompressing}
-                                aria-label={`Compress ${media.originalFileName}`}
-                              >
-                                {isCompressing ? "Compressing..." : "Compress"}
-                              </button>
-                            )}
-                            {media.status === "SUCCESS" && media.processedCdnUrl && (
-                              <button
-                                onClick={() => media.processedCdnUrl && handleDownload(media.processedCdnUrl, `compressed_${media.originalFileName}`)}
-                                className="cta-button download-button"
-                                aria-label={`Download compressed ${media.originalFileName}`}
-                                disabled={!media.processedCdnUrl}
-                              >
-                                Download
-                              </button>
+            </motion.div>
+          
+            <motion.div
+              className="media-list-card"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <h3>Your Media</h3>
+              <div className="scrollable-media">
+                {mediaList.length === 0 ? (
+                  <div className="empty-state">
+                    {isLoggedIn ? "No media uploaded yet." : "Login to view your media."}
+                  </div>
+                ) : (
+                  <div className="media-list">
+                    {mediaList.map((media) => (
+                      <motion.div
+                        key={media.id}
+                        className="media-item"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <div className="media-details">
+                          <div className="media-title">{media.originalFileName}</div>
+                          <div className="media-info">
+                            {editingMediaId === media.id ? (
+                              <div className="edit-target-size">
+                                <input
+                                  type="text"
+                                  value={newTargetSize}
+                                  onChange={(e) => setNewTargetSize(e.target.value)}
+                                  placeholder="e.g., 500KB or 2MB"
+                                  className="target-size-input"
+                                  aria-label="New target file size"
+                                />
+                                <button
+                                  onClick={() => handleUpdateTargetSize(media.id)}
+                                  className="cta-button save-button"
+                                  aria-label={`Save new target size for ${media.originalFileName}`}
+                                >
+                                  Save
+                                </button>
+                                <button
+                                  onClick={() => setEditingMediaId(null)}
+                                  className="cta-button cancel-button"
+                                  aria-label="Cancel editing"
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                            ) : (
+                              <>
+                                <span>Status: {media.status}</span>
+                                <span>Target Size: {media.targetSize}</span>
+                                <button
+                                  onClick={() => {
+                                    setEditingMediaId(media.id);
+                                    setNewTargetSize(media.targetSize);
+                                  }}
+                                  className="cta-button edit-button"
+                                  aria-label={`Edit target size for ${media.originalFileName}`}
+                                >
+                                  Edit Size
+                                </button>
+                                {media.errorMessage && <span>Error: {media.errorMessage}</span>}
+                              </>
                             )}
                           </div>
+                          {(media.status === "UPLOADED" || media.status === "SUCCESS" || media.status === "FAILED") && editingMediaId !== media.id && (
+                            <button
+                              onClick={() => handleCompress(media.id)}
+                              className="cta-button compress-button"
+                              disabled={isCompressing}
+                              aria-label={
+                                media.status === "SUCCESS"
+                                  ? `Re-compress ${media.originalFileName}`
+                                  : media.status === "FAILED"
+                                  ? `Try again to compress ${media.originalFileName}`
+                                  : `Compress ${media.originalFileName}`
+                              }
+                            >
+                              {isCompressing ? (
+                                <span className="compressing-spinner">Compressing...</span>
+                              ) : media.status === "SUCCESS" ? (
+                                "Re-compress"
+                              ) : media.status === "FAILED" ? (
+                                "Try Again"
+                              ) : (
+                                "Compress"
+                              )}
+                            </button>
+                          )}
+                          {media.status === "SUCCESS" && media.processedCdnUrl && (
+                            <button
+                              onClick={() =>
+                                media.processedCdnUrl &&
+                                handleDownload(
+                                  media.processedCdnUrl,
+                                  `compressed_${media.originalFileName}`
+                                )
+                              }
+                              className="cta-button download-button"
+                              aria-label={`Download compressed ${media.originalFileName}`}
+                              disabled={!media.processedCdnUrl}
+                            >
+                              Download
+                            </button>
+                          )}
                         </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
               </div>
-            </div>
-            {error && (
-              <div className="error-message" role="alert">
-                {error}
-              </div>
-            )}
-            <div className="trust-indicators">
-              <span className="trust-item">✅ 100% Free</span>
-              <span className="trust-item">🖼️ Supports JPEG, PNG, HEIC</span>
-              <span className="trust-item">🎥 Video Compression</span>
-              <span className="trust-item">📥 Instant Downloads</span>
-            </div>
-            <figure className="hero-image-container">
-              <Image
-                src="/images/media-compressor-hero.jpg"
-                alt="Media compression example - images and videos optimized for web"
-                className="hero-image"
-                width={800}
-                height={400}
-                priority
-              />
-              <figcaption className="sr-only">Example of media compression for images and videos</figcaption>
-            </figure>
+            </motion.div>
           </div>
         </motion.div>
       </section>
