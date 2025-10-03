@@ -816,5 +816,35 @@
     "featured": false,
     "slug": "leading-lines-directing-viewer-attention-editing",
     "difficulty": "Beginner"
+  },
+  {
+    "id": 55,
+    "title": "Instagram Story vs. Reel Export Differences: A Detailed Guide (2025)",
+    "excerpt": "Explore the key export differences between Instagram Stories and Reels using Scenith, ensuring optimal quality and performance for each format in 2025.",
+    "category": "Video Editing",
+    "readTime": "7 min",
+    "publishDate": "2025-10-03",
+    "author": "Scenith Team",
+    "image": "📱",
+    "gradient": "linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%)",
+    "tags": ["Instagram Stories", "Instagram Reels", "Export Differences", "Video Editing", "Social Media"],
+    "featured": false,
+    "slug": "instagram-story-vs-reel-export-differences",
+    "difficulty": "Beginner"
+  },
+  {
+    "id": 56,
+    "title": "LinkedIn Video Specifications: Crafting Professional Content (2025)",
+    "excerpt": "Discover LinkedIn video specifications with Scenith to create professional content that resonates with a business audience in 2025.",
+    "category": "Video Editing",
+    "readTime": "7 min",
+    "publishDate": "2025-10-03",
+    "author": "Scenith Team",
+    "image": "💼",
+    "gradient": "linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)",
+    "tags": ["LinkedIn Video", "Specifications", "Professional Content", "Video Editing", "Business Videos"],
+    "featured": false,
+    "slug": "linkedin-video-specifications-professional-content",
+    "difficulty": "Beginner"
   }
 ]
