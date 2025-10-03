@@ -756,5 +756,65 @@
     "featured": false,
     "slug": "audio-keyframe-animations-volume-swells-dips",
     "difficulty": "Beginner"
-  }  
+  },
+  {
+    "id": 51,
+    "title": "Bounce Animations: Mastering Keyframe Timing for Engaging Elements (2025)",
+    "excerpt": "Discover how to create captivating bounce animations with Scenith using keyframe timing to enhance your video elements and boost viewer engagement.",
+    "category": "Video Editing",
+    "readTime": "6 min",
+    "publishDate": "2025-09-30",
+    "author": "Scenith Team",
+    "image": "🎾",
+    "gradient": "linear-gradient(135deg, #34d399 0%, #10b981 100%)",
+    "tags": ["Bounce Animations", "Keyframe Timing", "Engaging Elements", "Video Editing"],
+    "featured": false,
+    "slug": "bounce-animations-keyframe-timing-engaging-elements",
+    "difficulty": "Beginner"
+  },
+  {
+    "id": 52,
+    "title": "Speed Ramping: Creating Dramatic Effects with Slow-to-Fast Motion (2025)",
+    "excerpt": "Learn how to use speed ramping in Scenith to craft dramatic slow-to-fast motion effects, enhancing your videos with cinematic flair.",
+    "category": "Video Editing",
+    "readTime": "6 min",
+    "publishDate": "2025-09-30",
+    "author": "Scenith Team",
+    "image": "⏩",
+    "gradient": "linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%)",
+    "tags": ["Speed Ramping", "Slow Motion", "Fast Motion", "Dramatic Effects", "Video Editing"],
+    "featured": false,
+    "slug": "speed-ramping-dramatic-effect",
+    "difficulty": "Beginner"
+  },
+  {
+    "id": 53,
+    "title": "Audio Descriptions: Enhancing Visual Content for Blind Viewers (2025)",
+    "excerpt": "Learn how to add audio descriptions in Scenith to make visual content accessible for blind viewers, improving inclusivity in video editing.",
+    "category": "Video Editing",
+    "readTime": "6 min",
+    "publishDate": "2025-10-01",
+    "author": "Scenith Team",
+    "image": "🔊",
+    "gradient": "linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)",
+    "tags": ["Audio Descriptions", "Visual Content", "Blind Viewers", "Accessibility", "Video Editing"],
+    "featured": false,
+    "slug": "audio-descriptions-visual-content-blind-viewers",
+    "difficulty": "Beginner"
+  },
+  {
+    "id": 54,
+    "title": "Leading Lines: Directing Viewer Attention in Video Editing (2025)",
+    "excerpt": "Learn how to use leading lines in Scenith to guide viewer attention, enhancing composition and engagement in your video projects.",
+    "category": "Video Editing",
+    "readTime": "6 min",
+    "publishDate": "2025-10-01",
+    "author": "Scenith Team",
+    "image": "📏",
+    "gradient": "linear-gradient(135deg, #34d399 0%, #10b981 100%)",
+    "tags": ["Leading Lines", "Viewer Attention", "Composition", "Video Editing"],
+    "featured": false,
+    "slug": "leading-lines-directing-viewer-attention-editing",
+    "difficulty": "Beginner"
+  }
 ]
