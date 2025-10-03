@@ -23,7 +23,7 @@ interface MediaItem {
   id: number;
   originalFileName: string;
   originalCdnUrl: string;
-  processedCdnUrl: string;
+  processedCdnUrl: string | null;
   targetSize: string;
   status: "UPLOADED" | "PROCESSING" | "SUCCESS" | "FAILED";
   errorMessage: string | null;
@@ -286,7 +286,6 @@ const CompressMediaClient: React.FC = () => {
     }
   };
 
-  // Handle download
   const handleDownload = async (url: string, fileName: string) => {
     try {
       const response = await fetch(url);
@@ -444,9 +443,10 @@ const CompressMediaClient: React.FC = () => {
                             )}
                             {media.status === "SUCCESS" && media.processedCdnUrl && (
                               <button
-                                onClick={() => handleDownload(media.processedCdnUrl, `compressed_${media.originalFileName}`)}
+                                onClick={() => media.processedCdnUrl && handleDownload(media.processedCdnUrl, `compressed_${media.originalFileName}`)}
                                 className="cta-button download-button"
                                 aria-label={`Download compressed ${media.originalFileName}`}
+                                disabled={!media.processedCdnUrl}
                               >
                                 Download
                               </button>
