@@ -906,5 +906,50 @@
     "featured": false,
     "slug": "reels-aspect-ratio-9-16-vs-4-5-engagement-test",
     "difficulty": "Beginner"
+  },
+  {
+    "id": 61,
+    "title": "How to Make Professional-Looking Videos at Home (2025 Guide)",
+    "excerpt": "Learn how to create professional-looking videos at home with Scenith, covering lighting, audio, and editing tips for stunning results in 2025.",
+    "category": "Video Editing",
+    "readTime": "7 min",
+    "publishDate": "2025-10-04",
+    "author": "Scenith Team",
+    "image": "🏠",
+    "gradient": "linear-gradient(135deg, #10b981 0%, #34d399 100%)",
+    "tags": ["professional videos", "home video production", "video editing", "lighting tips", "audio quality", "2025 guide"],
+    "featured": false,
+    "slug": "how-to-make-professional-looking-videos-at-home",
+    "difficulty": "Beginner"
+  },
+  {
+    "id": 62,
+    "title": "How to Edit Videos on Laptop: Complete Guide (2025)",
+    "excerpt": "Master video editing on your laptop with Scenith’s complete guide, covering setup, tools, and techniques for professional results in 2025.",
+    "category": "Video Editing",
+    "readTime": "7 min",
+    "publishDate": "2025-10-04",
+    "author": "Scenith Team",
+    "image": "🖥️",
+    "gradient": "linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%)",
+    "tags": ["video editing on laptop", "complete guide", "video editing tools", "professional editing", "2025 techniques"],
+    "featured": false,
+    "slug": "how-to-edit-videos-on-laptop-complete-guide",
+    "difficulty": "Beginner"
+  },
+  {
+    "id": 63,
+    "title": "How to Make YouTube Shorts from Long Videos (2025 Guide)",
+    "excerpt": "Learn how to create YouTube Shorts from long videos with Scenith, optimizing clips for the 9:16 ratio and mobile engagement in 2025.",
+    "category": "Video Editing",
+    "readTime": "7 min",
+    "publishDate": "2025-10-04",
+    "author": "Scenith Team",
+    "image": "📹",
+    "gradient": "linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%)",
+    "tags": ["YouTube Shorts", "long video conversion", "9:16 ratio", "video editing", "mobile optimization", "2025 guide"],
+    "featured": false,
+    "slug": "how-to-make-youtube-shorts-from-long-videos",
+    "difficulty": "Beginner"
   }
 ]
