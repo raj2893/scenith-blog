@@ -517,7 +517,7 @@ const VideoSpeedClient: React.FC = () => {
             '@type': 'SoftwareApplication',
             name: 'Scenith Video Speed Editor',
             description: 'Free AI-powered video speed editor to adjust playback speed of videos from 0.5x to 15x.',
-            url: typeof window !== 'undefined' ? window.location.href : '/video-speed',
+            url: typeof window !== 'undefined' ? window.location.href : '/tools/video-speed-modifier',
             applicationCategory: 'MultimediaApplication',
             operatingSystem: 'Web Browser',
             offers: {

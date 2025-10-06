@@ -360,7 +360,7 @@ const CompressMediaClient: React.FC = () => {
             "@type": "SoftwareApplication",
             name: "Scenith Media Compressor",
             description: "Free online tool to compress images (JPEG, PNG, HEIC) and videos to desired sizes with high quality.",
-            url: typeof window !== "undefined" ? window.location.href : "/compress-media",
+            url: typeof window !== "undefined" ? window.location.href : "/tools/compress-media",
             applicationCategory: "MultimediaApplication",
             operatingSystem: "Web Browser",
             offers: {

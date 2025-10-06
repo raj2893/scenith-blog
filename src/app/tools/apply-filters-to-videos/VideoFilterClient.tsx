@@ -818,7 +818,7 @@ const VideoFilterClient: React.FC = () => {
             '@type': 'SoftwareApplication',
             name: 'Scenith Video Filter',
             description: 'Free AI-powered video filter tool for applying professional-grade filters and LUTs to videos.',
-            url: typeof window !== 'undefined' ? window.location.href : '/video-filter',
+            url: typeof window !== 'undefined' ? window.location.href : '/tools/apply-filters-to-videos',
             applicationCategory: 'MultimediaApplication',
             operatingSystem: 'Web Browser',
             offers: {

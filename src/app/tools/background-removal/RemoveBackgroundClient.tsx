@@ -113,7 +113,7 @@ const RemoveBackgroundClient: React.FC = () => {
             '@type': 'SoftwareApplication',
             name: 'Scenith Background Remover',
             description: 'Free AI-powered background removal tool for creating transparent images from JPG and PNG files.',
-            url: typeof window !== 'undefined' ? window.location.href : '/remove-background',
+            url: typeof window !== 'undefined' ? window.location.href : '/tools/background-removal',
             applicationCategory: 'PhotoEditingApplication',
             operatingSystem: 'Web Browser',
             offers: {
