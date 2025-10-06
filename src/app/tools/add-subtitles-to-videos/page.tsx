@@ -1,10 +1,6 @@
 // app/add-subtitles-to-videos/page.tsx
 import type { Metadata } from "next";
-import dynamic from 'next/dynamic';
-
-const SubtitleClient = dynamic(() => import('./SubtitleClient'), {
-  ssr: false,
-});
+import SubtitleClient from './SubtitleClient';
 
 export const metadata: Metadata = {
   title: 'Free AI Subtitle Generator - Add Subtitles to Videos Online | SCENITH',

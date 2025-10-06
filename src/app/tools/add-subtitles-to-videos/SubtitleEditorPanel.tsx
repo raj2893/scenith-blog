@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useCallback, useEffect } from 'react';
-import WebFont from 'webfontloader';
 import { SubtitleDTO } from './SubtitleClient';
 import { debounce } from 'lodash';
 import './SubtitleEditorPanel.css';
@@ -81,11 +80,16 @@ const SubtitleEditorPanel: React.FC<SubtitleEditorPanelProps> = ({
   availableFonts,
 }) => {
   useEffect(() => {
-    WebFont.load({
-      google: {
-        families: googleFonts,
-      },
-    });
+    // Only load WebFont in the browser
+    if (typeof window !== 'undefined') {
+      import('webfontloader').then((WebFont) => {
+        WebFont.load({
+          google: {
+            families: googleFonts,
+          },
+        });
+      });
+    }
   }, []);
 
   // Parse font family to extract weight and style

@@ -1,4 +1,3 @@
-// app/add-subtitles-to-videos/SubtitleClient.tsx
 "use client";
 
 import React, { useState, useEffect, useCallback, useRef, SetStateAction, Dispatch } from 'react';
