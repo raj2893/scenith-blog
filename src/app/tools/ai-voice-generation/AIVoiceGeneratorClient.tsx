@@ -5,9 +5,9 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { API_BASE_URL, CDN_URL } from '../config';
+import { API_BASE_URL, CDN_URL } from '../../config';
 import { FaTimes } from 'react-icons/fa';
-import '../../../styles/tools/AIVoiceGenerator.css';
+import '../../../../styles/tools/AIVoiceGenerator.css';
 
 // Define TypeScript interfaces
 interface UserProfile {

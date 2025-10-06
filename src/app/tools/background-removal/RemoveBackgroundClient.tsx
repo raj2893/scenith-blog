@@ -5,9 +5,9 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import BackgroundRemoval from '../../components/BackgroundRemoval';
-import { API_BASE_URL } from '../config';
-import '../../../styles/tools/RemoveBackground.css';
+import BackgroundRemoval from '../../../components/BackgroundRemoval';
+import { API_BASE_URL } from '../../config';
+import '../../../../styles/tools/RemoveBackground.css';
 
 // Define TypeScript interfaces
 interface UserProfile {

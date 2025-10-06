@@ -6,8 +6,8 @@ import Image from 'next/image';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { FaTimes } from 'react-icons/fa';
-import { API_BASE_URL, CDN_URL } from '../config';
-import '../../../styles/tools/VideoSpeed.css';
+import { API_BASE_URL, CDN_URL } from '../../config';
+import '../../../../styles/tools/VideoSpeed.css';
 import Script from 'next/script';
 import { debounce } from 'lodash';
 

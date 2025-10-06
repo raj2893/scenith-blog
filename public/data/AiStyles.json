@@ -1,0 +1,644 @@
+[
+  {
+    "name": "Pale Green",
+    "fontFamily": "Poiret One",
+    "fontColor": "#065F46",
+    "backgroundColor": "#F0FDF4"
+  },
+  {
+    "name": "Mint Green",
+    "fontFamily": "Comic Neue",
+    "fontColor": "#065F46",
+    "backgroundColor": "#D1FAE5"
+  },
+  {
+    "name": "Light Green",
+    "fontFamily": "Tangerine",
+    "fontColor": "#166534",
+    "backgroundColor": "#BBF7D0"
+  },
+  {
+    "name": "Fresh Green",
+    "fontFamily": "Noto Sans Mono",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#10B981"
+  },
+  {
+    "name": "Emerald Green",
+    "fontFamily": "Imperial Script",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#059669"
+  },
+  {
+    "name": "Forest Green",
+    "fontFamily": "Verdana",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#047857"
+  },
+  {
+    "name": "Hunter Green",
+    "fontFamily": "Courier Prime",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#065F46"
+  },
+  {
+    "name": "Dark Green",
+    "fontFamily": "Times New Roman",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#064E3B"
+  },
+  {
+    "name": "Pine Green",
+    "fontFamily": "Tahoma",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#022C22"
+  },
+  {
+    "name": "Pale Purple",
+    "fontFamily": "Birthstone",
+    "fontColor": "#553C9A",
+    "backgroundColor": "#FAF5FF"
+  },
+  {
+    "name": "Lavender",
+    "fontFamily": "Lavishly Yours",
+    "fontColor": "#553C9A",
+    "backgroundColor": "#F3E8FF"
+  },
+  {
+    "name": "Light Purple",
+    "fontFamily": "Amatic SC",
+    "fontColor": "#6B21A8",
+    "backgroundColor": "#E9D5FF"
+  },
+  {
+    "name": "Purple",
+    "fontFamily": "Poiret One",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#8B5CF6"
+  },
+  {
+    "name": "Medium Purple",
+    "fontFamily": "Rampart One",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#7C3AED"
+  },
+  {
+    "name": "Deep Purple",
+    "fontFamily": "Imperial Script",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#6D28D9"
+  },
+  {
+    "name": "Royal Purple",
+    "fontFamily": "Freckle Face",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#5B21B6"
+  },
+  {
+    "name": "Dark Purple",
+    "fontFamily": "Tangerine",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#4C1D95"
+  },
+  {
+    "name": "Midnight Purple",
+    "fontFamily": "Fredericka the Great",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#3C1A78"
+  },
+  {
+    "name": "Blush Pink",
+    "fontFamily": "Kings",
+    "fontColor": "#831843",
+    "backgroundColor": "#FDF2F8"
+  },
+  {
+    "name": "Rose Pink",
+    "fontFamily": "Lavishly Yours",
+    "fontColor": "#831843",
+    "backgroundColor": "#FCE7F3"
+  },
+  {
+    "name": "Light Pink",
+    "fontFamily": "Kirang Haerang",
+    "fontColor": "#BE185D",
+    "backgroundColor": "#FBCFE8"
+  },
+  {
+    "name": "Pink",
+    "fontFamily": "Amatic SC",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#EC4899"
+  },
+  {
+    "name": "Medium Pink",
+    "fontFamily": "Rubik Wet Paint",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#E91E63"
+  },
+  {
+    "name": "Hot Pink",
+    "fontFamily": "Rampart One",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#DB2777"
+  },
+  {
+    "name": "Deep Pink",
+    "fontFamily": "Freckle Face",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#BE185D"
+  },
+  {
+    "name": "Dark Pink",
+    "fontFamily": "Fascinate Inline",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#9D174D"
+  },
+  {
+    "name": "Magenta",
+    "fontFamily": "Barrio",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#831843"
+  },
+  {
+    "name": "Light Peach",
+    "fontFamily": "Fredericka the Great",
+    "fontColor": "#9A3412",
+    "backgroundColor": "#FFF7ED"
+  },
+  {
+    "name": "Peach",
+    "fontFamily": "Yesteryear",
+    "fontColor": "#9A3412",
+    "backgroundColor": "#FED7AA"
+  },
+  {
+    "name": "Coral",
+    "fontFamily": "Gelasio",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#FB923C"
+  },
+  {
+    "name": "Orange",
+    "fontFamily": "Kings",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#F97316"
+  },
+  {
+    "name": "Medium Orange",
+    "fontFamily": "Doto",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#EA580C"
+  },
+  {
+    "name": "Dark Orange",
+    "fontFamily": "Butcherman",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#DC2626"
+  },
+  {
+    "name": "Burnt Orange",
+    "fontFamily": "Barrio",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#C2410C"
+  },
+  {
+    "name": "Rust Orange",
+    "fontFamily": "Bungee Hairline",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#9A3412"
+  },
+  {
+    "name": "Deep Rust",
+    "fontFamily": "Alumni Sans Pinstripe",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#7C2D12"
+  },
+  {
+    "name": "Cream Yellow",
+    "fontFamily": "Comic Sans MS",
+    "fontColor": "#92400E",
+    "backgroundColor": "#FFFBEB"
+  },
+  {
+    "name": "Light Yellow",
+    "fontFamily": "Mountains of Christmas",
+    "fontColor": "#92400E",
+    "backgroundColor": "#FEF3C7"
+  },
+  {
+    "name": "Soft Yellow",
+    "fontFamily": "Courier New",
+    "fontColor": "#A16207",
+    "backgroundColor": "#FDE68A"
+  },
+  {
+    "name": "Golden Yellow",
+    "fontFamily": "Rubik Wet Paint",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#F59E0B"
+  },
+  {
+    "name": "Gold",
+    "fontFamily": "Impact",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#EAB308"
+  },
+  {
+    "name": "Amber",
+    "fontFamily": "Fascinate Inline",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#D97706"
+  },
+  {
+    "name": "Dark Amber",
+    "fontFamily": "Kirang Haerang",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#B45309"
+  },
+  {
+    "name": "Bronze",
+    "fontFamily": "Imperial Script",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#92400E"
+  },
+  {
+    "name": "Dark Gold",
+    "fontFamily": "Poiret One",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#78350F"
+  },
+  {
+    "name": "Pale Red",
+    "fontFamily": "Yesteryear",
+    "fontColor": "#991B1B",
+    "backgroundColor": "#FEF2F2"
+  },
+  {
+    "name": "Light Red",
+    "fontFamily": "Lavishly Yours",
+    "fontColor": "#991B1B",
+    "backgroundColor": "#FEE2E2"
+  },
+  {
+    "name": "Soft Red",
+    "fontFamily": "Birthstone",
+    "fontColor": "#DC2626",
+    "backgroundColor": "#FECACA"
+  },
+  {
+    "name": "Red",
+    "fontFamily": "Mountains of Christmas",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#EF4444"
+  },
+  {
+    "name": "Medium Red",
+    "fontFamily": "Amatic SC",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#DC2626"
+  },
+  {
+    "name": "Deep Red",
+    "fontFamily": "Butcherman",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#B91C1C"
+  },
+  {
+    "name": "Dark Red",
+    "fontFamily": "Impact",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#991B1B"
+  },
+  {
+    "name": "Burgundy",
+    "fontFamily": "Tangerine",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#7F1D1D"
+  },
+  {
+    "name": "Maroon",
+    "fontFamily": "Rampart One",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#450A0A"
+  },
+  {
+    "name": "Pale Gray",
+    "fontFamily": "Tahoma",
+    "fontColor": "#374151",
+    "backgroundColor": "#FAFAFA"
+  },
+  {
+    "name": "Light Gray",
+    "fontFamily": "Arial",
+    "fontColor": "#374151",
+    "backgroundColor": "#F9FAFB"
+  },
+  {
+    "name": "Silver Gray",
+    "fontFamily": "Montserrat Alternates",
+    "fontColor": "#4B5563",
+    "backgroundColor": "#F3F4F6"
+  },
+  {
+    "name": "Medium Gray",
+    "fontFamily": "Georgia",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#6B7280"
+  },
+  {
+    "name": "Steel Gray",
+    "fontFamily": "Lexend Giga",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#6B7280"
+  },
+  {
+    "name": "Dark Gray",
+    "fontFamily": "Courier New",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#4B5563"
+  },
+  {
+    "name": "Charcoal",
+    "fontFamily": "Times New Roman",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#374151"
+  },
+  {
+    "name": "Slate Gray",
+    "fontFamily": "Carlito",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#1F2937"
+  },
+  {
+    "name": "Near Black",
+    "fontFamily": "Alumni Sans Pinstripe",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#111827"
+  },
+  {
+    "name": "Pure Black",
+    "fontFamily": "Bungee Hairline",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#000000"
+  },
+  {
+    "name": "Ice Teal",
+    "fontFamily": "Montserrat Alternates",
+    "fontColor": "#0F766E",
+    "backgroundColor": "#F0FDFA"
+  },
+  {
+    "name": "Teal Light",
+    "fontFamily": "Comic Neue",
+    "fontColor": "#0F766E",
+    "backgroundColor": "#CCFBF1"
+  },
+  {
+    "name": "Mint Teal",
+    "fontFamily": "Arimo",
+    "fontColor": "#134E4A",
+    "backgroundColor": "#99F6E4"
+  },
+  {
+    "name": "Teal",
+    "fontFamily": "Lexend Giga",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#0D9488"
+  },
+  {
+    "name": "Medium Teal",
+    "fontFamily": "Gelasio",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#0F766E"
+  },
+  {
+    "name": "Teal Dark",
+    "fontFamily": "Noto Sans Mono",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#115E59"
+  },
+  {
+    "name": "Deep Teal",
+    "fontFamily": "Verdana",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#134E4A"
+  },
+  {
+    "name": "Forest Teal",
+    "fontFamily": "Tinos",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#0F3F3C"
+  },
+  {
+    "name": "Dark Teal",
+    "fontFamily": "Courier Prime",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#042F2E"
+  },
+  {
+    "name": "Powder Cyan",
+    "fontFamily": "Gelasio",
+    "fontColor": "#155E75",
+    "backgroundColor": "#F0F9FF"
+  },
+  {
+    "name": "Cyan Light",
+    "fontFamily": "Poiret One",
+    "fontColor": "#155E75",
+    "backgroundColor": "#CFFAFE"
+  },
+  {
+    "name": "Sky Cyan",
+    "fontFamily": "Tangerine",
+    "fontColor": "#0E7490",
+    "backgroundColor": "#A5F3FC"
+  },
+  {
+    "name": "Cyan",
+    "fontFamily": "Comic Neue",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#06B6D4"
+  },
+  {
+    "name": "Medium Cyan",
+    "fontFamily": "Imperial Script",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#0891B2"
+  },
+  {
+    "name": "Cyan Dark",
+    "fontFamily": "Carlito",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#0E7490"
+  },
+  {
+    "name": "Deep Cyan",
+    "fontFamily": "Freckle Face",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#155E75"
+  },
+  {
+    "name": "Ocean Cyan",
+    "fontFamily": "Fredericka the Great",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#164E63"
+  },
+  {
+    "name": "Navy Cyan",
+    "fontFamily": "Kings",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#0C4A6E"
+  },
+  {
+    "name": "Pale Indigo",
+    "fontFamily": "Poiret One",
+    "fontColor": "#3730A3",
+    "backgroundColor": "#F8FAFF"
+  },
+  {
+    "name": "Indigo Light",
+    "fontFamily": "Kirang Haerang",
+    "fontColor": "#3730A3",
+    "backgroundColor": "#E0E7FF"
+  },
+  {
+    "name": "Soft Indigo",
+    "fontFamily": "Rubik Wet Paint",
+    "fontColor": "#4338CA",
+    "backgroundColor": "#C7D2FE"
+  },
+  {
+    "name": "Indigo",
+    "fontFamily": "Tangerine",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#6366F1"
+  },
+  {
+    "name": "Medium Indigo",
+    "fontFamily": "Fascinate Inline",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#4F46E5"
+  },
+  {
+    "name": "Indigo Dark",
+    "fontFamily": "Imperial Script",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#4338CA"
+  },
+  {
+    "name": "Deep Indigo",
+    "fontFamily": "Barrio",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#3730A3"
+  },
+  {
+    "name": "Royal Indigo",
+    "fontFamily": "Bungee Hairline",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#312E81"
+  },
+  {
+    "name": "Midnight Indigo",
+    "fontFamily": "Alumni Sans Pinstripe",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#1E1B4B"
+  },
+  {
+    "name": "Pearl Slate",
+    "fontFamily": "Noto Sans Mono",
+    "fontColor": "#334155",
+    "backgroundColor": "#FEFEFE"
+  },
+  {
+    "name": "Pure Light",
+    "fontFamily": "Montserrat Alternates",
+    "fontColor": "#000000",
+    "backgroundColor": "#FFFFFF"
+  },
+  {
+    "name": "Snow White",
+    "fontFamily": "Arial",
+    "fontColor": "#1A1A1A",
+    "backgroundColor": "#FAFAFA"
+  },
+  {
+    "name": "Off White",
+    "fontFamily": "Gelasio",
+    "fontColor": "#2C2C2C",
+    "backgroundColor": "#F8F8F8"
+  },
+  {
+    "name": "Soft Gray",
+    "fontFamily": "Carlito",
+    "fontColor": "#2C2C2C",
+    "backgroundColor": "#F5F5F5"
+  },
+  {
+    "name": "Light Gray Tone",
+    "fontFamily": "Calibri",
+    "fontColor": "#333333",
+    "backgroundColor": "#F0F0F0"
+  },
+  {
+    "name": "Light Contrast",
+    "fontFamily": "Tinos",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#E8E8E8"
+  },
+  {
+    "name": "Ice Blue",
+    "fontFamily": "Comic Neue",
+    "fontColor": "#1E3A8A",
+    "backgroundColor": "#F0F9FF"
+  },
+  {
+    "name": "Gentle Blue",
+    "fontFamily": "Lexend Giga",
+    "fontColor": "#1A365D",
+    "backgroundColor": "#EBF8FF"
+  },
+  {
+    "name": "Light Blue",
+    "fontFamily": "Noto Sans Mono",
+    "fontColor": "#1E40AF",
+    "backgroundColor": "#DBEAFE"
+  },
+  {
+    "name": "Sky Blue",
+    "fontFamily": "Arimo",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#3182CE"
+  },
+  {
+    "name": "Medium Blue",
+    "fontFamily": "Verdana",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#2563EB"
+  },
+  {
+    "name": "Ocean Blue",
+    "fontFamily": "Tinos",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#2B6CB0"
+  },
+  {
+    "name": "Deep Blue",
+    "fontFamily": "Carlito",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#1E3A8A"
+  },
+  {
+    "name": "Royal Blue",
+    "fontFamily": "Georgia",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#1E40AF"
+  },
+  {
+    "name": "Navy Blue",
+    "fontFamily": "Calibri",
+    "fontColor": "#FFFFFF",
+    "backgroundColor": "#1E2B5C"
+  }
+]

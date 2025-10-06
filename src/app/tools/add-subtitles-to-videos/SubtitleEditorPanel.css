@@ -1,0 +1,265 @@
+/* SubtitleEditorPanel.css */
+
+/* Import Montserrat font for consistency */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+/* Subtitle Editor Panel Specific */
+.section-content.tool-subpanel.subtitle-editor-panel {
+  padding: 15px;
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  border: 1px solid #2a2a2a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+  color: #d1d1d1;
+}
+
+/* Control Group Styles */
+.subtitle-editor-panel .control-group {
+  margin-bottom: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.subtitle-editor-panel .control-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: #a1a1a1;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.subtitle-editor-panel .control-group input,
+.subtitle-editor-panel .control-group select,
+.subtitle-editor-panel .control-group textarea {
+  width: 100%;
+  padding: 6px;
+  background-color: #1e1e1e;
+  color: #d1d1d1;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.subtitle-editor-panel .control-group input:focus,
+.subtitle-editor-panel .control-group select:focus,
+.subtitle-editor-panel .control-group textarea:focus {
+  border-color: #4A919E;
+  transform: scale(1.01);
+}
+
+.subtitle-editor-panel .control-group input[type="color"] {
+  height: 28px;
+  padding: 2px;
+}
+
+.subtitle-editor-panel .control-group input[type="number"] {
+  width: 60px;
+}
+
+.subtitle-editor-panel .control-group textarea {
+  min-height: 60px;
+  max-height: 120px;
+  resize: vertical;
+}
+
+.subtitle-editor-panel .slider-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.subtitle-editor-panel .slider-container input[type="range"] {
+  flex: 1;
+  height: 4px;
+  background: #2a2a2a;
+  border-radius: 4px;
+  -webkit-appearance: none;
+  transition: all 0.3s ease;
+}
+
+.subtitle-editor-panel .slider-container input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  background: #4A919E;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.subtitle-editor-panel .slider-container input[type="range"]::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: #4A919E;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.subtitle-editor-panel .slider-container input[type="range"]:hover {
+  background: #444;
+}
+
+.subtitle-editor-panel .slider-container input[type="number"] {
+  margin-left: 8px;
+  width: 60px;
+  padding: 6px;
+  background: #1e1e1e;
+  color: #d1d1d1;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.subtitle-editor-panel select,
+.subtitle-editor-panel input {
+  width: 100%;
+  padding: 6px;
+  background-color: #1e1e1e;
+  color: #d1d1d1;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.subtitle-editor-panel select:focus,
+.subtitle-editor-panel input:focus {
+  border-color: #4A919E;
+  transform: scale(1.01);
+}
+
+.subtitle-editor-panel .apply-text-btn {
+  width: 100%;
+  padding: 8px 16px;
+  background: transparent;
+  color: #4A919E;
+  border: 1px solid #4A919E;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  transition: all 0.3s ease;
+  box-shadow: none;
+}
+
+.subtitle-editor-panel .apply-text-btn:hover {
+  background: #4A919E;
+  color: #121212;
+  transform: scale(1.02);
+}
+
+.subtitle-editor-panel .apply-text-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #4A919E;
+  transition: all 0.3s ease;
+}
+
+.subtitle-editor-panel .apply-text-btn:hover::after {
+  width: 80%;
+  left: 10%;
+}
+
+/* Ensure textarea with red border for validation */
+textarea[style*="border: 2px solid red"] {
+  border: 2px solid red !important;
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+  .subtitle-editor-panel {
+    padding: 10px;
+  }
+
+  .subtitle-editor-panel .control-group label {
+    font-size: 12px;
+  }
+
+  .subtitle-editor-panel .control-group input,
+  .subtitle-editor-panel .control-group select,
+  .subtitle-editor-panel .control-group textarea {
+    font-size: 11px;
+    padding: 5px;
+  }
+
+  .subtitle-editor-panel .slider-container input[type="range"] {
+    height: 3.5px;
+  }
+
+  .subtitle-editor-panel .slider-container input[type="range"]::-webkit-slider-thumb {
+    width: 11px;
+    height: 11px;
+  }
+
+  .subtitle-editor-panel .slider-container input[type="range"]::-moz-range-thumb {
+    width: 11px;
+    height: 11px;
+  }
+
+  .subtitle-editor-panel .slider-container input[type="number"] {
+    width: 50px;
+    font-size: 11px;
+  }
+
+  .subtitle-editor-panel .apply-text-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .subtitle-editor-panel {
+    padding: 8px;
+  }
+
+  .subtitle-editor-panel .control-group label {
+    font-size: 11px;
+    margin-bottom: 4px;
+  }
+
+  .subtitle-editor-panel .control-group input,
+  .subtitle-editor-panel .control-group select,
+  .subtitle-editor-panel .control-group textarea {
+    font-size: 10px;
+    padding: 4px;
+  }
+
+  .subtitle-editor-panel .slider-container input[type="range"] {
+    height: 3px;
+  }
+
+  .subtitle-editor-panel .slider-container input[type="range"]::-webkit-slider-thumb {
+    width: 10px;
+    height: 10px;
+  }
+
+  .subtitle-editor-panel .slider-container input[type="range"]::-moz-range-thumb {
+    width: 10px;
+    height: 10px;
+  }
+
+  .subtitle-editor-panel .slider-container input[type="number"] {
+    width: 45px;
+    font-size: 10px;
+  }
+
+  .subtitle-editor-panel .apply-text-btn {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+}
