@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: '/remove-background',
+    canonical: '/tools/background-removal',
   },
 };
 

@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: "/compress-media",
+    canonical: "/tools/compress-media",
   },
 };
 

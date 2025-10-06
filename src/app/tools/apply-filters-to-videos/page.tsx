@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: '/video-filter',
+    canonical: '/tools/apply-filters-to-videos',
   },
 };
 

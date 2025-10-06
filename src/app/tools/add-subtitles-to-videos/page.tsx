@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: '/add-subtitles-to-videos',
+    canonical: '/tools/add-subtitles-to-videos',
   },
 };
 

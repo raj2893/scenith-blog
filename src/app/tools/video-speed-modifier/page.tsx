@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: '/video-speed',
+    canonical: '/tools/video-speed-modifier',
   },
 };
 

@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: '/ai-voice-generator',
+    canonical: '/tools/ai-voice-generation',
   },
 };
 

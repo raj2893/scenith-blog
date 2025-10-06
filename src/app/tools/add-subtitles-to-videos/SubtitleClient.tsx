@@ -816,7 +816,7 @@ const SubtitleClient: React.FC = () => {
             '@type': 'SoftwareApplication',
             name: 'Scenith AI Subtitle Generator',
             description: 'Free AI-powered subtitle generator for videos. Automatically add and customize subtitles with professional styles.',
-            url: typeof window !== 'undefined' ? window.location.href : '/tools/add-subtitles-to-videos',
+            url: '/tools/add-subtitles-to-videos',
             applicationCategory: 'MultimediaApplication',
             operatingSystem: 'Web Browser',
             offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
