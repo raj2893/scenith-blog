@@ -63,7 +63,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
       isDropdown: true,
       dropdownItems: [
         { label: 'AI Voices', href: '/tools/ai-voice-generation' },
-        { label: 'AI Subtitle Generator', href: '/tools/video-speed-modifier' },
+        { label: 'AI Subtitle Generator', href: '/tools/add-subtitles-to-videos' },
         { label: 'Background Remover', href: '/tools/background-removal' },
         { label: 'Video Speed Modifier', href: '/tools/video-speed-modifier' },
         { label: 'Video Color Grading', href: '/tools/apply-filters-to-videos' },
