@@ -13,6 +13,8 @@ import Script from 'next/script';
 import { debounce } from 'lodash';
 import SubtitleEditorPanel from './SubtitleEditorPanel';
 
+const isBrowser = typeof window !== 'undefined';
+
 // Interfaces
 interface UserProfile {
   id: number;
@@ -347,6 +349,7 @@ const SubtitleClient: React.FC = () => {
 
   // Handle scroll for navbar
   useEffect(() => {
+    if (typeof window === 'undefined') return;
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
@@ -356,6 +359,7 @@ const SubtitleClient: React.FC = () => {
 
   // Check auth status
   useEffect(() => {
+    if (typeof window === 'undefined') return;
     const token = localStorage.getItem('token');
     if (token) {
       axios
@@ -505,6 +509,7 @@ const SubtitleClient: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
     const initializeGoogleSignIn = () => {
       if (window.google && window.google.accounts) {
         window.google.accounts.id.initialize({
