@@ -179,6 +179,7 @@ export default function SpeedRampingTutorialDramaticEffects() {
             <h3>1. Importing and Setting Up Your Video</h3>
             <p>
               Start by uploading your video to Scenith’s platform. Identify the segment where you want to apply speed ramping—such as a jump or a dramatic turn—and mark it on the timeline. This step lays the groundwork for a seamless effect.
+            </p>
             <ol className={styles.stepList}>
               <li>
                 <strong>Upload Video:</strong> Import your file into Scenith’s timeline.
@@ -244,8 +245,10 @@ export default function SpeedRampingTutorialDramaticEffects() {
               </div>
               <div className={styles.cons}>
                 <h4>❌ Disadvantages:</h4>
-                <li>Internet-dependent for real-time editing</li>
-                <li>Requires practice for complex ramps</li>
+                <ul>
+                  <li>Internet-dependent for real-time editing</li>
+                  <li>Requires practice for complex ramps</li>
+                </ul>
               </div>
             </div>
 
@@ -254,9 +257,7 @@ export default function SpeedRampingTutorialDramaticEffects() {
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Speed Ramping Free →
               </Link>
-            </div>
-          </div>
-        </section>
+            </div></div></section>
 
         {/* Method 2: Manual Methods */}
         <section className={styles.section} id="manual-methods">

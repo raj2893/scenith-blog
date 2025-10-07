@@ -180,6 +180,7 @@ export default function CinematicColorGradingPresets() {
             <h3>1. Uploading and Choosing a Preset</h3>
             <p>
               Upload your video to Scenith and select a cinematic preset from the library—e.g., “Cinematic Warm” or “Moody Cool.” Preview the effect to match your video’s theme, setting the stage for a polished look.
+            </p>
             <ol className={styles.stepList}>
               <li>
                 <strong>Upload Video:</strong> Import your file into Scenith.
@@ -257,9 +258,7 @@ export default function CinematicColorGradingPresets() {
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Cinematic Grading Free →
               </Link>
-            </div>
-          </div>
-        </section>
+            </div></div></section>
 
         {/* Method 2: Manual Methods */}
         <section className={styles.section} id="manual-methods">

@@ -180,6 +180,7 @@ export default function MakeVideoFileSmallerForUpload() {
             <h3>1. Uploading and Assessing Your Video</h3>
             <p>
               Begin by uploading your video to Scenith’s online platform. The tool analyzes the file to suggest compression options based on its current size and resolution, providing a preview to ensure quality is maintained. This step is key to preparing your video for a smooth upload process.
+            </p>
             <ol className={styles.stepList}>
               <li>
                 <strong>Upload Video:</strong> Drag and drop your file into Scenith’s tool.
@@ -257,9 +258,7 @@ export default function MakeVideoFileSmallerForUpload() {
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Reducing File Size Free →
               </Link>
-            </div>
-          </div>
-        </section>
+            </div></div></section>
 
         {/* Method 2: Manual Methods */}
         <section className={styles.section} id="manual-methods">

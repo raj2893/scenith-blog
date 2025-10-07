@@ -180,6 +180,7 @@ export default function CompressLargeVideoFilesForEmail() {
             <h3>1. Uploading and Analyzing Your Video</h3>
             <p>
               Start by uploading your large video to Scenith’s online platform. The tool analyzes the file size (e.g., 500MB) and suggests compression options to bring it under 25MB for Gmail or 20MB for Outlook, ensuring compatibility while maintaining clarity.
+            </p>
             <ol className={styles.stepList}>
               <li>
                 <strong>Upload Video:</strong> Drag and drop your file into Scenith.
@@ -257,9 +258,7 @@ export default function CompressLargeVideoFilesForEmail() {
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Compression Free →
               </Link>
-            </div>
-          </div>
-        </section>
+            </div></div></section>
 
         {/* Method 2: Manual Methods */}
         <section className={styles.section} id="manual-methods">

@@ -180,6 +180,7 @@ export default function CompressVideoForInstagram() {
             <h3>1. Uploading and Analyzing Your Video</h3>
             <p>
               Upload your video to Scenith’s platform and let the tool analyze its size and resolution. It suggests compression settings to fit Instagram’s requirements, providing a preview to maintain quality throughout the process.
+            </p>
             <ol className={styles.stepList}>
               <li>
                 <strong>Upload Video:</strong> Drag and drop your file into Scenith.
@@ -257,9 +258,7 @@ export default function CompressVideoForInstagram() {
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Compression Free →
               </Link>
-            </div>
-          </div>
-        </section>
+            </div></div></section>
 
         {/* Method 2: Manual Methods */}
         <section className={styles.section} id="manual-methods">
