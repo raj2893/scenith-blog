@@ -576,7 +576,9 @@ const SubtitleClient: React.FC = () => {
       }
       setIsGenerating(true);
       setError(null);
+      
       try {
+          // Queue the generation task
           const response = await axios.post(
               `${API_BASE_URL}/api/subtitles/generate/${selectedUpload.id}`,
               {
@@ -586,12 +588,61 @@ const SubtitleClient: React.FC = () => {
               },
               { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
           );
-          setSelectedUpload(response.data);
-          setSubtitles(JSON.parse(response.data.subtitlesJson || '[]'));
+          
+          // Start polling for completion
+          const pollInterval = setInterval(async () => {
+              try {
+                  const statusResponse = await axios.get(
+                      `${API_BASE_URL}/api/subtitles/user-media`,
+                      { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+                  );
+                  
+                  const updatedMedia = statusResponse.data.find(
+                      (m: SubtitleMedia) => m.id === selectedUpload.id
+                  );
+                  
+                  if (updatedMedia) {
+                      setSelectedUpload(updatedMedia);
+                      
+                      if (updatedMedia.status === 'SUCCESS' && updatedMedia.subtitlesJson) {
+                          // Generation complete
+                          clearInterval(pollInterval);
+                          setIsGenerating(false);
+                          setSubtitles(JSON.parse(updatedMedia.subtitlesJson));
+                          
+                          // Scroll to subtitles list
+                          const subtitlesList = document.querySelector('.subtitles-list-container');
+                          if (subtitlesList) {
+                              subtitlesList.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                          }
+                      } else if (updatedMedia.status === 'FAILED') {
+                          // Generation failed
+                          clearInterval(pollInterval);
+                          setIsGenerating(false);
+                          setError('Subtitle generation failed. Please try again.');
+                      }
+                      // If status is PROCESSING or QUEUED, keep polling
+                  }
+              } catch (pollError) {
+                  console.error('Error polling subtitle status:', pollError);
+                  clearInterval(pollInterval);
+                  setIsGenerating(false);
+                  setError('Error checking subtitle generation status.');
+              }
+          }, 2000); // Poll every 2 seconds
+          
+          // Set a timeout to stop polling after 5 minutes
+          setTimeout(() => {
+              clearInterval(pollInterval);
+              if (isGenerating) {
+                  setIsGenerating(false);
+                  setError('Subtitle generation is taking longer than expected. Please refresh the page.');
+              }
+          }, 300000); // 5 minutes
+          
       } catch (error: any) {
-          setError(error.response?.data?.message || 'Failed to generate subtitles.');
-      } finally {
           setIsGenerating(false);
+          setError(error.response?.data?.message || 'Failed to start subtitle generation.');
       }
   };
 
