@@ -1064,7 +1064,7 @@ const SubtitleClient: React.FC = () => {
           </div>
           <figure className="hero-image-container">
             <Image
-              src="/images/subtitle-hero.jpg"
+              src="/images/AddSubtitlesSS.png"
               alt="AI subtitle generator example showing subtitle editing and video preview"
               className="hero-image"
               width={800}
