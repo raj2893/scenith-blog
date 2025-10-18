@@ -1491,5 +1491,20 @@
     "featured": false,
     "slug": "video-editing-jobs-for-beginners-online",
     "difficulty": "Beginner"
-  }
+  },
+  {
+    "id": 101,
+    "title": "How to Beat Instagram Algorithm 2025: Reels Strategy",
+    "excerpt": "Master the Instagram algorithm in 2025 with Scenith’s Reels strategy to boost reach and engagement.",
+    "category": "Social Media Growth",
+    "readTime": "7 min",
+    "publishDate": "2025-10-11",
+    "author": "Scenith Team",
+    "image": "📱",
+    "gradient": "linear-gradient(135deg, #f472b6 0%, #ec4899 100%)",
+    "tags": ["Instagram algorithm 2025", "Reels strategy", "Instagram growth", "video editing for Reels", "social media engagement"],
+    "featured": false,
+    "slug": "how-to-beat-instagram-algorithm-2025-reels-strategy",
+    "difficulty": "Beginner"
+  }  
 ]
