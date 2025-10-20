@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import Link from 'next/link';
-import styles from '../../../../../../styles/ViewersWithoutSound.module.css';
+import styles from '../../../../../styles/ViewersWithoutSound.module.css';
 
 export const metadata: Metadata = {
   title: "4K 30FPS Settings for Crisp Reels Quality (2025)",

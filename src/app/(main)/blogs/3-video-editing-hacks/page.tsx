@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import Link from "next/link";
-import styles from "../../../../../../styles/ThreeVideoEditingHacks.module.css";
+import styles from "../../../../../styles/ThreeVideoEditingHacks.module.css";
 
 export const metadata: Metadata = {
   title: "3 Video Editing Hacks to Skyrocket Your Social Media Growth (2025)",
