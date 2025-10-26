@@ -11,6 +11,7 @@ import '../../../../../styles/tools/Subtitles.css';
 import Script from 'next/script';
 import { debounce } from 'lodash';
 import SubtitleEditorPanel from './SubtitleEditorPanel';
+import CustomStyleDropdown from './CustomStyleDropdown';
 
 // Interfaces
 interface UserProfile {
@@ -343,6 +344,10 @@ const SubtitleClient: React.FC = () => {
   const [originalSubtitle, setOriginalSubtitle] = useState<SubtitleDTO | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [applyStyleToSingle, setApplyStyleToSingle] = useState(false);
+
+  const prevSelectedAiStyleRef = useRef<AiStyle | null>(null);
 
   // Handle scroll for navbar
   useEffect(() => {
@@ -423,6 +428,14 @@ const SubtitleClient: React.FC = () => {
     };
     fetchUploads();
   }, [isLoggedIn]);
+
+  const requireLogin = () => {
+    if (!isLoggedIn) {
+      setShowLoginModal(true);
+      return false;
+    }
+    return true;
+  };  
 
   // Handle login
   const handleLogin = async (formData: LoginFormData) => {
@@ -527,11 +540,12 @@ const SubtitleClient: React.FC = () => {
     }
   }, [showLoginModal, handleGoogleLogin]);  
 
-  // Handle video upload
   const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!requireLogin()) return;
     const file = e.target.files?.[0];
     if (!file) return;
+    
+    setIsUploading(true);
     const formData = new FormData();
     formData.append('file', file);
     try {
@@ -545,6 +559,8 @@ const SubtitleClient: React.FC = () => {
       setSelectedUpload(response.data);
     } catch (error: any) {
       setError(error.response?.data?.message || 'Failed to upload video.');
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -683,82 +699,104 @@ const SubtitleClient: React.FC = () => {
     [selectedUpload]
   );
 
-  const handleSaveMultipleSubtitles = async () => {
-    if (!requireLogin() || !selectedUpload || selectedSubtitles.length === 0) {
-      setError('Please select subtitles to update.');
-      return;
-    }
-    if (!selectedAiStyle) {
-      setError('Please select a style preset.');
-      return;
-    }
-    const updatedSubtitles = subtitles
-      .filter((sub) => selectedSubtitles.includes(sub.id))
-      .map((sub) => ({
-        ...sub,
-        fontFamily: selectedAiStyle.fontFamily,
-        fontColor: selectedAiStyle.fontColor,
-        backgroundColor: selectedAiStyle.backgroundColor,
-        scale: 1.5,
-        backgroundOpacity: 0.8,
-        positionX: 0,
-        positionY: 350,
-        alignment: 'center',
-        backgroundH: 50,
-        backgroundW: 50,
-        backgroundBorderRadius: 15,
-        backgroundBorderWidth: 0,
-        backgroundBorderColor: '#000000',
-        textBorderColor: '#000000',
-        textBorderWidth: 1,
-        textBorderOpacity: 0.9,
-        letterSpacing: 2.0,
-        lineSpacing: 1.5,
-        opacity: 1.0,
-        rotation: 0.0,
-      }));
-    try {
-      const response = await axios.put(
-        `${API_BASE_URL}/api/subtitles/update/${selectedUpload.id}`,
-        updatedSubtitles,
-        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
-      );
-      setSubtitles(JSON.parse(response.data.subtitlesJson || '[]'));
-      setSelectedSubtitles([]);
-    } catch (error: any) {
-      setError(error.response?.data?.message || 'Failed to update subtitles.');
-    }
-  };
-
-  const handleUpdateAllSubtitles = async () => {
+  const handleUpdateAllSubtitles = useCallback(async (targetSubtitleId?: string) => {
       if (!requireLogin() || !selectedUpload || !selectedAiStyle) {
-          setError('Please select a video and a style preset.');
           return;
       }
+      
       try {
-          const response = await axios.put(
-              `${API_BASE_URL}/api/subtitles/update-all/${selectedUpload.id}`,
-              {
-                  fontFamily: selectedAiStyle.fontFamily,
-                  fontColor: selectedAiStyle.fontColor,
-                  backgroundColor: selectedAiStyle.backgroundColor
-              },
-              { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
-          );
-          setSubtitles(JSON.parse(response.data.subtitlesJson || '[]'));
-          setSelectedSubtitles([]);
+          const styleParams = {
+              fontFamily: selectedAiStyle.fontFamily,
+              fontColor: selectedAiStyle.fontColor,
+              backgroundColor: selectedAiStyle.backgroundColor
+          };
+          
+          if (targetSubtitleId) {
+              // Find the existing subtitle to merge with
+              const existingSubtitle = subtitles.find(s => s.id === targetSubtitleId);
+              if (!existingSubtitle) {
+                  console.error('Subtitle not found:', targetSubtitleId);
+                  return;
+              }
+              
+              // Merge style params with existing subtitle data
+              const mergedSubtitle = {
+                  ...existingSubtitle,
+                  ...styleParams
+              };
+              
+              // Update single subtitle with merged data
+              const response = await axios.put(
+                  `${API_BASE_URL}/api/subtitles/update/${selectedUpload.id}/${targetSubtitleId}`,
+                  mergedSubtitle,
+                  { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+              );
+              
+              const updatedSubtitlesFromBackend = JSON.parse(response.data.subtitlesJson || '[]');
+              setSubtitles(updatedSubtitlesFromBackend);
+              
+              if (editingSubtitle?.id === targetSubtitleId) {
+                  const refreshedSubtitle = updatedSubtitlesFromBackend.find(
+                      (s: SubtitleDTO) => s.id === targetSubtitleId
+                  );
+                  if (refreshedSubtitle) {
+                      setEditingSubtitle(refreshedSubtitle);
+                      setOriginalSubtitle(refreshedSubtitle);
+                  }
+              }
+          } else {
+              // Update all subtitles - merge with each existing subtitle
+              const mergedSubtitles = subtitles.map(sub => ({
+                  ...sub,
+                  ...styleParams
+              }));
+              
+              const response = await axios.put(
+                  `${API_BASE_URL}/api/subtitles/update/${selectedUpload.id}`,
+                  mergedSubtitles,
+                  { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+              );
+              
+              const updatedSubtitlesFromBackend = JSON.parse(response.data.subtitlesJson || '[]');
+              setSubtitles(updatedSubtitlesFromBackend);
+              
+              if (editingSubtitle) {
+                  const refreshedSubtitle = updatedSubtitlesFromBackend.find(
+                      (s: SubtitleDTO) => s.id === editingSubtitle.id
+                  );
+                  if (refreshedSubtitle) {
+                      setEditingSubtitle(refreshedSubtitle);
+                      setOriginalSubtitle(refreshedSubtitle);
+                  }
+              }
+          }
       } catch (error: any) {
-          setError(error.response?.data?.message || 'Failed to update all subtitles.');
+          console.error('Failed to update subtitles:', error);
+          setError('Failed to apply style. Please try again.');
       }
-  };
+  }, [selectedAiStyle, selectedUpload, editingSubtitle, subtitles, requireLogin]);
   
   useEffect(() => {
-      if (subtitles.length > 0 && selectedAiStyle && selectedUpload) {
-          handleUpdateAllSubtitles();
+      // Only trigger when style actually changes (not on mount)
+      if (
+          subtitles.length > 0 && 
+          selectedAiStyle && 
+          selectedUpload &&
+          prevSelectedAiStyleRef.current !== null &&
+          prevSelectedAiStyleRef.current?.name !== selectedAiStyle?.name
+      ) {
+          // Apply style to single subtitle if editing, otherwise all
+          if (editingSubtitle) {
+              handleUpdateAllSubtitles(editingSubtitle.id);
+          } else {
+              handleUpdateAllSubtitles();
+          }
       }
-  }, [selectedAiStyle]);  
+      
+      // Update ref for next comparison
+      prevSelectedAiStyleRef.current = selectedAiStyle;
+  }, [selectedAiStyle, handleUpdateAllSubtitles, editingSubtitle, subtitles, selectedUpload]);
 
-  // Handle subtitle processing
   const handleStartProcessing = async () => {
     if (!requireLogin() || !selectedUpload) {
       setError('Please select a video to process.');
@@ -832,15 +870,6 @@ const SubtitleClient: React.FC = () => {
     }
   };
 
-  // Require login
-  const requireLogin = () => {
-    if (!isLoggedIn) {
-      setShowLoginModal(true);
-      return false;
-    }
-    return true;
-  };
-
   // Scroll to section
   const scrollToSection = (sectionId: string) => {
     const section = document.getElementById(sectionId);
@@ -894,31 +923,45 @@ const SubtitleClient: React.FC = () => {
           <div className="hero-cta-section">
             <div className="main-content">
               <div className="video-input-section">
-                <label className="custom-file-upload">
-                  <input
-                    type="file"
-                    accept="video/*"
-                    onChange={handleVideoUpload}
-                    disabled={!isLoggedIn}
-                    className="video-upload-input"
-                    aria-label="Upload video for subtitles"
-                  />
-                  <span className="upload-button">Upload Video <span className="upload-icon">⬆️</span></span>
-                </label>
-                <select
-                  value={selectedUpload?.id || ''}
-                  onChange={(e) => handleVideoSelect(e.target.value)}
-                  className="video-select"
-                  disabled={!isLoggedIn || uploads.length === 0}
-                  aria-label="Select uploaded video"
-                >
-                  <option value="">Select a Video</option>
-                  {uploads.map((upload) => (
-                    <option key={upload.id} value={upload.id}>
-                      {upload.originalFileName}
-                    </option>
-                  ))}
-                </select>
+                {isUploading && (
+                  <div className="upload-loading-overlay">
+                    <div className="upload-spinner"></div>
+                    <p>Uploading your video...</p>
+                  </div>
+                )}              
+                <div className="upload-section-container">
+                  <label className="compact-upload-button">
+                    <input
+                      type="file"
+                      accept="video/*"
+                      onChange={handleVideoUpload}
+                      disabled={!isLoggedIn || isUploading}
+                      className="video-upload-input"
+                      aria-label="Upload video for subtitles"
+                    />
+                    <span className="upload-icon">📤</span>
+                    <span>Upload</span>
+                  </label>
+                  <select
+                    value={selectedUpload?.id || ''}
+                    onChange={(e) => handleVideoSelect(e.target.value)}
+                    className="compact-video-select"
+                    disabled={!isLoggedIn || uploads.length === 0 || isUploading}
+                    aria-label="Select uploaded video"
+                  >
+                    <option value="">Select a Video</option>
+                    {uploads.map((upload) => {
+                      const truncatedName = upload.originalFileName.length > 30 
+                        ? upload.originalFileName.substring(0, 30) + '...' 
+                        : upload.originalFileName;
+                      return (
+                        <option key={upload.id} value={upload.id} title={upload.originalFileName}>
+                          {truncatedName}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
                 <div className="video-filter-container">
                   {/* Video Preview */}
                   <div className="video-preview">
@@ -937,35 +980,13 @@ const SubtitleClient: React.FC = () => {
                   <div className="subtitles-list-container">
                     <div className="filter-controls">
                         <h3>Subtitle Styles</h3>
-                        <div className="ai-styles-dropdown">
-                            <select
-                                value={selectedAiStyle?.name || ''}
-                                onChange={(e) => setSelectedAiStyle(aiStyles.find((s) => s.name === e.target.value) || null)}
-                                className="ai-style-select"
-                                disabled={!isLoggedIn}
-                                aria-label="Select subtitle style"
-                            >
-                                <option value="" disabled>Select Style</option>
-                                {aiStyles.map((style) => {
-                                    const { family, weight, style: fontStyle } = parseFont(style.fontFamily);
-                                    return (
-                                        <option
-                                            key={style.name}
-                                            value={style.name}
-                                            style={{
-                                                fontFamily: `"${family}", sans-serif`,
-                                                fontWeight: weight,
-                                                fontStyle: fontStyle,
-                                                color: style.fontColor,
-                                                backgroundColor: style.backgroundColor,
-                                            }}
-                                        >
-                                            {style.name}
-                                        </option>
-                                    );
-                                })}
-                            </select>
-                        </div>
+                          <CustomStyleDropdown
+                              styles={aiStyles}
+                              selectedStyle={selectedAiStyle}
+                              onSelectStyle={setSelectedAiStyle}
+                              disabled={!isLoggedIn}
+                              parseFont={parseFont}
+                          />
                         {subtitles.length > 0 && (
                             <div className="subtitles-list">
                                 <h4>Generated Subtitles ({subtitles.length})</h4>
@@ -1023,23 +1044,33 @@ const SubtitleClient: React.FC = () => {
                 </div>
                 <div className="action-buttons">
                   {selectedUpload && (
-                    <button
-                      className="generate-subtitles-button cta-button"
-                      onClick={handleGenerateSubtitles}
-                      disabled={isGenerating || !selectedUpload || !selectedAiStyle}
-                      aria-label={subtitles.length > 0 ? "Generate subtitles again" : "Generate subtitles"}
-                    >
-                      {isGenerating ? 'Generating...' : subtitles.length > 0 ? 'Generate Again' : 'Generate Subtitles'}
-                    </button>
+                    <div className="button-wrapper">
+                      <button
+                        className="generate-subtitles-button cta-button"
+                        onClick={handleGenerateSubtitles}
+                        disabled={isGenerating || !selectedUpload || !selectedAiStyle || isProcessing}
+                        aria-label={subtitles.length > 0 ? "Generate subtitles again" : "Generate subtitles"}
+                      >
+                        {isGenerating ? 'Generating...' : subtitles.length > 0 ? 'Generate Again' : 'Generate Subtitles'}
+                      </button>
+                      {isProcessing && (
+                        <div className="button-tooltip">Please wait, your video is getting processed!</div>
+                      )}
+                    </div>
                   )}
-                  <button
-                    className="cta-button process-video-button"
-                    onClick={handleStartProcessing}
-                    disabled={isLoggedIn && (!selectedUpload || isProcessing || !subtitles.length)}
-                    aria-label="Start subtitle processing"
-                  >
-                    {isProcessing ? 'Processing...' : isLoggedIn ? 'Process Subtitles' : 'Login to Process'}
-                  </button>
+                  <div className="button-wrapper">
+                    <button
+                      className="cta-button process-video-button"
+                      onClick={handleStartProcessing}
+                      disabled={isLoggedIn && (!selectedUpload || isProcessing || !subtitles.length || isGenerating)}
+                      aria-label="Start subtitle processing"
+                    >
+                      {isProcessing ? 'Processing...' : isLoggedIn ? 'Process Subtitles' : 'Login to Process'}
+                    </button>
+                    {isGenerating && (
+                      <div className="button-tooltip">Please wait, the subtitles are getting generated!</div>
+                    )}
+                  </div>
                 </div>
                 {selectedUpload?.processedCdnUrl && (
                   <div className="download-section" role="region" aria-labelledby="download-title">

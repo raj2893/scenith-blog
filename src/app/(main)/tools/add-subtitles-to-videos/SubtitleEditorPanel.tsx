@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect } from 'react';
 import { SubtitleDTO } from './SubtitleClient';
 import { debounce } from 'lodash';
+import { FaTimes } from 'react-icons/fa';
 import './SubtitleEditorPanel.css';
 
 interface SubtitleEditorPanelProps {
@@ -152,6 +153,15 @@ const SubtitleEditorPanel: React.FC<SubtitleEditorPanelProps> = ({
   return (
     <div className="section-content tool-subpanel subtitle-editor-panel">
       <h3>Subtitle Settings</h3>
+      <div className="control-group">
+        <button
+          className="apply-text-btn close-editor-btn"
+          onClick={onClose}
+          title="Close Editor"
+        >
+          <FaTimes />
+        </button>
+      </div>      
       <div className="control-group">
         <label>Text Content</label>
         <textarea
@@ -437,14 +447,6 @@ const SubtitleEditorPanel: React.FC<SubtitleEditorPanelProps> = ({
           step="1"
           style={{ width: '60px' }}
         />
-      </div>
-      <div className="control-group">
-        <button
-          className="apply-text-btn"
-          onClick={onClose}
-        >
-          Close
-        </button>
       </div>
     </div>
   );

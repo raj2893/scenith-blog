@@ -180,6 +180,34 @@ textarea[style*="border: 2px solid red"] {
   border: 2px solid red !important;
 }
 
+/* Close Button with Icon */
+.subtitle-editor-panel .close-editor-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  background: transparent;
+  color: #EF4444;
+  border: 1px solid #EF4444;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.subtitle-editor-panel .close-editor-btn:hover {
+  background: #EF4444;
+  color: #121212;
+  transform: scale(1.02);
+}
+
+.subtitle-editor-panel .close-editor-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
 /* Media Queries for Responsive Design */
 @media (max-width: 768px) {
   .subtitle-editor-panel {

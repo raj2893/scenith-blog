@@ -1,0 +1,131 @@
+/* Custom Style Dropdown */
+.custom-style-dropdown {
+  position: relative;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.dropdown-header {
+  width: 100%;
+  padding: 12px 40px 12px 12px;
+  border: 2px solid #E5E7EB;
+  border-radius: 8px;
+  background-color: #FFFFFF;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: 'Montserrat', sans-serif;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.dropdown-header:hover {
+  border-color: #3B82F6;
+}
+
+.custom-style-dropdown.disabled .dropdown-header {
+  background: #F8FAFC;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.dropdown-selected {
+  flex: 1;
+  color: #1E293B;
+}
+
+.dropdown-arrow {
+  position: absolute;
+  right: 12px;
+  color: #3B82F6;
+  font-size: 12px;
+  transition: transform 0.3s ease;
+  pointer-events: none;
+}
+
+.dropdown-arrow.open {
+  transform: rotate(180deg);
+}
+
+.dropdown-options {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  max-height: 400px; /* This is what you wanted - fixed max height */
+  overflow-y: auto;
+  background: #FFFFFF;
+  border: 2px solid #3B82F6;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 99999;
+  animation: dropdownFadeIn 0.2s ease;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-option {
+  padding: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: 'Montserrat', sans-serif;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.dropdown-option:last-child {
+  border-bottom: none;
+}
+
+.dropdown-option:hover {
+  background: rgba(59, 130, 246, 0.1) !important;
+}
+
+.dropdown-option.selected {
+  background: rgba(59, 130, 246, 0.15) !important;
+  font-weight: 600;
+  border-left: 4px solid #3B82F6;
+}
+
+/* Scrollbar styling for dropdown */
+.dropdown-options::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dropdown-options::-webkit-scrollbar-track {
+  background: #F8FAFC;
+  border-radius: 0 8px 8px 0;
+}
+
+.dropdown-options::-webkit-scrollbar-thumb {
+  background: #3B82F6;
+  border-radius: 4px;
+}
+
+.dropdown-options::-webkit-scrollbar-thumb:hover {
+  background: #2563EB;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .dropdown-options {
+    max-height: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dropdown-options {
+    max-height: 200px;
+  }
+}
