@@ -11,6 +11,7 @@ interface SubtitleEditorPanelProps {
   onUpdate: (updatedSubtitle: SubtitleDTO) => void;
   onClose: () => void;
   availableFonts: string[];
+  onApplyToAll: (field: string, value: any) => void;
 }
 
 const googleFonts = [
@@ -79,6 +80,7 @@ const SubtitleEditorPanel: React.FC<SubtitleEditorPanelProps> = ({
   onUpdate,
   onClose,
   availableFonts,
+  onApplyToAll
 }) => {
   useEffect(() => {
     // Only load WebFont in the browser
@@ -427,6 +429,26 @@ const SubtitleEditorPanel: React.FC<SubtitleEditorPanelProps> = ({
         />
       </div>
       <div className="control-group">
+        <button
+          className="apply-to-all-btn"
+          onClick={() => {
+            onApplyToAll('positionX', subtitle.positionX);
+          }}
+          style={{
+            padding: '8px 16px',
+            background: '#3B82F6',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            fontSize: '13px',
+            marginTop: '5px'
+          }}
+        >
+          Apply Position X to All
+        </button>
+      </div>      
+      <div className="control-group">
         <label>Position Y</label>
         <input
           type="number"
@@ -436,6 +458,26 @@ const SubtitleEditorPanel: React.FC<SubtitleEditorPanelProps> = ({
           style={{ width: '60px' }}
         />
       </div>
+      <div className="control-group">
+        <button
+          className="apply-to-all-btn"
+          onClick={() => {
+            onApplyToAll('positionY', subtitle.positionY);
+          }}
+          style={{
+            padding: '8px 16px',
+            background: '#3B82F6',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            fontSize: '13px',
+            marginTop: '5px'
+          }}
+        >
+          Apply Position Y to All
+        </button>
+      </div>      
       <div className="control-group">
         <label>Rotation (°)</label>
         <input

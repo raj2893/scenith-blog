@@ -28,6 +28,31 @@ const CustomStyleDropdown: React.FC<CustomStyleDropdownProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      import('webfontloader').then((WebFont) => {
+        // Extract unique font families from styles
+        const fontFamilies = styles.map(style => {
+          const { family } = parseFont(style.fontFamily);
+          // Handle font variants (e.g., "Arial:700", "Tangerine:700italic")
+          if (style.fontFamily.includes(':')) {
+            return style.fontFamily;
+          }
+          return family;
+        });
+        
+        // Remove duplicates
+        const uniqueFonts = Array.from(new Set(fontFamilies));
+        
+        WebFont.load({
+          google: {
+            families: uniqueFonts,
+          },
+        });
+      });
+    }
+  }, [styles, parseFont]);  
+
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

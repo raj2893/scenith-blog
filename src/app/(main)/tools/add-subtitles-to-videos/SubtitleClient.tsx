@@ -775,6 +775,42 @@ const SubtitleClient: React.FC = () => {
           setError('Failed to apply style. Please try again.');
       }
   }, [selectedAiStyle, selectedUpload, editingSubtitle, subtitles, requireLogin]);
+
+  const handleApplyPositionToAll = useCallback(async (field: string, value: any) => {
+      if (!requireLogin() || !selectedUpload || !subtitles.length) {
+          return;
+      }
+      
+      try {
+          // Create updated subtitles with the new position value
+          const updatedSubtitles = subtitles.map(sub => ({
+              ...sub,
+              [field]: value
+          }));
+          
+          const response = await axios.put(
+              `${API_BASE_URL}/api/subtitles/update/${selectedUpload.id}`,
+              updatedSubtitles,
+              { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+          );
+          
+          const updatedSubtitlesFromBackend = JSON.parse(response.data.subtitlesJson || '[]');
+          setSubtitles(updatedSubtitlesFromBackend);
+          
+          if (editingSubtitle) {
+              const refreshedSubtitle = updatedSubtitlesFromBackend.find(
+                  (s: SubtitleDTO) => s.id === editingSubtitle.id
+              );
+              if (refreshedSubtitle) {
+                  setEditingSubtitle(refreshedSubtitle);
+                  setOriginalSubtitle(refreshedSubtitle);
+              }
+          }
+      } catch (error: any) {
+          console.error('Failed to apply position to all subtitles:', error);
+          setError('Failed to apply position. Please try again.');
+      }
+  }, [selectedUpload, editingSubtitle, subtitles, requireLogin]);  
   
   useEffect(() => {
       // Only trigger when style actually changes (not on mount)
@@ -1034,6 +1070,7 @@ const SubtitleClient: React.FC = () => {
                           setOriginalSubtitle(null);
                         }}
                         availableFonts={aiStyles.map(s => s.fontFamily)}
+                        onApplyToAll={handleApplyPositionToAll}
                       />
                       <div className="editor-save-status">
                         {isSaving && <span className="saving-indicator">💾 Saving...</span>}
