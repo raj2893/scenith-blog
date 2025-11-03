@@ -92,6 +92,15 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
   const [scale, setScale] = useState(1);
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
+  const [isPanning, setIsPanning] = useState(false);
+  const [panStart, setPanStart] = useState({ x: 0, y: 0 });
+  const [isSpacePressed, setIsSpacePressed] = useState(false);
+  const [showLeftPanel, setShowLeftPanel] = useState(true);
+  const [showRightPanel, setShowRightPanel] = useState(true);
+  const [showLayersPopup, setShowLayersPopup] = useState(false);
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]);  
+  const [activeTab, setActiveTab] = useState<'text' | 'images' | 'shapes' | null>(null);
 
   // Fetch project
   useEffect(() => {
@@ -120,6 +129,99 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
         setTimeout(() => router.push("/tools/image-editing"), 2000);
       });
   }, [projectId, router]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+  
+    axios
+      .get(`${API_BASE_URL}/api/image-editor/assets?type=IMAGE`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        const imageUrls = res.data.map((asset: any) => asset.cdnUrl);
+        setUploadedImages(imageUrls);
+      })
+      .catch((err) => {
+        console.error("Error fetching assets:", err);
+      });
+  }, []);  
+
+  useEffect(() => {
+    const preventBrowserZoom = (e: WheelEvent) => {
+      if (e.ctrlKey || e.metaKey) {
+        e.preventDefault();
+      }
+    };
+  
+    // Add event listener to the document
+    document.addEventListener('wheel', preventBrowserZoom, { passive: false });
+  
+    return () => {
+      document.removeEventListener('wheel', preventBrowserZoom);
+    };
+  }, []);  
+
+  const handleWheel = (e: React.WheelEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (e.ctrlKey || e.metaKey) {
+      // Zoom with Ctrl/Cmd + Scroll
+      const delta = e.deltaY * -0.01;
+      const newScale = Math.min(Math.max(0.1, scale + delta), 3);
+      
+      // Zoom towards mouse cursor position
+      if (canvasRef.current) {
+        const rect = canvasRef.current.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+        
+        // Calculate the point under the mouse before zoom
+        const pointX = (mouseX - panOffset.x) / scale;
+        const pointY = (mouseY - panOffset.y) / scale;
+        
+        // Calculate new pan offset to keep the point under the mouse
+        const newPanX = mouseX - pointX * newScale;
+        const newPanY = mouseY - pointY * newScale;
+        
+        setPanOffset({ x: newPanX, y: newPanY });
+      }
+      
+      setScale(newScale);
+    } else {
+      // Pan with normal scroll
+      setPanOffset({
+        x: panOffset.x - e.deltaX,
+        y: panOffset.y - e.deltaY
+      });
+    }
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.code === 'Space' && !isSpacePressed) {
+        e.preventDefault();
+        setIsSpacePressed(true);
+      }
+    };
+  
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        setIsSpacePressed(false);
+        setIsPanning(false);
+      }
+    };
+  
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+  
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [isSpacePressed]);  
 
   // Save to history for undo/redo
   const saveToHistory = (newLayers: Layer[]) => {
@@ -199,15 +301,14 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
     saveToHistory(updatedLayers);
   };
 
-  // Upload image layer
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
+  
     const formData = new FormData();
     formData.append("file", file);
     formData.append("assetType", "IMAGE");
-
+  
     try {
       const response = await axios.post(`${API_BASE_URL}/api/image-editor/assets/upload`, formData, {
         headers: {
@@ -215,7 +316,7 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
           "Content-Type": "multipart/form-data",
         },
       });
-
+  
       const newLayer: Layer = {
         id: `image-${Date.now()}`,
         type: "image",
@@ -234,10 +335,34 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
       setLayers(updatedLayers);
       setSelectedLayerId(newLayer.id);
       saveToHistory(updatedLayers);
+      
+      // Add to uploaded images list
+      setUploadedImages([...uploadedImages, response.data.cdnUrl]);
     } catch (err) {
       setError("Failed to upload image");
     }
   };
+
+  const addImageFromGallery = (src: string) => {
+    const newLayer: Layer = {
+      id: `image-${Date.now()}`,
+      type: "image",
+      zIndex: layers.length,
+      opacity: 1,
+      x: canvasWidth / 2 - 150,
+      y: canvasHeight / 2 - 150,
+      width: 300,
+      height: 300,
+      rotation: 0,
+      visible: true,
+      locked: false,
+      src,
+    };
+    const updatedLayers = [...layers, newLayer];
+    setLayers(updatedLayers);
+    setSelectedLayerId(newLayer.id);
+    saveToHistory(updatedLayers);
+  };  
 
   // Update layer property
   const updateLayer = (layerId: string, updates: Partial<Layer>) => {
@@ -351,30 +476,49 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
     }
   };
 
-  // Mouse handlers for dragging layers
-  const handleMouseDown = (e: React.MouseEvent, layerId: string) => {
-    const layer = layers.find((l) => l.id === layerId);
-    if (!layer || layer.locked) return;
-
-    setSelectedLayerId(layerId);
-    setIsDragging(true);
-    setDragStart({ x: e.clientX - layer.x * scale, y: e.clientY - layer.y * scale });
+  const handleMouseDown = (e: React.MouseEvent, layerId?: string) => {
+    // Handle canvas panning with spacebar
+    if (isSpacePressed && !layerId) {
+      setIsPanning(true);
+      setPanStart({ x: e.clientX - panOffset.x, y: e.clientY - panOffset.y });
+      return;
+    }
+  
+    // Handle layer dragging
+    if (layerId) {
+      const layer = layers.find((l) => l.id === layerId);
+      if (!layer || layer.locked) return;
+  
+      setSelectedLayerId(layerId);
+      setIsDragging(true);
+      setDragStart({ x: e.clientX - layer.x * scale, y: e.clientY - layer.y * scale });
+    }
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
+    // Handle canvas panning
+    if (isPanning && isSpacePressed) {
+      const newX = e.clientX - panStart.x;
+      const newY = e.clientY - panStart.y;
+      setPanOffset({ x: newX, y: newY });
+      return;
+    }
+  
+    // Handle layer dragging
     if (!isDragging || !selectedLayerId) return;
-
+  
     const layer = layers.find((l) => l.id === selectedLayerId);
     if (!layer) return;
-
+  
     const newX = (e.clientX - dragStart.x) / scale;
     const newY = (e.clientY - dragStart.y) / scale;
-
+  
     updateLayer(selectedLayerId, { x: newX, y: newY });
   };
 
   const handleMouseUp = () => {
     setIsDragging(false);
+    setIsPanning(false);
   };
 
   const selectedLayer = layers.find((l) => l.id === selectedLayerId);
@@ -409,88 +553,322 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
           </div>
         </div>
       </div>
-
+  
       <div className="editor-workspace">
-        {/* Left Sidebar - Tools */}
-        <div className="sidebar left-sidebar">
-          <h3>Tools</h3>
-          <div className="tool-buttons">
-            <button className="tool-btn" onClick={addTextLayer}>
-              <FaFont /> Text
-            </button>
-            <label className="tool-btn" htmlFor="image-upload">
-              <FaImage /> Image
-              <input
-                type="file"
-                id="image-upload"
-                accept="image/*"
-                onChange={handleImageUpload}
-                style={{ display: "none" }}
-              />
-            </label>
-            <div className="dropdown">
-              <button className="tool-btn">
-                <FaShapes /> Shapes
-              </button>
-              <div className="dropdown-content">
-                <button onClick={() => addShapeLayer("rectangle")}>Rectangle</button>
-                <button onClick={() => addShapeLayer("circle")}>Circle</button>
-                <button onClick={() => addShapeLayer("ellipse")}>Ellipse</button>
-                <button onClick={() => addShapeLayer("triangle")}>Triangle</button>
+        {/* Left Sidebar - Elements & Properties */}
+        <div className={`sidebar left-sidebar-new ${showLeftPanel ? 'visible' : 'collapsed'}`}>
+          <button className="panel-toggle left-toggle" onClick={() => setShowLeftPanel(!showLeftPanel)}>
+            {showLeftPanel ? '◀' : '▶'}
+          </button>
+          
+          {showLeftPanel && (
+            <div className="sidebar-content">
+              {/* Tab Navigation */}
+              <div className="tab-navigation">
+                <button 
+                  className={`tab-btn ${activeTab === 'text' ? 'active' : ''}`}
+                  onClick={() => setActiveTab(activeTab === 'text' ? null : 'text')}
+                  title="Text"
+                >
+                  <FaFont size={20} />
+                </button>
+                <button 
+                  className={`tab-btn ${activeTab === 'images' ? 'active' : ''}`}
+                  onClick={() => setActiveTab(activeTab === 'images' ? null : 'images')}
+                  title="Images"
+                >
+                  <FaImage size={20} />
+                </button>
+                <button 
+                  className={`tab-btn ${activeTab === 'shapes' ? 'active' : ''}`}
+                  onClick={() => setActiveTab(activeTab === 'shapes' ? null : 'shapes')}
+                  title="Shapes"
+                >
+                  <FaShapes size={20} />
+                </button>
               </div>
-            </div>
-          </div>
-
-          <h3>Layers</h3>
-          <div className="layers-panel">
-            {layers.length === 0 ? (
-              <p className="empty-layers">No layers yet</p>
-            ) : (
-              layers
-                .slice()
-                .reverse()
-                .map((layer) => (
-                  <div
-                    key={layer.id}
-                    className={`layer-item ${selectedLayerId === layer.id ? "selected" : ""}`}
-                    onClick={() => setSelectedLayerId(layer.id)}
-                  >
-                    <div className="layer-info">
-                      <span>{layer.type}</span>
-                      {layer.text && <small>{layer.text.substring(0, 20)}</small>}
+        
+              {/* Tab Content */}
+              <div className="tab-content">
+                {activeTab === 'text' && (
+                  <div className="tool-group">
+                    <button className="element-btn" onClick={addTextLayer}>
+                      <FaFont size={20} />
+                      <span>Add Text</span>
+                    </button>
+                  </div>
+                )}
+        
+                {activeTab === 'images' && (
+                  <div className="tool-group">
+                    <div className="images-grid">
+                      <label className="upload-box" htmlFor="image-upload">
+                        <FaPlus size={18} />
+                        <span>Upload</span>
+                        <input
+                          type="file"
+                          id="image-upload"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          style={{ display: "none" }}
+                        />
+                      </label>
+                      {uploadedImages.map((src, index) => (
+                        <div
+                          key={index}
+                          className="image-thumbnail"
+                          onClick={() => addImageFromGallery(src)}
+                        >
+                          <img src={src} alt={`Image ${index + 1}`} />
+                        </div>
+                      ))}
                     </div>
-                    <div className="layer-controls">
-                      <button onClick={() => updateLayer(layer.id, { visible: !layer.visible })}>
-                        {layer.visible ? <FaEye /> : <FaEyeSlash />}
+                  </div>
+                )}
+        
+                {activeTab === 'shapes' && (
+                  <div className="tool-group">
+                    <div className="shapes-grid">
+                      <button className="shape-btn" onClick={() => addShapeLayer("rectangle")} title="Rectangle">
+                        <svg viewBox="0 0 100 100" width="40" height="40">
+                          <rect x="10" y="20" width="80" height="60" fill="#3B82F6" stroke="#1E40AF" strokeWidth="2" rx="5" />
+                        </svg>
                       </button>
-                      <button onClick={() => updateLayer(layer.id, { locked: !layer.locked })}>
-                        {layer.locked ? <FaLock /> : <FaUnlock />}
+                      <button className="shape-btn" onClick={() => addShapeLayer("circle")} title="Circle">
+                        <svg viewBox="0 0 100 100" width="40" height="40">
+                          <circle cx="50" cy="50" r="40" fill="#3B82F6" stroke="#1E40AF" strokeWidth="2" />
+                        </svg>
                       </button>
-                      <button onClick={() => moveLayer(layer.id, "up")}>▲</button>
-                      <button onClick={() => moveLayer(layer.id, "down")}>▼</button>
-                      <button onClick={() => deleteLayer(layer.id)}>
-                        <FaTrash />
+                      <button className="shape-btn" onClick={() => addShapeLayer("ellipse")} title="Ellipse">
+                        <svg viewBox="0 0 100 100" width="40" height="40">
+                          <ellipse cx="50" cy="50" rx="45" ry="30" fill="#3B82F6" stroke="#1E40AF" strokeWidth="2" />
+                        </svg>
+                      </button>
+                      <button className="shape-btn" onClick={() => addShapeLayer("triangle")} title="Triangle">
+                        <svg viewBox="0 0 100 100" width="40" height="40">
+                          <polygon points="50,10 90,90 10,90" fill="#3B82F6" stroke="#1E40AF" strokeWidth="2" />
+                        </svg>
                       </button>
                     </div>
                   </div>
-                ))
-            )}
-          </div>
-        </div>
-
+                )}
+        
+                {!activeTab && (
+                  <p className="no-selection">Select a tool from above</p>
+                )}
+              </div>
+        
+              {/* Properties Section */}
+              <div className="properties-section">
+                <h3>Properties</h3>
+                {!selectedLayer ? (
+                  <p className="no-selection">Select a layer to edit</p>
+                ) : (
+                  <div className="properties-panel">
+                    {/* Common Properties */}
+                    <div className="property-group">
+                      <label>Position</label>
+                      <div className="property-row">
+                        <input
+                          type="number"
+                          value={Math.round(selectedLayer.x)}
+                          onChange={(e) => updateLayer(selectedLayer.id, { x: parseFloat(e.target.value) })}
+                          placeholder="X"
+                        />
+                        <input
+                          type="number"
+                          value={Math.round(selectedLayer.y)}
+                          onChange={(e) => updateLayer(selectedLayer.id, { y: parseFloat(e.target.value) })}
+                          placeholder="Y"
+                        />
+                      </div>
+                    </div>
+        
+                    <div className="property-group">
+                      <label>Size</label>
+                      <div className="property-row">
+                        <input
+                          type="number"
+                          value={Math.round(selectedLayer.width)}
+                          onChange={(e) => updateLayer(selectedLayer.id, { width: parseFloat(e.target.value) })}
+                          placeholder="Width"
+                        />
+                        <input
+                          type="number"
+                          value={Math.round(selectedLayer.height)}
+                          onChange={(e) => updateLayer(selectedLayer.id, { height: parseFloat(e.target.value) })}
+                          placeholder="Height"
+                        />
+                      </div>
+                    </div>
+        
+                    <div className="property-group">
+                      <label>Rotation: {selectedLayer.rotation}°</label>
+                      <input
+                        type="range"
+                        min="-180"
+                        max="180"
+                        value={selectedLayer.rotation}
+                        onChange={(e) => updateLayer(selectedLayer.id, { rotation: parseFloat(e.target.value) })}
+                      />
+                    </div>
+        
+                    <div className="property-group">
+                      <label>Opacity: {Math.round(selectedLayer.opacity * 100)}%</label>
+                      <input
+                        type="range"
+                        min="0"
+                        max="1"
+                        step="0.1"
+                        value={selectedLayer.opacity}
+                        onChange={(e) => updateLayer(selectedLayer.id, { opacity: parseFloat(e.target.value) })}
+                      />
+                    </div>
+        
+                    {/* Text Properties */}
+                    {selectedLayer.type === "text" && (
+                      <>
+                        <div className="property-group">
+                          <label>Text</label>
+                          <textarea
+                            value={selectedLayer.text}
+                            onChange={(e) => updateLayer(selectedLayer.id, { text: e.target.value })}
+                            rows={3}
+                          />
+                        </div>
+        
+                        <div className="property-group">
+                          <label>Font Family</label>
+                          <select
+                            value={selectedLayer.fontFamily}
+                            onChange={(e) => updateLayer(selectedLayer.id, { fontFamily: e.target.value })}
+                          >
+                            <option value="Arial">Arial</option>
+                            <option value="Times New Roman">Times New Roman</option>
+                            <option value="Courier New">Courier New</option>
+                            <option value="Georgia">Georgia</option>
+                            <option value="Verdana">Verdana</option>
+                          </select>
+                        </div>
+        
+                        <div className="property-group">
+                          <label>Font Size: {selectedLayer.fontSize}px</label>
+                          <input
+                            type="range"
+                            min="12"
+                            max="200"
+                            value={selectedLayer.fontSize}
+                            onChange={(e) => updateLayer(selectedLayer.id, { fontSize: parseFloat(e.target.value) })}
+                          />
+                        </div>
+        
+                        <div className="property-group">
+                          <label>Font Weight</label>
+                          <select
+                            value={selectedLayer.fontWeight}
+                            onChange={(e) => updateLayer(selectedLayer.id, { fontWeight: e.target.value })}
+                          >
+                            <option value="normal">Normal</option>
+                            <option value="bold">Bold</option>
+                          </select>
+                        </div>
+        
+                        <div className="property-group">
+                          <label>Text Align</label>
+                          <select
+                            value={selectedLayer.textAlign}
+                            onChange={(e) => updateLayer(selectedLayer.id, { textAlign: e.target.value })}
+                          >
+                            <option value="left">Left</option>
+                            <option value="center">Center</option>
+                            <option value="right">Right</option>
+                          </select>
+                        </div>
+        
+                        <div className="property-group">
+                          <label>Color</label>
+                          <input
+                            type="color"
+                            value={selectedLayer.color}
+                            onChange={(e) => updateLayer(selectedLayer.id, { color: e.target.value })}
+                          />
+                        </div>
+                      </>
+                    )}
+        
+                    {/* Shape Properties */}
+                    {selectedLayer.type === "shape" && (
+                      <>
+                        <div className="property-group">
+                          <label>Fill Color</label>
+                          <input
+                            type="color"
+                            value={selectedLayer.fill}
+                            onChange={(e) => updateLayer(selectedLayer.id, { fill: e.target.value })}
+                          />
+                        </div>
+        
+                        <div className="property-group">
+                          <label>Stroke Color</label>
+                          <input
+                            type="color"
+                            value={selectedLayer.stroke}
+                            onChange={(e) => updateLayer(selectedLayer.id, { stroke: e.target.value })}
+                          />
+                        </div>
+        
+                        <div className="property-group">
+                          <label>Stroke Width: {selectedLayer.strokeWidth}px</label>
+                          <input
+                            type="range"
+                            min="0"
+                            max="20"
+                            value={selectedLayer.strokeWidth}
+                            onChange={(e) => updateLayer(selectedLayer.id, { strokeWidth: parseFloat(e.target.value) })}
+                          />
+                        </div>
+        
+                        {selectedLayer.shape === "rectangle" && (
+                          <div className="property-group">
+                            <label>Border Radius: {selectedLayer.borderRadius}px</label>
+                            <input
+                              type="range"
+                              min="0"
+                              max="100"
+                              value={selectedLayer.borderRadius}
+                              onChange={(e) => updateLayer(selectedLayer.id, { borderRadius: parseFloat(e.target.value) })}
+                            />
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>        
+  
         {/* Canvas */}
         <div className="canvas-wrapper">
-          <div className="canvas-controls">
-            <button onClick={() => setScale(Math.max(0.25, scale - 0.25))}>-</button>
-            <span>{Math.round(scale * 100)}%</span>
-            <button onClick={() => setScale(Math.min(2, scale + 0.25))}>+</button>
-          </div>
+          <div className="zoom-indicator">
+            {Math.round(scale * 100)}%
+          </div>          
           <div
             className="canvas-container"
             ref={canvasRef}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
+            onMouseDown={(e) => {
+              if (e.target === e.currentTarget) {
+                handleMouseDown(e);
+              }
+            }}            
+            onWheel={handleWheel}
+            style={{
+              cursor: isSpacePressed ? (isPanning ? 'grabbing' : 'grab') : 'default'
+            }}            
           >
             <div
               className="canvas"
@@ -498,7 +876,8 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
                 width: canvasWidth,
                 height: canvasHeight,
                 backgroundColor: canvasBgColor,
-                transform: `scale(${scale})`,
+                transform: `translate(${panOffset.x}px, ${panOffset.y}px) scale(${scale})`,
+                overflow: 'hidden',
               }}
             >
               {layers
@@ -599,201 +978,79 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
             </div>
           </div>
         </div>
-
-        {/* Right Sidebar - Properties */}
-        <div className="sidebar right-sidebar">
-          <h3>Properties</h3>
-          {!selectedLayer ? (
-            <p className="no-selection">Select a layer to edit properties</p>
-          ) : (
-            <div className="properties-panel">
-              {/* Common Properties */}
-              <div className="property-group">
-                <label>Position</label>
-                <div className="property-row">
-                  <input
-                    type="number"
-                    value={Math.round(selectedLayer.x)}
-                    onChange={(e) => updateLayer(selectedLayer.id, { x: parseFloat(e.target.value) })}
-                    placeholder="X"
-                  />
-                  <input
-                    type="number"
-                    value={Math.round(selectedLayer.y)}
-                    onChange={(e) => updateLayer(selectedLayer.id, { y: parseFloat(e.target.value) })}
-                    placeholder="Y"
-                  />
+  
+        {/* Right Sidebar - Layers */}
+        <div className={`sidebar right-sidebar-new ${showRightPanel ? 'visible' : 'collapsed'}`}>
+          <button className="panel-toggle right-toggle" onClick={() => setShowRightPanel(!showRightPanel)}>
+            {showRightPanel ? '▶' : '◀'}
+          </button>
+          
+          {showRightPanel && (
+            <div className="layers-slim-panel">
+              <button className="layers-icon-btn" onClick={() => setShowLayersPopup(true)} title="Manage Layers">
+                <div className="layer-stack-icon">
+                  <div className="layer-rect"></div>
+                  <div className="layer-rect"></div>
+                  <div className="layer-rect"></div>
                 </div>
-              </div>
-
-              <div className="property-group">
-                <label>Size</label>
-                <div className="property-row">
-                  <input
-                    type="number"
-                    value={Math.round(selectedLayer.width)}
-                    onChange={(e) => updateLayer(selectedLayer.id, { width: parseFloat(e.target.value) })}
-                    placeholder="Width"
-                  />
-                  <input
-                    type="number"
-                    value={Math.round(selectedLayer.height)}
-                    onChange={(e) => updateLayer(selectedLayer.id, { height: parseFloat(e.target.value) })}
-                    placeholder="Height"
-                  />
-                </div>
-              </div>
-
-              <div className="property-group">
-                <label>Rotation: {selectedLayer.rotation}°</label>
-                <input
-                  type="range"
-                  min="-180"
-                  max="180"
-                  value={selectedLayer.rotation}
-                  onChange={(e) => updateLayer(selectedLayer.id, { rotation: parseFloat(e.target.value) })}
-                />
-              </div>
-
-              <div className="property-group">
-                <label>Opacity: {Math.round(selectedLayer.opacity * 100)}%</label>
-                <input
-                  type="range"
-                  min="0"
-                  max="1"
-                  step="0.1"
-                  value={selectedLayer.opacity}
-                  onChange={(e) => updateLayer(selectedLayer.id, { opacity: parseFloat(e.target.value) })}
-                />
-              </div>
-
-              {/* Text Properties */}
-              {selectedLayer.type === "text" && (
-                <>
-                  <div className="property-group">
-                    <label>Text</label>
-                    <textarea
-                      value={selectedLayer.text}
-                      onChange={(e) => updateLayer(selectedLayer.id, { text: e.target.value })}
-                      rows={3}
-                    />
-                  </div>
-
-                  <div className="property-group">
-                    <label>Font Family</label>
-                    <select
-                      value={selectedLayer.fontFamily}
-                      onChange={(e) => updateLayer(selectedLayer.id, { fontFamily: e.target.value })}
-                    >
-                      <option value="Arial">Arial</option>
-                      <option value="Times New Roman">Times New Roman</option>
-                      <option value="Courier New">Courier New</option>
-                      <option value="Georgia">Georgia</option>
-                      <option value="Verdana">Verdana</option>
-                    </select>
-                  </div>
-
-                  <div className="property-group">
-                    <label>Font Size: {selectedLayer.fontSize}px</label>
-                    <input
-                      type="range"
-                      min="12"
-                      max="200"
-                      value={selectedLayer.fontSize}
-                      onChange={(e) => updateLayer(selectedLayer.id, { fontSize: parseFloat(e.target.value) })}
-                    />
-                  </div>
-
-                  <div className="property-group">
-                    <label>Font Weight</label>
-                    <select
-                      value={selectedLayer.fontWeight}
-                      onChange={(e) => updateLayer(selectedLayer.id, { fontWeight: e.target.value })}
-                    >
-                      <option value="normal">Normal</option>
-                      <option value="bold">Bold</option>
-                    </select>
-                  </div>
-
-                  <div className="property-group">
-                    <label>Text Align</label>
-                    <select
-                      value={selectedLayer.textAlign}
-                      onChange={(e) => updateLayer(selectedLayer.id, { textAlign: e.target.value })}
-                    >
-                      <option value="left">Left</option>
-                      <option value="center">Center</option>
-                      <option value="right">Right</option>
-                    </select>
-                  </div>
-
-                  <div className="property-group">
-                    <label>Color</label>
-                    <input
-                      type="color"
-                      value={selectedLayer.color}
-                      onChange={(e) => updateLayer(selectedLayer.id, { color: e.target.value })}
-                    />
-                  </div>
-                </>
-              )}
-
-              {/* Shape Properties */}
-              {selectedLayer.type === "shape" && (
-                <>
-                  <div className="property-group">
-                    <label>Fill Color</label>
-                    <input
-                      type="color"
-                      value={selectedLayer.fill}
-                      onChange={(e) => updateLayer(selectedLayer.id, { fill: e.target.value })}
-                    />
-                  </div>
-
-                  <div className="property-group">
-                    <label>Stroke Color</label>
-                    <input
-                      type="color"
-                      value={selectedLayer.stroke}
-                      onChange={(e) => updateLayer(selectedLayer.id, { stroke: e.target.value })}
-                    />
-                  </div>
-
-                  <div className="property-group">
-                    <label>Stroke Width: {selectedLayer.strokeWidth}px</label>
-                    <input
-                      type="range"
-                      min="0"
-                      max="20"
-                      value={selectedLayer.strokeWidth}
-                      onChange={(e) => updateLayer(selectedLayer.id, { strokeWidth: parseFloat(e.target.value) })}
-                    />
-                  </div>
-
-                  {selectedLayer.shape === "rectangle" && (
-                    <div className="property-group">
-                      <label>Border Radius: {selectedLayer.borderRadius}px</label>
-                      <input
-                        type="range"
-                        min="0"
-                        max="100"
-                        value={selectedLayer.borderRadius}
-                        onChange={(e) => updateLayer(selectedLayer.id, { borderRadius: parseFloat(e.target.value) })}
-                      />
-                    </div>
-                  )}
-                </>
-              )}
+                <span>{layers.length}</span>
+              </button>
             </div>
           )}
         </div>
       </div>
-
+  
+      {/* Layers Popup */}
+      {showLayersPopup && (
+        <div className="layers-popup-overlay" onClick={() => setShowLayersPopup(false)}>
+          <div className="layers-popup" onClick={(e) => e.stopPropagation()}>
+            <div className="popup-header">
+              <h3>Layers</h3>
+              <button className="close-popup" onClick={() => setShowLayersPopup(false)}>✕</button>
+            </div>
+            <div className="layers-popup-content">
+              {layers.length === 0 ? (
+                <p className="empty-layers">No layers yet</p>
+              ) : (
+                layers
+                  .slice()
+                  .reverse()
+                  .map((layer) => (
+                    <div
+                      key={layer.id}
+                      className={`layer-item ${selectedLayerId === layer.id ? "selected" : ""}`}
+                      onClick={() => setSelectedLayerId(layer.id)}
+                    >
+                      <div className="layer-info">
+                        <span>{layer.type}</span>
+                        {layer.text && <small>{layer.text.substring(0, 20)}</small>}
+                      </div>
+                      <div className="layer-controls">
+                        <button onClick={(e) => { e.stopPropagation(); updateLayer(layer.id, { visible: !layer.visible }); }}>
+                          {layer.visible ? <FaEye /> : <FaEyeSlash />}
+                        </button>
+                        <button onClick={(e) => { e.stopPropagation(); updateLayer(layer.id, { locked: !layer.locked }); }}>
+                          {layer.locked ? <FaLock /> : <FaUnlock />}
+                        </button>
+                        <button onClick={(e) => { e.stopPropagation(); moveLayer(layer.id, "up"); }}>▲</button>
+                        <button onClick={(e) => { e.stopPropagation(); moveLayer(layer.id, "down"); }}>▼</button>
+                        <button onClick={(e) => { e.stopPropagation(); deleteLayer(layer.id); }}>
+                          <FaTrash />
+                        </button>
+                      </div>
+                    </div>
+                  ))
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+  
       {/* Toast Messages */}
       {error && <div className="toast error-toast">{error}</div>}
       {success && <div className="toast success-toast">{success}</div>}
     </div>
-  );
+  );  
 };
 
 export default EditorCanvas;
