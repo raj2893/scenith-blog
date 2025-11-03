@@ -101,6 +101,22 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
   const [showLayersPopup, setShowLayersPopup] = useState(false);
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);  
   const [activeTab, setActiveTab] = useState<'text' | 'images' | 'shapes' | null>(null);
+  const [resizeHandle, setResizeHandle] = useState<string | null>(null);
+  const [resizeStartState, setResizeStartState] = useState<{
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    mouseX: number;
+    mouseY: number;
+  } | null>(null);
+  const [isRotatingLayer, setIsRotatingLayer] = useState(false);
+  const [rotationStartState, setRotationStartState] = useState<{
+    angle: number;
+    centerX: number;
+    centerY: number;
+    startAngle: number;
+  } | null>(null);
 
   // Fetch project
   useEffect(() => {
@@ -198,6 +214,47 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
     }
   };
 
+  const handleResizeMouseDown = (e: React.MouseEvent, layerId: string, handle: string) => {
+    e.stopPropagation();
+    const layer = layers.find((l) => l.id === layerId);
+    if (!layer || layer.locked) return;
+  
+    setResizeHandle(handle);
+    setResizeStartState({
+      x: layer.x,
+      y: layer.y,
+      width: layer.width,
+      height: layer.height,
+      mouseX: e.clientX,
+      mouseY: e.clientY,
+    });
+  };  
+
+  const handleRotationMouseDown = (e: React.MouseEvent, layerId: string) => {
+    e.stopPropagation();
+    const layer = layers.find((l) => l.id === layerId);
+    if (!layer || layer.locked) return;
+  
+    const rect = canvasRef.current?.getBoundingClientRect();
+    if (!rect) return;
+  
+    const centerX = layer.x + layer.width / 2;
+    const centerY = layer.y + layer.height / 2;
+    
+    const startAngle = Math.atan2(
+      e.clientY - (rect.top + (centerY * scale) + panOffset.y),
+      e.clientX - (rect.left + (centerX * scale) + panOffset.x)
+    ) * (180 / Math.PI);
+  
+    setIsRotatingLayer(true);
+    setRotationStartState({
+      angle: layer.rotation,
+      centerX,
+      centerY,
+      startAngle,
+    });
+  };   
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.code === 'Space' && !isSpacePressed) {
@@ -230,6 +287,55 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
     setHistory(newHistory);
     setHistoryIndex(newHistory.length - 1);
   };
+
+useEffect(() => {
+  const preventBrowserZoom = (e: WheelEvent) => {
+    if (e.ctrlKey || e.metaKey) {
+      e.preventDefault();
+    }
+  };
+
+  const preventBrowserNavigation = (e: TouchEvent) => {
+    if (e.touches.length > 1) {
+      e.preventDefault();
+    }
+  };
+
+  let isMouseDown = false;
+  
+  const handleMouseDown = () => {
+    isMouseDown = true;
+  };
+  
+  const handleMouseUp = () => {
+    isMouseDown = false;
+  }; 
+
+  const preventNavigation = (e: WheelEvent) => {
+    // Prevent horizontal scroll from triggering browser navigation
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  };
+
+  document.addEventListener('wheel', preventBrowserZoom, { passive: false });
+  document.addEventListener('wheel', preventNavigation, { passive: false });
+  document.addEventListener('touchmove', preventBrowserNavigation, { passive: false });
+  document.addEventListener('mousedown', handleMouseDown);
+  document.addEventListener('mouseup', handleMouseUp);
+  
+  // Disable browser gestures
+  document.body.style.overscrollBehaviorX = 'none';
+  
+  return () => {
+    document.removeEventListener('wheel', preventBrowserZoom);
+    document.removeEventListener('wheel', preventNavigation);
+    document.removeEventListener('touchmove', preventBrowserNavigation);
+    document.removeEventListener('mousedown', handleMouseDown);
+    document.removeEventListener('mouseup', handleMouseUp);
+  };
+}, []);
 
   // Undo
   const handleUndo = () => {
@@ -432,7 +538,25 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
     }
   };
 
-  // Export project
+  const downloadFromUrl = async (url: string, filename: string) => {
+    try {
+      const response = await fetch(url, { mode: 'cors' });
+      if (!response.ok) throw new Error('Network response was not ok');
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (err) {
+      console.error('Download failed:', err);
+      window.open(url, '_blank');
+    }
+  };  
+
   const handleExport = async (format: string) => {
     setIsExporting(true);
     setError(null);
@@ -447,7 +571,7 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
         },
         layers,
       });
-
+  
       await axios.put(
         `${API_BASE_URL}/api/image-editor/projects/${projectId}`,
         { designJson },
@@ -455,7 +579,7 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
-
+  
       // Export
       const response = await axios.post(
         `${API_BASE_URL}/api/image-editor/projects/${projectId}/export`,
@@ -464,9 +588,13 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
-
-      // Download
-      window.open(response.data.exportUrl, "_blank");
+  
+      const exportUrl = response.data.exportUrl;
+      const filename = `${project?.projectName || 'canvas'}.${format.toLowerCase()}`;
+  
+      // Trigger direct download
+      await downloadFromUrl(exportUrl, filename);
+  
       setSuccess(`Exported as ${format} successfully!`);
       setTimeout(() => setSuccess(null), 3000);
     } catch (err: any) {
@@ -495,31 +623,106 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
     }
   };
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    // Handle canvas panning
-    if (isPanning && isSpacePressed) {
-      const newX = e.clientX - panStart.x;
-      const newY = e.clientY - panStart.y;
-      setPanOffset({ x: newX, y: newY });
-      return;
-    }
-  
-    // Handle layer dragging
-    if (!isDragging || !selectedLayerId) return;
-  
+const handleMouseMove = (e: React.MouseEvent) => {
+  // Handle canvas panning
+  if (isPanning && isSpacePressed) {
+    const newX = e.clientX - panStart.x;
+    const newY = e.clientY - panStart.y;
+    setPanOffset({ x: newX, y: newY });
+    return;
+  }
+
+  // Handle layer rotation
+  if (isRotatingLayer && selectedLayerId && rotationStartState) {
     const layer = layers.find((l) => l.id === selectedLayerId);
     if (!layer) return;
-  
-    const newX = (e.clientX - dragStart.x) / scale;
-    const newY = (e.clientY - dragStart.y) / scale;
-  
-    updateLayer(selectedLayerId, { x: newX, y: newY });
-  };
 
-  const handleMouseUp = () => {
-    setIsDragging(false);
-    setIsPanning(false);
-  };
+    const rect = canvasRef.current?.getBoundingClientRect();
+    if (!rect) return;
+
+    const centerX = layer.x + layer.width / 2;
+    const centerY = layer.y + layer.height / 2;
+
+    const currentAngle = Math.atan2(
+      e.clientY - (rect.top + (centerY * scale) + panOffset.y),
+      e.clientX - (rect.left + (centerX * scale) + panOffset.x)
+    ) * (180 / Math.PI);
+
+    const deltaAngle = currentAngle - rotationStartState.startAngle;
+    const newRotation = rotationStartState.angle + deltaAngle;
+
+    updateLayer(selectedLayerId, { rotation: newRotation });
+    return;
+  }
+
+  // Handle layer resizing
+  if (resizeHandle && selectedLayerId && resizeStartState) {
+    const layer = layers.find((l) => l.id === selectedLayerId);
+    if (!layer) return;
+
+    const deltaX = (e.clientX - resizeStartState.mouseX) / scale;
+    const deltaY = (e.clientY - resizeStartState.mouseY) / scale;
+
+    let newX = resizeStartState.x;
+    let newY = resizeStartState.y;
+    let newWidth = resizeStartState.width;
+    let newHeight = resizeStartState.height;
+
+    switch (resizeHandle) {
+      case 'nw':
+        newX = resizeStartState.x + deltaX;
+        newY = resizeStartState.y + deltaY;
+        newWidth = resizeStartState.width - deltaX;
+        newHeight = resizeStartState.height - deltaY;
+        break;
+      case 'ne':
+        newY = resizeStartState.y + deltaY;
+        newWidth = resizeStartState.width + deltaX;
+        newHeight = resizeStartState.height - deltaY;
+        break;
+      case 'sw':
+        newX = resizeStartState.x + deltaX;
+        newWidth = resizeStartState.width - deltaX;
+        newHeight = resizeStartState.height + deltaY;
+        break;
+      case 'se':
+        newWidth = resizeStartState.width + deltaX;
+        newHeight = resizeStartState.height + deltaY;
+        break;
+    }
+
+    // Minimum size constraint
+    if (newWidth > 20 && newHeight > 20) {
+      updateLayer(selectedLayerId, {
+        x: newX,
+        y: newY,
+        width: newWidth,
+        height: newHeight,
+      });
+    }
+    return;
+  }
+
+  // Handle layer dragging
+  if (!isDragging || !selectedLayerId) return;
+
+  const layer = layers.find((l) => l.id === selectedLayerId);
+  if (!layer) return;
+
+  const newX = (e.clientX - dragStart.x) / scale;
+  const newY = (e.clientY - dragStart.y) / scale;
+
+  updateLayer(selectedLayerId, { x: newX, y: newY });
+};
+
+const handleMouseUp = () => {
+  setIsDragging(false);
+  setIsPanning(false);
+  setResizeHandle(null);
+  setResizeStartState(null);
+  setIsRotatingLayer(false);
+  setRotationStartState(null);
+};
 
   const selectedLayer = layers.find((l) => l.id === selectedLayerId);
 
@@ -667,20 +870,25 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
                   <div className="properties-panel">
                     {/* Common Properties */}
                     <div className="property-group">
-                      <label>Position</label>
-                      <div className="property-row">
-                        <input
-                          type="number"
-                          value={Math.round(selectedLayer.x)}
-                          onChange={(e) => updateLayer(selectedLayer.id, { x: parseFloat(e.target.value) })}
-                          placeholder="X"
-                        />
-                        <input
-                          type="number"
-                          value={Math.round(selectedLayer.y)}
-                          onChange={(e) => updateLayer(selectedLayer.id, { y: parseFloat(e.target.value) })}
-                          placeholder="Y"
-                        />
+                      <label>Opacity</label>
+                      <div className="opacity-control">
+                        <div className="opacity-icon">
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" opacity="0.6"/>
+                          </svg>
+                        </div>
+                        <div className="opacity-slider-container">
+                          <div className="opacity-value">{Math.round(selectedLayer.opacity * 100)}%</div>
+                          <input
+                            type="range"
+                            className="opacity-slider"
+                            min="0"
+                            max="1"
+                            step="0.01"
+                            value={selectedLayer.opacity}
+                            onChange={(e) => updateLayer(selectedLayer.id, { opacity: parseFloat(e.target.value) })}
+                          />
+                        </div>
                       </div>
                     </div>
         
@@ -880,101 +1088,136 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
                 overflow: 'hidden',
               }}
             >
-              {layers
-                .filter((l) => l.visible)
-                .sort((a, b) => a.zIndex - b.zIndex)
-                .map((layer) => (
-                  <div
-                    key={layer.id}
-                    className={`canvas-layer ${selectedLayerId === layer.id ? "selected-layer" : ""}`}
-                    style={{
-                      position: "absolute",
-                      left: layer.x,
-                      top: layer.y,
-                      width: layer.width,
-                      height: layer.height,
-                      opacity: layer.opacity,
-                      transform: `rotate(${layer.rotation}deg)`,
-                      cursor: layer.locked ? "not-allowed" : "move",
-                      pointerEvents: layer.locked ? "none" : "auto",
-                    }}
-                    onMouseDown={(e) => handleMouseDown(e, layer.id)}
-                  >
-                    {layer.type === "text" && (
+            {layers
+              .filter((l) => l.visible)
+              .sort((a, b) => a.zIndex - b.zIndex)
+              .map((layer) => (
+                <div
+                  key={layer.id}
+                  className={`canvas-layer ${selectedLayerId === layer.id ? "selected-layer" : ""}`}
+                  style={{
+                    position: "absolute",
+                    left: layer.x,
+                    top: layer.y,
+                    width: layer.width,
+                    height: layer.height,
+                    opacity: layer.opacity,
+                    transform: `rotate(${layer.rotation}deg)`,
+                    cursor: layer.locked ? "not-allowed" : "move",
+                    pointerEvents: layer.locked ? "none" : "auto",
+                  }}
+                  onMouseDown={(e) => handleMouseDown(e, layer.id)}
+                >
+                  {/* Layer content (text/image/shape) - keep as is */}
+                  {layer.type === "text" && (
+                    <div
+                      style={{
+                        fontFamily: layer.fontFamily,
+                        fontSize: layer.fontSize,
+                        fontWeight: layer.fontWeight,
+                        fontStyle: layer.fontStyle,
+                        color: layer.color,
+                        textAlign: layer.textAlign as any,
+                        width: "100%",
+                        height: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: layer.textAlign === "center" ? "center" : layer.textAlign === "right" ? "flex-end" : "flex-start",
+                        pointerEvents: "none",
+                      }}
+                    >
+                      {layer.text}
+                    </div>
+                  )}
+                  {layer.type === "image" && layer.src && (
+                    <img
+                      src={layer.src}
+                      alt=""
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        pointerEvents: "none",
+                      }}
+                    />
+                  )}
+                  {layer.type === "shape" && (
+                    <svg width="100%" height="100%" style={{ overflow: "visible", pointerEvents: "none" }}>
+                      {layer.shape === "rectangle" && (
+                        <rect
+                          width="100%"
+                          height="100%"
+                          fill={layer.fill}
+                          stroke={layer.stroke}
+                          strokeWidth={layer.strokeWidth}
+                          rx={layer.borderRadius}
+                        />
+                      )}
+                      {layer.shape === "circle" && (
+                        <circle
+                          cx="50%"
+                          cy="50%"
+                          r={Math.min(layer.width, layer.height) / 2}
+                          fill={layer.fill}
+                          stroke={layer.stroke}
+                          strokeWidth={layer.strokeWidth}
+                        />
+                      )}
+                      {layer.shape === "ellipse" && (
+                        <ellipse
+                          cx="50%"
+                          cy="50%"
+                          rx={layer.width / 2}
+                          ry={layer.height / 2}
+                          fill={layer.fill}
+                          stroke={layer.stroke}
+                          strokeWidth={layer.strokeWidth}
+                        />
+                      )}
+                      {layer.shape === "triangle" && (
+                        <polygon
+                          points={`${layer.width / 2},0 ${layer.width},${layer.height} 0,${layer.height}`}
+                          fill={layer.fill}
+                          stroke={layer.stroke}
+                          strokeWidth={layer.strokeWidth}
+                        />
+                      )}
+                    </svg>
+                  )}
+            
+                  {/* Resize Handles - Only show when selected */}
+                  {selectedLayerId === layer.id && !layer.locked && (
+                    <>
+                      <div className="rotation-line" />
                       <div
-                        style={{
-                          fontFamily: layer.fontFamily,
-                          fontSize: layer.fontSize,
-                          fontWeight: layer.fontWeight,
-                          fontStyle: layer.fontStyle,
-                          color: layer.color,
-                          textAlign: layer.textAlign as any,
-                          width: "100%",
-                          height: "100%",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: layer.textAlign === "center" ? "center" : layer.textAlign === "right" ? "flex-end" : "flex-start",
-                        }}
+                        className="rotation-handle"
+                        onMouseDown={(e) => handleRotationMouseDown(e, layer.id)}
+                        title="Rotate"
                       >
-                        {layer.text}
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8c-.45-.83-.7-1.79-.7-2.8 0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z"/>
+                        </svg>
                       </div>
-                    )}
-                    {layer.type === "image" && layer.src && (
-                      <img
-                        src={layer.src}
-                        alt=""
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                        }}
+                      <div
+                        className="resize-handle nw"
+                        onMouseDown={(e) => handleResizeMouseDown(e, layer.id, 'nw')}
                       />
-                    )}
-                    {layer.type === "shape" && (
-                      <svg width="100%" height="100%" style={{ overflow: "visible" }}>
-                        {layer.shape === "rectangle" && (
-                          <rect
-                            width="100%"
-                            height="100%"
-                            fill={layer.fill}
-                            stroke={layer.stroke}
-                            strokeWidth={layer.strokeWidth}
-                            rx={layer.borderRadius}
-                          />
-                        )}
-                        {layer.shape === "circle" && (
-                          <circle
-                            cx="50%"
-                            cy="50%"
-                            r={Math.min(layer.width, layer.height) / 2}
-                            fill={layer.fill}
-                            stroke={layer.stroke}
-                            strokeWidth={layer.strokeWidth}
-                          />
-                        )}
-                        {layer.shape === "ellipse" && (
-                          <ellipse
-                            cx="50%"
-                            cy="50%"
-                            rx={layer.width / 2}
-                            ry={layer.height / 2}
-                            fill={layer.fill}
-                            stroke={layer.stroke}
-                            strokeWidth={layer.strokeWidth}
-                          />
-                        )}
-                        {layer.shape === "triangle" && (
-                          <polygon
-                            points={`${layer.width / 2},0 ${layer.width},${layer.height} 0,${layer.height}`}
-                            fill={layer.fill}
-                            stroke={layer.stroke}
-                            strokeWidth={layer.strokeWidth}
-                          />
-                        )}
-                      </svg>
-                    )}
-                  </div>
-                ))}
+                      <div
+                        className="resize-handle ne"
+                        onMouseDown={(e) => handleResizeMouseDown(e, layer.id, 'ne')}
+                      />
+                      <div
+                        className="resize-handle sw"
+                        onMouseDown={(e) => handleResizeMouseDown(e, layer.id, 'sw')}
+                      />
+                      <div
+                        className="resize-handle se"
+                        onMouseDown={(e) => handleResizeMouseDown(e, layer.id, 'se')}
+                      />
+                    </>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
         </div>
