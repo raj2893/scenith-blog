@@ -117,6 +117,24 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
     centerY: number;
     startAngle: number;
   } | null>(null);
+  const [cropHandle, setCropHandle] = useState<string | null>(null);
+  const [cropStartState, setCropStartState] = useState<{
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    mouseX: number;
+    mouseY: number;
+  } | null>(null);  
+  const rotatePoint = (x: number, y: number, angle: number) => {
+    const rad = (angle * Math.PI) / 180;
+    const cos = Math.cos(rad);
+    const sin = Math.sin(rad);
+    return {
+      x: x * cos - y * sin,
+      y: x * sin + y * cos
+    };
+  };  
 
   // Fetch project
   useEffect(() => {
@@ -238,22 +256,39 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
     const rect = canvasRef.current?.getBoundingClientRect();
     if (!rect) return;
   
-    const centerX = layer.x + layer.width / 2;
-    const centerY = layer.y + layer.height / 2;
+    // Calculate the actual center position on screen (accounting for scale and pan)
+    const centerX = rect.left + panOffset.x + (layer.x + layer.width / 2) * scale;
+    const centerY = rect.top + panOffset.y + (layer.y + layer.height / 2) * scale;
     
     const startAngle = Math.atan2(
-      e.clientY - (rect.top + (centerY * scale) + panOffset.y),
-      e.clientX - (rect.left + (centerX * scale) + panOffset.x)
+      e.clientY - centerY,
+      e.clientX - centerX
     ) * (180 / Math.PI);
   
     setIsRotatingLayer(true);
     setRotationStartState({
       angle: layer.rotation,
-      centerX,
-      centerY,
+      centerX: layer.x + layer.width / 2,
+      centerY: layer.y + layer.height / 2,
       startAngle,
     });
-  };   
+  }; 
+
+  const handleCropMouseDown = (e: React.MouseEvent, layerId: string, handle: string) => {
+    e.stopPropagation();
+    const layer = layers.find((l) => l.id === layerId);
+    if (!layer || layer.locked) return;
+  
+    setCropHandle(handle);
+    setCropStartState({
+      x: layer.x,
+      y: layer.y,
+      width: layer.width,
+      height: layer.height,
+      mouseX: e.clientX,
+      mouseY: e.clientY,
+    });
+  };  
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -623,74 +658,72 @@ useEffect(() => {
     }
   };
 
-const handleMouseMove = (e: React.MouseEvent) => {
-  // Handle canvas panning
-  if (isPanning && isSpacePressed) {
-    const newX = e.clientX - panStart.x;
-    const newY = e.clientY - panStart.y;
-    setPanOffset({ x: newX, y: newY });
-    return;
-  }
-
-  // Handle layer rotation
+  const handleMouseMove = (e: React.MouseEvent) => {
+    // Handle canvas panning
+    if (isPanning && isSpacePressed) {
+      const newX = e.clientX - panStart.x;
+      const newY = e.clientY - panStart.y;
+      setPanOffset({ x: newX, y: newY });
+      return;
+    }
+  
   if (isRotatingLayer && selectedLayerId && rotationStartState) {
     const layer = layers.find((l) => l.id === selectedLayerId);
     if (!layer) return;
-
+  
     const rect = canvasRef.current?.getBoundingClientRect();
     if (!rect) return;
-
-    const centerX = layer.x + layer.width / 2;
-    const centerY = layer.y + layer.height / 2;
-
+  
+    // Calculate the actual center position on screen (accounting for scale and pan)
+    const centerX = rect.left + panOffset.x + (rotationStartState.centerX * scale);
+    const centerY = rect.top + panOffset.y + (rotationStartState.centerY * scale);
+  
     const currentAngle = Math.atan2(
-      e.clientY - (rect.top + (centerY * scale) + panOffset.y),
-      e.clientX - (rect.left + (centerX * scale) + panOffset.x)
+      e.clientY - centerY,
+      e.clientX - centerX
     ) * (180 / Math.PI);
-
+  
     const deltaAngle = currentAngle - rotationStartState.startAngle;
     const newRotation = rotationStartState.angle + deltaAngle;
-
+  
     updateLayer(selectedLayerId, { rotation: newRotation });
     return;
   }
-
-  // Handle layer resizing
-  if (resizeHandle && selectedLayerId && resizeStartState) {
+  
+  if (cropHandle && selectedLayerId && cropStartState) {
     const layer = layers.find((l) => l.id === selectedLayerId);
     if (!layer) return;
-
-    const deltaX = (e.clientX - resizeStartState.mouseX) / scale;
-    const deltaY = (e.clientY - resizeStartState.mouseY) / scale;
-
-    let newX = resizeStartState.x;
-    let newY = resizeStartState.y;
-    let newWidth = resizeStartState.width;
-    let newHeight = resizeStartState.height;
-
-    switch (resizeHandle) {
-      case 'nw':
-        newX = resizeStartState.x + deltaX;
-        newY = resizeStartState.y + deltaY;
-        newWidth = resizeStartState.width - deltaX;
-        newHeight = resizeStartState.height - deltaY;
+  
+    const deltaX = (e.clientX - cropStartState.mouseX) / scale;
+    const deltaY = (e.clientY - cropStartState.mouseY) / scale;
+  
+    // Rotate the delta based on layer rotation
+    const rotated = rotatePoint(deltaX, deltaY, -layer.rotation);
+    const rotatedDeltaX = rotated.x;
+    const rotatedDeltaY = rotated.y;
+  
+    let newX = cropStartState.x;
+    let newY = cropStartState.y;
+    let newWidth = cropStartState.width;
+    let newHeight = cropStartState.height;
+  
+    switch (cropHandle) {
+      case 'n':
+        newY = cropStartState.y + rotatedDeltaY;
+        newHeight = cropStartState.height - rotatedDeltaY;
         break;
-      case 'ne':
-        newY = resizeStartState.y + deltaY;
-        newWidth = resizeStartState.width + deltaX;
-        newHeight = resizeStartState.height - deltaY;
+      case 's':
+        newHeight = cropStartState.height + rotatedDeltaY;
         break;
-      case 'sw':
-        newX = resizeStartState.x + deltaX;
-        newWidth = resizeStartState.width - deltaX;
-        newHeight = resizeStartState.height + deltaY;
+      case 'e':
+        newWidth = cropStartState.width + rotatedDeltaX;
         break;
-      case 'se':
-        newWidth = resizeStartState.width + deltaX;
-        newHeight = resizeStartState.height + deltaY;
+      case 'w':
+        newX = cropStartState.x + rotatedDeltaX;
+        newWidth = cropStartState.width - rotatedDeltaX;
         break;
     }
-
+  
     // Minimum size constraint
     if (newWidth > 20 && newHeight > 20) {
       updateLayer(selectedLayerId, {
@@ -701,28 +734,85 @@ const handleMouseMove = (e: React.MouseEvent) => {
       });
     }
     return;
+  }  
+  
+  if (resizeHandle && selectedLayerId && resizeStartState) {
+    const layer = layers.find((l) => l.id === selectedLayerId);
+    if (!layer) return;
+  
+    const deltaX = (e.clientX - resizeStartState.mouseX) / scale;
+    const deltaY = (e.clientY - resizeStartState.mouseY) / scale;
+  
+    const rotated = rotatePoint(deltaX, deltaY, -layer.rotation);
+    const rotatedDeltaX = rotated.x;
+    const rotatedDeltaY = rotated.y;
+  
+    let newX = resizeStartState.x;
+    let newY = resizeStartState.y;
+    let newWidth = resizeStartState.width;
+    let newHeight = resizeStartState.height;
+  
+    const aspectRatio = resizeStartState.width / resizeStartState.height;
+  
+    switch (resizeHandle) {
+      case 'nw':
+        const nwDelta = Math.max(rotatedDeltaX, rotatedDeltaY / aspectRatio);
+        newX = resizeStartState.x + nwDelta;
+        newY = resizeStartState.y + nwDelta / aspectRatio;
+        newWidth = resizeStartState.width - nwDelta;
+        newHeight = resizeStartState.height - nwDelta / aspectRatio;
+        break;
+      case 'ne':
+        const neDelta = Math.max(rotatedDeltaX, -rotatedDeltaY / aspectRatio);
+        newY = resizeStartState.y - neDelta / aspectRatio;
+        newWidth = resizeStartState.width + neDelta;
+        newHeight = resizeStartState.height + neDelta / aspectRatio;
+        break;
+      case 'sw':
+        const swDelta = Math.max(-rotatedDeltaX, rotatedDeltaY / aspectRatio);
+        newX = resizeStartState.x - swDelta;
+        newWidth = resizeStartState.width + swDelta;
+        newHeight = resizeStartState.height + swDelta / aspectRatio;
+        break;
+      case 'se':
+        const seDelta = Math.max(rotatedDeltaX, rotatedDeltaY / aspectRatio);
+        newWidth = resizeStartState.width + seDelta;
+        newHeight = resizeStartState.height + seDelta / aspectRatio;
+        break;
+    }
+  
+    if (newWidth > 20 && newHeight > 20) {
+      updateLayer(selectedLayerId, {
+        x: newX,
+        y: newY,
+        width: newWidth,
+        height: newHeight,
+      });
+    }
+    return;
   }
+  
+    if (!isDragging || !selectedLayerId) return;
+  
+    const layer = layers.find((l) => l.id === selectedLayerId);
+    if (!layer) return;
+  
+    const newX = (e.clientX - dragStart.x) / scale;
+    const newY = (e.clientY - dragStart.y) / scale;
+  
+    updateLayer(selectedLayerId, { x: newX, y: newY });
+  };
 
-  // Handle layer dragging
-  if (!isDragging || !selectedLayerId) return;
-
-  const layer = layers.find((l) => l.id === selectedLayerId);
-  if (!layer) return;
-
-  const newX = (e.clientX - dragStart.x) / scale;
-  const newY = (e.clientY - dragStart.y) / scale;
-
-  updateLayer(selectedLayerId, { x: newX, y: newY });
-};
-
-const handleMouseUp = () => {
-  setIsDragging(false);
-  setIsPanning(false);
-  setResizeHandle(null);
-  setResizeStartState(null);
-  setIsRotatingLayer(false);
-  setRotationStartState(null);
-};
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    setIsPanning(false);
+    setResizeHandle(null);
+    setResizeStartState(null);
+    setIsRotatingLayer(false);
+    setRotationStartState(null);
+    setCropHandle(null);
+    setCropStartState(null);
+  };
 
   const selectedLayer = layers.find((l) => l.id === selectedLayerId);
 
@@ -1185,7 +1275,29 @@ const handleMouseUp = () => {
                     </svg>
                   )}
             
-                  {/* Resize Handles - Only show when selected */}
+                  {/* Crop Handles (Border Lines) - Only show when selected */}
+                  {selectedLayerId === layer.id && !layer.locked && (
+                    <>
+                      <div
+                        className="crop-handle n"
+                        onMouseDown={(e) => handleCropMouseDown(e, layer.id, 'n')}
+                      />
+                      <div
+                        className="crop-handle s"
+                        onMouseDown={(e) => handleCropMouseDown(e, layer.id, 's')}
+                      />
+                      <div
+                        className="crop-handle e"
+                        onMouseDown={(e) => handleCropMouseDown(e, layer.id, 'e')}
+                      />
+                      <div
+                        className="crop-handle w"
+                        onMouseDown={(e) => handleCropMouseDown(e, layer.id, 'w')}
+                      />
+                    </>
+                  )}
+                  
+                  {/* Resize Handles (Corner Dots) - Only show when selected */}
                   {selectedLayerId === layer.id && !layer.locked && (
                     <>
                       <div className="rotation-line" />
