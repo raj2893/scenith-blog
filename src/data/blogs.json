@@ -1761,5 +1761,35 @@
     "featured": false,
     "slug": "how-to-create-faceless-videos-with-ai",
     "difficulty": "Intermediate"
+  },
+  {
+    "id": 119,
+    "title": "Why 92% of Videos Get Ignored Without Subtitles (The Silent Engagement Crisis)",
+    "excerpt": "Discover why 92% of mobile users watch videos on mute and how AI-generated subtitles can 3x your engagement rates. Learn the silent viewing revolution.",
+    "category": "AI Tools",
+    "readTime": "7 min",
+    "publishDate": "2025-11-16",
+    "author": "Scenith Team",
+    "image": "🔇",
+    "gradient": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    "tags": ["AI Subtitles", "Video Engagement", "Mobile Viewing", "Accessibility"],
+    "featured": true,
+    "slug": "silent-engagement-crisis",
+    "difficulty": "Beginner"
+  },
+  {
+    "id": 120,
+    "title": "The $0 Studio Setup: How to Make Professional Videos Without Equipment (2025 Guide)",
+    "excerpt": "Stop waiting for expensive equipment. Learn how to create professional-quality videos with zero budget using AI tools that replace cameras, lighting, and studios.",
+    "category": "Getting Started",
+    "readTime": "8 min",
+    "publishDate": "2025-11-16",
+    "author": "Scenith Team",
+    "image": "💰",
+    "gradient": "linear-gradient(135deg, #00b894 0%, #38a169 100%)",
+    "tags": ["Budget Video Production", "AI Tools", "Smartphone Filming", "Free Tools"],
+    "featured": true,
+    "slug": "zero-studio-setup",
+    "difficulty": "Beginner"
   }
 ]
