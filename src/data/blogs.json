@@ -1773,7 +1773,7 @@
     "image": "🔇",
     "gradient": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
     "tags": ["AI Subtitles", "Video Engagement", "Mobile Viewing", "Accessibility"],
-    "featured": true,
+    "featured": false,
     "slug": "silent-engagement-crisis",
     "difficulty": "Beginner"
   },
@@ -1788,8 +1788,23 @@
     "image": "💰",
     "gradient": "linear-gradient(135deg, #00b894 0%, #38a169 100%)",
     "tags": ["Budget Video Production", "AI Tools", "Smartphone Filming", "Free Tools"],
-    "featured": true,
+    "featured": false,
     "slug": "zero-studio-setup",
     "difficulty": "Beginner"
-  }
+  },
+  {
+    "id": 121,
+    "title": "The Secret to Cinematic Zoom: Mastering Keyframe Interpolation (2025 Guide)",
+    "excerpt": "Stop using boring, straight cuts. Learn the advanced video editing secret to creating smooth, cinematic zooms, pans, and movement for unskippable videos.",
+    "category": "Video Editing",
+    "readTime": "6 min",
+    "publishDate": "2025-11-12",
+    "author": "Scenith Team",
+    "image": "🎬",
+    "gradient": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    "tags": ["Keyframe", "Cinematic Zoom", "Interpolation", "Advanced Editing", "Video Effects"],
+    "featured": false,
+    "slug": "mastering-keyframe-interpolation-for-cinematic-zoom",
+    "difficulty": "Intermediate"
+  }  
 ]
