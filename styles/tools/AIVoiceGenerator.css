@@ -236,9 +236,9 @@
   padding: 15px;
   border-radius: 12px;
   background: #F8FAFC;
-  cursor: pointer;
   transition: all 0.3s ease;
   border: 1px solid rgba(59, 130, 246, 0.1);
+  position: relative;
 }
 
 .voice-item:hover,
@@ -267,6 +267,7 @@
 
 .voice-details {
   flex: 1;
+  cursor: pointer;
 }
 
 .voice-title {
@@ -1089,6 +1090,32 @@
   height: 100%;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   transition: width 0.1s ease;
+}
+
+.demo-button {
+  background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  color: white;
+  flex-shrink: 0;
+  margin-left: 10px;
+}
+
+.demo-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+}
+
+.demo-button:active {
+  transform: scale(0.95);
 }
 
 /* Responsive Design */

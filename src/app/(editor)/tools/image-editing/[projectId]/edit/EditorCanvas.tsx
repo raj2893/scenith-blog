@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, JSX } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import "../../../../../../../styles/tools/EditorCanvas.css";
 import {
   FaSave,
   FaDownload,
@@ -20,7 +21,6 @@ import {
   FaUnlock,
 } from "react-icons/fa";
 import { API_BASE_URL } from "@/app/config";
-import "../../../../../../../styles/tools/EditorCanvas.css";
 
 function useDebounce<T>(value: T, delay: number): T {
   const [debounced, setDebounced] = useState<T>(value);
@@ -1063,21 +1063,27 @@ const handleWheel = (e: React.WheelEvent) => {
       const deltaX = (e.clientX - resizeStartState.mouseX) / scale;
       const deltaY = (e.clientY - resizeStartState.mouseY) / scale;
     
+      // Calculate minimum dimensions based on text
+      const fontSize = layer.fontSize || 32;
+      const text = layer.text || "";
+      const minWidth = Math.max(text.length * fontSize * 0.6, 50);
+      const minHeight = Math.max(fontSize * 1.5, 30);
+    
       let newBackgroundWidth = resizeStartState.width;
       let newBackgroundHeight = resizeStartState.height;
     
       switch (backgroundResizeHandle) {
         case 'bg-n':
-          newBackgroundHeight = Math.max(20, resizeStartState.height - deltaY);
+          newBackgroundHeight = Math.max(minHeight, resizeStartState.height - deltaY);
           break;
         case 'bg-s':
-          newBackgroundHeight = Math.max(20, resizeStartState.height + deltaY);
+          newBackgroundHeight = Math.max(minHeight, resizeStartState.height + deltaY);
           break;
         case 'bg-e':
-          newBackgroundWidth = Math.max(20, resizeStartState.width + deltaX);
+          newBackgroundWidth = Math.max(minWidth, resizeStartState.width + deltaX);
           break;
         case 'bg-w':
-          newBackgroundWidth = Math.max(20, resizeStartState.width - deltaX);
+          newBackgroundWidth = Math.max(minWidth, resizeStartState.width - deltaX);
           break;
       }
     
@@ -1086,7 +1092,7 @@ const handleWheel = (e: React.WheelEvent) => {
         backgroundHeight: newBackgroundHeight,
       });
       return;
-    }    
+    } 
   
     if (!isDragging || !selectedLayerId) return;
   
@@ -1163,14 +1169,21 @@ const handleWheel = (e: React.WheelEvent) => {
     e.stopPropagation();
     const layer = layers.find((l) => l.id === layerId);
     if (!layer || layer.locked) return;
-  
+
     setIsResizingBackground(true);
     setBackgroundResizeHandle(handle);
+
+    // Calculate minimum dimensions based on text
+    const fontSize = layer.fontSize || 32;
+    const text = layer.text || "";
+    const minWidth = Math.max(text.length * fontSize * 0.6, 50);
+    const minHeight = Math.max(fontSize * 1.5, 30);
+
     setResizeStartState({
       x: layer.x,
       y: layer.y,
-      width: layer.backgroundWidth || layer.width,
-      height: layer.backgroundHeight || layer.height,
+      width: layer.backgroundWidth || minWidth,
+      height: layer.backgroundHeight || minHeight,
       mouseX: e.clientX,
       mouseY: e.clientY,
     });
@@ -1625,7 +1638,22 @@ const handleWheel = (e: React.WheelEvent) => {
                             max="1"
                             step="0.01"
                             value={selectedLayer.backgroundOpacity || 0}
-                            onChange={(e) => updateLayer(selectedLayer.id, { backgroundOpacity: parseFloat(e.target.value) })}
+                            onChange={(e) => {
+                              const newOpacity = parseFloat(e.target.value);
+                              const updates: Partial<Layer> = { backgroundOpacity: newOpacity };
+
+                              // If enabling background for first time, set minimum dimensions
+                              if (newOpacity > 0 && (!selectedLayer.backgroundWidth || !selectedLayer.backgroundHeight)) {
+                                const fontSize = selectedLayer.fontSize || 32;
+                                const text = selectedLayer.text || "";
+                                const minWidth = Math.max(text.length * fontSize * 0.6 + 20, 100);
+                                const minHeight = Math.max(fontSize * 1.5 + 10, 50);
+                                updates.backgroundWidth = minWidth;
+                                updates.backgroundHeight = minHeight;
+                              }
+
+                              updateLayer(selectedLayer.id, updates);
+                            }}
                           />
                           {(selectedLayer.backgroundOpacity ?? 0) > 0 && (
                             <>
@@ -1870,31 +1898,27 @@ const handleWheel = (e: React.WheelEvent) => {
               .filter((l) => l.visible)
               .sort((a, b) => a.zIndex - b.zIndex)
               .map((layer) => (
-              <div
-                key={layer.id}
-                className={`canvas-layer ${selectedLayerId === layer.id ? "selected-layer" : ""}`}
-                style={{
-                  position: "absolute",
-                  left: layer.x,
-                  top: layer.y,
-                  // For text with background, use background dimensions; otherwise auto
-                  width: layer.type === "text" 
-                    ? ((layer.backgroundOpacity ?? 0) > 0 
-                        ? (layer.backgroundWidth || layer.width) 
-                        : "auto")
-                    : layer.width,
-                  height: layer.type === "text" 
-                    ? ((layer.backgroundOpacity ?? 0) > 0 
-                        ? (layer.backgroundHeight || layer.height) 
-                        : "auto")
-                    : layer.height,
-                  opacity: layer.opacity,
-                  transform: `rotate(${layer.rotation}deg)`,
-                  cursor: layer.locked ? "not-allowed" : "move",
-                  pointerEvents: layer.locked ? "none" : "auto",
-                }}
-                onMouseDown={(e) => handleMouseDown(e, layer.id)}
-              >
+            <div
+              key={layer.id}
+              className={`canvas-layer ${selectedLayerId === layer.id ? "selected-layer" : ""}`}
+              style={{
+                position: "absolute",
+                left: layer.x,
+                top: layer.y,
+                // Use backgroundWidth/Height for text with background, otherwise auto
+                width: layer.type === "text" 
+                  ? (layer.backgroundWidth ? `${layer.backgroundWidth}px` : "auto")
+                  : `${layer.width}px`,
+                height: layer.type === "text" 
+                  ? (layer.backgroundHeight ? `${layer.backgroundHeight}px` : "auto")
+                  : `${layer.height}px`,
+                opacity: layer.opacity,
+                transform: `rotate(${layer.rotation}deg)`,
+                cursor: layer.locked ? "not-allowed" : "move",
+                pointerEvents: layer.locked ? "none" : "auto",
+              }}
+              onMouseDown={(e) => handleMouseDown(e, layer.id)}
+            >
                   {/* Layer content */}
                   {layer.type === "text" && (
                     <>
@@ -1915,8 +1939,10 @@ const handleWheel = (e: React.WheelEvent) => {
                           }}
                           autoFocus
                           style={{
-                            width: "100%",
-                            height: "100%",
+                            width: layer.backgroundWidth || "auto",
+                            height: layer.backgroundHeight || "auto",
+                            minWidth: "100px",
+                            minHeight: "40px",
                             fontFamily: layer.fontFamily,
                             fontSize: layer.fontSize,
                             fontWeight: layer.fontWeight,
@@ -1936,7 +1962,7 @@ const handleWheel = (e: React.WheelEvent) => {
                           }}
                         />
                       ) : (
-                        // Display mode - let text size naturally, background controls container
+                        // Display mode
                         <div
                           onClick={(e) => {
                             if (selectedLayerId === layer.id) {
@@ -1948,7 +1974,7 @@ const handleWheel = (e: React.WheelEvent) => {
                             if (editingLayerId === layer.id) {
                               e.stopPropagation();
                             }
-                          }}                          
+                          }}
                           style={{
                             fontFamily: layer.fontFamily,
                             fontSize: layer.fontSize,
@@ -1964,8 +1990,10 @@ const handleWheel = (e: React.WheelEvent) => {
                             justifyContent: layer.textAlign === "center" ? "center" : 
                                            layer.textAlign === "right" ? "flex-end" : "flex-start",
                             whiteSpace: layer.wordWrap ? "pre-wrap" : "nowrap",
-                            width: "100%",
-                            height: "100%",
+                            width: layer.backgroundWidth ? `${layer.backgroundWidth}px` : "auto",
+                            height: layer.backgroundHeight ? `${layer.backgroundHeight}px` : "auto",
+                            minWidth: "fit-content",
+                            minHeight: "fit-content",
                             pointerEvents: "auto",
                             cursor: selectedLayerId === layer.id ? "text" : "inherit",
                             position: "relative",
@@ -1991,7 +2019,7 @@ const handleWheel = (e: React.WheelEvent) => {
                               }}
                             />
                           )}
-
+                  
                           {/* Text content */}
                           {layer.textSegments && layer.textSegments.length > 0 ? (
                             (() => {
@@ -2029,7 +2057,7 @@ const handleWheel = (e: React.WheelEvent) => {
                               return (
                                 <span style={{ 
                                   padding: layer.backgroundBorder ? 
-                                    `${(layer.backgroundBorderWidth ?? 2) + 4}px` : "4px",
+                                    `${(layer.backgroundBorderWidth ?? 2) + 4}px` : "8px",
                                   display: 'inline-block',
                                 }}>
                                   {parts}
@@ -2040,7 +2068,7 @@ const handleWheel = (e: React.WheelEvent) => {
                             <span style={{ 
                               color: layer.color,
                               padding: layer.backgroundBorder ? 
-                                `${(layer.backgroundBorderWidth ?? 2) + 4}px` : "4px",
+                                `${(layer.backgroundBorderWidth ?? 2) + 4}px` : "8px",
                               display: 'inline-block',
                             }}>
                               {layer.text}
@@ -2175,7 +2203,7 @@ const handleWheel = (e: React.WheelEvent) => {
                   )}
 
                   {selectedLayerId === layer.id && !layer.locked && layer.type === 'text' && 
-                   (layer.backgroundOpacity ?? 0) > 0 && (
+                   layer.backgroundWidth && layer.backgroundHeight && (layer.backgroundOpacity ?? 0) > 0 && (
                     <>
                       <div 
                         className="bg-resize-handle bg-n" 
@@ -2234,7 +2262,7 @@ const handleWheel = (e: React.WheelEvent) => {
                         }}
                       />
                     </>
-                  )}                  
+                  )}                 
                   
                   {/* Resize & Rotate Handles */}
                   {selectedLayerId === layer.id && !layer.locked && (

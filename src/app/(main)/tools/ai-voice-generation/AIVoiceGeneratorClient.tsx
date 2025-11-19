@@ -150,6 +150,8 @@ const AIVoiceGeneratorClient: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [loginErrors, setLoginErrors] = useState<{ [key: string]: string }>({});
   const [loginSuccess, setLoginSuccess] = useState<string>('');
+  const [playingDemo, setPlayingDemo] = useState<string | null>(null);
+  const demoAudioRef = useRef<HTMLAudioElement | null>(null);  
 
   // Handle scroll for navbar styling
   useEffect(() => {
@@ -196,6 +198,53 @@ const AIVoiceGeneratorClient: React.FC = () => {
       setIsLoggedIn(false);
     }
   }, []);
+
+  const handlePlayDemo = (voice: Voice) => {
+    // Stop any currently playing demo
+    if (demoAudioRef.current) {
+      demoAudioRef.current.pause();
+      demoAudioRef.current.currentTime = 0;
+    }
+
+    // If clicking the same voice, just stop
+    if (playingDemo === voice.voiceName) {
+      setPlayingDemo(null);
+      return;
+    }
+
+    // Construct demo URL based on voice properties
+    const genderFolder = voice.gender.toUpperCase();
+    const languageFolder = voice.language.replace(/\s*\(.*?\)\s*/g, '').trim().replace(/\s+/g, '%20');
+    const demoUrl = `${CDN_URL}/AiVoicesDemo/${languageFolder}/${genderFolder}/${voice.humanName || voice.voiceName}.mp3`;
+
+    // Create and play new audio
+    const audio = new Audio(demoUrl);
+    audio.play().catch((error) => {
+      console.error('Error playing demo:', error);
+      setPlayingDemo(null);
+    });
+
+    audio.onended = () => {
+      setPlayingDemo(null);
+    };
+
+    audio.onerror = () => {
+      console.error('Error loading demo audio');
+      setPlayingDemo(null);
+    };
+
+    demoAudioRef.current = audio;
+    setPlayingDemo(voice.voiceName);
+  };  
+
+  useEffect(() => {
+    return () => {
+      if (demoAudioRef.current) {
+        demoAudioRef.current.pause();
+        demoAudioRef.current = null;
+      }
+    };
+  }, []);  
 
   // Handle login form submission
   const handleLogin = async (formData: LoginFormData) => {
@@ -523,7 +572,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
         >
           <h1>Free AI Voice Generator - Text to Speech Online in Seconds</h1>
           <p className="hero-description">
-            Transform your text into lifelike AI voices instantly. Choose from 100+ natural-sounding voices across multiple languages. Perfect for videos, podcasts, presentations, and content creation. Completely free with MP3 downloads!
+            Transform your text into lifelike AI voices instantly. Choose from 40+ natural-sounding voices across multiple languages. Perfect for videos, podcasts, presentations, and content creation. Completely free with MP3 downloads!
           </p>
           <div className="hero-cta-section">
             <div className="main-content">
@@ -593,21 +642,31 @@ const AIVoiceGeneratorClient: React.FC = () => {
                         <div
                           key={voice.voiceName}
                           className={`voice-item ${selectedVoice?.voiceName === voice.voiceName ? 'selected' : ''}`}
-                          onClick={() => setSelectedVoice(voice)}
                           role="button"
                           tabIndex={0}
-                          onKeyPress={(e) => e.key === 'Enter' && setSelectedVoice(voice)}
                           aria-label={`Select voice ${voice.humanName || voice.voiceName}`}
                         >
                           <img
                             src={voice.profileUrl}
                             alt={`${voice.humanName || voice.voiceName} profile`}
                             className="voice-profile-image"
+                            onClick={() => setSelectedVoice(voice)}
                           />
-                          <div className="voice-details">
+                          <div className="voice-details" onClick={() => setSelectedVoice(voice)}>
                             <div className="voice-title">{voice.humanName || voice.voiceName}</div>
                             <div className="voice-info">{`${voice.language} (${voice.gender})`}</div>
                           </div>
+                          <button
+                            className="demo-button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handlePlayDemo(voice);
+                            }}
+                            aria-label={`Play demo for ${voice.humanName || voice.voiceName}`}
+                            title="Play demo"
+                          >
+                            {playingDemo === voice.voiceName ? '⏸️' : '▶️'}
+                          </button>
                         </div>
                       ))}
                     </div>
@@ -635,7 +694,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
             )}            
             <div className="trust-indicators">
               <span className="trust-item">✅ 100% Free</span>
-              <span className="trust-item">🎤 100+ Voices</span>
+              <span className="trust-item">🎤 40+ Voices</span>
               <span className="trust-item">🌍 Multi-Language</span>
               <span className="trust-item">📥 Instant MP3 Download</span>
             </div>
@@ -681,7 +740,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
             <motion.article className="step-card" whileHover={{ scale: 1.05 }} role="listitem">
               <div className="step-number" aria-label="Step 2">2</div>
               <h3>Choose Voice & Language</h3>
-              <p>Select from 100+ realistic AI voices across 20+ languages. Filter by gender, accent, and style to find the perfect voice for your project.</p>
+              <p>Select from 40+ realistic AI voices across 20+ languages. Filter by gender, accent, and style to find the perfect voice for your project.</p>
             </motion.article>
             <motion.article className="step-card" whileHover={{ scale: 1.05 }} role="listitem">
               <div className="step-number" aria-label="Step 3">3</div>
