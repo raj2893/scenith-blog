@@ -230,6 +230,13 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
         console.error("Error fetching elements:", err);
       });
   }, []); 
+
+  const saveToHistory = (newLayers: Layer[]) => {
+    const newHistory = history.slice(0, historyIndex + 1);
+    newHistory.push(JSON.stringify(newLayers));
+    setHistory(newHistory);
+    setHistoryIndex(newHistory.length - 1);
+  };  
   
   const addElementToCanvas = (element: any) => {
     const img = new Image();
@@ -292,7 +299,7 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
         setError("Failed to load project. Redirecting...");
         setTimeout(() => router.push("/tools/image-editing"), 2000);
       });
-  }, [projectId, router]);
+  }, [projectId, router, saveToHistory]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -441,14 +448,6 @@ const handleWheel = (e: React.WheelEvent) => {
       window.removeEventListener('keyup', handleKeyUp);
     };
   }, [isSpacePressed]);
-
-  // Save to history for undo/redo
-  const saveToHistory = (newLayers: Layer[]) => {
-    const newHistory = history.slice(0, historyIndex + 1);
-    newHistory.push(JSON.stringify(newLayers));
-    setHistory(newHistory);
-    setHistoryIndex(newHistory.length - 1);
-  };
 
   useEffect(() => {
     const preventZoom = (e: WheelEvent) => {
@@ -1030,8 +1029,8 @@ const handleWheel = (e: React.WheelEvent) => {
         if (layer.type === 'image' && layer.scale !== undefined) {
           // Get the ORIGINAL natural dimensions (from when layer was created)
           const startScale = layer.scale;
-          const naturalWidth = layer.width / startScale;
-          const naturalHeight = layer.height / startScale;
+          let naturalWidth = layer.width / startScale;
+          let naturalHeight = layer.height / startScale;
 
           // Calculate new scale based on new width
           const newScale = newWidth / naturalWidth;
@@ -1125,7 +1124,7 @@ const handleWheel = (e: React.WheelEvent) => {
     if (project && layers.length > 0) {
       autoSave();
     }
-  }, [debouncedLayers, canvasWidth, canvasHeight, canvasBgColor, project]);
+  }, [debouncedLayers, canvasWidth, canvasHeight, canvasBgColor, project, autoSave, layers.length]); // Add these
 
   const applySegmentColor = (layerId: string) => {
     if (!textSelection || textSelection.layerId !== layerId) return;
