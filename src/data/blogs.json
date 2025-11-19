@@ -1806,5 +1806,36 @@
     "featured": false,
     "slug": "mastering-keyframe-interpolation-for-cinematic-zoom",
     "difficulty": "Intermediate"
-  }  
+  },
+
+  {
+    "id": 122,
+    "title": "Why Professional Designers Are Switching to Browser-Based Image Editors (2025 Shift)",
+    "excerpt": "Traditional design software is dying. Discover why 67% of content creators abandoned Photoshop for cloud-based editors that work anywhere, cost nothing, and process designs 5x faster.",
+    "category": "Design Tools",
+    "readTime": "9 min",
+    "publishDate": "2025-11-20",
+    "author": "Scenith Team",
+    "image": "🎨",
+    "gradient": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    "tags": ["Image Editing", "Cloud Design", "Browser Tools", "Design Software", "Web Editor"],
+    "featured": false,
+    "slug": "browser-based-image-editors-revolution",
+    "difficulty": "Beginner"
+  },
+  {
+    "id": 123,
+    "title": "The Multi-Layer Design Secret: How to Create Professional Graphics Without Design Skills",
+    "excerpt": "Stop struggling with complex design tools. Learn the layer-based editing technique that lets non-designers create stunning thumbnails, social posts, and marketing graphics in minutes.",
+    "category": "Design Techniques",
+    "readTime": "8 min",
+    "publishDate": "2025-11-21",
+    "author": "Scenith Team",
+    "image": "🖼️",
+    "gradient": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    "tags": ["Multi-Layer Design", "Image Composition", "Graphic Design", "Thumbnails", "Social Media"],
+    "featured": false,
+    "slug": "multi-layer-design-for-non-designers",
+    "difficulty": "Beginner"
+  }
 ]
