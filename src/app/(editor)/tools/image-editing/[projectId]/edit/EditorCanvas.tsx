@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, JSX } from "react";
+import React, { useState, useEffect, useRef, JSX, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import "../../../../../../../styles/tools/EditorCanvas.css";
@@ -231,12 +231,12 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
       });
   }, []); 
 
-  const saveToHistory = (newLayers: Layer[]) => {
+  const saveToHistory = useCallback((newLayers: Layer[]) => {
     const newHistory = history.slice(0, historyIndex + 1);
     newHistory.push(JSON.stringify(newLayers));
     setHistory(newHistory);
     setHistoryIndex(newHistory.length - 1);
-  };  
+  }, [history, historyIndex]);
   
   const addElementToCanvas = (element: any) => {
     const img = new Image();
@@ -299,7 +299,7 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
         setError("Failed to load project. Redirecting...");
         setTimeout(() => router.push("/tools/image-editing"), 2000);
       });
-  }, [projectId, router, saveToHistory]);
+  }, [projectId, router]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -699,8 +699,8 @@ const handleWheel = (e: React.WheelEvent) => {
     saveToHistory(updatedLayers);
   };
 
-  const autoSave = async (force = false) => {
-    if (!force && isSaving) return; // Prevent overlap
+  const autoSave = useCallback(async (force = false) => {
+    if (!force && isSaving) return;
   
     setIsSaving(true);
     setError(null);
@@ -710,7 +710,6 @@ const handleWheel = (e: React.WheelEvent) => {
         canvas: { width: canvasWidth, height: canvasHeight, backgroundColor: canvasBgColor },
         layers: layers.map(l => ({
           ...l,
-          // ensure all new fields are sent
           textDecoration: l.textDecoration,
           textTransform: l.textTransform,
           outlineWidth: l.outlineWidth,
@@ -722,18 +721,18 @@ const handleWheel = (e: React.WheelEvent) => {
           curveRadius: l.curveRadius,
         })),
       });
-
+  
       await axios.put(
         `${API_BASE_URL}/api/image-editor/projects/${projectId}`,
         { designJson },
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
       );
-
+  
       if (force) {
         setSuccess("Saved!");
         setTimeout(() => setSuccess(null), 2000);
       } else {
-        setSuccess("Saved"); // Brief flash
+        setSuccess("Saved");
         setTimeout(() => setSuccess(null), 800);
       }
     } catch (err: any) {
@@ -741,7 +740,7 @@ const handleWheel = (e: React.WheelEvent) => {
     } finally {
       setIsSaving(false);
     }
-  };
+  }, [isSaving, canvasWidth, canvasHeight, canvasBgColor, layers, projectId]);
 
   const handleSave = () => autoSave(true);
 
@@ -1124,7 +1123,7 @@ const handleWheel = (e: React.WheelEvent) => {
     if (project && layers.length > 0) {
       autoSave();
     }
-  }, [debouncedLayers, canvasWidth, canvasHeight, canvasBgColor, project, autoSave, layers.length]); // Add these
+  }, [debouncedLayers, canvasWidth, canvasHeight, canvasBgColor, project]);
 
   const applySegmentColor = (layerId: string) => {
     if (!textSelection || textSelection.layerId !== layerId) return;
