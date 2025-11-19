@@ -910,8 +910,8 @@ const handleWheel = (e: React.WheelEvent) => {
       const deltaY = (e.clientY - cropStartState.mouseY) / scale;
     
       // Get natural dimensions (uncropped original size)
-      let naturalWidth = layer.width;
-      let naturalHeight = layer.height;
+      const naturalWidth = layer.width;
+      const naturalHeight = layer.height;
 
       if (layer.type === 'image' && layer.scale) {
         // For images, calculate based on scale and existing crop
@@ -1029,8 +1029,8 @@ const handleWheel = (e: React.WheelEvent) => {
         if (layer.type === 'image' && layer.scale !== undefined) {
           // Get the ORIGINAL natural dimensions (from when layer was created)
           const startScale = layer.scale;
-          let naturalWidth = layer.width / startScale;
-          let naturalHeight = layer.height / startScale;
+          const naturalWidth = layer.width / startScale;
+          const naturalHeight = layer.height / startScale;
 
           // Calculate new scale based on new width
           const newScale = newWidth / naturalWidth;
@@ -1391,8 +1391,8 @@ const handleWheel = (e: React.WheelEvent) => {
                               // Calculate natural dimensions
                               const currentCropHoriz = (selectedLayer.cropLeft ?? 0) + (selectedLayer.cropRight ?? 0);
                               const currentCropVert = (selectedLayer.cropTop ?? 0) + (selectedLayer.cropBottom ?? 0);
-                              let naturalWidth = selectedLayer.width / ((100 - currentCropHoriz) / 100);
-                              let naturalHeight = selectedLayer.height / ((100 - currentCropVert) / 100);
+                              const naturalWidth = selectedLayer.width / ((100 - currentCropHoriz) / 100);
+                              const naturalHeight = selectedLayer.height / ((100 - currentCropVert) / 100);
                               
                               // Calculate new height
                               const newVisibleHeight = naturalHeight * (100 - val - (selectedLayer.cropBottom ?? 0)) / 100;
@@ -1415,7 +1415,7 @@ const handleWheel = (e: React.WheelEvent) => {
                               
                               const currentCropHoriz = (selectedLayer.cropLeft ?? 0) + (selectedLayer.cropRight ?? 0);
                               const currentCropVert = (selectedLayer.cropTop ?? 0) + (selectedLayer.cropBottom ?? 0);
-                              let naturalWidth = selectedLayer.width / ((100 - currentCropHoriz) / 100);
+                              const naturalWidth = selectedLayer.width / ((100 - currentCropHoriz) / 100);
                               
                               const newVisibleWidth = naturalWidth * (100 - val - (selectedLayer.cropLeft ?? 0)) / 100;
                               
@@ -1437,7 +1437,7 @@ const handleWheel = (e: React.WheelEvent) => {
                               
                               const currentCropHoriz = (selectedLayer.cropLeft ?? 0) + (selectedLayer.cropRight ?? 0);
                               const currentCropVert = (selectedLayer.cropTop ?? 0) + (selectedLayer.cropBottom ?? 0);
-                              let naturalHeight = selectedLayer.height / ((100 - currentCropVert) / 100);
+                              const naturalHeight = selectedLayer.height / ((100 - currentCropVert) / 100);
                               
                               const newVisibleHeight = naturalHeight * (100 - val - (selectedLayer.cropTop ?? 0)) / 100;
                               
@@ -1459,7 +1459,7 @@ const handleWheel = (e: React.WheelEvent) => {
                               
                               const currentCropHoriz = (selectedLayer.cropLeft ?? 0) + (selectedLayer.cropRight ?? 0);
                               const currentCropVert = (selectedLayer.cropTop ?? 0) + (selectedLayer.cropBottom ?? 0);
-                              let naturalWidth = selectedLayer.width / ((100 - currentCropHoriz) / 100);
+                              const naturalWidth = selectedLayer.width / ((100 - currentCropHoriz) / 100);
                               
                               const newVisibleWidth = naturalWidth * (100 - val - (selectedLayer.cropRight ?? 0)) / 100;
                               
