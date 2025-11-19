@@ -917,8 +917,8 @@ const handleWheel = (e: React.WheelEvent) => {
         // For images, calculate based on scale and existing crop
         const currentCropHoriz = (layer.cropLeft ?? 0) + (layer.cropRight ?? 0);
         const currentCropVert = (layer.cropTop ?? 0) + (layer.cropBottom ?? 0);
-        naturalWidth = layer.width / ((100 - currentCropHoriz) / 100);
-        naturalHeight = layer.height / ((100 - currentCropVert) / 100);
+        const naturalWidth = layer.width / ((100 - currentCropHoriz) / 100);
+        const naturalHeight = layer.height / ((100 - currentCropVert) / 100);
       }
     
       // Convert delta to percentage
