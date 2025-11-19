@@ -138,23 +138,159 @@ export default function ToolsIndex() {
       <Head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Scenith Tools | AI-Powered Video & Media Tools</title>
+        
+        {/* Primary Meta Tags */}
+        <title>Scenith Tools | AI-Powered Video & Media Tools - Free Online Suite</title>
+        <meta
+          name="title"
+          content="Scenith Tools | AI-Powered Video & Media Tools - Free Online Suite"
+        />
         <meta
           name="description"
-          content="Discover powerful AI tools for video editing, voice generation, subtitle creation, and more. Free online tools to enhance your content creation workflow."
+          content="Discover 6+ powerful AI tools for video editing, voice generation, subtitle creation, background removal, and more. Free online tools trusted by 50,000+ creators. No signup required."
         />
         <meta
           name="keywords"
-          content="AI tools, video editing tools, voice generation, subtitle generator, background removal, video compression, media converter, Scenith"
+          content="AI tools, video editing tools, voice generation, subtitle generator, background removal, video compression, media converter, free online tools, AI voice generator, video speed changer, format converter, image compressor, Scenith tools, content creation tools, video editing software free, AI powered tools"
         />
+        <meta name="author" content="Scenith" />
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+        
+        {/* Canonical URL */}
         <link rel="canonical" href="https://scenith.in/tools" />
-        <meta property="og:title" content="Scenith Tools | AI-Powered Video & Media Tools" />
-        <meta property="og:description" content="Discover powerful AI tools for video editing, voice generation, and media optimization." />
+        
+        {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://scenith.in/tools" />
+        <meta property="og:title" content="Scenith Tools | AI-Powered Video & Media Tools - Free Online Suite" />
+        <meta property="og:description" content="Discover 6+ powerful AI tools for video editing, voice generation, subtitle creation, and more. Free online tools trusted by 50,000+ creators." />
+        <meta property="og:image" content="https://scenith.in/images/tools-og-image.jpg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:site_name" content="Scenith" />
+        <meta property="og:locale" content="en_US" />
+        
+        {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content="https://scenith.in/tools" />
         <meta name="twitter:title" content="Scenith Tools | AI-Powered Video & Media Tools" />
-        <meta name="twitter:description" content="Discover powerful AI tools for video editing, voice generation, and media optimization." />
+        <meta name="twitter:description" content="Discover 6+ powerful AI tools for video editing, voice generation, subtitle creation, and more. Free online tools trusted by 50,000+ creators." />
+        <meta name="twitter:image" content="https://scenith.in/images/tools-twitter-image.jpg" />
+        <meta name="twitter:creator" content="@scenith" />
+        <meta name="twitter:site" content="@scenith" />
+        
+        {/* Additional SEO Tags */}
+        <meta name="language" content="English" />
+        <meta name="revisit-after" content="7 days" />
+        <meta name="distribution" content="global" />
+        <meta name="rating" content="general" />
+        <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+        
+        {/* Geo Tags */}
+        <meta name="geo.region" content="IN" />
+        <meta name="geo.placename" content="India" />
+        
+        {/* Mobile App Tags */}
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="Scenith Tools" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        
+        {/* Schema.org Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebPage",
+              "name": "Scenith Tools - AI-Powered Video & Media Tools",
+              "description": "Discover powerful AI tools for video editing, voice generation, subtitle creation, background removal, and more. Free online tools to enhance your content creation workflow.",
+              "url": "https://scenith.in/tools",
+              "publisher": {
+                "@type": "Organization",
+                "name": "Scenith",
+                "url": "https://scenith.in",
+                "logo": {
+                  "@type": "ImageObject",
+                  "url": "https://scenith.in/logo.png"
+                }
+              },
+              "mainEntity": {
+                "@type": "ItemList",
+                "name": "Scenith Tools Collection",
+                "description": "Free AI-powered tools for content creators",
+                "numberOfItems": 6,
+                "itemListElement": toolsData.map((tool, index) => ({
+                  "@type": "ListItem",
+                  "position": index + 1,
+                  "item": {
+                    "@type": "SoftwareApplication",
+                    "name": tool.title,
+                    "description": tool.description,
+                    "url": `https://scenith.in${tool.url}`,
+                    "applicationCategory": "MultimediaApplication",
+                    "operatingSystem": "Web Browser",
+                    "offers": {
+                      "@type": "Offer",
+                      "price": "0",
+                      "priceCurrency": "USD"
+                    }
+                  }
+                }))
+              }
+            })
+          }}
+        />
+        
+        {/* Breadcrumb Schema */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://scenith.in"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Tools",
+                  "item": "https://scenith.in/tools"
+                }
+              ]
+            })
+          }}
+        />
+        
+        {/* Organization Schema */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "Scenith",
+              "url": "https://scenith.in",
+              "logo": "https://scenith.in/logo.png",
+              "sameAs": [
+                "https://twitter.com/scenith",
+                "https://www.facebook.com/scenith",
+                "https://www.instagram.com/scenith",
+                "https://www.youtube.com/@scenith"
+              ],
+              "contactPoint": {
+                "@type": "ContactPoint",
+                "contactType": "Customer Service",
+                "email": "support@scenith.in"
+              }
+            })
+          }}
+        />
       </Head>
 
       <div className={styles.toolsContainer}>

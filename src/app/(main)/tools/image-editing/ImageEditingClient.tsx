@@ -230,7 +230,7 @@ const ImageEditingClient: React.FC = () => {
         canvasHeight: 1080,
         canvasBackgroundColor: "#FFFFFF",
       });
-      router.push(`/tools/image-editing/${response.data.id}/edit`);
+      window.open(`/tools/image-editing/${response.data.id}/edit`, '_blank');
     } catch (error: any) {
       setError(error.response?.data?.message || "Failed to create project");
     }
@@ -249,9 +249,8 @@ const ImageEditingClient: React.FC = () => {
     }
   };
 
-  // Open editor
   const openEditor = (projectId: number) => {
-    router.push(`/tools/image-editing/${projectId}/edit`);
+    window.open(`/tools/image-editing/${projectId}/edit`, '_blank');
   };
 
   return (
@@ -365,7 +364,10 @@ const ImageEditingClient: React.FC = () => {
                       <div className="project-actions">
                         <button
                           className="action-btn edit-btn"
-                          onClick={() => openEditor(project.id)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openEditor(project.id);
+                          }}
                         >
                           <FaEdit /> Edit
                         </button>
