@@ -26,6 +26,13 @@ interface Voice {
   gender: string;
   profileUrl: string;
   languageCode: string;
+  voiceStyle?: string;
+  ssmlConfig?: {
+    rate?: string;
+    pitch?: string;
+    volume?: string;
+    emphasis?: string;
+  };  
 }
 
 interface LoginFormData {
@@ -200,42 +207,60 @@ const AIVoiceGeneratorClient: React.FC = () => {
   }, []);
 
   const handlePlayDemo = (voice: Voice) => {
+    const voiceId = `${voice.voiceName}-${voice.voiceStyle || 'default'}`;
+    
     // Stop any currently playing demo
     if (demoAudioRef.current) {
       demoAudioRef.current.pause();
       demoAudioRef.current.currentTime = 0;
     }
-
+  
     // If clicking the same voice, just stop
-    if (playingDemo === voice.voiceName) {
+    if (playingDemo === voiceId) {
       setPlayingDemo(null);
       return;
     }
-
+  
     // Construct demo URL based on voice properties
     const genderFolder = voice.gender.toUpperCase();
     const languageFolder = voice.language.replace(/\s*\(.*?\)\s*/g, '').trim().replace(/\s+/g, '%20');
-    const demoUrl = `${CDN_URL}/AiVoicesDemo/${languageFolder}/${genderFolder}/${voice.humanName || voice.voiceName}.mp3`;
-
+    
+    // For voice variations, construct filename with style
+    // e.g., "Rohit-Intense.mp3" or "Alia-Excited.mp3"
+    let demoFileName;
+    if (voice.voiceStyle) {
+      // Capitalize first letter of style for filename
+      const styleCapitalized = voice.voiceStyle.charAt(0).toUpperCase() + voice.voiceStyle.slice(1);
+      const baseName = voice.humanName?.split('-')[0] || voice.voiceName;
+      demoFileName = `${baseName}-${styleCapitalized}.mp3`;
+    } else {
+      // Base voice without style
+      demoFileName = `${voice.humanName || voice.voiceName}.mp3`;
+    }
+    
+    const demoUrl = `${CDN_URL}/AiVoicesDemo/${languageFolder}/${genderFolder}/${demoFileName}`;
+    
+    console.log('🎵 Playing demo:', demoUrl); // Debug log
+  
     // Create and play new audio
     const audio = new Audio(demoUrl);
     audio.play().catch((error) => {
       console.error('Error playing demo:', error);
       setPlayingDemo(null);
     });
-
+  
     audio.onended = () => {
       setPlayingDemo(null);
     };
-
+  
     audio.onerror = () => {
-      console.error('Error loading demo audio');
+      console.error('Error loading demo audio:', demoUrl);
       setPlayingDemo(null);
     };
-
+  
     demoAudioRef.current = audio;
-    setPlayingDemo(voice.voiceName);
-  };  
+    setPlayingDemo(voiceId);
+  };
 
   useEffect(() => {
     return () => {
@@ -424,19 +449,26 @@ const AIVoiceGeneratorClient: React.FC = () => {
     setIsGenerating(true);
     setError(null);
     try {
+      const requestBody: any = {
+        text: aiVoiceText,
+        voiceName: selectedVoice.voiceName,
+        languageCode: selectedVoice.languageCode,
+      };
+      
+      // Add SSML config if available
+      if (selectedVoice.ssmlConfig) {
+        requestBody.ssmlConfig = selectedVoice.ssmlConfig;
+      }
+      
       const response = await fetch(`${API_BASE_URL}/api/sole-tts/generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
-        body: JSON.stringify({
-          text: aiVoiceText,
-          voiceName: selectedVoice.voiceName,
-          languageCode: selectedVoice.languageCode,
-        }),
+        body: JSON.stringify(requestBody),
       });
-
+  
       let errorData;
       if (!response.ok) {
         const contentType = response.headers.get('content-type');
@@ -448,7 +480,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
         }
         throw new Error(errorData.message || errorData || `HTTP error! status: ${response.status}`);
       }
-
+  
       const data = await response.json();
       setGeneratedAudio(`${CDN_URL}/${data.audioPath}`);
       
@@ -640,8 +672,11 @@ const AIVoiceGeneratorClient: React.FC = () => {
                     <div className="voice-list">
                       {voices.map((voice) => (
                         <div
-                          key={voice.voiceName}
-                          className={`voice-item ${selectedVoice?.voiceName === voice.voiceName ? 'selected' : ''}`}
+                          key={`${voice.voiceName}-${voice.voiceStyle || 'default'}`}  // ✅ Unique key
+                          className={`voice-item ${
+                            selectedVoice?.voiceName === voice.voiceName && 
+                            selectedVoice?.voiceStyle === voice.voiceStyle ? 'selected' : ''
+                          }`}
                           role="button"
                           tabIndex={0}
                           aria-label={`Select voice ${voice.humanName || voice.voiceName}`}
@@ -653,7 +688,12 @@ const AIVoiceGeneratorClient: React.FC = () => {
                             onClick={() => setSelectedVoice(voice)}
                           />
                           <div className="voice-details" onClick={() => setSelectedVoice(voice)}>
-                            <div className="voice-title">{voice.humanName || voice.voiceName}</div>
+                            <div className="voice-title">
+                              {voice.humanName || voice.voiceName}
+                              {voice.voiceStyle && (
+                                <span className="voice-style-badge">{voice.voiceStyle}</span>
+                              )}
+                            </div>
                             <div className="voice-info">{`${voice.language} (${voice.gender})`}</div>
                           </div>
                           <button

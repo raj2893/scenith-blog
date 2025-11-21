@@ -1118,6 +1118,18 @@
   transform: scale(0.95);
 }
 
+.voice-style-badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+  color: white;
+  font-size: 0.7rem;
+  border-radius: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .main-content {
