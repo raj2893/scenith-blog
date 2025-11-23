@@ -214,6 +214,17 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
   const [isSelectingText, setIsSelectingText] = useState(false);
   const [isResizingBackground, setIsResizingBackground] = useState(false);
   const [backgroundResizeHandle, setBackgroundResizeHandle] = useState<string | null>(null);
+  const [guides, setGuides] = useState<{
+    vertical: number[];
+    horizontal: number[];
+  }>({ vertical: [], horizontal: [] });
+  const [isShiftPressed, setIsShiftPressed] = useState(false); 
+  const [pages, setPages] = useState<Array<{
+    id: string;
+    canvas: { width: number; height: number; backgroundColor: string };
+    layers: Layer[];
+  }>>([]);
+  const [currentPageIndex, setCurrentPageIndex] = useState(0);   
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -260,6 +271,109 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
     };
   };  
 
+  const detectAlignmentGuides = useCallback((movingLayer: Layer, allLayers: Layer[]) => {
+    const SNAP_THRESHOLD = 5; // pixels
+    const verticalGuides: number[] = [];
+    const horizontalGuides: number[] = [];
+    
+    // Canvas center guides
+    const canvasCenterX = canvasWidth / 2;
+    const canvasCenterY = canvasHeight / 2;
+    
+    // Helper function to get bounding box of rotated element
+    const getRotatedBounds = (layer: Layer) => {
+      const centerX = layer.x + layer.width / 2;
+      const centerY = layer.y + layer.height / 2;
+      const rotation = (layer.rotation || 0) * Math.PI / 180;
+      
+      // Four corners of the unrotated rectangle
+      const corners = [
+        { x: layer.x, y: layer.y },
+        { x: layer.x + layer.width, y: layer.y },
+        { x: layer.x + layer.width, y: layer.y + layer.height },
+        { x: layer.x, y: layer.y + layer.height }
+      ];
+      
+      // Rotate each corner around center
+      const rotatedCorners = corners.map(corner => {
+        const dx = corner.x - centerX;
+        const dy = corner.y - centerY;
+        return {
+          x: centerX + (dx * Math.cos(rotation) - dy * Math.sin(rotation)),
+          y: centerY + (dx * Math.sin(rotation) + dy * Math.cos(rotation))
+        };
+      });
+      
+      return {
+        centerX,
+        centerY,
+        corners: rotatedCorners,
+        minX: Math.min(...rotatedCorners.map(c => c.x)),
+        maxX: Math.max(...rotatedCorners.map(c => c.x)),
+        minY: Math.min(...rotatedCorners.map(c => c.y)),
+        maxY: Math.max(...rotatedCorners.map(c => c.y))
+      };
+    };
+    
+    const movingBounds = getRotatedBounds(movingLayer);
+    
+    // Check canvas center alignment
+    if (Math.abs(movingBounds.centerX - canvasCenterX) < SNAP_THRESHOLD) {
+      verticalGuides.push(canvasCenterX);
+    }
+    if (Math.abs(movingBounds.centerY - canvasCenterY) < SNAP_THRESHOLD) {
+      horizontalGuides.push(canvasCenterY);
+    }
+    
+    // Check alignment with other layers
+    allLayers.forEach(layer => {
+      if (layer.id === movingLayer.id || !layer.visible) return;
+      
+      const layerBounds = getRotatedBounds(layer);
+      
+      // Center alignments
+      if (Math.abs(movingBounds.centerX - layerBounds.centerX) < SNAP_THRESHOLD) {
+        verticalGuides.push(layerBounds.centerX);
+      }
+      if (Math.abs(movingBounds.centerY - layerBounds.centerY) < SNAP_THRESHOLD) {
+        horizontalGuides.push(layerBounds.centerY);
+      }
+      
+      // Edge alignments (bounding box)
+      if (Math.abs(movingBounds.minX - layerBounds.minX) < SNAP_THRESHOLD) {
+        verticalGuides.push(layerBounds.minX);
+      }
+      if (Math.abs(movingBounds.maxX - layerBounds.maxX) < SNAP_THRESHOLD) {
+        verticalGuides.push(layerBounds.maxX);
+      }
+      if (Math.abs(movingBounds.minY - layerBounds.minY) < SNAP_THRESHOLD) {
+        horizontalGuides.push(layerBounds.minY);
+      }
+      if (Math.abs(movingBounds.maxY - layerBounds.maxY) < SNAP_THRESHOLD) {
+        horizontalGuides.push(layerBounds.maxY);
+      }
+      
+      // Edge-to-edge alignments (spacing)
+      if (Math.abs(movingBounds.minX - layerBounds.maxX) < SNAP_THRESHOLD) {
+        verticalGuides.push(layerBounds.maxX);
+      }
+      if (Math.abs(movingBounds.maxX - layerBounds.minX) < SNAP_THRESHOLD) {
+        verticalGuides.push(layerBounds.minX);
+      }
+      if (Math.abs(movingBounds.minY - layerBounds.maxY) < SNAP_THRESHOLD) {
+        horizontalGuides.push(layerBounds.maxY);
+      }
+      if (Math.abs(movingBounds.maxY - layerBounds.minY) < SNAP_THRESHOLD) {
+        horizontalGuides.push(layerBounds.minY);
+      }
+    });
+    
+    return {
+      vertical: [...new Set(verticalGuides)],
+      horizontal: [...new Set(horizontalGuides)]
+    };
+  }, [canvasWidth, canvasHeight]);
+
   useEffect(() => {
     // Only load WebFont in the browser
     if (typeof window !== 'undefined') {
@@ -280,7 +394,7 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
       router.push("/tools/image-editing");
       return;
     }
-
+  
     axios
       .get(`${API_BASE_URL}/api/image-editor/projects/${projectId}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -288,11 +402,30 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
       .then((res) => {
         setProject(res.data);
         const design = JSON.parse(res.data.designJson);
-        setCanvasWidth(design.canvas.width);
-        setCanvasHeight(design.canvas.height);
-        setCanvasBgColor(design.canvas.backgroundColor);
-        setLayers(design.layers || []);
-        saveToHistory(design.layers);
+        
+        // Check if it's the new multi-page format
+        if (design.pages && Array.isArray(design.pages)) {
+          setPages(design.pages);
+          const firstPage = design.pages[0];
+          setCanvasWidth(firstPage.canvas.width);
+          setCanvasHeight(firstPage.canvas.height);
+          setCanvasBgColor(firstPage.canvas.backgroundColor);
+          setLayers(firstPage.layers || []);
+          saveToHistory(firstPage.layers);
+        } else {
+          // Old single-page format - migrate it
+          const migratedPages = [{
+            id: `page-${Date.now()}`,
+            canvas: design.canvas,
+            layers: design.layers || []
+          }];
+          setPages(migratedPages);
+          setCanvasWidth(design.canvas.width);
+          setCanvasHeight(design.canvas.height);
+          setCanvasBgColor(design.canvas.backgroundColor);
+          setLayers(design.layers || []);
+          saveToHistory(design.layers);
+        }
       })
       .catch((err) => {
         console.error("Error fetching project:", err);
@@ -419,35 +552,44 @@ const handleWheel = (e: React.WheelEvent) => {
       if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
         return;
       }
-      
+
       if (e.code === 'Space' && !isSpacePressed) {
         e.preventDefault();
         setIsSpacePressed(true);
       }
+
+      // ADD THIS:
+      if (e.shiftKey && !isShiftPressed) {
+        setIsShiftPressed(true);
+      }
     };
-  
+
     const handleKeyUp = (e: KeyboardEvent) => {
-      // Don't intercept space if user is typing in an input/textarea
       const target = e.target as HTMLElement;
       if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
         return;
       }
-      
+
       if (e.code === 'Space') {
         e.preventDefault();
         setIsSpacePressed(false);
         setIsPanning(false);
       }
+
+      // ADD THIS:
+      if (!e.shiftKey && isShiftPressed) {
+        setIsShiftPressed(false);
+      }
     };
-  
+
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
-  
+
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [isSpacePressed]);
+  }, [isSpacePressed, isShiftPressed]);
 
   useEffect(() => {
     const preventZoom = (e: WheelEvent) => {
@@ -705,21 +847,17 @@ const handleWheel = (e: React.WheelEvent) => {
     setIsSaving(true);
     setError(null);
     try {
+      // Update current page data
+      const updatedPages = [...pages];
+      updatedPages[currentPageIndex] = {
+        ...updatedPages[currentPageIndex],
+        canvas: { width: canvasWidth, height: canvasHeight, backgroundColor: canvasBgColor },
+        layers: layers
+      };
+  
       const designJson = JSON.stringify({
         version: "1.0",
-        canvas: { width: canvasWidth, height: canvasHeight, backgroundColor: canvasBgColor },
-        layers: layers.map(l => ({
-          ...l,
-          textDecoration: l.textDecoration,
-          textTransform: l.textTransform,
-          outlineWidth: l.outlineWidth,
-          outlineColor: l.outlineColor,
-          backgroundOpacity: l.backgroundOpacity,
-          backgroundColor: l.backgroundColor,
-          verticalAlign: l.verticalAlign,
-          wordWrap: l.wordWrap,
-          curveRadius: l.curveRadius,
-        })),
+        pages: updatedPages
       });
   
       await axios.put(
@@ -740,7 +878,7 @@ const handleWheel = (e: React.WheelEvent) => {
     } finally {
       setIsSaving(false);
     }
-  }, [isSaving, canvasWidth, canvasHeight, canvasBgColor, layers, projectId]);
+  }, [isSaving, canvasWidth, canvasHeight, canvasBgColor, layers, projectId, pages, currentPageIndex]);
 
   const handleSave = () => autoSave(true);
 
@@ -780,26 +918,17 @@ const handleWheel = (e: React.WheelEvent) => {
     setError(null);
   
     try {
-      // Save first
+      // Save current page before export
+      const updatedPages = [...pages];
+      updatedPages[currentPageIndex] = {
+        ...updatedPages[currentPageIndex],
+        canvas: { width: canvasWidth, height: canvasHeight, backgroundColor: canvasBgColor },
+        layers: layers
+      };
+  
       const designJson = JSON.stringify({
         version: "1.0",
-        canvas: {
-          width: canvasWidth,
-          height: canvasHeight,
-          backgroundColor: canvasBgColor,
-        },
-        layers: layers.map(l => ({
-          ...l,
-          textDecoration: l.textDecoration,
-          textTransform: l.textTransform,
-          outlineWidth: l.outlineWidth,
-          outlineColor: l.outlineColor,
-          backgroundOpacity: l.backgroundOpacity,
-          backgroundColor: l.backgroundColor,
-          verticalAlign: l.verticalAlign,
-          wordWrap: l.wordWrap,
-          curveRadius: l.curveRadius,
-        })),
+        pages: updatedPages
       });
   
       await axios.put(
@@ -810,9 +939,9 @@ const handleWheel = (e: React.WheelEvent) => {
         }
       );
   
-      // Export
+      // Export with page index parameter
       const response = await axios.post(
-        `${API_BASE_URL}/api/image-editor/projects/${projectId}/export`,
+        `${API_BASE_URL}/api/image-editor/projects/${projectId}/export?pageIndex=${currentPageIndex}`,
         { format, quality: 90 },
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -885,7 +1014,6 @@ const handleWheel = (e: React.WheelEvent) => {
       const rect = canvasRef.current?.getBoundingClientRect();
       if (!rect) return;
     
-      // Calculate the actual center position on screen (accounting for scale and pan)
       const centerX = rect.left + panOffset.x + (rotationStartState.centerX * scale);
       const centerY = rect.top + panOffset.y + (rotationStartState.centerY * scale);
     
@@ -895,7 +1023,14 @@ const handleWheel = (e: React.WheelEvent) => {
       ) * (180 / Math.PI);
     
       const deltaAngle = currentAngle - rotationStartState.startAngle;
-      const newRotation = rotationStartState.angle + deltaAngle;
+      let newRotation = rotationStartState.angle + deltaAngle;
+    
+      // ADD SHIFT KEY SNAPPING:
+      if (isShiftPressed) {
+        // Snap to 45-degree increments
+        const snapAngle = 45;
+        newRotation = Math.round(newRotation / snapAngle) * snapAngle;
+      }
     
       updateLayer(selectedLayerId, { rotation: newRotation });
       return;
@@ -1093,17 +1228,88 @@ const handleWheel = (e: React.WheelEvent) => {
     } 
   
     if (!isDragging || !selectedLayerId) return;
-  
+    
     const layer = layers.find((l) => l.id === selectedLayerId);
     if (!layer) return;
-  
+    
     const newX = (e.clientX - dragStart.x) / scale;
     const newY = (e.clientY - dragStart.y) / scale;
-  
-    updateLayer(selectedLayerId, { x: newX, y: newY });
+    
+    const tempLayer = { ...layer, x: newX, y: newY };
+    const detectedGuides = detectAlignmentGuides(tempLayer, layers);
+    setGuides(detectedGuides);
+    
+    // Apply snapping with rotated bounds
+    let finalX = newX;
+    let finalY = newY;
+    
+    const SNAP_THRESHOLD = 5;
+    
+    // Get rotated bounding box
+    const getRotatedBounds = (layer: Layer) => {
+      const centerX = layer.x + layer.width / 2;
+      const centerY = layer.y + layer.height / 2;
+      const rotation = (layer.rotation || 0) * Math.PI / 180;
+      
+      const corners = [
+        { x: layer.x, y: layer.y },
+        { x: layer.x + layer.width, y: layer.y },
+        { x: layer.x + layer.width, y: layer.y + layer.height },
+        { x: layer.x, y: layer.y + layer.height }
+      ];
+      
+      const rotatedCorners = corners.map(corner => {
+        const dx = corner.x - centerX;
+        const dy = corner.y - centerY;
+        return {
+          x: centerX + (dx * Math.cos(rotation) - dy * Math.sin(rotation)),
+          y: centerY + (dx * Math.sin(rotation) + dy * Math.cos(rotation))
+        };
+      });
+      
+      return {
+        centerX,
+        centerY,
+        minX: Math.min(...rotatedCorners.map(c => c.x)),
+        maxX: Math.max(...rotatedCorners.map(c => c.x)),
+        minY: Math.min(...rotatedCorners.map(c => c.y)),
+        maxY: Math.max(...rotatedCorners.map(c => c.y))
+      };
+    };
+    
+    const bounds = getRotatedBounds(tempLayer);
+    
+    // Snap to vertical guides
+    if (detectedGuides.vertical.length > 0) {
+      const snapX = detectedGuides.vertical[0];
+      
+      if (Math.abs(bounds.centerX - snapX) < SNAP_THRESHOLD) {
+        finalX = newX + (snapX - bounds.centerX);
+      } else if (Math.abs(bounds.minX - snapX) < SNAP_THRESHOLD) {
+        finalX = newX + (snapX - bounds.minX);
+      } else if (Math.abs(bounds.maxX - snapX) < SNAP_THRESHOLD) {
+        finalX = newX + (snapX - bounds.maxX);
+      }
+    }
+    
+    // Snap to horizontal guides
+    if (detectedGuides.horizontal.length > 0) {
+      const snapY = detectedGuides.horizontal[0];
+      
+      if (Math.abs(bounds.centerY - snapY) < SNAP_THRESHOLD) {
+        finalY = newY + (snapY - bounds.centerY);
+      } else if (Math.abs(bounds.minY - snapY) < SNAP_THRESHOLD) {
+        finalY = newY + (snapY - bounds.minY);
+      } else if (Math.abs(bounds.maxY - snapY) < SNAP_THRESHOLD) {
+        finalY = newY + (snapY - bounds.maxY);
+      }
+    }
+    
+    updateLayer(selectedLayerId, { x: finalX, y: finalY });
   };
 
   const handleMouseUp = () => {
+    setGuides({ vertical: [], horizontal: [] });
     setIsDragging(false);
     setIsPanning(false);
     setResizeHandle(null);
@@ -1187,6 +1393,93 @@ const handleWheel = (e: React.WheelEvent) => {
     });
   };  
 
+  const addNewPage = () => {
+    const newPage = {
+      id: `page-${Date.now()}`,
+      canvas: { width: canvasWidth, height: canvasHeight, backgroundColor: "#FFFFFF" },
+      layers: []
+    };
+    const updatedPages = [...pages, newPage];
+    setPages(updatedPages);
+    setCurrentPageIndex(updatedPages.length - 1);
+    setCanvasWidth(newPage.canvas.width);
+    setCanvasHeight(newPage.canvas.height);
+    setCanvasBgColor(newPage.canvas.backgroundColor);
+    setLayers([]);
+    setSelectedLayerId(null);
+    saveToHistory([]);
+    autoSave(true);
+  };
+  
+  const duplicatePage = (pageIndex: number) => {
+    const pageToCopy = pages[pageIndex];
+    const duplicatedPage = {
+      id: `page-${Date.now()}`,
+      canvas: { ...pageToCopy.canvas },
+      layers: JSON.parse(JSON.stringify(pageToCopy.layers)).map((layer: Layer) => ({
+        ...layer,
+        id: `${layer.type}-${Date.now()}-${Math.random()}`
+      }))
+    };
+    const updatedPages = [...pages];
+    updatedPages.splice(pageIndex + 1, 0, duplicatedPage);
+    setPages(updatedPages);
+    setCurrentPageIndex(pageIndex + 1);
+    setCanvasWidth(duplicatedPage.canvas.width);
+    setCanvasHeight(duplicatedPage.canvas.height);
+    setCanvasBgColor(duplicatedPage.canvas.backgroundColor);
+    setLayers(duplicatedPage.layers);
+    setSelectedLayerId(null);
+    saveToHistory(duplicatedPage.layers);
+    autoSave(true);
+  };
+  
+  const switchToPage = (pageIndex: number) => {
+    if (pageIndex === currentPageIndex) return;
+    
+    // Save current page first
+    const updatedPages = [...pages];
+    updatedPages[currentPageIndex] = {
+      ...updatedPages[currentPageIndex],
+      canvas: { width: canvasWidth, height: canvasHeight, backgroundColor: canvasBgColor },
+      layers: layers
+    };
+    setPages(updatedPages);
+    
+    // Switch to new page
+    const targetPage = updatedPages[pageIndex];
+    setCurrentPageIndex(pageIndex);
+    setCanvasWidth(targetPage.canvas.width);
+    setCanvasHeight(targetPage.canvas.height);
+    setCanvasBgColor(targetPage.canvas.backgroundColor);
+    setLayers(targetPage.layers);
+    setSelectedLayerId(null);
+    saveToHistory(targetPage.layers);
+  };
+  
+  const deletePage = (pageIndex: number) => {
+    if (pages.length === 1) {
+      setError("Cannot delete the last page");
+      setTimeout(() => setError(null), 2000);
+      return;
+    }
+    
+    const updatedPages = pages.filter((_, idx) => idx !== pageIndex);
+    setPages(updatedPages);
+    
+    const newIndex = pageIndex === 0 ? 0 : pageIndex - 1;
+    setCurrentPageIndex(newIndex);
+    
+    const targetPage = updatedPages[newIndex];
+    setCanvasWidth(targetPage.canvas.width);
+    setCanvasHeight(targetPage.canvas.height);
+    setCanvasBgColor(targetPage.canvas.backgroundColor);
+    setLayers(targetPage.layers);
+    setSelectedLayerId(null);
+    saveToHistory(targetPage.layers);
+    autoSave(true);
+  };  
+
   return (
     <div className="editor-container">
       {/* Top Toolbar */}
@@ -1218,7 +1511,7 @@ const handleWheel = (e: React.WheelEvent) => {
         </div>
       </div>
   
-      <div className="editor-workspace">
+    <div className="editor-workspace">
     {/* Left Sidebar - Icon Panel + Content Panel */}
     <div className="left-sidebar-container">
       {/* Thin Icon Panel */}
@@ -1860,6 +2153,63 @@ const handleWheel = (e: React.WheelEvent) => {
             </div>
           )}
         </div>  
+
+        <div className="pages-panel">
+          <div className="pages-list">
+            {pages.map((page, index) => (
+              <div
+                key={page.id}
+                className={`page-thumbnail ${currentPageIndex === index ? 'active' : ''}`}
+                onClick={() => switchToPage(index)}
+              >
+                <div 
+                  className="page-preview"
+                  style={{ backgroundColor: page.canvas.backgroundColor }}
+                >
+                  <div style={{ fontSize: '8px', textAlign: 'center', padding: '2px' }}>
+                    Page {index + 1}
+                  </div>
+                </div>
+                <div style={{ fontSize: '10px', textAlign: 'center', marginTop: '2px' }}>
+                  {page.layers.length} layers
+                </div>
+                {pages.length > 1 && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deletePage(index);
+                    }}
+                    style={{
+                      position: 'absolute',
+                      top: '2px',
+                      right: '2px',
+                      width: '16px',
+                      height: '16px',
+                      padding: 0,
+                      background: '#ef4444',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '50%',
+                      fontSize: '10px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+          <button className="add-page-btn" onClick={addNewPage}>
+            <FaPlus /> New Page
+          </button>
+          <button 
+            className="duplicate-page-btn" 
+            onClick={() => duplicatePage(currentPageIndex)}
+          >
+            <FaPlus /> Duplicate
+          </button>
+        </div>        
   
         {/* Canvas */}
         <div className="canvas-wrapper">
@@ -2283,6 +2633,39 @@ const handleWheel = (e: React.WheelEvent) => {
                   )}
                 </div>
               ))}
+              {/* Alignment Guides */}
+              {guides.vertical.map((x, idx) => (
+                <div
+                  key={`v-guide-${idx}`}
+                  style={{
+                    position: 'absolute',
+                    left: x,
+                    top: 0,
+                    bottom: 0,
+                    width: '1px',
+                    backgroundColor: '#FF00FF',
+                    pointerEvents: 'none',
+                    zIndex: 9999,
+                    boxShadow: '0 0 2px rgba(255, 0, 255, 0.5)',
+                  }}
+                />
+              ))}
+              {guides.horizontal.map((y, idx) => (
+                <div
+                  key={`h-guide-${idx}`}
+                  style={{
+                    position: 'absolute',
+                    top: y,
+                    left: 0,
+                    right: 0,
+                    height: '1px',
+                    backgroundColor: '#FF00FF',
+                    pointerEvents: 'none',
+                    zIndex: 9999,
+                    boxShadow: '0 0 2px rgba(255, 0, 255, 0.5)',
+                  }}
+                />
+              ))}              
             </div>
           </div>
         </div>

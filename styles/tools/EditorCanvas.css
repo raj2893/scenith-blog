@@ -967,6 +967,75 @@ body {
   background: rgba(59, 130, 246, 0.3);
 }
 
+.pages-panel {
+  position: fixed;
+  bottom: 0;
+  left: 340px;
+  right: 70px;
+  height: 100px;
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 20px;
+  z-index: 50;
+}
+
+.pages-list {
+  flex: 1;
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+}
+
+.page-thumbnail {
+  min-width: 120px;
+  height: 70px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.page-thumbnail.active {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.page-preview {
+  flex: 1;
+  border-radius: 4px;
+  box-shadow: inset 0 0 4px rgba(0,0,0,0.1);
+}
+
+.add-page-btn, .duplicate-page-btn {
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.add-page-btn:hover, .duplicate-page-btn:hover {
+  transform: translateY(-2px);
+}
+
+.duplicate-page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 @keyframes slideIn {
   from {
     transform: translateX(400px);
