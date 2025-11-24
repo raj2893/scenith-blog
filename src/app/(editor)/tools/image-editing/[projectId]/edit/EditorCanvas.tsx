@@ -85,8 +85,12 @@ interface Layer {
   wordWrap?: boolean;
   curveRadius?: number;
 
-  // Effects
-  filters?: Array<{ type: string; value: number }>;
+  filters?: Array<{
+    type: 'brightness' | 'contrast' | 'saturation' | 'hue-rotate' | 'blur' | 
+          'sharpen' | 'temperature' | 'tint' | 'exposure' | 'highlights' | 
+          'shadows' | 'vibrance' | 'grayscale' | 'sepia' | 'invert';
+    value: number;
+  }>;
   shadow?: {
     offsetX: number;
     offsetY: number;
@@ -171,7 +175,7 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
   const [showRightPanel, setShowRightPanel] = useState(true);
   const [showLayersPopup, setShowLayersPopup] = useState(false);
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);  
-  const [activeTab, setActiveTab] = useState<'text' | 'images' | 'shapes' | 'properties' | 'canvas' | 'elements' |null>(null);
+  const [activeTab, setActiveTab] = useState<'text' | 'images' | 'shapes' | 'properties' | 'canvas' | 'elements' | 'filters' |null>(null);
   const [resizeHandle, setResizeHandle] = useState<string | null>(null);
   const [resizeStartState, setResizeStartState] = useState<{
     x: number;
@@ -225,6 +229,8 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
     layers: Layer[];
   }>>([]);
   const [currentPageIndex, setCurrentPageIndex] = useState(0);   
+  const [clipboard, setClipboard] = useState<Layer | null>(null);
+  const [clipboardAction, setClipboardAction] = useState<'copy' | 'cut' | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -552,44 +558,78 @@ const handleWheel = (e: React.WheelEvent) => {
       if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
         return;
       }
-
+  
       if (e.code === 'Space' && !isSpacePressed) {
         e.preventDefault();
         setIsSpacePressed(true);
       }
-
-      // ADD THIS:
+  
       if (e.shiftKey && !isShiftPressed) {
         setIsShiftPressed(true);
       }
+  
+      // Copy: Ctrl+C or Cmd+C
+      if ((e.ctrlKey || e.metaKey) && e.key === 'c' && selectedLayerId) {
+        e.preventDefault();
+        const layerToCopy = layers.find(l => l.id === selectedLayerId);
+        if (layerToCopy && !layerToCopy.locked) {
+          setClipboard(JSON.parse(JSON.stringify(layerToCopy)));
+          setClipboardAction('copy');
+          // Show toast notification
+          setSuccess('Layer copied!');
+          setTimeout(() => setSuccess(null), 1000);
+        }
+      }
+      
+      // Cut: Ctrl+X or Cmd+X
+      if ((e.ctrlKey || e.metaKey) && e.key === 'x' && selectedLayerId) {
+        e.preventDefault();
+        const layerToCut = layers.find(l => l.id === selectedLayerId);
+        if (layerToCut && !layerToCut.locked) {
+          setClipboard(JSON.parse(JSON.stringify(layerToCut)));
+          setClipboardAction('cut');
+          deleteLayer(selectedLayerId);
+          // Show toast notification
+          setSuccess('Layer cut!');
+          setTimeout(() => setSuccess(null), 1000);
+        }
+      }
+      
+      // Paste: Ctrl+V or Cmd+V
+      if ((e.ctrlKey || e.metaKey) && e.key === 'v' && clipboard) {
+        e.preventDefault();
+        pasteLayer();
+        // Show toast notification
+        setSuccess('Layer pasted!');
+        setTimeout(() => setSuccess(null), 1000);
+      }
     };
-
+  
     const handleKeyUp = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
       if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
         return;
       }
-
+  
       if (e.code === 'Space') {
         e.preventDefault();
         setIsSpacePressed(false);
         setIsPanning(false);
       }
-
-      // ADD THIS:
+  
       if (!e.shiftKey && isShiftPressed) {
         setIsShiftPressed(false);
       }
     };
-
+  
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
-
+  
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [isSpacePressed, isShiftPressed]);
+  }, [isSpacePressed, isShiftPressed, selectedLayerId, layers, clipboard]); // Add dependencies
 
   useEffect(() => {
     const preventZoom = (e: WheelEvent) => {
@@ -820,6 +860,31 @@ const handleWheel = (e: React.WheelEvent) => {
     setSelectedLayerId(null);
     saveToHistory(updatedLayers);
   };
+
+  // Paste layer
+  const pasteLayer = () => {
+    if (!clipboard) return;
+  
+    // Create new layer with offset position and new ID
+    const newLayer: Layer = {
+      ...clipboard,
+      id: `${clipboard.type}-${Date.now()}`,
+      x: clipboard.x + 20, // Offset by 20px
+      y: clipboard.y + 20,
+      zIndex: layers.length,
+    };
+  
+    const updatedLayers = [...layers, newLayer];
+    setLayers(updatedLayers);
+    setSelectedLayerId(newLayer.id);
+    saveToHistory(updatedLayers);
+  
+    // If it was a cut operation, clear clipboard after first paste
+    if (clipboardAction === 'cut') {
+      setClipboard(null);
+      setClipboardAction(null);
+    }
+  };  
 
   // Reorder layers
   const moveLayer = (layerId: string, direction: "up" | "down") => {
@@ -1480,6 +1545,132 @@ const handleWheel = (e: React.WheelEvent) => {
     autoSave(true);
   };  
 
+  // Helper function to apply filters to layer preview
+  const getFilterStyle = (filters?: Layer['filters']) => {
+    if (!filters || filters.length === 0) return {};
+    
+    const filterStrings: string[] = [];
+    
+    filters.forEach(filter => {
+      switch (filter.type) {
+        case 'brightness':
+          // Range: -100 to 100 -> 0% to 200%
+          filterStrings.push(`brightness(${100 + filter.value}%)`);
+          break;
+        case 'contrast':
+          // Range: -100 to 100 -> 0% to 200%
+          filterStrings.push(`contrast(${100 + filter.value}%)`);
+          break;
+        case 'saturation':
+          // Range: -100 to 100 -> 0% to 200%
+          filterStrings.push(`saturate(${100 + filter.value}%)`);
+          break;
+        case 'hue-rotate':
+          filterStrings.push(`hue-rotate(${filter.value}deg)`);
+          break;
+        case 'blur':
+          if (filter.value > 0) {
+            // CSS blur matches our adjusted backend blur
+            filterStrings.push(`blur(${filter.value}px)`);
+          }
+          break;
+        case 'sharpen':
+          // Approximate sharpening with contrast boost
+          if (filter.value > 0) {
+            filterStrings.push(`contrast(${100 + filter.value * 3}%)`);
+          }
+          break;
+        case 'temperature':
+          // Match backend's sepia + hue-rotate approach
+          if (filter.value > 0) {
+            // Warm
+            filterStrings.push(`sepia(${filter.value * 0.15}%)`);
+            filterStrings.push(`hue-rotate(${-filter.value * 0.08}deg)`);
+          } else {
+            // Cool
+            const coolFactor = -filter.value;
+            filterStrings.push(`hue-rotate(${coolFactor * 0.4}deg)`);
+            filterStrings.push(`saturate(${100 - (coolFactor * 0.05)}%)`);
+          }
+          break;
+        case 'tint':
+          // Match backend's hue-rotate approach
+          if (filter.value !== 0) {
+            filterStrings.push(`hue-rotate(${filter.value * 1.2}deg)`);
+          }
+          break;
+        case 'exposure':
+          // Match backend's gamma approach with brightness
+          const expFactor = Math.pow(2, filter.value);
+          filterStrings.push(`brightness(${expFactor * 100}%)`);
+          break;
+        case 'highlights':
+          // Subtle brightness adjustment matching backend
+          const highlightAdj = (filter.value / 100.0) * 30;
+          filterStrings.push(`brightness(${100 + highlightAdj}%)`);
+          break;
+        case 'shadows':
+          // Subtle brightness adjustment matching backend
+          const shadowAdj = (filter.value / 100.0) * 30;
+          filterStrings.push(`brightness(${100 + shadowAdj}%)`);
+          break;
+        case 'vibrance':
+          // Direct saturation mapping
+          filterStrings.push(`saturate(${filter.value}%)`);
+          break;
+        case 'grayscale':
+          filterStrings.push(`grayscale(100%)`);
+          break;
+        case 'sepia':
+          filterStrings.push(`sepia(${filter.value}%)`);
+          break;
+        case 'invert':
+          filterStrings.push(`invert(100%)`);
+          break;
+      }
+    });
+    
+    return {
+      filter: filterStrings.join(' '),
+      WebkitFilter: filterStrings.join(' ')
+    };
+  };
+  
+  // Helper to update a specific filter
+  const updateFilter = (layerId: string, filterType: string, value: number) => {
+    const layer = layers.find(l => l.id === layerId);
+    if (!layer) return;
+    
+    const existingFilters = layer.filters || [];
+    const filterIndex = existingFilters.findIndex(f => f.type === filterType);
+    
+    let newFilters;
+    if (filterIndex >= 0) {
+      // Update existing filter
+      newFilters = [...existingFilters];
+      newFilters[filterIndex] = { type: filterType as any, value };
+    } else {
+      // Add new filter
+      newFilters = [...existingFilters, { type: filterType as any, value }];
+    }
+    
+    updateLayer(layerId, { filters: newFilters });
+  };
+  
+  // Helper to remove a filter
+  const removeFilter = (layerId: string, filterType: string) => {
+    const layer = layers.find(l => l.id === layerId);
+    if (!layer || !layer.filters) return;
+    
+    const newFilters = layer.filters.filter(f => f.type !== filterType);
+    updateLayer(layerId, { filters: newFilters.length > 0 ? newFilters : undefined });
+  };
+  
+  // Helper to reset all filters
+  const resetAllFilters = (layerId: string) => {
+    updateLayer(layerId, { filters: undefined });
+  };  
+
   return (
     <div className="editor-container">
       {/* Top Toolbar */}
@@ -1563,7 +1754,16 @@ const handleWheel = (e: React.WheelEvent) => {
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
             <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/>
           </svg>
-        </button>        
+        </button>  
+        <button 
+          className={`icon-panel-btn ${activeTab === 'filters' ? 'active' : ''}`}
+          onClick={() => setActiveTab(activeTab === 'filters' ? null : 'filters')}
+          title="Filters"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3 5h18v2H3V5zm2 4h14v2H5V9zm4 4h6v2H9v-2zm2 4h2v2h-2v-2z"/>
+          </svg>
+        </button>              
       </div>
     
       {activeTab && (
@@ -2148,7 +2348,310 @@ const handleWheel = (e: React.WheelEvent) => {
                   )}
                 </div>
               </div>
-            )}                    
+            )}
+            {activeTab === 'filters' && (
+              <div className="panel-section">
+                <h3>Filters & Color Correction</h3>
+                {!selectedLayer ? (
+                  <p className="no-selection">Select an image layer to apply filters</p>
+                ) : selectedLayer.type !== 'image' ? (
+                  <p className="no-selection">Filters are only available for image layers</p>
+                ) : (
+                  <div className="filters-panel">
+                    {/* Brightness */}
+                    <div className="filter-control">
+                      <label>
+                        Brightness
+                        <span className="filter-value">
+                          {selectedLayer.filters?.find(f => f.type === 'brightness')?.value || 0}
+                        </span>
+                      </label>
+                      <input
+                        type="range"
+                        min="-100"
+                        max="100"
+                        step="1"
+                        value={selectedLayer.filters?.find(f => f.type === 'brightness')?.value || 0}
+                        onChange={(e) => updateFilter(selectedLayer.id, 'brightness', parseFloat(e.target.value))}
+                      />
+                    </div>
+            
+                    {/* Contrast */}
+                    <div className="filter-control">
+                      <label>
+                        Contrast
+                        <span className="filter-value">
+                          {selectedLayer.filters?.find(f => f.type === 'contrast')?.value || 0}
+                        </span>
+                      </label>
+                      <input
+                        type="range"
+                        min="-100"
+                        max="100"
+                        step="1"
+                        value={selectedLayer.filters?.find(f => f.type === 'contrast')?.value || 0}
+                        onChange={(e) => updateFilter(selectedLayer.id, 'contrast', parseFloat(e.target.value))}
+                      />
+                    </div>
+            
+                    {/* Saturation */}
+                    <div className="filter-control">
+                      <label>
+                        Saturation
+                        <span className="filter-value">
+                          {selectedLayer.filters?.find(f => f.type === 'saturation')?.value || 0}
+                        </span>
+                      </label>
+                      <input
+                        type="range"
+                        min="-100"
+                        max="100"
+                        step="1"
+                        value={selectedLayer.filters?.find(f => f.type === 'saturation')?.value || 0}
+                        onChange={(e) => updateFilter(selectedLayer.id, 'saturation', parseFloat(e.target.value))}
+                      />
+                    </div>
+            
+                    {/* Hue Rotate */}
+                    <div className="filter-control">
+                      <label>
+                        Hue
+                        <span className="filter-value">
+                          {selectedLayer.filters?.find(f => f.type === 'hue-rotate')?.value || 0}°
+                        </span>
+                      </label>
+                      <input
+                        type="range"
+                        min="0"
+                        max="360"
+                        step="1"
+                        value={selectedLayer.filters?.find(f => f.type === 'hue-rotate')?.value || 0}
+                        onChange={(e) => updateFilter(selectedLayer.id, 'hue-rotate', parseFloat(e.target.value))}
+                      />
+                    </div>
+            
+                    {/* Temperature */}
+                    <div className="filter-control">
+                      <label>
+                        Temperature
+                        <span className="filter-value">
+                          {selectedLayer.filters?.find(f => f.type === 'temperature')?.value || 0}
+                        </span>
+                      </label>
+                      <input
+                        type="range"
+                        min="-100"
+                        max="100"
+                        step="1"
+                        value={selectedLayer.filters?.find(f => f.type === 'temperature')?.value || 0}
+                        onChange={(e) => updateFilter(selectedLayer.id, 'temperature', parseFloat(e.target.value))}
+                      />
+                      <div className="temperature-indicator">
+                        <span style={{color: '#3b82f6'}}>Cool</span>
+                        <span style={{color: '#f59e0b'}}>Warm</span>
+                      </div>
+                    </div>
+            
+                    {/* Tint */}
+                    <div className="filter-control">
+                      <label>
+                        Tint
+                        <span className="filter-value">
+                          {selectedLayer.filters?.find(f => f.type === 'tint')?.value || 0}
+                        </span>
+                      </label>
+                      <input
+                        type="range"
+                        min="-100"
+                        max="100"
+                        step="1"
+                        value={selectedLayer.filters?.find(f => f.type === 'tint')?.value || 0}
+                        onChange={(e) => updateFilter(selectedLayer.id, 'tint', parseFloat(e.target.value))}
+                      />
+                      <div className="temperature-indicator">
+                        <span style={{color: '#10b981'}}>Green</span>
+                        <span style={{color: '#ec4899'}}>Magenta</span>
+                      </div>
+                    </div>
+            
+                    {/* Exposure */}
+                    <div className="filter-control">
+                      <label>
+                        Exposure
+                        <span className="filter-value">
+                          {(selectedLayer.filters?.find(f => f.type === 'exposure')?.value || 0).toFixed(2)} EV
+                        </span>
+                      </label>
+                      <input
+                        type="range"
+                        min="-2"
+                        max="2"
+                        step="0.1"
+                        value={selectedLayer.filters?.find(f => f.type === 'exposure')?.value || 0}
+                        onChange={(e) => updateFilter(selectedLayer.id, 'exposure', parseFloat(e.target.value))}
+                      />
+                    </div>
+            
+                    {/* Highlights */}
+                    <div className="filter-control">
+                      <label>
+                        Highlights
+                        <span className="filter-value">
+                          {selectedLayer.filters?.find(f => f.type === 'highlights')?.value || 0}
+                        </span>
+                      </label>
+                      <input
+                        type="range"
+                        min="-100"
+                        max="100"
+                        step="1"
+                        value={selectedLayer.filters?.find(f => f.type === 'highlights')?.value || 0}
+                        onChange={(e) => updateFilter(selectedLayer.id, 'highlights', parseFloat(e.target.value))}
+                      />
+                    </div>
+            
+                    {/* Shadows */}
+                    <div className="filter-control">
+                      <label>
+                        Shadows
+                        <span className="filter-value">
+                          {selectedLayer.filters?.find(f => f.type === 'shadows')?.value || 0}
+                        </span>
+                      </label>
+                      <input
+                        type="range"
+                        min="-100"
+                        max="100"
+                        step="1"
+                        value={selectedLayer.filters?.find(f => f.type === 'shadows')?.value || 0}
+                        onChange={(e) => updateFilter(selectedLayer.id, 'shadows', parseFloat(e.target.value))}
+                      />
+                    </div>
+            
+                    {/* Vibrance */}
+                    <div className="filter-control">
+                      <label>
+                        Vibrance
+                        <span className="filter-value">
+                          {selectedLayer.filters?.find(f => f.type === 'vibrance')?.value || 100}
+                        </span>
+                      </label>
+                      <input
+                        type="range"
+                        min="0"
+                        max="200"
+                        step="1"
+                        value={selectedLayer.filters?.find(f => f.type === 'vibrance')?.value || 100}
+                        onChange={(e) => updateFilter(selectedLayer.id, 'vibrance', parseFloat(e.target.value))}
+                      />
+                    </div>
+            
+                    {/* Blur */}
+                    <div className="filter-control">
+                      <label>
+                        Blur
+                        <span className="filter-value">
+                          {selectedLayer.filters?.find(f => f.type === 'blur')?.value || 0}px
+                        </span>
+                      </label>
+                      <input
+                        type="range"
+                        min="0"
+                        max="20"
+                        step="0.5"
+                        value={selectedLayer.filters?.find(f => f.type === 'blur')?.value || 0}
+                        onChange={(e) => updateFilter(selectedLayer.id, 'blur', parseFloat(e.target.value))}
+                      />
+                    </div>
+            
+                    {/* Sharpen */}
+                    <div className="filter-control">
+                      <label>
+                        Sharpen
+                        <span className="filter-value">
+                          {selectedLayer.filters?.find(f => f.type === 'sharpen')?.value || 0}
+                        </span>
+                      </label>
+                      <input
+                        type="range"
+                        min="0"
+                        max="10"
+                        step="0.5"
+                        value={selectedLayer.filters?.find(f => f.type === 'sharpen')?.value || 0}
+                        onChange={(e) => updateFilter(selectedLayer.id, 'sharpen', parseFloat(e.target.value))}
+                      />
+                    </div>                 
+            
+                    {/* Quick Presets */}
+                    <div className="filter-presets">
+                      <h4>Quick Presets</h4>
+                      <div className="preset-buttons">
+                        <button
+                          className="preset-btn"
+                          onClick={() => {
+                            updateLayer(selectedLayer.id, {
+                              filters: [
+                                { type: 'contrast', value: 20 },
+                                { type: 'saturation', value: 30 },
+                                { type: 'sharpen', value: 2 }
+                              ]
+                            });
+                          }}
+                        >
+                          Vivid
+                        </button>
+                        <button
+                          className="preset-btn"
+                          onClick={() => {
+                            updateLayer(selectedLayer.id, {
+                              filters: [
+                                { type: 'temperature', value: 30 },
+                                { type: 'saturation', value: -20 },
+                                { type: 'exposure', value: 0.3 }
+                              ]
+                            });
+                          }}
+                        >
+                          Warm
+                        </button>
+                        <button
+                          className="preset-btn"
+                          onClick={() => {
+                            updateLayer(selectedLayer.id, {
+                              filters: [
+                                { type: 'temperature', value: -30 },
+                                { type: 'contrast', value: 15 }
+                              ]
+                            });
+                          }}
+                        >
+                          Cool
+                        </button>
+                        <button
+                          className="preset-btn"
+                          onClick={() => {
+                            updateLayer(selectedLayer.id, {
+                              filters: [
+                                { type: 'saturation', value: -100 },
+                                { type: 'contrast', value: 25 }
+                              ]
+                            });
+                          }}
+                        >
+                          B&W
+                        </button>
+                        <button
+                          className="preset-btn reset-btn"
+                          onClick={() => resetAllFilters(selectedLayer.id)}
+                        >
+                          Reset All
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}                          
             </div>
             </div>
           )}
@@ -2434,6 +2937,7 @@ const handleWheel = (e: React.WheelEvent) => {
                         overflow: "hidden",
                         pointerEvents: "none",
                         position: "relative",
+                        ...getFilterStyle(layer.filters),
                       }}
                     >
                       <img
@@ -2441,11 +2945,9 @@ const handleWheel = (e: React.WheelEvent) => {
                         alt=""
                         style={{
                           position: "absolute",
-                          // The image should fill to show the uncropped scaled version
                           width: `${100 / ((100 - (layer.cropLeft ?? 0) - (layer.cropRight ?? 0)) / 100)}%`,
                           height: `${100 / ((100 - (layer.cropTop ?? 0) - (layer.cropBottom ?? 0)) / 100)}%`,
                           objectFit: "fill",
-                          // Position to show the correct cropped area
                           top: `${-(layer.cropTop ?? 0) / (100 - (layer.cropTop ?? 0) - (layer.cropBottom ?? 0)) * 100}%`,
                           left: `${-(layer.cropLeft ?? 0) / (100 - (layer.cropLeft ?? 0) - (layer.cropRight ?? 0)) * 100}%`,
                         }}
