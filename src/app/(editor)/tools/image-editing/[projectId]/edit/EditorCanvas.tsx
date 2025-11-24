@@ -229,8 +229,9 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
     layers: Layer[];
   }>>([]);
   const [currentPageIndex, setCurrentPageIndex] = useState(0);   
-  const [clipboard, setClipboard] = useState<Layer | null>(null);
+  const [clipboard, setClipboard] = useState<Layer[] | null>(null);
   const [clipboardAction, setClipboardAction] = useState<'copy' | 'cut' | null>(null);
+  const [selectedLayerIds, setSelectedLayerIds] = useState<string[]>([]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -569,39 +570,46 @@ const handleWheel = (e: React.WheelEvent) => {
       }
   
       // Copy: Ctrl+C or Cmd+C
-      if ((e.ctrlKey || e.metaKey) && e.key === 'c' && selectedLayerId) {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'c' && selectedLayerIds.length > 0) {
         e.preventDefault();
-        const layerToCopy = layers.find(l => l.id === selectedLayerId);
-        if (layerToCopy && !layerToCopy.locked) {
-          setClipboard(JSON.parse(JSON.stringify(layerToCopy)));
+        const layersToCopy = layers.filter(l => selectedLayerIds.includes(l.id) && !l.locked);
+        if (layersToCopy.length > 0) {
+          setClipboard(layersToCopy.map(l => JSON.parse(JSON.stringify(l))));
           setClipboardAction('copy');
-          // Show toast notification
-          setSuccess('Layer copied!');
+          setSuccess(`${layersToCopy.length} layer(s) copied!`);
           setTimeout(() => setSuccess(null), 1000);
         }
       }
       
       // Cut: Ctrl+X or Cmd+X
-      if ((e.ctrlKey || e.metaKey) && e.key === 'x' && selectedLayerId) {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'x' && selectedLayerIds.length > 0) {
         e.preventDefault();
-        const layerToCut = layers.find(l => l.id === selectedLayerId);
-        if (layerToCut && !layerToCut.locked) {
-          setClipboard(JSON.parse(JSON.stringify(layerToCut)));
+        const layersToCut = layers.filter(l => selectedLayerIds.includes(l.id) && !l.locked);
+        if (layersToCut.length > 0) {
+          setClipboard(layersToCut.map(l => JSON.parse(JSON.stringify(l))));
           setClipboardAction('cut');
-          deleteLayer(selectedLayerId);
-          // Show toast notification
-          setSuccess('Layer cut!');
+          // Delete the cut layers
+          const updatedLayers = layers.filter(l => !selectedLayerIds.includes(l.id));
+          setLayers(updatedLayers);
+          setSelectedLayerIds([]);
+          saveToHistory(updatedLayers);
+          setSuccess(`${layersToCut.length} layer(s) cut!`);
           setTimeout(() => setSuccess(null), 1000);
         }
       }
       
       // Paste: Ctrl+V or Cmd+V
-      if ((e.ctrlKey || e.metaKey) && e.key === 'v' && clipboard) {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'v' && clipboard && clipboard.length > 0) {
         e.preventDefault();
-        pasteLayer();
-        // Show toast notification
-        setSuccess('Layer pasted!');
+        pasteMultipleLayers();
+        setSuccess(`${clipboard.length} layer(s) pasted!`);
         setTimeout(() => setSuccess(null), 1000);
+      }
+  
+      // Delete: Delete or Backspace
+      if ((e.key === 'Delete' || e.key === 'Backspace') && selectedLayerIds.length > 0) {
+        e.preventDefault();
+        deleteMultipleLayers();
       }
     };
   
@@ -629,7 +637,7 @@ const handleWheel = (e: React.WheelEvent) => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [isSpacePressed, isShiftPressed, selectedLayerId, layers, clipboard]); // Add dependencies
+  }, [isSpacePressed, isShiftPressed, selectedLayerIds, layers, clipboard]);
 
   useEffect(() => {
     const preventZoom = (e: WheelEvent) => {
@@ -853,37 +861,51 @@ const handleWheel = (e: React.WheelEvent) => {
     saveToHistory(updatedLayers);
   };
 
-  // Delete layer
   const deleteLayer = (layerId: string) => {
-    const updatedLayers = layers.filter((layer) => layer.id !== layerId);
-    setLayers(updatedLayers);
-    setSelectedLayerId(null);
-    saveToHistory(updatedLayers);
+    deleteMultipleLayers();
   };
 
-  // Paste layer
-  const pasteLayer = () => {
-    if (!clipboard) return;
+  const deleteMultipleLayers = () => {
+    const layersToDelete = selectedLayerIds.filter(id => {
+      const layer = layers.find(l => l.id === id);
+      return layer && !layer.locked;
+    });
   
-    // Create new layer with offset position and new ID
-    const newLayer: Layer = {
-      ...clipboard,
-      id: `${clipboard.type}-${Date.now()}`,
-      x: clipboard.x + 20, // Offset by 20px
-      y: clipboard.y + 20,
-      zIndex: layers.length,
-    };
+    if (layersToDelete.length === 0) return;
   
-    const updatedLayers = [...layers, newLayer];
+    const updatedLayers = layers.filter(l => !layersToDelete.includes(l.id));
     setLayers(updatedLayers);
-    setSelectedLayerId(newLayer.id);
+    setSelectedLayerIds([]);
+    saveToHistory(updatedLayers);
+    setSuccess(`${layersToDelete.length} layer(s) deleted!`);
+    setTimeout(() => setSuccess(null), 1000);
+  };
+  
+  const pasteMultipleLayers = () => {
+    if (!clipboard || clipboard.length === 0) return;
+  
+    const newLayers = clipboard.map((layerData, index) => ({
+      ...layerData,
+      id: `${layerData.type}-${Date.now()}-${index}`,
+      x: layerData.x + 20,
+      y: layerData.y + 20,
+      zIndex: layers.length + index,
+    }));
+  
+    const updatedLayers = [...layers, ...newLayers];
+    setLayers(updatedLayers);
+    setSelectedLayerIds(newLayers.map(l => l.id));
     saveToHistory(updatedLayers);
   
-    // If it was a cut operation, clear clipboard after first paste
+    // Clear clipboard if it was a cut operation
     if (clipboardAction === 'cut') {
       setClipboard(null);
       setClipboardAction(null);
     }
+  };
+
+  const pasteLayer = () => {
+    pasteMultipleLayers();
   };  
 
   // Reorder layers
@@ -1057,9 +1079,30 @@ const handleWheel = (e: React.WheelEvent) => {
       const layer = layers.find((l) => l.id === layerId);
       if (!layer || layer.locked) return;
   
-      setSelectedLayerId(layerId);
+      // Handle multi-select with Shift key
+      if (isShiftPressed) {
+        // Toggle selection
+        setSelectedLayerIds(prev => {
+          if (prev.includes(layerId)) {
+            return prev.filter(id => id !== layerId);
+          } else {
+            return [...prev, layerId];
+          }
+        });
+      } else {
+        // Single select (clear others if not already selected)
+        if (!selectedLayerIds.includes(layerId)) {
+          setSelectedLayerIds([layerId]);
+        }
+      }
+  
       setIsDragging(true);
-      setDragStart({ x: e.clientX - layer.x * scale, y: e.clientY - layer.y * scale });
+      setDragStart({ x: e.clientX, y: e.clientY });
+    } else {
+      // Clicked on canvas background - clear selection
+      if (!isShiftPressed) {
+        setSelectedLayerIds([]);
+      }
     }
   };
 
@@ -1072,8 +1115,8 @@ const handleWheel = (e: React.WheelEvent) => {
       return;
     }
   
-    if (isRotatingLayer && selectedLayerId && rotationStartState) {
-      const layer = layers.find((l) => l.id === selectedLayerId);
+    if (isRotatingLayer && selectedLayerIds.length === 1 && rotationStartState) {
+      const layer = layers.find((l) => l.id === selectedLayerIds[0]);
       if (!layer) return;
     
       const rect = canvasRef.current?.getBoundingClientRect();
@@ -1090,37 +1133,32 @@ const handleWheel = (e: React.WheelEvent) => {
       const deltaAngle = currentAngle - rotationStartState.startAngle;
       let newRotation = rotationStartState.angle + deltaAngle;
     
-      // ADD SHIFT KEY SNAPPING:
       if (isShiftPressed) {
-        // Snap to 45-degree increments
         const snapAngle = 45;
         newRotation = Math.round(newRotation / snapAngle) * snapAngle;
       }
     
-      updateLayer(selectedLayerId, { rotation: newRotation });
+      updateLayer(selectedLayerIds[0], { rotation: newRotation });
       return;
     }
   
-    if (cropHandle && selectedLayerId && cropStartState) {
-      const layer = layers.find((l) => l.id === selectedLayerId);
+    if (cropHandle && selectedLayerIds.length === 1 && cropStartState) {
+      const layer = layers.find((l) => l.id === selectedLayerIds[0]);
       if (!layer) return;
     
       const deltaX = (e.clientX - cropStartState.mouseX) / scale;
       const deltaY = (e.clientY - cropStartState.mouseY) / scale;
     
-      // Get natural dimensions (uncropped original size)
       const naturalWidth = layer.width;
       const naturalHeight = layer.height;
-
+  
       if (layer.type === 'image' && layer.scale) {
-        // For images, calculate based on scale and existing crop
         const currentCropHoriz = (layer.cropLeft ?? 0) + (layer.cropRight ?? 0);
         const currentCropVert = (layer.cropTop ?? 0) + (layer.cropBottom ?? 0);
         const naturalWidth = layer.width / ((100 - currentCropHoriz) / 100);
         const naturalHeight = layer.height / ((100 - currentCropVert) / 100);
       }
     
-      // Convert delta to percentage
       const deltaPercentX = (deltaX / naturalWidth) * 100;
       const deltaPercentY = (deltaY / naturalHeight) * 100;
     
@@ -1150,13 +1188,12 @@ const handleWheel = (e: React.WheelEvent) => {
     
       const totalVertical = newCropTop + newCropBottom;
       const totalHorizontal = newCropLeft + newCropRight;
-
+  
       if (totalVertical < 95 && totalHorizontal < 95) {
-        // Calculate new dimensions
         const newVisibleWidth = naturalWidth * (100 - newCropLeft - newCropRight) / 100;
         const newVisibleHeight = naturalHeight * (100 - newCropTop - newCropBottom) / 100;
       
-        updateLayer(selectedLayerId, {
+        updateLayer(selectedLayerIds[0], {
           cropTop: newCropTop,
           cropRight: newCropRight,
           cropBottom: newCropBottom,
@@ -1166,7 +1203,7 @@ const handleWheel = (e: React.WheelEvent) => {
           x: newX,
           y: newY,
         });
-
+  
         setCropStartState({
           x: newX,
           y: newY,
@@ -1179,8 +1216,8 @@ const handleWheel = (e: React.WheelEvent) => {
       return;
     }
   
-    if (resizeHandle && selectedLayerId && resizeStartState) {
-      const layer = layers.find((l) => l.id === selectedLayerId);
+    if (resizeHandle && selectedLayerIds.length === 1 && resizeStartState) {
+      const layer = layers.find((l) => l.id === selectedLayerIds[0]);
       if (!layer) return;
     
       const deltaX = (e.clientX - resizeStartState.mouseX) / scale;
@@ -1226,15 +1263,13 @@ const handleWheel = (e: React.WheelEvent) => {
     
       if (newWidth > 20 && newHeight > 20) {
         if (layer.type === 'image' && layer.scale !== undefined) {
-          // Get the ORIGINAL natural dimensions (from when layer was created)
           const startScale = layer.scale;
           const naturalWidth = layer.width / startScale;
           const naturalHeight = layer.height / startScale;
-
-          // Calculate new scale based on new width
+  
           const newScale = newWidth / naturalWidth;
-
-          updateLayer(selectedLayerId, {
+  
+          updateLayer(selectedLayerIds[0], {
             x: newX,
             y: newY,
             scale: newScale,
@@ -1242,8 +1277,7 @@ const handleWheel = (e: React.WheelEvent) => {
             height: roundTo2(naturalHeight * newScale),
           });
         } else {
-          // For shapes and text
-          updateLayer(selectedLayerId, {
+          updateLayer(selectedLayerIds[0], {
             x: newX,
             y: newY,
             width: newWidth,
@@ -1253,15 +1287,14 @@ const handleWheel = (e: React.WheelEvent) => {
       }
       return;
     }
-
-    if (isResizingBackground && selectedLayerId && resizeStartState && backgroundResizeHandle) {
-      const layer = layers.find((l) => l.id === selectedLayerId);
+  
+    if (isResizingBackground && selectedLayerIds.length === 1 && resizeStartState && backgroundResizeHandle) {
+      const layer = layers.find((l) => l.id === selectedLayerIds[0]);
       if (!layer) return;
     
       const deltaX = (e.clientX - resizeStartState.mouseX) / scale;
       const deltaY = (e.clientY - resizeStartState.mouseY) / scale;
     
-      // Calculate minimum dimensions based on text
       const fontSize = layer.fontSize || 32;
       const text = layer.text || "";
       const minWidth = Math.max(text.length * fontSize * 0.6, 50);
@@ -1285,95 +1318,51 @@ const handleWheel = (e: React.WheelEvent) => {
           break;
       }
     
-      updateLayer(selectedLayerId, {
+      updateLayer(selectedLayerIds[0], {
         backgroundWidth: newBackgroundWidth,
         backgroundHeight: newBackgroundHeight,
       });
       return;
-    } 
+    }
   
-    if (!isDragging || !selectedLayerId) return;
+    // Multi-layer drag
+    if (!isDragging || selectedLayerIds.length === 0) return;
     
-    const layer = layers.find((l) => l.id === selectedLayerId);
-    if (!layer) return;
-    
-    const newX = (e.clientX - dragStart.x) / scale;
-    const newY = (e.clientY - dragStart.y) / scale;
-    
-    const tempLayer = { ...layer, x: newX, y: newY };
-    const detectedGuides = detectAlignmentGuides(tempLayer, layers);
-    setGuides(detectedGuides);
-    
-    // Apply snapping with rotated bounds
-    let finalX = newX;
-    let finalY = newY;
-    
-    const SNAP_THRESHOLD = 5;
-    
-    // Get rotated bounding box
-    const getRotatedBounds = (layer: Layer) => {
-      const centerX = layer.x + layer.width / 2;
-      const centerY = layer.y + layer.height / 2;
-      const rotation = (layer.rotation || 0) * Math.PI / 180;
-      
-      const corners = [
-        { x: layer.x, y: layer.y },
-        { x: layer.x + layer.width, y: layer.y },
-        { x: layer.x + layer.width, y: layer.y + layer.height },
-        { x: layer.x, y: layer.y + layer.height }
-      ];
-      
-      const rotatedCorners = corners.map(corner => {
-        const dx = corner.x - centerX;
-        const dy = corner.y - centerY;
+    const deltaX = (e.clientX - dragStart.x) / scale;
+    const deltaY = (e.clientY - dragStart.y) / scale;
+  
+    // Update all selected layers
+    const updatedLayers = layers.map(layer => {
+      if (selectedLayerIds.includes(layer.id) && !layer.locked) {
         return {
-          x: centerX + (dx * Math.cos(rotation) - dy * Math.sin(rotation)),
-          y: centerY + (dx * Math.sin(rotation) + dy * Math.cos(rotation))
+          ...layer,
+          x: layer.x + deltaX,
+          y: layer.y + deltaY
         };
-      });
-      
-      return {
-        centerX,
-        centerY,
-        minX: Math.min(...rotatedCorners.map(c => c.x)),
-        maxX: Math.max(...rotatedCorners.map(c => c.x)),
-        minY: Math.min(...rotatedCorners.map(c => c.y)),
-        maxY: Math.max(...rotatedCorners.map(c => c.y))
-      };
-    };
-    
-    const bounds = getRotatedBounds(tempLayer);
-    
-    // Snap to vertical guides
-    if (detectedGuides.vertical.length > 0) {
-      const snapX = detectedGuides.vertical[0];
-      
-      if (Math.abs(bounds.centerX - snapX) < SNAP_THRESHOLD) {
-        finalX = newX + (snapX - bounds.centerX);
-      } else if (Math.abs(bounds.minX - snapX) < SNAP_THRESHOLD) {
-        finalX = newX + (snapX - bounds.minX);
-      } else if (Math.abs(bounds.maxX - snapX) < SNAP_THRESHOLD) {
-        finalX = newX + (snapX - bounds.maxX);
       }
-    }
+      return layer;
+    });
+  
+    setLayers(updatedLayers);
+    setDragStart({ x: e.clientX, y: e.clientY });
     
-    // Snap to horizontal guides
-    if (detectedGuides.horizontal.length > 0) {
-      const snapY = detectedGuides.horizontal[0];
-      
-      if (Math.abs(bounds.centerY - snapY) < SNAP_THRESHOLD) {
-        finalY = newY + (snapY - bounds.centerY);
-      } else if (Math.abs(bounds.minY - snapY) < SNAP_THRESHOLD) {
-        finalY = newY + (snapY - bounds.minY);
-      } else if (Math.abs(bounds.maxY - snapY) < SNAP_THRESHOLD) {
-        finalY = newY + (snapY - bounds.maxY);
+    // Show guides only for single selection
+    if (selectedLayerIds.length === 1) {
+      const movedLayer = updatedLayers.find(l => l.id === selectedLayerIds[0]);
+      if (movedLayer) {
+        const detectedGuides = detectAlignmentGuides(movedLayer, layers);
+        setGuides(detectedGuides);
       }
+    } else {
+      setGuides({ vertical: [], horizontal: [] });
     }
-    
-    updateLayer(selectedLayerId, { x: finalX, y: finalY });
   };
 
   const handleMouseUp = () => {
+    if (isDragging && selectedLayerIds.length > 0) {
+      saveToHistory(layers);
+    }
+    
     setGuides({ vertical: [], horizontal: [] });
     setIsDragging(false);
     setIsPanning(false);
@@ -1384,9 +1373,10 @@ const handleWheel = (e: React.WheelEvent) => {
     setCropHandle(null);
     setCropStartState(null);
     setBackgroundResizeHandle(null);
+    setIsResizingBackground(false);
   };
 
-  const selectedLayer = layers.find((l) => l.id === selectedLayerId);
+  const selectedLayer = selectedLayerIds.length === 1 ? layers.find((l) => l.id === selectedLayerIds[0]) : null;
 
   const debouncedLayers = useDebounce(layers, 1000);
   
@@ -1838,7 +1828,11 @@ const handleWheel = (e: React.WheelEvent) => {
             {activeTab === 'properties' && (
               <div className="panel-section">
                 <h3>Properties</h3>
-                {!selectedLayer ? (
+                {selectedLayerIds.length === 0 ? (
+                  <p className="no-selection">Select a layer to edit</p>
+                ) : selectedLayerIds.length > 1 ? (
+                  <p className="no-selection">Multiple layers selected. Only positioning is available.</p>
+                ) : !selectedLayer ? (
                   <p className="no-selection">Select a layer to edit</p>
                 ) : (
                   <div className="properties-panel">
@@ -2751,12 +2745,11 @@ const handleWheel = (e: React.WheelEvent) => {
               .map((layer) => (
             <div
               key={layer.id}
-              className={`canvas-layer ${selectedLayerId === layer.id ? "selected-layer" : ""}`}
+              className={`canvas-layer ${selectedLayerIds.includes(layer.id) ? "selected-layer" : ""}`}
               style={{
                 position: "absolute",
                 left: layer.x,
                 top: layer.y,
-                // Use backgroundWidth/Height for text with background, otherwise auto
                 width: layer.type === "text" 
                   ? (layer.backgroundWidth ? `${layer.backgroundWidth}px` : "auto")
                   : `${layer.width}px`,
@@ -2999,7 +2992,7 @@ const handleWheel = (e: React.WheelEvent) => {
                   )}
             
                   {/* Crop Handles - show at edges of the layer frame */}
-                  {selectedLayerId === layer.id && !layer.locked && (layer.type === 'image') && (
+                  {selectedLayerIds.length === 1 && selectedLayerIds[0] === layer.id && !layer.locked && layer.type === 'image' && (
                     <>
                       {/* Top edge */}
                       <div 
@@ -3114,9 +3107,9 @@ const handleWheel = (e: React.WheelEvent) => {
                     </>
                   )}                 
                   
-                  {/* Resize & Rotate Handles */}
-                  {selectedLayerId === layer.id && !layer.locked && (
+                  {selectedLayerIds.length === 1 && selectedLayerIds[0] === layer.id && !layer.locked && (
                     <>
+                      {/* Rotation and resize handles */}
                       <div className="rotation-line" />
                       <div
                         className="rotation-handle"
@@ -3291,8 +3284,20 @@ const handleWheel = (e: React.WheelEvent) => {
                   .map((layer) => (
                     <div
                       key={layer.id}
-                      className={`layer-item ${selectedLayerId === layer.id ? "selected" : ""}`}
-                      onClick={() => setSelectedLayerId(layer.id)}
+                      className={`layer-item ${selectedLayerIds.includes(layer.id) ? "selected" : ""}`}
+                      onClick={(e) => {
+                        if (e.shiftKey) {
+                          setSelectedLayerIds(prev => {
+                            if (prev.includes(layer.id)) {
+                              return prev.filter(id => id !== layer.id);
+                            } else {
+                              return [...prev, layer.id];
+                            }
+                          });
+                        } else {
+                          setSelectedLayerIds([layer.id]);
+                        }
+                      }}
                     >
                       <div className="layer-info">
                         <span>{layer.type}</span>
