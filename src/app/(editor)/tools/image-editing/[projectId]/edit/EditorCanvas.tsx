@@ -464,52 +464,65 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
     return `${width / divisor}:${height / divisor}`;
   };  
 
-const handleWheel = (e: React.WheelEvent) => {
-  // DO NOT call e.preventDefault() here — React doesn't allow it in passive handlers
-  e.stopPropagation();
-
-  if (e.ctrlKey || e.metaKey) {
-    const delta = e.deltaY * -0.01;
-    const newScale = Math.min(Math.max(0.1, scale + delta), 3);
-
-    if (canvasRef.current) {
-      const rect = canvasRef.current.getBoundingClientRect();
-      const mouseX = e.clientX - rect.left;
-      const mouseY = e.clientY - rect.top;
-
-      const pointX = (mouseX - panOffset.x) / scale;
-      const pointY = (mouseY - panOffset.y) / scale;
-
-      const newPanX = mouseX - pointX * newScale;
-      const newPanY = mouseY - pointY * newScale;
-
-      setPanOffset({ x: newPanX, y: newPanY });
+  const handleWheel = (e: React.WheelEvent) => {
+    // DO NOT call e.preventDefault() here — React doesn't allow it in passive handlers
+    e.stopPropagation();
+  
+    if (e.ctrlKey || e.metaKey) {
+      const delta = e.deltaY * -0.01;
+      const newScale = Math.min(Math.max(0.1, scale + delta), 3);
+  
+      if (canvasRef.current) {
+        const rect = canvasRef.current.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+  
+        const pointX = (mouseX - panOffset.x) / scale;
+        const pointY = (mouseY - panOffset.y) / scale;
+  
+        const newPanX = mouseX - pointX * newScale;
+        const newPanY = mouseY - pointY * newScale;
+  
+        setPanOffset({ x: newPanX, y: newPanY });
+      }
+  
+      setScale(newScale);
+    } else {
+      setPanOffset({
+        x: panOffset.x - e.deltaX,
+        y: panOffset.y - e.deltaY
+      });
     }
-
-    setScale(newScale);
-  } else {
-    setPanOffset({
-      x: panOffset.x - e.deltaX,
-      y: panOffset.y - e.deltaY
-    });
-  }
-};
+  };
 
   const handleResizeMouseDown = (e: React.MouseEvent, layerId: string, handle: string) => {
     e.stopPropagation();
     const layer = layers.find((l) => l.id === layerId);
     if (!layer || layer.locked) return;
   
-    setResizeHandle(handle);
-    setResizeStartState({
-      x: layer.x,
-      y: layer.y,
-      width: layer.width,
-      height: layer.height,
-      mouseX: e.clientX,
-      mouseY: e.clientY,
-    });
-  };  
+    // For text layers, store fontSize for resizing
+    if (layer.type === 'text') {
+      setResizeHandle(handle);
+      setResizeStartState({
+        x: layer.x,
+        y: layer.y,
+        width: layer.fontSize || 32, // Store fontSize as width for text
+        height: layer.fontSize || 32, // Store fontSize as height for text
+        mouseX: e.clientX,
+        mouseY: e.clientY,
+      });
+    } else {
+      setResizeHandle(handle);
+      setResizeStartState({
+        x: layer.x,
+        y: layer.y,
+        width: layer.width,
+        height: layer.height,
+        mouseX: e.clientX,
+        mouseY: e.clientY,
+      });
+    }
+  }; 
 
   const handleRotationMouseDown = (e: React.MouseEvent, layerId: string) => {
     e.stopPropagation();
@@ -1223,6 +1236,40 @@ const handleWheel = (e: React.WheelEvent) => {
       const deltaX = (e.clientX - resizeStartState.mouseX) / scale;
       const deltaY = (e.clientY - resizeStartState.mouseY) / scale;
     
+      // Special handling for TEXT layers - resize font size
+      if (layer.type === 'text') {
+        const rotated = rotatePoint(deltaX, deltaY, -layer.rotation);
+        const rotatedDeltaX = rotated.x;
+        const rotatedDeltaY = rotated.y;
+    
+        const startFontSize = resizeStartState.width; // We stored fontSize in width
+        let fontSizeDelta = 0;
+    
+        // Calculate font size change based on corner handle
+        switch (resizeHandle) {
+          case 'nw':
+            fontSizeDelta = -Math.max(rotatedDeltaX, rotatedDeltaY);
+            break;
+          case 'ne':
+            fontSizeDelta = Math.max(rotatedDeltaX, -rotatedDeltaY);
+            break;
+          case 'sw':
+            fontSizeDelta = Math.max(-rotatedDeltaX, rotatedDeltaY);
+            break;
+          case 'se':
+            fontSizeDelta = Math.max(rotatedDeltaX, rotatedDeltaY);
+            break;
+        }
+    
+        const newFontSize = Math.max(12, Math.round(startFontSize + fontSizeDelta * 0.5));
+        
+        updateLayer(selectedLayerIds[0], {
+          fontSize: newFontSize
+        });
+        return;
+      }
+    
+      // Original handling for IMAGE and SHAPE layers
       const rotated = rotatePoint(deltaX, deltaY, -layer.rotation);
       const rotatedDeltaX = rotated.x;
       const rotatedDeltaY = rotated.y;
@@ -1266,9 +1313,9 @@ const handleWheel = (e: React.WheelEvent) => {
           const startScale = layer.scale;
           const naturalWidth = layer.width / startScale;
           const naturalHeight = layer.height / startScale;
-  
+    
           const newScale = newWidth / naturalWidth;
-  
+    
           updateLayer(selectedLayerIds[0], {
             x: newX,
             y: newY,
@@ -1991,11 +2038,11 @@ const handleWheel = (e: React.WheelEvent) => {
                             value={selectedLayer.fontFamily}
                             onChange={(e) => updateLayer(selectedLayer.id, { fontFamily: e.target.value })}
                           >
-                            <option value="Arial">Arial</option>
-                            <option value="Times New Roman">Times New Roman</option>
-                            <option value="Courier New">Courier New</option>
-                            <option value="Georgia">Georgia</option>
-                            <option value="Verdana">Verdana</option>
+                            {googleFonts.map((font) => (
+                              <option key={font} value={font} style={{ fontFamily: font }}>
+                                {font}
+                              </option>
+                            ))}
                           </select>
                         </div>
         
@@ -2142,6 +2189,15 @@ const handleWheel = (e: React.WheelEvent) => {
                           />
                           {(selectedLayer.backgroundOpacity ?? 0) > 0 && (
                             <>
+                              <div className="property-group">
+                                <label>Background Color</label>
+                                <input
+                                  type="color"
+                                  value={selectedLayer.backgroundColor || "#FFFFFF"}
+                                  onChange={(e) => updateLayer(selectedLayer.id, { backgroundColor: e.target.value })}
+                                />
+                              </div>
+                                                          
                               <div className="property-group">
                                 <label>Background Border Color</label>
                                 <input
