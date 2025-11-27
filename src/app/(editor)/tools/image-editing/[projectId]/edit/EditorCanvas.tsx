@@ -1252,29 +1252,39 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
         const rotated = rotatePoint(deltaX, deltaY, -layer.rotation);
         const rotatedDeltaX = rotated.x;
         const rotatedDeltaY = rotated.y;
-    
+      
         const startFontSize = resizeStartState.width;
         let fontSizeDelta = 0;
-    
+        let newX = layer.x;
+        let newY = layer.y;
+      
         switch (resizeHandle) {
           case 'nw':
             fontSizeDelta = -Math.max(rotatedDeltaX, rotatedDeltaY);
+            // Move position opposite to resize direction
+            const nwScaleFactor = fontSizeDelta / startFontSize;
+            newX = resizeStartState.x - (rotatedDeltaX * 0.5);
+            newY = resizeStartState.y - (rotatedDeltaY * 0.5);
             break;
           case 'ne':
             fontSizeDelta = Math.max(rotatedDeltaX, -rotatedDeltaY);
+            newY = resizeStartState.y + (rotatedDeltaY * 0.5);
             break;
           case 'sw':
             fontSizeDelta = Math.max(-rotatedDeltaX, rotatedDeltaY);
+            newX = resizeStartState.x + (rotatedDeltaX * 0.5);
             break;
           case 'se':
             fontSizeDelta = Math.max(rotatedDeltaX, rotatedDeltaY);
             break;
         }
-    
+      
         const newFontSize = Math.max(12, Math.round(startFontSize + fontSizeDelta * 0.5));
-        
+
         updateLayer(selectedLayerIds[0], {
-          fontSize: newFontSize
+          fontSize: newFontSize,
+          x: newX,
+          y: newY
         });
         return;
       }
@@ -2826,6 +2836,7 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
                 transform: `rotate(${layer.rotation}deg)`,
                 cursor: layer.locked ? "not-allowed" : "move",
                 pointerEvents: layer.locked ? "none" : "auto",
+                overflow: "visible",
               }}
               onMouseDown={(e) => handleMouseDown(e, layer.id)}
             >
@@ -2905,15 +2916,17 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
                                        layer.verticalAlign === "bottom" ? "flex-end" : "center",
                             justifyContent: layer.textAlign === "center" ? "center" : 
                                            layer.textAlign === "right" ? "flex-end" : "flex-start",
-                            whiteSpace: layer.wordWrap ? "pre-wrap" : "nowrap",
+                            whiteSpace: "nowrap",
                             width: layer.backgroundWidth ? `${layer.backgroundWidth}px` : "auto",
                             height: layer.backgroundHeight ? `${layer.backgroundHeight}px` : "auto",
-                            minWidth: "fit-content",
-                            minHeight: "fit-content",
+                            minWidth: "max-content",
+                            minHeight: "max-content",
                             pointerEvents: "auto",
                             cursor: selectedLayerId === layer.id ? "text" : "inherit",
                             position: "relative",
                             userSelect: editingLayerId === layer.id ? "text" : "none",
+                            overflow: "visible",
+                            flexShrink: 0,
                           }}
                         >
                           {/* Background layer */}
