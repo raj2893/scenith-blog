@@ -253,6 +253,13 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
       });
   }, []); 
 
+  useEffect(() => {
+    if (editingLayerId && textInputRef.current) {
+      textInputRef.current.focus();
+      textInputRef.current.select();
+    }
+  }, [editingLayerId]);  
+
   const saveToHistory = useCallback((newLayers: Layer[]) => {
     const newHistory = history.slice(0, historyIndex + 1);
     newHistory.push(JSON.stringify(newLayers));
@@ -852,10 +859,12 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
             height: updates.height !== undefined ? roundTo2(updates.height) : layer.height,
             rotation: updates.rotation !== undefined ? roundTo2(updates.rotation) : layer.rotation,
             opacity: updates.opacity !== undefined ? roundTo2(updates.opacity) : layer.opacity,
-            cropTop: updates.cropTop !== undefined ? roundTo2(updates.cropTop) : layer.cropTop ?? 0,
-            cropRight: updates.cropRight !== undefined ? roundTo2(updates.cropRight) : layer.cropRight ?? 0,
-            cropBottom: updates.cropBottom !== undefined ? roundTo2(updates.cropBottom) : layer.cropBottom ?? 0,
-            cropLeft: updates.cropLeft !== undefined ? roundTo2(updates.cropLeft) : layer.cropLeft ?? 0,
+            ...(layer.type === 'image' && {
+              cropTop: updates.cropTop !== undefined ? roundTo2(updates.cropTop) : layer.cropTop ?? 0,
+              cropRight: updates.cropRight !== undefined ? roundTo2(updates.cropRight) : layer.cropRight ?? 0,
+              cropBottom: updates.cropBottom !== undefined ? roundTo2(updates.cropBottom) : layer.cropBottom ?? 0,
+              cropLeft: updates.cropLeft !== undefined ? roundTo2(updates.cropLeft) : layer.cropLeft ?? 0,
+            }),
             // Integers stay as-is
             fontSize: updates.fontSize ?? layer.fontSize,
             strokeWidth: updates.strokeWidth ?? layer.strokeWidth,
@@ -1087,11 +1096,11 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
       setPanStart({ x: e.clientX - panOffset.x, y: e.clientY - panOffset.y });
       return;
     }
-  
+
     if (editingLayerId && layerId === editingLayerId) {
       return;
-    }
-  
+    }  
+
     if (layerId) {
       const layer = layers.find((l) => l.id === layerId);
       if (!layer || layer.locked) return;
@@ -1244,10 +1253,9 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
         const rotatedDeltaX = rotated.x;
         const rotatedDeltaY = rotated.y;
     
-        const startFontSize = resizeStartState.width; // We stored fontSize in width
+        const startFontSize = resizeStartState.width;
         let fontSizeDelta = 0;
     
-        // Calculate font size change based on corner handle
         switch (resizeHandle) {
           case 'nw':
             fontSizeDelta = -Math.max(rotatedDeltaX, rotatedDeltaY);
@@ -1312,20 +1320,22 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
     
       if (newWidth > 20 && newHeight > 20) {
         if (layer.type === 'image' && layer.scale !== undefined) {
-          const startScale = layer.scale;
-          const naturalWidth = layer.width / startScale;
-          const naturalHeight = layer.height / startScale;
+          const img = document.querySelector(`img[src="${layer.src}"]`) as HTMLImageElement;
+          if (!img) return;
     
-          const newScale = newWidth / naturalWidth;
-    
+          const naturalWidth = img.naturalWidth;
+          const cropHoriz = (layer.cropLeft ?? 0) + (layer.cropRight ?? 0);
+          const currentVisibleWidth = naturalWidth * layer.scale * (100 - cropHoriz) / 100;
+          const newScale = (newWidth / currentVisibleWidth) * layer.scale;
+        
+          // Only update position and scale, no crop values here
           updateLayer(selectedLayerIds[0], {
             x: newX,
             y: newY,
             scale: newScale,
-            width: roundTo2(naturalWidth * newScale),
-            height: roundTo2(naturalHeight * newScale),
           });
         } else {
+          // For shapes, only update dimensions
           updateLayer(selectedLayerIds[0], {
             x: newX,
             y: newY,
@@ -2865,9 +2875,15 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
                         // Display mode
                         <div
                           onClick={(e) => {
-                            if (selectedLayerId === layer.id) {
+                            if (selectedLayerIds.includes(layer.id) && selectedLayerIds.length === 1) {
                               e.stopPropagation();
                               setEditingLayerId(layer.id);
+                              setTimeout(() => {
+                                if (textInputRef.current) {
+                                  textInputRef.current.focus();
+                                  textInputRef.current.select();
+                                }
+                              }, 0);
                             }
                           }}
                           onMouseDown={(e) => {
