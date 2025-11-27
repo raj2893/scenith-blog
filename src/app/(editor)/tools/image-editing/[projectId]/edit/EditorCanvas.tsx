@@ -715,6 +715,14 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
   };
 
   const addTextLayer = () => {
+    // Calculate default background dimensions upfront
+    const fontSize = 32;
+    const text = "New Text";
+    const estimatedTextWidth = text.length * fontSize * 0.6;
+    const estimatedTextHeight = fontSize * 1.5;
+    const defaultBackgroundWidth = estimatedTextWidth + 20;
+    const defaultBackgroundHeight = estimatedTextHeight + 10;
+  
     const newLayer: Layer = {
       id: `text-${Date.now()}`,
       type: "text",
@@ -740,6 +748,8 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
       outlineColor: "#000000",
       backgroundOpacity: 0,
       backgroundColor: "#FFFFFF",
+      backgroundWidth: defaultBackgroundWidth,  // ADD THIS
+      backgroundHeight: defaultBackgroundHeight, // ADD THIS
       verticalAlign: "middle",
       wordWrap: true,
       curveRadius: 0,      
@@ -2049,7 +2059,20 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
                           <label>Text</label>
                           <textarea
                             value={selectedLayer.text}
-                            onChange={(e) => updateLayer(selectedLayer.id, { text: e.target.value })}
+                            onChange={(e) => {
+                              const newText = e.target.value;
+                              const fontSize = selectedLayer.fontSize || 32;
+                              const estimatedTextWidth = newText.length * fontSize * 0.6;
+                              const estimatedTextHeight = fontSize * 1.5;
+
+                              updateLayer(selectedLayer.id, { 
+                                text: newText,
+                                ...(selectedLayer.backgroundWidth ? {
+                                  backgroundWidth: Math.max(estimatedTextWidth + 20, 50),
+                                  backgroundHeight: Math.max(estimatedTextHeight + 10, 30)
+                                } : {})
+                              });
+                            }}
                             rows={3}
                           />
                         </div>
@@ -2076,7 +2099,21 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
                             max="200"
                             step="1"
                             value={selectedLayer.fontSize}
-                            onChange={(e) => updateLayer(selectedLayer.id, { fontSize: parseInt(e.target.value, 10) })}
+                            onChange={(e) => {
+                              const newFontSize = parseInt(e.target.value, 10);
+                              const text = selectedLayer.text || "";
+                              const estimatedTextWidth = text.length * newFontSize * 0.6;
+                              const estimatedTextHeight = newFontSize * 1.5;
+                              
+                              updateLayer(selectedLayer.id, { 
+                                fontSize: newFontSize,
+                                // Update background dimensions if they exist
+                                ...(selectedLayer.backgroundWidth ? {
+                                  backgroundWidth: Math.max(estimatedTextWidth + 20, 50),
+                                  backgroundHeight: Math.max(estimatedTextHeight + 10, 30)
+                                } : {})
+                              });
+                            }}
                           />
                         </div>
         
@@ -2193,20 +2230,7 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
                             step="0.01"
                             value={selectedLayer.backgroundOpacity || 0}
                             onChange={(e) => {
-                              const newOpacity = parseFloat(e.target.value);
-                              const updates: Partial<Layer> = { backgroundOpacity: newOpacity };
-
-                              // If enabling background for first time, set minimum dimensions
-                              if (newOpacity > 0 && (!selectedLayer.backgroundWidth || !selectedLayer.backgroundHeight)) {
-                                const fontSize = selectedLayer.fontSize || 32;
-                                const text = selectedLayer.text || "";
-                                const minWidth = Math.max(text.length * fontSize * 0.6 + 20, 100);
-                                const minHeight = Math.max(fontSize * 1.5 + 10, 50);
-                                updates.backgroundWidth = minWidth;
-                                updates.backgroundHeight = minHeight;
-                              }
-
-                              updateLayer(selectedLayer.id, updates);
+                              updateLayer(selectedLayer.id, { backgroundOpacity: parseFloat(e.target.value) });
                             }}
                           />
                           {(selectedLayer.backgroundOpacity ?? 0) > 0 && (
