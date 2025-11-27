@@ -208,6 +208,22 @@ html, body {
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
+  position: relative;
+}
+
+.layer-item.dragging {
+  opacity: 0.5;
+  cursor: grabbing !important;
+}
+
+.layer-item.drag-over {
+  border-top: 3px solid #3b82f6;
+}
+
+.layer-preview-container {
+  margin-left: auto;
+  margin-right: 8px;
+  flex-shrink: 0;
 }
 
 .layer-item:hover {
@@ -225,6 +241,23 @@ html, body {
   flex-direction: column;
   gap: 4px;
   margin-bottom: 8px;
+  flex: 1;
+  min-width: 0;  
+}
+
+.layer-item[draggable="true"]:active {
+  cursor: grabbing;
+  opacity: 0.8;
+}
+
+.layer-item .layer-preview-container img,
+.layer-item .layer-preview-container > div {
+  transition: transform 0.2s ease;
+}
+
+.layer-item:hover .layer-preview-container img,
+.layer-item:hover .layer-preview-container > div {
+  transform: scale(1.05);
 }
 
 .layer-info span {

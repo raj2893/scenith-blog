@@ -236,6 +236,8 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
   const [clipboardAction, setClipboardAction] = useState<'copy' | 'cut' | null>(null);
   const [selectedLayerIds, setSelectedLayerIds] = useState<string[]>([]);
   const [showPagesPanel, setShowPagesPanel] = useState(true);
+  const [draggedLayerId, setDraggedLayerId] = useState<string | null>(null);
+  const [dragOverLayerId, setDragOverLayerId] = useState<string | null>(null);  
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -1740,6 +1742,163 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
     updateLayer(layerId, { filters: undefined });
   };  
 
+  const handleDragStart = (e: React.DragEvent, layerId: string) => {
+    setDraggedLayerId(layerId);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+  
+  const handleDragOver = (e: React.DragEvent, layerId: string) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    setDragOverLayerId(layerId);
+  };
+  
+  const handleDragLeave = () => {
+    setDragOverLayerId(null);
+  };
+  
+  const handleDrop = (e: React.DragEvent, targetLayerId: string) => {
+    e.preventDefault();
+    if (!draggedLayerId || draggedLayerId === targetLayerId) {
+      setDraggedLayerId(null);
+      setDragOverLayerId(null);
+      return;
+    }
+  
+    const draggedIndex = layers.findIndex(l => l.id === draggedLayerId);
+    const targetIndex = layers.findIndex(l => l.id === targetLayerId);
+  
+    if (draggedIndex === -1 || targetIndex === -1) return;
+  
+    const updatedLayers = [...layers];
+    const [draggedLayer] = updatedLayers.splice(draggedIndex, 1);
+    updatedLayers.splice(targetIndex, 0, draggedLayer);
+  
+    // Update zIndex for all layers
+    updatedLayers.forEach((layer, idx) => {
+      layer.zIndex = idx;
+    });
+  
+    setLayers(updatedLayers);
+    saveToHistory(updatedLayers);
+    setDraggedLayerId(null);
+    setDragOverLayerId(null);
+  };
+  
+  const renderLayerPreview = (layer: Layer) => {
+    if (layer.type === 'text') {
+      return (
+        <div 
+          style={{
+            width: '40px',
+            height: '40px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '10px',
+            fontFamily: layer.fontFamily,
+            color: layer.color,
+            backgroundColor: '#f8f9fa',
+            borderRadius: '4px',
+            overflow: 'hidden',
+            textAlign: 'center',
+            padding: '2px',
+            lineHeight: '1.2',
+          }}
+        >
+          {layer.text?.substring(0, 15) || 'T'}
+        </div>
+      );
+    }
+    
+    if (layer.type === 'image' && layer.src) {
+      return (
+        <div 
+          style={{
+            width: '40px',
+            height: '40px',
+            borderRadius: '4px',
+            overflow: 'hidden',
+            backgroundColor: '#f8f9fa',
+            ...getFilterStyle(layer.filters),
+          }}
+        >
+          <img 
+            src={layer.src} 
+            alt="preview"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+          />
+        </div>
+      );
+    }
+    
+    if (layer.type === 'shape') {
+      return (
+        <div 
+          style={{
+            width: '40px',
+            height: '40px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#f8f9fa',
+            borderRadius: '4px',
+          }}
+        >
+          <svg width="32" height="32" viewBox="0 0 100 100">
+            {layer.shape === "rectangle" && (
+              <rect
+                x="10"
+                y="20"
+                width="80"
+                height="60"
+                fill={layer.fill}
+                stroke={layer.stroke}
+                strokeWidth={layer.strokeWidth}
+                rx={layer.borderRadius}
+              />
+            )}
+            {layer.shape === "circle" && (
+              <circle
+                cx="50"
+                cy="50"
+                r="35"
+                fill={layer.fill}
+                stroke={layer.stroke}
+                strokeWidth={layer.strokeWidth}
+              />
+            )}
+            {layer.shape === "ellipse" && (
+              <ellipse
+                cx="50"
+                cy="50"
+                rx="40"
+                ry="25"
+                fill={layer.fill}
+                stroke={layer.stroke}
+                strokeWidth={layer.strokeWidth}
+              />
+            )}
+            {layer.shape === "triangle" && (
+              <polygon
+                points="50,15 85,85 15,85"
+                fill={layer.fill}
+                stroke={layer.stroke}
+                strokeWidth={layer.strokeWidth}
+              />
+            )}
+          </svg>
+        </div>
+      );
+    }
+    
+    return null;
+  };  
+
   return (
     <div className="editor-container">
       {/* Top Toolbar */}
@@ -2104,7 +2263,7 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
                               const text = selectedLayer.text || "";
                               const estimatedTextWidth = text.length * newFontSize * 0.6;
                               const estimatedTextHeight = newFontSize * 1.5;
-                              
+
                               updateLayer(selectedLayer.id, { 
                                 fontSize: newFontSize,
                                 // Update background dimensions if they exist
@@ -3393,7 +3552,14 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
                   .map((layer) => (
                     <div
                       key={layer.id}
-                      className={`layer-item ${selectedLayerIds.includes(layer.id) ? "selected" : ""}`}
+                      className={`layer-item ${selectedLayerIds.includes(layer.id) ? "selected" : ""} ${
+                        dragOverLayerId === layer.id ? "drag-over" : ""
+                      } ${draggedLayerId === layer.id ? "dragging" : ""}`}
+                      draggable={!layer.locked}
+                      onDragStart={(e) => handleDragStart(e, layer.id)}
+                      onDragOver={(e) => handleDragOver(e, layer.id)}
+                      onDragLeave={handleDragLeave}
+                      onDrop={(e) => handleDrop(e, layer.id)}
                       onClick={(e) => {
                         if (e.shiftKey) {
                           setSelectedLayerIds(prev => {
@@ -3407,11 +3573,20 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
                           setSelectedLayerIds([layer.id]);
                         }
                       }}
+                      style={{
+                        cursor: layer.locked ? 'not-allowed' : 'grab',
+                      }}
                     >
                       <div className="layer-info">
                         <span>{layer.type}</span>
                         {layer.text && <small>{layer.text.substring(0, 20)}</small>}
                       </div>
+                      
+                      {/* Layer Preview */}
+                      <div className="layer-preview-container">
+                        {renderLayerPreview(layer)}
+                      </div>
+                      
                       <div className="layer-controls">
                         <button onClick={(e) => { e.stopPropagation(); updateLayer(layer.id, { visible: !layer.visible }); }}>
                           {layer.visible ? <FaEye /> : <FaEyeSlash />}
