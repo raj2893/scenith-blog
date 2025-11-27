@@ -19,6 +19,9 @@ import {
   FaEyeSlash,
   FaLock,
   FaUnlock,
+  FaChevronDown,
+  FaChevronUp,
+  FaTrashAlt,
 } from "react-icons/fa";
 import { API_BASE_URL } from "@/app/config";
 
@@ -232,6 +235,7 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
   const [clipboard, setClipboard] = useState<Layer[] | null>(null);
   const [clipboardAction, setClipboardAction] = useState<'copy' | 'cut' | null>(null);
   const [selectedLayerIds, setSelectedLayerIds] = useState<string[]>([]);
+  const [showPagesPanel, setShowPagesPanel] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -465,7 +469,6 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
   };  
 
   const handleWheel = (e: React.WheelEvent) => {
-    // DO NOT call e.preventDefault() here — React doesn't allow it in passive handlers
     e.stopPropagation();
   
     if (e.ctrlKey || e.metaKey) {
@@ -474,14 +477,15 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
   
       if (canvasRef.current) {
         const rect = canvasRef.current.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
-  
-        const pointX = (mouseX - panOffset.x) / scale;
-        const pointY = (mouseY - panOffset.y) / scale;
-  
-        const newPanX = mouseX - pointX * newScale;
-        const newPanY = mouseY - pointY * newScale;
+        
+        // Get the current position of canvas center on screen
+        const currentCanvasCenterX = panOffset.x + (canvasWidth * scale) / 2;
+        const currentCanvasCenterY = panOffset.y + (canvasHeight * scale) / 2;
+        
+        // Calculate where the canvas center should be after scaling
+        // to keep it in the same screen position
+        const newPanX = currentCanvasCenterX - (canvasWidth * newScale) / 2;
+        const newPanY = currentCanvasCenterY - (canvasHeight * newScale) / 2;
   
         setPanOffset({ x: newPanX, y: newPanY });
       }
@@ -1162,16 +1166,13 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
       const deltaX = (e.clientX - cropStartState.mouseX) / scale;
       const deltaY = (e.clientY - cropStartState.mouseY) / scale;
     
-      const naturalWidth = layer.width;
-      const naturalHeight = layer.height;
-  
-      if (layer.type === 'image' && layer.scale) {
-        const currentCropHoriz = (layer.cropLeft ?? 0) + (layer.cropRight ?? 0);
-        const currentCropVert = (layer.cropTop ?? 0) + (layer.cropBottom ?? 0);
-        const naturalWidth = layer.width / ((100 - currentCropHoriz) / 100);
-        const naturalHeight = layer.height / ((100 - currentCropVert) / 100);
-      }
+      // Calculate natural dimensions (original image size before any crop)
+      const currentCropHoriz = (layer.cropLeft ?? 0) + (layer.cropRight ?? 0);
+      const currentCropVert = (layer.cropTop ?? 0) + (layer.cropBottom ?? 0);
+      const naturalWidth = layer.width / ((100 - currentCropHoriz) / 100);
+      const naturalHeight = layer.height / ((100 - currentCropVert) / 100);
     
+      // Convert pixel delta to percentage of natural dimensions
       const deltaPercentX = (deltaX / naturalWidth) * 100;
       const deltaPercentY = (deltaY / naturalHeight) * 100;
     
@@ -1185,7 +1186,7 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
       switch (cropHandle) {
         case 'n':
           newCropTop = Math.max(0, Math.min(95, (layer.cropTop ?? 0) + deltaPercentY));
-          newY = layer.y + deltaY;
+          newY = cropStartState.y + deltaY;
           break;
         case 's':
           newCropBottom = Math.max(0, Math.min(95, (layer.cropBottom ?? 0) - deltaPercentY));
@@ -1195,13 +1196,13 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
           break;
         case 'w':
           newCropLeft = Math.max(0, Math.min(95, (layer.cropLeft ?? 0) + deltaPercentX));
-          newX = layer.x + deltaX;
+          newX = cropStartState.x + deltaX;
           break;
       }
     
       const totalVertical = newCropTop + newCropBottom;
       const totalHorizontal = newCropLeft + newCropRight;
-  
+    
       if (totalVertical < 95 && totalHorizontal < 95) {
         const newVisibleWidth = naturalWidth * (100 - newCropLeft - newCropRight) / 100;
         const newVisibleHeight = naturalHeight * (100 - newCropTop - newCropBottom) / 100;
@@ -1216,7 +1217,8 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
           x: newX,
           y: newY,
         });
-  
+    
+        // IMPORTANT: Update cropStartState for continuous dragging
         setCropStartState({
           x: newX,
           y: newY,
@@ -2707,7 +2709,17 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
           )}
         </div>  
 
-        <div className="pages-panel">
+        {/* Collapsible Pages Panel */}
+        <div className={`pages-panel ${showPagesPanel ? '' : 'hidden'}`}>
+          {/* Toggle button (always visible) */}
+          <button
+            className="pages-toggle"
+            onClick={() => setShowPagesPanel(!showPagesPanel)}
+            title={showPagesPanel ? 'Hide pages' : 'Show pages'}
+          >
+            {showPagesPanel ? <FaChevronDown size={19} /> : <FaChevronUp size={19} />}
+          </button>
+
           <div className="pages-list">
             {pages.map((page, index) => (
               <div
@@ -2732,24 +2744,12 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
                       e.stopPropagation();
                       deletePage(index);
                     }}
-                    style={{
-                      position: 'absolute',
-                      top: '2px',
-                      right: '2px',
-                      width: '16px',
-                      height: '16px',
-                      padding: 0,
-                      background: '#ef4444',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '50%',
-                      fontSize: '10px',
-                      cursor: 'pointer'
-                    }}
+                    className="delete-page-btn"
+                    title="Delete page"
                   >
-                    ×
+                    <FaTrashAlt size={11} />
                   </button>
-                )}
+                )}   
               </div>
             ))}
           </div>

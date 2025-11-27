@@ -1182,6 +1182,71 @@ body {
   opacity: 0.5;
 }
 
+.pages-panel {
+  position: fixed;
+  bottom: 0;
+  left: 340px;
+  right: 70px;
+  height: 100px;
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 20px;
+  z-index: 50;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(0);
+}
+
+.pages-panel.hidden {
+  transform: translateY(100%);
+}
+
+/* tiny toggle button that sits on the top border */
+.pages-toggle {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 30px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-bottom: none;
+  border-radius: 12px 12px 0 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+  z-index: 51;
+}
+
+.delete-page-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  background: rgba(239, 68, 68, 0.9);   /* red-500 with slight transparency */
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.delete-page-btn:hover {
+  background: #dc2626;   /* red-600 */
+  transform: scale(1.1);
+}
+
 @keyframes slideIn {
   from {
     transform: translateX(400px);
