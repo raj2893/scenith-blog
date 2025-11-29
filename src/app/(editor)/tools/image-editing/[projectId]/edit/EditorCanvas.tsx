@@ -237,7 +237,9 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
   const [selectedLayerIds, setSelectedLayerIds] = useState<string[]>([]);
   const [showPagesPanel, setShowPagesPanel] = useState(true);
   const [draggedLayerId, setDraggedLayerId] = useState<string | null>(null);
-  const [dragOverLayerId, setDragOverLayerId] = useState<string | null>(null);  
+  const [dragOverLayerId, setDragOverLayerId] = useState<string | null>(null);
+  const [isRemovingBg, setIsRemovingBg] = useState(false);
+  const [bgRemovalProgress, setBgRemovalProgress] = useState<string>('');   
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -1344,17 +1346,28 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
         if (layer.type === 'image' && layer.scale !== undefined) {
           const img = document.querySelector(`img[src="${layer.src}"]`) as HTMLImageElement;
           if (!img) return;
-    
-          const naturalWidth = img.naturalWidth;
-          const cropHoriz = (layer.cropLeft ?? 0) + (layer.cropRight ?? 0);
-          const currentVisibleWidth = naturalWidth * layer.scale * (100 - cropHoriz) / 100;
-          const newScale = (newWidth / currentVisibleWidth) * layer.scale;
         
-          // Only update position and scale, no crop values here
+          const naturalWidth = img.naturalWidth;
+          const naturalHeight = img.naturalHeight;
+
+          // Calculate current crop percentages
+          const cropHoriz = (layer.cropLeft ?? 0) + (layer.cropRight ?? 0);
+          const cropVert = (layer.cropTop ?? 0) + (layer.cropBottom ?? 0);
+
+          // Calculate the scale needed to achieve the new dimensions
+          // while maintaining the current crop percentages
+          const newScaleX = newWidth / (naturalWidth * (100 - cropHoriz) / 100);
+          const newScaleY = newHeight / (naturalHeight * (100 - cropVert) / 100);
+
+          // Use the average scale to maintain aspect ratio
+          const newScale = (newScaleX + newScaleY) / 2;
+        
           updateLayer(selectedLayerIds[0], {
             x: newX,
             y: newY,
             scale: newScale,
+            width: newWidth,
+            height: newHeight,
           });
         } else {
           // For shapes, only update dimensions
@@ -1897,6 +1910,95 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
     }
     
     return null;
+  }; 
+  
+  const handleRemoveBackground = async (layerId: string) => {
+    const layer = layers.find(l => l.id === layerId);
+    if (!layer || layer.type !== 'image' || !layer.src) {
+      setError("Please select an image layer");
+      return;
+    }
+  
+    // Extract asset ID from the image URL
+    const assetMatch = layer.src.match(/\/assets\/([^\/]+)$/);
+    if (!assetMatch) {
+      setError("Cannot identify image asset");
+      return;
+    }
+  
+    // Find the asset ID from uploadedImages
+    try {
+      setIsRemovingBg(true);
+      setBgRemovalProgress('Processing...');
+      
+      // Get all assets to find the ID
+      const token = localStorage.getItem("token");
+      const assetsResponse = await axios.get(`${API_BASE_URL}/api/image-editor/assets?type=IMAGE`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      
+      const matchingAsset = assetsResponse.data.find((asset: any) => asset.cdnUrl === layer.src);
+      if (!matchingAsset) {
+        throw new Error("Asset not found");
+      }
+  
+      setBgRemovalProgress('Removing background...');
+      
+      // Call remove background API
+      const response = await axios.post(
+        `${API_BASE_URL}/api/image-editor/assets/${matchingAsset.id}/remove-background`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+  
+      const newAsset = response.data;
+      
+      // Load the new image to get dimensions
+      const img = new Image();
+      img.onload = () => {
+        // Remove old layer
+        const updatedLayers = layers.filter(l => l.id !== layerId);
+        
+        // Add new layer with removed background - maintaining the OLD layer's dimensions
+        const newLayer = createImageLayer(newAsset.cdnUrl, img.naturalWidth, img.naturalHeight);
+        newLayer.x = layer.x;
+        newLayer.y = layer.y;
+        // Copy the display dimensions from the old layer
+        newLayer.width = layer.width;
+        newLayer.height = layer.height;
+        newLayer.scale = layer.scale;
+        // Also copy crop values if any
+        newLayer.cropTop = layer.cropTop;
+        newLayer.cropRight = layer.cropRight;
+        newLayer.cropBottom = layer.cropBottom;
+        newLayer.cropLeft = layer.cropLeft;
+        // Copy rotation and opacity
+        newLayer.rotation = layer.rotation;
+        newLayer.opacity = layer.opacity;
+        
+        const finalLayers = [...updatedLayers, newLayer];
+        setLayers(finalLayers);
+        setSelectedLayerId(newLayer.id);
+        saveToHistory(finalLayers);
+        
+        // Add to uploaded images
+        setUploadedImages(prev => [...prev, newAsset.cdnUrl]);
+        
+        setSuccess("Background removed successfully!");
+        setTimeout(() => setSuccess(null), 2000);
+      };
+      img.onerror = () => {
+        setError("Failed to load processed image");
+      };
+      img.src = newAsset.cdnUrl;
+      
+    } catch (err: any) {
+      console.error("Background removal error:", err);
+      setError(err.response?.data?.message || "Failed to remove background");
+    } finally {
+      setIsRemovingBg(false);
+      setBgRemovalProgress('');
+    }
   };  
 
   return (
@@ -2100,102 +2202,132 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
 
                     {/* Crop Controls */}
                     {selectedLayer.type === "image" && (
-                      <div className="property-group">
-                        <label>Crop (%)</label>
-                        <div className="property-row">
-                          <input
-                            type="number"
-                            min="0"
-                            max={100 - (selectedLayer.cropBottom ?? 0)}
-                            step="0.1"
-                            value={(selectedLayer.cropTop ?? 0).toFixed(1)}
-                            onChange={(e) => {
-                              const val = Math.min(100 - (selectedLayer.cropBottom ?? 0), Math.max(0, parseFloat(e.target.value) || 0));
-                              
-                              // Calculate natural dimensions
-                              const currentCropHoriz = (selectedLayer.cropLeft ?? 0) + (selectedLayer.cropRight ?? 0);
-                              const currentCropVert = (selectedLayer.cropTop ?? 0) + (selectedLayer.cropBottom ?? 0);
-                              const naturalWidth = selectedLayer.width / ((100 - currentCropHoriz) / 100);
-                              const naturalHeight = selectedLayer.height / ((100 - currentCropVert) / 100);
-                              
-                              // Calculate new height
-                              const newVisibleHeight = naturalHeight * (100 - val - (selectedLayer.cropBottom ?? 0)) / 100;
-                              
-                              updateLayer(selectedLayer.id, { 
-                                cropTop: val,
-                                height: newVisibleHeight
-                              });
-                            }}
-                            placeholder="Top"
-                          />
-                          <input
-                            type="number"
-                            min="0"
-                            max={100 - (selectedLayer.cropLeft ?? 0)}
-                            step="0.1"
-                            value={(selectedLayer.cropRight ?? 0).toFixed(1)}
-                            onChange={(e) => {
-                              const val = Math.min(100 - (selectedLayer.cropLeft ?? 0), Math.max(0, parseFloat(e.target.value) || 0));
-                              
-                              const currentCropHoriz = (selectedLayer.cropLeft ?? 0) + (selectedLayer.cropRight ?? 0);
-                              const currentCropVert = (selectedLayer.cropTop ?? 0) + (selectedLayer.cropBottom ?? 0);
-                              const naturalWidth = selectedLayer.width / ((100 - currentCropHoriz) / 100);
-                              
-                              const newVisibleWidth = naturalWidth * (100 - val - (selectedLayer.cropLeft ?? 0)) / 100;
-                              
-                              updateLayer(selectedLayer.id, { 
-                                cropRight: val,
-                                width: newVisibleWidth
-                              });
-                            }}
-                            placeholder="Right"
-                          />
-                          <input
-                            type="number"
-                            min="0"
-                            max={100 - (selectedLayer.cropTop ?? 0)}
-                            step="0.1"
-                            value={(selectedLayer.cropBottom ?? 0).toFixed(1)}
-                            onChange={(e) => {
-                              const val = Math.min(100 - (selectedLayer.cropTop ?? 0), Math.max(0, parseFloat(e.target.value) || 0));
-                              
-                              const currentCropHoriz = (selectedLayer.cropLeft ?? 0) + (selectedLayer.cropRight ?? 0);
-                              const currentCropVert = (selectedLayer.cropTop ?? 0) + (selectedLayer.cropBottom ?? 0);
-                              const naturalHeight = selectedLayer.height / ((100 - currentCropVert) / 100);
-                              
-                              const newVisibleHeight = naturalHeight * (100 - val - (selectedLayer.cropTop ?? 0)) / 100;
-                              
-                              updateLayer(selectedLayer.id, { 
-                                cropBottom: val,
-                                height: newVisibleHeight
-                              });
-                            }}
-                            placeholder="Bottom"
-                          />
-                          <input
-                            type="number"
-                            min="0"
-                            max={100 - (selectedLayer.cropRight ?? 0)}
-                            step="0.1"
-                            value={(selectedLayer.cropLeft ?? 0).toFixed(1)}
-                            onChange={(e) => {
-                              const val = Math.min(100 - (selectedLayer.cropRight ?? 0), Math.max(0, parseFloat(e.target.value) || 0));
-                              
-                              const currentCropHoriz = (selectedLayer.cropLeft ?? 0) + (selectedLayer.cropRight ?? 0);
-                              const currentCropVert = (selectedLayer.cropTop ?? 0) + (selectedLayer.cropBottom ?? 0);
-                              const naturalWidth = selectedLayer.width / ((100 - currentCropHoriz) / 100);
-                              
-                              const newVisibleWidth = naturalWidth * (100 - val - (selectedLayer.cropRight ?? 0)) / 100;
-                              
-                              updateLayer(selectedLayer.id, { 
-                                cropLeft: val,
-                                width: newVisibleWidth
-                              });
-                            }}
-                            placeholder="Left"
-                          />
+                      <>
+                        <div className="property-group">
+                          <label>Crop (%)</label>
+                          <div className="property-row">
+                            <input
+                              type="number"
+                              min="0"
+                              max={100 - (selectedLayer.cropBottom ?? 0)}
+                              step="0.1"
+                              value={(selectedLayer.cropTop ?? 0).toFixed(1)}
+                              onChange={(e) => {
+                                const val = Math.min(100 - (selectedLayer.cropBottom ?? 0), Math.max(0, parseFloat(e.target.value) || 0));
+
+                                // Calculate natural dimensions
+                                const currentCropHoriz = (selectedLayer.cropLeft ?? 0) + (selectedLayer.cropRight ?? 0);
+                                const currentCropVert = (selectedLayer.cropTop ?? 0) + (selectedLayer.cropBottom ?? 0);
+                                const naturalWidth = selectedLayer.width / ((100 - currentCropHoriz) / 100);
+                                const naturalHeight = selectedLayer.height / ((100 - currentCropVert) / 100);
+
+                                // Calculate new height
+                                const newVisibleHeight = naturalHeight * (100 - val - (selectedLayer.cropBottom ?? 0)) / 100;
+
+                                updateLayer(selectedLayer.id, { 
+                                  cropTop: val,
+                                  height: newVisibleHeight
+                                });
+                              }}
+                              placeholder="Top"
+                            />
+                            <input
+                              type="number"
+                              min="0"
+                              max={100 - (selectedLayer.cropLeft ?? 0)}
+                              step="0.1"
+                              value={(selectedLayer.cropRight ?? 0).toFixed(1)}
+                              onChange={(e) => {
+                                const val = Math.min(100 - (selectedLayer.cropLeft ?? 0), Math.max(0, parseFloat(e.target.value) || 0));
+
+                                const currentCropHoriz = (selectedLayer.cropLeft ?? 0) + (selectedLayer.cropRight ?? 0);
+                                const currentCropVert = (selectedLayer.cropTop ?? 0) + (selectedLayer.cropBottom ?? 0);
+                                const naturalWidth = selectedLayer.width / ((100 - currentCropHoriz) / 100);
+
+                                const newVisibleWidth = naturalWidth * (100 - val - (selectedLayer.cropLeft ?? 0)) / 100;
+
+                                updateLayer(selectedLayer.id, { 
+                                  cropRight: val,
+                                  width: newVisibleWidth
+                                });
+                              }}
+                              placeholder="Right"
+                            />
+                            <input
+                              type="number"
+                              min="0"
+                              max={100 - (selectedLayer.cropTop ?? 0)}
+                              step="0.1"
+                              value={(selectedLayer.cropBottom ?? 0).toFixed(1)}
+                              onChange={(e) => {
+                                const val = Math.min(100 - (selectedLayer.cropTop ?? 0), Math.max(0, parseFloat(e.target.value) || 0));
+
+                                const currentCropHoriz = (selectedLayer.cropLeft ?? 0) + (selectedLayer.cropRight ?? 0);
+                                const currentCropVert = (selectedLayer.cropTop ?? 0) + (selectedLayer.cropBottom ?? 0);
+                                const naturalHeight = selectedLayer.height / ((100 - currentCropVert) / 100);
+
+                                const newVisibleHeight = naturalHeight * (100 - val - (selectedLayer.cropTop ?? 0)) / 100;
+
+                                updateLayer(selectedLayer.id, { 
+                                  cropBottom: val,
+                                  height: newVisibleHeight
+                                });
+                              }}
+                              placeholder="Bottom"
+                            />
+                            <input
+                              type="number"
+                              min="0"
+                              max={100 - (selectedLayer.cropRight ?? 0)}
+                              step="0.1"
+                              value={(selectedLayer.cropLeft ?? 0).toFixed(1)}
+                              onChange={(e) => {
+                                const val = Math.min(100 - (selectedLayer.cropRight ?? 0), Math.max(0, parseFloat(e.target.value) || 0));
+
+                                const currentCropHoriz = (selectedLayer.cropLeft ?? 0) + (selectedLayer.cropRight ?? 0);
+                                const currentCropVert = (selectedLayer.cropTop ?? 0) + (selectedLayer.cropBottom ?? 0);
+                                const naturalWidth = selectedLayer.width / ((100 - currentCropHoriz) / 100);
+
+                                const newVisibleWidth = naturalWidth * (100 - val - (selectedLayer.cropRight ?? 0)) / 100;
+
+                                updateLayer(selectedLayer.id, { 
+                                  cropLeft: val,
+                                  width: newVisibleWidth
+                                });
+                              }}
+                              placeholder="Left"
+                            />
+                          </div>
                         </div>
-                      </div>
+                        <div className="property-group">
+                          <button
+                            className="tool-btn"
+                            onClick={() => handleRemoveBackground(selectedLayer.id)}
+                            disabled={isRemovingBg}
+                            style={{
+                              background: isRemovingBg 
+                                ? 'linear-gradient(90deg, #94a3b8, #64748b)' 
+                                : 'linear-gradient(90deg, #10b981, #059669)',
+                              cursor: isRemovingBg ? 'not-allowed' : 'pointer',
+                            }}
+                          >
+                            {isRemovingBg ? (
+                              <>
+                                <div className="spinner" style={{ width: '16px', height: '16px', borderWidth: '2px' }}></div>
+                                <span>{bgRemovalProgress}</span>
+                              </>
+                            ) : (
+                              <>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                  <path d="M20 11A8.1 8.1 0 0 0 4.5 9M4 5v4h4" />
+                                  <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
+                                </svg>
+                                <span>Remove Background</span>
+                              </>
+                            )}
+                          </button>
+                        </div>                        
+                      </>  
                     )}                    
 
                     {/* Rotation */}

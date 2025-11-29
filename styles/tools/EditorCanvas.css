@@ -1280,6 +1280,11 @@ body {
   transform: scale(1.1);
 }
 
+.tool-btn .spinner {
+  border-color: #ffffff;
+  border-top-color: transparent;
+}
+
 @keyframes slideIn {
   from {
     transform: translateX(400px);
