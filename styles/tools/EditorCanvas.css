@@ -1310,316 +1310,6 @@ body {
   }
 }
 
-/* Responsive */
-@media (max-width: 1200px) {
-  .sidebar {
-    width: 240px;
-  }
-
-  .left-sidebar-new {
-    width: 220px;
-  }
-  
-  .right-sidebar-new {
-    width: 65px;
-  }
-}
-
-@media (max-width: 992px) {
-  .editor-workspace {
-    flex-direction: column;
-  }
-
-  .sidebar {
-    width: 100%;
-    max-height: 250px;
-    border-right: none;
-    border-bottom: 1px solid #e2e8f0;
-  }
-
-  .right-sidebar {
-    border-left: none;
-    border-top: 1px solid #e2e8f0;
-  }
-
-  .canvas-wrapper {
-    padding: 20px 10px;
-  }
-
-  .editor-workspace {
-    flex-direction: column;
-  }
-
-  .left-sidebar-new {
-    width: 100%;
-    max-height: 40vh;
-    border-right: none;
-    border-bottom: 1px solid #e2e8f0;
-  }
-
-  .left-sidebar-new.collapsed {
-    max-height: 45px;
-  }
-
-  .left-toggle {
-    right: 50%;
-    top: auto;
-    bottom: -28px;
-    transform: translateX(50%) rotate(90deg);
-  }
-
-  .right-sidebar-new {
-    width: 100%;
-    height: 75px;
-    border-left: none;
-    border-top: 1px solid #e2e8f0;
-    flex-direction: row;
-  }
-
-  .right-sidebar-new.collapsed {
-    height: 45px;
-  }
-
-  .right-toggle {
-    left: 50%;
-    top: -28px;
-    bottom: auto;
-    transform: translateX(-50%) rotate(90deg);
-  }
-
-  .layers-slim-panel {
-    padding: 10px 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .layers-icon-btn {
-    flex-direction: row;
-    padding: 10px 16px;
-    width: auto;
-  }
-
-  .layer-stack-icon {
-    flex-direction: row;
-    gap: 3px;
-    width: auto;
-  }
-
-  .layer-rect {
-    width: 6px;
-    height: 24px;
-  }
-
-  .layer-rect:nth-child(1) {
-    height: 18px;
-    width: 6px;
-  }
-
-  .layer-rect:nth-child(2) {
-    height: 21px;
-    width: 6px;
-  }
-
-  .layer-rect:nth-child(3) {
-    height: 24px;
-    width: 6px;
-  }
-
-  .images-grid,
-  .shapes-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-  
-  .left-sidebar-container {
-    flex-direction: row;
-    width: 100%;
-    max-height: 70px;
-    border-right: none;
-    border-bottom: 1px solid #e2e8f0;
-  }
-
-  .icon-panel {
-    flex-direction: row;
-    width: 100%;
-    height: 70px;
-    border-right: none;
-    border-bottom: 1px solid #e2e8f0;
-    padding: 0 12px;
-    overflow-x: auto;
-  }
-
-  .content-panel {
-    position: absolute;
-    top: 70px;
-    left: 0;
-    right: 0;
-    width: 100%;
-    max-height: 50vh;
-    overflow-y: auto;
-    z-index: 100;
-  }
-
-  @keyframes slideInLeft {
-    from {
-      height: 0;
-      opacity: 0;
-    }
-    to {
-      height: auto;
-      opacity: 1;
-    }
-  }  
-}
-
-@media (max-width: 768px) {
-  .editor-toolbar {
-    flex-wrap: wrap;
-    height: auto;
-    padding: 10px;
-  }
-
-  .editor-toolbar h2 {
-    font-size: 1.1rem;
-    width: 100%;
-    text-align: left;
-    margin-bottom: 10px;
-  }
-
-  .toolbar-actions {
-    width: 100%;
-    justify-content: space-between;
-    flex-wrap: wrap;
-  }
-
-  .toolbar-btn {
-    padding: 8px 14px;
-    font-size: 0.85rem;
-  }
-
-  .sidebar {
-    max-height: 200px;
-  }
-
-  .canvas-controls {
-    top: 10px;
-    right: 10px;
-    padding: 6px 12px;
-  }
-
-  .canvas-controls button {
-    width: 28px;
-    height: 28px;
-    font-size: 1rem;
-  }
-
-  .tab-navigation {
-    padding: 6px;
-    gap: 6px;
-  }
-
-  .tab-btn {
-    padding: 10px;
-  }
-
-  .images-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .shapes-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  .layers-popup {
-    width: 95%;
-    max-height: 70vh;
-  }
-
-  .export-modal {
-    width: 95%;
-  }
-  
-  .export-modal-content {
-    padding: 30px 20px;
-    min-height: 250px;
-  }  
-
-  .filters-panel {
-    gap: 16px;
-  }
-  
-  .filter-control {
-    padding: 12px;
-  }
-  
-  .preset-buttons {
-    grid-template-columns: 1fr;
-  }  
-}
-
-@media (max-width: 480px) {
-  .editor-toolbar {
-    padding: 8px;
-  }
-
-  .toolbar-btn {
-    padding: 6px 10px;
-    font-size: 0.8rem;
-  }
-
-  .sidebar {
-    padding: 15px;
-  }
-
-  .tool-btn {
-    padding: 10px 12px;
-    font-size: 0.85rem;
-  }
-
-  .property-row {
-    grid-template-columns: 1fr;
-  }
-
-  .canvas-wrapper {
-    padding: 10px 5px;
-  }
-
-  .left-sidebar-new {
-    max-height: 50vh;
-  }
-
-  .sidebar-content {
-    padding: 12px;
-  }
-
-  .images-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 6px;
-  }
-
-  .shapes-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 6px;
-  }
-
-  .element-btn {
-    padding: 12px;
-    font-size: 0.9rem;
-  }
-
-  .popup-header {
-    padding: 16px 20px;
-  }
-
-  .popup-header h3 {
-    font-size: 1.1rem;
-  }
-
-  .layers-popup-content {
-    padding: 16px;
-  }
-}
-
 /* Loading States */
 .loading-overlay {
   position: absolute;
@@ -1969,15 +1659,30 @@ body {
   align-items: center;
   justify-content: center;
   position: relative;
-  transition: all 0.3s ease;
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10;
 }
 
 .right-sidebar-new.collapsed {
-  width: 40px;
+  width: 2px;
+}
+
+.right-sidebar-new .layers-slim-panel {
+  padding: 16px 8px;
+  width: 100%;
+  opacity: 1;
+  transition: opacity 0.2s ease;
 }
 
 .right-sidebar-new.collapsed .layers-slim-panel {
-  display: none;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Reuse the same toggle button style (already exists for left panel) */
+.right-toggle {
+  left: -28px;
+  border-radius: 8px 0 0 8px;
 }
 
 .layers-slim-panel {
@@ -2219,4 +1924,657 @@ body {
 
 .fancy-heading {
   display: none;
+}
+
+@media (max-width: 1024px) {
+  .editor-toolbar h2 {
+    font-size: 1.1rem;
+  }
+  
+  .toolbar-btn {
+    padding: 8px 14px;
+    font-size: 0.85rem;
+    gap: 6px;
+  }
+  
+  .icon-panel {
+    width: 50px;
+  }
+  
+  .icon-panel-btn {
+    width: 38px;
+    height: 38px;
+  }
+  
+  .content-panel {
+    width: 240px;
+  }
+  
+  .pages-panel {
+    left: 290px;
+  }
+}
+
+/* Mobile landscape and tablets (768px) */
+@media (max-width: 768px) {
+  /* Toolbar adjustments */
+  .editor-toolbar {
+    height: auto;
+    min-height: 50px;
+    padding: 8px 12px;
+    flex-wrap: wrap;
+  }
+  
+  .editor-toolbar h2 {
+    font-size: 1rem;
+    order: 1;
+    flex: 0 0 100%;
+    margin-bottom: 8px;
+    text-align: left;
+  }
+  
+  .back-btn {
+    order: 2;
+    font-size: 0.8rem;
+    padding: 6px 10px;
+  }
+  
+  .toolbar-actions {
+    order: 3;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  
+  .toolbar-btn {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+  
+  /* Left sidebar - Stack horizontally at top */
+  .left-sidebar-container {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: auto;
+    max-height: 50vh;
+    z-index: 200;
+    flex-direction: column;
+    border-right: none;
+    border-bottom: 1px solid #e2e8f0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .icon-panel {
+    width: 100%;
+    height: 50px;
+    flex-direction: row;
+    padding: 6px 12px;
+    gap: 6px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    border-right: none;
+    border-bottom: 1px solid #e2e8f0;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .icon-panel::-webkit-scrollbar {
+    height: 3px;
+  }
+  
+  .icon-panel-btn {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+  }
+  
+  .content-panel {
+    width: 100%;
+    max-height: calc(50vh - 50px);
+    border-right: none;
+    animation: none;
+    overflow-y: auto;
+  }
+  
+  .content-panel-inner {
+    padding: 16px;
+  }
+  
+  /* Canvas wrapper adjustments */
+  .canvas-wrapper {
+    margin-top: 60px;
+    padding: 20px 10px 120px;
+  }
+  
+  .canvas-container {
+    touch-action: pan-x pan-y pinch-zoom;
+  }
+  
+  .zoom-indicator {
+    bottom: 130px;
+    right: 10px;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+  
+  /* Pages panel adjustments */
+  .pages-panel {
+    left: 0;
+    right: 0;
+    height: 90px;
+    padding: 8px 12px;
+  }
+  
+  .pages-list {
+    gap: 8px;
+  }
+  
+  .page-thumbnail {
+    min-width: 100px;
+    height: 60px;
+  }
+  
+  .add-page-btn, .duplicate-page-btn {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+  
+  .pages-toggle {
+    top: -28px;
+    width: 50px;
+    height: 28px;
+  }
+  
+  /* Property adjustments */
+  .property-group {
+    padding: 12px;
+  }
+  
+  .property-group label {
+    font-size: 0.85rem;
+  }
+  
+  .property-group input,
+  .property-group textarea,
+  .property-group select {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+  
+  /* Images and shapes grids */
+  .images-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+  
+  .shapes-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+  
+  /* Layer handles sizing */
+  .resize-handle {
+    width: 16px;
+    height: 16px;
+    border-width: 3px;
+  }
+  
+  .rotation-handle {
+    width: 40px;
+    height: 40px;
+    top: -50px;
+  }
+  
+  .rotation-line {
+    height: 50px;
+  }
+  
+  .crop-handle.n,
+  .crop-handle.s {
+    height: 12px;
+  }
+  
+  .crop-handle.e,
+  .crop-handle.w {
+    width: 12px;
+  }
+  
+  /* Layers popup adjustments */
+  .layers-popup {
+    width: 95%;
+    max-height: 85vh;
+  }
+  
+  .popup-header {
+    padding: 16px 20px;
+  }
+  
+  .layers-popup-content {
+    padding: 16px;
+  }
+  
+  .layer-item {
+    padding: 10px;
+  }
+  
+  .layer-controls button {
+    padding: 8px 10px;
+    font-size: 0.8rem;
+  }
+  
+  /* Export modal */
+  .export-modal {
+    width: 95%;
+  }
+  
+  .export-modal-content {
+    padding: 30px 20px;
+  }
+  
+  /* Filters */
+  .filter-control {
+    padding: 12px;
+  }
+  
+  .preset-buttons {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+}
+
+/* Mobile portrait (480px) */
+@media (max-width: 480px) {
+  /* Toolbar ultra-compact */
+  .editor-toolbar {
+    padding: 6px 8px;
+  }
+  
+  .editor-toolbar h2 {
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+  }
+  
+  .toolbar-btn {
+    padding: 5px 8px;
+    font-size: 0.75rem;
+  }
+  
+  .back-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .dropdown-content {
+    min-width: 140px;
+  }
+  
+  .dropdown-content button {
+    padding: 10px 12px;
+    font-size: 0.85rem;
+  }
+  
+  /* Left sidebar even more compact */
+  .icon-panel {
+    height: 45px;
+    padding: 4px 8px;
+    gap: 4px;
+  }
+  
+  .icon-panel-btn {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .icon-panel-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .content-panel-inner {
+    padding: 12px;
+  }
+  
+  .panel-section h3 {
+    font-size: 1rem;
+    margin-bottom: 12px;
+  }
+  
+  /* Canvas */
+  .canvas-wrapper {
+    padding: 15px 5px 100px;
+  }
+  
+  .zoom-indicator {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    bottom: 110px;
+  }
+  
+  /* Pages panel */
+  .pages-panel {
+    height: 80px;
+    padding: 6px 8px;
+  }
+  
+  .page-thumbnail {
+    min-width: 85px;
+    height: 50px;
+    padding: 4px;
+  }
+  
+  .page-thumbnail > div {
+    font-size: 7px;
+  }
+  
+  .delete-page-btn {
+    width: 18px;
+    height: 18px;
+    top: 2px;
+    right: 2px;
+  }
+  
+  .add-page-btn, .duplicate-page-btn {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    gap: 4px;
+  }
+  
+  .pages-toggle {
+    width: 45px;
+    height: 26px;
+    top: -26px;
+  }
+  
+  /* Properties */
+  .property-group {
+    padding: 10px;
+    gap: 8px;
+  }
+  
+  .property-group label {
+    font-size: 0.8rem;
+  }
+  
+  .property-group input,
+  .property-group textarea,
+  .property-group select {
+    padding: 8px 10px;
+    font-size: 0.85rem;
+  }
+  
+  .property-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .opacity-control {
+    gap: 8px;
+    padding: 10px;
+  }
+  
+  .opacity-icon {
+    width: 28px;
+    height: 28px;
+  }
+  
+  /* Grids */
+  .images-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+  }
+  
+  .shapes-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+  }
+  
+  .element-btn {
+    padding: 10px;
+    font-size: 0.85rem;
+    gap: 6px;
+  }
+  
+  /* Layer handles - larger for touch */
+  .resize-handle {
+    width: 20px;
+    height: 20px;
+    border-width: 3px;
+  }
+  
+  .rotation-handle {
+    width: 44px;
+    height: 44px;
+    top: -55px;
+  }
+  
+  .rotation-line {
+    height: 55px;
+  }
+  
+  .crop-handle.n,
+  .crop-handle.s {
+    height: 16px;
+  }
+  
+  .crop-handle.e,
+  .crop-handle.w {
+    width: 16px;
+  }
+  
+  /* Popups */
+  .layers-popup {
+    width: 98%;
+    max-height: 90vh;
+    border-radius: 12px;
+  }
+  
+  .popup-header {
+    padding: 12px 16px;
+  }
+  
+  .popup-header h3 {
+    font-size: 1.1rem;
+  }
+  
+  .close-popup {
+    width: 32px;
+    height: 32px;
+    font-size: 1.1rem;
+  }
+  
+  .layers-popup-content {
+    padding: 12px;
+  }
+  
+  .layer-item {
+    padding: 8px;
+  }
+  
+  .layer-info span {
+    font-size: 0.85rem;
+  }
+  
+  .layer-info small {
+    font-size: 0.75rem;
+  }
+  
+  .layer-controls {
+    gap: 4px;
+  }
+  
+  .layer-controls button {
+    padding: 6px 8px;
+    font-size: 0.75rem;
+  }
+  
+  /* Export modal */
+  .export-modal {
+    width: 98%;
+    border-radius: 12px;
+  }
+  
+  .export-modal-content {
+    padding: 25px 16px;
+    min-height: 220px;
+  }
+  
+  .export-ready h4,
+  .export-error h4 {
+    font-size: 1.1rem;
+  }
+  
+  .download-export-btn {
+    padding: 12px 24px;
+    font-size: 0.9rem;
+  }
+  
+  /* Filters */
+  .filter-control {
+    padding: 10px;
+  }
+  
+  .filter-control label {
+    font-size: 0.8rem;
+  }
+  
+  .filter-value {
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    min-width: 40px;
+  }
+  
+  .preset-buttons {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  
+  .preset-btn {
+    padding: 8px;
+    font-size: 0.8rem;
+  }
+  
+  /* Toast */
+  .toast {
+    bottom: 90px;
+    right: 10px;
+    left: 10px;
+    padding: 12px 16px;
+    font-size: 0.85rem;
+  }
+  
+  /* Text selection popup */
+  [style*="position: fixed"][style*="bottom: 100px"] {
+    bottom: 90px !important;
+    left: 10px !important;
+    right: 10px !important;
+    transform: none !important;
+    padding: 10px 12px !important;
+    gap: 8px !important;
+  }
+  
+  [style*="position: fixed"][style*="bottom: 100px"] label {
+    font-size: 0.8rem !important;
+  }
+  
+  [style*="position: fixed"][style*="bottom: 100px"] input[type="color"] {
+    width: 40px !important;
+    height: 35px !important;
+  }
+  
+  [style*="position: fixed"][style*="bottom: 100px"] button {
+    padding: 8px 16px !important;
+    font-size: 0.8rem !important;
+  }
+}
+
+/* Extra small devices (360px) */
+@media (max-width: 360px) {
+  .toolbar-btn {
+    padding: 4px 6px;
+    font-size: 0.7rem;
+  }
+  
+  .icon-panel-btn {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .images-grid,
+  .shapes-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .page-thumbnail {
+    min-width: 75px;
+    height: 45px;
+  }
+  
+  .add-page-btn, .duplicate-page-btn {
+    padding: 5px 8px;
+    font-size: 0.75rem;
+  }
+}
+
+/* Landscape orientation on mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  .left-sidebar-container {
+    max-height: 40vh;
+  }
+  
+  .canvas-wrapper {
+    padding: 10px 5px 60px;
+  }
+  
+  .pages-panel {
+    height: 60px;
+  }
+  
+  .page-thumbnail {
+    height: 40px;
+    min-width: 70px;
+  }
+  
+  .zoom-indicator {
+    bottom: 70px;
+  }
+}
+
+/* Touch device improvements */
+@media (hover: none) and (pointer: coarse) {
+  /* Larger touch targets */
+  .icon-panel-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  
+  .layer-controls button {
+    min-width: 36px;
+    min-height: 36px;
+  }
+  
+  .resize-handle {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .rotation-handle {
+    width: 48px;
+    height: 48px;
+  }
+  
+  /* Prevent text selection on drag */
+  .canvas-layer {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+  }
+  
+  /* Smoother scrolling */
+  .icon-panel,
+  .pages-list,
+  .content-panel-inner,
+  .layers-popup-content {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
 }

@@ -22,6 +22,8 @@ import {
   FaChevronDown,
   FaChevronUp,
   FaTrashAlt,
+  FaChevronRight,
+  FaChevronLeft,
 } from "react-icons/fa";
 import { API_BASE_URL } from "@/app/config";
 
@@ -175,7 +177,7 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
   const [panStart, setPanStart] = useState({ x: 0, y: 0 });
   const [isSpacePressed, setIsSpacePressed] = useState(false);
   const [showLeftPanel, setShowLeftPanel] = useState(true);
-  const [showRightPanel, setShowRightPanel] = useState(true);
+  const [showRightPanel, setShowRightPanel] = useState<boolean>(true);
   const [showLayersPopup, setShowLayersPopup] = useState(false);
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);  
   const [activeTab, setActiveTab] = useState<'text' | 'images' | 'shapes' | 'properties' | 'canvas' | 'elements' | 'filters' |null>(null);
@@ -239,7 +241,46 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
   const [draggedLayerId, setDraggedLayerId] = useState<string | null>(null);
   const [dragOverLayerId, setDragOverLayerId] = useState<string | null>(null);
   const [isRemovingBg, setIsRemovingBg] = useState(false);
-  const [bgRemovalProgress, setBgRemovalProgress] = useState<string>('');   
+  const [bgRemovalProgress, setBgRemovalProgress] = useState<string>(''); 
+  const [isMobile, setIsMobile] = useState(false);
+  const [touchStart, setTouchStart] = useState<{ x: number; y: number; distance: number } | null>(null);
+  const [initialScale, setInitialScale] = useState(1);  
+  const [touchAction, setTouchAction] = useState<'none' | 'drag' | 'resize' | 'rotate' | 'crop'>('none');
+  const [touchStartPos, setTouchStartPos] = useState<{ x: number; y: number } | null>(null);  
+  
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);  
+
+  useEffect(() => {
+    const handleTouchMoveGlobal = (e: TouchEvent) => {
+      if (resizeHandle || isRotatingLayer || cropHandle || isResizingBackground) {
+        e.preventDefault();
+        handleTouchMoveForHandles(e);
+      }
+    };
+  
+    const handleTouchEndGlobal = () => {
+      if (resizeHandle || isRotatingLayer || cropHandle || isResizingBackground) {
+        handleMouseUp();
+      }
+    };
+  
+    document.addEventListener('touchmove', handleTouchMoveGlobal, { passive: false });
+    document.addEventListener('touchend', handleTouchEndGlobal);
+  
+    return () => {
+      document.removeEventListener('touchmove', handleTouchMoveGlobal);
+      document.removeEventListener('touchend', handleTouchEndGlobal);
+    };
+  }, [resizeHandle, isRotatingLayer, cropHandle, isResizingBackground]);  
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -480,6 +521,9 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
   };  
 
   const handleWheel = (e: React.WheelEvent) => {
+    if (!isMobile || e.ctrlKey || e.metaKey) {
+      e.preventDefault();
+    }    
     e.stopPropagation();
   
     if (e.ctrlKey || e.metaKey) {
@@ -1468,6 +1512,119 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
     setCropStartState(null);
     setBackgroundResizeHandle(null);
     setIsResizingBackground(false);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    // Don't prevent default on the canvas container itself - let layer touches bubble up
+    if (e.touches.length === 2) {
+      // Pinch zoom
+      e.preventDefault();
+      const touch1 = e.touches[0];
+      const touch2 = e.touches[1];
+      const distance = Math.hypot(
+        touch2.clientX - touch1.clientX,
+        touch2.clientY - touch1.clientY
+      );
+      setTouchStart({
+        x: (touch1.clientX + touch2.clientX) / 2,
+        y: (touch1.clientY + touch2.clientY) / 2,
+        distance
+      });
+      setInitialScale(scale);
+      setTouchAction('none');
+    } else if (e.touches.length === 1 && isSpacePressed) {
+      // Pan mode
+      e.preventDefault();
+      setIsPanning(true);
+      setPanStart({
+        x: e.touches[0].clientX - panOffset.x,
+        y: e.touches[0].clientY - panOffset.y
+      });
+      setTouchAction('none');
+    } else if (e.touches.length === 1 && !isSpacePressed) {
+      // Only set touch action for dragging, don't set other states here
+      // The layer's onTouchStart will handle the actual selection
+      setTouchAction('drag');
+      setTouchStartPos({
+        x: e.touches[0].clientX,
+        y: e.touches[0].clientY
+      });
+    }
+  };
+  
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (e.touches.length === 2 && touchStart) {
+      // Pinch zoom
+      e.preventDefault();
+      const touch1 = e.touches[0];
+      const touch2 = e.touches[1];
+      const distance = Math.hypot(
+        touch2.clientX - touch1.clientX,
+        touch2.clientY - touch1.clientY
+      );
+      const scaleChange = distance / touchStart.distance;
+      const newScale = Math.min(Math.max(0.1, initialScale * scaleChange), 3);
+      setScale(newScale);
+    } else if (e.touches.length === 1 && isPanning) {
+      // Pan canvas
+      e.preventDefault();
+      setPanOffset({
+        x: e.touches[0].clientX - panStart.x,
+        y: e.touches[0].clientY - panStart.y
+      });
+    } else if (e.touches.length === 1 && (touchAction === 'drag' || isDragging) && selectedLayerIds.length > 0 && !isSpacePressed) {
+      // Drag layers
+      e.preventDefault();
+      const deltaX = (e.touches[0].clientX - dragStart.x) / scale;
+      const deltaY = (e.touches[0].clientY - dragStart.y) / scale;
+    
+      const updatedLayers = layers.map(layer => {
+        if (selectedLayerIds.includes(layer.id) && !layer.locked) {
+          return {
+            ...layer,
+            x: layer.x + deltaX,
+            y: layer.y + deltaY
+          };
+        }
+        return layer;
+      });
+    
+      setLayers(updatedLayers);
+      setDragStart({ x: e.touches[0].clientX, y: e.touches[0].clientY });
+    
+      if (selectedLayerIds.length === 1) {
+        const movedLayer = updatedLayers.find(l => l.id === selectedLayerIds[0]);
+        if (movedLayer) {
+          const detectedGuides = detectAlignmentGuides(movedLayer, layers);
+          setGuides(detectedGuides);
+        }
+      }
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (touchAction === 'drag' && selectedLayerIds.length > 0) {
+      saveToHistory(layers);
+    }
+
+    setTouchStart(null);
+    setIsPanning(false);
+    setTouchAction('none');
+    setTouchStartPos(null);
+    setIsDragging(false);
+    setGuides({ vertical: [], horizontal: [] });
+  }; 
+
+  const handleTouchMoveForHandles = (e: TouchEvent) => {
+    if (e.touches.length !== 1) return;
+
+    const touch = e.touches[0];
+    const mouseEvent = {
+      clientX: touch.clientX,
+      clientY: touch.clientY,
+    } as React.MouseEvent;
+
+    handleMouseMove(mouseEvent);
   };
 
   const selectedLayer = selectedLayerIds.length === 1 ? layers.find((l) => l.id === selectedLayerIds[0]) : null;
@@ -3103,7 +3260,36 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
         <div className="canvas-wrapper">
           <div className="zoom-indicator">
             {Math.round(scale * 100)}%
-          </div>          
+          </div>  
+          {isMobile && (
+            <button
+              className="mobile-pan-toggle"
+              style={{
+                position: 'absolute',
+                bottom: '130px',
+                left: '10px',
+                width: '44px',
+                height: '44px',
+                borderRadius: '50%',
+                background: isSpacePressed 
+                  ? 'linear-gradient(135deg, #3b82f6, #8b5cf6)' 
+                  : '#ffffff',
+                border: '2px solid #3b82f6',
+                color: isSpacePressed ? '#ffffff' : '#3b82f6',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                zIndex: 50,
+              }}
+              onClick={() => setIsSpacePressed(!isSpacePressed)}
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M13 3l7 7-7 7M11 21l-7-7 7-7" />
+              </svg>
+            </button>
+          )}                  
           <div
             className="canvas-container"
             ref={canvasRef}
@@ -3116,6 +3302,9 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
               }
             }}            
             onWheel={handleWheel}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}            
             style={{
               cursor: isSpacePressed ? (isPanning ? 'grabbing' : 'grab') : 'default'
             }}            
@@ -3154,6 +3343,22 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
                 overflow: "visible",
               }}
               onMouseDown={(e) => handleMouseDown(e, layer.id)}
+              onTouchStart={(e) => {
+                if (!layer.locked) {
+                  e.stopPropagation();
+                  const touch = e.touches[0];
+                  const mouseEvent = {
+                    clientX: touch.clientX,
+                    clientY: touch.clientY,
+                    target: e.target,
+                    currentTarget: e.currentTarget
+                  } as any;
+                  handleMouseDown(mouseEvent, layer.id);
+                  setTouchAction('drag');
+                  setIsDragging(true);
+                  setDragStart({ x: touch.clientX, y: touch.clientY });
+                }
+              }}          
             >
                   {/* Layer content */}
                   {layer.type === "text" && (
@@ -3398,6 +3603,17 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
                       <div 
                         className="crop-handle n" 
                         onMouseDown={(e) => handleCropMouseDown(e, layer.id, 'n')}
+                        onTouchStart={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          const touch = e.touches[0];
+                          const mouseEvent = {
+                            clientX: touch.clientX,
+                            clientY: touch.clientY,
+                            stopPropagation: () => e.stopPropagation()
+                          } as React.MouseEvent;
+                          handleCropMouseDown(mouseEvent, layer.id, 'n');
+                        }}                        
                         style={{
                           top: 0,
                           left: 0,
@@ -3410,6 +3626,17 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
                       <div 
                         className="crop-handle s" 
                         onMouseDown={(e) => handleCropMouseDown(e, layer.id, 's')}
+                        onTouchStart={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          const touch = e.touches[0];
+                          const mouseEvent = {
+                            clientX: touch.clientX,
+                            clientY: touch.clientY,
+                            stopPropagation: () => e.stopPropagation()
+                          } as React.MouseEvent;
+                          handleCropMouseDown(mouseEvent, layer.id, 's');
+                        }}                        
                         style={{
                           bottom: 0,
                           left: 0,
@@ -3422,6 +3649,17 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
                       <div 
                         className="crop-handle e" 
                         onMouseDown={(e) => handleCropMouseDown(e, layer.id, 'e')}
+                        onTouchStart={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          const touch = e.touches[0];
+                          const mouseEvent = {
+                            clientX: touch.clientX,
+                            clientY: touch.clientY,
+                            stopPropagation: () => e.stopPropagation()
+                          } as React.MouseEvent;
+                          handleCropMouseDown(mouseEvent, layer.id, 'e');
+                        }}                        
                         style={{
                           right: 0,
                           top: 0,
@@ -3434,6 +3672,17 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
                       <div 
                         className="crop-handle w" 
                         onMouseDown={(e) => handleCropMouseDown(e, layer.id, 'w')}
+                        onTouchStart={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          const touch = e.touches[0];
+                          const mouseEvent = {
+                            clientX: touch.clientX,
+                            clientY: touch.clientY,
+                            stopPropagation: () => e.stopPropagation()
+                          } as React.MouseEvent;
+                          handleCropMouseDown(mouseEvent, layer.id, 'w');
+                        }}                        
                         style={{
                           left: 0,
                           top: 0,
@@ -3514,16 +3763,79 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
                       <div
                         className="rotation-handle"
                         onMouseDown={(e) => handleRotationMouseDown(e, layer.id)}
+                        onTouchStart={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          const touch = e.touches[0];
+                          const mouseEvent = {
+                            clientX: touch.clientX,
+                            clientY: touch.clientY,
+                            stopPropagation: () => e.stopPropagation()
+                          } as React.MouseEvent;
+                          handleRotationMouseDown(mouseEvent, layer.id);
+                        }}                        
                         title="Rotate"
                       >
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                           <path d="M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8c-.45-.83-.7-1.79-.7-2.8 0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z"/>
                         </svg>
                       </div>
-                      <div className="resize-handle nw" onMouseDown={(e) => handleResizeMouseDown(e, layer.id, 'nw')} />
-                      <div className="resize-handle ne" onMouseDown={(e) => handleResizeMouseDown(e, layer.id, 'ne')} />
-                      <div className="resize-handle sw" onMouseDown={(e) => handleResizeMouseDown(e, layer.id, 'sw')} />
-                      <div className="resize-handle se" onMouseDown={(e) => handleResizeMouseDown(e, layer.id, 'se')} />
+                      <div className="resize-handle nw" 
+                        onMouseDown={(e) => handleResizeMouseDown(e, layer.id, 'nw')}
+                        onTouchStart={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          const touch = e.touches[0];
+                          const mouseEvent = {
+                            clientX: touch.clientX,
+                            clientY: touch.clientY,
+                            stopPropagation: () => e.stopPropagation()
+                          } as React.MouseEvent;
+                          handleResizeMouseDown(mouseEvent, layer.id, 'nw');
+                        }}                        
+                       />
+                      <div className="resize-handle ne" 
+                        onMouseDown={(e) => handleResizeMouseDown(e, layer.id, 'ne')}
+                        onTouchStart={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          const touch = e.touches[0];
+                          const mouseEvent = {
+                            clientX: touch.clientX,
+                            clientY: touch.clientY,
+                            stopPropagation: () => e.stopPropagation()
+                          } as React.MouseEvent;
+                          handleResizeMouseDown(mouseEvent, layer.id, 'ne');
+                        }}                        
+                      />
+                      <div className="resize-handle sw"
+                        onMouseDown={(e) => handleResizeMouseDown(e, layer.id, 'sw')}
+                        onTouchStart={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          const touch = e.touches[0];
+                          const mouseEvent = {
+                            clientX: touch.clientX,
+                            clientY: touch.clientY,
+                            stopPropagation: () => e.stopPropagation()
+                          } as React.MouseEvent;
+                          handleResizeMouseDown(mouseEvent, layer.id, 'sw');
+                        }}                        
+                      />
+                      <div className="resize-handle se"
+                        onMouseDown={(e) => handleResizeMouseDown(e, layer.id, 'se')}
+                        onTouchStart={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          const touch = e.touches[0];
+                          const mouseEvent = {
+                            clientX: touch.clientX,
+                            clientY: touch.clientY,
+                            stopPropagation: () => e.stopPropagation()
+                          } as React.MouseEvent;
+                          handleResizeMouseDown(mouseEvent, layer.id, 'se');
+                        }}                        
+                      />
                     </>
                   )}
                 </div>
@@ -3645,15 +3957,24 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
           </div>
         )}     
   
-        {/* Right Sidebar - Layers */}
-        <div className={`sidebar right-sidebar-new ${showRightPanel ? 'visible' : 'collapsed'}`}>
-          <button className="panel-toggle right-toggle" onClick={() => setShowRightPanel(!showRightPanel)}>
-            {showRightPanel ? 'Right Arrow' : 'Left Arrow'}
+        {/* Right Sidebar - Layers (now collapsible) */}
+        <div className={`right-sidebar-new ${showRightPanel ? 'visible' : 'collapsed'}`}>
+          {/* Toggle arrow - always visible */}
+          <button 
+            className="panel-toggle right-toggle" 
+            onClick={() => setShowRightPanel(!showRightPanel)}
+            title={showRightPanel ? 'Hide layers' : 'Show layers'}
+          >
+            {showRightPanel ? <FaChevronRight size={18} /> : <FaChevronLeft size={18} />}
           </button>
-          
+
           {showRightPanel && (
             <div className="layers-slim-panel">
-              <button className="layers-icon-btn" onClick={() => setShowLayersPopup(true)} title="Manage Layers">
+              <button 
+                className="layers-icon-btn" 
+                onClick={() => setShowLayersPopup(true)} 
+                title="Manage Layers"
+              >
                 <div className="layer-stack-icon">
                   <div className="layer-rect"></div>
                   <div className="layer-rect"></div>
