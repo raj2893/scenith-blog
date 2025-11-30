@@ -181,8 +181,7 @@ export default function LandingPage() {
         <meta name="mobile-web-app-capable" content="yes" />
         
         {/* Schema.org Structured Data - WebSite */}
-        <Script
-          id='landing-page-scenith'
+        <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
