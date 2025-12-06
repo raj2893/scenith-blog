@@ -1285,6 +1285,24 @@ body {
   border-top-color: transparent;
 }
 
+.coming-soon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 300px;
+}
+
+.coming-soon-text {
+  font-size: 1.1rem;
+  color: #94a3b8;
+  background: #f8f9fa;
+  padding: 24px 40px;
+  border-radius: 12px;
+  border: 1px dashed #cbd5e1;
+  text-align: center;
+}
+
 @keyframes slideIn {
   from {
     transform: translateX(400px);

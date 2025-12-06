@@ -2295,31 +2295,36 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
             )}
     
             {activeTab === 'shapes' && (
-              <div className="panel-section">
-                <h3>Shapes</h3>
-                <div className="shapes-grid">
-                  <button className="shape-btn" onClick={() => addShapeLayer("rectangle")} title="Rectangle">
-                    <svg viewBox="0 0 100 100" width="40" height="40">
-                      <rect x="10" y="20" width="80" height="60" fill="#3B82F6" stroke="#1E40AF" strokeWidth="2" rx="5" />
-                    </svg>
-                  </button>
-                  <button className="shape-btn" onClick={() => addShapeLayer("circle")} title="Circle">
-                    <svg viewBox="0 0 100 100" width="40" height="40">
-                      <circle cx="50" cy="50" r="40" fill="#3B82F6" stroke="#1E40AF" strokeWidth="2" />
-                    </svg>
-                  </button>
-                  <button className="shape-btn" onClick={() => addShapeLayer("ellipse")} title="Ellipse">
-                    <svg viewBox="0 0 100 100" width="40" height="40">
-                      <ellipse cx="50" cy="50" rx="45" ry="30" fill="#3B82F6" stroke="#1E40AF" strokeWidth="2" />
-                    </svg>
-                  </button>
-                  <button className="shape-btn" onClick={() => addShapeLayer("triangle")} title="Triangle">
-                    <svg viewBox="0 0 100 100" width="40" height="40">
-                      <polygon points="50,10 90,90 10,90" fill="#3B82F6" stroke="#1E40AF" strokeWidth="2" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
+              // <div className="panel-section">
+              //   <h3>Shapes</h3>
+              //   <div className="shapes-grid">
+              //     <button className="shape-btn" onClick={() => addShapeLayer("rectangle")} title="Rectangle">
+              //       <svg viewBox="0 0 100 100" width="40" height="40">
+              //         <rect x="10" y="20" width="80" height="60" fill="#3B82F6" stroke="#1E40AF" strokeWidth="2" rx="5" />
+              //       </svg>
+              //     </button>
+              //     <button className="shape-btn" onClick={() => addShapeLayer("circle")} title="Circle">
+              //       <svg viewBox="0 0 100 100" width="40" height="40">
+              //         <circle cx="50" cy="50" r="40" fill="#3B82F6" stroke="#1E40AF" strokeWidth="2" />
+              //       </svg>
+              //     </button>
+              //     <button className="shape-btn" onClick={() => addShapeLayer("ellipse")} title="Ellipse">
+              //       <svg viewBox="0 0 100 100" width="40" height="40">
+              //         <ellipse cx="50" cy="50" rx="45" ry="30" fill="#3B82F6" stroke="#1E40AF" strokeWidth="2" />
+              //       </svg>
+              //     </button>
+              //     <button className="shape-btn" onClick={() => addShapeLayer("triangle")} title="Triangle">
+              //       <svg viewBox="0 0 100 100" width="40" height="40">
+              //         <polygon points="50,10 90,90 10,90" fill="#3B82F6" stroke="#1E40AF" strokeWidth="2" />
+              //       </svg>
+              //     </button>
+              //   </div>
+              // </div>
+                <div className="panel-section coming-soon">
+                  <div className="coming-soon-text">
+                    <span>Coming soon…</span>
+                  </div>
+                </div>              
             )}
     
             {activeTab === 'properties' && (
@@ -2360,102 +2365,6 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
                     {/* Crop Controls */}
                     {selectedLayer.type === "image" && (
                       <>
-                        <div className="property-group">
-                          <label>Crop (%)</label>
-                          <div className="property-row">
-                            <input
-                              type="number"
-                              min="0"
-                              max={100 - (selectedLayer.cropBottom ?? 0)}
-                              step="0.1"
-                              value={(selectedLayer.cropTop ?? 0).toFixed(1)}
-                              onChange={(e) => {
-                                const val = Math.min(100 - (selectedLayer.cropBottom ?? 0), Math.max(0, parseFloat(e.target.value) || 0));
-
-                                // Calculate natural dimensions
-                                const currentCropHoriz = (selectedLayer.cropLeft ?? 0) + (selectedLayer.cropRight ?? 0);
-                                const currentCropVert = (selectedLayer.cropTop ?? 0) + (selectedLayer.cropBottom ?? 0);
-                                const naturalWidth = selectedLayer.width / ((100 - currentCropHoriz) / 100);
-                                const naturalHeight = selectedLayer.height / ((100 - currentCropVert) / 100);
-
-                                // Calculate new height
-                                const newVisibleHeight = naturalHeight * (100 - val - (selectedLayer.cropBottom ?? 0)) / 100;
-
-                                updateLayer(selectedLayer.id, { 
-                                  cropTop: val,
-                                  height: newVisibleHeight
-                                });
-                              }}
-                              placeholder="Top"
-                            />
-                            <input
-                              type="number"
-                              min="0"
-                              max={100 - (selectedLayer.cropLeft ?? 0)}
-                              step="0.1"
-                              value={(selectedLayer.cropRight ?? 0).toFixed(1)}
-                              onChange={(e) => {
-                                const val = Math.min(100 - (selectedLayer.cropLeft ?? 0), Math.max(0, parseFloat(e.target.value) || 0));
-
-                                const currentCropHoriz = (selectedLayer.cropLeft ?? 0) + (selectedLayer.cropRight ?? 0);
-                                const currentCropVert = (selectedLayer.cropTop ?? 0) + (selectedLayer.cropBottom ?? 0);
-                                const naturalWidth = selectedLayer.width / ((100 - currentCropHoriz) / 100);
-
-                                const newVisibleWidth = naturalWidth * (100 - val - (selectedLayer.cropLeft ?? 0)) / 100;
-
-                                updateLayer(selectedLayer.id, { 
-                                  cropRight: val,
-                                  width: newVisibleWidth
-                                });
-                              }}
-                              placeholder="Right"
-                            />
-                            <input
-                              type="number"
-                              min="0"
-                              max={100 - (selectedLayer.cropTop ?? 0)}
-                              step="0.1"
-                              value={(selectedLayer.cropBottom ?? 0).toFixed(1)}
-                              onChange={(e) => {
-                                const val = Math.min(100 - (selectedLayer.cropTop ?? 0), Math.max(0, parseFloat(e.target.value) || 0));
-
-                                const currentCropHoriz = (selectedLayer.cropLeft ?? 0) + (selectedLayer.cropRight ?? 0);
-                                const currentCropVert = (selectedLayer.cropTop ?? 0) + (selectedLayer.cropBottom ?? 0);
-                                const naturalHeight = selectedLayer.height / ((100 - currentCropVert) / 100);
-
-                                const newVisibleHeight = naturalHeight * (100 - val - (selectedLayer.cropTop ?? 0)) / 100;
-
-                                updateLayer(selectedLayer.id, { 
-                                  cropBottom: val,
-                                  height: newVisibleHeight
-                                });
-                              }}
-                              placeholder="Bottom"
-                            />
-                            <input
-                              type="number"
-                              min="0"
-                              max={100 - (selectedLayer.cropRight ?? 0)}
-                              step="0.1"
-                              value={(selectedLayer.cropLeft ?? 0).toFixed(1)}
-                              onChange={(e) => {
-                                const val = Math.min(100 - (selectedLayer.cropRight ?? 0), Math.max(0, parseFloat(e.target.value) || 0));
-
-                                const currentCropHoriz = (selectedLayer.cropLeft ?? 0) + (selectedLayer.cropRight ?? 0);
-                                const currentCropVert = (selectedLayer.cropTop ?? 0) + (selectedLayer.cropBottom ?? 0);
-                                const naturalWidth = selectedLayer.width / ((100 - currentCropHoriz) / 100);
-
-                                const newVisibleWidth = naturalWidth * (100 - val - (selectedLayer.cropRight ?? 0)) / 100;
-
-                                updateLayer(selectedLayer.id, { 
-                                  cropLeft: val,
-                                  width: newVisibleWidth
-                                });
-                              }}
-                              placeholder="Left"
-                            />
-                          </div>
-                        </div>
                         <div className="property-group">
                           <button
                             className="tool-btn"
@@ -2872,329 +2781,339 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
             )}    
 
             {activeTab === 'elements' && (
-              <div className="panel-section">
-                <h3>Elements</h3>
-                <div className="images-grid">
-                  {elements.map((element) => (
-                    <div
-                      key={element.id}
-                      className="image-thumbnail"
-                      onClick={() => addElementToCanvas(element)}
-                      title={element.name}
-                    >
-                      <img src={element.cdnUrl} alt={element.name} />
-                    </div>
-                  ))}
-                  {elements.length === 0 && (
-                    <p style={{gridColumn: '1 / -1', textAlign: 'center', color: '#94a3b8', padding: '20px'}}>
-                      No elements available
-                    </p>
-                  )}
+              // <div className="panel-section">
+              //   <h3>Elements</h3>
+              //   <div className="images-grid">
+              //     {elements.map((element) => (
+              //       <div
+              //         key={element.id}
+              //         className="image-thumbnail"
+              //         onClick={() => addElementToCanvas(element)}
+              //         title={element.name}
+              //       >
+              //         <img src={element.cdnUrl} alt={element.name} />
+              //       </div>
+              //     ))}
+              //     {elements.length === 0 && (
+              //       <p style={{gridColumn: '1 / -1', textAlign: 'center', color: '#94a3b8', padding: '20px'}}>
+              //         No elements available
+              //       </p>
+              //     )}
+              //   </div>
+              // </div>
+              <div className="panel-section coming-soon">
+                <div className="coming-soon-text">
+                  <span>Coming soon…</span>
                 </div>
-              </div>
+              </div>              
             )}
             {activeTab === 'filters' && (
-              <div className="panel-section">
-                <h3>Filters & Color Correction</h3>
-                {!selectedLayer ? (
-                  <p className="no-selection">Select an image layer to apply filters</p>
-                ) : selectedLayer.type !== 'image' ? (
-                  <p className="no-selection">Filters are only available for image layers</p>
-                ) : (
-                  <div className="filters-panel">
-                    {/* Brightness */}
-                    <div className="filter-control">
-                      <label>
-                        Brightness
-                        <span className="filter-value">
-                          {selectedLayer.filters?.find(f => f.type === 'brightness')?.value || 0}
-                        </span>
-                      </label>
-                      <input
-                        type="range"
-                        min="-100"
-                        max="100"
-                        step="1"
-                        value={selectedLayer.filters?.find(f => f.type === 'brightness')?.value || 0}
-                        onChange={(e) => updateFilter(selectedLayer.id, 'brightness', parseFloat(e.target.value))}
-                      />
-                    </div>
+              // <div className="panel-section">
+              //   <h3>Filters & Color Correction</h3>
+              //   {!selectedLayer ? (
+              //     <p className="no-selection">Select an image layer to apply filters</p>
+              //   ) : selectedLayer.type !== 'image' ? (
+              //     <p className="no-selection">Filters are only available for image layers</p>
+              //   ) : (
+              //     <div className="filters-panel">
+              //       {/* Brightness */}
+              //       <div className="filter-control">
+              //         <label>
+              //           Brightness
+              //           <span className="filter-value">
+              //             {selectedLayer.filters?.find(f => f.type === 'brightness')?.value || 0}
+              //           </span>
+              //         </label>
+              //         <input
+              //           type="range"
+              //           min="-100"
+              //           max="100"
+              //           step="1"
+              //           value={selectedLayer.filters?.find(f => f.type === 'brightness')?.value || 0}
+              //           onChange={(e) => updateFilter(selectedLayer.id, 'brightness', parseFloat(e.target.value))}
+              //         />
+              //       </div>
             
-                    {/* Contrast */}
-                    <div className="filter-control">
-                      <label>
-                        Contrast
-                        <span className="filter-value">
-                          {selectedLayer.filters?.find(f => f.type === 'contrast')?.value || 0}
-                        </span>
-                      </label>
-                      <input
-                        type="range"
-                        min="-100"
-                        max="100"
-                        step="1"
-                        value={selectedLayer.filters?.find(f => f.type === 'contrast')?.value || 0}
-                        onChange={(e) => updateFilter(selectedLayer.id, 'contrast', parseFloat(e.target.value))}
-                      />
-                    </div>
+              //       {/* Contrast */}
+              //       <div className="filter-control">
+              //         <label>
+              //           Contrast
+              //           <span className="filter-value">
+              //             {selectedLayer.filters?.find(f => f.type === 'contrast')?.value || 0}
+              //           </span>
+              //         </label>
+              //         <input
+              //           type="range"
+              //           min="-100"
+              //           max="100"
+              //           step="1"
+              //           value={selectedLayer.filters?.find(f => f.type === 'contrast')?.value || 0}
+              //           onChange={(e) => updateFilter(selectedLayer.id, 'contrast', parseFloat(e.target.value))}
+              //         />
+              //       </div>
             
-                    {/* Saturation */}
-                    <div className="filter-control">
-                      <label>
-                        Saturation
-                        <span className="filter-value">
-                          {selectedLayer.filters?.find(f => f.type === 'saturation')?.value || 0}
-                        </span>
-                      </label>
-                      <input
-                        type="range"
-                        min="-100"
-                        max="100"
-                        step="1"
-                        value={selectedLayer.filters?.find(f => f.type === 'saturation')?.value || 0}
-                        onChange={(e) => updateFilter(selectedLayer.id, 'saturation', parseFloat(e.target.value))}
-                      />
-                    </div>
+              //       {/* Saturation */}
+              //       <div className="filter-control">
+              //         <label>
+              //           Saturation
+              //           <span className="filter-value">
+              //             {selectedLayer.filters?.find(f => f.type === 'saturation')?.value || 0}
+              //           </span>
+              //         </label>
+              //         <input
+              //           type="range"
+              //           min="-100"
+              //           max="100"
+              //           step="1"
+              //           value={selectedLayer.filters?.find(f => f.type === 'saturation')?.value || 0}
+              //           onChange={(e) => updateFilter(selectedLayer.id, 'saturation', parseFloat(e.target.value))}
+              //         />
+              //       </div>
             
-                    {/* Hue Rotate */}
-                    <div className="filter-control">
-                      <label>
-                        Hue
-                        <span className="filter-value">
-                          {selectedLayer.filters?.find(f => f.type === 'hue-rotate')?.value || 0}°
-                        </span>
-                      </label>
-                      <input
-                        type="range"
-                        min="0"
-                        max="360"
-                        step="1"
-                        value={selectedLayer.filters?.find(f => f.type === 'hue-rotate')?.value || 0}
-                        onChange={(e) => updateFilter(selectedLayer.id, 'hue-rotate', parseFloat(e.target.value))}
-                      />
-                    </div>
+              //       {/* Hue Rotate */}
+              //       <div className="filter-control">
+              //         <label>
+              //           Hue
+              //           <span className="filter-value">
+              //             {selectedLayer.filters?.find(f => f.type === 'hue-rotate')?.value || 0}°
+              //           </span>
+              //         </label>
+              //         <input
+              //           type="range"
+              //           min="0"
+              //           max="360"
+              //           step="1"
+              //           value={selectedLayer.filters?.find(f => f.type === 'hue-rotate')?.value || 0}
+              //           onChange={(e) => updateFilter(selectedLayer.id, 'hue-rotate', parseFloat(e.target.value))}
+              //         />
+              //       </div>
             
-                    {/* Temperature */}
-                    <div className="filter-control">
-                      <label>
-                        Temperature
-                        <span className="filter-value">
-                          {selectedLayer.filters?.find(f => f.type === 'temperature')?.value || 0}
-                        </span>
-                      </label>
-                      <input
-                        type="range"
-                        min="-100"
-                        max="100"
-                        step="1"
-                        value={selectedLayer.filters?.find(f => f.type === 'temperature')?.value || 0}
-                        onChange={(e) => updateFilter(selectedLayer.id, 'temperature', parseFloat(e.target.value))}
-                      />
-                      <div className="temperature-indicator">
-                        <span style={{color: '#3b82f6'}}>Cool</span>
-                        <span style={{color: '#f59e0b'}}>Warm</span>
-                      </div>
-                    </div>
+              //       {/* Temperature */}
+              //       <div className="filter-control">
+              //         <label>
+              //           Temperature
+              //           <span className="filter-value">
+              //             {selectedLayer.filters?.find(f => f.type === 'temperature')?.value || 0}
+              //           </span>
+              //         </label>
+              //         <input
+              //           type="range"
+              //           min="-100"
+              //           max="100"
+              //           step="1"
+              //           value={selectedLayer.filters?.find(f => f.type === 'temperature')?.value || 0}
+              //           onChange={(e) => updateFilter(selectedLayer.id, 'temperature', parseFloat(e.target.value))}
+              //         />
+              //         <div className="temperature-indicator">
+              //           <span style={{color: '#3b82f6'}}>Cool</span>
+              //           <span style={{color: '#f59e0b'}}>Warm</span>
+              //         </div>
+              //       </div>
             
-                    {/* Tint */}
-                    <div className="filter-control">
-                      <label>
-                        Tint
-                        <span className="filter-value">
-                          {selectedLayer.filters?.find(f => f.type === 'tint')?.value || 0}
-                        </span>
-                      </label>
-                      <input
-                        type="range"
-                        min="-100"
-                        max="100"
-                        step="1"
-                        value={selectedLayer.filters?.find(f => f.type === 'tint')?.value || 0}
-                        onChange={(e) => updateFilter(selectedLayer.id, 'tint', parseFloat(e.target.value))}
-                      />
-                      <div className="temperature-indicator">
-                        <span style={{color: '#10b981'}}>Green</span>
-                        <span style={{color: '#ec4899'}}>Magenta</span>
-                      </div>
-                    </div>
+              //       {/* Tint */}
+              //       <div className="filter-control">
+              //         <label>
+              //           Tint
+              //           <span className="filter-value">
+              //             {selectedLayer.filters?.find(f => f.type === 'tint')?.value || 0}
+              //           </span>
+              //         </label>
+              //         <input
+              //           type="range"
+              //           min="-100"
+              //           max="100"
+              //           step="1"
+              //           value={selectedLayer.filters?.find(f => f.type === 'tint')?.value || 0}
+              //           onChange={(e) => updateFilter(selectedLayer.id, 'tint', parseFloat(e.target.value))}
+              //         />
+              //         <div className="temperature-indicator">
+              //           <span style={{color: '#10b981'}}>Green</span>
+              //           <span style={{color: '#ec4899'}}>Magenta</span>
+              //         </div>
+              //       </div>
             
-                    {/* Exposure */}
-                    <div className="filter-control">
-                      <label>
-                        Exposure
-                        <span className="filter-value">
-                          {(selectedLayer.filters?.find(f => f.type === 'exposure')?.value || 0).toFixed(2)} EV
-                        </span>
-                      </label>
-                      <input
-                        type="range"
-                        min="-2"
-                        max="2"
-                        step="0.1"
-                        value={selectedLayer.filters?.find(f => f.type === 'exposure')?.value || 0}
-                        onChange={(e) => updateFilter(selectedLayer.id, 'exposure', parseFloat(e.target.value))}
-                      />
-                    </div>
+              //       {/* Exposure */}
+              //       <div className="filter-control">
+              //         <label>
+              //           Exposure
+              //           <span className="filter-value">
+              //             {(selectedLayer.filters?.find(f => f.type === 'exposure')?.value || 0).toFixed(2)} EV
+              //           </span>
+              //         </label>
+              //         <input
+              //           type="range"
+              //           min="-2"
+              //           max="2"
+              //           step="0.1"
+              //           value={selectedLayer.filters?.find(f => f.type === 'exposure')?.value || 0}
+              //           onChange={(e) => updateFilter(selectedLayer.id, 'exposure', parseFloat(e.target.value))}
+              //         />
+              //       </div>
             
-                    {/* Highlights */}
-                    <div className="filter-control">
-                      <label>
-                        Highlights
-                        <span className="filter-value">
-                          {selectedLayer.filters?.find(f => f.type === 'highlights')?.value || 0}
-                        </span>
-                      </label>
-                      <input
-                        type="range"
-                        min="-100"
-                        max="100"
-                        step="1"
-                        value={selectedLayer.filters?.find(f => f.type === 'highlights')?.value || 0}
-                        onChange={(e) => updateFilter(selectedLayer.id, 'highlights', parseFloat(e.target.value))}
-                      />
-                    </div>
+              //       {/* Highlights */}
+              //       <div className="filter-control">
+              //         <label>
+              //           Highlights
+              //           <span className="filter-value">
+              //             {selectedLayer.filters?.find(f => f.type === 'highlights')?.value || 0}
+              //           </span>
+              //         </label>
+              //         <input
+              //           type="range"
+              //           min="-100"
+              //           max="100"
+              //           step="1"
+              //           value={selectedLayer.filters?.find(f => f.type === 'highlights')?.value || 0}
+              //           onChange={(e) => updateFilter(selectedLayer.id, 'highlights', parseFloat(e.target.value))}
+              //         />
+              //       </div>
             
-                    {/* Shadows */}
-                    <div className="filter-control">
-                      <label>
-                        Shadows
-                        <span className="filter-value">
-                          {selectedLayer.filters?.find(f => f.type === 'shadows')?.value || 0}
-                        </span>
-                      </label>
-                      <input
-                        type="range"
-                        min="-100"
-                        max="100"
-                        step="1"
-                        value={selectedLayer.filters?.find(f => f.type === 'shadows')?.value || 0}
-                        onChange={(e) => updateFilter(selectedLayer.id, 'shadows', parseFloat(e.target.value))}
-                      />
-                    </div>
+              //       {/* Shadows */}
+              //       <div className="filter-control">
+              //         <label>
+              //           Shadows
+              //           <span className="filter-value">
+              //             {selectedLayer.filters?.find(f => f.type === 'shadows')?.value || 0}
+              //           </span>
+              //         </label>
+              //         <input
+              //           type="range"
+              //           min="-100"
+              //           max="100"
+              //           step="1"
+              //           value={selectedLayer.filters?.find(f => f.type === 'shadows')?.value || 0}
+              //           onChange={(e) => updateFilter(selectedLayer.id, 'shadows', parseFloat(e.target.value))}
+              //         />
+              //       </div>
             
-                    {/* Vibrance */}
-                    <div className="filter-control">
-                      <label>
-                        Vibrance
-                        <span className="filter-value">
-                          {selectedLayer.filters?.find(f => f.type === 'vibrance')?.value || 100}
-                        </span>
-                      </label>
-                      <input
-                        type="range"
-                        min="0"
-                        max="200"
-                        step="1"
-                        value={selectedLayer.filters?.find(f => f.type === 'vibrance')?.value || 100}
-                        onChange={(e) => updateFilter(selectedLayer.id, 'vibrance', parseFloat(e.target.value))}
-                      />
-                    </div>
+              //       {/* Vibrance */}
+              //       <div className="filter-control">
+              //         <label>
+              //           Vibrance
+              //           <span className="filter-value">
+              //             {selectedLayer.filters?.find(f => f.type === 'vibrance')?.value || 100}
+              //           </span>
+              //         </label>
+              //         <input
+              //           type="range"
+              //           min="0"
+              //           max="200"
+              //           step="1"
+              //           value={selectedLayer.filters?.find(f => f.type === 'vibrance')?.value || 100}
+              //           onChange={(e) => updateFilter(selectedLayer.id, 'vibrance', parseFloat(e.target.value))}
+              //         />
+              //       </div>
             
-                    {/* Blur */}
-                    <div className="filter-control">
-                      <label>
-                        Blur
-                        <span className="filter-value">
-                          {selectedLayer.filters?.find(f => f.type === 'blur')?.value || 0}px
-                        </span>
-                      </label>
-                      <input
-                        type="range"
-                        min="0"
-                        max="20"
-                        step="0.5"
-                        value={selectedLayer.filters?.find(f => f.type === 'blur')?.value || 0}
-                        onChange={(e) => updateFilter(selectedLayer.id, 'blur', parseFloat(e.target.value))}
-                      />
-                    </div>
+              //       {/* Blur */}
+              //       <div className="filter-control">
+              //         <label>
+              //           Blur
+              //           <span className="filter-value">
+              //             {selectedLayer.filters?.find(f => f.type === 'blur')?.value || 0}px
+              //           </span>
+              //         </label>
+              //         <input
+              //           type="range"
+              //           min="0"
+              //           max="20"
+              //           step="0.5"
+              //           value={selectedLayer.filters?.find(f => f.type === 'blur')?.value || 0}
+              //           onChange={(e) => updateFilter(selectedLayer.id, 'blur', parseFloat(e.target.value))}
+              //         />
+              //       </div>
             
-                    {/* Sharpen */}
-                    <div className="filter-control">
-                      <label>
-                        Sharpen
-                        <span className="filter-value">
-                          {selectedLayer.filters?.find(f => f.type === 'sharpen')?.value || 0}
-                        </span>
-                      </label>
-                      <input
-                        type="range"
-                        min="0"
-                        max="10"
-                        step="0.5"
-                        value={selectedLayer.filters?.find(f => f.type === 'sharpen')?.value || 0}
-                        onChange={(e) => updateFilter(selectedLayer.id, 'sharpen', parseFloat(e.target.value))}
-                      />
-                    </div>                 
+              //       {/* Sharpen */}
+              //       <div className="filter-control">
+              //         <label>
+              //           Sharpen
+              //           <span className="filter-value">
+              //             {selectedLayer.filters?.find(f => f.type === 'sharpen')?.value || 0}
+              //           </span>
+              //         </label>
+              //         <input
+              //           type="range"
+              //           min="0"
+              //           max="10"
+              //           step="0.5"
+              //           value={selectedLayer.filters?.find(f => f.type === 'sharpen')?.value || 0}
+              //           onChange={(e) => updateFilter(selectedLayer.id, 'sharpen', parseFloat(e.target.value))}
+              //         />
+              //       </div>                 
             
-                    {/* Quick Presets */}
-                    <div className="filter-presets">
-                      <h4>Quick Presets</h4>
-                      <div className="preset-buttons">
-                        <button
-                          className="preset-btn"
-                          onClick={() => {
-                            updateLayer(selectedLayer.id, {
-                              filters: [
-                                { type: 'contrast', value: 20 },
-                                { type: 'saturation', value: 30 },
-                                { type: 'sharpen', value: 2 }
-                              ]
-                            });
-                          }}
-                        >
-                          Vivid
-                        </button>
-                        <button
-                          className="preset-btn"
-                          onClick={() => {
-                            updateLayer(selectedLayer.id, {
-                              filters: [
-                                { type: 'temperature', value: 30 },
-                                { type: 'saturation', value: -20 },
-                                { type: 'exposure', value: 0.3 }
-                              ]
-                            });
-                          }}
-                        >
-                          Warm
-                        </button>
-                        <button
-                          className="preset-btn"
-                          onClick={() => {
-                            updateLayer(selectedLayer.id, {
-                              filters: [
-                                { type: 'temperature', value: -30 },
-                                { type: 'contrast', value: 15 }
-                              ]
-                            });
-                          }}
-                        >
-                          Cool
-                        </button>
-                        <button
-                          className="preset-btn"
-                          onClick={() => {
-                            updateLayer(selectedLayer.id, {
-                              filters: [
-                                { type: 'saturation', value: -100 },
-                                { type: 'contrast', value: 25 }
-                              ]
-                            });
-                          }}
-                        >
-                          B&W
-                        </button>
-                        <button
-                          className="preset-btn reset-btn"
-                          onClick={() => resetAllFilters(selectedLayer.id)}
-                        >
-                          Reset All
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
+              //       {/* Quick Presets */}
+              //       <div className="filter-presets">
+              //         <h4>Quick Presets</h4>
+              //         <div className="preset-buttons">
+              //           <button
+              //             className="preset-btn"
+              //             onClick={() => {
+              //               updateLayer(selectedLayer.id, {
+              //                 filters: [
+              //                   { type: 'contrast', value: 20 },
+              //                   { type: 'saturation', value: 30 },
+              //                   { type: 'sharpen', value: 2 }
+              //                 ]
+              //               });
+              //             }}
+              //           >
+              //             Vivid
+              //           </button>
+              //           <button
+              //             className="preset-btn"
+              //             onClick={() => {
+              //               updateLayer(selectedLayer.id, {
+              //                 filters: [
+              //                   { type: 'temperature', value: 30 },
+              //                   { type: 'saturation', value: -20 },
+              //                   { type: 'exposure', value: 0.3 }
+              //                 ]
+              //               });
+              //             }}
+              //           >
+              //             Warm
+              //           </button>
+              //           <button
+              //             className="preset-btn"
+              //             onClick={() => {
+              //               updateLayer(selectedLayer.id, {
+              //                 filters: [
+              //                   { type: 'temperature', value: -30 },
+              //                   { type: 'contrast', value: 15 }
+              //                 ]
+              //               });
+              //             }}
+              //           >
+              //             Cool
+              //           </button>
+              //           <button
+              //             className="preset-btn"
+              //             onClick={() => {
+              //               updateLayer(selectedLayer.id, {
+              //                 filters: [
+              //                   { type: 'saturation', value: -100 },
+              //                   { type: 'contrast', value: 25 }
+              //                 ]
+              //               });
+              //             }}
+              //           >
+              //             B&W
+              //           </button>
+              //           <button
+              //             className="preset-btn reset-btn"
+              //             onClick={() => resetAllFilters(selectedLayer.id)}
+              //           >
+              //             Reset All
+              //           </button>
+              //         </div>
+              //       </div>
+              //     </div>
+              //   )}
+              // </div>
+              <div className="panel-section coming-soon">
+                <div className="coming-soon-text">
+                  <span>Coming soon…</span>
+                </div>
+              </div>              
             )}                          
             </div>
             </div>
