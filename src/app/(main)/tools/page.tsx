@@ -48,6 +48,19 @@ const toolsData: Tool[] = [
   },
   {
     id: 3,
+    title: "Image Editor",
+    description: "Free online image editor with layers, text, shapes, filters, and more. Perfect for social media graphics, thumbnails, and banners.",
+    category: "Design Tools",
+    icon: "🖼️",
+    gradient: "linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%)",
+    tags: ["image", "editor", "design", "layers", "graphics", "photo"],
+    featured: false,
+    url: "/tools/image-editing",
+    difficulty: "Easy",
+    usageTime: "5 min"
+  },  
+  {
+    id: 4,
     title: "AI Background Removal",
     description: "Remove backgrounds from images instantly with AI precision. Get clean, professional cutouts in seconds.",
     category: "AI Tools",
@@ -60,7 +73,7 @@ const toolsData: Tool[] = [
     usageTime: "1 min"
   },
   {
-    id: 4,
+    id: 5,
     title: "Video Speed Modifier",
     description: "Adjust video playback speed seamlessly. Speed up or slow down your videos while maintaining quality.",
     category: "Video Editing",
@@ -73,7 +86,7 @@ const toolsData: Tool[] = [
     usageTime: "2 min"
   },
   {
-    id: 5,
+    id: 6,
     title: "Media Compression",
     description: "Compress images and videos without losing quality. Reduce file sizes for faster uploads and sharing.",
     category: "Optimization",
@@ -86,7 +99,7 @@ const toolsData: Tool[] = [
     usageTime: "2 min"
   },
   {
-    id: 6,
+    id: 7,
     title: "Media Format Conversion",
     description: "Convert between different media formats effortlessly. Support for video, audio, and image formats.",
     category: "Conversion",
@@ -294,98 +307,82 @@ export default function ToolsIndex() {
       </Head>
 
       <div className={styles.toolsContainer}>
-        {/* Hero Section */}
+        {/* Compact Hero Section */}
         <div className={styles.heroSection}>
           <div className={styles.heroContent}>
-            <div className={styles.heroBadge}>
-              <span className={styles.badgeText}>🚀 Free Tools</span>
+            <div className={styles.heroTop}>
+              <h1 className={styles.heroTitle}>
+                AI-Powered Tools for <span className={styles.gradientText}>Creators</span>
+              </h1>
+              <p className={styles.heroDescription}>
+                Professional-grade tools, completely free. No signup required.
+              </p>
             </div>
-            <h1 className={styles.heroTitle}>
-              Powerful AI Tools for
-              <span className={styles.gradientText}> Content Creators</span>
-            </h1>
-            <p className={styles.heroDescription}>
-              Elevate your content with our suite of AI-powered tools. From voice generation to video editing, everything you need to create amazing content is right here.
-            </p>
             
-            {/* Search and Filter Controls */}
+            {/* Inline Search and Filters */}
             <div className={styles.controlsContainer}>
               <div className={styles.searchBox}>
                 <span className={styles.searchIcon}>🔍</span>
                 <input
                   type="text"
-                  placeholder="Search tools by name, category, or feature..."
+                  placeholder="Search tools..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className={styles.searchInput}
                 />
               </div>
               
-              <div className={styles.filtersRow}>
-                <div className={styles.categoryTabs}>
-                  {categories.map((category) => (
-                    <button
-                      key={category}
-                      className={`${styles.categoryTab} ${selectedCategory === category ? styles.active : ''}`}
-                      onClick={() => setSelectedCategory(category)}
-                    >
-                      {category === 'all' ? '✨ All Tools' : category}
-                    </button>
-                  ))}
-                </div>
+              <div className={styles.categoryTabs}>
+                {categories.map((category) => (
+                  <button
+                    key={category}
+                    className={`${styles.categoryTab} ${selectedCategory === category ? styles.active : ''}`}
+                    onClick={() => setSelectedCategory(category)}
+                  >
+                    {category === 'all' ? 'All' : category}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
         </div>
 
         <div className={styles.contentWrapper}>
-          {/* Featured Tool */}
+          {/* Featured Tool - Compact Horizontal Card */}
           {featuredTool && selectedCategory === 'all' && !searchTerm && (
-            <section className={styles.featuredSection}>
-              <div className={styles.sectionHeader}>
-                <h2 className={styles.sectionTitle}>⭐ Featured Tool</h2>
-              </div>
+            <div className={styles.featuredSection}>
               <Link href={featuredTool.url} className={styles.featuredLink}>
                 <article className={styles.featuredCard}>
                   <div className={styles.featuredImage} style={{ background: featuredTool.gradient }}>
                     <span className={styles.featuredIcon}>{featuredTool.icon}</span>
-                    <div className={styles.featuredBadge}>FEATURED</div>
+                    <div className={styles.featuredBadge}>⭐ FEATURED</div>
                   </div>
                   <div className={styles.featuredContent}>
                     <div className={styles.featuredMeta}>
                       <span className={styles.category}>{featuredTool.category}</span>
                       <span className={styles.difficulty}>{featuredTool.difficulty}</span>
-                    </div>
-                    <h3 className={styles.featuredTitle}>{featuredTool.title}</h3>
-                    <p className={styles.featuredExcerpt}>{featuredTool.description}</p>
-                    <div className={styles.featuredStats}>
                       <span className={styles.stat}>
                         <span className={styles.statIcon}>⏱️</span>
-                        {featuredTool.usageTime} usage
-                      </span>
-                      <span className={styles.stat}>
-                        <span className={styles.statIcon}>🎯</span>
-                        {featuredTool.difficulty}
+                        {featuredTool.usageTime}
                       </span>
                     </div>
+                    <h2 className={styles.featuredTitle}>{featuredTool.title}</h2>
+                    <p className={styles.featuredExcerpt}>{featuredTool.description}</p>
                     <div className={styles.ctaButton}>
-                      Try Now →
+                      Launch Tool →
                     </div>
                   </div>
                 </article>
               </Link>
-            </section>
+            </div>
           )}
 
           {/* Tools Grid */}
           <section className={styles.toolsSection}>
             <div className={styles.sectionHeader}>
               <h2 className={styles.sectionTitle}>
-                {searchTerm ? `Search Results (${filteredTools().length})` : 'All Tools'}
+                {searchTerm ? `Results (${filteredTools().length})` : 'All Tools'}
               </h2>
-              <div className={styles.resultsCount}>
-                Showing {paginatedTools().length} of {filteredTools().length} tools
-              </div>
             </div>
 
             {paginatedTools().length === 0 ? (
@@ -432,24 +429,19 @@ export default function ToolsIndex() {
               </div>
             )}
           </section>
-        </div>
 
-        {/* CTA Section */}
-        <section className={styles.ctaSection}>
-          <div className={styles.ctaContainer}>
+          {/* Compact CTA Section */}
+          <section className={styles.ctaSection}>
             <div className={styles.ctaContent}>
               <span className={styles.ctaIcon}>💡</span>
               <h2 className={styles.ctaTitle}>Need a Custom Tool?</h2>
               <p className={styles.ctaText}>
-                Have a specific workflow in mind? Let us know what tool would make your content creation easier!
+                Join 50,000+ creators using our tools • All free • No signup required
               </p>
               <button className={styles.ctaBtn}>Request a Tool</button>
-              <p className={styles.ctaDisclaimer}>
-                Join 50,000+ creators using our tools • All tools are free • No signup required
-              </p>
             </div>
-          </div>
-        </section>
+          </section>
+        </div>
       </div>
     </>
   );
