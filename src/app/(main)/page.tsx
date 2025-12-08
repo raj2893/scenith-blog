@@ -5,8 +5,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { FaPlay, FaMicrophone, FaClosedCaptioning, FaExchangeAlt, FaEraser, FaTachometerAlt, FaPaintBrush, FaCompressArrowsAlt } from 'react-icons/fa';
-import '../../../styles/LandingPage.css'; // Import your existing CSS file
-import Script from 'next/script';
+import '../../../styles/LandingPage.css';
 
 interface ToolShowcase {
   id: string;
