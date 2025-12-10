@@ -33,9 +33,36 @@ const toolsShowcase: ToolShowcase[] = [
     icon: FaClosedCaptioning,
     description: 'Auto-generate accurate subtitles instantly',
     link: '/tools/add-subtitles-to-videos',
-    color: '#4ECDC4',
-    badge: 'New'
+    color: '#0b8a82',
+    badge: null
   },
+  { 
+    id: 'image-editing', 
+    title: 'Image Editor', 
+    icon: FaPaintBrush,
+    description: 'A Friendly Image Editor for all your Social Requirements.',
+    link: '/tools/image-editing',
+    color: '#5e59ae',
+    badge: 'New'
+  },  
+  { 
+    id: 'video-editing', 
+    title: 'Video Editor', 
+    icon: FaPaintBrush,
+    description: 'A Friendly Video Editor for all your Social Requirements.',
+    link: 'https://scenith.in/dashboard',
+    color: '#8801b1',
+    badge: null
+  },  
+  { 
+    id: 'bg-remover', 
+    title: 'Background Remover', 
+    icon: FaEraser,
+    description: 'Remove image backgrounds in seconds',
+    link: '/tools/background-removal',
+    color: '#FFEAA7',
+    badge: 'Popular'
+  },  
   { 
     id: 'media-conversion', 
     title: 'Media Conversion', 
@@ -55,30 +82,12 @@ const toolsShowcase: ToolShowcase[] = [
     badge: null
   },
   { 
-    id: 'bg-remover', 
-    title: 'Background Remover', 
-    icon: FaEraser,
-    description: 'Remove image backgrounds in seconds',
-    link: '/tools/background-removal',
-    color: '#FFEAA7',
-    badge: 'Popular'
-  },
-  { 
     id: 'speed-modifier', 
     title: 'Video Speed Modifier', 
     icon: FaTachometerAlt,
     description: 'Speed up or slow down your videos',
     link: '/tools/video-speed-modifier',
-    color: '#DFE6E9',
-    badge: null
-  },
-  { 
-    id: 'image-editing', 
-    title: 'Image Editing', 
-    icon: FaPaintBrush,
-    description: 'A Friendly Image Editor for all your Social Requirements.',
-    link: '/tools/image-editing',
-    color: '#A29BFE',
+    color: '#62caf7',
     badge: null
   }
 ];
@@ -386,18 +395,18 @@ export default function LandingPage() {
               Create Stunning Videos with <span className="highlight">Scenith</span>
             </h1>
             <p>
-              Unleash your creativity with our powerful, AI-driven video editing platform. From AI voice generation to subtitle creation, Scenith provides <span className="stats-highlight">7+ professional tools</span> that save you hours of work. Join <span className="stats-highlight">10,000+ creators</span> who trust Scenith.
+              Create professional videos faster with Scenith’s all-in-one AI platform. Generate lifelike voiceovers, edit videos, enhance images, add subtitles, and more — all in one place.
             </p>
             <div className="hero-cta">
-              <Link href="/signup" className="cta-button primary">
-                Start Editing Now
+              <Link href="/tools/ai-voice-generation" className="cta-button primary">
+                AI Voice Generator
               </Link>
-              <button
-                className="cta-button secondary"
-                onClick={() => scrollToSection('tutorials-section')}
-              >
-                Watch Tutorials <FaPlay className="play-icon" />
-              </button>
+              <Link href="/dashboard" className="cta-button secondary">
+                Video Editor
+              </Link>
+              <Link href="/tools/image-editing" className="cta-button secondary">
+                Image Editor
+              </Link>
             </div>
           </motion.div>
         </section>
