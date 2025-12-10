@@ -159,6 +159,13 @@ const AIVoiceGeneratorClient: React.FC = () => {
   const [loginSuccess, setLoginSuccess] = useState<string>('');
   const [playingDemo, setPlayingDemo] = useState<string | null>(null);
   const demoAudioRef = useRef<HTMLAudioElement | null>(null);  
+  const [ttsUsage, setTtsUsage] = useState<{
+    used: number;
+    limit: number;
+    remaining: number;
+    role: string;
+  } | null>(null);  
+  const [characterCount, setCharacterCount] = useState(0);
 
   // Handle scroll for navbar styling
   useEffect(() => {
@@ -168,6 +175,33 @@ const AIVoiceGeneratorClient: React.FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Fetch TTS usage when user logs in
+  useEffect(() => {
+    const fetchTtsUsage = async () => {
+      if (!isLoggedIn) {
+        setTtsUsage(null);
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/sole-tts/usage`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setTtsUsage(data);
+        }
+      } catch (error) {
+        console.error('Error fetching TTS usage:', error);
+      }
+    };
+
+    fetchTtsUsage();
+  }, [isLoggedIn]);  
 
   // Check auth status and fetch user profile if token exists
   useEffect(() => {
@@ -446,6 +480,37 @@ const AIVoiceGeneratorClient: React.FC = () => {
       setError('Please enter text and select a voice.');
       return;
     }
+
+    if (aiVoiceText.length > getMaxCharsPerRequest()) {
+      setError(`Text exceeds the maximum limit of ${getMaxCharsPerRequest().toLocaleString()} characters per request (you only have ${ttsUsage?.remaining.toLocaleString()} left this month).`);
+      setTimeout(() => {
+        const errorElement = document.querySelector('.error-message');
+        if (errorElement) {
+          errorElement.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center' 
+          });
+        }
+      }, 100);
+      setTimeout(() => setError(null), 10000);
+      return;
+    }
+
+    if (ttsUsage && (ttsUsage.used + aiVoiceText.length > ttsUsage.limit)) {
+      setError(`This request would exceed your monthly limit. You have ${ttsUsage.remaining.toLocaleString()} characters remaining, but this text is ${aiVoiceText.length.toLocaleString()} characters long.`);
+      setTimeout(() => {
+        const errorElement = document.querySelector('.error-message');
+        if (errorElement) {
+          errorElement.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center' 
+          });
+        }
+      }, 100);
+      setTimeout(() => setError(null), 10000);
+      return;
+    }
+
     setIsGenerating(true);
     setError(null);
     try {
@@ -468,21 +533,34 @@ const AIVoiceGeneratorClient: React.FC = () => {
         },
         body: JSON.stringify(requestBody),
       });
-  
-      let errorData;
+
       if (!response.ok) {
         const contentType = response.headers.get('content-type');
+        let errorMessage = `HTTP error! status: ${response.status}`;
+
         if (contentType && contentType.includes('application/json')) {
-          errorData = await response.json();
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorData.error || errorMessage;
         } else {
           const errorText = await response.text();
-          errorData = errorText || `HTTP error! status: ${response.status}`;
+          errorMessage = errorText || errorMessage;
         }
-        throw new Error(errorData.message || errorData || `HTTP error! status: ${response.status}`);
+
+        throw new Error(errorMessage);
       }
-  
+
       const data = await response.json();
       setGeneratedAudio(`${CDN_URL}/${data.audioPath}`);
+
+      const usageResponse = await fetch(`${API_BASE_URL}/api/sole-tts/usage`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      if (usageResponse.ok) {
+        const usageData = await usageResponse.json();
+        setTtsUsage(usageData);
+      }
       
       setTimeout(() => {
         const audioSection = document.querySelector('.audio-output-section');
@@ -494,7 +572,24 @@ const AIVoiceGeneratorClient: React.FC = () => {
         }
       }, 100);
     } catch (err: any) {
-      setError(err.message || 'Failed to generate audio.');
+      const errorMessage = err.message || 'Failed to generate audio.';
+      setError(errorMessage);
+    
+      // Scroll to error message
+      setTimeout(() => {
+        const errorElement = document.querySelector('.error-message');
+        if (errorElement) {
+          errorElement.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center' 
+          });
+        }
+      }, 100);
+    
+      // Auto-clear error after 10 seconds
+      setTimeout(() => {
+        setError(null);
+      }, 10000);
     } finally {
       setIsGenerating(false);
     }
@@ -551,8 +646,11 @@ const AIVoiceGeneratorClient: React.FC = () => {
     });
   };
 
-  // Current date for SEO freshness
-  const currentYear = new Date().getFullYear();
+  const getMaxCharsPerRequest = useCallback(() => {
+    if (!isLoggedIn || !ttsUsage) return 5000;
+    // Never allow a single request bigger than what the user has left
+    return Math.min(5000, ttsUsage.remaining);
+  }, [isLoggedIn, ttsUsage]);
 
   return (
     <div className="ai-voice-generator-page">
@@ -611,16 +709,55 @@ const AIVoiceGeneratorClient: React.FC = () => {
               <div className="text-input-section">
                 <textarea
                   value={aiVoiceText}
-                  onChange={(e) => setAiVoiceText(e.target.value)}
-                  placeholder="Enter your text here... (Max 13,500 characters for free usage)"
+                  onChange={(e) => {
+                    setAiVoiceText(e.target.value);
+                    setCharacterCount(e.target.value.length);
+                  }}
+                  placeholder="Enter your text here..."
                   className="ai-voice-textarea"
                   disabled={!isLoggedIn}
                   aria-label="Text input for AI voice generation"
+                  maxLength={getMaxCharsPerRequest()}
                 />
+
+                {isLoggedIn && (
+                  <div className="character-count-container">
+                    <p className="character-count">
+                      <span className={characterCount > getMaxCharsPerRequest() ? 'count-exceeded' : characterCount > getMaxCharsPerRequest() * 0.9 ? 'count-warning' : ''}>
+                        {characterCount.toLocaleString()}
+                      </span> / {getMaxCharsPerRequest().toLocaleString()} characters per request
+                    </p>
+                  </div>
+                )}
+
+                {isLoggedIn && ttsUsage && (
+                  <div className="usage-info">
+                    <div className="usage-bar-container">
+                      <div 
+                        className="usage-bar-fill" 
+                        style={{ width: `${(ttsUsage.used / ttsUsage.limit) * 100}%` }}
+                      />
+                    </div>
+                    <p className="usage-text">
+                      <strong>{ttsUsage.remaining.toLocaleString()}</strong> characters remaining 
+                      ({ttsUsage.used.toLocaleString()} / {ttsUsage.limit.toLocaleString()} used this month)
+                    </p>
+                  </div>
+                )}
+
                 <button
                   className="cta-button generate-voice-button"
                   onClick={handleGenerateAiAudio}
-                  disabled={isLoggedIn && (!aiVoiceText.trim() || !selectedVoice) || isGenerating}
+                  disabled={
+                    !isLoggedIn ? false : (                     // ← When NOT logged in → button ENABLED
+                      !aiVoiceText.trim() || 
+                      !selectedVoice || 
+                      isGenerating || 
+                      characterCount > getMaxCharsPerRequest() ||
+                      (ttsUsage && ttsUsage.remaining < aiVoiceText.length) ||
+                      undefined
+                    )
+                  }
                   aria-label="Generate AI voice from text"
                 >
                   {isGenerating ? 'Generating...' : isLoggedIn ? 'Generate AI Voice' : 'Login to Generate'}
@@ -754,9 +891,16 @@ const AIVoiceGeneratorClient: React.FC = () => {
       </section>
 
       {error && (
-        <div className="error-message" role="alert">
-          {error}
-        </div>
+        <motion.div 
+          className="error-message" 
+          role="alert"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3 }}
+        >
+          <strong>⚠️ Error:</strong> {error}
+        </motion.div>
       )}
 
       <section className="how-section" id="how-it-works" role="region" aria-labelledby="how-it-works-title">
@@ -775,7 +919,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
             <motion.article className="step-card" whileHover={{ scale: 1.05 }} role="listitem">
               <div className="step-number" aria-label="Step 1">1</div>
               <h3>Type Your Text</h3>
-              <p>Enter any text up to 13,500 characters. Perfect for scripts, articles, or presentations. Our AI handles natural phrasing and intonation automatically.</p>
+              <p>Enter any text up to 5,000 characters. Perfect for scripts, articles, or presentations. Our AI handles natural phrasing and intonation automatically.</p>
             </motion.article>
             <motion.article className="step-card" whileHover={{ scale: 1.05 }} role="listitem">
               <div className="step-number" aria-label="Step 2">2</div>

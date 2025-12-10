@@ -701,16 +701,31 @@
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
 }
 
-/* Error Message */
 .error-message {
-  background: rgba(239, 68, 68, 0.1);
-  color: #EF4444;
-  padding: 15px;
+  background: rgba(239, 68, 68, 0.15);
+  color: #DC2626;
+  padding: 16px 20px;
   border-radius: 12px;
   margin: 20px auto;
-  max-width: 600px;
+  max-width: 800px;
   text-align: center;
   border-left: 4px solid #EF4444;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.5;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.1);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* CTA Section */
@@ -886,16 +901,6 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
-}
-
-.error-message {
-  background: rgba(239, 68, 68, 0.1);
-  color: #EF4444;
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  font-size: 0.95rem;
-  border-left: 4px solid #EF4444;
 }
 
 .success-message {
@@ -1128,6 +1133,72 @@
   border-radius: 12px;
   font-weight: 600;
   text-transform: capitalize;
+}
+
+.character-count-container {
+  margin: 10px 0;
+  padding: 8px 12px;
+  background: rgba(59, 130, 246, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(59, 130, 246, 0.1);
+}
+
+.character-count {
+  font-size: 0.9rem;
+  color: #64748B;
+  margin: 0;
+  text-align: right;
+  font-weight: 500;
+}
+
+.character-count span {
+  color: #3B82F6;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.character-count .count-warning {
+  color: #F59E0B !important;
+}
+
+.character-count .count-exceeded {
+  color: #EF4444 !important;
+}
+
+.usage-info {
+  margin: 15px 0;
+  padding: 12px;
+  background: rgba(59, 130, 246, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(59, 130, 246, 0.1);
+}
+
+.usage-bar-container {
+  width: 100%;
+  height: 8px;
+  background: rgba(59, 130, 246, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.usage-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3B82F6, #8B5CF6);
+  transition: width 0.3s ease;
+  border-radius: 4px;
+}
+
+.usage-text {
+  font-size: 0.9rem;
+  color: #64748B;
+  margin: 0;
+  text-align: center;
+}
+
+.usage-text strong {
+  color: #3B82F6;
+  font-weight: 700;
 }
 
 /* Responsive Design */
