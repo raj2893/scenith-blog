@@ -371,9 +371,6 @@ export default function LandingPage() {
             })
           }}
         />
-
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3084309234365491"
-             crossOrigin="anonymous"></script>        
       </Head>
 
       <div className="landing-page">
