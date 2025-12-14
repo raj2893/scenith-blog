@@ -1064,6 +1064,36 @@
   transform: translateY(-3px);
 }
 
+/* Add these styles to your existing LandingPage.css or create a new global styles file */
+
+/* General page styling for consistency */
+.landing-page section h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2.5rem;
+}
+
+.landing-page section p {
+  font-size: 1.1rem;
+  color: #280808;
+}
+
+.landing-page section ul {
+  padding-left: 40px;
+  margin: 20px 0;
+}
+
+.landing-page section ul li {
+  margin-bottom: 10px;
+}
+
+/* For terms page specifically */
+.tools-showcase-section h2 {
+  font-size: 2rem;
+  margin-top: 50px;
+  margin-bottom: 20px;
+}
+
 /* Animations */
 @keyframes shimmer {
   0% { background-position: -200%; }
