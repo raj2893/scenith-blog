@@ -7,7 +7,9 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 import { API_BASE_URL, CDN_URL } from '../../../config';
 import { FaTimes } from 'react-icons/fa';
+import PremiumUpgradePopup from '@/app/components/PremiumUpgradePopup';
 import '../../../../../styles/tools/AIVoiceGenerator.css';
+import '../../../../../styles/components/PremiumUpgradePopup.css';
 
 // Define TypeScript interfaces
 interface UserProfile {
@@ -166,6 +168,8 @@ const AIVoiceGeneratorClient: React.FC = () => {
     role: string;
   } | null>(null);  
   const [characterCount, setCharacterCount] = useState(0);
+  const [showPremiumPopup, setShowPremiumPopup] = useState(false);
+  const [isIndianUser, setIsIndianUser] = useState<boolean | null>(null);  
 
   // Handle scroll for navbar styling
   useEffect(() => {
@@ -651,6 +655,39 @@ const AIVoiceGeneratorClient: React.FC = () => {
     // Never allow a single request bigger than what the user has left
     return Math.min(5000, ttsUsage.remaining);
   }, [isLoggedIn, ttsUsage]);
+
+  // Add this useEffect to detect user location and show popup
+  useEffect(() => {
+    const detectLocationAndShowPopup = async () => {
+      if (!isLoggedIn) return;
+        
+      try {
+        // Detect user's country
+        const response = await fetch('https://ipapi.co/json/');
+        const data = await response.json();
+        const countryCode = data.country_code;
+        const isIndia = countryCode === 'IN';
+        setIsIndianUser(isIndia);
+  
+        // Show popup only if user is from India and has BASIC role
+        if (isIndia && userProfile.role === 'BASIC') {
+          // Delay popup by 2 seconds for better UX
+          setTimeout(() => {
+            setShowPremiumPopup(true);
+          }, 2000);
+        }
+      } catch (error) {
+        console.error('Error detecting location:', error);
+      }
+    };
+  
+    detectLocationAndShowPopup();
+  }, [isLoggedIn, userProfile.role]);
+  
+  // Add handler to close popup
+  const handleClosePremiumPopup = () => {
+    setShowPremiumPopup(false);
+  };  
 
   return (
     <div className="ai-voice-generator-page">
@@ -1179,6 +1216,11 @@ const AIVoiceGeneratorClient: React.FC = () => {
           </motion.div>
         </div>
       )}
+
+      <PremiumUpgradePopup 
+        isOpen={showPremiumPopup} 
+        onClose={handleClosePremiumPopup} 
+      />      
     </div>
   );
 };
