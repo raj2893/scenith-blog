@@ -241,7 +241,7 @@ export default function FreeAIVoiceGenerator() {
 
             <div className={styles.cta}>
               <p><strong>Try Scenith for free:</strong> Create professional AI voices in seconds with no signup required.</p>
-              <Link href="https://scenith.in/ai-voice-generator" className={styles.ctaButton}>
+              <Link href="https://scenith.in/tools/ai-voice-generation" className={styles.ctaButton}>
                 Start Generating Voices Free →
               </Link>
             </div>
@@ -390,7 +390,7 @@ export default function FreeAIVoiceGenerator() {
           <div className={styles.finalCta}>
             <h3>Ready to Create Stunning Audio in Seconds?</h3>
             <p>Generate lifelike AI voices for free with Scenith – no signup required.</p>
-            <Link href="https://scenith.in/ai-voice-generator" className={styles.ctaButton}>
+            <Link href="https://scenith.in/tools/ai-voice-generation" className={styles.ctaButton}>
               Start Generating Voices Free →
             </Link>
             <p>Join 25,000+ creators crafting professional audio with Scenith!</p>

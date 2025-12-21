@@ -785,7 +785,7 @@
 }
 
 .cta-button:hover:not(:disabled) {
-  background: #F8FAFC;
+  background: linear-gradient(135deg, #EC4899 0%, #EF4444 50%, #F59E0B 100%);
   transform: translateY(-3px);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
 }
@@ -1167,10 +1167,27 @@
 
 .usage-info {
   margin: 15px 0;
-  padding: 12px;
+  padding: 15px;
   background: rgba(59, 130, 246, 0.05);
   border-radius: 8px;
   border: 1px solid rgba(59, 130, 246, 0.1);
+}
+
+.usage-section {
+  margin-bottom: 20px;
+}
+
+.usage-section:last-child {
+  margin-bottom: 0;
+}
+
+.usage-label {
+  font-size: 0.85rem;
+  color: #64748B;
+  margin: 0 0 8px 0;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .usage-bar-container {
@@ -1697,6 +1714,122 @@
   color: #475569;
 }
 
+.upgrade-button {
+  padding: 18px 40px;
+  background: linear-gradient(135deg, #F59E0B 0%, #EF4444 50%, #EC4899 100%);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 30px rgba(245, 158, 11, 0.4);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  animation: pulse-glow 2s infinite;
+}
+
+.upgrade-button::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transform: rotate(45deg);
+  animation: shimmer 3s infinite;
+}
+
+.upgrade-button:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 40px rgba(245, 158, 11, 0.6);
+}
+
+.upgrade-icon {
+  font-size: 1.3rem;
+  animation: bounce 1s infinite;
+}
+
+.upgrade-badge {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  background: #FFFFFF;
+  color: #EF4444;
+  font-size: 0.65rem;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  animation: badge-pulse 1.5s infinite;
+}
+
+/* Limit Exceeded Message */
+.limit-exceeded-message {
+  margin-top: 20px;
+  padding: 25px;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(239, 68, 68, 0.1) 100%);
+  border-radius: 12px;
+  border: 2px solid rgba(245, 158, 11, 0.3);
+  text-align: center;
+  animation: slideDown 0.5s ease-out;
+}
+
+.limit-message-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #EF4444;
+  margin-bottom: 15px;
+}
+
+.limit-benefits {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.benefit-item {
+  background: #FFFFFF;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1E293B;
+  border-left: 4px solid #F59E0B;
+  text-align: left;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.benefit-item:hover {
+  transform: translateX(5px);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+}
+
+.limit-message-cta {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #EF4444;
+  margin-top: 15px;
+  margin-bottom: 0;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .main-content {
@@ -1791,6 +1924,49 @@
   .comparison-table td {
     padding: 15px;
   }  
+
+  .usage-info {
+    padding: 12px;
+  }
+  
+  .usage-section {
+    margin-bottom: 15px;
+  }
+  
+  .usage-label {
+    font-size: 0.8rem;
+  }
+  
+  .usage-text {
+    font-size: 0.85rem;
+  }  
+
+  .upgrade-button {
+    padding: 16px 30px;
+    font-size: 1rem;
+  }
+  
+  .upgrade-badge {
+    font-size: 0.6rem;
+    padding: 2px 8px;
+  }
+  
+  .limit-exceeded-message {
+    padding: 20px;
+  }
+  
+  .limit-message-title {
+    font-size: 1.1rem;
+  }
+  
+  .benefit-item {
+    font-size: 0.9rem;
+    padding: 10px 15px;
+  }
+  
+  .limit-message-cta {
+    font-size: 1rem;
+  }  
 }
 
 @media (max-width: 480px) {
@@ -1847,4 +2023,19 @@
   .auth-container h1 {
     font-size: 1.8rem;
   }
+
+  .upgrade-button {
+    padding: 14px 25px;
+    font-size: 0.95rem;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .upgrade-icon {
+    font-size: 1.2rem;
+  }
+  
+  .upgrade-badge {
+    display: none;
+  }  
 }

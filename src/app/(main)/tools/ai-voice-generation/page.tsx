@@ -1,4 +1,3 @@
-// app/ai-voice-generator/page.tsx (Server Component)
 import type { Metadata } from "next";
 import AIVoiceGeneratorClient from './AIVoiceGeneratorClient';
 

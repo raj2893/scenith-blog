@@ -162,11 +162,18 @@ const AIVoiceGeneratorClient: React.FC = () => {
   const [playingDemo, setPlayingDemo] = useState<string | null>(null);
   const demoAudioRef = useRef<HTMLAudioElement | null>(null);  
   const [ttsUsage, setTtsUsage] = useState<{
-    used: number;
-    limit: number;
-    remaining: number;
+    monthly: {
+      used: number;
+      limit: number;
+      remaining: number;
+    };
+    daily: {
+      used: number;
+      limit: number;
+      remaining: number;
+    };
     role: string;
-  } | null>(null);  
+  } | null>(null);
   const [characterCount, setCharacterCount] = useState(0);
   const [showPremiumPopup, setShowPremiumPopup] = useState(false);
   const [isIndianUser, setIsIndianUser] = useState<boolean | null>(null);  
@@ -486,7 +493,17 @@ const AIVoiceGeneratorClient: React.FC = () => {
     }
 
     if (aiVoiceText.length > getMaxCharsPerRequest()) {
-      setError(`Text exceeds the maximum limit of ${getMaxCharsPerRequest().toLocaleString()} characters per request (you only have ${ttsUsage?.remaining.toLocaleString()} left this month).`);
+      const roleBasedLimit = ttsUsage?.role === 'STUDIO' ? 5000 : 
+                            ttsUsage?.role === 'CREATOR' ? 2500 : 500;
+      const limitType = ttsUsage?.daily.remaining !== -1 && 
+                        (ttsUsage?.daily.remaining ?? 0) < (ttsUsage?.monthly.remaining ?? 0)
+        ? 'daily' 
+        : 'monthly';
+      const remainingChars = limitType === 'daily' 
+        ? (ttsUsage?.daily.remaining ?? 0) 
+        : (ttsUsage?.monthly.remaining ?? 0);
+      
+      setError(`Text exceeds the maximum limit of ${getMaxCharsPerRequest().toLocaleString()} characters per request for your ${ttsUsage?.role || 'BASIC'} plan (Role limit: ${roleBasedLimit.toLocaleString()} chars, ${remainingChars.toLocaleString()} left ${limitType}).`);
       setTimeout(() => {
         const errorElement = document.querySelector('.error-message');
         if (errorElement) {
@@ -499,20 +516,40 @@ const AIVoiceGeneratorClient: React.FC = () => {
       setTimeout(() => setError(null), 10000);
       return;
     }
-
-    if (ttsUsage && (ttsUsage.used + aiVoiceText.length > ttsUsage.limit)) {
-      setError(`This request would exceed your monthly limit. You have ${ttsUsage.remaining.toLocaleString()} characters remaining, but this text is ${aiVoiceText.length.toLocaleString()} characters long.`);
-      setTimeout(() => {
-        const errorElement = document.querySelector('.error-message');
-        if (errorElement) {
-          errorElement.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'center' 
-          });
-        }
-      }, 100);
-      setTimeout(() => setError(null), 10000);
-      return;
+    
+    if (ttsUsage) {
+      const wouldExceedDaily = ttsUsage.daily.limit > 0 && (ttsUsage.daily.used + aiVoiceText.length > ttsUsage.daily.limit);
+      const wouldExceedMonthly = ttsUsage.monthly.used + aiVoiceText.length > ttsUsage.monthly.limit;
+      
+      if (wouldExceedDaily) {
+        setError(`This request would exceed your daily limit. You have ${ttsUsage.daily.remaining.toLocaleString()} characters remaining today, but this text is ${aiVoiceText.length.toLocaleString()} characters long.`);
+        setTimeout(() => {
+          const errorElement = document.querySelector('.error-message');
+          if (errorElement) {
+            errorElement.scrollIntoView({ 
+              behavior: 'smooth', 
+              block: 'center' 
+            });
+          }
+        }, 100);
+        setTimeout(() => setError(null), 10000);
+        return;
+      }
+      
+      if (wouldExceedMonthly) {
+        setError(`This request would exceed your monthly limit. You have ${ttsUsage.monthly.remaining.toLocaleString()} characters remaining this month, but this text is ${aiVoiceText.length.toLocaleString()} characters long.`);
+        setTimeout(() => {
+          const errorElement = document.querySelector('.error-message');
+          if (errorElement) {
+            errorElement.scrollIntoView({ 
+              behavior: 'smooth', 
+              block: 'center' 
+            });
+          }
+        }, 100);
+        setTimeout(() => setError(null), 10000);
+        return;
+      }
     }
 
     setIsGenerating(true);
@@ -651,9 +688,19 @@ const AIVoiceGeneratorClient: React.FC = () => {
   };
 
   const getMaxCharsPerRequest = useCallback(() => {
-    if (!isLoggedIn || !ttsUsage) return 5000;
-    // Never allow a single request bigger than what the user has left
-    return Math.min(5000, ttsUsage.remaining);
+    if (!isLoggedIn || !ttsUsage) return 500;
+    
+    const roleBasedLimit = ttsUsage.role === 'STUDIO' ? 5000 : 
+                          ttsUsage.role === 'CREATOR' ? 2500 : 500;
+    
+    const dailyRemaining = ttsUsage.daily.remaining;
+    const monthlyRemaining = ttsUsage.monthly.remaining;
+    
+    if (dailyRemaining === -1) {
+      return Math.min(roleBasedLimit, monthlyRemaining);
+    }
+    
+    return Math.min(roleBasedLimit, dailyRemaining, monthlyRemaining);
   }, [isLoggedIn, ttsUsage]);
 
   // Add this useEffect to detect user location and show popup
@@ -688,6 +735,14 @@ const AIVoiceGeneratorClient: React.FC = () => {
   const handleClosePremiumPopup = () => {
     setShowPremiumPopup(false);
   };  
+
+  const isLimitsExceeded = useCallback(() => {
+    if (!isLoggedIn || !ttsUsage) return false;
+        
+    const monthlyExceeded = ttsUsage.monthly.remaining <= 0;
+    
+    return monthlyExceeded;
+  }, [isLoggedIn, ttsUsage]);  
 
 return (
   <div className="ai-voice-generator-page">
@@ -791,7 +846,7 @@ return (
               name: 'How many characters can I generate for free?',
               acceptedAnswer: {
                 '@type': 'Answer',
-                text: 'The free tier includes 13,500 characters per month (approximately 15 minutes of speech). Each request supports up to 5,000 characters. Upgrade to premium for unlimited generation and access to premium voices.'
+                text: 'The free BASIC plan includes 5,000 characters per month with a daily limit of 1,000 characters. CREATOR plan offers 50,000 characters/month with 5,000 characters/day. STUDIO plan provides 150,000 characters/month with no daily limits. Each request supports up to 5,000 characters.'
               }
             }
           ]
@@ -847,36 +902,90 @@ return (
 
               {isLoggedIn && ttsUsage && (
                 <div className="usage-info">
-                  <div className="usage-bar-container">
-                    <div 
-                      className="usage-bar-fill" 
-                      style={{ width: `${(ttsUsage.used / ttsUsage.limit) * 100}%` }}
-                    />
+                  {ttsUsage.daily.limit > 0 && 
+                   ttsUsage.monthly.remaining > 0 && 
+                   ttsUsage.daily.remaining < ttsUsage.monthly.remaining && (
+                    <div className="usage-section">
+                      <p className="usage-label">Daily Usage (Most Restrictive)</p>
+                      <div className="usage-bar-container">
+                        <div 
+                          className="usage-bar-fill" 
+                          style={{ width: `${(ttsUsage.daily.used / ttsUsage.daily.limit) * 100}%` }}
+                        />
+                      </div>
+                      <p className="usage-text">
+                        <strong>{ttsUsage.daily.remaining.toLocaleString()}</strong> characters remaining today
+                        ({ttsUsage.daily.used.toLocaleString()} / {ttsUsage.daily.limit.toLocaleString()} used)
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Monthly Usage Bar - Always show */}
+                  <div className="usage-section">
+                    <p className="usage-label">
+                      {ttsUsage.daily.limit > 0 && 
+                       ttsUsage.monthly.remaining > 0 && 
+                       ttsUsage.daily.remaining >= ttsUsage.monthly.remaining
+                        ? 'Monthly Usage (Most Restrictive)'
+                        : 'Monthly Usage'}
+                    </p>
+                    <div className="usage-bar-container">
+                      <div 
+                        className="usage-bar-fill" 
+                        style={{ width: `${(ttsUsage.monthly.used / ttsUsage.monthly.limit) * 100}%` }}
+                      />
+                    </div>
+                    <p className="usage-text">
+                      <strong>{ttsUsage.monthly.remaining.toLocaleString()}</strong> characters remaining this month
+                      ({ttsUsage.monthly.used.toLocaleString()} / {ttsUsage.monthly.limit.toLocaleString()} used)
+                    </p>
                   </div>
-                  <p className="usage-text">
-                    <strong>{ttsUsage.remaining.toLocaleString()}</strong> characters remaining 
-                    ({ttsUsage.used.toLocaleString()} / {ttsUsage.limit.toLocaleString()} used this month)
-                  </p>
                 </div>
               )}
 
-              <button
-                className="cta-button generate-voice-button"
-                onClick={handleGenerateAiAudio}
-                disabled={
-                  !isLoggedIn ? false : (
-                    !aiVoiceText.trim() || 
-                    !selectedVoice || 
-                    isGenerating || 
-                    characterCount > getMaxCharsPerRequest() ||
-                    (ttsUsage && ttsUsage.remaining < aiVoiceText.length) ||
-                    undefined
-                  )
-                }
-                aria-label="Generate AI voice from text"
-              >
-                {isGenerating ? 'Generating...' : isLoggedIn ? 'Generate AI Voice' : 'Login to Generate'}
-              </button>
+              {isLimitsExceeded() ? (
+                <a
+                  href="https://scenith.in/tools/pricing"
+                  className="cta-button upgrade-button"
+                  aria-label="Upgrade to unlock more characters"
+                >
+                  <span className="upgrade-icon">🚀</span>
+                  Upgrade to Pro - Unlock More Characters
+                  <span className="upgrade-badge">Limited Time Offer</span>
+                </a>                
+              ) : (
+                <button
+                  className="cta-button generate-voice-button"
+                  onClick={handleGenerateAiAudio}
+                  disabled={
+                    !isLoggedIn ? false : (
+                      !aiVoiceText.trim() || 
+                      !selectedVoice || 
+                      isGenerating || 
+                      characterCount > getMaxCharsPerRequest() ||
+                      (ttsUsage && (
+                        (ttsUsage.daily.limit > 0 && ttsUsage.daily.remaining < aiVoiceText.length) ||
+                        ttsUsage.monthly.remaining < aiVoiceText.length
+                      )) ||
+                      undefined
+                    )
+                  }
+                  aria-label="Generate AI voice from text"
+                >
+                  {isGenerating ? 'Generating...' : isLoggedIn ? 'Generate AI Voice' : 'Login to Generate'}
+                </button>
+              )}
+              {isLimitsExceeded() && (
+                <div className="limit-exceeded-message">
+                  <p className="limit-message-title">⚡ You've used all your {userProfile.role} plan characters!</p>
+                  <div className="limit-benefits">
+                    <div className="benefit-item">✓ CREATOR: 50,000 chars/month + 5,000/day</div>
+                    <div className="benefit-item">✓ STUDIO: 150,000 chars/month + No daily limit</div>
+                    <div className="benefit-item">✓ Unlimited voice generations</div>
+                  </div>
+                  <p className="limit-message-cta">Upgrade now and continue creating! 🎯</p>
+                </div>
+              )}              
             </div>
 
             <div className="voice-list-section">
@@ -1672,7 +1781,7 @@ return (
           </article>
           <article className="faq-item" role="listitem">
             <h3>How many characters can I generate for free?</h3>
-            <p>The free tier includes 13,500 characters per month (approximately 15 minutes of speech). Each request supports up to 5,000 characters. Upgrade to premium for unlimited generation and access to premium voices.</p>
+            <p>The free BASIC plan includes 5,000 characters per month with a daily limit of 1,000 characters. CREATOR plan offers 50,000 characters/month with 5,000 characters/day. STUDIO plan provides 150,000 characters/month with no daily limits. Each request supports up to 5,000 characters.</p>
           </article>
           <article className="faq-item" role="listitem">
             <h3>Can I adjust voice speed, pitch, or tone?</h3>
