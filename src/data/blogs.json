@@ -1837,5 +1837,20 @@
     "featured": false,
     "slug": "multi-layer-design-for-non-designers",
     "difficulty": "Beginner"
+  },
+  {
+    "id": 124,
+    "title": "Scenith’s New Free Image Editor is Here – Pro-Level Design Without the Pro Price Tag",
+    "excerpt": "Layers, AI background removal, multi-page PDFs, curved text, unlimited projects – all 100% free. Meet the browser-based image editor that’s making Canva Pro and Photoshop feel overpriced.",
+    "category": "Design Tools",
+    "readTime": "8 min",
+    "publishDate": "2025-12-12",
+    "author": "Scenith Team",
+    "image": "🎨",
+    "gradient": "linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)",
+    "tags": ["Free Image Editor", "Graphic Design", "AI Background Removal", "Canva Alternative", "Online Design Tool"],
+    "featured": false,
+    "slug": "free-image-editor-launch",
+    "difficulty": "Beginner"
   }
 ]
