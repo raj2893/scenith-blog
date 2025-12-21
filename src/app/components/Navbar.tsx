@@ -71,7 +71,6 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
       ],
     },
     { label: 'Blogs', path: '/blogs' },
-    { label: 'Categories', sectionId: 'filter-section' },
     { label: 'Contact Us', sectionId: 'footer-section' },
   ];
 
