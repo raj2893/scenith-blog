@@ -298,7 +298,7 @@ export default function PricingPage() {
           role: 'CREATOR',
           price: 0,
           currency: 'LOADING',
-          ttsLimit: 10000,
+          ttsLimit: 50000,
           popular: true,
           features: ['10,000 Characters/month', 'All Premium AI Voices']
         },
@@ -307,7 +307,7 @@ export default function PricingPage() {
           role: 'STUDIO',
           price: 0,
           currency: 'LOADING',
-          ttsLimit: 20000,
+          ttsLimit: 150000,
           features: ['20,000 Characters/month', 'All Premium AI Voices']
         }
       ];
@@ -333,7 +333,7 @@ export default function PricingPage() {
         price: creatorPrice,
         currency: currency,
         symbol: symbol, // we'll use this in UI
-        ttsLimit: 10000,
+        ttsLimit: 50000,
         popular: true,
         features: ['10,000 Characters/month', 'All Premium AI Voices']
       },
@@ -343,7 +343,7 @@ export default function PricingPage() {
         price: studioPrice,
         currency: currency,
         symbol: symbol,
-        ttsLimit: 20000,
+        ttsLimit: 150000,
         features: ['20,000 Characters/month', 'All Premium AI Voices']
       }
     ];
