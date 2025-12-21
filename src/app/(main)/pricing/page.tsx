@@ -300,7 +300,7 @@ export default function PricingPage() {
           currency: 'LOADING',
           ttsLimit: 50000,
           popular: true,
-          features: ['10,000 Characters/month', 'All Premium AI Voices']
+          features: ['50,000 Characters/month', 'All Premium AI Voices']
         },
         {
           name: 'Studio',
@@ -308,7 +308,7 @@ export default function PricingPage() {
           price: 0,
           currency: 'LOADING',
           ttsLimit: 150000,
-          features: ['20,000 Characters/month', 'All Premium AI Voices']
+          features: ['1,50,000 Characters/month', 'All Premium AI Voices']
         }
       ];
     }
@@ -335,7 +335,7 @@ export default function PricingPage() {
         symbol: symbol, // we'll use this in UI
         ttsLimit: 50000,
         popular: true,
-        features: ['10,000 Characters/month', 'All Premium AI Voices']
+        features: ['50,000 Characters/month', 'All Premium AI Voices']
       },
       {
         name: 'Studio',
@@ -344,7 +344,7 @@ export default function PricingPage() {
         currency: currency,
         symbol: symbol,
         ttsLimit: 150000,
-        features: ['20,000 Characters/month', 'All Premium AI Voices']
+        features: ['1,50,000 Characters/month', 'All Premium AI Voices']
       }
     ];
   };
