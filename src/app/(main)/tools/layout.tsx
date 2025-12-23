@@ -1,16 +1,14 @@
 "use client";
 
 import { useState, useEffect, ReactNode } from 'react';
-import axios from 'axios';
-import { API_BASE_URL } from '../../config';
-import PremiumUpgradePopup from '@/app/components/PremiumUpgradePopup';
 import '../../../../styles/components/PremiumUpgradePopup.css';
+import PremiumUpgradePopup from '@/app/components/PremiumUpgradePopup';
 
-interface BlogsLayoutProps {
+interface ToolsLayoutProps {
   children: ReactNode;
 }
 
-export default function BlogsLayout({ children }: BlogsLayoutProps) {
+export default function ToolsLayout({ children }: ToolsLayoutProps) {
   const [showPremiumPopup, setShowPremiumPopup] = useState(false);
 
   useEffect(() => {
@@ -36,7 +34,6 @@ export default function BlogsLayout({ children }: BlogsLayoutProps) {
     <>
       {children}
       
-      {/* Premium Popup - Only shows in blogs section */}
       <PremiumUpgradePopup
         isOpen={showPremiumPopup} 
         onClose={handleClosePremiumPopup} 

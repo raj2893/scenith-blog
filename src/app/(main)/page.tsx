@@ -132,25 +132,16 @@ export default function LandingPage() {
     const detectLocationAndShowPopup = async () => {
 
       try {
-        const response = await fetch('https://ipapi.co/json/');
-        const data = await response.json();
-        const countryCode = data.country_code;
-        const isIndia = countryCode === 'IN';
-
-        // Show popup only if user is from India and has BASIC role
-        if (isIndia) {
-          // Delay popup by 2 seconds for better UX
-          setTimeout(() => {
-            setShowPremiumPopup(true);
-          }, 2000);
-        }
+      setTimeout(() => {
+        setShowPremiumPopup(true);
+      }, 2000);
       } catch (error) {
         console.error('Error detecting location:', error);
       }
     };
 
     detectLocationAndShowPopup();
-  });
+  }, []);
 
   const handleClosePremiumPopup = () => {
     setShowPremiumPopup(false);
