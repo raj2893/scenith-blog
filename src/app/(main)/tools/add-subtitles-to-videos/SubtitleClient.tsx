@@ -923,20 +923,79 @@ const SubtitleClient: React.FC = () => {
   return (
     <div className="video-filter-page">
       <Script
-        id="subtitle-structured-data"
+        id="subtitle-faq-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             '@context': 'https://schema.org',
-            '@type': 'SoftwareApplication',
-            name: 'Scenith AI Subtitle Generator',
-            description: 'Free AI-powered subtitle generator for videos. Automatically add and customize subtitles with professional styles.',
-            url: typeof window !== 'undefined' ? window.location.href :'/tools/add-subtitles-to-videos',
-            applicationCategory: 'MultimediaApplication',
-            operatingSystem: 'Web Browser',
-            offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-            aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.9', reviewCount: '15000' },
-            author: { '@type': 'Organization', name: 'SCENITH AI VIDEO EDITOR' },
+            '@type': 'FAQPage',
+            mainEntity: [
+              {
+                '@type': 'Question',
+                name: 'How accurate are AI-generated subtitles?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Our Whisper AI-powered system achieves 95-98% accuracy for clear audio with standard accents. You can manually edit any generated subtitles for perfect accuracy.'
+                }
+              },
+              {
+                '@type': 'Question',
+                name: 'What video formats are supported?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'We support all major video formats including MP4, AVI, MOV, MKV, WMV, and more. Maximum file size is 500MB per video.'
+                }
+              },
+              {
+                '@type': 'Question',
+                name: 'Can I customize subtitle appearance?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Yes! Customize fonts, colors, sizes, positions, backgrounds, borders, and animation styles. Choose from pre-designed templates or create custom styles matching your brand.'
+                }
+              },
+              {
+                '@type': 'Question',
+                name: 'How long does subtitle generation take?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Processing typically takes 1-2 minutes for videos under 10 minutes long. Longer videos may take 3-5 minutes depending on video length and audio complexity.'
+                }
+              }
+            ]
+          }),
+        }}
+      />
+      
+      <Script
+        id="subtitle-howto-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'HowTo',
+            name: 'How to Add Subtitles to Videos with AI',
+            description: 'Step-by-step guide to automatically generating and customizing subtitles using AI technology',
+            step: [
+              {
+                '@type': 'HowToStep',
+                name: 'Upload Your Video',
+                text: 'Upload any video file (MP4, AVI, MOV, etc.). Our system securely stores it for subtitle processing.',
+                position: 1
+              },
+              {
+                '@type': 'HowToStep',
+                name: 'Generate & Edit Subtitles',
+                text: 'Use AI to generate subtitles automatically, then customize text, styles, colors, fonts, and timings for perfect captions that match your brand.',
+                position: 2
+              },
+              {
+                '@type': 'HowToStep',
+                name: 'Process & Download',
+                text: 'Apply subtitles to your video with one click. Download the high-quality MP4 with burned-in captions in minutes, ready for any platform.',
+                position: 3
+              }
+            ]
           }),
         }}
       />
@@ -1297,27 +1356,536 @@ const SubtitleClient: React.FC = () => {
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <h2 id="faq-title">Frequently Asked Questions</h2>
+          <h2 id="faq-title">Frequently Asked Questions About AI Subtitle Generation</h2>
           <div className="faq-grid" role="list">
             <article className="faq-item" role="listitem">
-              <h3>What video formats are supported?</h3>
-              <p>We support MP4, AVI, MOV, and more. Upload any standard video file to add subtitles.</p>
+              <h3>How accurate are AI-generated subtitles?</h3>
+              <p>Our Whisper AI-powered system achieves 95-98% accuracy for clear audio with standard accents. Accuracy may be lower for heavy accents, technical jargon, or poor audio quality. You can always manually edit any generated subtitles for perfect accuracy.</p>
             </article>
             <article className="faq-item" role="listitem">
-              <h3>Can I edit AI-generated subtitles?</h3>
-              <p>Yes, you can manually correct text, adjust timings, or apply custom styles to any subtitle.</p>
+              <h3>What video formats are supported?</h3>
+              <p>We support all major video formats including MP4, AVI, MOV, MKV, WMV, and more. Maximum file size is 500MB per video. For larger files, consider compressing your video before upload.</p>
+            </article>
+            <article className="faq-item" role="listitem">
+              <h3>Can I customize subtitle appearance?</h3>
+              <p>Yes! Customize fonts, colors, sizes, positions, backgrounds, borders, and animation styles. Choose from pre-designed templates or create custom styles matching your brand. All styling is preserved in the final MP4 export.</p>
+            </article>
+            <article className="faq-item" role="listitem">
+              <h3>How long does subtitle generation take?</h3>
+              <p>Processing typically takes 1-2 minutes for videos under 10 minutes long. Longer videos may take 3-5 minutes. Generation time depends on video length, audio complexity, and current server load.</p>
+            </article>
+            <article className="faq-item" role="listitem">
+              <h3>Can I edit generated subtitles?</h3>
+              <p>Absolutely! Our editor lets you modify text, adjust timing, change positions, and update styling for any subtitle. Changes save automatically and sync in real-time with your video preview.</p>
+            </article>
+            <article className="faq-item" role="listitem">
+              <h3>What languages are supported?</h3>
+              <p>We support 50+ languages including English, Spanish, French, German, Mandarin, Hindi, Japanese, Portuguese, Arabic, and more. The Whisper AI model automatically detects the spoken language in your video.</p>
             </article>
             <article className="faq-item" role="listitem">
               <h3>Are the subtitles burned into the video?</h3>
-              <p>Yes, the final MP4 includes subtitles embedded directly into the video for universal compatibility.</p>
+              <p>Yes, the processed MP4 includes permanently embedded (burned-in) subtitles that cannot be removed. This ensures subtitles display correctly on all platforms without requiring separate caption file support.</p>
             </article>
             <article className="faq-item" role="listitem">
-              <h3>How accurate are the AI subtitles?</h3>
-              <p>Our AI uses Whisper for high-accuracy transcription, with manual editing for any corrections.</p>
+              <h3>Can I export subtitle files (SRT format)?</h3>
+              <p>Currently, we embed subtitles directly into videos as burned-in captions. SRT/VTT export functionality is planned for a future update. Embedded subtitles work universally across all video platforms.</p>
+            </article>
+            <article className="faq-item" role="listitem">
+              <h3>Is there a video length limit?</h3>
+              <p>Free accounts can process videos up to 10 minutes. Premium accounts support videos up to 2 hours. For longer content, consider splitting into chapters or segments for easier management.</p>
+            </article>
+            <article className="faq-item" role="listitem">
+              <h3>Do you store my videos?</h3>
+              <p>Videos are temporarily stored during processing (24-48 hours) then automatically deleted. You retain full ownership and rights to all content. We never share or use your videos for any purpose.</p>
+            </article>
+            <article className="faq-item" role="listitem">
+              <h3>Can I use subtitled videos commercially?</h3>
+              <p>Yes! All generated subtitles and processed videos are licensed for commercial use. Use them in ads, YouTube monetization, client projects, or any business purpose without attribution requirements.</p>
+            </article>
+            <article className="faq-item" role="listitem">
+              <h3>What if the AI makes mistakes?</h3>
+              <p>Simply click any subtitle to edit text, timing, or styling. Our real-time editor makes corrections easy. Most users spend 5-10 minutes reviewing AI-generated subtitles versus hours of manual transcription.</p>
             </article>
           </div>
         </motion.div>
       </section>
+
+      <section className="educational-intro" role="complementary" aria-labelledby="intro-title">
+        <div className="container">
+          <h2 id="intro-title" className="section-subtitle">Transform Your Videos with AI-Powered Subtitles</h2>
+          <div className="intro-content-grid">
+            <div className="intro-text">
+              <p className="intro-paragraph">
+                <strong>AI subtitle generation</strong> has revolutionized video accessibility by automatically creating accurate captions in seconds. Whether you're a content creator, educator, filmmaker, or business professional, our advanced <strong>speech-to-text technology</strong> helps you make videos accessible without manual transcription or expensive captioning services.
+              </p>
+              <p className="intro-paragraph">
+                Our neural network-powered system uses <strong>Whisper AI</strong> for industry-leading accuracy across multiple languages. Each subtitle is automatically timed, positioned, and styled—perfect for social media, YouTube, educational content, and professional productions. Customize fonts, colors, and animations to match your brand.
+              </p>
+              <p className="intro-paragraph">
+                <strong>Why choose AI subtitle generation?</strong> Save hours of manual transcription time while improving video engagement by 80%. Studies show 85% of social media videos are watched without sound—subtitles ensure your message reaches everyone. With instant editing and MP4 export, you have everything needed for professional accessible content.
+              </p>
+            </div>
+            <div className="intro-stats">
+              <div className="stat-box">
+                <div className="stat-number">95%</div>
+                <div className="stat-label">Transcription Accuracy</div>
+              </div>
+              <div className="stat-box">
+                <div className="stat-number">50+</div>
+                <div className="stat-label">Supported Languages</div>
+              </div>
+              <div className="stat-box">
+                <div className="stat-number">50K+</div>
+                <div className="stat-label">Active Users</div>
+              </div>
+              <div className="stat-box">
+                <div className="stat-number">60 sec</div>
+                <div className="stat-label">Average Processing Time</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* NEW: What is AI Subtitle Generation Section */}
+      <section className="what-is-section" id="what-is-subtitle-gen" role="region" aria-labelledby="what-is-title">
+        <div className="container">
+          <h2 id="what-is-title">What is AI Subtitle Generation? Understanding Automatic Captioning Technology</h2>
+          <p className="section-description">
+            AI subtitle generation leverages advanced speech recognition to automatically transcribe audio and create perfectly timed captions for your videos.
+          </p>
+
+          <div className="content-deep-dive">
+            <div className="dive-section">
+              <h3>How Automatic Subtitle Generation Works</h3>
+              <p>
+                Modern <strong>AI subtitle generators</strong> use deep learning models trained on millions of hours of audio data. The process involves multiple sophisticated steps:
+              </p>
+              <ol className="process-list">
+                <li><strong>Audio Extraction:</strong> The system extracts audio from your video file, analyzing waveforms and identifying speech segments while filtering background noise.</li>
+                <li><strong>Speech Recognition:</strong> Advanced models like Whisper AI convert speech to text using acoustic and language models, understanding context, accents, and technical terminology.</li>
+                <li><strong>Timing Synchronization:</strong> Each word is precisely time-stamped to match the video, creating subtitle segments that appear exactly when words are spoken.</li>
+                <li><strong>Text Processing:</strong> The AI applies punctuation, capitalization, and formatting rules, breaking long sentences into readable subtitle chunks based on timing and character limits.</li>
+                <li><strong>Style Application:</strong> Subtitles are rendered with customizable fonts, colors, positions, and effects, ready to be burned into the video or exported as separate caption files.</li>
+              </ol>
+            </div>
+
+            <div className="dive-section">
+              <h3>Key Technologies Behind AI Subtitles</h3>
+              <div className="tech-cards">
+                <div className="tech-card">
+                  <h4>🎙️ Whisper AI</h4>
+                  <p>OpenAI's state-of-the-art speech recognition model trained on 680,000 hours of multilingual data, providing near-human accuracy for transcription across 50+ languages.</p>
+                </div>
+                <div className="tech-card">
+                  <h4>🧠 Neural Networks</h4>
+                  <p>Deep learning architectures process audio patterns, learning from vast datasets to recognize speech despite accents, background noise, and audio quality variations.</p>
+                </div>
+                <div className="tech-card">
+                  <h4>⏱️ Time Alignment</h4>
+                  <p>Forced alignment algorithms precisely match transcribed text to audio timestamps, ensuring subtitles appear and disappear at exactly the right moments.</p>
+                </div>
+                <div className="tech-card">
+                  <h4>🌐 Language Models</h4>
+                  <p>Natural language processing understands context, grammar, and vocabulary, correcting common transcription errors and applying proper punctuation automatically.</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="dive-section">
+              <h3>Evolution of Subtitle Technology</h3>
+              <p>
+                Subtitle creation has evolved dramatically from manual transcription to today's AI-powered automation:
+              </p>
+              <ul className="evolution-timeline">
+                <li><strong>Pre-2000s:</strong> Manual transcription by professional typists took 4-6 hours per hour of video, costing $100-300 per video hour.</li>
+                <li><strong>2000s-2010s:</strong> Basic speech recognition emerged but required extensive manual correction, reducing time to 2-3 hours per video hour.</li>
+                <li><strong>2016-2020:</strong> Machine learning improved accuracy to 75-85%, making automatic subtitles practical for draft transcripts requiring human review.</li>
+                <li><strong>2020-Present:</strong> Transformer models like Whisper achieve 95%+ accuracy, enabling production-ready subtitles with minimal editing in minutes instead of hours.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* NEW: Benefits & Applications Section */}
+      <section className="benefits-applications-section" role="region" aria-labelledby="benefits-title">
+        <div className="container">
+          <h2 id="benefits-title">Why Add Subtitles to Your Videos? Benefits for Creators and Viewers</h2>
+
+          <div className="benefits-grid">
+            <article className="benefit-detailed">
+              <h3>♿ Accessibility & Inclusion</h3>
+              <p>
+                Subtitles make content accessible to 466 million people worldwide with hearing disabilities. <strong>Legal requirements like ADA and WCAG 2.1</strong> mandate captions for public content, protecting you from compliance issues while expanding your audience reach. Subtitles also help non-native speakers, people in sound-sensitive environments, and viewers with audio processing disorders.
+              </p>
+              <div className="benefit-stats">
+                <span>466M people with hearing loss</span>
+                <span>ADA & WCAG compliant</span>
+                <span>30% larger potential audience</span>
+              </div>
+            </article>
+
+            <article className="benefit-detailed">
+              <h3>📈 Boost Engagement & Watch Time</h3>
+              <p>
+                Videos with subtitles get <strong>80% higher engagement rates</strong> on social media. Facebook reports 85% of videos are watched without sound—subtitles ensure your message lands. YouTube videos with captions receive 40% more views and rank higher in search results, as subtitles provide text for algorithms to index.
+              </p>
+              <div className="benefit-stats">
+                <span>80% higher engagement</span>
+                <span>85% watch without sound</span>
+                <span>40% more YouTube views</span>
+              </div>
+            </article>
+
+            <article className="benefit-detailed">
+              <h3>🌍 Global Reach & SEO</h3>
+              <p>
+                Subtitles dramatically improve video SEO. Search engines crawl caption text, helping your videos rank for more keywords. <strong>Translate subtitles into multiple languages</strong> to reach international audiences without expensive dubbing. Google reports that captioned videos see 7.32% better search rankings on average.
+              </p>
+              <div className="benefit-stats">
+                <span>7.32% better SEO ranking</span>
+                <span>Multilingual reach</span>
+                <span>Searchable video content</span>
+              </div>
+            </article>
+
+            <article className="benefit-detailed">
+              <h3>⏱️ Save Time & Money</h3>
+              <p>
+                Professional captioning services charge $1-3 per video minute, plus 3-5 day turnaround times. <strong>AI subtitle generation costs nothing</strong> and delivers results in minutes. What once took hours of manual transcription now happens automatically, freeing you to focus on content creation instead of tedious typing.
+              </p>
+              <div className="benefit-stats">
+                <span>$0 vs $1-3 per minute</span>
+                <span>Minutes vs days turnaround</span>
+                <span>95% time savings</span>
+              </div>
+            </article>
+
+            <article className="benefit-detailed">
+              <h3>📱 Mobile-Friendly Content</h3>
+              <p>
+                Over 70% of video views happen on mobile devices, often in public places or quiet environments where users can't play audio. <strong>Subtitles enable silent viewing</strong>, dramatically increasing mobile video completion rates. Instagram and TikTok videos with captions receive 35% more engagement than those without.
+              </p>
+              <div className="benefit-stats">
+                <span>70% mobile video views</span>
+                <span>35% more social engagement</span>
+                <span>Silent viewing enabled</span>
+              </div>
+            </article>
+
+            <article className="benefit-detailed">
+              <h3>🎓 Enhanced Learning & Retention</h3>
+              <p>
+                Educational research shows viewers retain <strong>40% more information</strong> when both watching and reading content. Subtitles help with comprehension, especially for complex topics, technical terms, or accented speech. Students and professionals benefit from reinforced visual and auditory learning.
+              </p>
+              <div className="benefit-stats">
+                <span>40% better information retention</span>
+                <span>Improved comprehension</span>
+                <span>Multi-sensory learning</span>
+              </div>
+            </article>
+          </div>
+
+          <div className="applications-showcase">
+            <h3>Real-World Applications Across Industries</h3>
+            <div className="application-cards-grid">
+              <div className="app-card">
+                <span className="app-icon">📱</span>
+                <h4>Social Media Content</h4>
+                <p>Maximize engagement on Instagram, TikTok, Facebook, and LinkedIn where 85% of videos are watched without sound. Captions ensure your message reaches viewers in any environment.</p>
+                <strong>Use cases:</strong> Reels, Stories, ads, educational posts, brand content
+              </div>
+
+              <div className="app-card">
+                <span className="app-icon">🎬</span>
+                <h4>YouTube Videos</h4>
+                <p>Improve SEO rankings, increase watch time, and reach international audiences. Closed captions make content accessible while providing searchable text for YouTube's algorithm.</p>
+                <strong>Use cases:</strong> Tutorials, vlogs, product reviews, documentaries, courses
+              </div>
+
+              <div className="app-card">
+                <span className="app-icon">📚</span>
+                <h4>E-Learning & Training</h4>
+                <p>Meet accessibility requirements while enhancing student comprehension. Subtitles help non-native speakers and improve information retention across all learning styles.</p>
+                <strong>Use cases:</strong> Online courses, corporate training, webinars, tutorials
+              </div>
+
+              <div className="app-card">
+                <span className="app-icon">💼</span>
+                <h4>Business & Marketing</h4>
+                <p>Create accessible marketing videos, product demos, and internal communications. Captions ensure messages land whether viewed in offices, airports, or during commutes.</p>
+                <strong>Use cases:</strong> Product demos, ads, announcements, presentations
+              </div>
+
+              <div className="app-card">
+                <span className="app-icon">🎥</span>
+                <h4>Film & Entertainment</h4>
+                <p>Professional subtitle styling for independent films, web series, and entertainment content. Customizable fonts and positioning maintain creative vision while ensuring accessibility.</p>
+                <strong>Use cases:</strong> Short films, web series, documentaries, music videos
+              </div>
+
+              <div className="app-card">
+                <span className="app-icon">📰</span>
+                <h4>News & Media</h4>
+                <p>Rapidly caption breaking news, interviews, and reports. Fast turnaround times enable real-time captioning for time-sensitive content reaching diverse audiences.</p>
+                <strong>Use cases:</strong> News reports, interviews, live event coverage, podcasts
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* NEW: Subtitle Customization Guide Section */}
+      <section className="subtitle-guide-section" role="region" aria-labelledby="guide-title">
+        <div className="container">
+          <h2 id="guide-title">Complete Guide to Subtitle Customization and Best Practices</h2>
+          <p className="section-description">
+            Master subtitle design with professional techniques for maximum readability and viewer engagement across all platforms.
+          </p>
+
+          <div className="guide-content">
+            <article className="guide-section">
+              <h3>Typography & Readability Best Practices</h3>
+              <div className="characteristics-grid">
+                <div className="char-card">
+                  <h4>🔤 Font Selection</h4>
+                  <p><strong>Sans-serif fonts</strong> like Arial, Helvetica, and Roboto offer superior readability on screens. Avoid decorative fonts that become illegible at small sizes. <strong>Font weight matters</strong>—bold or semi-bold text stands out against busy backgrounds.</p>
+                  <ul>
+                    <li>Sans-serif: Clear, modern, highly readable</li>
+                    <li>Bold/Semi-bold: Improved contrast and visibility</li>
+                    <li>Minimum 20px size for mobile readability</li>
+                  </ul>
+                </div>
+
+                <div className="char-card">
+                  <h4>🎨 Color Contrast</h4>
+                  <p>WCAG 2.1 requires <strong>4.5:1 contrast ratio</strong> for text readability. White text with black outline/shadow provides universal readability against any background. Yellow subtitles work well for bright scenes; white excels in dark environments.</p>
+                  <ul>
+                    <li>White text + black stroke: Universal standard</li>
+                    <li>Yellow text: High visibility for movies</li>
+                    <li>Avoid red/green combinations (colorblind users)</li>
+                  </ul>
+                </div>
+
+                <div className="char-card">
+                  <h4>📏 Positioning & Spacing</h4>
+                  <p><strong>Bottom center placement</strong> is standard—keeps subtitles clear of on-screen action. Leave 10-15% margin from screen edges for safe zones. Line height of 1.2-1.4x font size prevents cramped text.</p>
+                  <ul>
+                    <li>Bottom center: Standard positioning</li>
+                    <li>10-15% safe margin from edges</li>
+                    <li>Two lines maximum per subtitle</li>
+                  </ul>
+                </div>
+
+                <div className="char-card">
+                  <h4>⏱️ Timing & Duration</h4>
+                  <p>Subtitles should appear <strong>0.1-0.3 seconds before spoken words</strong> for natural reading flow. Minimum 1 second on-screen (21 characters/second reading speed). Maximum 2 lines or 42 characters per subtitle for comfortable reading.</p>
+                  <ul>
+                    <li>1-7 seconds duration per subtitle</li>
+                    <li>21 characters per second reading rate</li>
+                    <li>Sync audio 0.1-0.3s before text appears</li>
+                  </ul>
+                </div>
+              </div>
+            </article>
+
+            <article className="guide-section">
+              <h3>Platform-Specific Optimization</h3>
+              <div className="matching-table">
+                <div className="match-row">
+                  <div className="match-content-type">
+                    <strong>📱 Instagram & TikTok</strong>
+                    <p>Vertical 9:16 format, mobile viewing</p>
+                  </div>
+                  <div className="match-recommendation">
+                    <p><strong>Best Practice:</strong> Center-bottom placement, large bold fonts, high contrast</p>
+                    <p><em>Why:</em> Mobile screens require larger text. 85% watch without sound—captions are essential for engagement.</p>
+                  </div>
+                </div>
+
+                <div className="match-row">
+                  <div className="match-content-type">
+                    <strong>🎬 YouTube</strong>
+                    <p>Landscape 16:9, desktop & mobile</p>
+                  </div>
+                  <div className="match-recommendation">
+                    <p><strong>Best Practice:</strong> Standard bottom placement, white text with black stroke, SRT export option</p>
+                    <p><em>Why:</em> Viewers can toggle captions on/off. Separate SRT files improve SEO and allow multi-language support.</p>
+                  </div>
+                </div>
+
+                <div className="match-row">
+                  <div className="match-content-type">
+                    <strong>📺 Broadcast & Film</strong>
+                    <p>Professional productions, cinema</p>
+                  </div>
+                  <div className="match-recommendation">
+                    <p><strong>Best Practice:</strong> Yellow sans-serif, precise timing, professional typography</p>
+                    <p><em>Why:</em> Industry standards ensure readability on large screens. Yellow is traditional for film subtitles.</p>
+                  </div>
+                </div>
+
+                <div className="match-row">
+                  <div className="match-content-type">
+                    <strong>📚 E-Learning Platforms</strong>
+                    <p>Educational content, tutorials</p>
+                  </div>
+                  <div className="match-recommendation">
+                    <p><strong>Best Practice:</strong> Clean sans-serif, high contrast, slower reading pace</p>
+                    <p><em>Why:</em> Students need time to process information. Clear typography reduces cognitive load during learning.</p>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article className="guide-section">
+              <h3>Advanced Subtitle Techniques</h3>
+              <div className="tips-grid">
+                <div className="tip-card">
+                  <span className="tip-number">1</span>
+                  <h4>Text Stroke & Shadow</h4>
+                  <p>Add 2-3px black stroke around white text for perfect readability against any background. Stroke is superior to drop shadows for subtitle clarity—shadows can blur text on moving backgrounds.</p>
+                </div>
+
+                <div className="tip-card">
+                  <span className="tip-number">2</span>
+                  <h4>Background Boxes</h4>
+                  <p>Semi-transparent black backgrounds (50-70% opacity) behind text ensure readability over complex scenes. Use rounded corners for modern aesthetics. Keep padding consistent at 5-10px.</p>
+                </div>
+
+                <div className="tip-card">
+                  <span className="tip-number">3</span>
+                  <h4>Speaker Identification</h4>
+                  <p>Use different colors or positions for multiple speakers in interviews or dialogues. Consistency is key—each speaker should maintain the same color throughout the video.</p>
+                </div>
+
+                <div className="tip-card">
+                  <span className="tip-number">4</span>
+                  <h4>Sound Effect Indicators</h4>
+                  <p>Describe important non-speech audio in [brackets]: [music playing], [door slams], [phone ringing]. Critical for accessibility and viewer comprehension during silent viewing.</p>
+                </div>
+
+                <div className="tip-card">
+                  <span className="tip-number">5</span>
+                  <h4>Line Breaking Rules</h4>
+                  <p>Break lines at natural phrase boundaries, not mid-word or mid-phrase. Top line should be shorter than bottom line for balanced pyramid shape. Avoid orphaned words (single words alone on a line).</p>
+                </div>
+
+                <div className="tip-card">
+                  <span className="tip-number">6</span>
+                  <h4>Quality Control</h4>
+                  <p>Always review generated subtitles for accuracy. Check for: correct spelling, proper punctuation, timing sync, speaker changes, and technical terms. Test on mobile devices for size verification.</p>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      {/* NEW: Technical Comparison Section */}
+      <section className="comparison-section" role="region" aria-labelledby="comparison-title">
+        <div className="container">
+          <h2 id="comparison-title">AI Subtitle Generation vs Manual Transcription: Complete Comparison</h2>
+          <p className="section-description">
+            Understand the key differences between AI-powered automatic subtitles and traditional manual transcription services.
+          </p>
+
+          <div className="comparison-table-wrapper">
+            <table className="comparison-table">
+              <thead>
+                <tr>
+                  <th>Feature</th>
+                  <th>AI Subtitle Generation</th>
+                  <th>Manual Transcription</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Cost</strong></td>
+                  <td>✅ Free to $0.50/minute<br/><span className="detail">Unlimited generations with subscription</span></td>
+                  <td>❌ $1-3 per video minute<br/><span className="detail">Plus rush fees, formatting costs</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Speed</strong></td>
+                  <td>✅ 1-2 minutes processing<br/><span className="detail">Real-time for short videos</span></td>
+                  <td>❌ 3-5 business days<br/><span className="detail">Rush service adds 50-100% cost</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Accuracy</strong></td>
+                  <td>✅ 95-98% for clear audio<br/><span className="detail">Lower for accents, technical terms</span></td>
+                  <td>✅ 99-100% accuracy<br/><span className="detail">Human review catches all nuances</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Editing Required</strong></td>
+                  <td>⚠️ 5-15 minutes review<br/><span className="detail">Quick corrections for errors</span></td>
+                  <td>✅ Minimal to none<br/><span className="detail">Professional quality delivery</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Scalability</strong></td>
+                  <td>✅ Process 100s of videos<br/><span className="detail">Automated batch processing</span></td>
+                  <td>❌ Limited by human capacity<br/><span className="detail">Expensive for volume work</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Language Support</strong></td>
+                  <td>✅ 50+ languages instantly<br/><span className="detail">No additional cost per language</span></td>
+                  <td>⚠️ Major languages available<br/><span className="detail">$2-5/min for rare languages</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Customization</strong></td>
+                  <td>✅ Full styling control<br/><span className="detail">Fonts, colors, positions, effects</span></td>
+                  <td>⚠️ Basic formatting<br/><span className="detail">Custom styling costs extra</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Technical Terms</strong></td>
+                  <td>⚠️ May require corrections<br/><span className="detail">Industry jargon needs review</span></td>
+                  <td>✅ Accurate with research<br/><span className="detail">Transcribers look up terms</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Multiple Speakers</strong></td>
+                  <td>⚠️ Speaker ID improving<br/><span className="detail">May need manual tagging</span></td>
+                  <td>✅ Precise identification<br/><span className="detail">Formatted with speaker labels</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Background Noise</strong></td>
+                  <td>⚠️ Struggles with poor audio<br/><span className="detail">Filters help but not perfect</span></td>
+                  <td>✅ Humans understand context<br/><span className="detail">Can decipher challenging audio</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div className="comparison-recommendation">
+            <h3>When to Choose AI Subtitle Generation</h3>
+            <ul className="recommendation-list">
+              <li>✅ <strong>Budget-conscious projects:</strong> Save 90% on captioning costs without sacrificing quality</li>
+              <li>✅ <strong>High-volume content:</strong> Process multiple videos simultaneously for social media or YouTube</li>
+              <li>✅ <strong>Fast turnarounds:</strong> Same-day delivery for time-sensitive content</li>
+              <li>✅ <strong>Clear audio recordings:</strong> Professional audio with minimal background noise</li>
+              <li>✅ <strong>Standard vocabulary:</strong> General topics without extensive industry jargon</li>
+              <li>✅ <strong>Multilingual needs:</strong> Automatically subtitle in 50+ languages</li>
+              <li>✅ <strong>Social media content:</strong> Quick captions for Instagram, TikTok, Facebook videos</li>
+            </ul>
+
+            <h3>When to Choose Manual Transcription</h3>
+            <ul className="recommendation-list">
+              <li>🎯 <strong>Legal/medical content:</strong> 100% accuracy required for compliance</li>
+              <li>🎯 <strong>Poor audio quality:</strong> Heavy background noise, multiple overlapping speakers</li>
+              <li>🎯 <strong>Heavy accents:</strong> Regional dialects or non-native speakers</li>
+              <li>🎯 <strong>Technical terminology:</strong> Industry-specific jargon requiring expertise</li>
+              <li>🎯 <strong>Broadcast standards:</strong> Television or film requiring perfect quality</li>
+              <li>🎯 <strong>Complex formatting:</strong> Specific styling requirements beyond standard captions</li>
+            </ul>
+
+            <div className="hybrid-approach">
+              <h3>💡 Pro Tip: Hybrid Approach</h3>
+              <p>
+                Most professionals combine both methods: Use <strong>AI subtitle generation for fast drafts</strong>, then hire human editors for final quality review on critical videos. This reduces manual transcription costs by 70-80% while maintaining high accuracy where it matters. Perfect for YouTube channels, online courses, and professional content production.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>      
 
       <section className="cta-section" id="get-started" role="region" aria-labelledby="cta-title">
         <motion.div
