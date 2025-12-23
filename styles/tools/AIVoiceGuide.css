@@ -1,0 +1,419 @@
+/* styles/guides/AIVoiceGuide.css */
+
+.ai-voice-guide-page {
+  font-family: 'Montserrat', sans-serif;
+  background: linear-gradient(to bottom, #F8FAFC 0%, #FFFFFF 100%);
+  min-height: 100vh;
+  color: #1E293B;
+}
+
+/* Hero Section */
+.ai-voice-guide-page section:first-of-type {
+  padding: 120px 20px 100px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.ai-voice-guide-page section:first-of-type::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+.ai-voice-guide-page section:first-of-type > div {
+  position: relative;
+  z-index: 2;
+}
+
+.ai-voice-guide-page section:first-of-type h1 {
+  font-size: 3rem;
+  line-height: 1.2;
+  font-weight: 800;
+  margin-bottom: 24px;
+  color: #FFFFFF;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+@media (min-width: 768px) {
+  .ai-voice-guide-page section:first-of-type h1 {
+    font-size: 4.5rem;
+  }
+}
+
+.ai-voice-guide-page section:first-of-type p {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  max-width: 900px;
+  margin: 0 auto 40px;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.ai-voice-guide-page section:first-of-type a[href="/tools/ai-voice-generation"] {
+  padding: 16px 40px;
+  background: #FFFFFF;
+  color: #4F46E5;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 1.125rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.ai-voice-guide-page section:first-of-type a[href="/tools/ai-voice-generation"]:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  background: #F8FAFC;
+}
+
+.ai-voice-guide-page section:first-of-type button {
+  padding: 16px 40px;
+  background: transparent;
+  color: #FFFFFF;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+}
+
+.ai-voice-guide-page section:first-of-type button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* Trust indicators in hero */
+.ai-voice-guide-page section:first-of-type > div > div:last-of-type {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 48px;
+}
+
+.ai-voice-guide-page section:first-of-type > div > div:last-of-type > div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  padding: 10px 20px;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* Table of Contents */
+.ai-voice-guide-page section:nth-of-type(2) {
+  padding: 80px 20px;
+  background: #FFFFFF;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.ai-voice-guide-page section:nth-of-type(2) h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 40px;
+  color: #1E293B;
+}
+
+.ai-voice-guide-page section:nth-of-type(2) > div > div:last-child {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.ai-voice-guide-page section:nth-of-type(2) a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: #F8FAFC;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.ai-voice-guide-page section:nth-of-type(2) a:hover {
+  background: #EEF2FF;
+  color: #4F46E5;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(79, 70, 229, 0.1);
+}
+
+.ai-voice-guide-page section:nth-of-type(2) a span:first-child {
+  font-weight: 700;
+  color: #4F46E5;
+}
+
+/* Main Content Sections */
+.ai-voice-guide-page section:nth-of-type(3) {
+  padding: 80px 20px;
+}
+
+.ai-voice-guide-page article {
+  background: #FFFFFF;
+  border-radius: 20px;
+  padding: 48px;
+  margin-bottom: 64px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(79, 70, 229, 0.1);
+  transition: all 0.3s ease;
+}
+
+.ai-voice-guide-page article:hover {
+  box-shadow: 0 20px 50px rgba(79, 70, 229, 0.15);
+  transform: translateY(-4px);
+}
+
+.ai-voice-guide-page article h2 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 32px;
+  color: #1E293B;
+  position: relative;
+  padding-bottom: 16px;
+}
+
+.ai-voice-guide-page article h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, #4F46E5, #8B5CF6);
+  border-radius: 2px;
+}
+
+.ai-voice-guide-page article h3 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin: 40px 0 20px;
+  color: #1E293B;
+}
+
+.ai-voice-guide-page article p,
+.ai-voice-guide-page article li {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: #475569;
+  margin-bottom: 20px;
+}
+
+/* Highlight boxes */
+.ai-voice-guide-page article > div[class*="bg-"] {
+  padding: 32px;
+  border-radius: 16px;
+  margin: 40px 0;
+  border-left: 5px solid;
+}
+
+.ai-voice-guide-page article div.bg-indigo-50 {
+  background: #EEF2FF;
+  border-color: #4F46E5;
+}
+
+.ai-voice-guide-page article div.bg-green-50 {
+  background: #F0FDF4;
+  border-color: #22C55E;
+}
+
+.ai-voice-guide-page article div.bg-yellow-50 {
+  background: #FFFBEB;
+  border-color: #F59E0B;
+}
+
+.ai-voice-guide-page article div.bg-purple-50,
+.ai-voice-guide-page article div.bg-gradient-to-r {
+  background: linear-gradient(135deg, #FAF5FF, #F3E8FF);
+  border-color: #8B5CF6;
+}
+
+.ai-voice-guide-page article div.bg-blue-50 {
+  background: #EFF6FF;
+  border-color: #3B82F6;
+}
+
+.ai-voice-guide-page article div.bg-red-50 {
+  background: #FEF2F2;
+  border-color: #EF4444;
+}
+
+/* CTA in tutorial section */
+.ai-voice-guide-page article div.bg-gradient-to-r[class*="from-indigo"] {
+  padding: 40px;
+  text-align: center;
+  color: #FFFFFF;
+}
+
+.ai-voice-guide-page article div.bg-gradient-to-r[class*="from-indigo"] h3 {
+  font-size: 2rem;
+  margin-bottom: 16px;
+  color: #FFFFFF;
+}
+
+.ai-voice-guide-page article div.bg-gradient-to-r[class*="from-indigo"] a {
+  margin-top: 24px;
+  padding: 16px 36px;
+  background: #FFFFFF;
+  color: #4F46E5;
+  border-radius: 9999px;
+  font-weight: 700;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* FAQ Accordion */
+.ai-voice-guide-page article:last-of-type .space-y-4 > div {
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+}
+
+.ai-voice-guide-page article:last-of-type .space-y-4 > div:hover {
+  border-color: #4F46E5;
+  box-shadow: 0 4px 15px rgba(79, 70, 229, 0.1);
+}
+
+.ai-voice-guide-page article:last-of-type button {
+  width: 100%;
+  padding: 24px;
+  text-align: left;
+  background: #FFFFFF;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #1E293B;
+}
+
+.ai-voice-guide-page article:last-of-type button:hover {
+  background: #F8FAFC;
+}
+
+.ai-voice-guide-page article:last-of-type div.px-6.pb-6 {
+  padding: 0 24px 24px;
+  background: #FAFAFA;
+  color: #475569;
+  line-height: 1.7;
+}
+
+/* Final CTA Section */
+.ai-voice-guide-page section:last-of-type {
+  padding: 100px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.ai-voice-guide-page section:last-of-type h2 {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 24px;
+  color: #FFFFFF;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+@media (min-width: 768px) {
+  .ai-voice-guide-page section:last-of-type h2 {
+    font-size: 4rem;
+  }
+}
+
+.ai-voice-guide-page section:last-of-type p {
+  font-size: 1.25rem;
+  max-width: 800px;
+  margin: 0 auto 48px;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.ai-voice-guide-page section:last-of-type a {
+  padding: 18px 48px;
+  background: #FFFFFF;
+  color: #4F46E5;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 1.25rem;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.ai-voice-guide-page section:last-of-type a:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+}
+
+/* Stats grid */
+.ai-voice-guide-page section:last-of-type > div > div:last-child {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 40px;
+  margin-top: 60px;
+}
+
+.ai-voice-guide-page section:last-of-type > div > div:last-child > div {
+  color: #FFFFFF;
+}
+
+.ai-voice-guide-page section:last-of-type > div > div:last-child > div > div:first-child {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+/* Footer */
+.ai-voice-guide-page footer {
+  padding: 60px 20px;
+  background: #111827;
+  color: #9CA3AF;
+  text-align: center;
+}
+
+.ai-voice-guide-page footer p {
+  margin-bottom: 24px;
+  font-size: 0.95rem;
+}
+
+.ai-voice-guide-page footer div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 32px;
+}
+
+.ai-voice-guide-page footer a {
+  color: #9CA3AF;
+  transition: color 0.3s ease;
+  font-weight: 500;
+}
+
+.ai-voice-guide-page footer a:hover {
+  color: #FFFFFF;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .ai-voice-guide-page article {
+    padding: 32px 24px;
+    margin-bottom: 48px;
+  }
+
+  .ai-voice-guide-page article h2 {
+    font-size: 1.9rem;
+  }
+
+  .ai-voice-guide-page article h3 {
+    font-size: 1.4rem;
+  }
+
+  .ai-voice-guide-page section:first-of-type,
+  .ai-voice-guide-page section:last-of-type {
+    padding: 80px 20px;
+  }
+}
