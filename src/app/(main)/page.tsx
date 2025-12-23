@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { FaPlay, FaMicrophone, FaClosedCaptioning, FaExchangeAlt, FaEraser, FaTachometerAlt, FaPaintBrush, FaCompressArrowsAlt } from 'react-icons/fa';
 import '../../../styles/LandingPage.css';
+import PremiumUpgradePopup from '../components/PremiumUpgradePopup';
+import '../../../styles/components/PremiumUpgradePopup.css';
 
 interface ToolShowcase {
   id: string;
@@ -100,6 +102,7 @@ const youtubeTutorials = [
 
 export default function LandingPage() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [showPremiumPopup, setShowPremiumPopup] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -124,6 +127,34 @@ export default function LandingPage() {
       });
     }, 150);
   };
+
+  useEffect(() => {
+    const detectLocationAndShowPopup = async () => {
+
+      try {
+        const response = await fetch('https://ipapi.co/json/');
+        const data = await response.json();
+        const countryCode = data.country_code;
+        const isIndia = countryCode === 'IN';
+
+        // Show popup only if user is from India and has BASIC role
+        if (isIndia) {
+          // Delay popup by 2 seconds for better UX
+          setTimeout(() => {
+            setShowPremiumPopup(true);
+          }, 2000);
+        }
+      } catch (error) {
+        console.error('Error detecting location:', error);
+      }
+    };
+
+    detectLocationAndShowPopup();
+  });
+
+  const handleClosePremiumPopup = () => {
+    setShowPremiumPopup(false);
+  };  
 
   return (
     <>
@@ -592,6 +623,10 @@ export default function LandingPage() {
           </motion.div>
         </section>
       </div>
+      <PremiumUpgradePopup
+        isOpen={showPremiumPopup} 
+        onClose={handleClosePremiumPopup} 
+      />      
     </>
   );
 }

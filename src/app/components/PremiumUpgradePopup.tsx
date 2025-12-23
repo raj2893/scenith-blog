@@ -129,13 +129,13 @@ const PremiumUpgradePopup: React.FC<PremiumUpgradePopupProps> = ({ isOpen, onClo
               </div>
 
               <div className="premium-popup-text">
-                <h2>Want Higher Generation Limit?</h2>
+                <h2>Want Higher AI VOICE Generation Limit?</h2>
                 <p>Upgrade to Pro with the <strong>Cheapest Premium Plan!</strong></p>
                 
                 <div className="premium-features">
                   <div className="premium-feature-item">
                     <span className="feature-icon">⚡</span>
-                    <span>10,000+ characters/month</span>
+                    <span>50,000+ characters/month</span>
                   </div>
                   <div className="premium-feature-item">
                     <span className="feature-icon">🎤</span>
