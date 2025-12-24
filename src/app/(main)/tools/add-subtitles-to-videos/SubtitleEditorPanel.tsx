@@ -12,6 +12,7 @@ interface SubtitleEditorPanelProps {
   onClose: () => void;
   availableFonts: string[];
   onApplyToAll: (field: string, value: any) => void;
+  isGlobalEdit?: boolean;
 }
 
 const googleFonts = [
@@ -80,7 +81,8 @@ const SubtitleEditorPanel: React.FC<SubtitleEditorPanelProps> = ({
   onUpdate,
   onClose,
   availableFonts,
-  onApplyToAll
+  onApplyToAll,
+  isGlobalEdit = false
 }) => {
   useEffect(() => {
     // Only load WebFont in the browser
@@ -155,33 +157,38 @@ const SubtitleEditorPanel: React.FC<SubtitleEditorPanelProps> = ({
   return (
     <div className="section-content tool-subpanel subtitle-editor-panel">
       <h3>Subtitle Settings</h3>
-      <div className="control-group">
-        <button
-          className="apply-text-btn close-editor-btn"
-          onClick={onClose}
-          title="Close Editor"
-        >
-          <FaTimes />
-        </button>
-      </div>      
-      <div className="control-group">
-        <label>Text Content</label>
-        <textarea
-          value={subtitle.text}
-          onChange={(e) => updateField('text', e.target.value)}
-          rows={4}
-          style={{
-            width: '100%',
-            resize: 'vertical',
-            padding: '8px',
-            fontSize: '14px',
-            borderRadius: '4px',
-            border: subtitle.text.trim() === '' ? '2px solid red' : '1px solid #2a2a2a',
-            boxSizing: 'border-box',
-          }}
-          placeholder={subtitle.text.trim() === '' ? 'Text cannot be empty' : 'Enter subtitle text (press Enter for new line)'}
-        />
-      </div>
+      <h3>{isGlobalEdit ? 'Edit All Subtitles' : 'Edit Subtitle'}</h3>
+      {!isGlobalEdit && (
+        <div className="control-group">
+          <button
+            className="apply-text-btn close-editor-btn"
+            onClick={onClose}
+            title="Close Editor"
+          >
+            <FaTimes />
+          </button>
+        </div>
+      )}  
+      {!isGlobalEdit && (
+        <div className="control-group">
+          <label>Text Content</label>
+          <textarea
+            value={subtitle.text}
+            onChange={(e) => updateField('text', e.target.value)}
+            rows={4}
+            style={{
+              width: '100%',
+              resize: 'vertical',
+              padding: '8px',
+              fontSize: '14px',
+              borderRadius: '4px',
+              border: subtitle.text.trim() === '' ? '2px solid red' : '1px solid #2a2a2a',
+              boxSizing: 'border-box',
+            }}
+            placeholder={subtitle.text.trim() === '' ? 'Text cannot be empty' : 'Enter subtitle text (press Enter for new line)'}
+          />
+        </div>
+      )}
       <div className="control-group">
         <label>Font Family</label>
         <select
@@ -429,26 +436,6 @@ const SubtitleEditorPanel: React.FC<SubtitleEditorPanelProps> = ({
         />
       </div>
       <div className="control-group">
-        <button
-          className="apply-to-all-btn"
-          onClick={() => {
-            onApplyToAll('positionX', subtitle.positionX);
-          }}
-          style={{
-            padding: '8px 16px',
-            background: '#3B82F6',
-            color: 'white',
-            border: 'none',
-            borderRadius: '6px',
-            cursor: 'pointer',
-            fontSize: '13px',
-            marginTop: '5px'
-          }}
-        >
-          Apply Position X to All
-        </button>
-      </div>      
-      <div className="control-group">
         <label>Position Y</label>
         <input
           type="number"
@@ -457,27 +444,7 @@ const SubtitleEditorPanel: React.FC<SubtitleEditorPanelProps> = ({
           step="1"
           style={{ width: '60px' }}
         />
-      </div>
-      <div className="control-group">
-        <button
-          className="apply-to-all-btn"
-          onClick={() => {
-            onApplyToAll('positionY', subtitle.positionY);
-          }}
-          style={{
-            padding: '8px 16px',
-            background: '#3B82F6',
-            color: 'white',
-            border: 'none',
-            borderRadius: '6px',
-            cursor: 'pointer',
-            fontSize: '13px',
-            marginTop: '5px'
-          }}
-        >
-          Apply Position Y to All
-        </button>
-      </div>      
+      </div>   
       <div className="control-group">
         <label>Rotation (°)</label>
         <input

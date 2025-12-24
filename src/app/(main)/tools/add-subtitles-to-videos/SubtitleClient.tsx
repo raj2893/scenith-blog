@@ -1108,28 +1108,98 @@ const SubtitleClient: React.FC = () => {
                     </div>
                   </div>
                   {/* Subtitle Editor Panel */}
-                  {editingSubtitle && (
+                  {(editingSubtitle || subtitles.length > 0) && (
                     <div className="subtitle-editor-container">
                       <SubtitleEditorPanel
-                        subtitle={editingSubtitle}
+                        subtitle={editingSubtitle || {
+                          id: 'global',
+                          text: '',
+                          timelineStartTime: 0,
+                          timelineEndTime: 0,
+                          fontFamily: subtitles[0]?.fontFamily || 'Arial',
+                          fontColor: subtitles[0]?.fontColor || 'white',
+                          backgroundColor: subtitles[0]?.backgroundColor || 'transparent',
+                          scale: subtitles[0]?.scale || 1.0,
+                          backgroundOpacity: subtitles[0]?.backgroundOpacity || 1.0,
+                          positionX: subtitles[0]?.positionX || 0,
+                          positionY: subtitles[0]?.positionY || 0,
+                          alignment: subtitles[0]?.alignment || 'center',
+                          backgroundH: subtitles[0]?.backgroundH || 50,
+                          backgroundW: subtitles[0]?.backgroundW || 50,
+                          backgroundBorderRadius: subtitles[0]?.backgroundBorderRadius || 15,
+                          backgroundBorderWidth: subtitles[0]?.backgroundBorderWidth || 0,
+                          backgroundBorderColor: subtitles[0]?.backgroundBorderColor || 'transparent',
+                          textBorderColor: subtitles[0]?.textBorderColor || 'transparent',
+                          textBorderWidth: subtitles[0]?.textBorderWidth || 0,
+                          textBorderOpacity: subtitles[0]?.textBorderOpacity || 1.0,
+                          letterSpacing: subtitles[0]?.letterSpacing || 0,
+                          lineSpacing: subtitles[0]?.lineSpacing || 1.2,
+                          opacity: subtitles[0]?.opacity || 1.0,
+                          rotation: subtitles[0]?.rotation || 0,
+                          isSubtitle: true,
+                          keyframes: {}
+                        } as SubtitleDTO}
                         onUpdate={(updatedSubtitle) => {
-                          setEditingSubtitle(updatedSubtitle);
-                          setSubtitles(subtitles.map(sub => 
-                            sub.id === updatedSubtitle.id ? updatedSubtitle : sub
-                          ));
-                          debouncedSave(updatedSubtitle);
+                          if (editingSubtitle) {
+                            // Update single subtitle
+                            setEditingSubtitle(updatedSubtitle);
+                            setSubtitles(subtitles.map(sub => 
+                              sub.id === updatedSubtitle.id ? updatedSubtitle : sub
+                            ));
+                            debouncedSave(updatedSubtitle);
+                          } else {
+                            // Apply to all subtitles
+                            const updatedSubtitles = subtitles.map(sub => ({
+                              ...sub,
+                              fontFamily: updatedSubtitle.fontFamily,
+                              fontColor: updatedSubtitle.fontColor,
+                              backgroundColor: updatedSubtitle.backgroundColor,
+                              scale: updatedSubtitle.scale,
+                              backgroundOpacity: updatedSubtitle.backgroundOpacity,
+                              positionX: updatedSubtitle.positionX,
+                              positionY: updatedSubtitle.positionY,
+                              alignment: updatedSubtitle.alignment,
+                              backgroundH: updatedSubtitle.backgroundH,
+                              backgroundW: updatedSubtitle.backgroundW,
+                              backgroundBorderRadius: updatedSubtitle.backgroundBorderRadius,
+                              backgroundBorderWidth: updatedSubtitle.backgroundBorderWidth,
+                              backgroundBorderColor: updatedSubtitle.backgroundBorderColor,
+                              textBorderColor: updatedSubtitle.textBorderColor,
+                              textBorderWidth: updatedSubtitle.textBorderWidth,
+                              textBorderOpacity: updatedSubtitle.textBorderOpacity,
+                              letterSpacing: updatedSubtitle.letterSpacing,
+                              lineSpacing: updatedSubtitle.lineSpacing,
+                              opacity: updatedSubtitle.opacity,
+                              rotation: updatedSubtitle.rotation
+                            }));
+                            setSubtitles(updatedSubtitles);
+
+                            // Save all subtitles to backend
+                            axios.put(
+                              `${API_BASE_URL}/api/subtitles/update/${selectedUpload!.id}`,
+                              updatedSubtitles,
+                              { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+                            ).catch(error => {
+                              console.error('Failed to update all subtitles:', error);
+                              setError('Failed to apply changes to all subtitles.');
+                            });
+                          }
                         }}
                         onClose={() => {
-                          if (originalSubtitle) {
-                            setSubtitles(subtitles.map(sub => 
-                              sub.id === originalSubtitle.id ? originalSubtitle : sub
-                            ));
+                          if (editingSubtitle) {
+                            if (originalSubtitle) {
+                              setSubtitles(subtitles.map(sub => 
+                                sub.id === originalSubtitle.id ? originalSubtitle : sub
+                              ));
+                            }
+                            setEditingSubtitle(null);
+                            setOriginalSubtitle(null);
                           }
-                          setEditingSubtitle(null);
-                          setOriginalSubtitle(null);
+                          // Don't close panel when in global mode, just do nothing
                         }}
                         availableFonts={aiStyles.map(s => s.fontFamily)}
                         onApplyToAll={handleApplyPositionToAll}
+                        isGlobalEdit={!editingSubtitle}
                       />
                       <div className="editor-save-status">
                         {isSaving && <span className="saving-indicator">💾 Saving...</span>}

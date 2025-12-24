@@ -192,11 +192,79 @@ export default function PricingPage() {
         // @ts-ignore - Razorpay type not available
         const rzp = new window.Razorpay(options);
         rzp.open();
-      } else if (gateway === 'paypal') {
-        // PayPal will be rendered via SDK (see note below)
-        alert('PayPal integration coming soon! For now, use Razorpay (Indian users).');
-        // Full PayPal code will be added in next step if needed
-      }
+      }  else if (gateway === 'paypal') {
+          // Create a container for PayPal buttons if not already present
+          let paypalContainer = document.getElementById('paypal-button-container');
+          if (!paypalContainer) {
+            paypalContainer = document.createElement('div');
+            paypalContainer.id = 'paypal-button-container';
+            paypalContainer.style.position = 'fixed';
+            paypalContainer.style.top = '50%';
+            paypalContainer.style.left = '50%';
+            paypalContainer.style.transform = 'translate(-50%, -50%)';
+            paypalContainer.style.zIndex = '1000';
+            paypalContainer.style.background = 'white';
+            paypalContainer.style.padding = '20px';
+            paypalContainer.style.borderRadius = '12px';
+            paypalContainer.style.boxShadow = '0 10px 30px rgba(0,0,0,0.3)';
+            document.body.appendChild(paypalContainer);
+          }
+
+          // Clear any previous buttons
+          paypalContainer.innerHTML = '';
+
+          // Render PayPal Buttons
+          // @ts-ignore - paypal is global from SDK
+          paypal.Buttons({
+            createOrder: () => {
+              return gatewayOrderId;  // Use the order ID created by backend
+            },
+            onApprove: async (data: any, actions: any) => {
+              try {
+                // Capture payment on backend
+                const captureResponse = await axios.post(
+                  `${API_BASE_URL}/api/payments/capture-paypal`,
+                  {
+                    internalOrderId,
+                    paypalOrderId: data.orderID
+                  },
+                  {
+                    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+                  }
+                );
+
+                if (captureResponse.data.status === 'SUCCESS') {
+                  alert(`🎉 Successfully upgraded to ${plan.name} via PayPal!`);
+                  setCurrentPlan(plan.role);
+                  router.push('/tools/ai-voice-generation');
+                } else {
+                  alert('Payment capture failed. Please try again.');
+                }
+              } catch (err: any) {
+                console.error('PayPal capture error:', err);
+                alert('Error capturing payment: ' + (err.response?.data || 'Unknown error'));
+              } finally {
+                // Remove container after success/fail
+                if (paypalContainer) {
+                  document.body.removeChild(paypalContainer);
+                }
+              }
+            },
+            onCancel: () => {
+              alert('Payment cancelled.');
+              if (paypalContainer) {
+                document.body.removeChild(paypalContainer);
+              }
+            },
+            onError: (err: any) => {
+              console.error('PayPal error:', err);
+              alert('PayPal error occurred.');
+              if (paypalContainer) {
+                document.body.removeChild(paypalContainer);
+              }
+            }
+          }).render('#paypal-button-container');
+        }
 
     } catch (error: any) {
       console.error('Payment error:', error);
