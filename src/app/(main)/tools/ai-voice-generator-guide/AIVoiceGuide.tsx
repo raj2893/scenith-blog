@@ -30,12 +30,9 @@ const AIVoiceGuide = () => {
                 <Sparkles className="w-4 h-4" />
                 <span className="text-sm font-semibold">2025 Ultimate Guide</span>
               </div>
-              <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+              <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight text-black">
                 AI Voice Generator: Complete Guide to Text-to-Speech Technology
               </h1>
-              <p className="text-xl md:text-2xl mb-8 text-white/90 max-w-4xl mx-auto">
-                Master AI voice generation with our comprehensive guide. Learn how to create professional voiceovers, choose the perfect voice, and transform your content with cutting-edge text-to-speech technology.
-              </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <a
                   href="/tools/ai-voice-generation"
@@ -44,9 +41,6 @@ const AIVoiceGuide = () => {
                   Try Free AI Voice Generator
                   <ArrowRight className="w-5 h-5" />
                 </a>
-                <button className="text-white border-2 border-white/30 px-8 py-4 rounded-full font-semibold hover:bg-white/10 transition-all">
-                  Read Complete Guide ↓
-                </button>
               </div>
               <div className="mt-12 flex flex-wrap justify-center gap-8 text-sm">
                 <div className="flex items-center gap-2">
@@ -337,7 +331,7 @@ const AIVoiceGuide = () => {
               </p>
 
               <div className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-6 rounded-xl my-6">
-                <h3 className="text-2xl font-bold mb-3">🚀 Get Started Now</h3>
+                <h3 className="text-2xl font-bold mb-3 text-black">🚀 Get Started Now</h3>
                 <p className="mb-4">Ready to create your first AI voiceover? Our free tool includes everything you need.</p>
                 <a
                   href="/tools/ai-voice-generation"
@@ -718,7 +712,7 @@ const AIVoiceGuide = () => {
       {/* Final CTA Section */}
       <section className="py-20 px-4 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 text-white">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-black">
             Ready to Transform Your Content with AI Voices?
           </h2>
           <p className="text-xl mb-8 text-white/90">
@@ -753,20 +747,6 @@ const AIVoiceGuide = () => {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-gray-300 py-12 px-4">
-        <div className="max-w-6xl mx-auto text-center">
-          <p className="mb-4">© 2025 SCENITH AI Voice Generator. All rights reserved.</p>
-          <div className="flex flex-wrap justify-center gap-6 text-sm">
-            <a href="/tools/ai-voice-generation" className="hover:text-white transition-colors">AI Voice Generator</a>
-            <a href="/tools/pricing" className="hover:text-white transition-colors">Pricing</a>
-            <a href="/about" className="hover:text-white transition-colors">About Us</a>
-            <a href="/contact" className="hover:text-white transition-colors">Contact</a>
-            <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };
