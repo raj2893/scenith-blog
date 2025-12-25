@@ -18,16 +18,17 @@ const Footer = () => {
     // All Tools (new + existing)
     { label: 'AI Voice Generator', path: '/tools/ai-voice-generation' },
     { label: 'AI Subtitle Generator', path: '/tools/add-subtitles-to-videos' },
-    { label: 'AI Background Remover', path: '/background-removal' },
-    { label: 'AI Video Speed', path: '/tools/video-speed-modifier' },
-    { label: 'AI Video Filter', path: '/tools/apply-filters-to-videos' },
+    { label: 'AI Background Remover', path: '/tools/background-removal' },
+    { label: 'Media Conversion', path: '/tools/media-conversion-tool' },
+    { label: 'Image Editor', path: '/tools/image-editing' },
     { label: 'Media Compressor', path: '/tools/compress-media' },
+    { label: 'Project Editor', path: '/dashboard' },
 
     // Required static pages (kept as requested)
     { label: 'Pricing', path: '/pricing' },
-    { label: 'About Us', path: '/about' },
-    { label: 'Contact', path: '/contact' },
-    { label: 'Privacy Policy', path: '/privacy-policy' },
+    { label: 'About Us', path: '/about-us' },
+    { label: 'Contact', path: '/contact-us' },
+    { label: 'Privacy Policy', path: '/terms-and-conditions' },
   ];
 
   return (

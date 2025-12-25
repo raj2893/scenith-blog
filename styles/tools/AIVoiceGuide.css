@@ -1,4 +1,4 @@
-/* styles/guides/AIVoiceGuide.css */
+/* styles/tools/AIVoiceGuide.css */
 
 .ai-voice-guide-page {
   font-family: 'Montserrat', sans-serif;
@@ -7,7 +7,7 @@
   color: #1E293B;
 }
 
-/* Hero Section */
+/* Hero Section - Shared Styles */
 .ai-voice-guide-page section:first-of-type {
   padding: 120px 20px 100px;
   text-align: center;
@@ -33,7 +33,7 @@
   line-height: 1.2;
   font-weight: 800;
   margin-bottom: 24px;
-  color: #000000 !important;          /* pure black - overrides white */
+  color: #000000 !important;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
@@ -43,14 +43,32 @@
   }
 }
 
+/* Hero description/subtitle - readable on gradient */
 .ai-voice-guide-page section:first-of-type p {
   font-size: 1.25rem;
   line-height: 1.6;
   max-width: 900px;
   margin: 0 auto 40px;
-  color: rgba(255, 255, 255, 0.95);
+  color: #000000 !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  font-weight: 500;
 }
 
+/* Special class for hero description if needed */
+.hero-description {
+  color: #000000 !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .hero-description {
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* Hero CTA Buttons */
 .ai-voice-guide-page section:first-of-type a[href="/tools/ai-voice-generation"] {
   padding: 16px 40px;
   background: #FFFFFF;
@@ -60,6 +78,9 @@
   font-size: 1.125rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .ai-voice-guide-page section:first-of-type a[href="/tools/ai-voice-generation"]:hover {
@@ -84,7 +105,7 @@
   border-color: rgba(255, 255, 255, 0.6);
 }
 
-/* Trust indicators in hero */
+/* Trust indicators/badges in hero */
 .ai-voice-guide-page section:first-of-type > div > div:last-of-type {
   display: flex;
   flex-wrap: wrap;
@@ -103,9 +124,10 @@
   border-radius: 9999px;
   font-weight: 600;
   font-size: 0.95rem;
+  color: rgba(0, 0, 0, 0.9);
 }
 
-/* Table of Contents */
+/* Table of Contents Section */
 .ai-voice-guide-page section:nth-of-type(2) {
   padding: 80px 20px;
   background: #FFFFFF;
@@ -135,6 +157,7 @@
   border-radius: 12px;
   transition: all 0.3s ease;
   text-decoration: none;
+  color: #1E293B;
 }
 
 .ai-voice-guide-page section:nth-of-type(2) a:hover {
@@ -150,10 +173,38 @@
 }
 
 /* Main Content Sections */
-.ai-voice-guide-page section:nth-of-type(3) {
+.ai-voice-guide-page section:nth-of-type(3),
+.ai-voice-guide-page section:nth-of-type(4),
+.ai-voice-guide-page section:nth-of-type(5),
+.ai-voice-guide-page section:nth-of-type(6),
+.ai-voice-guide-page section:nth-of-type(7),
+.ai-voice-guide-page section:nth-of-type(8) {
   padding: 80px 20px;
 }
 
+/* Alternating background colors for sections */
+.ai-voice-guide-page section:nth-of-type(4),
+.ai-voice-guide-page section:nth-of-type(6),
+.ai-voice-guide-page section:nth-of-type(8) {
+  background: #F9FAFB;
+}
+
+/* Section Headings */
+.ai-voice-guide-page section h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 48px;
+  color: #1E293B;
+}
+
+@media (min-width: 768px) {
+  .ai-voice-guide-page section h2 {
+    font-size: 3rem;
+  }
+}
+
+/* Article/Content Cards */
 .ai-voice-guide-page article {
   background: #FFFFFF;
   border-radius: 20px;
@@ -176,6 +227,7 @@
   color: #1E293B;
   position: relative;
   padding-bottom: 16px;
+  text-align: left;
 }
 
 .ai-voice-guide-page article h2::after {
@@ -204,59 +256,146 @@
   margin-bottom: 20px;
 }
 
-/* Highlight boxes */
-.ai-voice-guide-page article > div[class*="bg-"] {
+.ai-voice-guide-page article ul {
+  margin: 20px 0;
+  padding-left: 24px;
+}
+
+.ai-voice-guide-page article li {
+  margin-bottom: 12px;
+}
+
+/* Benefit Cards Grid (for Benefits page) */
+.ai-voice-guide-page section > div > div.grid {
+  display: grid;
+  gap: 24px;
+}
+
+@media (min-width: 768px) {
+  .ai-voice-guide-page section > div > div.grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .ai-voice-guide-page section > div > div.grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Individual benefit/feature cards */
+.ai-voice-guide-page section > div > div.grid > div {
+  background: #FFFFFF;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #E5E7EB;
+  transition: all 0.3s ease;
+}
+
+.ai-voice-guide-page section > div > div.grid > div:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
+}
+
+/* Highlight/Callout Boxes */
+.ai-voice-guide-page article > div[class*="bg-"],
+.ai-voice-guide-page section > div > div[class*="bg-"] {
   padding: 32px;
   border-radius: 16px;
   margin: 40px 0;
   border-left: 5px solid;
 }
 
-.ai-voice-guide-page article div.bg-indigo-50 {
+.ai-voice-guide-page article div.bg-indigo-50,
+.ai-voice-guide-page section div.bg-indigo-50 {
   background: #EEF2FF;
   border-color: #4F46E5;
 }
 
-.ai-voice-guide-page article div.bg-green-50 {
+.ai-voice-guide-page article div.bg-green-50,
+.ai-voice-guide-page section div.bg-green-50 {
   background: #F0FDF4;
   border-color: #22C55E;
 }
 
-.ai-voice-guide-page article div.bg-yellow-50 {
+.ai-voice-guide-page article div.bg-yellow-50,
+.ai-voice-guide-page section div.bg-yellow-50 {
   background: #FFFBEB;
   border-color: #F59E0B;
 }
 
 .ai-voice-guide-page article div.bg-purple-50,
-.ai-voice-guide-page article div.bg-gradient-to-r {
+.ai-voice-guide-page section div.bg-purple-50,
+.ai-voice-guide-page article div.bg-gradient-to-r,
+.ai-voice-guide-page section div.bg-gradient-to-r {
   background: linear-gradient(135deg, #FAF5FF, #F3E8FF);
   border-color: #8B5CF6;
 }
 
-.ai-voice-guide-page article div.bg-blue-50 {
+.ai-voice-guide-page article div.bg-blue-50,
+.ai-voice-guide-page section div.bg-blue-50 {
   background: #EFF6FF;
   border-color: #3B82F6;
 }
 
-.ai-voice-guide-page article div.bg-red-50 {
+.ai-voice-guide-page article div.bg-red-50,
+.ai-voice-guide-page section div.bg-red-50 {
   background: #FEF2F2;
   border-color: #EF4444;
 }
 
-/* CTA in tutorial section */
-.ai-voice-guide-page article div.bg-gradient-to-r[class*="from-indigo"] {
+/* Prose content styling */
+.ai-voice-guide-page .prose {
+  max-width: none;
+}
+
+.ai-voice-guide-page .prose p {
+  margin-bottom: 20px;
+  line-height: 1.8;
+}
+
+.ai-voice-guide-page .prose ul {
+  margin: 20px 0;
+  padding-left: 24px;
+}
+
+.ai-voice-guide-page .prose li {
+  margin-bottom: 12px;
+}
+
+.ai-voice-guide-page .prose strong {
+  color: #1E293B;
+  font-weight: 600;
+}
+
+/* CTA boxes within articles */
+.ai-voice-guide-page article div.bg-gradient-to-r[class*="from-indigo"],
+.ai-voice-guide-page section div.bg-gradient-to-r[class*="from-indigo"] {
   padding: 40px;
   text-align: center;
   color: #FFFFFF;
+  background: linear-gradient(135deg, #4F46E5, #8B5CF6);
+  border: none;
 }
 
-.ai-voice-guide-page article div.bg-gradient-to-r[class*="from-indigo"] h3 {
+.ai-voice-guide-page article div.bg-gradient-to-r[class*="from-indigo"] h3,
+.ai-voice-guide-page section div.bg-gradient-to-r[class*="from-indigo"] h3,
+.ai-voice-guide-page article div.bg-gradient-to-r[class*="from-indigo"] h4,
+.ai-voice-guide-page section div.bg-gradient-to-r[class*="from-indigo"] h4 {
   font-size: 2rem;
   margin-bottom: 16px;
-  color: #FFFFFF;
+  color: #000000 !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-.ai-voice-guide-page article div.bg-gradient-to-r[class*="from-indigo"] a {
+.ai-voice-guide-page article div.bg-gradient-to-r[class*="from-indigo"] p,
+.ai-voice-guide-page section div.bg-gradient-to-r[class*="from-indigo"] p {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.ai-voice-guide-page article div.bg-gradient-to-r[class*="from-indigo"] a,
+.ai-voice-guide-page section div.bg-gradient-to-r[class*="from-indigo"] a {
   margin-top: 24px;
   padding: 16px 36px;
   background: #FFFFFF;
@@ -264,10 +403,21 @@
   border-radius: 9999px;
   font-weight: 700;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.ai-voice-guide-page article div.bg-gradient-to-r[class*="from-indigo"] a:hover,
+.ai-voice-guide-page section div.bg-gradient-to-r[class*="from-indigo"] a:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
 }
 
 /* FAQ Accordion */
-.ai-voice-guide-page article:last-of-type .space-y-4 > div {
+.ai-voice-guide-page article:last-of-type .space-y-4 > div,
+.ai-voice-guide-page section .space-y-4 > div {
   border: 1px solid #E2E8F0;
   border-radius: 12px;
   overflow: hidden;
@@ -275,12 +425,14 @@
   transition: all 0.3s ease;
 }
 
-.ai-voice-guide-page article:last-of-type .space-y-4 > div:hover {
+.ai-voice-guide-page article:last-of-type .space-y-4 > div:hover,
+.ai-voice-guide-page section .space-y-4 > div:hover {
   border-color: #4F46E5;
   box-shadow: 0 4px 15px rgba(79, 70, 229, 0.1);
 }
 
-.ai-voice-guide-page article:last-of-type button {
+.ai-voice-guide-page article:last-of-type button,
+.ai-voice-guide-page section .space-y-4 button {
   width: 100%;
   padding: 24px;
   text-align: left;
@@ -291,13 +443,17 @@
   font-weight: 600;
   font-size: 1.1rem;
   color: #1E293B;
+  border: none;
+  cursor: pointer;
 }
 
-.ai-voice-guide-page article:last-of-type button:hover {
+.ai-voice-guide-page article:last-of-type button:hover,
+.ai-voice-guide-page section .space-y-4 button:hover {
   background: #F8FAFC;
 }
 
-.ai-voice-guide-page article:last-of-type div.px-6.pb-6 {
+.ai-voice-guide-page article:last-of-type div.px-6.pb-6,
+.ai-voice-guide-page section .space-y-4 div[class*="px-"] {
   padding: 0 24px 24px;
   background: #FAFAFA;
   color: #475569;
@@ -312,12 +468,11 @@
   overflow: hidden;
 }
 
-/* Force black color + better readability on colorful gradient */
 .ai-voice-guide-page section:last-of-type h2 {
   font-size: 3rem;
   font-weight: 800;
   margin-bottom: 24px;
-  color: #000000 !important;          /* pure black - overrides everything */
+  color: #000000 !important;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
@@ -331,7 +486,9 @@
   font-size: 1.25rem;
   max-width: 800px;
   margin: 0 auto 48px;
-  color: rgba(255, 255, 255, 0.95);
+  color: rgba(0, 0, 0, 0.9) !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  font-weight: 500;
 }
 
 .ai-voice-guide-page section:last-of-type a {
@@ -343,6 +500,9 @@
   font-size: 1.25rem;
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .ai-voice-guide-page section:last-of-type a:hover {
@@ -350,7 +510,7 @@
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
 }
 
-/* Stats grid */
+/* Stats grid in final CTA */
 .ai-voice-guide-page section:last-of-type > div > div:last-child {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -359,13 +519,19 @@
 }
 
 .ai-voice-guide-page section:last-of-type > div > div:last-child > div {
-  color: #FFFFFF;
+  color: #000000;
 }
 
 .ai-voice-guide-page section:last-of-type > div > div:last-child > div > div:first-child {
   font-size: 3rem;
   font-weight: 800;
   margin-bottom: 8px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.ai-voice-guide-page section:last-of-type > div > div:last-child > div > div:last-child {
+  color: rgba(0, 0, 0, 0.8);
+  font-weight: 500;
 }
 
 /* Footer */
@@ -392,6 +558,7 @@
   color: #9CA3AF;
   transition: color 0.3s ease;
   font-weight: 500;
+  text-decoration: none;
 }
 
 .ai-voice-guide-page footer a:hover {
@@ -417,18 +584,16 @@
   .ai-voice-guide-page section:last-of-type {
     padding: 80px 20px;
   }
-/* Hero Section - Special dark & readable description */
-.hero-description {
-  color: #000000 !important;                    /* pure black */
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);    /* subtle shadow for depth on gradient */
-  font-weight: 500;                             /* medium weight for clarity */
-  line-height: 1.5;                             /* slightly more breathing room */
-}
 
-/* Optional: stronger shadow on smaller screens if needed */
-@media (max-width: 768px) {
-  .hero-description {
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  .ai-voice-guide-page section:first-of-type h1 {
+    font-size: 2.5rem;
   }
-}
+
+  .ai-voice-guide-page section:last-of-type h2 {
+    font-size: 2.5rem;
+  }
+
+  .ai-voice-guide-page section > div > div.grid {
+    grid-template-columns: 1fr;
+  }
 }

@@ -55,7 +55,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
     }
   };
 
-  // Blog-specific navigation links with Tools dropdown
+  // Navigation links with Tools dropdown (Contact Us removed)
   const baseNavLinks: NavLink[] = [
     { label: 'Home', path: '/' },
     {
@@ -68,10 +68,10 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
         { label: 'Video Speed Modifier', href: '/tools/video-speed-modifier' },
         { label: 'Video Color Grading', href: '/tools/apply-filters-to-videos' },
         { label: 'Media Compression', href: '/tools/compress-media' },
+        { label: 'Media Conversion', href: '/tools/media-conversion-tool' },
       ],
     },
     { label: 'Blogs', path: '/blogs' },
-    { label: 'Contact Us', sectionId: 'footer-section' },
   ];
 
   const navLinks = pathname.startsWith('/blogs/') && pathname !== '/blogs'
