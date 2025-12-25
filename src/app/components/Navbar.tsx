@@ -68,7 +68,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
         { label: 'Video Speed Modifier', href: '/tools/video-speed-modifier' },
         { label: 'Video Color Grading', href: '/tools/apply-filters-to-videos' },
         { label: 'Media Compression', href: '/tools/compress-media' },
-        { label: 'Media Conversion', path: '/tools/media-conversion-tool' },
+        { label: 'Media Conversion', href: '/tools/media-conversion-tool' },
       ],
     },
     { label: 'Blogs', path: '/blogs' },
