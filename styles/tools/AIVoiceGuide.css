@@ -33,7 +33,7 @@
   line-height: 1.2;
   font-weight: 800;
   margin-bottom: 24px;
-  color: #FFFFFF;
+  color: #000000 !important;          /* pure black - overrides white */
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
@@ -312,11 +312,12 @@
   overflow: hidden;
 }
 
+/* Force black color + better readability on colorful gradient */
 .ai-voice-guide-page section:last-of-type h2 {
   font-size: 3rem;
   font-weight: 800;
   margin-bottom: 24px;
-  color: #FFFFFF;
+  color: #000000 !important;          /* pure black - overrides everything */
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
@@ -416,4 +417,18 @@
   .ai-voice-guide-page section:last-of-type {
     padding: 80px 20px;
   }
+/* Hero Section - Special dark & readable description */
+.hero-description {
+  color: #000000 !important;                    /* pure black */
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);    /* subtle shadow for depth on gradient */
+  font-weight: 500;                             /* medium weight for clarity */
+  line-height: 1.5;                             /* slightly more breathing room */
+}
+
+/* Optional: stronger shadow on smaller screens if needed */
+@media (max-width: 768px) {
+  .hero-description {
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  }
+}
 }
