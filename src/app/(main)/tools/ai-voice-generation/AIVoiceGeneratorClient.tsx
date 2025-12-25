@@ -945,7 +945,7 @@ return (
 
               {isLimitsExceeded() ? (
                 <a
-                  href="https://scenith.in/tools/pricing"
+                  href="https://scenith.in/pricing"
                   className="cta-button upgrade-button"
                   aria-label="Upgrade to unlock more characters"
                 >
