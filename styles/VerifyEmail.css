@@ -1,0 +1,179 @@
+/* VerifyEmail.css */
+@import url('./Auth.css'); /* Inherit Auth.css styles */
+
+.verify-email-page {
+  /* Extend auth-page styles */
+  background: #FAFAFA;
+  min-height: 100vh;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.verify-email-page .auth-container {
+  /* Extend auth-container styles */
+  max-width: 460px;
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 1px solid rgba(63, 142, 252, 0.3);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1), 0 0 15px rgba(63, 142, 252, 0.2);
+  text-align: center;
+  animation: zoomIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  z-index: 10;
+}
+
+.verify-email-page .verification-message {
+  padding: 20px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(63, 142, 252, 0.2);
+  animation: messageReveal 0.5s ease-out;
+}
+
+.verify-email-page .verification-message p {
+  color: #333333;
+  margin-bottom: 12px;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.verify-email-page .verification-message p.loading {
+  color: #3F8EFC; /* Electric Blue */
+}
+
+.verify-email-page .verification-message p.success {
+  color: #50E3C2; /* Bright Aqua */
+}
+
+.verify-email-page .verification-message p.error {
+  color: #FF5A5F; /* Coral Red */
+}
+
+.verify-email-page .verification-message p.info {
+  color: #FFD700; /* Golden Yellow */
+}
+
+/* Spinner for loading state */
+.verify-email-page .spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #3F8EFC;
+  border-top: 4px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 12px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Resend Verification Email button */
+.verify-button {
+  padding: 14px;
+  background: #6AB4F8; /* Light Blue */
+  color: #FFFFFF;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  box-shadow: 0 4px 12px rgba(106, 180, 248, 0.3);
+  margin-top: 15px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.verify-button:hover {
+  background: #4A94D8; /* Slightly darker light blue */
+  transform: scale(1.05); /* Scale up slightly */
+  box-shadow: 0 8px 20px rgba(106, 180, 248, 0.5);
+  animation: buttonGlowLightBlue 1.5s infinite;
+}
+
+.verify-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: all 0.5s ease;
+}
+
+.verify-button:hover::before {
+  left: 100%;
+}
+
+.verify-button:active {
+  transform: scale(1.02);
+  box-shadow: 0 4px 10px rgba(106, 180, 248, 0.3);
+}
+
+@keyframes buttonGlowLightBlue {
+  0% { box-shadow: 0 8px 20px rgba(106, 180, 248, 0.3); }
+  50% { box-shadow: 0 8px 25px rgba(106, 180, 248, 0.5); }
+  100% { box-shadow: 0 8px 20px rgba(106, 180, 248, 0.3); }
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .verify-email-page .auth-container {
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .verify-email-page .auth-container {
+    padding: 20px;
+    max-width: 90%;
+  }
+  .verify-email-page .verification-message {
+    padding: 15px;
+  }
+  .verify-button {
+    padding: 12px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .verify-email-page {
+    flex-direction: column;
+    padding: 15px;
+  }
+  .verify-email-page .auth-container {
+    max-width: 100%;
+    max-height: calc(100vh - 30px);
+  }
+  .verify-email-page .rotating-text-container {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    max-width: none;
+    padding: 10px;
+    background: none;
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+  .verify-email-page .rotating-text {
+    font-size: 16px;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+  }
+  .verify-email-page .rotating-text-wrapper {
+    height: 40px;
+  }
+}

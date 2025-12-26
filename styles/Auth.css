@@ -1,0 +1,689 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+/* Reset and Base styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  overflow: hidden; /* Prevent any scrolling on the body */
+}
+
+/* Full-page wrapper */
+.auth-page {
+  display: flex;
+  justify-content: space-between; /* Distribute space between left and right */
+  align-items: center; /* Center vertically */
+  height: 100vh; /* Exactly the viewport height */
+  background: #FAFAFA; /* Soft White */
+  position: relative;
+  overflow: hidden; /* Ensure no overflow */
+  padding: 20px; /* Reduced padding to give more space */
+}
+
+/* Gradient overlay */
+.auth-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(183, 108, 253, 0.2), rgba(80, 227, 194, 0.2)); /* Neon Purple to Bright Aqua */
+  animation: gradientShift 10s ease-in-out infinite;
+  z-index: -1;
+}
+
+/* Diagonal Waveform SVG (same for both pages now) */
+.auth-page .waveform-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  fill: rgba(63, 142, 252, 0.15); /* Electric Blue (match Sign Up) */
+  filter: drop-shadow(0 0 10px rgba(63, 142, 252, 0.3));
+  animation: waveFlow 6s linear infinite; /* Updated: Combine animations, use linear timing */
+  z-index: 0;
+}
+
+/* Floating particles (same for both pages now) */
+.auth-page .particle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 215, 0, 0.6); /* Golden Yellow (match Sign Up) */
+  pointer-events: none;
+  animation: float 10s infinite; /* Match Sign Up */
+}
+
+.auth-page .particle.square {
+  border-radius: 0;
+  background: rgba(80, 227, 194, 0.6); /* Bright Aqua (match Sign Up) */
+}
+
+@keyframes float {
+  0% { transform: translateY(0) translateX(0); opacity: 0.7; }
+  50% { opacity: 0.3; }
+  100% { transform: translateY(-100vh) translateX(15px); opacity: 0; }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Removed wavePulse and combined into waveFlow */
+
+/* Combined animation for smooth back-and-forth motion with pulsation */
+@keyframes waveFlow {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0.7;
+  }
+  25% {
+    transform: translate(-50px, -31.25px) translateY(3px); /* Reduced distance, add pulsation */
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-100px, -62.5px); /* Peak of the forward motion */
+    opacity: 0.7;
+  }
+  75% {
+    transform: translate(-50px, -31.25px) translateY(3px); /* Mirror the forward motion on return */
+    opacity: 1;
+  }
+  100% {
+    transform: translate(0, 0);
+    opacity: 0.7;
+  }
+}
+
+/* Main container */
+.auth-container {
+  background: rgba(255, 255, 255, 0.95); /* White with slight transparency */
+  backdrop-filter: blur(10px);
+  padding: 30px; /* Reduced padding to save space */
+  border-radius: 20px;
+  border: 1px solid rgba(63, 142, 252, 0.3); /* Electric Blue */
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1), 0 0 15px rgba(63, 142, 252, 0.2);
+  width: 100%;
+  max-width: 460px;
+  height: fit-content; /* Updated: Fit the content */
+  max-height: calc(100vh - 40px); /* Updated: Ensure it doesn't exceed viewport */
+  overflow: hidden; /* Updated: Prevent scrolling */
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  animation: zoomIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  z-index: 10;
+}
+
+/* Glowing container effect */
+.auth-container::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    217deg, rgba(183, 108, 253, 0.05), transparent 70%,
+    127deg, rgba(80, 227, 194, 0.05), transparent 70%,
+    336deg, rgba(63, 142, 252, 0.05), transparent 70%
+  );
+  z-index: -1;
+  animation: glowRotate 15s linear infinite;
+}
+
+/* Header branding */
+.auth-header {
+  margin-bottom: 25px; /* Reduced margin */
+  position: relative;
+}
+
+.auth-header h1 {
+  font-size: 34px; /* Slightly smaller to save space */
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  animation: shimmer 3s infinite;
+  transition: transform 0.3s ease;
+  position: relative;
+  display: inline-block;
+  /* Gradient text effect */
+  background: linear-gradient(90deg, #3F8EFC, #B76CFD); /* Electric Blue to Neon Purple */
+  -webkit-background-clip: text;
+  background-clip: text; /* Standard property for broader support */
+  -webkit-text-fill-color: transparent;
+  color: transparent; /* Fallback for browsers that don't support gradient text */
+  /* Fallback color for browsers that don't support the gradient effect */
+  color: #3F8EFC; /* Electric Blue as a fallback */
+}
+
+/* Removed: Login page hover effect to match Sign Up */
+/*
+.auth-page.login-page .auth-header h1:hover {
+  transform: scale(1.05);
+}
+*/
+
+.auth-header h1 .letter {
+  position: relative;
+  display: inline-block;
+  /* Ensure the letter inherits the gradient text effect */
+  background: inherit;
+  -webkit-background-clip: inherit;
+  background-clip: inherit;
+  -webkit-text-fill-color: inherit;
+  color: inherit;
+}
+
+.auth-header h1::after {
+  content: '';
+  position: absolute;
+  width: 45px;
+  height: 3px;
+  background: linear-gradient(90deg, #3F8EFC, #B76CFD);
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 2px;
+}
+
+.auth-header p {
+  font-size: 14px; /* Slightly smaller */
+  color: #333333; /* Charcoal Grey */
+  margin: 8px 0 0; /* Reduced margin */
+  font-weight: 500;
+  letter-spacing: 1px;
+  opacity: 0.85;
+}
+
+/* Title */
+.auth-container h2 {
+  font-size: 26px; /* Reduced size */
+  font-weight: 700;
+  color: #333333;
+  margin-bottom: 20px; /* Reduced margin */
+  text-transform: uppercase;
+  letter-spacing: 1.8px;
+  text-shadow: 0 0 10px rgba(63, 142, 252, 0.4);
+}
+
+/* Form styling */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Reduced gap */
+}
+
+.auth-input-label {
+  position: relative;
+  text-align: left;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 12px; /* Reduced padding */
+  border: 1px solid rgba(224, 224, 224, 0.5); /* Light Grey */
+  border-radius: 12px;
+  font-size: 15px; /* Slightly smaller */
+  background: rgba(255, 255, 255, 0.8);
+  color: #333333;
+  transition: all 0.3s ease;
+}
+
+.auth-input:focus {
+  border-color: #3F8EFC; /* Electric Blue for both pages */
+  box-shadow: 0 0 15px rgba(63, 142, 252, 0.4);
+  outline: none;
+  animation: inputGlow 1.2s infinite;
+}
+
+.auth-input::placeholder {
+  color: #999999;
+  transition: all 0.3s ease;
+}
+
+.auth-input:focus::placeholder {
+  opacity: 0.6;
+  transform: translateX(6px);
+}
+
+.auth-input-label span {
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  transform: translateY(-50%);
+  color: #666666;
+  font-size: 13px; /* Slightly smaller */
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.auth-input:focus + span,
+.auth-input:not(:placeholder-shown) + span {
+  top: -10px; /* Adjusted for smaller input */
+  left: 12px;
+  font-size: 11px; /* Slightly smaller */
+  color: #3F8EFC; /* Electric Blue for both pages */
+  background: #FAFAFA;
+  padding: 0 6px;
+  border-radius: 4px;
+}
+
+/* Primary button */
+.auth-button {
+  padding: 14px; /* Reduced padding */
+  background: #B76CFD; /* Neon Purple */
+  color: #FFFFFF; /* White text for better contrast */
+  border: none;
+  border-radius: 12px;
+  font-size: 15px; /* Slightly smaller */
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  box-shadow: 0 4px 12px rgba(63, 142, 252, 0.2);
+}
+
+.auth-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: all 0.5s ease;
+}
+
+.auth-button:hover {
+  background: #9446EB; /* Deep Neon Purple */
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(148, 70, 235, 0.3);
+  animation: buttonGlow 1.5s infinite;
+}
+
+.auth-button:hover::before {
+  left: 100%;
+}
+
+.auth-button:active {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(63, 142, 252, 0.2);
+}
+
+/* Divider (same for both pages now) */
+.auth-page .divider {
+  margin: 20px 0; /* Reduced margin */
+  font-size: 13px; /* Slightly smaller */
+  color: #666666;
+  position: relative;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-page .divider::before,
+.auth-page .divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(224, 224, 224, 0.5), transparent); /* Match Sign Up */
+  margin: 0 15px;
+}
+
+/* Google button wrapper */
+.google-button {
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Vertically center */
+  margin: 20px 0; /* Reduced margin */
+  min-height: 40px; /* Slightly smaller */
+}
+
+.google-button > div {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(63, 142, 252, 0.2);
+  width: 100% !important;
+  max-width: 360px; /* Reduced max-width */
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+/* Override Google button internal styles to center text */
+.google-button > div > div {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+}
+
+.google-button > div > div > div {
+  margin: 0 auto !important;
+  text-align: center !important;
+}
+
+/* Link styling (same for both pages now) */
+.auth-link {
+  font-size: 13px; /* Slightly smaller */
+  color: #666666;
+}
+
+.auth-link a {
+  color: #FF5A5F; /* Coral Red (match Sign Up) */
+  text-decoration: none;
+  font-weight: 600;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.auth-link a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background: linear-gradient(90deg, #3F8EFC, #50E3C2); /* Match Sign Up */
+  transition: all 0.3s ease;
+}
+
+.auth-link a:hover {
+  color: #3F8EFC; /* Match Sign Up */
+}
+
+.auth-link a:hover::after {
+  width: 100%;
+}
+
+/* Error and success messages (same for both pages now) */
+.auth-page .error-message {
+  color: #FF5A5F; /* Coral Red (match Sign Up) */
+  font-size: 0.85rem; /* Slightly smaller */
+  margin: 10px 0; /* Reduced margin */
+  padding: 10px; /* Reduced padding */
+  background: rgba(255, 90, 95, 0.1); /* Match Sign Up */
+  border-radius: 8px;
+  border-left: 3px solid #FF5A5F; /* Match Sign Up */
+  animation: errorShake 0.5s;
+}
+
+.auth-page .success-message {
+  color: #50E3C2; /* Bright Aqua (match Sign Up) */
+  font-size: 0.85rem; /* Slightly smaller */
+  margin: 10px 0; /* Reduced margin */
+  padding: 10px; /* Reduced padding */
+  background: rgba(80, 227, 194, 0.1); /* Match Sign Up */
+  border-radius: 8px;
+  border-left: 3px solid #50E3C2; /* Match Sign Up */
+  animation: successPulse 2s infinite;
+}
+
+/* Verification message */
+.verification-message {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 20px; /* Reduced padding */
+  border-radius: 10px;
+  border: 1px solid rgba(63, 142, 252, 0.2);
+  animation: messageReveal 0.5s ease-out;
+}
+
+.verification-message p {
+  color: #333333;
+  margin-bottom: 12px; /* Reduced margin */
+  line-height: 1.5; /* Slightly tighter line height */
+  font-size: 14px; /* Slightly smaller */
+}
+
+.verification-message strong {
+  color: #3F8EFC;
+  font-weight: 600;
+}
+
+/* Logo element (same for both pages now) */
+.auth-page .logo-element {
+  position: absolute;
+  width: 24px; /* Slightly smaller */
+  height: 24px;
+  border: 2px solid #FFD700; /* Golden Yellow (match Sign Up) */
+  border-radius: 50%;
+  top: -10px; /* Adjusted for smaller header */
+  left: 50%; /* Start centered, will animate horizontally */
+  transform: translateX(-50%); /* Center the element initially */
+  animation: bounce 0.5s infinite, moveOverLetters 7s infinite; /* Combine bouncing and horizontal movement */
+  z-index: 15; /* Ensure it appears above the text */
+}
+
+.auth-page .logo-element::before {
+  content: '';
+  position: absolute;
+  width: 8px; /* Slightly smaller */
+  height: 8px;
+  background: #3F8EFC; /* Electric Blue (match Sign Up) */
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Bouncing animation */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0) translateX(-50%);
+  }
+  50% {
+    transform: translateY(-10px) translateX(-50%);
+  }
+}
+
+/* Animation to move the logo element over each letter (S to H and back) */
+@keyframes moveOverLetters {
+  /* Forward: S -> C -> E -> N -> I -> T -> H */
+  0%, 7.14% { left: calc(50% - 85px); } /* S */
+  7.14%, 14.28% { left: calc(50% - 65px); } /* C */
+  14.28%, 21.42% { left: calc(50% - 45px); } /* E */
+  21.42%, 28.56% { left: calc(50% - 25px); } /* N */
+  28.56%, 35.7% { left: calc(50% - 5px); } /* I */
+  35.7%, 42.84% { left: calc(50% + 38px); } /* T - Updated */
+  42.84%, 50% { left: calc(50% + 62px); } /* H - Updated */
+  /* Reverse: H -> T -> I -> N -> E -> C -> S */
+  50%, 57.14% { left: calc(50% + 62px); } /* H - Updated */
+  57.14%, 64.28% { left: calc(50% + 38px); } /* T - Updated */
+  64.28%, 71.42% { left: calc(50% - 5px); } /* I */
+  71.42%, 78.56% { left: calc(50% - 25px); } /* N */
+  78.56%, 85.7% { left: calc(50% - 45px); } /* E */
+  85.7%, 92.84% { left: calc(50% - 65px); } /* C */
+  92.84%, 100% { left: calc(50% - 85px); } /* S */
+}
+
+/* Rotating text container */
+.rotating-text-container {
+  flex: 1; /* Take up the left half of the space */
+  display: flex;
+  justify-content: center; /* Center horizontally within the left half */
+  align-items: center; /* Center vertically */
+  z-index: 5; /* Above background but below auth container */
+  padding: 15px; /* Reduced padding */
+  background: rgba(255, 255, 255, 0.1); /* Subtle transparent background */
+  backdrop-filter: blur(5px); /* Slight blur effect */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+  max-width: 50%; /* Ensure it doesn’t take up more than half the screen */
+  max-height: calc(100vh - 40px); /* Fit within viewport height minus padding */
+  overflow: hidden; /* Prevent overflow */
+}
+
+/* Rotating text wrapper to handle transitions */
+.rotating-text-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100px; /* Reduced height to save space */
+  overflow: hidden; /* Hide overflow for sliding effect */
+}
+
+/* Rotating text items */
+.rotating-text {
+  position: absolute;
+  width: 100%;
+  font-size: 32px; /* Slightly smaller to fit better */
+  font-weight: 700; /* Bolder for emphasis */
+  color: #333333; /* Charcoal Grey to match theme */
+  clip-path: inset(0 100% 0 0); /* Initially hidden (clipped from the right) */
+  animation: wipeTransition 25s infinite; /* Updated: 5s per message x 5 messages = 25s cycle */
+  text-shadow: 0 0 8px rgba(63, 142, 252, 0.3); /* Subtle glow to match theme */
+  line-height: 1.2; /* Adjusted for better readability */
+  text-align: center; /* Center the text within the container */
+}
+
+/* Individual delays for each message */
+.rotating-text:nth-child(1) { animation-delay: 0s; }
+.rotating-text:nth-child(2) { animation-delay: 5s; } /* Updated: 5s intervals */
+.rotating-text:nth-child(3) { animation-delay: 10s; } /* Updated: 5s intervals */
+.rotating-text:nth-child(4) { animation-delay: 15s; } /* Updated: 5s intervals */
+.rotating-text:nth-child(5) { animation-delay: 20s; } /* Updated: 5s intervals */
+
+/* Wipe transition animation for text */
+@keyframes wipeTransition {
+  0% { clip-path: inset(0 100% 0 0); } /* Start fully clipped (hidden, clipped from the right) */
+  4% { clip-path: inset(0 0 0 0); } /* Wipe in (fully visible) over 1s */
+  16% { clip-path: inset(0 0 0 0); } /* Stay fully visible for 3s (until 4s) */
+  20% { clip-path: inset(0 0 0 100%); } /* Wipe out (clipped from the left) over 1s (until 5s) */
+  100% { clip-path: inset(0 0 0 100%); } /* Stay clipped (hidden) */
+}
+
+/* Animations */
+@keyframes zoomIn {
+  0% { opacity: 0; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes glowRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200%; }
+  100% { background-position: 200%; }
+}
+
+@keyframes buttonGlow {
+  0% { box-shadow: 0 8px 20px rgba(148, 70, 235, 0.3); }
+  50% { box-shadow: 0 8px 25px rgba(148, 70, 235, 0.5); }
+  100% { box-shadow: 0 8px 20px rgba(148, 70, 235, 0.3); }
+}
+
+@keyframes inputGlow {
+  0% { box-shadow: 0 0 15px rgba(63, 142, 252, 0.4); }
+  50% { box-shadow: 0 0 20px rgba(63, 142, 252, 0.6); }
+  100% { box-shadow: 0 0 15px rgba(63, 142, 252, 0.4); }
+}
+
+@keyframes errorShake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+@keyframes successPulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.8; }
+  100% { opacity: 1; }
+}
+
+@keyframes messageReveal {
+  0% { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes logoSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .rotating-text-container {
+    max-width: 45%;
+  }
+  .rotating-text {
+    font-size: 28px; /* Adjusted for smaller screens */
+  }
+  .rotating-text-wrapper {
+    height: 80px; /* Adjusted height */
+  }
+  .auth-container {
+    max-height: calc(100vh - 40px); /* Keep max-height for smaller screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .rotating-text-container {
+    max-width: 40%;
+    padding: 10px; /* Further reduced padding */
+  }
+  .rotating-text {
+    font-size: 24px; /* Further reduced */
+  }
+  .rotating-text-wrapper {
+    height: 60px; /* Further reduced height */
+  }
+  .auth-container {
+    padding: 20px; /* Further reduced padding */
+    max-height: calc(100vh - 40px);
+  }
+  .auth-header h1 {
+    font-size: 30px;
+  }
+  .auth-container h2 {
+    font-size: 22px;
+  }
+  .auth-button {
+    padding: 12px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-page {
+    flex-direction: column; /* Stack elements vertically */
+    justify-content: center;
+    align-items: center;
+    padding: 15px; /* Further reduced padding */
+  }
+  .auth-container {
+    padding: 20px;
+    max-width: 90%;
+    max-height: calc(100vh - 30px); /* Adjust for smaller padding */
+  }
+  .auth-header h1 {
+    font-size: 28px;
+  }
+  .auth-container h2 {
+    font-size: 20px;
+  }
+  .auth-button {
+    padding: 12px;
+    font-size: 14px;
+  }
+  .google-button > div {
+    width: 100% !important;
+  }
+  .rotating-text-container {
+    display: none;
+  }
+}
