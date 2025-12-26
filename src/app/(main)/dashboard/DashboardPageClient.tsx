@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Tilt } from 'react-tilt';
+import Tilt from 'react-parallax-tilt';
 import { FaTrash, FaSignOutAlt, FaBars } from 'react-icons/fa';
 import '../../../../styles/Dashboard.css'; // You will copy your existing Dashboard.css here
 import { API_BASE_URL, CDN_URL } from '@/app/config';
@@ -558,7 +558,7 @@ const DashboardPageClient: React.FC = () => {
                 <p className="no-projects">No projects yet. Create one to get started!</p>
               ) : (
                 projects.map((project) => (
-                  <Tilt key={project.id} options={{ max: 25, scale: 1.05, speed: 400 }}>
+                  <Tilt key={project.id} tiltMaxAngleX={25} tiltMaxAngleY={25} scale={1.05} transitionSpeed={400} glareEnable={true} glareMaxOpacity={0.2}>
                     <motion.div
                       className="project-card"
                       initial={{ opacity: 0, scale: 0.8 }}
