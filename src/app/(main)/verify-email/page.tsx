@@ -1,6 +1,7 @@
 // app/verify-email/page.tsx
 
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import VerifyEmailClient from './VerifyEmailClient';
 
 export const metadata: Metadata = {
@@ -29,9 +30,23 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/verify-email',
   },
-  robots: 'noindex, nofollow', // Important: don't index verification pages
+  robots: 'noindex, nofollow',
 };
 
+// Optional: Fallback UI while loading
+function LoadingFallback() {
+  return (
+    <div className="auth-page verify-email-page" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+      <div className="spinner"></div>
+      <p>Verifying your email...</p>
+    </div>
+  );
+}
+
 export default function VerifyEmailPage() {
-  return <VerifyEmailClient />;
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <VerifyEmailClient />
+    </Suspense>
+  );
 }
