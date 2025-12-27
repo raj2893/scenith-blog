@@ -1,0 +1,266 @@
+/* FilterControls.css */
+
+/* Import Montserrat font for consistency */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+/* Filters Panel Specific */
+.filters-panel {
+  padding: 15px;
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  border: 1px solid #2a2a2a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+  color: #d1d1d1;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* Headings */
+.filters-panel h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #d1d1d1;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+}
+
+.filters-panel h4 {
+  font-size: 13px;
+  font-weight: 500;
+  margin: 12px 0 8px;
+  color: #a1a1a1;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Paragraph for no segment selected */
+.filters-panel p {
+  font-size: 12px;
+  color: #a1a1a1;
+  margin: 10px 0;
+}
+
+/* Filter Group Styles */
+.filters-panel .filter-group {
+  margin-bottom: 15px;
+}
+
+/* Control Group Styles */
+.filters-panel .control-group {
+  margin-bottom: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.filters-panel .control-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: #a1a1a1;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Input and Slider Styles */
+.filters-panel .control-group input[type="range"],
+.filters-panel .control-group input[type="number"],
+.filters-panel .control-group input[type="checkbox"] {
+  background-color: #1e1e1e;
+  color: #d1d1d1;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.filters-panel .control-group input[type="range"] {
+  width: 100%;
+  height: 4px;
+  background: #2a2a2a;
+  border-radius: 4px;
+  -webkit-appearance: none;
+}
+
+.filters-panel .control-group input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  background: #4A919E;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.filters-panel .control-group input[type="range"]::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: #4A919E;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.filters-panel .control-group input[type="range"]:hover {
+  background: #444;
+}
+
+.filters-panel .control-group input[type="number"] {
+  width: 60px;
+  padding: 6px;
+}
+
+.filters-panel .control-group input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin: 0 5px 0 0;
+}
+
+.filters-panel .control-group input:focus {
+  border-color: #4A919E;
+  transform: scale(1.01);
+}
+
+/* Slider Container */
+.filters-panel .slider-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+/* Hue Gradient Bar */
+.filters-panel .control-group .slider-container > div[style*="background: linear-gradient"] {
+  height: 10px;
+  border-radius: 2px;
+}
+
+/* Reset Button */
+.filters-panel button {
+  padding: 2px 6px;
+  font-size: 12px;
+  background: #ff4444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filters-panel button:hover {
+  background: #cc3333;
+  transform: scale(1.02);
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+  .filters-panel {
+    padding: 10px;
+  }
+
+  .filters-panel h3 {
+    font-size: 13px;
+  }
+
+  .filters-panel h4 {
+    font-size: 12px;
+  }
+
+  .filters-panel .control-group label {
+    font-size: 12px;
+  }
+
+  .filters-panel .control-group input[type="range"],
+  .filters-panel .control-group input[type="number"],
+  .filters-panel .control-group input[type="checkbox"] {
+    font-size: 11px;
+    padding: 5px;
+  }
+
+  .filters-panel .control-group input[type="range"] {
+    height: 3.5px;
+  }
+
+  .filters-panel .control-group input[type="range"]::-webkit-slider-thumb {
+    width: 11px;
+    height: 11px;
+  }
+
+  .filters-panel .control-group input[type="range"]::-moz-range-thumb {
+    width: 11px;
+    height: 11px;
+  }
+
+  .filters-panel .control-group input[type="number"] {
+    width: 50px;
+  }
+
+  .filters-panel .control-group input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+  }
+
+  .filters-panel button {
+    padding: 2px 5px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .filters-panel {
+    padding: 8px;
+  }
+
+  .filters-panel h3 {
+    font-size: 12px;
+  }
+
+  .filters-panel h4 {
+    font-size: 11px;
+  }
+
+  .filters-panel .control-group label {
+    font-size: 11px;
+    margin-bottom: 4px;
+  }
+
+  .filters-panel .control-group input[type="range"],
+  .filters-panel .control-group input[type="number"],
+  .filters-panel .control-group input[type="checkbox"] {
+    font-size: 10px;
+    padding: 4px;
+  }
+
+  .filters-panel .control-group input[type="range"] {
+    height: 3px;
+  }
+
+  .filters-panel .control-group input[type="range"]::-webkit-slider-thumb {
+    width: 10px;
+    height: 10px;
+  }
+
+  .filters-panel .control-group input[type="range"]::-moz-range-thumb {
+    width: 10px;
+    height: 10px;
+  }
+
+  .filters-panel .control-group input[type="number"] {
+    width: 45px;
+  }
+
+  .filters-panel .control-group input[type="checkbox"] {
+    width: 12px;
+    height: 12px;
+  }
+
+  .filters-panel button {
+    padding: 2px 4px;
+    font-size: 10px;
+  }
+}

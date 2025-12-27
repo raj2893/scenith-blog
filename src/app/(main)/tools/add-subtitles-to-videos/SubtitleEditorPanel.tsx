@@ -16,6 +16,7 @@ interface SubtitleEditorPanelProps {
 }
 
 const googleFonts = [
+  'Noto Sans Devanagari',
   'Alumni Sans Pinstripe',
   'Amatic SC',
   'Amatic SC:700',
@@ -210,6 +211,7 @@ const SubtitleEditorPanel: React.FC<SubtitleEditorPanelProps> = ({
           <option value="Comic Sans MS" style={{ fontFamily: 'Comic Sans MS' }}>Comic Sans MS</option>
           <option value="Impact" style={{ fontFamily: 'Impact' }}>Impact</option>
           <option value="Tahoma" style={{ fontFamily: 'Tahoma' }}>Tahoma</option>
+          <option value="Noto Sans Devanagari" style={{ fontFamily: 'Noto Sans Devanagari' }}>Noto Sans Devanagari (Hindi)</option>
           {/* Google Fonts & Custom Fonts */}
           {Array.from(new Set(availableFonts)).map((font) => (
             <option key={font} value={font} style={{ fontFamily: font }}>

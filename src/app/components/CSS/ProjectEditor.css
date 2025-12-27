@@ -1,0 +1,1784 @@
+/* Import Montserrat font for consistency with dashboard.css */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+/* Specific icons for each section */
+.section-button[data-section="videos"]::before {
+  background-image: url('/public/images/VideoM.jpeg');
+}
+
+.section-button[data-section="photos"]::before {
+  background-image: url('/public/images/PhotoM.jpeg');
+}
+
+.section-button[data-section="audios"]::before {
+  background-image: url('/public/images/AudioM.jpeg');
+}
+
+.section-button[data-section="elements"]::before {
+  background-image: url('/public/images/ElementsM.jpeg');
+}
+
+.section-button[data-section="textStyles"]::before {
+  background-image: url('/public/images/TextM.jpeg');
+}
+
+.section-button[data-section="transform"]::before {
+  background-image: url('/public/images/TransformT.jpg');
+}
+
+.section-button[data-section="transitions"]::before {
+  background-image: url('/public/images/TransitionT.jpg');
+}
+
+.section-button[data-section="filters"]::before {
+  background-image: url('/public/images/FiltersT.jpg');
+}
+
+.section-button[data-section="text"]::before {
+  background-image: url('/public/images/TextM.jpeg');
+}
+
+.section-button[data-section="aiSubtitles"]::before {
+  background-image: url('/public/images/AiSubtitlesLogo.jpg');
+}
+
+.section-button[data-section="aiVoice"]::before {
+  background-image: url('/public/images/AiAudioLogo.jpg');
+}
+
+/* Global Layout */
+.project-editor {
+  display: flex;
+  flex-wrap: nowrap; /* Prevent wrapping of panels */
+  height: 100vh;
+  overflow: hidden;
+  background-color: #121212; /* Deep dark background for minimal eye strain */
+  color: #d1d1d1; /* Soft light gray for text readability */
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+  position: relative;
+}
+
+/* Toggle Button Styles */
+.toggle-button {
+  width: 24px; /* Reduced from 32px */
+  height: 24px;
+  background-color: #1e1e1e;
+  color: #a1a1a1;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px; /* Slightly smaller radius */
+  font-size: 12px; /* Reduced from 16px */
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.toggle-button:hover {
+  background-color: #2a2a2a;
+  color: #4A919E; /* Muted teal to match tool buttons */
+  border-color: #4A919E;
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(74, 145, 158, 0.2);
+}
+
+.toggle-button:active {
+  transform: scale(0.95);
+}
+
+.toggle-button::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #4A919E;
+  transition: all 0.3s ease;
+}
+
+.toggle-button:hover::after {
+  width: 60%;
+  left: 20%;
+}
+
+/* Ensure toggle button in closed state is centered */
+.media-panel.closed .toggle-button,
+.tools-panel.closed .toggle-button {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  background-color: #1a1a1a;
+}
+
+.media-panel.closed .toggle-button:hover,
+.tools-panel.closed .toggle-button:hover {
+  background-color: #2a2a2a;
+  box-shadow: none;
+}
+
+.media-panel.closed .toggle-button::after,
+.tools-panel.closed .toggle-button::after {
+  display: none;
+}
+
+/* Media Panel */
+.media-panel {
+  width: 100px;
+  max-height: 100vh;
+  background-color: #1a1a1a;
+  padding: 15px 20px; /* Increased padding on left and right to prevent clipping */
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.5);
+  transition: width 0.3s ease;
+  overflow-x: visible; /* Allow scaled buttons to extend slightly without clipping */
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+ 
+}
+
+.media-panel::-webkit-scrollbar {
+  display: none; /* Chrome, Edge, Safari */
+}
+
+.media-panel.closed {
+  width: 40px;
+  padding: 0;
+}
+
+.media-panel .panel-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 40px;
+}
+
+.media-panel.closed .panel-header {
+  justify-content: center;
+  height: 100%;
+}
+
+.media-panel .panel-content {
+  flex: 1; /* Take remaining space after header */
+  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  box-sizing: border-box;
+  padding-right: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Space between sections */
+  scrollbar-width: none; /* Hide scrollbar in Firefox */
+}
+
+.media-panel .panel-content::-webkit-scrollbar {
+  display: none; /* Chrome, Edge, Safari */
+}
+
+.media-panel .panel-content h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: #a1a1a1;
+  margin-bottom: 15px;
+}
+
+.content-panel {
+  width: 300px;
+  max-height: 100vh;
+  background-color: #1a1a1a;
+  padding: 15px 20px;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.5);
+  transition: width 0.3s ease;
+  scrollbar-width: none;
+  right: 0;
+  top: 0;
+}
+
+.content-panel.open {
+  transform: translateX(0);
+}
+
+.content-panel::-webkit-scrollbar {
+  display: none;
+}
+
+.content-panel.closed {
+  width: 50px;
+  padding: 0;
+}
+
+.content-panel .panel-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 40px;
+}
+
+.content-panel.closed .panel-header {
+  justify-content: center;
+  height: 100%;
+}
+
+.content-panel .panel-content {
+  height: calc(100% - 40px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  padding-right: 5px;
+}
+
+.media-section {
+  margin-bottom: 15px;
+  flex-shrink: 0; /* Prevent shrinking */
+}
+
+.section-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: calc(100% - 8px);
+  margin: 0 4px;
+  padding: 6px; /* Reduced padding */
+  background-color: transparent;
+  color: #d1d1d1;
+  border: none; /* Removed border */
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 6px;
+  font-weight: 600;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  transition: all 0.3s ease;
+  margin-bottom: 6px; /* Reduced margin */
+  transform-origin: center;
+  box-sizing: border-box;
+}
+
+.section-button:hover {
+  background-color: #2a2a2a;
+  color: #39c0ed;
+  transform: scale(1.01);
+}
+
+.section-button::before {
+  content: '';
+  display: block;
+  width: 26px; /* Reduced from 48px (48 / 5) */
+  height: 26px;
+  margin-bottom: 3px; /* Reduced margin */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 12%;
+  transition: filter 0.3s ease;
+}
+
+.section-button:focus {
+  outline: none;
+  background-color: #2a2a2a;
+  color: #39c0ed;
+}
+
+.section-button:hover::before {
+  filter: brightness(1.2) drop-shadow(0 0 3px rgba(57, 192, 237, 0.3)); /* Adjusted drop-shadow */
+}
+
+.section-button.active {
+  background-color: #2a2a2a;
+  color: #39c0ed;
+}
+
+.section-content {
+  margin-top: 0px;
+  padding: 12px;
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  max-height: calc(100vh - 80px); /* Adjusted for panel header */
+  overflow-y: auto;
+  border: 1px solid #2a2a2a;
+  box-sizing: border-box;
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none;
+  /* Hide scrollbar for WebKit browsers (Chrome, Safari, Edge) */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on touch devices */
+}
+
+/* Hide scrollbar for WebKit browsers */
+.section-content::-webkit-scrollbar {
+  display: none;
+}
+
+/* Replace the .upload-button styles */
+.upload-icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background-color: transparent;
+  border: 1px solid #39c0ed; /* Vibrant cyan border */
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 0 auto 15px; /* Center horizontally and add bottom margin */
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: visible; /* Ensure scaled SVG doesn't get clipped */
+}
+
+.upload-icon-button:hover {
+  background-color: #39c0ed; /* Cyan background on hover */
+  transform: scale(1.1); /* Slightly larger scale for emphasis */
+  box-shadow: 0 0 8px rgba(57, 192, 237, 0.3); /* Subtle cyan glow */
+}
+
+.upload-icon-button:active {
+  transform: scale(0.95); /* Slight shrink on click */
+}
+
+.upload-icon-button .upload-arrow {
+  width: 24px; /* Size of the SVG */
+  height: 24px;
+  color: #39c0ed; /* Cyan stroke color */
+  transition: color 0.3s ease;
+}
+
+.upload-icon-button:hover .upload-arrow {
+  color: #121212; /* Dark color for contrast against cyan background */
+}
+
+.hidden-input {
+  display: none;
+}
+
+.video-list,
+.photo-list,
+.audio-list,
+.element-list,
+.text-style-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  max-height: 450px;
+  overflow-y: auto;
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none;
+}
+
+/* Hide scrollbar for WebKit browsers */
+.video-list::-webkit-scrollbar,
+.photo-list::-webkit-scrollbar,
+.audio-list::-webkit-scrollbar,
+.element-list::-webkit-scrollbar,
+.text-style-list::-webkit-scrollbar {
+  display: none;
+}
+
+.element-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+}
+
+.upload-progress-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  z-index: 10;
+  border-radius: 4px;
+}
+
+.upload-progress-text {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.upload-progress-bar {
+  width: 80%;
+  height: 8px;
+  background: #333;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.upload-progress-fill {
+  height: 100%;
+  background: #4caf50;
+  transition: width 0.2s ease-in-out;
+}
+
+.video-item,
+.photo-item,
+.audio-item,
+.element-item {
+  position: relative;
+  width: 100px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 6px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.video-item:hover,
+.photo-item:hover,
+.audio-item:hover,
+.element-item:hover {
+  transform: scale(0.90);
+}
+
+.video-item.selected {
+  box-shadow: 0 0 0 2px #39c0ed;
+}
+
+.video-thumbnail,
+.photo-thumbnail,
+.audio-waveform,
+.element-thumbnail {
+  width: 100%;
+  height: 60px;
+  background-color: #2a2a2a;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.video-thumbnail {
+  background-size: cover;
+  background-position: center;
+  height: 100px;
+}
+
+.video-thumbnail-placeholder {
+  width: 100%;
+  height: 60px;
+  background-color: #2a2a2a;
+  border-radius: 6px;
+}
+
+.video-list .video-item .video-title,
+.photo-list .photo-item .photo-title,
+.audio-list .audio-item .audio-title,
+.element-list .element-item .element-title {
+  font-size: 9px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  color: #d1d1d1 !important; /* Use !important temporarily to force the style */
+}
+
+.audio-item,
+.element-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: transparent;
+  padding: 0;
+}
+
+.element-item:hover {
+  background-color: rgba(57, 192, 237, 0.05);
+}
+
+.element-thumbnail {
+  margin-bottom: 5px;
+}
+
+.empty-state {
+  text-align: center;
+  color: #666;
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 20px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: 1px solid #2a2a2a;
+  font-size: 13px;
+  font-weight: 500;
+  box-sizing: border-box;
+  background-color: #1e1e1e;
+  color: #d1d1d1;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #39c0ed;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box; /* Ensure padding/margins are respected */
+  width: calc(100% - 150px - 300px);
+}
+
+.content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+  margin: 0; /* Remove any unintended margins */
+}
+
+.preview-section {
+  background-color: #1a1a1a; /* Lighter background than #0d0d0d */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex: 1;
+  min-height: 200px;
+  padding: 20px 0;
+  box-sizing: border-box;
+  border: 1px solid #2a2a2a;
+}
+
+.preview-section > * {
+  max-width: 100%;
+  max-height: calc(100% - 40px);
+  object-fit: contain;
+  background-color: #1a1a1a; /* Lighter background than #0d0d0d */
+}
+
+.resize-preview-section {
+  width: 100%;
+  height: 6px;
+  background-color: #2a2a2a;
+  cursor: ns-resize;
+  transition: all 0.3s ease;
+}
+
+.resize-preview-section:hover,
+.resize-preview-section.dragging {
+  background-color: #39c0ed;
+}
+
+.controls-panel {
+  display: flex;
+  justify-content: center;
+  padding: 12px;
+  background-color: #1a1a1a;
+  border-bottom: 1px solid #2a2a2a;
+  height: 60px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.control-button {
+  padding: 8px 20px;
+  margin: 0 8px;
+  background: transparent;
+  color: #5E8AB4; /* Muted blue for Play button */
+  border: 1px solid #5E8AB4;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+  box-shadow: none; /* Ensure no glow */
+}
+
+.control-button::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #5E8AB4; /* Match the Play button color */
+  transition: all 0.3s ease;
+}
+
+.control-button:hover {
+  /* Removed background change to prevent glowing effect */
+  color: #5E8AB4;
+  border-color: #5E8AB4;
+  transform: scale(1.02);
+}
+
+.control-button:hover::after {
+  width: 80%;
+  left: 10%;
+}
+
+/* Export Button in Controls Panel */
+.control-button.export-button {
+  background: transparent;
+  color: #6BAF92; /* Soft green for Export button */
+  border: 1px solid #6BAF92;
+  box-shadow: none; /* Ensure no glow */
+}
+
+.control-button.export-button::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #6BAF92; /* Match the Export button color */
+  transition: all 0.3s ease;
+}
+
+.control-button.export-button:hover {
+  /* Removed background change to prevent glowing effect */
+  color: #6BAF92;
+  border-color: #6BAF92;
+  transform: scale(1.02);
+}
+
+.control-button.export-button:hover::after {
+  width: 80%;
+  left: 10%;
+}
+
+.delete-button {
+  padding: 8px 12px;
+  margin: 0 8px;
+  background: transparent;
+  color: #ff5a5f;
+  border: 1px solid #ff5a5f;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+  box-shadow: none; /* Ensure no glow */
+}
+
+.delete-button::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #ff5a5f;
+  transition: all 0.3s ease;
+}
+
+.delete-button:hover:enabled {
+  background: #ff5a5f;
+  color: #121212;
+  transform: scale(1.02);
+}
+
+.delete-button:hover:enabled::after {
+  width: 80%;
+  left: 10%;
+}
+
+.delete-button:disabled {
+  background-color: transparent;
+  color: #666;
+  border-color: #666;
+  cursor: not-allowed;
+}
+
+.timeline-section {
+  overflow: hidden;
+  min-height: 150px;
+  max-height: calc(75% - 46px);
+  flex-shrink: 1;
+  background-color: #1a1a1a;
+  border: 2px solid #2a2a2a; /* Increased border width for visibility and consistency */
+  border-radius: 6px; /* Optional: Adds slight rounding for aesthetics */
+  margin-right: 10px;
+  box-sizing: border-box; /* Ensure border and padding are included in width */
+}
+
+.timeline-section.selected {
+  border-color: #39c0ed; /* Highlight border when selected, consistent with other components */
+}
+
+.loading-message {
+  color: #a1a1a1;
+  text-align: center;
+  padding: 20px;
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.zoom-slider-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  background-color: #1a1a1a;
+  border-top: 1px solid #2a2a2a;
+  flex-shrink: 0;
+}
+
+.zoom-slider {
+  width: 100%;
+  height: 4px;
+  background: #2a2a2a;
+  border-radius: 4px;
+  outline: none;
+  margin-right: 10px;
+  -webkit-appearance: none;
+  transition: all 0.3s ease;
+}
+
+.zoom-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  background: #39c0ed;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.zoom-slider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: #39c0ed;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.zoom-slider:hover {
+  background: #444;
+}
+
+.zoom-slider-container span {
+  color: #a1a1a1;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* Tools Panel */
+.tools-panel {
+  width: 250px;
+  max-height: 100vh;
+  background-color: #1a1a1a;
+  padding: 15px 20px; /* Matches media-panel padding */
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.5); /* Matches media-panel shadow, adjusted for left side */
+  transition: width 0.3s ease; /* Matches media-panel transition */
+  overflow-x: visible; /* Matches media-panel to allow scaled buttons */
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox, matches media-panel */
+  z-index: 10; /* Ensure tools-panel stays above main-content to prevent overlap */
+}
+
+.tools-panel::-webkit-scrollbar {
+  display: none; /* Chrome, Edge, Safari, matches media-panel */
+}
+
+.tools-panel.closed {
+  width: 50px; /* Matches media-panel.closed width */
+  padding: 0; /* Matches media-panel.closed padding */
+}
+
+.tools-panel .panel-header {
+  display: flex;
+  justify-content: flex-end; /* Matches media-panel header */
+  align-items: center;
+  height: 40px; /* Matches media-panel header height */
+}
+
+.tools-panel.closed .panel-header {
+  justify-content: center; /* Matches media-panel closed header */
+  height: 100%; /* Matches media-panel closed header */
+}
+
+.tools-panel .panel-content {
+  height: calc(100% - 40px); /* Matches media-panel content height */
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  padding-right: 5px; /* Matches media-panel content padding */
+}
+
+.tools-panel .panel-content h2 {
+  font-size: 1.1rem; /* Matches media-panel h2 */
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: #a1a1a1;
+  margin-bottom: 15px; /* Matches media-panel h2 */
+}
+
+.tools-section {
+  margin-bottom: 15px; /* Matches media-section margin */
+}
+
+.tool-subpanel {
+  margin-top: 8px; /* Matches section-content margin */
+  padding: 12px;
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  max-height: 600px; /* Matches section-content */
+  overflow-y: auto;
+  border: 1px solid #2a2a2a;
+  box-sizing: border-box;
+  scrollbar-width: none; /* Firefox, matches section-content */
+  -webkit-overflow-scrolling: touch; /* Matches section-content */
+}
+
+.tool-subpanel::-webkit-scrollbar {
+  display: none; /* Chrome, Edge, Safari, matches section-content */
+}
+
+/* Filter Panel Specific */
+.filter-panel {
+  padding: 15px; /* Increased for consistency with KeyframeControls.css */
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  border: 1px solid #2a2a2a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5); /* Subtle shadow for depth */
+  box-sizing: border-box;
+  overflow-y: auto; /* Ensure scrollability */
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none;
+  /* Ensure smooth scrolling on touch devices */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Hide scrollbar for WebKit browsers */
+.filter-panel::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-select,
+.filter-input {
+  margin-bottom: 12px;
+}
+
+.filter-select select,
+.filter-input input {
+  width: 100%;
+  padding: 6px;
+  background-color: #1e1e1e;
+  color: #d1d1d1;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.filter-select select:focus,
+.filter-input input:focus {
+  border-color: #4A919E;
+  transform: scale(1.01);
+}
+
+.apply-filter-btn {
+  width: 100%;
+  padding: 8px 16px;
+  background: transparent;
+  color: #4A919E; /* Muted teal consistent with KeyframeControls.css */
+  border: 1px solid #4A919E;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  transition: all 0.3s ease;
+  box-shadow: none; /* Ensure no glow */
+}
+
+.apply-filter-btn:hover {
+  background: #4A919E;
+  color: #121212;
+  transform: scale(1.02);
+}
+
+.apply-filter-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #4A919E;
+  transition: all 0.3s ease;
+}
+
+.apply-filter-btn:hover::after {
+  width: 80%;
+  left: 10%;
+}
+
+.applied-filters {
+  margin-top: 12px;
+}
+
+.filter-item {
+  display: flex;
+  align-items: center; /* Align items vertically */
+  justify-content: space-between;
+  padding: 8px 12px; /* Increased padding for consistency */
+  background-color: #1e1e1e;
+  border: 1px solid #2a2a2a; /* Matches KeyframeControls.css borders */
+  border-radius: 6px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #d1d1d1;
+  transition: all 0.3s ease;
+}
+
+.filter-item:hover {
+  background-color: #2a2a2a;
+  transform: scale(1.02);
+}
+
+.remove-filter-btn {
+  padding: 4px 8px;
+  background: transparent;
+  color: #ff5a5f; /* Matches KeyframeControls.css error color */
+  border: 1px solid #ff5a5f;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  box-shadow: none; /* Ensure no glow */
+  flex-shrink: 0; /* Prevent shrinking */
+}
+
+.remove-filter-btn:hover {
+  background: #ff5a5f;
+  color: #121212;
+  transform: scale(1.02);
+}
+
+.remove-filter-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #ff5a5f;
+  transition: all 0.3s ease;
+}
+
+.remove-filter-btn:hover::after {
+  width: 80%;
+  left: 10%;
+}
+
+.filter-list {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 12px;
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none;
+  /* Ensure smooth scrolling on touch devices */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Hide scrollbar for WebKit browsers */
+.filter-list::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-option {
+  padding: 10px 12px; /* Increased padding for consistency */
+  background-color: #1e1e1e;
+  border: 1px solid #2a2a2a; /* Matches KeyframeControls.css */
+  border-radius: 6px;
+  margin-bottom: 8px;
+  transition: all 0.3s ease;
+}
+
+.filter-option:hover {
+  background-color: #2a2a2a;
+  transform: scale(1.02);
+}
+
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.filter-header span {
+  font-size: 12px;
+  font-weight: 600; /* Increased weight for emphasis */
+  color: #d1d1d1;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.filter-params {
+  padding-left: 12px; /* Increased for better hierarchy */
+}
+
+.filter-params .control-group {
+  margin-bottom: 10px;
+}
+
+/* Dialog Buttons */
+.dialog-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.cancel-button,
+.save-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  transition: all 0.3s ease;
+  box-shadow: none; /* Ensure no glow */
+}
+
+.cancel-button {
+  background: transparent;
+  color: #d1d1d1;
+  border: 1px solid #d1d1d1;
+}
+
+.cancel-button::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #d1d1d1;
+  transition: all 0.3s ease;
+}
+
+.cancel-button:hover {
+  background: #555;
+  border-color: #555;
+  transform: scale(1.02);
+}
+
+.cancel-button:hover::after {
+  width: 80%;
+  left: 10%;
+}
+
+.save-button {
+  background: transparent;
+  color: #4A919E; /* Muted teal for Save Project button */
+  border: 1px solid #4A919E;
+}
+
+.save-button::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #4A919E; /* Match the Save button color */
+  transition: all 0.3s ease;
+}
+
+.save-button:hover {
+  /* Removed background change to prevent glowing effect */
+  color: #4A919E;
+  border-color: #4A919E;
+  transform: scale(1.02);
+}
+
+.save-button:hover::after {
+  width: 80%;
+  left: 10%;
+}
+
+.tool-subpanel {
+  margin-top: 0; /* Remove top margin since it's now inside tools-section */
+  padding: 12px;
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  max-height: 500px; /* Increased to allow more content to be visible */
+  overflow-y: auto;
+  border: 1px solid #2a2a2a;
+  box-sizing: border-box;
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none;
+  /* Hide scrollbar for WebKit browsers (Chrome, Safari, Edge) */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on touch devices */
+}
+
+/* Hide scrollbar for WebKit browsers */
+.tool-subpanel::-webkit-scrollbar {
+  display: none;
+}
+/* Optional: Adjust padding for specific panels if needed */
+.transform-panel,
+.filter-panel,
+.text-tool-panel {
+  padding: 12px;
+}
+
+/* Ensure the panel-content handles overflow correctly */
+.tools-panel .panel-content {
+  height: calc(100% - 40px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  padding-right: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Space between sections */
+}
+
+/* Loading container */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6); /* Black background with 60% opacity */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+/* Branding container for Scenith text and logo element */
+.branding-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+/* Scenith text styling */
+.branding-container h1 {
+  font-size: 24px;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  animation: shimmer 3s infinite;
+  background: linear-gradient(90deg, #3F8EFC, #B76CFD);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: #3F8EFC;
+  position: relative;
+  display: inline-block;
+}
+
+.branding-container h1::after {
+  content: '';
+  position: absolute;
+  width: 45px;
+  height: 3px;
+  background: linear-gradient(90deg, #3F8EFC, #B76CFD);
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 2px;
+}
+
+.branding-container .letter {
+  position: relative;
+  display: inline-block;
+  background: inherit;
+  -webkit-background-clip: inherit;
+  background-clip: inherit;
+  -webkit-text-fill-color: inherit;
+  color: inherit;
+}
+
+.branding-container .logo-element::before {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #3F8EFC;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Animations */
+@keyframes shimmer {
+  0% { background-position: -200%; }
+  100% { background-position: 200%; }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Existing lock-icon styles (retained for consistency) */
+.lock-icon {
+  font-size: 14px;
+  margin-left: 5px;
+  vertical-align: middle;
+}
+
+/* Styles for element items for Basic users */
+.element-item.basic-user {
+  opacity: 0.7; /* Slightly dim to indicate restricted interaction */
+  cursor: default; /* Indicate no action */
+  position: relative; /* For tooltip positioning */
+}
+
+/* Custom tooltip for Basic users */
+.element-item.basic-user:hover::after {
+  content: 'Elements are accessible to premium users only.';
+  position: absolute;
+  bottom: 100%; /* Position above element */
+  left: 50%;
+  transform: translateX(-50%);
+  background: #2a2a2a; /* Match app's dark theme */
+  color: #fff; /* White text */
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 1000;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+/* Tooltip arrow */
+.element-item.basic-user:hover::before {
+  content: '';
+  position: absolute;
+  bottom: calc(100% - 6px); /* Below tooltip */
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #2a2a2a; /* Match tooltip background */
+  z-index: 1000;
+}
+
+/* Hide tooltip when not hovering */
+.element-item.basic-user::after,
+.element-item.basic-user::before {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Ensure element-item is clickable for non-Basic users */
+.element-item:not(.basic-user) {
+  cursor: pointer;
+}
+
+/* Divider Section */
+.divider-section {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 8px 0;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.divider-line {
+  flex: 1;
+  height: 1px;
+  background-color: #2a2a2a;
+  border: none;
+}
+
+.divider-text {
+  font-size: 10px;
+  font-weight: 600;
+  color: #a1a1a1;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  white-space: nowrap;
+}
+
+.text-style-item {
+  position: relative;
+  width: 100px; /* Match video-item, photo-item width */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 6px;
+  overflow: hidden;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.text-style-item:hover {
+  transform: scale(0.90); /* Match hover effect of other items */
+}
+
+.text-style-item.selected {
+  box-shadow: 0 0 0 2px #39c0ed; /* Match selected state of video-item */
+}
+
+/* Text Style Preview (e.g., a sample of the styled text) */
+.text-style-preview {
+  width: 100%;
+  height: 60px; /* Match thumbnail height of other items */
+  background-color: #2a2a2a; /* Match thumbnail background */
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px; /* Smaller font for preview to fit content */
+  color: #d1d1d1;
+  overflow: hidden;
+  text-align: center;
+  padding: 5px;
+  box-sizing: border-box;
+}
+
+.text-style-list .text-style-item .text-style-title {
+  font-size: 9px; /* Match title font size of other items */
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  color: #d1d1d1 !important;
+  margin-top: 5px; /* Space between preview and title */
+}
+
+.remove-background-button {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding: 8px 16px;
+  background: transparent;
+  color: #4A919E;
+  border: 1px solid #4A919E;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 7px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative; 
+  transition: all 0.3s ease;
+  box-shadow: none;
+}
+
+.remove-background-button:hover {
+  background: #4A919E;
+  color: #121212;
+  transform: scale(1.02);
+}
+
+.remove-background-button::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #4A919E;
+  transition: all 0.3s ease;
+}
+
+.remove-background-button:hover::after {
+  width: 80%;
+  left: 10%;
+}
+
+.remove-background-button:disabled {
+  background: transparent;
+  color: #666;
+  border-color: #666;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  /* Project Editor Layout */
+  .project-editor {
+    flex-direction: column;
+  }
+
+  /* Media Panel */
+  .media-panel {
+    width: 100%;
+    max-height: 35vh;
+  }
+  .media-panel.closed {
+    max-height: 40px;
+  }
+
+  /* Timeline Section */
+  .timeline-section {
+    min-height: 150px;
+    max-height: none; /* Remove max-height constraint to allow growth */
+    flex: 1; /* Allow timeline to grow and fill available space */
+  }
+
+  /* Ensure media-panel closed state adjusts layout */
+  .media-panel.closed + .main-content {
+    height: calc(100vh - 40px - 23px - 28px); /* Account for closed media-panel (40px), controls-panel (23px), and zoom-slider-container (28px) */
+  }  
+
+  .media-panel .panel-content {
+    flex-direction: row;
+    gap: 8px; /* Slightly smaller gap for smaller screens */
+    padding: 8px; /* Adjust padding */
+    flex-wrap: nowrap;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    overflow-y: hidden; /* Prevent vertical scrolling */
+    scrollbar-width: none; /* Hide scrollbar for Firefox */    
+  }  
+
+  .media-panel .panel-content::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for WebKit browsers (Chrome, Safari, Edge) */
+  }  
+
+  /* Tools Panel */
+  .tools-panel {
+    width: 100%;
+    max-height: 35vh;
+  }
+
+  .tools-panel.closed {
+    max-height: 40px;
+  }
+
+  /* Main Content */
+  .main-content {
+    flex: 1;
+    width: 100%; /* Full width on mobile */
+    height: calc(100vh - 35vh - 40px); /* Adjust height to account for media-panel (open or closed) and fixed elements */
+    display: flex;
+    flex-direction: column;    
+  }
+
+  .video-item,
+  .photo-item,
+  .audio-item,
+  .element-item {
+    width: 80px; /* Reduced from 100px */
+  }
+
+  .video-thumbnail,
+  .photo-thumbnail,
+  .audio-waveform,
+  .element-thumbnail {
+    height: 48px; /* Reduced from 60px */
+  }
+
+  .video-thumbnail {
+    height: 80px; /* Reduced from 100px */
+  }
+
+  .video-list .video-item .video-title,
+  .photo-list .photo-item .photo-title,
+  .audio-list .audio-item .audio-title,
+  .element-list .element-item .element-title {
+    font-size: 7px; /* Reduced from 9px */
+  }
+
+  .tool-subpanel .filter-option,
+  .tool-subpanel .filter-item {
+    padding: 6px 8px; /* Reduced from 10px 12px */
+    font-size: 10px; /* Reduced from 12px */
+  }  
+
+  .content-wrapper {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }  
+
+  .content-panel {
+    width: 100%;
+    max-height: 35vh;
+  }
+  .content-panel.closed {
+    display: none;
+  }
+
+  /* Preview Section */
+  .preview-section {
+    /* min-height: 150px; */
+    background-color: #1a1a1a; /* Lighter background than #0d0d0d */
+  }
+
+  /* Controls Panel */
+  .controls-panel {
+    flex-wrap: wrap;
+    height: auto;
+  }
+
+  /* Toggle Button */
+  .toggle-button {
+    padding: 8px 0; /* Add top and bottom padding for mobile */
+    justify-content: center; /* Ensure horizontal centering */
+  }
+
+  .media-panel.closed .toggle-button,
+  .tools-panel.closed .toggle-button {
+    padding: 8px 0; /* Consistent padding in closed state */
+    justify-content: center; /* Ensure horizontal centering */
+  }
+
+  .branding-container h1 {
+    font-size: 20px;
+  }
+
+  .branding-container .logo-element {
+    width: 20px;
+    height: 20px;
+  }
+
+  .branding-container .logo-element::before {
+    width: 6px;
+    height: 6px;
+  }
+
+  /* Zoom slider adjustments */
+  .zoom-slider-container {
+    padding: 10px 8px 20px; /* Increased bottom padding for more margin */
+    height: 34px; /* Increased from 28px to accommodate larger slider */
+  }
+
+  .zoom-slider {
+    height: 5px; /* Increased from 3.5px */
+  }
+
+  .zoom-slider::-webkit-slider-thumb {
+    width: 14px; /* Increased from 11px */
+    height: 14px; /* Increased from 11px */
+  }
+
+  .zoom-slider::-moz-range-thumb {
+    width: 14px; /* Increased from 11px */
+    height: 14px; /* Increased from 11px */
+  }
+
+  .zoom-slider-container span {
+    font-size: 10px; /* Slightly smaller font size */
+  }
+
+  .controls-panel {
+    padding: 3px; /* Reduced from 6px (half) */
+    height: 23px; /* Reduced from 46px (half) */
+  }
+
+  .control-button,
+  .delete-button {
+    padding: 4px 10px; /* Increased from 2.5px 7px */
+    font-size: 7px; /* Increased from 5.5px */
+    border-radius: 3px; /* Increased from 2.5px */
+    line-height: 8px; /* Increased from 6.5px */
+  }
+
+  .control-button::after,
+  .delete-button::after {
+    bottom: 0.7px; /* Adjusted from 1px (half) */
+    height: 0.8px; /* Reduced from 1.2px (half) */
+  }
+
+  .panel-header {
+    height: 28px; /* Reduced from 46px (half) */
+    padding: 4px; /* Reduced from 6px (half) */
+  }
+
+  .toggle-button {
+    font-size: 8px; /* Reduced from 16px (half) */
+    width: 23px; /* Reduced from 46px (half) */
+    height: 23px; /* Reduced from 46px (half) */
+    line-height: 23px; /* Reduced from 46px (half) */
+    border-radius: 2.5px; /* Reduced from 5px (half) */
+  }
+
+  .divider-section {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Media and Tools Panels */
+  .media-panel,
+  .tools-panel {
+    max-height: 30vh;
+  }
+
+  .media-panel .panel-content {
+    flex-direction: row;
+    gap: 6px; /* Adjusted for smaller screens */
+    padding: 6px; /* Adjusted for smaller screens */
+    flex-wrap: nowrap; /* Already present */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    overflow-y: hidden; /* Prevent vertical scrolling */
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+  }
+
+  .media-panel .panel-content::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for WebKit browsers (Chrome, Safari, Edge) */
+  }  
+
+  .video-item,
+  .photo-item,
+  .audio-item,
+  .element-item {
+    width: 70px; /* Reduced from 80px */
+  }
+
+  .video-thumbnail,
+  .photo-thumbnail,
+  .audio-waveform,
+  .element-thumbnail {
+    height: 40px; /* Reduced from 48px */
+  }
+
+  .video-thumbnail {
+    height: 70px; /* Reduced from 80px */
+  }
+
+  .video-list .video-item .video-title,
+  .photo-list .photo-item .photo-title,
+  .audio-list .audio-item .audio-title,
+  .element-list .element-item .element-title {
+    font-size: 6px; /* Reduced from 7px */
+  }
+
+  .tool-subpanel .filter-option,
+  .tool-subpanel .filter-item {
+    padding: 5px 7px; /* Reduced from 6px 8px */
+    font-size: 9px; /* Reduced from 10px */
+  }  
+
+  .content-panel {
+    max-height: 30vh;
+  }
+
+  /* Preview Section */
+  .preview-section {
+    min-height: 100px;
+    max-height: 30vh;
+    background-color: #1a1a1a; /* Lighter background than #0d0d0d */
+  }
+
+  /* Toggle Button */
+  .toggle-button {
+    padding: 6px 0; /* Slightly reduced padding for smaller screens */
+    justify-content: center; /* Ensure horizontal centering */
+  }
+
+  .media-panel.closed .toggle-button,
+  .tools-panel.closed .toggle-button {
+    padding: 6px 0; /* Consistent padding in closed state */
+    justify-content: center; /* Ensure horizontal centering */
+  }
+
+  .branding-container h1 {
+    font-size: 18px;
+  }
+
+  .branding-container .logo-element {
+    width: 18px;
+    height: 18px;
+  }
+
+  .branding-container .logo-element::before {
+    width: 5px;
+    height: 5px;
+  }
+
+  .zoom-slider-container {
+    padding: 8px 6px 16px; /* Increased bottom padding */
+    height: 20px; /* Increased from 15px */
+  }
+
+  .zoom-slider {
+    height: 4px; /* Increased from 3px */
+  }
+
+  .zoom-slider::-webkit-slider-thumb {
+    width: 10px; /* Increased from 7px */
+    height: 10px; /* Increased from 7px */
+  }
+
+  .zoom-slider::-moz-range-thumb {
+    width: 12px; /* Increased from 10px */
+    height: 12px; /* Increased from 10px */
+  }
+
+  .zoom-slider-container span {
+    font-size: 5px; /* Smaller font size */
+  }
+
+  .controls-panel {
+    padding: 2px; /* Reduced from 4px (half) */
+    height: 18px; /* Reduced from 36px (half) */
+  }
+
+  .control-button,
+  .delete-button {
+    padding: 1.5px 5px; /* Reduced from 3px 10px (half) */
+    margin: 0 1.5px; /* Reduced from 0 3px (half) */
+    font-size: 5px; /* Reduced from 10px (half) */
+    border-radius: 2px; /* Reduced from 4px (half) */
+    line-height: 5.5px; /* Reduced from 11px (half) */
+  }
+
+  .control-button::after,
+  .delete-button::after {
+    bottom: 0.25px; /* Adjusted from 0.5px (half) */
+    height: 0.4px; /* Reduced from 0.8px (half) */
+  }
+
+  .panel-header {
+    height: 10px; /* Reduced from 36px (half) */
+    padding: 2px; /* Reduced from 4px (half) */
+  }
+
+  .toggle-button {
+    font-size: 7px; /* Reduced from 14px (half) */
+    width: 18px; /* Reduced from 36px (half) */
+    height: 18px; /* Reduced from 36px (half) */
+    line-height: 18px; /* Reduced from 36px (half) */
+    border-radius: 2px; /* Reduced from 4px (half) */
+  }
+
+  .divider-section {
+    display: none;
+  }
+}

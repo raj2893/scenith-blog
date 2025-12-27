@@ -1,0 +1,97 @@
+/* Transitions Panel Specific */
+.transitions-panel {
+  padding: 15px;
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  border: 1px solid #2a2a2a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  box-sizing: border-box;
+}
+
+.transitions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none;
+  /* Ensure smooth scrolling on touch devices */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Hide scrollbar for WebKit browsers */
+.transitions-list::-webkit-scrollbar {
+  display: none;
+}
+
+.transition-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background-color: #1e1e1e;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  cursor: grab;
+  transition: all 0.3s ease;
+}
+
+.transition-item:hover {
+  background-color: #2a2a2a;
+  transform: scale(1.02);
+}
+
+.transition-item.dragging {
+  opacity: 0.5;
+}
+
+.transition-icon {
+  width: 24px;
+  height: 24px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  flex-shrink: 0;
+}
+
+.transition-item span {
+  font-size: 12px;
+  font-weight: 500;
+  color: #d1d1d1;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Coming soon text */
+.coming-soon-text {
+  text-align: left;
+  color: #39c0ed;
+  font-size: 9px;
+  font-weight: 500;
+  margin-top: 10px;
+  padding: 8px 12px;
+  font-weight: 10;
+  opacity: 0.5
+}
+
+/* Selected transition details */
+.selected-transition-details {
+  margin-top: 12px;
+}
+
+.selected-transition-details h4 {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #a1a1a1;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+@media (max-width: 768px) {
+  .coming-soon-text {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+}

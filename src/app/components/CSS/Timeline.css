@@ -1,0 +1,1529 @@
+/* Timeline Component Styles */
+.timeline-container {
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 20px); /* Account for 10px left + 10px right margins */
+  height: 100%;
+  overflow: hidden;
+  background-color: #1a1a1a;
+  margin: 0 auto; /* Center the container within timeline-section */
+}
+
+.timeline-controls {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #1e1e1e;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.timeline-controls button {
+  margin-right: 10px;
+  padding: 5px 10px;
+  background: transparent;
+  color: #5E8AB4; /* Muted blue for Play button */
+  border: 1px solid #5E8AB4;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  transition: all 0.3s ease;
+  box-shadow: none; /* Ensure no glow */
+}
+
+.timeline-controls button::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #5E8AB4; /* Match the Play button color */
+  transition: all 0.3s ease;
+}
+
+.timeline-controls button:hover {
+  /* Removed background change to prevent glowing effect */
+  color: #5E8AB4;
+  border-color: #5E8AB4;
+  transform: scale(1.02);
+}
+
+.timeline-controls button:hover::after {
+  width: 80%;
+  left: 10%;
+}
+
+.timeline-controls .split-at-current-control button.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.time-display {
+  margin: 0 15px;
+  color: #d1d1d1;
+  font-family: monospace;
+  font-size: 12px;
+}
+
+/* Make the timeline scrollable */
+.timeline-scroll-container {
+  position: relative;
+  flex-grow: 1;
+  overflow-x: auto;
+  overflow-y: auto;
+  min-height: 150px;
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+  -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
+  background: none; /* Explicitly remove any background */
+}
+
+.timeline-scroll-container::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome, Safari, and WebKit browsers */
+}
+
+.timeline-scroll-container::-webkit-scrollbar-track {
+  background: #2a2a2a;
+}
+
+.timeline-scroll-container::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 4px;
+}
+
+.timeline-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.timeline-ruler {
+  position: sticky;
+  top: 0;
+  height: 30px;
+  background-color: #1e1e1e;
+  border-bottom: 1px solid #2a2a2a;
+  z-index: 50000;
+}
+
+.timeline-ruler::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%; /* Match the full timeline width */
+  height: 100%;
+  background-color: #1e1e1e; /* Solid background */
+  z-index: -1; /* Behind time markers */
+}
+
+.time-marker {
+  position: absolute;
+  top: 0;
+  height: 100%;
+}
+
+.marker-line {
+  width: 1px;
+  height: 15px;
+  background-color: #666;
+}
+
+.marker-label {
+  font-size: 10px;
+  color: #a1a1a1;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+.timeline {
+  position: relative;
+  min-height: 120px;
+  background-color: #1a1a1a;
+  min-width: max-content;
+  width: 100%; /* Ensure it matches the full timeline width */
+  z-index: 1000;
+}
+
+.timeline-item.video-segment {
+  background-color: #4A919E; /* Default for videos if not set */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background-size: cover;
+  background-position: center;
+}
+
+.timeline-item.image-segment {
+  background-color: #FF5722; /* Default for images if not set */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background-size: cover;
+  background-position: center;
+}
+
+.playhead {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: #ff5555;
+  z-index: 50001;
+  touch-action: none;
+}
+
+.timeline-layer {
+  position: relative;
+  height: 40px;
+  border-bottom: 1px solid #2a2a2a;
+  background-color: #1e1e1e;
+  transition: background-color 0.2s;
+}
+
+.layer-label {
+  position: absolute;
+  left: 5px;
+  top: 5px;
+  font-size: 12px;
+  color: #a1a1a1;
+  pointer-events: none;
+}
+
+.layer-items {
+  position: relative;
+  height: 100%;
+}
+
+.timeline-item {
+  position: absolute;
+  height: 30px;
+  top: 5px;
+  border-radius: 4px;
+  cursor: move;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  overflow: visible;
+  background-size: cover;
+  background-position: center;
+  box-sizing: border-box;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  touch-action: none;
+}
+
+.timeline-item, .resize-handle {
+  touch-action: none;
+}
+
+.timeline-item.video-segment,
+.timeline-item.image-segment,
+.timeline-item.audio-segment {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.timeline-item:hover {
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.timeline-item.selected {
+  border: 2px solid #ff9800;
+  box-shadow: 0 0 8px rgba(255, 152, 0, 0.4);
+}
+
+.timeline-item.multi-selected {
+  border: 2px solid #FF00FF; /* Magenta border for multi-selected segments */
+  background-color: rgba(255, 0, 255, 0.2);
+}
+
+.timeline-item.text-segment.multi-selected {
+  border: 2px solid #FF00FF; /* Magenta border for multi-selected text segments */
+  background-color: rgba(255, 0, 255, 0.2); /* Match other multi-selected segments */
+}
+
+.resize-handle {
+  position: absolute;
+  top: 0;
+  width: 8px;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.5);
+  cursor: ew-resize;
+  z-index: 12;
+  transition: background-color 0.2s ease;
+  touch-action: none;
+}
+
+.resize-handle.resize-left {
+  left: -4px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+.resize-handle.resize-right {
+  right: -4px;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.timeline-item .resize-handle {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.timeline-item:hover .resize-handle,
+.timeline-item.playing .resize-handle {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.timeline-item .resize-handle:hover,
+.timeline-item .resize-handle:active {
+  background-color: #ff9800;
+}
+
+.timeline-item.text-segment {
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.text-segment-preview {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-sizing: border-box;
+  color: #d1d1d1;
+}
+
+.text-segment-icon {
+  display: inline-block;
+  margin-right: 4px;
+  font-weight: bold;
+  border: 1px solid #d1d1d1;
+  border-radius: 3px;
+  padding: 0 2px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #d1d1d1;
+}
+
+.text-segment-content {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.video-title {
+  font-size: 12px;
+  color: #d1d1d1;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 4px;
+  width: 100%;
+  height: 100%;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-sizing: border-box;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.timeline-item .resize-handle.resize-right {
+  right: -4px;
+  width: 8px;
+}
+
+.timeline-item .resize-handle.resize-left {
+  left: -4px;
+  width: 8px;
+}
+
+.dragging {
+  opacity: 0.7;
+  z-index: 1000;
+}
+
+.timeline.showing-new-layer:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background-color: rgba(57, 192, 237, 0.1);
+  border: 2px dashed #39c0ed;
+  pointer-events: none;
+}
+
+.new-layer-drop-area {
+  border: 2px dashed #666;
+  background-color: rgba(255, 255, 255, 0.05);
+  min-height: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.new-layer-drop-area:hover,
+.new-layer-drop-area.drag-over {
+  background-color: rgba(57, 192, 237, 0.1);
+  border-color: #39c0ed;
+}
+
+.new-layer-drop-area .layer-label {
+  color: #a1a1a1;
+  font-style: italic;
+}
+
+.timeline.showing-new-layer-top::before {
+  content: "Drop to create new layer";
+  position: absolute;
+  top: -40px;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background-color: rgba(57, 192, 237, 0.1);
+  border: 2px dashed #39c0ed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  color: #d1d1d1;
+  font-size: 12px;
+}
+
+.timeline-layer.drag-over {
+  background-color: rgba(57, 192, 237, 0.1);
+}
+
+.history-controls {
+  display: flex;
+  align-items: center;
+  margin: 0 10px;
+}
+
+.history-controls button {
+  margin: 0 5px;
+  padding: 5px 10px;
+  background: transparent;
+  color: #39c0ed;
+  border: 1px solid #39c0ed;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  position: relative;
+  transition: all 0.3s ease;
+  box-shadow: none; /* Ensure no glow */
+}
+
+.history-controls button::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #39c0ed;
+  transition: all 0.3s ease;
+}
+
+.history-controls button:hover {
+  background: #39c0ed;
+  color: #121212;
+  transform: scale(1.02);
+}
+
+.history-controls button:hover::after {
+  width: 80%;
+  left: 10%;
+}
+
+.history-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  color: #666;
+  border-color: #666;
+}
+
+.saving-indicator {
+  margin-left: 10px;
+  font-size: 0.8em;
+  color: #a1a1a1;
+  animation: pulsate 1.5s infinite;
+}
+
+@keyframes pulsate {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+.video-clip .clip-content {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+@keyframes pulse {
+  0% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+
+.timeline-item.dragging.snapping {
+  outline: 2px solid #ff9800;
+  outline-offset: 2px;
+}
+
+.timeline-item.dragging {
+  opacity: 0.8;
+  z-index: 1000;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+}
+
+.timeline-item.playing {
+  border: 2px solid #ff9800 !important;
+  box-shadow: 0 0 8px rgba(255, 152, 0, 0.4);
+}
+
+.text-segment-dialog {
+  position: fixed;
+  width: 320px;
+  background-color: #1e1e1e;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  transform: translate(-50%, -50%);
+  color: #d1d1d1;
+  display: none;
+}
+
+.text-segment-dialog.show {
+  display: block;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.dialog-header h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #a1a1a1;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: #a1a1a1;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  color: #d1d1d1;
+}
+
+.dialog-content {
+  padding: 16px;
+}
+
+.form-group {
+  margin-bottom: 12px;
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 4px;
+  color: #a1a1a1;
+  font-size: 12px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 6px 8px;
+  background-color: #2a2a2a;
+  border: 1px solid #2a2a2a;
+  border-radius: 4px;
+  color: #d1d1d1;
+}
+
+.form-group input[type="range"] {
+  width: 80%;
+  vertical-align: middle;
+  height: 4px;
+  background: #2a2a2a;
+  border-radius: 4px;
+  -webkit-appearance: none;
+  transition: all 0.3s ease;
+}
+
+.form-group input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  background: #4A919E; /* Replace pinkish #b76cfd with muted teal */
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.form-group input[type="range"]::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: #4A919E; /* Replace pinkish #b76cfd with muted teal */
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.form-group input[type="range"]:hover {
+  background: #444;
+}
+
+.form-group span {
+  display: inline-block;
+  margin-left: 8px;
+  width: 36px;
+  text-align: right;
+  color: #d1d1d1;
+}
+
+.form-group input[type="color"] {
+  width: 32px;
+  height: 32px;
+  border: none;
+  cursor: pointer;
+}
+
+.form-group input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+.dialog-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.cancel-button,
+.save-button {
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  border: none;
+  position: relative;
+  transition: all 0.3s ease;
+  box-shadow: none; /* Ensure no glow */
+}
+
+.cancel-button {
+  background: transparent;
+  color: #d1d1d1;
+  border: 1px solid #d1d1d1;
+}
+
+.cancel-button::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #d1d1d1;
+  transition: all 0.3s ease;
+}
+
+.cancel-button:hover {
+  background: #555;
+  border-color: #555;
+  transform: scale(1.02);
+}
+
+.cancel-button:hover::after {
+  width: 80%;
+  left: 10%;
+}
+
+.save-button {
+  background: transparent;
+  color: #4A919E; /* Muted teal for Save Project button */
+  border: 1px solid #4A919E;
+}
+
+.save-button::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #4A919E; /* Match the Save button color */
+  transition: all 0.3s ease;
+}
+
+.save-button:hover {
+  /* Removed background change to prevent glowing effect */
+  color: #4A919E;
+  border-color: #4A919E;
+  transform: scale(1.02);
+}
+
+.save-button:hover::after {
+  width: 80%;
+  left: 10%;
+}
+
+.add-text-control {
+  margin-left: 10px;
+}
+
+.add-text-control button {
+  background: transparent;
+  color: #D4A017; /* Soft amber for Add Text button */
+  border: 1px solid #D4A017;
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  position: relative;
+  transition: all 0.3s ease;
+  box-shadow: none; /* Ensure no glow */
+}
+
+.add-text-control button::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #D4A017; /* Match the Add Text button color */
+  transition: all 0.3s ease;
+}
+
+.add-text-control button:hover {
+  /* Removed background change to prevent glowing effect */
+  color: #D4A017;
+  border-color: #D4A017;
+  transform: scale(1.02);
+}
+
+.add-text-control button:hover::after {
+  width: 80%;
+  left: 10%;
+}
+
+.add-text-control button:before {
+  content: "T";
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-color: transparent;
+  color: #D4A017; /* Match the Add Text button color */
+  font-weight: bold;
+  text-align: center;
+  line-height: 16px;
+  border: 1px solid #D4A017;
+  border-radius: 2px;
+}
+
+.split-control button {
+  margin-left: 10px;
+  padding: 6px;
+  background: transparent;
+  color: #E07B39; /* Subtle orange for Scissors (Split) button */
+  border: 1px solid #E07B39;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  position: relative;
+  transition: all 0.3s ease;
+  box-shadow: none; /* Ensure no glow */
+}
+
+.split-control button::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #E07B39; /* Match the Split button color */
+  transition: all 0.3s ease;
+}
+
+.split-control button:hover {
+  /* Removed background change to prevent glowing effect */
+  color: #E07B39;
+  border-color: #E07B39;
+  transform: scale(1.02);
+}
+
+.split-control button:hover::after {
+  width: 80%;
+  left: 10%;
+}
+
+.split-control button.active {
+  background: #E07B39;
+  color: #121212;
+}
+
+.timeline.split-mode {
+  cursor: crosshair;
+}
+
+.timeline.split-mode .timeline-item {
+  cursor: crosshair;
+}
+
+.timeline.split-mode .timeline-item:hover {
+  border: 2px dashed #E07B39; /* Match the Split button color */
+}
+
+.audio-layer {
+  background-color: #1e1e1e;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.audio-layer .layer-label {
+  color: #66bb6a;
+}
+
+.audio-layer .timeline-item.audio-segment {
+  background-color: #66bb6a;
+  border: 1px solid #4caf50;
+}
+
+.audio-segment-preview {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-sizing: border-box;
+  color: #121212;
+}
+
+.snap-indicator.snap-playhead {
+  background-color: #ff5555;
+  opacity: 0.8;
+  width: 2px;
+  z-index: 1000;
+}
+
+.audio-segment-icon {
+  display: inline-block;
+  margin-right: 4px;
+  font-size: 14px;
+}
+
+.audio-segment-content {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.timeline-section.selected {
+  border: 2px solid #4A919E; /* Muted teal border for selection */
+}
+
+.timeline-separator {
+  height: 20px;
+  background-color: #2a2a2a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top: 1px solid #2a2a2a;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.separator-label {
+  color: #a1a1a1;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.timeline-item.image-segment {
+  background-color: #ff5722;
+}
+
+.image-segment-preview {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-sizing: border-box;
+  color: #121212;
+}
+
+.audio-section-label {
+  height: 20px;
+  line-height: 20px;
+  text-align: left;
+  padding-left: 10px;
+  background: #1e1e1e;
+  color: #a1a1a1;
+  font-size: 12px;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.transition-overlay {
+  border: 1px solid #39c0ed;
+  box-sizing: border-box;
+}
+
+.transition-label {
+  font-size: 10px;
+  color: #d1d1d1;
+  text-align: center;
+  text-shadow: 0 0 2px #000;
+}
+
+.resize-handle.transition-resize-left,
+.resize-handle.transition-resize-right {
+  width: 5px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  background-color: #39c0ed;
+  cursor: ew-resize;
+}
+
+.resize-handle.transition-resize-left {
+  left: 0;
+}
+
+.resize-handle.transition-resize-right {
+  right: 0;
+}
+
+.audio-segment {
+  position: absolute;
+  background: #222;
+  border: 1px solid #444;
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.audio-waveform {
+  background: #222;
+  overflow: hidden;
+}
+
+.timeline.split-mode .playhead.magnetic {
+  background-color: #ff5555; /* Brighter color to indicate snapping */
+  width: 3px; /* Slightly thicker for visibility */
+  z-index: 1000;
+}
+
+.copy-control {
+  margin-left: 10px;
+}
+
+.copy-control button {
+  padding: 6px 12px;
+  background: transparent;
+  color: #4CAF50; /* Green for Copy button to distinguish it */
+  border: 1px solid #4CAF50;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  position: relative;
+  transition: all 0.3s ease;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.copy-control button::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #4CAF50;
+  transition: all 0.3s ease;
+}
+
+.copy-control button:hover {
+  color: #4CAF50;
+  border-color: #4CAF50;
+  transform: scale(1.02);
+}
+
+.copy-control button:hover::after {
+  width: 80%;
+  left: 10%;
+}
+
+.copy-control button.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.timeline-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none; /* Prevent clicks when disabled */
+}
+
+@media (max-width: 768px) {
+  /* Timeline Container */
+  .timeline-container {
+    width: 100%; /* Full width on mobile */
+    margin: 0; /* Remove margins for edge-to-edge layout */
+  }
+
+  /* Timeline Controls */
+  .timeline-controls {
+    padding: 8px; /* Reduced padding */
+    flex-wrap: wrap; /* Allow wrapping for smaller screens */
+  }
+
+  .timeline-controls button {
+    margin-right: 6px; /* Reduced margin */
+    padding: 4px 8px; /* Smaller padding */
+    font-size: 11px; /* Smaller font size */
+    border-radius: 6px; /* Slightly smaller border radius */
+  }
+
+  .time-display {
+    margin: 0 10px; /* Reduced margin */
+    font-size: 11px; /* Smaller font size */
+  }
+
+  /* Add Text Button */
+  .add-text-control button {
+    padding: 4px 10px; /* Reduced padding */
+    font-size: 11px; /* Smaller font size */
+    gap: 4px; /* Reduced gap */
+    border-radius: 6px; /* Smaller border radius */
+  }
+
+  .add-text-control button:before {
+    content: T;
+    width: 14px; /* Smaller icon */
+    height: 14px; /* Smaller icon */
+    line-height: 14px; /* Adjust line height */
+    font-size: 10px; /* Smaller font for "T" */
+  }
+
+  /* Split Control Button */
+  .split-control button {
+    margin-left: 6px; /* Reduced margin */
+    padding: 4px; /* Smaller padding */
+    font-size: 14px; /* Smaller icon size */
+    border-radius: 6px; /* Smaller border radius */
+  }
+
+  /* Timeline Scroll Container */
+  .timeline-scroll-container {
+    min-height: 120px; /* Reduced minimum height */
+  }
+
+  /* Timeline Ruler */
+  .timeline-ruler {
+    height: 25px; /* Reduced height */
+  }
+
+  .marker-label {
+    font-size: 9px; /* Smaller font size */
+  }
+
+  .marker-line {
+    height: 12px; /* Reduced marker line height */
+  }
+
+  /* Timeline Layer */
+  .timeline-layer {
+    height: 35px; /* Reduced layer height */
+  }
+
+  .layer-label {
+    font-size: 11px; /* Smaller font size */
+    top: 4px; /* Adjust position */
+    left: 4px; /* Adjust position */
+  }
+
+  /* Timeline Item */
+  .timeline-item {
+    height: 26px; /* Reduced height */
+    top: 4px; /* Adjust position */
+    border-radius: 3px; /* Smaller border radius */
+  }
+
+  .text-segment-preview,
+  .audio-segment-preview,
+  .image-segment-preview {
+    font-size: 11px; /* Smaller font size */
+    padding: 2px; /* Reduced padding */
+  }
+
+  .text-segment-icon,
+  .audio-segment-icon {
+    font-size: 10px; /* Smaller icon size */
+    margin-right: 3px; /* Reduced margin */
+    padding: 0 1px; /* Reduced padding */
+  }
+
+  .video-title {
+    font-size: 11px; /* Smaller font size */
+    padding: 3px; /* Reduced padding */
+  }
+
+  .resize-handle {
+    width: 6px; /* Smaller resize handle */
+  }
+
+  .resize-handle.resize-left {
+    left: -3px; /* Adjust position */
+  }
+
+  .resize-handle.resize-right {
+    right: -3px; /* Adjust position */
+  }
+
+  /* Audio Section Label */
+  .audio-section-label {
+    height: 18px; /* Reduced height */
+    line-height: 18px; /* Adjust line height */
+    font-size: 11px; /* Smaller font size */
+    padding-left: 8px; /* Reduced padding */
+  }
+
+  /* New Layer Drop Area */
+  .new-layer-drop-area {
+    min-height: 18px; /* Reduced height */
+  }
+
+  /* Transition Overlay */
+  .transition-overlay {
+    height: 18px; /* Reduced height */
+  }
+
+  .transition-label {
+    font-size: 9px; /* Smaller font size */
+  }
+
+  .resize-handle.transition-resize-left,
+  .resize-handle.transition-resize-right {
+    width: 4px; /* Smaller resize handle */
+  }
+
+  /* Text Segment Dialog */
+  .text-segment-dialog {
+    width: 280px; /* Reduced width */
+  }
+
+  .dialog-header {
+    padding: 8px 12px; /* Reduced padding */
+  }
+
+  .dialog-header h3 {
+    font-size: 14px; /* Smaller font size */
+  }
+
+  .close-button {
+    font-size: 18px; /* Smaller icon size */
+  }
+
+  .dialog-content {
+    padding: 12px; /* Reduced padding */
+  }
+
+  .form-group {
+    margin-bottom: 10px; /* Reduced margin */
+  }
+
+  .form-row {
+    gap: 10px; /* Reduced gap */
+    margin-bottom: 10px; /* Reduced margin */
+  }
+
+  .form-group label {
+    font-size: 11px; /* Smaller font size */
+    margin-bottom: 3px; /* Reduced margin */
+  }
+
+  .form-group input[type="text"],
+  .form-group input[type="number"],
+  .form-group textarea,
+  .form-group select {
+    padding: 5px 6px; /* Reduced padding */
+    font-size: 11px; /* Smaller font size */
+    border-radius: 3px; /* Smaller border radius */
+  }
+
+  .form-group input[type="range"] {
+    width: 75%; /* Slightly smaller width */
+  }
+
+  .form-group input[type="range"]::-webkit-slider-thumb,
+  .form-group input[type="range"]::-moz-range-thumb {
+    width: 10px; /* Smaller thumb */
+    height: 10px; /* Smaller thumb */
+  }
+
+  .form-group input[type="color"] {
+    width: 28px; /* Smaller color picker */
+    height: 28px; /* Smaller color picker */
+  }
+
+  .form-group span {
+    width: 32px; /* Smaller width */
+    font-size: 11px; /* Smaller font size */
+  }
+
+  .dialog-buttons {
+    margin-top: 12px; /* Reduced margin */
+    gap: 6px; /* Reduced gap */
+  }
+
+  .cancel-button,
+  .save-button {
+    padding: 5px 12px; /* Reduced padding */
+    font-size: 11px; /* Smaller font size */
+    border-radius: 6px; /* Smaller border radius */
+  }
+
+  .copy-control {
+    margin-left: 6px;
+  }
+
+  .copy-control button {
+    padding: 4px 10px;
+    font-size: 11px;
+    gap: 4px;
+    border-radius: 6px;
+  }  
+}
+
+@media (max-width: 480px) {
+  /* Timeline Container */
+  .timeline-controls {
+    padding: 10px; /* Further reduced padding */
+    flex-direction: row; /* Keep horizontal layout */
+    align-items: center; /* Center items vertically */
+    justify-content: start; /* Distribute space evenly */
+    flex-wrap: nowrap; /* Prevent wrapping */
+    height: 22px; /* Reduced height for compact layout */
+  }
+
+  .timeline-controls button {
+    margin-right: 8px; /* Further reduced margin */
+    margin-bottom: 0; /* Remove bottom margin */
+    padding: 1px 3px; /* Further reduced padding */
+    font-size: 8px; /* Smaller font size */
+    border-radius: 3px; /* Smaller border radius */
+    line-height: 12px; /* Reduced line height for compact buttons */
+    display: flex; /* Ensure icon and text align properly */
+    align-items: center; /* Center content vertically */
+  }
+
+  .timeline-controls .button-text {
+    display: none; /* Hide text on mobile */
+  }
+
+  .timeline-controls .button-icon {
+    font-size: 8px; /* Smaller icon size */
+    line-height: 12px; /* Match button height */
+  }
+
+  .time-display {
+    font-size: 7px; /* Smaller font size */
+    line-height: 12px; /* Match button height */
+    margin-right: 8px;
+  }
+
+  /* History Controls */
+  .history-controls {
+    margin: 0 3px; /* Reduced margin */
+  }
+
+  .history-controls button {
+    margin: 0 2px; /* Further reduced margin */
+    padding: 1px 3px; /* Further reduced padding */
+    font-size: 8px; /* Smaller font size */
+    border-radius: 3px; /* Smaller border radius */
+    line-height: 12px; /* Reduced line height */
+  }
+
+  /* Add Text Button */
+  .add-text-control {
+  }
+
+  .add-text-control button {
+    padding: 1px 3px; /* Further reduced padding */
+    font-size: 8px; /* Smaller font size */
+    gap: 2px; /* Smaller gap */
+    border-radius: 3px; /* Smaller border radius */
+    line-height: 12px; /* Reduced line height */
+    margin-right: 8px;
+  }
+
+  .add-text-control button:before {
+    content: T;
+    width: 8px; /* Smaller icon */
+    height: 8px; /* Smaller icon */
+    line-height: 8px; /* Adjust line height */
+    font-size: 5px; /* Smaller font for "T" */
+    line-height: 8px;
+  }
+
+  /* Split Control Button */
+  .split-control {
+  }
+
+  .split-control button {
+    margin-left: 0; /* Remove left margin */
+    margin-bottom: 0; /* Remove bottom margin */
+    padding: 1px; /* Further reduced padding */
+    font-size: 8px; /* Smaller icon size */
+    border-radius: 3px; /* Smaller border radius */
+    line-height: 12px; /* Reduced line height */
+  }
+
+  /* Saving Indicator */
+  .saving-indicator {
+    margin-left: 3px; /* Reduced margin */
+    font-size: 7px; /* Smaller font size */
+    line-height: 12px; /* Match button height */
+  }
+
+  /* Timeline Scroll Container */
+  .timeline-scroll-container {
+    min-height: 50px; /* Further reduced minimum height */
+  }
+
+  /* Timeline Ruler */
+  .timeline-ruler {
+    height: 20px; /* Further reduced height */
+  }
+
+  .marker-label {
+    font-size: 8px; /* Smaller font size */
+  }
+
+  .marker-line {
+    height: 10px; /* Further reduced marker line height */
+  }
+
+  /* Timeline Layer */
+  .timeline-layer {
+    height: 30px; /* Further reduced layer height */
+  }
+
+  .layer-label {
+    font-size: 10px; /* Smaller font size */
+    top: 3px; /* Adjust position */
+    left: 3px; /* Adjust position */
+  }
+
+  /* Timeline Item */
+  .timeline-item {
+    height: 24px; /* Further reduced height */
+    top: 3px; /* Adjust position */
+    border-radius: 2px; /* Smaller border radius */
+  }
+
+  .text-segment-preview,
+  .audio-segment-preview,
+  .image-segment-preview {
+    font-size: 10px; /* Smaller font size */
+    padding: 1px; /* Reduced padding */
+  }
+
+  .text-segment-icon,
+  .audio-segment-icon {
+    font-size: 9px; /* Smaller icon size */
+    margin-right: 2px; /* Reduced margin */
+    padding: 0 1px; /* Reduced padding */
+  }
+
+  .video-title {
+    font-size: 10px; /* Smaller font size */
+    padding: 2px; /* Reduced padding */
+  }
+
+  .resize-handle {
+    width: 5px; /* Smaller resize handle */
+  }
+
+  .resize-handle.resize-left {
+    left: -2.5px; /* Adjust position */
+  }
+
+  .resize-handle.resize-right {
+    right: -2.5px; /* Adjust position */
+  }
+
+  /* Audio Section Label */
+  .audio-section-label {
+    height: 16px; /* Further reduced height */
+    line-height: 16px; /* Adjust line height */
+    font-size: 10px; /* Smaller font size */
+    padding-left: 6px; /* Reduced padding */
+  }
+
+  /* New Layer Drop Area */
+  .new-layer-drop-area {
+    min-height: 16px; /* Further reduced height */
+  }
+
+  /* Transition Overlay */
+  .transition-overlay {
+    height: 16px; /* Further reduced height */
+  }
+
+  .transition-label {
+    font-size: 8px; /* Smaller font size */
+  }
+
+  .resize-handle.transition-resize-left,
+  .resize-handle.transition-resize-right {
+    width: 3px; /* Smaller resize handle */
+  }
+
+  /* Text Segment Dialog */
+  .text-segment-dialog {
+    width: 240px; /* Further reduced width */
+  }
+
+  .dialog-header {
+    padding: 6px 10px; /* Further reduced padding */
+  }
+
+  .dialog-header h3 {
+    font-size: 13px; /* Smaller font size */
+  }
+
+  .close-button {
+    font-size: 16px; /* Smaller icon size */
+  }
+
+  .dialog-content {
+    padding: 10px; /* Further reduced padding */
+  }
+
+  .form-group {
+    margin-bottom: 8px; /* Further reduced margin */
+  }
+
+  .form-row {
+    gap: 8px; /* Further reduced gap */
+    margin-bottom: 8px; /* Further reduced margin */
+  }
+
+  .form-group label {
+    font-size: 10px; /* Smaller font size */
+    margin-bottom: 2px; /* Reduced margin */
+  }
+
+  .form-group input[type="text"],
+  .form-group input[type="number"],
+  .form-group textarea,
+  .form-group select {
+    padding: 4px 5px; /* Further reduced padding */
+    font-size: 10px; /* Smaller font size */
+    border-radius: 2px; /* Smaller border radius */
+  }
+
+  .form-group input[type="range"] {
+    width: 70%; /* Further reduced width */
+  }
+
+  .form-group input[type="range"]::-webkit-slider-thumb,
+  .form-group input[type="range"]::-moz-range-thumb {
+    width: 8px; /* Smaller thumb */
+    height: 8px; /* Smaller thumb */
+  }
+
+  .form-group input[type="color"] {
+    width: 24px; /* Smaller color picker */
+    height: 24px; /* Smaller color picker */
+  }
+
+  .form-group span {
+    width: 28px; /* Smaller width */
+    font-size: 10px; /* Smaller font size */
+  }
+
+  .dialog-buttons {
+    margin-top: 10px; /* Further reduced margin */
+    gap: 5px; /* Further reduced gap */
+  }
+
+  .cancel-button,
+  .save-button {
+    padding: 4px 10px; /* Further reduced padding */
+    font-size: 10px; /* Smaller font size */
+    border-radius: 5px; /* Smaller border radius */
+  }
+
+  .copy-control {
+    margin-left: 8px;
+  }
+
+  .copy-control button {
+    padding: 1px 3px;
+    font-size: 8px;
+    border-radius: 3px;
+    line-height: 12px;
+    margin-right: 8px;
+  }
+
+  .copy-control .button-text {
+    display: none; /* Hide text on mobile */
+  }
+
+  .copy-control .button-icon {
+    font-size: 8px;
+    line-height: 12px;
+  }  
+}

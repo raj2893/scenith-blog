@@ -1,0 +1,306 @@
+/* KeyframeControls.css */
+
+/* Import Montserrat font for consistency with ProjectEditor.css */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+/* Container for the keyframe section */
+.keyframe-section {
+  padding: 15px 20px;
+  background: #1a1a1a;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* Property row styling */
+.property-row {
+  margin-bottom: 15px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+/* Property header styling */
+.property-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.property-header label {
+  font-size: 13px;
+  color: #a1a1a1;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  flex-grow: 1;
+}
+
+/* Keyframe toggle button */
+.keyframe-toggle {
+  background: transparent;
+  border: 1px solid #2a2a2a;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #d1d1d1;
+  border-radius: 6px;
+  /* Limit transition to transform only for hover scaling */
+  transition: transform 0.3s ease;
+  box-shadow: none;
+  flex-shrink: 0;
+}
+
+.keyframe-toggle:hover {
+  background: #2a2a2a;
+  border-color: #4A919E;
+  color: #4A919E;
+  transform: scale(1.02);
+}
+
+.keyframe-toggle.active {
+  color: #4A919E;
+  background: #2a2a2a;
+  border-color: #4A919E;
+  /* No transition to ensure instant change */
+  transition: none;
+}
+
+/* Property controls container */
+.property-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  flex-wrap: nowrap;
+}
+
+/* Value scrubber for dragging */
+.value-scrubber {
+  cursor: ew-resize;
+  padding: 6px 10px;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  background: #1e1e1e;
+  user-select: none;
+  min-width: 60px;
+  text-align: center;
+  font-size: 12px;
+  color: #d1d1d1;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.value-scrubber:hover {
+  background: #2a2a2a;
+  border-color: #4A919E;
+  color: #4A919E;
+  transform: scale(1.02);
+}
+
+/* Keyframe navigation buttons */
+.keyframe-nav {
+  display: flex;
+  gap: 6px;
+}
+
+.keyframe-nav button {
+  background: transparent;
+  border: 1px solid #2a2a2a;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 11px;
+  color: #d1d1d1;
+  transition: all 0.3s ease;
+  box-shadow: none;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.keyframe-nav button:hover:not(:disabled) {
+  background: #2a2a2a;
+  border-color: #4A919E;
+  color: #4A919E;
+  transform: scale(1.02);
+}
+
+.keyframe-nav button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: #666;
+}
+
+/* Mini timeline for keyframes */
+.mini-timeline {
+  width: 100%;
+  max-width: 160px;
+  height: 24px;
+  background: #1e1e1e;
+  border: 1px solid #2a2a2a;
+  border-radius: 4px;
+  position: relative;
+  margin-top: 8px;
+  box-sizing: border-box;
+}
+
+/* Playhead in the mini timeline */
+.mini-playhead {
+  position: absolute;
+  width: 2px;
+  height: 100%;
+  background: #4A919E;
+  top: 0;
+  box-sizing: border-box;
+}
+
+/* Keyframe markers in the timeline */
+.keyframe-marker {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #4A919E;
+  border: 1px solid #d1d1d1;
+  transform: translate(-50%, -50%) rotate(45deg);
+  cursor: pointer;
+  top: 50%;
+  /* No transition to ensure instant removal */
+  transition: none;
+}
+
+.keyframe-marker:hover {
+  background: #5E8AB4;
+  transform: translate(-50%, -50%) rotate(45deg) scale(1.1);
+  /* Transition only for hover effects */
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+/* Crop-specific control styles */
+.property-row.crop-control {
+  margin-bottom: 12px;
+}
+
+.property-row.crop-control .property-header label {
+  font-weight: 600;
+}
+
+.property-row.crop-control .property-controls input[type="range"] {
+  width: 90px;
+  height: 4px;
+  background: #2a2a2a;
+  border-radius: 4px;
+  -webkit-appearance: none;
+  transition: all 0.3s ease;
+}
+
+.property-row.crop-control .property-controls input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  background: #4A919E;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.property-row.crop-control .property-controls input[type="range"]::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: #4A919E;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.property-row.crop-control .property-controls input[type="number"] {
+  width: 45px;
+  padding: 6px;
+  background: #1e1e1e;
+  color: #d1d1d1;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+/* Custom error message for crop validation */
+.custom-error-message {
+  display: flex;
+  align-items: center;
+  background: #2a2a2a;
+  color: #ff5a5f;
+  padding: 10px 15px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  font-size: 13px;
+  font-weight: 500;
+  animation: slideIn 0.3s ease-out, fadeOut 3s 0.3s forwards;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  box-sizing: border-box;
+}
+
+.custom-error-message span {
+  flex: 1;
+}
+
+/* Animation for sliding in */
+@keyframes slideIn {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Animation for fading out */
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .keyframe-section {
+    padding: 10px 15px;
+  }
+
+  .mini-timeline {
+    max-width: 130px;
+  }
+
+  .value-scrubber {
+    min-width: 50px;
+    font-size: 11px;
+  }
+
+  .property-controls {
+    gap: 6px;
+  }
+
+  .keyframe-nav {
+    gap: 4px;
+  }
+
+  .keyframe-nav button {
+    padding: 3px 6px;
+    font-size: 10px;
+  }
+
+  .property-row.crop-control .property-controls input[type="range"] {
+    width: 70px;
+  }
+
+  .property-row.crop-control .property-controls input[type="number"] {
+    width: 35px;
+  }
+}

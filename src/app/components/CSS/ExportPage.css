@@ -1,0 +1,122 @@
+/* src/CSS/ExportPage.css */
+.export-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+}
+
+.export-container {
+  text-align: center;
+  padding: 40px;
+  background-color: #2a2a2a;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #444;
+  border-top: 5px solid #00ff88;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.export-container h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.export-container p {
+  font-size: 16px;
+  margin-bottom: 30px;
+  color: #cccccc;
+}
+
+.download-button,
+.back-button,
+.export-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 10px;
+  transition: background-color 0.3s;
+}
+
+.download-button,
+.export-button {
+  background-color: #00ff88;
+  color: #000000;
+}
+
+.download-button:hover,
+.export-button:hover {
+  background-color: #00cc70;
+}
+
+.back-button {
+  background-color: #555555;
+  color: #ffffff;
+}
+
+.back-button:hover {
+  background-color: #666666;
+}
+
+.download-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+.download-button:disabled,
+.export-button:disabled {
+  background-color: #444444;
+  cursor: not-allowed;
+}
+
+.progress-bar-container {
+  width: 100%;
+  max-width: 500px; /* Adjust as needed */
+  height: 30px; /* Height of the progress bar */
+  background-color: #444444; /* Background for unfilled portion */
+  border-radius: 5px;
+  overflow: hidden;
+  margin: 20px auto; /* Center and space the progress bar */
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: #00ff88; /* Progress bar fill color */
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Align text to the right of the filled portion */
+  transition: width 0.3s ease-in-out; /* Smooth width transition */
+  position: relative;
+}
+
+.progress-bar-text {
+  color: #000000; /* Text color for contrast */
+  font-size: 14px;
+  font-weight: bold;
+  padding-right: 10px; /* Space from the right edge */
+  white-space: nowrap; /* Prevent text wrapping */
+}

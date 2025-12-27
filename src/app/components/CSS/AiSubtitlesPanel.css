@@ -1,0 +1,157 @@
+/* AI Subtitles Panel */
+.ai-subtitles-panel {
+  padding: 16px;
+  background: linear-gradient(145deg, #1a1a1a, #222222);
+  border-radius: 12px;
+  border: 1px solid #333333;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), inset 0 1px 3px rgba(255, 255, 255, 0.05);
+  box-sizing: border-box;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header Section */
+.ai-subtitles-header {
+  position: sticky;
+  top: 0;
+  background: linear-gradient(145deg, #1a1a1a, #222222);
+  padding-bottom: 12px;
+  z-index: 10;
+  border-bottom: 1px solid #333333;
+}
+
+.ai-subtitles-panel h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #e0e0e0;
+  margin: 0 0 12px 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Generate Subtitles Button */
+/* Generate Subtitles Button */
+.generate-subtitles-button {
+  width: 100%;
+  padding: 10px 16px;
+  background: transparent;
+  color: #4A919E;
+  border: 1px solid #4A919E;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(74, 145, 158, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.generate-subtitles-button:hover:enabled {
+  background: #4A919E;
+  color: #121212;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(74, 145, 158, 0.6);
+}
+
+.generate-subtitles-button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: 0.5s;
+}
+
+.generate-subtitles-button:hover:enabled::after {
+  left: 100%;
+}
+
+.generate-subtitles-button:disabled {
+  background: transparent;
+  color: #666;
+  border-color: #666;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Scrollable Styles Container */
+.ai-styles-container {
+  flex: 1;
+  overflow-y: auto;
+  margin-top: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: #4A919E #2a2a2a;
+}
+
+/* Custom Scrollbar for Webkit Browsers */
+.ai-styles-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.ai-styles-container::-webkit-scrollbar-track {
+  background: #2a2a2a;
+  border-radius: 10px;
+}
+
+.ai-styles-container::-webkit-scrollbar-thumb {
+  background: #4A919E;
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+.ai-styles-container::-webkit-scrollbar-thumb:hover {
+  background: #66a6b3;
+}
+
+/* Styles List */
+.ai-styles-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Style Item */
+.ai-style-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 14px;
+  padding: 12px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.ai-style-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.ai-style-item.selected {
+  border: 2px solid #00aaff !important;
+  box-shadow: 0 0 8px rgba(0, 170, 255, 0.5);
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  color: #888888;
+  font-size: 14px;
+  padding: 20px;
+  background: #2a2a2a;
+  border-radius: 8px;
+  border: 1px solid #333333;
+}

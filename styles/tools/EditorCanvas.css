@@ -1314,6 +1314,77 @@ body {
   }
 }
 
+/* Templates Tab Grid */
+.templates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px;
+  padding: 8px 0;
+  overflow-y: auto;
+  max-height: calc(100vh - 200px); /* Prevent overflow in content panel */
+}
+
+.template-thumbnail {
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.template-thumbnail:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+}
+
+.template-preview-container {
+  position: relative;
+  width: 100%;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.template-thumbnail:hover .template-preview-container {
+  border-color: #3b82f6;
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.2);
+}
+
+/* Template name below preview */
+.template-thumbnail > div:last-child {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1e293b;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 4px;
+}
+
+/* Loading spinner in templates tab */
+.templates-grid .spinner {
+  grid-column: 1 / -1;
+  justify-self: center;
+  margin: 40px auto;
+}
+
+/* Empty state */
+.templates-grid p {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 1rem;
+  padding: 40px 20px;
+  margin: 0;
+}
+
 @media (max-width: 1400px) {
   .left-sidebar-new {
     width: 240px;
@@ -2199,6 +2270,15 @@ body {
     grid-template-columns: repeat(2, 1fr);
     gap: 6px;
   }
+
+  .templates-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px;
+  }
+
+  .template-thumbnail > div:last-child {
+    font-size: 0.85rem;
+  }  
 }
 
 /* Mobile portrait (480px) */
@@ -2504,6 +2584,15 @@ body {
     padding: 8px 16px !important;
     font-size: 0.8rem !important;
   }
+
+  .templates-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .template-thumbnail:hover {
+    transform: translateY(-4px) scale(1.02);
+  }  
 }
 
 /* Extra small devices (360px) */

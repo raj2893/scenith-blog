@@ -1,0 +1,265 @@
+/* TextPanel.css */
+
+/* Import Montserrat font for consistency */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+/* Text Tool Panel Specific */
+.text-tool-panel {
+  padding: 15px; /* Increased for consistency with KeyframeControls.css */
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  border: 1px solid #2a2a2a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5); /* Subtle shadow for depth */
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+  color: #d1d1d1; /* Soft light gray for text readability */
+}
+
+/* Control Group Styles */
+.text-tool-panel .control-group {
+  margin-bottom: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.text-tool-panel .control-group label {
+  display: block;
+  font-size: 13px; /* Matches KeyframeControls.css labels */
+  font-weight: 500;
+  margin-bottom: 6px; /* Slightly increased for spacing */
+  color: #a1a1a1;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.text-tool-panel .control-group input,
+.text-tool-panel .control-group select,
+.text-tool-panel .control-group textarea {
+  width: 100%;
+  padding: 6px;
+  background-color: #1e1e1e;
+  color: #d1d1d1;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.text-tool-panel .control-group input:focus,
+.text-tool-panel .control-group select:focus,
+.text-tool-panel .control-group textarea:focus {
+  border-color: #4A919E; /* Muted teal consistent with KeyframeControls.css */
+  transform: scale(1.01); /* Subtle scale for interactivity */
+}
+
+.text-tool-panel .control-group input[type="color"] {
+  height: 28px;
+  padding: 2px;
+}
+
+.text-tool-panel .control-group input[type="number"] {
+  width: 60px; /* Matches KeyframeControls.css for consistency */
+}
+
+.text-tool-panel .control-group textarea {
+  min-height: 60px;
+  max-height: 120px;
+  resize: vertical;
+}
+
+.text-tool-panel .slider-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.text-tool-panel .slider-container input[type="range"] {
+  flex: 1;
+  height: 4px;
+  background: #2a2a2a;
+  border-radius: 4px;
+  -webkit-appearance: none;
+  transition: all 0.3s ease;
+}
+
+.text-tool-panel .slider-container input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  background: #4A919E; /* Muted teal consistent with KeyframeControls.css */
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.text-tool-panel .slider-container input[type="range"]::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: #4A919E; /* Muted teal */
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.text-tool-panel .slider-container input[type="range"]:hover {
+  background: #444;
+}
+
+.text-tool-panel .slider-container input[type="number"] {
+  margin-left: 8px;
+  width: 60px; /* Matches KeyframeControls.css */
+  padding: 6px;
+  background: #1e1e1e;
+  color: #d1d1d1;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.text-tool-panel select,
+.text-tool-panel input {
+  width: 100%;
+  padding: 6px;
+  background-color: #1e1e1e;
+  color: #d1d1d1;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.text-tool-panel select:focus,
+.text-tool-panel input:focus {
+  border-color: #4A919E;
+  transform: scale(1.01);
+}
+
+.text-tool-panel .apply-text-btn {
+  width: 100%;
+  padding: 8px 16px;
+  background: transparent;
+  color: #4A919E; /* Muted teal consistent with KeyframeControls.css */
+  border: 1px solid #4A919E;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  transition: all 0.3s ease;
+  box-shadow: none; /* Ensure no glow */
+}
+
+.text-tool-panel .apply-text-btn:hover {
+  background: #4A919E;
+  color: #121212;
+  transform: scale(1.02);
+}
+
+.text-tool-panel .apply-text-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #4A919E;
+  transition: all 0.3s ease;
+}
+
+.text-tool-panel .apply-text-btn:hover::after {
+  width: 80%;
+  left: 10%;
+}
+
+/* Ensure textarea with red border for validation */
+textarea[style*="border: 2px solid red"] {
+  border: 2px solid red !important;
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+  .text-tool-panel {
+    padding: 10px;
+  }
+
+  .text-tool-panel .control-group label {
+    font-size: 12px;
+  }
+
+  .text-tool-panel .control-group input,
+  .text-tool-panel .control-group select,
+  .text-tool-panel .control-group textarea {
+    font-size: 11px;
+    padding: 5px;
+  }
+
+  .text-tool-panel .slider-container input[type="range"] {
+    height: 3.5px;
+  }
+
+  .text-tool-panel .slider-container input[type="range"]::-webkit-slider-thumb {
+    width: 11px;
+    height: 11px;
+  }
+
+  .text-tool-panel .slider-container input[type="range"]::-moz-range-thumb {
+    width: 11px;
+    height: 11px;
+  }
+
+  .text-tool-panel .slider-container input[type="number"] {
+    width: 50px;
+    font-size: 11px;
+  }
+
+  .text-tool-panel .apply-text-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .text-tool-panel {
+    padding: 8px;
+  }
+
+  .text-tool-panel .control-group label {
+    font-size: 11px;
+    margin-bottom: 4px;
+  }
+
+  .text-tool-panel .control-group input,
+  .text-tool-panel .control-group select,
+  .text-tool-panel .control-group textarea {
+    font-size: 10px;
+    padding: 4px;
+  }
+
+  .text-tool-panel .slider-container input[type="range"] {
+    height: 3px;
+  }
+
+  .text-tool-panel .slider-container input[type="range"]::-webkit-slider-thumb {
+    width: 10px;
+    height: 10px;
+  }
+
+  .text-tool-panel .slider-container input[type="range"]::-moz-range-thumb {
+    width: 10px;
+    height: 10px;
+  }
+
+  .text-tool-panel .slider-container input[type="number"] {
+    width: 45px;
+    font-size: 10px;
+  }
+
+  .text-tool-panel .apply-text-btn {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+}

@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, JSX, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import "../../../../../../../styles/tools/EditorCanvas.css";
+import TemplateGallery from "../../../../../components/TemplateGallery";
 import {
   FaSave,
   FaDownload,
@@ -154,7 +155,21 @@ const googleFonts = [
   'Tangerine', 'Tangerine Bold', 'Yesteryear',
 ];
 
-const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
+interface EditorCanvasProps {
+  projectId?: string; 
+  initialDesignJson?: string;
+  onDesignChange?: (designJson: string) => void;
+  canvasWidth?: number;
+  canvasHeight?: number;
+}
+
+const EditorCanvas: React.FC<EditorCanvasProps> = ({
+  projectId,
+  initialDesignJson,
+  onDesignChange,
+  canvasWidth: propCanvasWidth,
+  canvasHeight: propCanvasHeight,
+}) => {
   const router = useRouter();
   const canvasRef = useRef<HTMLDivElement>(null);
   const [project, setProject] = useState<Project | null>(null);
@@ -180,7 +195,7 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
   const [showRightPanel, setShowRightPanel] = useState<boolean>(true);
   const [showLayersPopup, setShowLayersPopup] = useState(false);
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);  
-  const [activeTab, setActiveTab] = useState<'text' | 'images' | 'shapes' | 'properties' | 'canvas' | 'elements' | 'filters' |null>(null);
+  const [activeTab, setActiveTab] = useState<'text' | 'images' | 'shapes' | 'properties' | 'canvas' | 'elements' | 'filters' | 'templates' |null>(null);
   const [resizeHandle, setResizeHandle] = useState<string | null>(null);
   const [resizeStartState, setResizeStartState] = useState<{
     x: number;
@@ -247,6 +262,9 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
   const [initialScale, setInitialScale] = useState(1);  
   const [touchAction, setTouchAction] = useState<'none' | 'drag' | 'resize' | 'rotate' | 'crop'>('none');
   const [touchStartPos, setTouchStartPos] = useState<{ x: number; y: number } | null>(null);  
+  const [showTemplateGallery, setShowTemplateGallery] = useState(false); 
+  const [templates, setTemplates] = useState<any[]>([]);
+  const [templatesLoading, setTemplatesLoading] = useState(true);   
   
   useEffect(() => {
     const checkMobile = () => {
@@ -304,6 +322,26 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
       textInputRef.current.select();
     }
   }, [editingLayerId]);  
+
+  // Fetch templates for the left panel
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    setTemplatesLoading(true);
+    axios
+      .get(`${API_BASE_URL}/api/image-editor/templates`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        setTemplates(res.data);
+        setTemplatesLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching templates:", err);
+        setTemplatesLoading(false);
+      });
+  }, []);  
 
   const saveToHistory = useCallback((newLayers: Layer[]) => {
     const newHistory = history.slice(0, historyIndex + 1);
@@ -450,52 +488,114 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
     }
   }, []);  
 
-  // Fetch project
+  // Initialize design - either from project API or from props (template mode)
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/tools/image-editing");
-      return;
-    }
-  
-    axios
-      .get(`${API_BASE_URL}/api/image-editor/projects/${projectId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        setProject(res.data);
-        const design = JSON.parse(res.data.designJson);
-        
-        // Check if it's the new multi-page format
-        if (design.pages && Array.isArray(design.pages)) {
+    if (projectId) {
+      // Normal mode: fetch from backend (existing behavior kept for user projects)
+      const token = localStorage.getItem("token");
+      if (!token) {
+        router.push("/tools/image-editing");
+        return;
+      }
+
+      axios
+        .get(`${API_BASE_URL}/api/image-editor/projects/${projectId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          setProject(res.data);
+          const design = JSON.parse(res.data.designJson);
+
+          if (design.pages && Array.isArray(design.pages)) {
+            setPages(design.pages);
+            const firstPage = design.pages[0];
+            setCanvasWidth(firstPage.canvas.width);
+            setCanvasHeight(firstPage.canvas.height);
+            setCanvasBgColor(firstPage.canvas.backgroundColor);
+            setLayers(firstPage.layers || []);
+            saveToHistory(firstPage.layers || []);
+          } else {
+            // Migrate old format
+            const migratedPages = [{
+              id: `page-${Date.now()}`,
+              canvas: design.canvas || { width: 1080, height: 1080, backgroundColor: "#FFFFFF" },
+              layers: design.layers || []
+            }];
+            setPages(migratedPages);
+            setCanvasWidth(migratedPages[0].canvas.width);
+            setCanvasHeight(migratedPages[0].canvas.height);
+            setCanvasBgColor(migratedPages[0].canvas.backgroundColor);
+            setLayers(migratedPages[0].layers);
+            saveToHistory(migratedPages[0].layers);
+          }
+        })
+        .catch((err) => {
+          console.error("Error fetching project:", err);
+          setError("Failed to load project");
+        });
+    } else if (initialDesignJson) {
+      // Template mode: use provided design
+      try {
+        const design = JSON.parse(initialDesignJson);
+
+        let width = propCanvasWidth || 1080;
+        let height = propCanvasHeight || 1080;
+        let bgColor = "#FFFFFF";
+        let pageLayers: Layer[] = [];
+
+        if (design.pages && Array.isArray(design.pages) && design.pages.length > 0) {
           setPages(design.pages);
           const firstPage = design.pages[0];
-          setCanvasWidth(firstPage.canvas.width);
-          setCanvasHeight(firstPage.canvas.height);
-          setCanvasBgColor(firstPage.canvas.backgroundColor);
-          setLayers(firstPage.layers || []);
-          saveToHistory(firstPage.layers);
+          width = firstPage.canvas.width || width;
+          height = firstPage.canvas.height || height;
+          bgColor = firstPage.canvas.backgroundColor || bgColor;
+          pageLayers = firstPage.layers || [];
         } else {
-          // Old single-page format - migrate it
-          const migratedPages = [{
+          // Fallback blank page
+          const blankPage = {
             id: `page-${Date.now()}`,
-            canvas: design.canvas,
-            layers: design.layers || []
-          }];
-          setPages(migratedPages);
-          setCanvasWidth(design.canvas.width);
-          setCanvasHeight(design.canvas.height);
-          setCanvasBgColor(design.canvas.backgroundColor);
-          setLayers(design.layers || []);
-          saveToHistory(design.layers);
+            canvas: { width, height, backgroundColor: bgColor },
+            layers: []
+          };
+          setPages([blankPage]);
+          pageLayers = [];
         }
-      })
-      .catch((err) => {
-        console.error("Error fetching project:", err);
-        setError("Failed to load project. Redirecting...");
-        setTimeout(() => router.push("/tools/image-editing"), 2000);
-      });
-  }, [projectId, router]);
+
+        setCanvasWidth(width);
+        setCanvasHeight(height);
+        setCanvasBgColor(bgColor);
+        setLayers(pageLayers);
+        saveToHistory(pageLayers);
+      } catch (err) {
+        console.error("Invalid initialDesignJson", err);
+        // Fallback to blank
+        const blankPage = {
+          id: `page-${Date.now()}`,
+          canvas: { width: propCanvasWidth || 1080, height: propCanvasHeight || 1080, backgroundColor: "#FFFFFF" },
+          layers: []
+        };
+        setPages([blankPage]);
+        setCanvasWidth(blankPage.canvas.width);
+        setCanvasHeight(blankPage.canvas.height);
+        setCanvasBgColor(blankPage.canvas.backgroundColor);
+        setLayers([]);
+        saveToHistory([]);
+      }
+    } else {
+      // No projectId and no initialDesign → start blank (should not happen in template mode)
+      const blankPage = {
+        id: `page-${Date.now()}`,
+        canvas: { width: propCanvasWidth || 1080, height: propCanvasHeight || 1080, backgroundColor: "#FFFFFF" },
+        layers: []
+      };
+      setPages([blankPage]);
+      setCanvasWidth(blankPage.canvas.width);
+      setCanvasHeight(blankPage.canvas.height);
+      setCanvasBgColor(blankPage.canvas.backgroundColor);
+      setLayers([]);
+      saveToHistory([]);
+    }
+  }, [projectId, initialDesignJson, propCanvasWidth, propCanvasHeight, router]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -745,6 +845,25 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
       document.body.style.overscrollBehaviorX = '';
     };
   }, []);
+
+  // Notify parent (TemplateEditorPage) whenever design changes in template mode
+  useEffect(() => {
+    if (!projectId && onDesignChange) {
+      const updatedPages = [...pages];
+      updatedPages[currentPageIndex] = {
+        ...updatedPages[currentPageIndex],
+        canvas: { width: canvasWidth, height: canvasHeight, backgroundColor: canvasBgColor },
+        layers: layers
+      };
+
+      const fullDesign = {
+        version: "1.0",
+        pages: updatedPages
+      };
+
+      onDesignChange(JSON.stringify(fullDesign));
+    }
+  }, [layers, canvasWidth, canvasHeight, canvasBgColor, pages, currentPageIndex, projectId, onDesignChange]);
 
   // Undo
   const handleUndo = () => {
@@ -1013,6 +1132,8 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
   };
 
   const autoSave = useCallback(async (force = false) => {
+    if (!projectId) return;
+
     if (!force && isSaving) return;
   
     setIsSaving(true);
@@ -1040,16 +1161,13 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
       if (force) {
         setSuccess("Saved!");
         setTimeout(() => setSuccess(null), 2000);
-      } else {
-        setSuccess("Saved");
-        setTimeout(() => setSuccess(null), 800);
       }
     } catch (err: any) {
       if (force) setError("Save failed");
     } finally {
       setIsSaving(false);
     }
-  }, [isSaving, canvasWidth, canvasHeight, canvasBgColor, layers, projectId, pages, currentPageIndex]);
+  }, [projectId, isSaving, canvasWidth, canvasHeight, canvasBgColor, layers, pages, currentPageIndex]);
 
   const handleSave = () => autoSave(true);
 
@@ -2158,6 +2276,44 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
     }
   };  
 
+  const handleApplyTemplate = async (templateId: number) => {
+    try {
+      setError(null);
+      const token = localStorage.getItem("token");
+
+      const response = await axios.post(
+        `${API_BASE_URL}/api/image-editor/projects/${projectId}/apply-template/${templateId}`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      // Update project state with template data
+      setProject(response.data);
+      const design = JSON.parse(response.data.designJson);
+
+      if (design.pages && Array.isArray(design.pages)) {
+        setPages(design.pages);
+        const firstPage = design.pages[0];
+        setCanvasWidth(firstPage.canvas.width);
+        setCanvasHeight(firstPage.canvas.height);
+        setCanvasBgColor(firstPage.canvas.backgroundColor);
+        setLayers(firstPage.layers || []);
+        setCurrentPageIndex(0);
+        setSelectedLayerIds([]);
+        saveToHistory(firstPage.layers);
+      }
+
+      setSuccess("Template applied successfully!");
+      setTimeout(() => setSuccess(null), 2000);
+    } catch (err: any) {
+      console.error("Error applying template:", err);
+      setError(err.response?.data?.message || "Failed to apply template");
+      setTimeout(() => setError(null), 3000);
+    }
+  };  
+
   return (
     <div className="editor-container">
       {/* Top Toolbar */}
@@ -2167,13 +2323,28 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
         </button>
         <h2>{project?.projectName || "Editor"}</h2>
         <div className="toolbar-actions">
+          <button 
+            className="toolbar-btn" 
+            onClick={() => setShowTemplateGallery(true)}
+            title="Browse Templates"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>
+            </svg>
+            Templates
+          </button>          
           <button className="toolbar-btn" onClick={handleUndo} disabled={historyIndex <= 0}>
             <FaUndo />
           </button>
           <button className="toolbar-btn" onClick={handleRedo} disabled={historyIndex >= history.length - 1}>
             <FaRedo />
           </button>
-          <button className="toolbar-btn" onClick={handleSave} disabled={isSaving}>
+          <button 
+            className="toolbar-btn" 
+            onClick={handleSave} 
+            disabled={isSaving || !projectId}
+            title={!projectId ? "Save is handled in template editor" : ""}
+          >
             <FaSave /> {isSaving ? "Saving..." : "Save"}
           </button>
           <div className="dropdown">
@@ -2194,6 +2365,15 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
     <div className="left-sidebar-container">
       {/* Thin Icon Panel */}
       <div className="icon-panel">
+        <button 
+          className={`icon-panel-btn ${activeTab === 'templates' ? 'active' : ''}`}
+          onClick={() => setActiveTab(activeTab === 'templates' ? null : 'templates')}
+          title="Templates"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>
+          </svg>
+        </button>        
         <button 
           className={`icon-panel-btn ${activeTab === 'text' ? 'active' : ''}`}
           onClick={() => setActiveTab(activeTab === 'text' ? null : 'text')}
@@ -2256,6 +2436,182 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
       {activeTab && (
         <div className="content-panel">
           <div className="content-panel-inner">
+            {activeTab === 'templates' && (
+              <div className="panel-section">
+                <h3>Templates</h3>
+                {templatesLoading ? (
+                  <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+                    <div className="spinner" style={{ width: '32px', height: '32px', margin: '0 auto' }}></div>
+                  </div>
+                ) : templates.length === 0 ? (
+                  <p style={{ textAlign: 'center', color: '#94a3b8', padding: '40px 20px' }}>
+                    No templates available
+                  </p>
+                ) : (
+                  <div className="templates-grid">
+                    {templates.map((template) => {
+                      let firstPage;
+                      try {
+                        const design = JSON.parse(template.designJson);
+                        firstPage = design.pages?.[0];
+                      } catch (e) {
+                        return null;
+                      }
+                      if (!firstPage) return null;
+                    
+                      const { width, height, backgroundColor } = firstPage.canvas;
+                      const aspectRatio = width / height;
+                      const previewWidth = 160; // Slightly larger for better text visibility
+                      const previewHeight = previewWidth / aspectRatio;
+                    
+                      const scaleX = previewWidth / width;
+                      const scaleY = previewHeight / height;
+                      const minScale = Math.min(scaleX, scaleY); // For text size scaling
+                    
+                      return (
+                        <div
+                          key={template.id}
+                          className="template-thumbnail"
+                          onClick={() => handleApplyTemplate(template.id)}
+                          title={template.templateName}
+                        >
+                          <div
+                            className="template-preview-container"
+                            style={{
+                              width: previewWidth,
+                              height: previewHeight,
+                              backgroundColor: backgroundColor || '#FFFFFF',
+                            }}
+                          >
+                            {firstPage.layers
+                              .filter((l: Layer) => l.visible)
+                              .sort((a: Layer, b: Layer) => a.zIndex - b.zIndex)
+                              .map((layer: Layer) => (
+                                <div
+                                  key={layer.id}
+                                  style={{
+                                    position: 'absolute',
+                                    left: layer.x * scaleX,
+                                    top: layer.y * scaleY,
+                                    width: layer.type === 'text' 
+                                      ? (layer.backgroundWidth ? layer.backgroundWidth * scaleX : 'auto')
+                                      : layer.width * scaleX,
+                                    height: layer.type === 'text'
+                                      ? (layer.backgroundHeight ? layer.backgroundHeight * scaleY : 'auto')
+                                      : layer.height * scaleY,
+                                    opacity: layer.opacity,
+                                    transform: `rotate(${layer.rotation}deg)`,
+                                    pointerEvents: 'none',
+                                    overflow: 'visible',
+                                  }}
+                                >
+                                {/* Text Layer - Perfect match */}
+                                {layer.type === 'text' && (
+                                  <div
+                                    style={{
+                                      fontFamily: layer.fontFamily ?? 'Arial',
+                                      fontSize: (layer.fontSize ?? 32) * minScale,
+                                      fontWeight: layer.fontWeight ?? 'normal',
+                                      fontStyle: layer.fontStyle ?? 'normal',
+                                      color: layer.color ?? '#000000',
+                                      textAlign: (layer.textAlign ?? 'left') as 'left' | 'center' | 'right',
+                                      textDecoration: layer.textDecoration ?? 'none',
+                                      textTransform: (layer.textTransform ?? 'none') as 'uppercase' | 'lowercase' | 'capitalize' | 'none',
+                                      // Perfect text stroke (outline)
+                                      WebkitTextStroke: layer.outlineWidth != null && (layer.outlineWidth ?? 0) > 0
+                                        ? `${(layer.outlineWidth ?? 0) * minScale}px ${layer.outlineColor ?? '#000000'}`
+                                        : undefined,
+                                      paintOrder: 'stroke fill', // Ensures stroke is behind fill
+                                      whiteSpace: layer.wordWrap ? 'pre-wrap' : 'nowrap',
+                                      wordBreak: layer.wordWrap ? 'break-word' : 'normal',
+                                      overflow: 'hidden',
+                                      textOverflow: 'ellipsis',
+                                      lineHeight: 1.2,
+                                      letterSpacing: 'normal',
+                                      // Background behind text - exact match
+                                      backgroundColor: (layer.backgroundOpacity ?? 0) > 0 ? (layer.backgroundColor ?? 'transparent') : undefined,
+                                      opacity: (layer.backgroundOpacity ?? 0) > 0 ? (layer.backgroundOpacity ?? 1) : 1,
+                                      padding: (layer.backgroundOpacity ?? 0) > 0 ? `${8 * minScale}px` : '0',
+                                      borderRadius: layer.backgroundBorderRadius != null 
+                                        ? `${(layer.backgroundBorderRadius ?? 0) * minScale}px` 
+                                        : undefined,
+                                      border: layer.backgroundBorderWidth != null && (layer.backgroundBorderWidth ?? 0) > 0
+                                        ? `${(layer.backgroundBorderWidth ?? 0) * minScale}px solid ${layer.backgroundBorder ?? '#000000'}`
+                                        : undefined,
+                                      boxShadow: layer.shadow ? 
+                                        `${(layer.shadow.offsetX ?? 0) * minScale}px ${(layer.shadow.offsetY ?? 0) * minScale}px ${(layer.shadow.blur ?? 0) * minScale}px ${layer.shadow.color ?? 'rgba(0,0,0,0.25)'}` 
+                                        : undefined,
+                                      // Curve hint
+                                      transform: layer.curveRadius != null && Math.abs(layer.curveRadius ?? 0) > 50
+                                        ? `rotate(${layer.curveRadius > 0 ? 8 : -8}deg)`
+                                        : undefined,
+                                      display: 'flex',
+                                      alignItems: layer.verticalAlign === 'top' ? 'flex-start' 
+                                        : layer.verticalAlign === 'bottom' ? 'flex-end' 
+                                        : 'center',
+                                      justifyContent: layer.textAlign === 'center' ? 'center' 
+                                        : layer.textAlign === 'right' ? 'flex-end' 
+                                        : 'flex-start',
+                                      width: '100%',
+                                      height: '100%',
+                                      boxSizing: 'border-box',
+                                    }}
+                                  >
+                                    {layer.text || 'Text'}
+                                  </div>
+                                )}
+            
+                                  {/* Image Layer */}
+                                  {layer.type === 'image' && layer.src && (
+                                    <img
+                                      src={layer.src}
+                                      alt=""
+                                      style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover',
+                                        ...getFilterStyle(layer.filters),
+                                      }}
+                                    />
+                                  )}
+            
+                                  {/* Shape Layer */}
+                                  {layer.type === 'shape' && (
+                                    <svg width="100%" height="100%" viewBox="0 0 100 100">
+                                      {layer.shape === 'rectangle' && (
+                                        <rect
+                                          x="0"
+                                          y="0"
+                                          width="100"
+                                          height="100"
+                                          fill={layer.fill || '#3b82f6'}
+                                          stroke={layer.stroke || '#000'}
+                                          strokeWidth={layer.strokeWidth || 2}
+                                          rx={layer.borderRadius || 0}
+                                        />
+                                      )}
+                                      {layer.shape === 'circle' && (
+                                        <circle cx="50" cy="50" r="45" fill={layer.fill || '#3b82f6'} stroke={layer.stroke} strokeWidth={layer.strokeWidth || 2} />
+                                      )}
+                                      {layer.shape === 'ellipse' && (
+                                        <ellipse cx="50" cy="50" rx="45" ry="30" fill={layer.fill || '#3b82f6'} stroke={layer.stroke} strokeWidth={layer.strokeWidth || 2} />
+                                      )}
+                                      {layer.shape === 'triangle' && (
+                                        <polygon points="50,5 95,90 5,90" fill={layer.fill || '#3b82f6'} stroke={layer.stroke} strokeWidth={layer.strokeWidth || 2} />
+                                      )}
+                                    </svg>
+                                  )}
+                                </div>
+                              ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+
             {activeTab === 'text' && (
               <div className="panel-section">
                 <h3>Text</h3>
@@ -2781,31 +3137,31 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
             )}    
 
             {activeTab === 'elements' && (
-              // <div className="panel-section">
-              //   <h3>Elements</h3>
-              //   <div className="images-grid">
-              //     {elements.map((element) => (
-              //       <div
-              //         key={element.id}
-              //         className="image-thumbnail"
-              //         onClick={() => addElementToCanvas(element)}
-              //         title={element.name}
-              //       >
-              //         <img src={element.cdnUrl} alt={element.name} />
-              //       </div>
-              //     ))}
-              //     {elements.length === 0 && (
-              //       <p style={{gridColumn: '1 / -1', textAlign: 'center', color: '#94a3b8', padding: '20px'}}>
-              //         No elements available
-              //       </p>
-              //     )}
-              //   </div>
-              // </div>
-              <div className="panel-section coming-soon">
-                <div className="coming-soon-text">
-                  <span>Coming soon…</span>
+              <div className="panel-section">
+                <h3>Elements</h3>
+                <div className="images-grid">
+                  {elements.map((element) => (
+                    <div
+                      key={element.id}
+                      className="image-thumbnail"
+                      onClick={() => addElementToCanvas(element)}
+                      title={element.name}
+                    >
+                      <img src={element.cdnUrl} alt={element.name} />
+                    </div>
+                  ))}
+                  {elements.length === 0 && (
+                    <p style={{gridColumn: '1 / -1', textAlign: 'center', color: '#94a3b8', padding: '20px'}}>
+                      No elements available
+                    </p>
+                  )}
                 </div>
-              </div>              
+              </div>
+              // <div className="panel-section coming-soon">
+              //   <div className="coming-soon-text">
+              //     <span>Coming soon…</span>
+              //   </div>
+              // </div>              
             )}
             {activeTab === 'filters' && (
               // <div className="panel-section">
@@ -4034,6 +4390,12 @@ const EditorCanvas: React.FC<{ projectId: string }> = ({ projectId }) => {
       {/* Toast Messages */}
       {error && <div className="toast error-toast">{error}</div>}
       {success && <div className="toast success-toast">{success}</div>}
+      {showTemplateGallery && (
+        <TemplateGallery
+          onClose={() => setShowTemplateGallery(false)}
+          onSelectTemplate={handleApplyTemplate}
+        />
+      )}      
     </div>
   );  
 };
