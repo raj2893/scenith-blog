@@ -22,7 +22,7 @@ import PhotosPanel from '../videocomponents/PhotosPanel.js';
 import AudiosPanel from '../videocomponents/AudiosPanel.js';
 import ElementsPanel from '../videocomponents/ElementsPanel.js';
 
-const ProjectEditor = () => {
+const ProjectEditorContent = () => {
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [videos, setVideos] = useState([]);
   const [audios, setAudios] = useState([]);
@@ -4964,6 +4964,29 @@ return (
     )}
   </div>
 );
+};
+
+const ProjectEditor = () => {
+  return (
+    <Suspense fallback={
+      <div className="loading-container">
+        <div className="branding-container">
+          <h1>
+            <span className="letter">S</span>
+            <span className="letter">C</span>
+            <span className="letter">E</span>
+            <span className="letter">N</span>
+            <span className="letter">I</span>
+            <span className="letter">T</span>
+            <span className="letter">H</span>
+          </h1>
+          <div className="logo-element"></div>
+        </div>
+      </div>
+    }>
+      <ProjectEditorContent />
+    </Suspense>
+  );
 };
 
 export default ProjectEditor;
