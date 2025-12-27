@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import { API_BASE_URL } from "@/app/config";
 import EditorCanvas from "@/app/(editor)/tools/image-editing/[projectId]/edit/EditorCanvas";
 import "../../../../../styles/TemplateEditor.css";
 
-const TemplateEditorPage = () => {
+const TemplateEditorPageContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const templateId = searchParams.get("templateId");
@@ -260,4 +260,14 @@ const TemplateEditorPage = () => {
   );
 };
 
-export default TemplateEditorPage;
+export default function TemplateEditorPage() {
+  return (
+    <Suspense fallback={
+      <div className="loading-container">
+        <div>Loading...</div>
+      </div>
+    }>
+      <TemplateEditorPageContent />
+    </Suspense>
+  );
+}
