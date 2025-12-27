@@ -380,6 +380,83 @@ const CompressMediaClient: React.FC = () => {
           }),
         }}
       />
+      {/* Add FAQ Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "How do I compress an image or video?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Upload your media file (JPEG, PNG, HEIC, or video), set your target size (e.g., 500KB or 2MB), and click 'Upload & Prepare'. Then click 'Compress' to optimize your file instantly."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What file formats are supported?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "We support JPEG, PNG, and HEIC for images, and popular video formats like MP4, MOV, and AVI. Free tier supports files up to 50MB."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is compressed media commercial use allowed?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes! All compressed media can be used commercially with full rights and no watermarks. Perfect for websites, social media, marketing, and business content."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How much quality is lost during compression?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Our advanced algorithms minimize quality loss while achieving your target file size. Most users report minimal to no visible difference, especially for web and social media use."
+                }
+              }
+            ]
+          }),
+        }}
+      />
+
+      {/* Add HowTo Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "HowTo",
+            "name": "How to Compress Images and Videos Online",
+            "description": "Step-by-step guide to compressing images and videos for web, social media, and content creation",
+            "step": [
+              {
+                "@type": "HowToStep",
+                "name": "Upload Your Media",
+                "text": "Choose an image (JPEG, PNG, HEIC) or video file and upload it securely to our platform. Files up to 50MB supported in the free tier.",
+                "position": 1
+              },
+              {
+                "@type": "HowToStep",
+                "name": "Set Target Size",
+                "text": "Specify your desired file size using formats like '500KB' for images or '2MB' for videos. Our smart algorithm will optimize accordingly.",
+                "position": 2
+              },
+              {
+                "@type": "HowToStep",
+                "name": "Compress and Download",
+                "text": "Click 'Compress' to process your media. Download the optimized file instantly with minimal quality loss. Re-compress anytime with different settings.",
+                "position": 3
+              }
+            ]
+          }),
+        }}
+      />
 
       <div className="particle-background">
         <div className="particle"></div>
@@ -588,6 +665,152 @@ const CompressMediaClient: React.FC = () => {
           </div>
         </motion.div>
       </section>
+      {/* Educational Introduction - SEO Rich */}
+      <section style={{
+        padding: '100px 20px 80px',
+        background: 'linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)',
+        borderTop: '1px solid rgba(226, 232, 240, 0.8)'
+      }}>
+        <motion.div
+          className="container"
+          style={{ maxWidth: '1400px', margin: '0 auto' }}
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+            <h2 style={{
+              fontSize: 'clamp(2rem, 4vw, 3rem)',
+              marginBottom: '25px',
+              fontWeight: '700',
+              color: '#1e293b'
+            }}>
+              Why Compress Images & Videos?
+            </h2>
+            <p style={{
+              fontSize: '1.1rem',
+              maxWidth: '900px',
+              margin: '0 auto',
+              lineHeight: '1.8',
+              color: '#64748b'
+            }}>
+              Media compression is essential for modern web performance, social media optimization, and content delivery.
+              Reduce file sizes without sacrificing quality for faster loading, better SEO, and improved user experience.
+            </p>
+          </div>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '30px',
+            marginBottom: '60px'
+          }}>
+            {[
+              {
+                icon: '🚀',
+                title: 'Faster Website Loading',
+                description: 'Compressed images and videos load up to 10x faster, improving user experience and reducing bounce rates. Google prioritizes fast-loading sites in search rankings.',
+                stats: ['70% faster page load', 'Better SEO ranking', '40% less bandwidth']
+              },
+              {
+                icon: '📱',
+                title: 'Social Media Optimization',
+                description: 'Meet platform file size limits for Instagram, TikTok, YouTube, and Facebook while maintaining visual quality. Upload high-quality content that fits perfectly.',
+                stats: ['Platform-ready sizes', 'No quality loss', 'Instant uploads']
+              },
+              {
+                icon: '💰',
+                title: 'Save Storage & Bandwidth',
+                description: 'Reduce cloud storage costs by 50-90% and decrease bandwidth usage. Perfect for businesses, content creators, and websites with high traffic volumes.',
+                stats: ['90% smaller files', '50% cost savings', 'Unlimited compression']
+              },
+              {
+                icon: '🎨',
+                title: 'Professional Quality',
+                description: 'Our advanced algorithms preserve visual quality while achieving maximum compression. Perfect for portfolios, e-commerce, marketing materials, and creative projects.',
+                stats: ['Minimal quality loss', 'Smart optimization', 'Commercial use OK']
+              }
+            ].map((benefit, index) => (
+              <motion.div
+                key={index}
+                style={{
+                  background: '#ffffff',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(226, 232, 240, 0.8)',
+                  borderRadius: '20px',
+                  padding: '35px',
+                  transition: 'all 0.4s ease',
+                  boxShadow: '0 4px 15px rgba(0, 0, 0, 0.06)'
+                }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={{
+                  boxShadow: '0 8px 25px rgba(59, 130, 246, 0.15)',
+                  borderColor: 'rgba(59, 130, 246, 0.3)',
+                  transform: 'translateY(-5px)'
+                }}
+              >
+                <div style={{ fontSize: '3.5rem', marginBottom: '20px' }}>{benefit.icon}</div>
+                <h3 style={{
+                  fontSize: '1.5rem',
+                  marginBottom: '15px',
+                  fontWeight: '600',
+                  background: 'linear-gradient(90deg, #3b82f6, #8b5cf6)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent'
+                }}>
+                  {benefit.title}
+                </h3>
+                <p style={{
+                  fontSize: '1rem',
+                  lineHeight: '1.7',
+                  marginBottom: '20px',
+                  color: '#64748b'
+                }}>
+                  {benefit.description}
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {benefit.stats.map((stat, i) => (
+                    <div key={i} style={{
+                      fontSize: '0.9rem',
+                      color: '#3b82f6',
+                      fontWeight: '500'
+                    }}>
+                      ✓ {stat}
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <div style={{
+            background: 'rgba(59, 130, 246, 0.05)',
+            borderRadius: '20px',
+            padding: '40px',
+            border: '1px solid rgba(59, 130, 246, 0.2)',
+            textAlign: 'center'
+          }}>
+            <h3 style={{
+              fontSize: '1.8rem',
+              marginBottom: '20px',
+              background: 'linear-gradient(90deg, #3b82f6, #8b5cf6)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              fontWeight: '700'
+            }}>
+              💡 Industry Standard Compression
+            </h3>
+            <p style={{ fontSize: '1.1rem', lineHeight: '1.7', maxWidth: '900px', margin: '0 auto', color: '#64748b' }}>
+              Join <strong style={{ color: '#1e293b' }}>30,000+ professionals</strong> using Scenith Media Compressor for web optimization,
+              social media content, marketing campaigns, and creative projects. Free tier includes unlimited compressions with no watermarks.
+            </p>
+          </div>
+        </motion.div>
+      </section>
 
       <section className="how-section" id="how-it-works" role="region" aria-labelledby="how-it-works-title">
         <motion.div
@@ -657,7 +880,136 @@ const CompressMediaClient: React.FC = () => {
           </div>
         </motion.div>
       </section>
+{/* Compression Technology Deep Dive */}
+<section style={{
+  padding: '100px 20px',
+  background: '#ffffff',
+  borderTop: '1px solid rgba(226, 232, 240, 0.8)',
+  borderBottom: '1px solid rgba(226, 232, 240, 0.8)'
+}}>
+  <div className="container" style={{ maxWidth: '1400px', margin: '0 auto' }}>
+    <motion.div
+      style={{ textAlign: 'center', marginBottom: '80px' }}
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+    >
+      <h2 style={{
+        fontSize: 'clamp(2rem, 4vw, 3rem)',
+        marginBottom: '25px',
+        fontWeight: '700',
+        color: '#1e293b'
+      }}>
+        Advanced Compression Technology
+      </h2>
+      <p style={{
+        fontSize: '1.1rem',
+        maxWidth: '800px',
+        margin: '0 auto',
+        color: '#64748b',
+        lineHeight: '1.7'
+      }}>
+        Understanding how our intelligent algorithms optimize your media while preserving visual quality
+      </p>
+    </motion.div>
 
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+      gap: '40px'
+    }}>
+      {[
+        {
+          title: 'Smart Image Optimization',
+          icon: '🖼️',
+          description: 'Our AI-powered engine analyzes image content to determine optimal compression settings. Preserves important details while removing redundant data.',
+          features: [
+            'JPEG: Lossy compression with quality control',
+            'PNG: Lossless optimization for graphics',
+            'HEIC: Modern format with superior efficiency',
+            'WebP conversion for 30% smaller files'
+          ]
+        },
+        {
+          title: 'Video Compression Engine',
+          icon: '🎥',
+          description: 'Advanced video codec optimization reduces file sizes dramatically while maintaining visual fidelity. Perfect for social media and web streaming.',
+          features: [
+            'H.264/H.265 encoding optimization',
+            'Bitrate adjustment for target size',
+            'Frame rate preservation',
+            'Audio quality balancing'
+          ]
+        },
+        {
+          title: 'Adaptive Quality Settings',
+          icon: '⚙️',
+          description: 'Automatically adjusts compression parameters based on content type, target size, and quality requirements. No manual tuning needed.',
+          features: [
+            'Content-aware compression',
+            'Perceptual quality optimization',
+            'Target size accuracy within 5%',
+            'Batch processing support'
+          ]
+        }
+      ].map((tech, index) => (
+        <motion.div
+          key={index}
+          style={{
+            background: 'linear-gradient(145deg, #f8fafc, #ffffff)',
+            border: '1px solid rgba(226, 232, 240, 0.8)',
+            borderRadius: '20px',
+            padding: '40px',
+            transition: 'all 0.3s ease',
+            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.06)'
+          }}
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: index * 0.1 }}
+          whileHover={{
+            boxShadow: '0 8px 25px rgba(59, 130, 246, 0.15)',
+            borderColor: 'rgba(59, 130, 246, 0.3)'
+          }}
+        >
+          <div style={{ fontSize: '3.5rem', marginBottom: '20px' }}>{tech.icon}</div>
+          <h3 style={{
+            fontSize: '1.6rem',
+            marginBottom: '15px',
+            fontWeight: '600',
+            color: '#1e293b'
+          }}>
+            {tech.title}
+          </h3>
+          <p style={{
+            fontSize: '1rem',
+            lineHeight: '1.7',
+            marginBottom: '25px',
+            color: '#64748b'
+          }}>
+            {tech.description}
+          </p>
+          <ul style={{
+            listStyle: 'none',
+            padding: 0,
+            fontSize: '0.95rem',
+            color: '#64748b'
+          }}>
+            {tech.features.map((feature, i) => (
+              <li key={i} style={{
+                padding: '10px 0',
+                borderBottom: i < tech.features.length - 1 ? '1px solid rgba(226, 232, 240, 0.8)' : 'none'
+              }}>
+                <span style={{ color: '#3b82f6', marginRight: '10px', fontWeight: '600' }}>✓</span>
+                {feature}
+              </li>
+            ))}
+          </ul>
+        </motion.div>
+      ))}
+    </div>
+  </div>
+</section>
       <section className="use-cases-section" id="use-cases" role="region" aria-labelledby="use-cases-title">
         <motion.div
           className="container"
@@ -690,7 +1042,166 @@ const CompressMediaClient: React.FC = () => {
           </div>
         </motion.div>
       </section>
+{/* Comparison with Other Tools */}
+<section style={{
+  padding: '100px 20px',
+  background: 'linear-gradient(180deg, #f8fafc 0%, #ffffff 50%, #f8fafc 100%)',
+  borderTop: '1px solid rgba(226, 232, 240, 0.8)',
+  borderBottom: '1px solid rgba(226, 232, 240, 0.8)'
+}}>
+  <div className="container" style={{ maxWidth: '1200px', margin: '0 auto' }}>
+    <motion.div
+      style={{ textAlign: 'center', marginBottom: '80px' }}
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+    >
+      <h2 style={{
+        fontSize: 'clamp(2rem, 4vw, 3rem)',
+        marginBottom: '25px',
+        fontWeight: '700',
+        color: '#1e293b'
+      }}>
+        Scenith vs Other Compression Tools
+      </h2>
+      <p style={{
+        fontSize: '1.1rem',
+        maxWidth: '800px',
+        margin: '0 auto',
+        color: '#64748b'
+      }}>
+        See why thousands choose Scenith for professional media compression
+      </p>
+    </motion.div>
 
+    <motion.div
+      style={{
+        background: '#ffffff',
+        backdropFilter: 'blur(20px)',
+        border: '1px solid rgba(226, 232, 240, 0.8)',
+        borderRadius: '24px',
+        padding: '50px',
+        overflowX: 'auto',
+        boxShadow: '0 4px 15px rgba(0, 0, 0, 0.06)'
+      }}
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+    >
+      <table style={{
+        width: '100%',
+        borderCollapse: 'separate',
+        borderSpacing: 0
+      }}>
+        <thead>
+          <tr style={{
+            borderBottom: '2px solid rgba(59, 130, 246, 0.3)',
+            background: 'rgba(59, 130, 246, 0.05)'
+          }}>
+            <th style={{
+              padding: '20px',
+              textAlign: 'left',
+              fontSize: '1.1rem',
+              fontWeight: '600',
+              color: '#1e293b'
+            }}>Feature</th>
+            <th style={{
+              padding: '20px',
+              textAlign: 'center',
+              fontSize: '1.1rem',
+              fontWeight: '600',
+              background: 'linear-gradient(90deg, #3b82f6, #8b5cf6)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent'
+            }}>Scenith</th>
+            <th style={{
+              padding: '20px',
+              textAlign: 'center',
+              fontSize: '1.1rem',
+              fontWeight: '600',
+              color: '#64748b'
+            }}>Other Tools</th>
+          </tr>
+        </thead>
+        <tbody>
+          {[
+            { feature: 'Image Formats', scenith: '✅ JPEG, PNG, HEIC, WebP', other: '⚠️ Limited formats' },
+            { feature: 'Video Support', scenith: '✅ MP4, MOV, AVI, all codecs', other: '❌ Often image-only' },
+            { feature: 'Target Size Control', scenith: '✅ Exact size specification', other: '⚠️ Quality % only' },
+            { feature: 'File Size Limit (Free)', scenith: '✅ Up to 50MB', other: '❌ 5-10MB limit' },
+            { feature: 'Watermarks', scenith: '✅ None - ever', other: '❌ Added on free tier' },
+            { feature: 'Commercial Use', scenith: '✅ Full rights included', other: '⚠️ Paid upgrade required' },
+            { feature: 'Re-compression', scenith: '✅ Unlimited attempts', other: '❌ Limited tries' }
+          ].map((row, index) => (
+            <motion.tr
+              key={index}
+              style={{
+                borderBottom: index < 9 ? '1px solid rgba(226, 232, 240, 0.8)' : 'none',
+                transition: 'all 0.3s ease'
+              }}
+              whileHover={{
+                background: 'rgba(59, 130, 246, 0.05)'
+              }}
+            >
+              <td style={{
+                padding: '20px',
+                fontWeight: '500',
+                color: '#1e293b'
+              }}>
+                {row.feature}
+              </td>
+              <td style={{
+                padding: '20px',
+                textAlign: 'center',
+                color: '#1e293b',
+                fontWeight: '600'
+              }}>
+                {row.scenith}
+              </td>
+              <td style={{
+                padding: '20px',
+                textAlign: 'center',
+                color: '#64748b'
+              }}>
+                {row.other}
+              </td>
+            </motion.tr>
+          ))}
+        </tbody>
+      </table>
+    </motion.div>
+
+    <motion.div
+      style={{
+        textAlign: 'center',
+        marginTop: '60px',
+        padding: '40px',
+        background: 'rgba(59, 130, 246, 0.05)',
+        borderRadius: '20px',
+        border: '1px solid rgba(59, 130, 246, 0.2)',
+        boxShadow: '0 4px 15px rgba(59, 130, 246, 0.1)'
+      }}
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+    >
+      <h3 style={{
+        fontSize: '1.8rem',
+        marginBottom: '20px',
+        background: 'linear-gradient(90deg, #3b82f6, #8b5cf6)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        fontWeight: '700'
+      }}>
+        💡 The Smart Choice for Media Compression
+      </h3>
+      <p style={{ fontSize: '1.1rem', lineHeight: '1.8', maxWidth: '900px', margin: '0 auto', color: '#64748b' }}>
+        Scenith combines advanced AI algorithms, generous file size limits, and unlimited free compression
+        with zero watermarks. Start optimizing your media for web, social media, and professional projects today.
+      </p>
+    </motion.div>
+  </div>
+</section>
       <section className="testimonials-section" id="testimonials" role="region" aria-labelledby="testimonials-title">
         <motion.div
           className="container"
@@ -731,23 +1242,68 @@ const CompressMediaClient: React.FC = () => {
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <h2 id="faq-title">Frequently Asked Questions</h2>
+          <h2 id="faq-title">Frequently Asked Questions About Media Compression</h2>
+          <p className="section-description">
+            Everything you need to know about compressing images and videos with Scenith
+          </p>
           <div className="faq-grid" role="list">
             <article className="faq-item" role="listitem">
               <h3>What file formats are supported?</h3>
-              <p>We support JPEG, PNG, HEIC for images, and popular video formats like MP4, MOV, and AVI.</p>
+              <p>
+                <strong>Images:</strong> JPEG, PNG, and HEIC are fully supported. We also recommend converting to WebP for 30% better compression.
+                <strong>Videos:</strong> MP4, MOV, AVI, and other common formats work perfectly. Free tier supports files up to 50MB.
+              </p>
             </article>
             <article className="faq-item" role="listitem">
-              <h3>Is the compressed media commercial use allowed?</h3>
-              <p>Yes! All compressed media can be used commercially with no watermarks.</p>
+              <h3>How do I set the target file size?</h3>
+              <p>
+                Enter your desired size using formats like "500KB" for images or "2MB" for videos. Our intelligent algorithm
+                optimizes compression to match your target within 5% accuracy while preserving maximum visual quality.
+              </p>
             </article>
             <article className="faq-item" role="listitem">
-              <h3>How do I set the target size?</h3>
-              <p>Enter a size like "500KB" or "2MB". Our tool optimizes the media to match your target closely.</p>
+              <h3>Is there quality loss during compression?</h3>
+              <p>
+                Minimal quality loss occurs with our AI-optimized algorithms. For most web and social media uses,
+                the difference is imperceptible. You can re-compress with different settings until you achieve your
+                desired balance of size vs. quality.
+              </p>
             </article>
             <article className="faq-item" role="listitem">
-              <h3>Is there a file size limit?</h3>
-              <p>The free tier supports files up to 50MB. Contact us for larger files or premium plans.</p>
+              <h3>Can I use compressed media commercially?</h3>
+              <p>
+                Yes! All compressed files come with full commercial use rights and zero watermarks, even on the free tier.
+                Perfect for websites, marketing materials, social media content, client projects, and business applications.
+              </p>
+            </article>
+            <article className="faq-item" role="listitem">
+              <h3>What are the file size limits?</h3>
+              <p>
+                The free BASIC plan supports files up to 50MB. CREATOR plan increases this to 200MB, and STUDIO plan
+                allows files up to 500MB. Perfect for high-resolution images, 4K videos, and professional content.
+              </p>
+            </article>
+            <article className="faq-item" role="listitem">
+              <h3>How fast is the compression process?</h3>
+              <p>
+                Most images compress in under 5 seconds. Videos take 10-30 seconds depending on length and resolution.
+                Our cloud-based processing ensures fast results without taxing your device's resources.
+              </p>
+            </article>
+            <article className="faq-item" role="listitem">
+              <h3>Can I compress multiple files at once?</h3>
+              <p>
+                Yes! Batch processing is available on CREATOR and STUDIO plans. Upload multiple files and compress
+                them simultaneously to save time. Free BASIC users can process files sequentially without limits.
+              </p>
+            </article>
+            <article className="faq-item" role="listitem">
+              <h3>What happens to my uploaded files?</h3>
+              <p>
+                Your files are securely stored in the cloud and accessible only to your account. Original files remain
+                unchanged, and you can re-compress anytime. Files are automatically deleted after 30 days of inactivity
+                for your privacy and security.
+              </p>
             </article>
           </div>
         </motion.div>
