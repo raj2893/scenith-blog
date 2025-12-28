@@ -351,7 +351,6 @@ export default function PricingPageClient() {
 
   const getPlans = (): PricingPlan[] => {
     if (isIndianUser === null) {
-      // Show skeleton/loading or fallback during detection
       return [
         {
           name: 'Basic',
@@ -359,7 +358,13 @@ export default function PricingPageClient() {
           price: 0,
           currency: 'FREE',
           ttsLimit: 5000,
-          features: ['5,000 Characters/month', '30+ AI Voices in multiple languages']
+          features: [
+            '5,000 Characters/month',
+            '1,000 Characters/day',
+            '500 Characters per request',
+            '30+ AI Voices in multiple languages',
+            'Basic support'
+          ]
         },
         {
           name: 'Creator',
@@ -368,7 +373,13 @@ export default function PricingPageClient() {
           currency: 'LOADING',
           ttsLimit: 50000,
           popular: true,
-          features: ['50,000 Characters/month', 'All Premium AI Voices']
+          features: [
+            '50,000 Characters/month',
+            '5,000 Characters/day',
+            '2,500 Characters per request',
+            'All Premium AI Voices',
+            'Priority support'
+          ]
         },
         {
           name: 'Studio',
@@ -376,7 +387,13 @@ export default function PricingPageClient() {
           price: 0,
           currency: 'LOADING',
           ttsLimit: 150000,
-          features: ['1,50,000 Characters/month', 'All Premium AI Voices']
+          features: [
+            '1,50,000 Characters/month',
+            'Unlimited daily usage',
+            '5,000 Characters per request',
+            'All Premium AI Voices',
+            'Dedicated support'
+          ]
         }
       ];
     }
@@ -393,17 +410,31 @@ export default function PricingPageClient() {
         price: 0,
         currency: 'FREE',
         ttsLimit: 5000,
-        features: ['5,000 Characters/month', '30+ AI Voices in multiple languages']
+        features: [
+          '5,000 Characters/month',
+          '1,000 Characters/day',
+          '500 Characters per request',
+          '30+ AI Voices in multiple languages',
+          'Basic support',
+          'Commercial use allowed'
+        ]
       },
       {
         name: 'Creator',
         role: 'CREATOR',
         price: creatorPrice,
         currency: currency,
-        symbol: symbol, // we'll use this in UI
+        symbol: symbol,
         ttsLimit: 50000,
         popular: true,
-        features: ['50,000 Characters/month', 'All Premium AI Voices']
+        features: [
+          '50,000 Characters/month',
+          '5,000 Characters/day',
+          '2,500 Characters per request',
+          'All Premium AI Voices',
+          'Priority support',
+          'Commercial use allowed'
+        ]
       },
       {
         name: 'Studio',
@@ -412,7 +443,14 @@ export default function PricingPageClient() {
         currency: currency,
         symbol: symbol,
         ttsLimit: 150000,
-        features: ['1,50,000 Characters/month', 'All Premium AI Voices']
+        features: [
+          '1,50,000 Characters/month',
+          'Unlimited daily usage',
+          '5,000 Characters per request',
+          'All Premium AI Voices',
+          'Dedicated support',
+          'Commercial use allowed'
+        ]
       }
     ];
   };
@@ -432,67 +470,266 @@ export default function PricingPageClient() {
         </section>
 
       <div className="pricing-grid">
-        {getPlans().map((plan) => (
-          <motion.div
-            key={plan.role}
-            className={`pricing-card ${plan.popular ? 'popular' : ''} ${
-              currentPlan === plan.role ? 'current' : ''
-            }`}
-            whileHover={{ scale: 1.05 }}
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            {plan.popular && <div className="popular-badge">Most Popular</div>}
-            {currentPlan === plan.role && <div className="current-badge">Current Plan</div>}
-            {currentPlan === 'STUDIO' && plan.role === 'CREATOR' && (
-              <div className="downgrade-blocked-badge">Downgrade Not Available</div>
-            )}
-
-            <h2>{plan.name}</h2>
-            <div className="price">
-              {plan.price === 0 ? (
-                'FREE'
-              ) : plan.currency === 'LOADING' ? (
-                <span>Loading price...</span>
-              ) : (
-                <>
-                  <span className="currency">{plan.symbol}</span>
-                  <span className="amount">{plan.price}</span>
-                  <span className="period">/month</span>
-                </>
-              )}
-            </div>
-
-            <ul className="features">
-              {plan.features.map((feature, index) => (
-                <li key={index}>✅ {feature}</li>
-              ))}
-            </ul>
-
-            <button
-              className="upgrade-button"
-              onClick={() => handleUpgrade(plan)}
-              disabled={
-                loading !== null ||
-                plan.role === 'BASIC' ||
-                plan.role === currentPlan ||
-                (currentPlan === 'STUDIO' && plan.role === 'CREATOR')
-              }
+        {getPlans().map((plan) => {
+          const planIcons = {
+            BASIC: (
+              <svg className="plan-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="32" cy="32" r="28" stroke="url(#gradient1)" strokeWidth="3" fill="none"/>
+                <path d="M32 16v16l11 6.5" stroke="url(#gradient1)" strokeWidth="3" strokeLinecap="round"/>
+                <defs>
+                  <linearGradient id="gradient1" x1="0" y1="0" x2="64" y2="64">
+                    <stop offset="0%" stopColor="#667eea"/>
+                    <stop offset="100%" stopColor="#764ba2"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+            ),
+            CREATOR: (
+              <svg className="plan-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M32 8l8 16h16l-13 12 5 16-16-10-16 10 5-16-13-12h16z" fill="url(#gradient2)"/>
+                <defs>
+                  <linearGradient id="gradient2" x1="0" y1="0" x2="64" y2="64">
+                    <stop offset="0%" stopColor="#667eea"/>
+                    <stop offset="100%" stopColor="#764ba2"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+            ),
+            STUDIO: (
+              <svg className="plan-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 20h40v32H12z" stroke="url(#gradient3)" strokeWidth="3" fill="none"/>
+                <circle cx="22" cy="30" r="3" fill="url(#gradient3)"/>
+                <circle cx="32" cy="30" r="3" fill="url(#gradient3)"/>
+                <circle cx="42" cy="30" r="3" fill="url(#gradient3)"/>
+                <path d="M20 42h24" stroke="url(#gradient3)" strokeWidth="3" strokeLinecap="round"/>
+                <path d="M32 12l-6 8h12z" fill="url(#gradient3)"/>
+                <defs>
+                  <linearGradient id="gradient3" x1="0" y1="0" x2="64" y2="64">
+                    <stop offset="0%" stopColor="#667eea"/>
+                    <stop offset="100%" stopColor="#764ba2"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+            )
+          };
+        
+          return (
+            <motion.div
+              key={plan.role}
+              className={`pricing-card ${plan.popular ? 'popular' : ''} ${
+                currentPlan === plan.role ? 'current' : ''
+              }`}
+              whileHover={{ scale: 1.05 }}
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
             >
-              {loading === plan.role
-                ? 'Processing...'
-                : plan.role === currentPlan
-                  ? 'Current Plan'
-                  : (currentPlan === 'STUDIO' && plan.role === 'CREATOR')
-                    ? 'Downgrade Not Allowed'
-                    : plan.role === 'BASIC'
-                      ? 'Free Forever'
-                      : 'Upgrade Now'
-              }
-            </button>
-          </motion.div>
-        ))}
+              {plan.popular && <div className="popular-badge">Most Popular</div>}
+              {currentPlan === plan.role && <div className="current-badge">Current Plan</div>}
+              {currentPlan === 'STUDIO' && plan.role === 'CREATOR' && (
+                <div className="downgrade-blocked-badge">Downgrade Not Available</div>
+              )}
+        
+              {/* SVG Icon */}
+              <div className="plan-icon-wrapper">
+                {planIcons[plan.role]}
+              </div>
+            
+              <h2>{plan.name}</h2>
+              <div className="plan-subtitle">{plan.role} PLAN</div>
+            
+              <div className="price">
+                {plan.price === 0 ? (
+                  'FREE'
+                ) : plan.currency === 'LOADING' ? (
+                  <span>Loading...</span>
+                ) : (
+                  <>
+                    <span className="currency">{plan.symbol}</span>
+                    <span className="amount">{plan.price}</span>
+                  </>
+                )}
+              </div>
+              <div className="price-description">
+                {plan.price === 0 ? 'Forever free' : 'per month'}
+              </div>
+              
+              <ul className="features">
+                {plan.features.map((feature, index) => (
+                  <li key={index}>{feature}</li>
+                ))}
+              </ul>
+              
+              <button
+                className="upgrade-button"
+                onClick={() => handleUpgrade(plan)}
+                disabled={
+                  loading !== null ||
+                  plan.role === 'BASIC' ||
+                  plan.role === currentPlan ||
+                  (currentPlan === 'STUDIO' && plan.role === 'CREATOR')
+                }
+              >
+                {loading === plan.role
+                  ? 'Processing...'
+                  : plan.role === currentPlan
+                    ? 'Current Plan'
+                    : (currentPlan === 'STUDIO' && plan.role === 'CREATOR')
+                      ? 'Downgrade Not Allowed'
+                      : plan.role === 'BASIC'
+                        ? 'Free Forever'
+                        : 'Upgrade Now'
+                }
+              </button>
+            </motion.div>
+          );
+        })}
       </div>
+
+      {/* FAQ Section */}
+      <section className="pricing-faq">
+        <h2>Frequently Asked Questions</h2>
+        <div className="faq-grid">
+          <div className="faq-item">
+            <h3>What is AI voice generation?</h3>
+            <p>AI voice generation uses advanced text-to-speech technology to convert written text into natural-sounding speech. Scenith offers 30+ premium AI voices in multiple languages for various use cases including content creation, e-learning, podcasts, and commercial projects.</p>
+          </div>
+          <div className="faq-item">
+            <h3>Can I upgrade or downgrade my plan?</h3>
+            <p>Yes! You can upgrade your plan at any time. Upgrades take effect immediately. Note that downgrades from Studio to Creator are not available to maintain service quality. All plans are billed monthly with no long-term commitments.</p>
+          </div>
+          <div className="faq-item">
+            <h3>What happens if I exceed my character limit?</h3>
+            <p>Your daily and monthly character limits are tracked separately. If you reach your daily limit, you can continue the next day. If you exceed your monthly limit, you'll need to upgrade to a higher tier or wait until your plan renews.</p>
+          </div>
+          <div className="faq-item">
+            <h3>Do you offer refunds?</h3>
+            <p>No. We do not offer refund on our paid plans.</p>
+          </div>
+          <div className="faq-item">
+            <h3>Can I use the voices for commercial projects?</h3>
+            <p>All our plans allow you to use generated voices for commercial projects including YouTube videos, podcasts, advertisements, and e-learning content.</p>
+          </div>
+          <div className="faq-item">
+            <h3>Which payment methods do you accept?</h3>
+            <p>We accept all major payment methods through Razorpay (for India) and PayPal (international). This includes credit cards, debit cards, UPI, net banking, and digital wallets for secure transactions.</p>
+          </div>
+        </div>
+      </section>
+            
+      {/* Comparison Table */}
+      <section className="pricing-comparison">
+        <h2>Detailed Plan Comparison</h2>
+        <div className="comparison-table-wrapper">
+          <table className="comparison-table">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>Basic</th>
+                <th>Creator</th>
+                <th>Studio</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Monthly Characters</td>
+                <td>5,000</td>
+                <td>50,000</td>
+                <td>150,000</td>
+              </tr>
+              <tr>
+                <td>Daily Character Limit</td>
+                <td>1,000</td>
+                <td>5,000</td>
+                <td>Unlimited</td>
+              </tr>
+              <tr>
+                <td>Max Characters per Request</td>
+                <td>500</td>
+                <td>2,500</td>
+                <td>5,000</td>
+              </tr>
+              <tr>
+                <td>AI Voice Library</td>
+                <td>30+ voices</td>
+                <td>All premium voices</td>
+                <td>All premium voices</td>
+              </tr>
+              <tr>
+                <td>Commercial Use</td>
+                <td>✓</td>
+                <td>✓</td>
+                <td>✓</td>
+              </tr>
+              <tr>
+                <td>Priority Support</td>
+                <td>✗</td>
+                <td>✓</td>
+                <td>✓ Dedicated</td>
+              </tr>
+              <tr>
+                <td>API Access</td>
+                <td>✗</td>
+                <td>✗</td>
+                <td>Coming Soon</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+            
+      {/* Use Cases */}
+      <section className="pricing-use-cases">
+        <h2>Perfect for Every Creator</h2>
+        <div className="use-cases-grid">
+          <div className="use-case-card">
+            <div className="use-case-icon">🎙️</div>
+            <h3>Content Creators</h3>
+            <p>Generate professional voiceovers for YouTube videos, social media content, and podcasts. Our AI voices bring your scripts to life with natural intonation and emotion.</p>
+          </div>
+          <div className="use-case-card">
+            <div className="use-case-icon">📚</div>
+            <h3>E-Learning Professionals</h3>
+            <p>Create engaging educational content with consistent, clear narration. Perfect for online courses, tutorials, and training materials in multiple languages.</p>
+          </div>
+          <div className="use-case-card">
+            <div className="use-case-icon">📱</div>
+            <h3>App Developers</h3>
+            <p>Integrate natural-sounding voices into your applications, games, and interactive experiences. Scale your voice content without recording studios.</p>
+          </div>
+          <div className="use-case-card">
+            <div className="use-case-icon">📢</div>
+            <h3>Marketing Teams</h3>
+            <p>Produce advertisements, explainer videos, and promotional content quickly. Test multiple voice styles to find the perfect brand voice.</p>
+          </div>
+        </div>
+      </section>
+            
+      {/* Trust Indicators */}
+      <section className="pricing-trust">
+        <h2>Why Choose Scenith?</h2>
+        <div className="trust-grid">
+          <div className="trust-item">
+            <div className="trust-icon">🔒</div>
+            <h3>Secure Payments</h3>
+            <p>Bank-grade encryption with Razorpay and PayPal</p>
+          </div>
+          <div className="trust-item">
+            <div className="trust-icon">⚡</div>
+            <h3>Instant Access</h3>
+            <p>Start generating voices immediately after upgrade</p>
+          </div>
+          <div className="trust-item">
+            <div className="trust-icon">🌍</div>
+            <h3>Global Support</h3>
+            <p>30+ languages and regional voice options</p>
+          </div>
+          <div className="trust-item">
+            <div className="trust-icon">💯</div>
+            <h3>Quality Guarantee</h3>
+            <p>7-day money-back guarantee on all plans</p>
+          </div>
+        </div>
+      </section>      
       </>
     )}
       {showLoginModal && (

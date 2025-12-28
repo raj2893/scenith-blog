@@ -86,6 +86,21 @@
   transition: transform 0.3s ease;
 }
 
+.nav-link-with-icon {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav-link-icon {
+  display: inline-flex;
+  font-size: 0.95em;
+  background: linear-gradient(90deg, #3B82F6, #8B5CF6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .nav-link:hover {
   transform: translateY(-2px);
 }

@@ -1,13 +1,27 @@
 'use client';
 import React, { useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { FaBars } from 'react-icons/fa';
+import { FaBars, FaDollarSign, FaHome, FaTools, FaBlog } from 'react-icons/fa';
 import '../../../styles/Navbar.css';
+
+// Add this CSS for the icon styling
+const iconStyles = `
+  .nav-link-with-icon {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .nav-link-icon {
+    display: inline-flex;
+    font-size: 0.9em;
+  }
+`;
 
 // Define TypeScript interface for props
 interface NavbarProps {
   pageType: string;
-  scrollToSection?: (sectionId: string) => void; // Make scrollToSection optional
+  scrollToSection?: (sectionId: string) => void;
 }
 
 interface NavLink {
@@ -16,6 +30,7 @@ interface NavLink {
   sectionId?: string;
   isDropdown?: boolean;
   dropdownItems?: { label: string; href: string }[];
+  icon?: React.ReactNode;
 }
 
 const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
@@ -25,7 +40,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
   const [isToolsDropdownOpen, setIsToolsDropdownOpen] = useState(false);
 
   const navigate = (path: string) => {
-    if (path.startsWith('/blogs') || path.startsWith('/background-removal')) {
+    if (path.startsWith('/blogs') || path.startsWith('/background-removal') || path.startsWith('/pricing')) {
       router.push(path);
     } else {
       window.location.href = `https://scenith.in${path}`;
@@ -36,7 +51,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
 
   const toggleNavMenu = () => {
     setIsNavMenuOpen(!isNavMenuOpen);
-    setIsToolsDropdownOpen(false); // Close dropdown when toggling nav menu
+    setIsToolsDropdownOpen(false);
   };
 
   const toggleToolsDropdown = () => {
@@ -55,12 +70,12 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
     }
   };
 
-  // Navigation links with Tools dropdown (Contact Us removed)
   const baseNavLinks: NavLink[] = [
-    { label: 'Home', path: '/' },
+    { label: 'Home', path: '/', icon: <FaHome /> },
     {
       label: 'Tools',
       isDropdown: true,
+      icon: <FaTools />,
       dropdownItems: [
         { label: 'AI Voices', href: '/tools/ai-voice-generation' },
         { label: 'AI Subtitle Generator', href: '/tools/add-subtitles-to-videos' },
@@ -71,7 +86,8 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
         { label: 'Media Conversion', href: '/tools/media-conversion-tool' },
       ],
     },
-    { label: 'Blogs', path: '/blogs' },
+    { label: 'Pricing', path: '/pricing', icon: <FaDollarSign /> },
+    { label: 'Blogs', path: '/blogs', icon: <FaBlog /> },
   ];
 
   const navLinks = pathname.startsWith('/blogs/') && pathname !== '/blogs'
@@ -103,11 +119,12 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
                 <>
                   <button
                     type="button"
-                    className={`nav-link dropdown-trigger ${pathname === link.path ? 'active' : ''}`}
+                    className={`nav-link nav-link-with-icon dropdown-trigger ${pathname === link.path ? 'active' : ''}`}
                     onMouseEnter={() => setIsToolsDropdownOpen(true)}
                     onMouseLeave={() => setIsToolsDropdownOpen(false)}
                     onClick={toggleToolsDropdown}
                   >
+                    {link.icon && <span className="nav-link-icon">{link.icon}</span>}
                     {link.label}
                   </button>
                   {isToolsDropdownOpen && (
@@ -132,7 +149,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
               ) : (
                 <button
                   type="button"
-                  className={`nav-link ${pathname === link.path ? 'active' : ''}`}
+                  className={`nav-link ${link.icon ? 'nav-link-with-icon' : ''} ${pathname === link.path ? 'active' : ''}`}
                   onClick={() => {
                     if (link.path) {
                       navigate(link.path);
@@ -142,6 +159,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
                     }
                   }}
                 >
+                  {link.icon && <span className="nav-link-icon">{link.icon}</span>}
                   {link.label}
                 </button>
               )}

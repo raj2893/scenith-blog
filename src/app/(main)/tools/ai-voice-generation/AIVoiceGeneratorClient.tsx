@@ -491,7 +491,6 @@ const AIVoiceGeneratorClient: React.FC = () => {
       setError('Please enter text and select a voice.');
       return;
     }
-
     if (aiVoiceText.length > getMaxCharsPerRequest()) {
       const roleBasedLimit = ttsUsage?.role === 'STUDIO' ? 5000 : 
                             ttsUsage?.role === 'CREATOR' ? 2500 : 500;
@@ -507,44 +506,41 @@ const AIVoiceGeneratorClient: React.FC = () => {
       setTimeout(() => {
         const errorElement = document.querySelector('.error-message');
         if (errorElement) {
-          errorElement.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'center' 
-          });
+          errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
       }, 100);
       setTimeout(() => setError(null), 10000);
       return;
     }
-    
+
+    // Check if this request would exceed remaining limits
     if (ttsUsage) {
-      const wouldExceedDaily = ttsUsage.daily.limit > 0 && (ttsUsage.daily.used + aiVoiceText.length > ttsUsage.daily.limit);
-      const wouldExceedMonthly = ttsUsage.monthly.used + aiVoiceText.length > ttsUsage.monthly.limit;
-      
+      // Check daily limit (only if it exists, -1 means unlimited)
+      const wouldExceedDaily = ttsUsage.daily.limit > 0 && 
+                               (ttsUsage.daily.remaining < aiVoiceText.length);
+
+      // Check monthly limit (only if it exists, -1 means unlimited)
+      const wouldExceedMonthly = ttsUsage.monthly.limit > 0 && 
+                                 (ttsUsage.monthly.remaining < aiVoiceText.length);
+
       if (wouldExceedDaily) {
         setError(`This request would exceed your daily limit. You have ${ttsUsage.daily.remaining.toLocaleString()} characters remaining today, but this text is ${aiVoiceText.length.toLocaleString()} characters long.`);
         setTimeout(() => {
           const errorElement = document.querySelector('.error-message');
           if (errorElement) {
-            errorElement.scrollIntoView({ 
-              behavior: 'smooth', 
-              block: 'center' 
-            });
+            errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }
         }, 100);
         setTimeout(() => setError(null), 10000);
         return;
       }
-      
+
       if (wouldExceedMonthly) {
         setError(`This request would exceed your monthly limit. You have ${ttsUsage.monthly.remaining.toLocaleString()} characters remaining this month, but this text is ${aiVoiceText.length.toLocaleString()} characters long.`);
         setTimeout(() => {
           const errorElement = document.querySelector('.error-message');
           if (errorElement) {
-            errorElement.scrollIntoView({ 
-              behavior: 'smooth', 
-              block: 'center' 
-            });
+            errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }
         }, 100);
         setTimeout(() => setError(null), 10000);
@@ -642,26 +638,39 @@ const AIVoiceGeneratorClient: React.FC = () => {
         // Fetch the audio file as a blob
         const response = await fetch(generatedAudio);
         const blob = await response.blob();
-        
+
         // Create a blob URL
         const blobUrl = window.URL.createObjectURL(blob);
-        
+
         // Create download link
         const link = document.createElement('a');
         link.href = blobUrl;
         link.download = `ai-voice-${Date.now()}.mp3`; // Add timestamp for unique filename
-        
+
         // Trigger download
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        
+
         // Clean up the blob URL
         window.URL.revokeObjectURL(blobUrl);
+
+        if (userProfile.role != 'STUDIO') {
+          setTimeout(() => {
+            setShowPremiumPopup(true);
+          }, 2000); // Show popup 1.5 seconds after download starts
+        }
       } catch (error) {
         console.error('Download failed:', error);
         // Fallback to opening in new tab if download fails
         window.open(generatedAudio, '_blank');
+
+        // Still show popup even if fallback method is used
+        if (userProfile.role === 'BASIC' || userProfile.role === 'CREATOR') {
+          setTimeout(() => {
+            setShowPremiumPopup(true);
+          }, 2000);
+        }
       }
     }
   };
@@ -689,17 +698,30 @@ const AIVoiceGeneratorClient: React.FC = () => {
 
   const getMaxCharsPerRequest = useCallback(() => {
     if (!isLoggedIn || !ttsUsage) return 500;
-    
-    const roleBasedLimit = ttsUsage.role === 'STUDIO' ? 5000 : 
+
+    // Determine role-based limit
+    const roleBasedLimit = ttsUsage.role === 'ADMIN' ? 10000 :
+                          ttsUsage.role === 'STUDIO' ? 5000 : 
                           ttsUsage.role === 'CREATOR' ? 2500 : 500;
-    
+
     const dailyRemaining = ttsUsage.daily.remaining;
     const monthlyRemaining = ttsUsage.monthly.remaining;
-    
+
+    if (dailyRemaining === -1 && monthlyRemaining === -1) {
+      return roleBasedLimit;
+    }
+
     if (dailyRemaining === -1) {
+      if (monthlyRemaining === -1) return roleBasedLimit;
       return Math.min(roleBasedLimit, monthlyRemaining);
     }
-    
+
+    if (monthlyRemaining === -1) {
+      // Monthly unlimited, but daily has a limit
+      return Math.min(roleBasedLimit, dailyRemaining);
+    }
+
+    // Both have limits, use the most restrictive
     return Math.min(roleBasedLimit, dailyRemaining, monthlyRemaining);
   }, [isLoggedIn, ttsUsage]);
 
@@ -712,12 +734,9 @@ const AIVoiceGeneratorClient: React.FC = () => {
         // Detect user's country
         const response = await fetch('https://ipapi.co/json/');
         const data = await response.json();
-        const countryCode = data.country_code;
-        const isIndia = countryCode === 'IN';
-        setIsIndianUser(isIndia);
   
         // Show popup only if user is from India and has BASIC role
-        if (isIndia && userProfile.role === 'BASIC') {
+        if (userProfile.role === 'BASIC' || userProfile.role === 'CREATOR') {
           // Delay popup by 2 seconds for better UX
           setTimeout(() => {
             setShowPremiumPopup(true);
@@ -738,11 +757,26 @@ const AIVoiceGeneratorClient: React.FC = () => {
 
   const isLimitsExceeded = useCallback(() => {
     if (!isLoggedIn || !ttsUsage) return false;
-        
-    const monthlyExceeded = ttsUsage.monthly.remaining <= 0;
-    
-    return monthlyExceeded;
-  }, [isLoggedIn, ttsUsage]);  
+
+    const monthlyExceeded = ttsUsage.monthly.limit > 0 && ttsUsage.monthly.remaining <= 0;
+    const dailyExceeded = ttsUsage.daily.limit > 0 && ttsUsage.daily.remaining <= 0;
+
+    return monthlyExceeded || dailyExceeded;
+  }, [isLoggedIn, ttsUsage]);
+
+  const wouldExceedLimits = useCallback((textLength: number) => {
+    if (!isLoggedIn || !ttsUsage) return false;
+
+    if (ttsUsage.monthly.limit > 0 && ttsUsage.monthly.remaining < textLength) {
+      return true;
+    }
+
+    if (ttsUsage.daily.limit > 0 && ttsUsage.daily.remaining < textLength) {
+      return true;
+    }
+
+    return false;
+  }, [isLoggedIn, ttsUsage]);
 
 return (
   <div className="ai-voice-generator-page">
@@ -903,7 +937,7 @@ return (
               {isLoggedIn && ttsUsage && (
                 <div className="usage-info">
                   {ttsUsage.daily.limit > 0 && 
-                   ttsUsage.monthly.remaining > 0 && 
+                   ttsUsage.monthly.limit > 0 &&
                    ttsUsage.daily.remaining < ttsUsage.monthly.remaining && (
                     <div className="usage-section">
                       <p className="usage-label">Daily Usage (Most Restrictive)</p>
@@ -923,22 +957,31 @@ return (
                   {/* Monthly Usage Bar - Always show */}
                   <div className="usage-section">
                     <p className="usage-label">
-                      {ttsUsage.daily.limit > 0 && 
+                      {ttsUsage.monthly.limit === -1 ? 'Monthly Usage (Unlimited)' :
+                       ttsUsage.daily.limit > 0 && 
                        ttsUsage.monthly.remaining > 0 && 
                        ttsUsage.daily.remaining >= ttsUsage.monthly.remaining
                         ? 'Monthly Usage (Most Restrictive)'
                         : 'Monthly Usage'}
                     </p>
-                    <div className="usage-bar-container">
-                      <div 
-                        className="usage-bar-fill" 
-                        style={{ width: `${(ttsUsage.monthly.used / ttsUsage.monthly.limit) * 100}%` }}
-                      />
-                    </div>
-                    <p className="usage-text">
-                      <strong>{ttsUsage.monthly.remaining.toLocaleString()}</strong> characters remaining this month
-                      ({ttsUsage.monthly.used.toLocaleString()} / {ttsUsage.monthly.limit.toLocaleString()} used)
-                    </p>
+                    {ttsUsage.monthly.limit === -1 ? (
+                      <p className="usage-text">
+                        <strong>Unlimited</strong> - No monthly character limit
+                      </p>
+                    ) : (
+                      <>
+                        <div className="usage-bar-container">
+                          <div 
+                            className="usage-bar-fill" 
+                            style={{ width: `${(ttsUsage.monthly.used / ttsUsage.monthly.limit) * 100}%` }}
+                          />
+                        </div>
+                        <p className="usage-text">
+                          <strong>{ttsUsage.monthly.remaining.toLocaleString()}</strong> characters remaining this month
+                          ({ttsUsage.monthly.used.toLocaleString()} / {ttsUsage.monthly.limit.toLocaleString()} used)
+                        </p>
+                      </>
+                    )}
                   </div>
                 </div>
               )}
@@ -963,10 +1006,7 @@ return (
                       !selectedVoice || 
                       isGenerating || 
                       characterCount > getMaxCharsPerRequest() ||
-                      (ttsUsage && (
-                        (ttsUsage.daily.limit > 0 && ttsUsage.daily.remaining < aiVoiceText.length) ||
-                        ttsUsage.monthly.remaining < aiVoiceText.length
-                      )) ||
+                      wouldExceedLimits(aiVoiceText.length) ||
                       undefined
                     )
                   }
