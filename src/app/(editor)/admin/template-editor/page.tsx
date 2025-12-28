@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect, Suspense, useCallback, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import { API_BASE_URL } from "@/app/config";
@@ -26,6 +26,7 @@ const TemplateEditorPageContent = () => {
   const [designJson, setDesignJson] = useState<string | undefined>(undefined);
   const [canvasSize, setCanvasSize] = useState({ width: 1080, height: 1080 });
   const [isLoading, setIsLoading] = useState(true);  
+  const designJsonRef = useRef<string>("");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -107,11 +108,13 @@ const TemplateEditorPageContent = () => {
   const handleSaveTemplate = async () => {
     if (!templateData.templateName.trim()) {
       setError("Template name is required");
+      setTimeout(() => setError(null), 3000);
       return;
     }
 
     if (!designJson) {
       setError("No design to save");
+      setTimeout(() => setError(null), 3000);
       return;
     }
 
@@ -152,13 +155,26 @@ const TemplateEditorPageContent = () => {
         setSuccess("Template updated successfully!");
       }
 
-      setTimeout(() => router.push("/admin/templates"), 2000);
+      setTimeout(() => {
+        setSuccess(null);
+        router.push("/admin/templates");
+      }, 2000);
     } catch (err: any) {
+      console.error("Save error:", err);
       setError(err.response?.data?.message || "Failed to save template");
+      setTimeout(() => setError(null), 5000);
     } finally {
       setSaving(false);
     }
   };
+
+  const handleDesignChange = useCallback((newDesign: string) => {
+    // Only update if actually different
+    if (designJsonRef.current !== newDesign) {
+      designJsonRef.current = newDesign;
+      setDesignJson(newDesign);
+    }
+  }, []); 
 
   {if (isLoading) {
     return (
@@ -251,7 +267,7 @@ const TemplateEditorPageContent = () => {
     <div className="template-editor-canvas">
       <EditorCanvas
         initialDesignJson={designJson}
-        onDesignChange={setDesignJson}
+        onDesignChange={handleDesignChange}
         canvasWidth={canvasSize.width}
         canvasHeight={canvasSize.height}
       />

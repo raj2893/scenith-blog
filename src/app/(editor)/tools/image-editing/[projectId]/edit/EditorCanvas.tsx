@@ -264,7 +264,8 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
   const [touchStartPos, setTouchStartPos] = useState<{ x: number; y: number } | null>(null);  
   const [showTemplateGallery, setShowTemplateGallery] = useState(false); 
   const [templates, setTemplates] = useState<any[]>([]);
-  const [templatesLoading, setTemplatesLoading] = useState(true);   
+  const [templatesLoading, setTemplatesLoading] = useState(true);  
+  const [lastSavedDesign, setLastSavedDesign] = useState<string>(""); 
   
   useEffect(() => {
     const checkMobile = () => {
@@ -344,11 +345,13 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
   }, []);  
 
   const saveToHistory = useCallback((newLayers: Layer[]) => {
-    const newHistory = history.slice(0, historyIndex + 1);
-    newHistory.push(JSON.stringify(newLayers));
-    setHistory(newHistory);
-    setHistoryIndex(newHistory.length - 1);
-  }, [history, historyIndex]);
+    setHistory(prevHistory => {
+      const newHistory = prevHistory.slice(0, historyIndex + 1);
+      newHistory.push(JSON.stringify(newLayers));
+      return newHistory;
+    });
+    setHistoryIndex(prev => prev + 1);
+  }, [historyIndex]);
   
   const addElementToCanvas = (element: any) => {
     const img = new Image();
@@ -849,21 +852,31 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
   // Notify parent (TemplateEditorPage) whenever design changes in template mode
   useEffect(() => {
     if (!projectId && onDesignChange) {
-      const updatedPages = [...pages];
-      updatedPages[currentPageIndex] = {
-        ...updatedPages[currentPageIndex],
-        canvas: { width: canvasWidth, height: canvasHeight, backgroundColor: canvasBgColor },
-        layers: layers
-      };
+      const timeoutId = setTimeout(() => {
+        const updatedPages = [...pages];
+        updatedPages[currentPageIndex] = {
+          ...updatedPages[currentPageIndex],
+          canvas: { width: canvasWidth, height: canvasHeight, backgroundColor: canvasBgColor },
+          layers: layers
+        };
 
-      const fullDesign = {
-        version: "1.0",
-        pages: updatedPages
-      };
+        const fullDesign = {
+          version: "1.0",
+          pages: updatedPages
+        };
+      
+        const designString = JSON.stringify(fullDesign);
 
-      onDesignChange(JSON.stringify(fullDesign));
+        // Only call if different
+        if (designString !== lastSavedDesign) {
+          setLastSavedDesign(designString);
+          onDesignChange(designString);
+        }
+      }, 300); // Debounce by 300ms
+
+      return () => clearTimeout(timeoutId);
     }
-  }, [layers, canvasWidth, canvasHeight, canvasBgColor, pages, currentPageIndex, projectId, onDesignChange]);
+  }, [layers, canvasWidth, canvasHeight, canvasBgColor, pages, currentPageIndex, projectId, lastSavedDesign]);
 
   // Undo
   const handleUndo = () => {
@@ -1750,10 +1763,10 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
   const debouncedLayers = useDebounce(layers, 1000);
   
   useEffect(() => {
-    if (project && layers.length > 0) {
+    if (projectId && project && layers.length > 0) {
       autoSave();
     }
-  }, [debouncedLayers, canvasWidth, canvasHeight, canvasBgColor, project]);
+  }, [debouncedLayers, canvasWidth, canvasHeight, canvasBgColor, project, projectId]);
 
   const applySegmentColor = (layerId: string) => {
     if (!textSelection || textSelection.layerId !== layerId) return;
