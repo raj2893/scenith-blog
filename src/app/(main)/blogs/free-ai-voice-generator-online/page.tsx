@@ -17,13 +17,13 @@ export const metadata: Metadata = {
     "multilingual voice generator",
   ],
   alternates: {
-    canonical: "/blogs/free-ai-voice-generator",
+    canonical: "/blogs/free-ai-voice-generator-online",
   },
   openGraph: {
     title: "Free AI Voice Generator: Create Lifelike Voices Online in Seconds",
     description:
       "Use Scenith’s free AI voice generator to create natural-sounding voices in over 20 languages for videos, podcasts, and presentations. Compare methods, learn best practices, and start today!",
-    url: "https://scenith.in/blogs/free-ai-voice-generator",
+    url: "https://scenith.in/blogs/free-ai-voice-generator-online",
     siteName: "Scenith",
     locale: "en_US",
     type: "article",
@@ -41,7 +41,7 @@ export default function FreeAIVoiceGenerator() {
   return (
     <>
       <Script
-        id="ld-json-free-ai-voice-generator"
+        id="ld-json-free-ai-voice-generator-online"
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
@@ -67,7 +67,7 @@ export default function FreeAIVoiceGenerator() {
             dateModified: '2025-09-23T10:00:00Z',
             mainEntityOfPage: {
               '@type': 'WebPage',
-              '@id': 'https://scenith.in/blogs/free-ai-voice-generator',
+              '@id': 'https://scenith.in/blogs/free-ai-voice-generator-online',
             },
             articleSection: 'Audio Editing',
             inLanguage: 'en-US',

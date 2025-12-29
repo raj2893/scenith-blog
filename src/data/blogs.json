@@ -1608,7 +1608,7 @@
     "image": "📈",
     "gradient": "linear-gradient(135deg, #00b894 0%, #38a169 100%)",
     "tags": ["Social Media Growth", "Content Strategy", "Followers", "Instagram"],
-    "featured": true,
+    "featured": false,
     "slug": "zero-to-10k-followers-content-strategy-2025",
     "difficulty": "Intermediate"
   },
@@ -1852,5 +1852,20 @@
     "featured": false,
     "slug": "free-image-editor-launch",
     "difficulty": "Beginner"
-  }
+  },
+  {
+    "id": 125,
+    "title": "Scenith's New Free Image Editor is Here – Pro-Level Design Without the Pro Price Tag",
+    "excerpt": "Layers, AI background removal, multi-page PDFs, curved text, unlimited projects – all 100% free. Meet the browser-based image editor that's making Canva Pro and Photoshop feel overpriced.",
+    "category": "Design Tools",
+    "readTime": "8 min",
+    "publishDate": "2025-12-29",
+    "author": "Scenith Team",
+    "image": "🎨",
+    "gradient": "linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)",
+    "tags": ["Free Image Editor", "Graphic Design", "AI Background Removal", "Canva Alternative", "Online Design Tool"],
+    "featured": true,
+    "slug": "image-editor-for-social-media-marketing",
+    "difficulty": "Beginner"
+  }  
 ]

@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     title: "4K 30FPS Settings for Crisp Reels Quality (2025)",
     description:
       "Learn the best 4K 30FPS settings in Scenith to create crystal-clear Instagram Reels that stand out on any screen.",
-    url: 'https://scenith.in/blogs/4k-30fps-settings-crisp-reels-quality',
+    url: 'https://scenith.in/blogs/4k-30FPS-settings-crisp-reels-quality',
     siteName: 'Scenith',
     locale: 'en_US',
     type: 'article',
@@ -62,7 +62,7 @@ export default function FourK30FPSSettings() {
             dateModified: '2025-09-19T10:00:00Z',
             mainEntityOfPage: {
               '@type': 'WebPage',
-              '@id': 'https://scenith.in/blogs/4k-30fps-settings-crisp-reels-quality',
+              '@id': 'https://scenith.in/blogs/4k-30FPS-settings-crisp-reels-quality',
             },
             articleSection: 'Video Editing',
             inLanguage: 'en-US',
