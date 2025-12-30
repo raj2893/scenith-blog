@@ -4,3 +4,8 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+[[headers]]
+  for = "/ads.txt"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
