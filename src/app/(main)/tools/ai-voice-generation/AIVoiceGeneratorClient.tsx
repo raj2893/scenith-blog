@@ -864,7 +864,7 @@ return (
               name: 'What languages and voices are available?',
               acceptedAnswer: {
                 '@type': 'Answer',
-                text: 'We support 20+ languages including English, Spanish, French, German, Mandarin, Hindi, and more. Each language features multiple natural-sounding voices with various genders, accents, and styles. You can filter and preview all voices before generating.'
+                text: 'We support 20+ languages including American English, UK English, Spanish, French, German, Mandarin, Hindi, and more. Each language features multiple natural-sounding voices with various genders, accents, and styles. You can filter and preview all voices before generating.'
               }
             },
             {
@@ -904,7 +904,7 @@ return (
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        <h1>Free AI Voice Generator - Text to Speech Online in Seconds</h1>
+        <h1>AI Voice Generator for YouTube & Marketing (Natural Voices)</h1>
         <p className="hero-description">
           Transform your text into lifelike AI voices instantly. Choose from 40+ natural-sounding voices across multiple languages. Perfect for videos, podcasts, presentations, and content creation. Completely free with MP3 downloads!
         </p>
@@ -1298,7 +1298,7 @@ return (
           <article className="benefit-detailed">
             <h3>🌍 Global Reach & Localization</h3>
             <p>
-              Expand your audience with multilingual content. Our <strong>20+ language support</strong> includes English (US, UK, Australian, Indian accents), Spanish, French, German, Mandarin, Hindi, Portuguese, and more. Each language features native-sounding voices trained on regional speech patterns, ensuring authentic delivery that resonates with local audiences.
+              Expand your audience with multilingual content. Our <strong>20+ language support</strong> includes English (American, UK, Australian, Indian accents), Spanish, French, German, Mandarin, Hindi, Portuguese, and more. Each language features native-sounding voices trained on regional speech patterns, ensuring authentic delivery that resonates with local audiences.
             </p>
             <div className="benefit-stats">
               <span>20+ languages available</span>
@@ -1813,7 +1813,7 @@ return (
           </article>
           <article className="faq-item" role="listitem">
             <h3>What languages and voices are available?</h3>
-            <p>We support 20+ languages including English, Spanish, French, German, Mandarin, Hindi, and more. Each language features multiple natural-sounding voices with various genders, accents, and styles. You can filter and preview all voices before generating.</p>
+            <p>We support 20+ languages including American English, UK English, Spanish, French, German, Mandarin, Hindi, and more. Each language features multiple natural-sounding voices with various genders, accents, and styles. You can filter and preview all voices before generating.</p>
           </article>
           <article className="faq-item" role="listitem">
             <h3>Is the generated audio commercial use allowed?</h3>

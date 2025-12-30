@@ -241,7 +241,7 @@ const AIVoiceGuide = () => {
                 Expanding content to international markets traditionally requires hiring native-speaking voice talent for each language—expensive and logistically complex. Maintaining consistent brand voice across languages proves challenging when using multiple actors with different styles and tones.
               </p>
               <p>
-                Modern AI voice generators support 20+ languages with native-sounding voices trained on regional speech patterns. Generate English, Spanish, French, German, Mandarin, Hindi, and many other languages from a single platform. Create localized versions of content in minutes rather than weeks, expand global reach cost-effectively, and maintain consistent brand voice across all language markets.
+                Modern AI voice generators support 20+ languages with native-sounding voices trained on regional speech patterns. Generate American English, UK English, Spanish, French, German, Mandarin, Hindi, and many other languages from a single platform. Create localized versions of content in minutes rather than weeks, expand global reach cost-effectively, and maintain consistent brand voice across all language markets.
               </p>
 
               <h3 className="text-2xl font-semibold mt-8 mb-4 text-gray-900">5. Perfect Consistency Every Time</h3>

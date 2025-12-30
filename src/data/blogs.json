@@ -1867,5 +1867,20 @@
     "featured": true,
     "slug": "image-editor-for-social-media-marketing",
     "difficulty": "Beginner"
-  }  
+  },
+  {
+    "id": 126,
+    "title": "Free AI Subtitle Generator: Add Captions to Videos in 30 Seconds (2025 Guide)",
+    "excerpt": "Stop wasting 5 hours manually typing subtitles. AI generates 98% accurate captions in 30 seconds. Free, unlimited use, supports 50+ languages. Boost engagement 80% with automatic subtitles.",
+    "category": "AI Tools",
+    "readTime": "10 min",
+    "publishDate": "2025-12-30",
+    "author": "Scenith Team",
+    "image": "📝",
+    "gradient": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    "tags": ["AI Subtitles", "Auto Captions", "Video Accessibility", "Free Tools"],
+    "featured": false,
+    "slug": "ai-subtitle-generator-free-guide",
+    "difficulty": "Beginner"
+  }    
 ]
