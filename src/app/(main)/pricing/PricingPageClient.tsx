@@ -12,6 +12,7 @@ interface PricingPlan {
   name: string;
   role: 'BASIC' | 'CREATOR' | 'STUDIO';
   price: number;
+  originalPrice?: number;
   currency: string;
   features: string[];
   ttsLimit: number;
@@ -378,6 +379,7 @@ export default function PricingPageClient() {
             '5,000 Characters/day',
             '2,500 Characters per request',
             'All Premium AI Voices',
+            'Elements & Templates (Coming Soon)',
             'Priority support'
           ]
         },
@@ -392,14 +394,19 @@ export default function PricingPageClient() {
             'Unlimited daily usage',
             '5,000 Characters per request',
             'All Premium AI Voices',
+            'Elements & Templates (Coming Soon)',
             'Dedicated support'
           ]
         }
       ];
     }
 
-    const creatorPrice = isIndianUser ? 499 : 15;
-    const studioPrice = isIndianUser ? 1299 : 25;
+    const originalCreatorPrice = isIndianUser ? 499 : 15;
+    const originalStudioPrice = isIndianUser ? 1299 : 25;
+
+    const creatorPrice = Math.round(originalCreatorPrice * 0.25);
+    const studioPrice = Math.round(originalStudioPrice * 0.25);
+
     const currency = isIndianUser ? 'INR' : 'USD';
     const symbol = isIndianUser ? '₹' : '$';
 
@@ -423,6 +430,7 @@ export default function PricingPageClient() {
         name: 'Creator',
         role: 'CREATOR',
         price: creatorPrice,
+        originalPrice: originalCreatorPrice,
         currency: currency,
         symbol: symbol,
         ttsLimit: 50000,
@@ -432,6 +440,7 @@ export default function PricingPageClient() {
           '5,000 Characters/day',
           '2,500 Characters per request',
           'All Premium AI Voices',
+          'Elements & Templates (Coming Soon)',
           'Priority support',
           'Commercial use allowed'
         ]
@@ -440,6 +449,7 @@ export default function PricingPageClient() {
         name: 'Studio',
         role: 'STUDIO',
         price: studioPrice,
+        originalPrice: originalStudioPrice,
         currency: currency,
         symbol: symbol,
         ttsLimit: 150000,
@@ -448,6 +458,7 @@ export default function PricingPageClient() {
           'Unlimited daily usage',
           '5,000 Characters per request',
           'All Premium AI Voices',
+          'Elements & Templates (Coming Soon)',
           'Dedicated support',
           'Commercial use allowed'
         ]
@@ -465,7 +476,12 @@ export default function PricingPageClient() {
     ) : (
       <>
         <section className="pricing-hero">
+          <div className="new-year-badge">🎉 Happy New Year 2026! 🎉</div>
           <h1>Simple, Transparent Pricing</h1>
+          <div className="discount-banner">
+            <span className="discount-text">75% OFF</span>
+            <span className="limited-offer">First 26 Users Only!</span>
+          </div>
           <p>Choose the plan that fits your needs</p>
         </section>
 
@@ -544,13 +560,26 @@ export default function PricingPageClient() {
                   <span>Loading...</span>
                 ) : (
                   <>
-                    <span className="currency">{plan.symbol}</span>
-                    <span className="amount">{plan.price}</span>
+                    {plan.originalPrice && (
+                      <div className="original-price">
+                        <span className="currency">{plan.symbol}</span>
+                        <span className="amount">{plan.originalPrice}</span>
+                      </div>
+                    )}
+                    <div className="discounted-price">
+                      <span className="currency">{plan.symbol}</span>
+                      <span className="amount">{plan.price}</span>
+                    </div>
                   </>
                 )}
               </div>
               <div className="price-description">
-                {plan.price === 0 ? 'Forever free' : 'per month'}
+                {plan.price === 0 ? 'Forever free' : (
+                  <>
+                    <span className="savings-badge">Save 75%</span>
+                    <span>per month</span>
+                  </>
+                )}
               </div>
               
               <ul className="features">
@@ -666,6 +695,12 @@ export default function PricingPageClient() {
                 <td>✓</td>
                 <td>✓ Dedicated</td>
               </tr>
+              <tr>
+                <td>Elements & Templates</td>
+                <td>✗</td>
+                <td>Coming Soon</td>
+                <td>Coming Soon</td>
+              </tr>              
               <tr>
                 <td>API Access</td>
                 <td>✗</td>

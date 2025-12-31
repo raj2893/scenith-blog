@@ -129,9 +129,15 @@ const PremiumUpgradePopup: React.FC<PremiumUpgradePopupProps> = ({ isOpen, onClo
               </div>
 
               <div className="premium-popup-text">
+                <div className="new-year-popup-badge">🎉 New Year Special! 🎉</div>
                 <h2>Want Higher AI VOICE Generation Limit?</h2>
                 <p>Upgrade to Pro with the <strong>Cheapest Premium Plan!</strong></p>
-                
+
+                <div className="discount-highlight">
+                  <span className="discount-percentage">75% OFF</span>
+                  <span className="limited-slots">First 26 Users Only!</span>
+                </div>
+
                 <div className="premium-features">
                   <div className="premium-feature-item">
                     <span className="feature-icon">⚡</span>
@@ -141,14 +147,10 @@ const PremiumUpgradePopup: React.FC<PremiumUpgradePopupProps> = ({ isOpen, onClo
                     <span className="feature-icon">🎤</span>
                     <span>All premium AI voices</span>
                   </div>
-                  <div className="premium-feature-item">
-                    <span className="feature-icon">💰</span>
-                    <span>Starting at just ₹499/month</span>
-                  </div>
                 </div>
 
                 <button className="premium-upgrade-button" onClick={handleUpgrade}>
-                  <span>Upgrade to Pro</span>
+                  <span>Claim 75% OFF Now</span>
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
