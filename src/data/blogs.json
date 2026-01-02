@@ -1882,5 +1882,31 @@
     "featured": false,
     "slug": "ai-subtitle-generator-free-guide",
     "difficulty": "Beginner"
-  }    
+  },
+  {
+    "id": 127,
+    "title": "Free Image Editor Online: Create Professional Graphics Without Photoshop (2025 Guide)",
+    "excerpt": "Discover the complete guide to free online image editors in 2025. Layer-based editing, AI background removal, professional typography, and unlimited projects—all free, no watermarks. Perfect alternative to Canva Pro and Photoshop.",
+    "category": "Design Tools",
+    "readTime": "12 min",
+    "publishDate": "2025-01-01",
+    "author": "Scenith Team",
+    "image": "🎨",
+    "gradient": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    "tags": [
+      "Free Image Editor",
+      "Online Design Tool",
+      "Graphic Design",
+      "Canva Alternative",
+      "Photoshop Alternative",
+      "Browser-Based Editor",
+      "AI Background Removal",
+      "Layer-Based Editing",
+      "Professional Design",
+      "Social Media Graphics"
+    ],
+    "featured": true,
+    "slug": "free-image-editor-online-guide-2025",
+    "difficulty": "Beginner"
+  }  
 ]
