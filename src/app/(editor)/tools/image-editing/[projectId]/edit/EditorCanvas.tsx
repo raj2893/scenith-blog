@@ -428,6 +428,19 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
     if (Math.abs(movingBounds.centerY - canvasCenterY) < SNAP_THRESHOLD) {
       horizontalGuides.push(canvasCenterY);
     }
+
+    if (Math.abs(movingBounds.minX - 0) < SNAP_THRESHOLD) {
+      verticalGuides.push(0);
+    }
+    if (Math.abs(movingBounds.maxX - canvasWidth) < SNAP_THRESHOLD) {
+      verticalGuides.push(canvasWidth);
+    }
+    if (Math.abs(movingBounds.minY - 0) < SNAP_THRESHOLD) {
+      horizontalGuides.push(0);
+    }
+    if (Math.abs(movingBounds.maxY - canvasHeight) < SNAP_THRESHOLD) {
+      horizontalGuides.push(canvasHeight);
+    }    
     
     // Check alignment with other layers
     allLayers.forEach(layer => {
@@ -1596,10 +1609,10 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
   
     // Multi-layer drag
     if (!isDragging || selectedLayerIds.length === 0) return;
-    
+
     const deltaX = (e.clientX - dragStart.x) / scale;
     const deltaY = (e.clientY - dragStart.y) / scale;
-  
+
     // Update all selected layers
     const updatedLayers = layers.map(layer => {
       if (selectedLayerIds.includes(layer.id) && !layer.locked) {
@@ -1611,20 +1624,69 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
       }
       return layer;
     });
-  
-    setLayers(updatedLayers);
-    setDragStart({ x: e.clientX, y: e.clientY });
-    
-    // Show guides only for single selection
+
+    // Apply snapping for single selection
     if (selectedLayerIds.length === 1) {
       const movedLayer = updatedLayers.find(l => l.id === selectedLayerIds[0]);
       if (movedLayer) {
         const detectedGuides = detectAlignmentGuides(movedLayer, layers);
         setGuides(detectedGuides);
+
+        // ADD MAGNETIC SNAPPING HERE
+        const SNAP_THRESHOLD = 10;
+
+        // Snap to vertical guides
+        if (detectedGuides.vertical.length > 0) {
+          const centerX = movedLayer.x + movedLayer.width / 2;
+          const closestVertical = detectedGuides.vertical.reduce((prev, curr) => 
+            Math.abs(curr - centerX) < Math.abs(prev - centerX) ? curr : prev
+          );
+
+          if (Math.abs(closestVertical - centerX) < SNAP_THRESHOLD) {
+            movedLayer.x = closestVertical - movedLayer.width / 2;
+          }
+
+          // Also check left and right edges
+          if (Math.abs(closestVertical - movedLayer.x) < SNAP_THRESHOLD) {
+            movedLayer.x = closestVertical;
+          }
+          if (Math.abs(closestVertical - (movedLayer.x + movedLayer.width)) < SNAP_THRESHOLD) {
+            movedLayer.x = closestVertical - movedLayer.width;
+          }
+        }
+
+        // Snap to horizontal guides
+        if (detectedGuides.horizontal.length > 0) {
+          const centerY = movedLayer.y + movedLayer.height / 2;
+          const closestHorizontal = detectedGuides.horizontal.reduce((prev, curr) => 
+            Math.abs(curr - centerY) < Math.abs(prev - centerY) ? curr : prev
+          );
+
+          if (Math.abs(closestHorizontal - centerY) < SNAP_THRESHOLD) {
+            movedLayer.y = closestHorizontal - movedLayer.height / 2;
+          }
+
+          // Also check top and bottom edges
+          if (Math.abs(closestHorizontal - movedLayer.y) < SNAP_THRESHOLD) {
+            movedLayer.y = closestHorizontal;
+          }
+          if (Math.abs(closestHorizontal - (movedLayer.y + movedLayer.height)) < SNAP_THRESHOLD) {
+            movedLayer.y = closestHorizontal - movedLayer.height;
+          }
+        }
+
+        // Update the layer in the array with snapped position
+        const finalLayers = updatedLayers.map(l => 
+          l.id === movedLayer.id ? movedLayer : l
+        );
+        setLayers(finalLayers);
       }
     } else {
+      setLayers(updatedLayers);
       setGuides({ vertical: [], horizontal: [] });
     }
+
+    setDragStart({ x: e.clientX, y: e.clientY });
   };
 
   const handleMouseUp = () => {
@@ -1720,16 +1782,60 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
         return layer;
       });
     
-      setLayers(updatedLayers);
-      setDragStart({ x: e.touches[0].clientX, y: e.touches[0].clientY });
-    
+      // Apply snapping for single selection
       if (selectedLayerIds.length === 1) {
         const movedLayer = updatedLayers.find(l => l.id === selectedLayerIds[0]);
         if (movedLayer) {
           const detectedGuides = detectAlignmentGuides(movedLayer, layers);
           setGuides(detectedGuides);
+
+          // Magnetic snapping
+          const SNAP_THRESHOLD = 10;
+
+          if (detectedGuides.vertical.length > 0) {
+            const centerX = movedLayer.x + movedLayer.width / 2;
+            const closestVertical = detectedGuides.vertical.reduce((prev, curr) => 
+              Math.abs(curr - centerX) < Math.abs(prev - centerX) ? curr : prev
+            );
+
+            if (Math.abs(closestVertical - centerX) < SNAP_THRESHOLD) {
+              movedLayer.x = closestVertical - movedLayer.width / 2;
+            }
+            if (Math.abs(closestVertical - movedLayer.x) < SNAP_THRESHOLD) {
+              movedLayer.x = closestVertical;
+            }
+            if (Math.abs(closestVertical - (movedLayer.x + movedLayer.width)) < SNAP_THRESHOLD) {
+              movedLayer.x = closestVertical - movedLayer.width;
+            }
+          }
+
+          if (detectedGuides.horizontal.length > 0) {
+            const centerY = movedLayer.y + movedLayer.height / 2;
+            const closestHorizontal = detectedGuides.horizontal.reduce((prev, curr) => 
+              Math.abs(curr - centerY) < Math.abs(prev - centerY) ? curr : prev
+            );
+
+            if (Math.abs(closestHorizontal - centerY) < SNAP_THRESHOLD) {
+              movedLayer.y = closestHorizontal - movedLayer.height / 2;
+            }
+            if (Math.abs(closestHorizontal - movedLayer.y) < SNAP_THRESHOLD) {
+              movedLayer.y = closestHorizontal;
+            }
+            if (Math.abs(closestHorizontal - (movedLayer.y + movedLayer.height)) < SNAP_THRESHOLD) {
+              movedLayer.y = closestHorizontal - movedLayer.height;
+            }
+          }
+
+          const finalLayers = updatedLayers.map(l => 
+            l.id === movedLayer.id ? movedLayer : l
+          );
+          setLayers(finalLayers);
         }
+      } else {
+        setLayers(updatedLayers);
       }
+    
+      setDragStart({ x: e.touches[0].clientX, y: e.touches[0].clientY });
     }
   };
 
