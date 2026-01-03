@@ -77,11 +77,11 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
       isDropdown: true,
       icon: <FaTools />,
       dropdownItems: [
-        { label: 'AI Voices', href: '/tools/ai-voice-generation' },
+        { label: 'AI Voice Generator', href: '/tools/ai-voice-generation' },
         { label: 'AI Subtitle Generator', href: '/tools/add-subtitles-to-videos' },
+        { label: 'Image Editing', href: '/tools/image-editing' },
         { label: 'Background Remover', href: '/tools/background-removal' },
         { label: 'Video Speed Modifier', href: '/tools/video-speed-modifier' },
-        { label: 'Video Color Grading', href: '/tools/apply-filters-to-videos' },
         { label: 'Media Compression', href: '/tools/compress-media' },
         { label: 'Media Conversion', href: '/tools/media-conversion-tool' },
       ],
