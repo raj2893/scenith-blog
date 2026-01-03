@@ -1132,7 +1132,60 @@ return (
                 </button>
               </motion.div>
             </section>
-          )}            
+          )}      
+          <section className="must-try-section" role="region" aria-labelledby="must-try-title">
+            <div className="must-try-header">
+              <h2 id="must-try-title">Must Try: More AI Tools on Scenith</h2>
+              <p>Supercharge your content creation with these powerful tools</p>
+            </div>
+            <div className="must-try-grid">
+              <a 
+                href="https://scenith.in/tools/add-subtitles-to-videos?utm_source=ai_voice_page&utm_medium=must_try_section&utm_campaign=cross_tool_promotion" 
+                className="must-try-card"
+                aria-label="Try AI Subtitle Generator"
+                target="_blank"
+                rel="noopener noreferrer"                
+              >
+                <span className="must-try-icon">💬</span>
+                <span className="must-try-badge">🔥 Popular</span>
+                <h3 className="must-try-title">AI Subtitle Generator</h3>
+                <p className="must-try-description">
+                  Automatically generate accurate subtitles for your videos in seconds. Boost engagement by 80% with professional captions.
+                </p>
+                <div className="must-try-features">
+                  <span className="must-try-feature">Auto speech-to-text transcription</span>
+                  <span className="must-try-feature">25+ Default Text Styles</span>
+                  <span className="must-try-feature">Custom styling & animations</span>
+                </div>
+                <span className="must-try-cta">
+                  Try Subtitle Generator →
+                </span>
+              </a>
+
+              <a 
+                href="https://scenith.in/tools/image-editing?utm_source=ai_voice_page&utm_medium=must_try_section&utm_campaign=cross_tool_promotion" 
+                className="must-try-card"
+                aria-label="Try Free Image Editor"
+                target="_blank"
+                rel="noopener noreferrer"                
+              >
+                <span className="must-try-icon">🖼️</span>
+                <span className="must-try-badge">✨ New</span>
+                <h3 className="must-try-title">Free Image Editor</h3>
+                <p className="must-try-description">
+                  Create stunning graphics, thumbnails, and social media posts with our powerful online image editor.
+                </p>
+                <div className="must-try-features">
+                  <span className="must-try-feature">Elements, Templates, Text, & Filters</span>
+                  <span className="must-try-feature">Perfect for YouTube thumbnails</span>
+                  <span className="must-try-feature">No watermarks, instant export</span>
+                </div>
+                <span className="must-try-cta">
+                  Try Image Editor →
+                </span>
+              </a>
+            </div>
+          </section>                
           <div className="trust-indicators">
             <span className="trust-item">✅ 100% Free</span>
             <span className="trust-item">🎤 40+ Voices</span>
