@@ -804,7 +804,7 @@ body {
 
 /* Expandable Content Panel */
 .content-panel {
-  width: 280px;
+  width: 360px;
   background: #ffffff;
   border-right: 1px solid #e2e8f0;
   animation: slideInLeft 0.3s ease;
@@ -817,7 +817,7 @@ body {
     opacity: 0;
   }
   to {
-    width: 280px;
+    width: 360px;
     opacity: 1;
   }
 }
@@ -1642,15 +1642,16 @@ body {
   box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
 }
 
-/* Images Grid */
 .images-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(2, 1fr); /* Force 2 columns */
+  gap: 12px;
+  align-items: start;
 }
 
 .upload-box {
-  aspect-ratio: 1;
+  width: 80px;
+  height: 80px;
   background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
   border: 2px dashed #cbd5e1;
   border-radius: 8px;
@@ -1664,6 +1665,7 @@ body {
   font-weight: 600;
   color: #64748b;
   gap: 4px;
+  flex-shrink: 0;
 }
 
 .upload-box:hover {
@@ -1673,7 +1675,7 @@ body {
 }
 
 .image-thumbnail {
-  aspect-ratio: 1;
+  width: 100%; /* Take full column width */
   border-radius: 8px;
   overflow: hidden;
   cursor: pointer;
@@ -1690,8 +1692,8 @@ body {
 
 .image-thumbnail img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto; /* Auto height to maintain aspect ratio */
+  display: block;
 }
 
 /* Shapes Grid */
@@ -2036,11 +2038,17 @@ body {
   }
   
   .content-panel {
-    width: 240px;
+    width: 320px;
   }
+
+  @keyframes slideInLeft {
+    to {
+      width: 320px;
+    }
+  }  
   
   .pages-panel {
-    left: 290px;
+    left: 370px;
   }
 }
 
@@ -2193,9 +2201,12 @@ body {
   
   /* Images and shapes grids */
   .images-grid {
-    grid-template-columns: repeat(4, 1fr);
     gap: 6px;
   }
+
+  .image-thumbnail {
+    max-width: 100px;
+  }  
   
   .shapes-grid {
     grid-template-columns: repeat(4, 1fr);
@@ -2418,9 +2429,12 @@ body {
   
   /* Grids */
   .images-grid {
-    grid-template-columns: repeat(3, 1fr);
     gap: 5px;
   }
+
+  .image-thumbnail {
+    max-width: 80px;
+  }  
   
   .shapes-grid {
     grid-template-columns: repeat(3, 1fr);
@@ -2621,6 +2635,10 @@ body {
     padding: 5px 8px;
     font-size: 0.75rem;
   }
+
+  .image-thumbnail {
+    max-width: 70px;
+  }  
 }
 
 /* Landscape orientation on mobile */

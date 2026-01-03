@@ -2222,11 +2222,14 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
       return (
         <div 
           style={{
-            width: '40px',
-            height: '40px',
+            maxWidth: '40px',
+            maxHeight: '40px',
             borderRadius: '4px',
             overflow: 'hidden',
-            backgroundColor: '#f8f9fa',
+            backgroundColor: '#f8fafc',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
             ...getFilterStyle(layer.filters),
           }}
         >
@@ -2234,9 +2237,12 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
             src={layer.src} 
             alt="preview"
             style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
+              maxWidth: '100%',
+              maxHeight: '100%',
+              width: 'auto',
+              height: 'auto',
+              objectFit: 'contain',
+              display: 'block',
             }}
           />
         </div>
