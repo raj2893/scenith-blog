@@ -1905,8 +1905,33 @@
       "Professional Design",
       "Social Media Graphics"
     ],
-    "featured": true,
+    "featured": false,
     "slug": "free-image-editor-online-guide-2026",
     "difficulty": "Beginner"
-  }  
+  },
+  {
+    "id": 128,
+    "title": "Free AI Voice Generator: Create Lifelike Voices Online in Seconds (2026 Guide)",
+    "excerpt": "Discover how to generate realistic AI voices for free in 2026. Complete guide covering neural text-to-speech technology, 40+ natural voices, multi-language support, and professional voiceover creation without expensive voice actors.",
+    "category": "AI Tools",
+    "readTime": "15 min",
+    "publishDate": "2026-01-04",
+    "author": "Scenith Team",
+    "image": "🎤",
+    "gradient": "linear-gradient(135deg, #764ba2 0%, #667eea 100%)",
+    "tags": [
+      "AI Voice Generator",
+      "Text to Speech",
+      "AI Voiceover",
+      "Free AI Tools",
+      "Neural TTS",
+      "Voice Synthesis",
+      "Multilingual Voices",
+      "Content Creation",
+      "Voice Technology"
+    ],
+    "featured": false,
+    "slug": "free-ai-voice-generator-complete-guide-2026",
+    "difficulty": "Beginner"
+  }    
 ]
