@@ -176,8 +176,6 @@ const AIVoiceGeneratorClient: React.FC = () => {
   } | null>(null);
   const [characterCount, setCharacterCount] = useState(0);
   const [showPremiumPopup, setShowPremiumPopup] = useState(false);
-  const [isIndianUser, setIsIndianUser] = useState<boolean | null>(null);  
-
   // Handle scroll for navbar styling
   useEffect(() => {
     const handleScroll = () => {
@@ -724,31 +722,6 @@ const AIVoiceGeneratorClient: React.FC = () => {
     // Both have limits, use the most restrictive
     return Math.min(roleBasedLimit, dailyRemaining, monthlyRemaining);
   }, [isLoggedIn, ttsUsage]);
-
-  // Add this useEffect to detect user location and show popup
-  useEffect(() => {
-    const detectLocationAndShowPopup = async () => {
-      if (!isLoggedIn) return;
-        
-      try {
-        // Detect user's country
-        const response = await fetch('https://ipapi.co/json/');
-        const data = await response.json();
-  
-        // Show popup only if user is from India and has BASIC role
-        if (userProfile.role === 'BASIC' || userProfile.role === 'CREATOR') {
-          // Delay popup by 2 seconds for better UX
-          setTimeout(() => {
-            setShowPremiumPopup(true);
-          }, 2000);
-        }
-      } catch (error) {
-        console.error('Error detecting location:', error);
-      }
-    };
-  
-    detectLocationAndShowPopup();
-  }, [isLoggedIn, userProfile.role]);
   
   // Add handler to close popup
   const handleClosePremiumPopup = () => {
@@ -776,7 +749,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
     }
 
     return false;
-  }, [isLoggedIn, ttsUsage]);
+  }, [isLoggedIn, ttsUsage]);  
 
 return (
   <div className="ai-voice-generator-page">
