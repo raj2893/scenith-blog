@@ -197,8 +197,25 @@ const CustomVideoPlayer = ({ src, userId, subtitles, currentTime, setCurrentTime
                     const sourceWidth = videoElement.videoWidth || 1920;
                     const sourceHeight = videoElement.videoHeight || 1080;
                     const videoRect = videoElement.getBoundingClientRect();
-                    const displayedWidth = videoRect.width;
-                    const displayedHeight = videoRect.height;
+                    
+                    // Calculate the actual displayed video dimensions (accounting for object-fit: contain)
+                    const videoAspectRatio = sourceWidth / sourceHeight;
+                    const containerAspectRatio = videoRect.width / videoRect.height;
+                    
+                    let displayedWidth, displayedHeight, offsetX = 0, offsetY = 0;
+                    
+                    if (containerAspectRatio > videoAspectRatio) {
+                        // Container is wider - video will have horizontal padding
+                        displayedHeight = videoRect.height;
+                        displayedWidth = displayedHeight * videoAspectRatio;
+                        offsetX = (videoRect.width - displayedWidth) / 2;
+                    } else {
+                        // Container is taller - video will have vertical padding
+                        displayedWidth = videoRect.width;
+                        displayedHeight = displayedWidth / videoAspectRatio;
+                        offsetY = (videoRect.height - displayedHeight) / 2;
+                    }
+                    
                     const scaleFactorX = displayedWidth / sourceWidth;
                     const scaleFactorY = displayedHeight / sourceHeight;
                     const scaleFactor = Math.min(scaleFactorX, scaleFactorY);
@@ -238,51 +255,65 @@ const CustomVideoPlayer = ({ src, userId, subtitles, currentTime, setCurrentTime
                     const positionX = (currentSubtitle.positionX || 0) * scaleFactor;
                     const positionY = (currentSubtitle.positionY || 0) * scaleFactor;
                     const rotation = currentSubtitle.rotation || 0;
+                    
                     return (
                         <div
-                            className="subtitle-overlay"
+                            className="subtitle-clip-container"
                             style={{
                                 position: 'absolute',
-                                left: '50%',
-                                top: '50%',
-                                transform: `translate(calc(-50% + ${positionX}px), calc(-50% + ${positionY}px)) rotate(${rotation}deg)`,
-                                transformOrigin: 'center center',
+                                left: `${offsetX}px`,
+                                top: `${offsetY}px`,
+                                width: `${displayedWidth}px`,
+                                height: `${displayedHeight}px`,
+                                overflow: 'hidden',
                                 zIndex: 10,
                                 pointerEvents: 'none',
-                                maxWidth: `${displayedWidth * 0.9}px`,
                             }}
                         >
                             <div
+                                className="subtitle-overlay"
                                 style={{
-                                    backgroundColor: bgColorWithOpacity,
-                                    padding: `${bgHeight / 2}px ${bgWidth / 2}px`,
-                                    borderRadius: `${borderRadius}px`,
-                                    border: bgBorderWidth > 0 ? `${bgBorderWidth}px solid ${currentSubtitle.backgroundBorderColor || 'transparent'}` : 'none',
-                                    display: 'inline-block',
-                                    position: 'relative',
+                                    position: 'absolute',
+                                    left: '50%',
+                                    top: '50%',
+                                    transform: `translate(calc(-50% + ${positionX}px), calc(-50% + ${positionY}px)) rotate(${rotation}deg)`,
+                                    transformOrigin: 'center center',
+                                    pointerEvents: 'none',
+                                    maxWidth: `${displayedWidth * 0.9}px`,
                                 }}
                             >
-                                {textLines.map((line, index) => (
-                                    <div
-                                        key={index}
-                                        style={{
-                                            fontFamily: `"${family}", sans-serif`,
-                                            fontWeight: weight,
-                                            fontStyle: style,
-                                            fontSize: `${fontSize}px`,
-                                            color: currentSubtitle.fontColor || '#FFFFFF',
-                                            lineHeight: `${lineHeight}px`,
-                                            textAlign: alignment as any,
-                                            letterSpacing: `${letterSpacing}px`,
-                                            WebkitTextStroke: textBorderWidth > 0 ? `${textBorderWidth}px ${textBorderColorWithOpacity}` : 'none',
-                                            paintOrder: 'stroke fill',
-                                            whiteSpace: 'nowrap',
-                                            opacity: currentSubtitle.opacity !== undefined ? currentSubtitle.opacity : 1.0,
-                                        }}
-                                    >
-                                        {line}
-                                    </div>
-                                ))}
+                                <div
+                                    style={{
+                                        backgroundColor: bgColorWithOpacity,
+                                        padding: `${bgHeight / 2}px ${bgWidth / 2}px`,
+                                        borderRadius: `${borderRadius}px`,
+                                        border: bgBorderWidth > 0 ? `${bgBorderWidth}px solid ${currentSubtitle.backgroundBorderColor || 'transparent'}` : 'none',
+                                        display: 'inline-block',
+                                        position: 'relative',
+                                    }}
+                                >
+                                    {textLines.map((line, index) => (
+                                        <div
+                                            key={index}
+                                            style={{
+                                                fontFamily: `"${family}", sans-serif`,
+                                                fontWeight: weight,
+                                                fontStyle: style,
+                                                fontSize: `${fontSize}px`,
+                                                color: currentSubtitle.fontColor || '#FFFFFF',
+                                                lineHeight: `${lineHeight}px`,
+                                                textAlign: alignment as any,
+                                                letterSpacing: `${letterSpacing}px`,
+                                                WebkitTextStroke: textBorderWidth > 0 ? `${textBorderWidth}px ${textBorderColorWithOpacity}` : 'none',
+                                                paintOrder: 'stroke fill',
+                                                whiteSpace: 'nowrap',
+                                                opacity: currentSubtitle.opacity !== undefined ? currentSubtitle.opacity : 1.0,
+                                            }}
+                                        >
+                                            {line}
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     );
