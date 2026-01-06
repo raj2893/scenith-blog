@@ -491,7 +491,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
     }
     if (aiVoiceText.length > getMaxCharsPerRequest()) {
       const roleBasedLimit = ttsUsage?.role === 'STUDIO' ? 5000 : 
-                            ttsUsage?.role === 'CREATOR' ? 2500 : 500;
+                            ttsUsage?.role === 'CREATOR' ? 2500 : 250;
       const limitType = ttsUsage?.daily.remaining !== -1 && 
                         (ttsUsage?.daily.remaining ?? 0) < (ttsUsage?.monthly.remaining ?? 0)
         ? 'daily' 
@@ -700,7 +700,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
     // Determine role-based limit
     const roleBasedLimit = ttsUsage.role === 'ADMIN' ? 10000 :
                           ttsUsage.role === 'STUDIO' ? 5000 : 
-                          ttsUsage.role === 'CREATOR' ? 2500 : 500;
+                          ttsUsage.role === 'CREATOR' ? 2500 : 250;
 
     const dailyRemaining = ttsUsage.daily.remaining;
     const monthlyRemaining = ttsUsage.monthly.remaining;
