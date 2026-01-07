@@ -1,24 +1,13 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { FaBars, FaDollarSign, FaHome, FaTools, FaBlog } from 'react-icons/fa';
+import { FaBars, FaDollarSign, FaHome, FaTools, FaBlog, FaTimes, FaUser } from 'react-icons/fa';
+import axios from 'axios';
+import { motion } from 'framer-motion';
+import { API_BASE_URL } from '../config';
 import '../../../styles/Navbar.css';
 
-// Add this CSS for the icon styling
-const iconStyles = `
-  .nav-link-with-icon {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .nav-link-icon {
-    display: inline-flex;
-    font-size: 0.9em;
-  }
-`;
-
-// Define TypeScript interface for props
+// Define TypeScript interfaces
 interface NavbarProps {
   pageType: string;
   scrollToSection?: (sectionId: string) => void;
@@ -33,11 +22,76 @@ interface NavLink {
   icon?: React.ReactNode;
 }
 
+interface UserProfile {
+  email: string;
+  firstName: string;
+  picture: string | null;
+}
+
+interface LoginFormData {
+  email: string;
+  password: string;
+}
+
 const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
   const router = useRouter();
   const pathname = usePathname();
   const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
   const [isToolsDropdownOpen, setIsToolsDropdownOpen] = useState(false);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  
+  // Auth states
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [loginSuccess, setLoginSuccess] = useState<string>('');
+  const [navbarLoginTriggered, setNavbarLoginTriggered] = useState(false);
+
+  // Check authentication status on mount
+  useEffect(() => {
+    const checkAuth = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const response = await axios.get(`${API_BASE_URL}/auth/me`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          const fullName = response.data.name || '';
+          const nameParts = fullName.trim().split(' ');
+          const firstName = nameParts[0] || '';
+          setUserProfile({
+            email: response.data.email || '',
+            firstName,
+            picture: response.data.picture || null,
+          });
+          setIsLoggedIn(true);
+        } catch (error) {
+          console.error('Auth check failed:', error);
+          localStorage.removeItem('token');
+          localStorage.removeItem('userProfile');
+          setIsLoggedIn(false);
+        }
+      }
+    };
+    checkAuth();
+
+    // Listen for storage changes (login/logout from other tabs or page)
+    const handleStorageChange = () => {
+      checkAuth();
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Poll for auth changes every 2 seconds
+    const authCheckInterval = setInterval(checkAuth, 2000);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(authCheckInterval);
+    };
+  }, []);
 
   const navigate = (path: string) => {
     if (path.startsWith('/blogs') || path.startsWith('/background-removal') || path.startsWith('/pricing')) {
@@ -47,18 +101,23 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
     }
     setIsNavMenuOpen(false);
     setIsToolsDropdownOpen(false);
+    setIsProfileDropdownOpen(false);
   };
 
   const toggleNavMenu = () => {
     setIsNavMenuOpen(!isNavMenuOpen);
     setIsToolsDropdownOpen(false);
+    setIsProfileDropdownOpen(false);
   };
 
   const toggleToolsDropdown = () => {
     setIsToolsDropdownOpen(!isToolsDropdownOpen);
   };
 
-  // Default scrollToSection implementation if not provided
+  const toggleProfileDropdown = () => {
+    setIsProfileDropdownOpen(!isProfileDropdownOpen);
+  };
+
   const defaultScrollToSection = (sectionId: string) => {
     const section = document.getElementById(sectionId);
     if (section) {
@@ -69,6 +128,137 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
       });
     }
   };
+
+  const handleLogin = async (formData: LoginFormData) => {
+    setIsLoggingIn(true);
+    setLoginError(null);
+    try {
+      const response = await axios.post(`${API_BASE_URL}/auth/login`, formData);
+      const { token } = response.data;
+      localStorage.setItem('token', token);
+      
+      const userResponse = await axios.get(`${API_BASE_URL}/auth/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      
+      const fullName = userResponse.data.name || '';
+      const nameParts = fullName.trim().split(' ');
+      const firstName = nameParts[0] || '';
+      
+      setUserProfile({
+        email: userResponse.data.email || '',
+        firstName,
+        picture: userResponse.data.picture || null,
+      });
+      setIsLoggedIn(true);
+      setShowLoginModal(false);
+      setNavbarLoginTriggered(false);
+      setLoginSuccess('Login successful!');
+      setTimeout(() => setLoginSuccess(''), 3000);
+    } catch (error: any) {
+      setLoginError(error.response?.data?.message || 'Login failed. Please check your credentials.');
+    } finally {
+      setIsLoggingIn(false);
+    }
+  };
+
+  const handleGoogleLogin = useCallback(async (credentialResponse: any) => {
+    setLoginError('');
+    setLoginSuccess('');
+    setIsLoggingIn(true);
+    try {
+      const response = await axios.post(`${API_BASE_URL}/auth/google`, {
+        token: credentialResponse.credential,
+      });
+      localStorage.setItem('token', response.data.token);
+      
+      const userResponse = await axios.get(`${API_BASE_URL}/auth/me`, {
+        headers: { Authorization: `Bearer ${response.data.token}` },
+      });
+      
+      const fullName = userResponse.data.name || '';
+      const nameParts = fullName.trim().split(' ');
+      const firstName = nameParts[0] || '';
+      
+      setUserProfile({
+        email: userResponse.data.email || '',
+        firstName,
+        picture: userResponse.data.picture || null,
+      });
+      setIsLoggedIn(true);
+      setShowLoginModal(false);
+      setNavbarLoginTriggered(false);
+      setLoginSuccess('Google login successful!');
+      setTimeout(() => setLoginSuccess(''), 3000);
+    } catch (error: any) {
+      setLoginError(error.response?.data?.message || 'Google login failed');
+      setTimeout(() => setLoginError(''), 8000);
+    } finally {
+      setIsLoggingIn(false);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userProfile');
+    setIsLoggedIn(false);
+    setUserProfile(null);
+    setIsProfileDropdownOpen(false);
+    window.location.reload();
+  };
+
+  const handleNavbarLoginClick = () => {
+    setNavbarLoginTriggered(true);
+    setShowLoginModal(true);
+  };
+
+  useEffect(() => {
+    if (!showLoginModal || !navbarLoginTriggered) return;
+  
+    const timer = setTimeout(() => {
+      const initializeGoogleSignIn = () => {
+        if (window.google && window.google.accounts) {
+          try {
+            // Check if Google Sign-In is already initialized globally
+            const existingButton = document.getElementById('navbarGoogleSignInButton');
+            if (!existingButton) return;
+          
+            // Only render if the button container is empty
+            if (existingButton.children.length === 0) {
+              window.google.accounts.id.initialize({
+                client_id: '397321320139-tpd310sq9j8rdngqd9kdmhgegco52b3g.apps.googleusercontent.com',
+                callback: handleGoogleLogin,
+              });
+              window.google.accounts.id.renderButton(existingButton, {
+                theme: 'outline',
+                size: 'large',
+                width: 300,
+              });
+            }
+          } catch (error) {
+            // Silently handle if already initialized
+            console.warn('Google Sign-In already initialized elsewhere');
+          }
+        } else {
+          setTimeout(initializeGoogleSignIn, 100);
+        }
+      };
+    
+      initializeGoogleSignIn();
+    }, 150);
+  
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [showLoginModal, navbarLoginTriggered, handleGoogleLogin]);
+
+  useEffect(() => {
+    return () => {
+      if (!showLoginModal && navbarLoginTriggered) {
+        setNavbarLoginTriggered(false);
+      }
+    };
+  }, [showLoginModal, navbarLoginTriggered]);  
 
   const baseNavLinks: NavLink[] = [
     { label: 'Home', path: '/', icon: <FaHome /> },
@@ -95,79 +285,209 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
     : baseNavLinks;
 
   return (
-    <nav className={`nav-bar ${isNavMenuOpen ? 'open' : ''}`}>
-      <div className="nav-content">
-        <div className="branding-container" onClick={() => navigate('/')}>
-          <h1>
-            <span className="letter">S</span>
-            <span className="letter">C</span>
-            <span className="letter">E</span>
-            <span className="letter">N</span>
-            <span className="letter">I</span>
-            <span className="letter">T</span>
-            <span className="letter">H</span>
-          </h1>
-          <div className="logo-element"></div>
-        </div>
-        <button className="hamburger-menu" onClick={toggleNavMenu}>
-          <FaBars />
-        </button>
-        <div className={`nav-links ${isNavMenuOpen ? 'open' : ''}`}>
-          {navLinks.map((link) => (
-            <div key={link.label} className="nav-item">
-              {link.isDropdown ? (
-                <>
+    <>
+      <nav className={`nav-bar ${isNavMenuOpen ? 'open' : ''}`}>
+        <div className="nav-content">
+          <div className="branding-container" onClick={() => navigate('/')}>
+            <h1>
+              <span className="letter">S</span>
+              <span className="letter">C</span>
+              <span className="letter">E</span>
+              <span className="letter">N</span>
+              <span className="letter">I</span>
+              <span className="letter">T</span>
+              <span className="letter">H</span>
+            </h1>
+            <div className="logo-element"></div>
+          </div>
+          <button className="hamburger-menu" onClick={toggleNavMenu}>
+            <FaBars />
+          </button>
+          <div className={`nav-links ${isNavMenuOpen ? 'open' : ''}`}>
+            {navLinks.map((link) => (
+              <div key={link.label} className="nav-item">
+                {link.isDropdown ? (
+                  <>
+                    <button
+                      type="button"
+                      className={`nav-link nav-link-with-icon dropdown-trigger ${pathname === link.path ? 'active' : ''}`}
+                      onMouseEnter={() => setIsToolsDropdownOpen(true)}
+                      onMouseLeave={() => setIsToolsDropdownOpen(false)}
+                      onClick={toggleToolsDropdown}
+                    >
+                      {link.icon && <span className="nav-link-icon">{link.icon}</span>}
+                      {link.label}
+                    </button>
+                    {isToolsDropdownOpen && (
+                      <div
+                        className="tools-dropdown"
+                        onMouseEnter={() => setIsToolsDropdownOpen(true)}
+                        onMouseLeave={() => setIsToolsDropdownOpen(false)}
+                      >
+                        {link.dropdownItems?.map((item) => (
+                          <button
+                            key={item.label}
+                            type="button"
+                            className="tools-dropdown-item"
+                            onClick={() => navigate(item.href)}
+                          >
+                            {item.label}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                ) : (
                   <button
                     type="button"
-                    className={`nav-link nav-link-with-icon dropdown-trigger ${pathname === link.path ? 'active' : ''}`}
-                    onMouseEnter={() => setIsToolsDropdownOpen(true)}
-                    onMouseLeave={() => setIsToolsDropdownOpen(false)}
-                    onClick={toggleToolsDropdown}
+                    className={`nav-link ${link.icon ? 'nav-link-with-icon' : ''} ${pathname === link.path ? 'active' : ''}`}
+                    onClick={() => {
+                      if (link.path) {
+                        navigate(link.path);
+                      } else if (link.sectionId) {
+                        (scrollToSection || defaultScrollToSection)(link.sectionId);
+                        setIsNavMenuOpen(false);
+                      }
+                    }}
                   >
                     {link.icon && <span className="nav-link-icon">{link.icon}</span>}
                     {link.label}
                   </button>
-                  {isToolsDropdownOpen && (
+                )}
+              </div>
+            ))}
+            
+            {/* Auth Button */}
+            <div className="nav-item auth-nav-item">
+              {isLoggedIn ? (
+                <>
+                  <button
+                    type="button"
+                    className="nav-link nav-link-with-icon dropdown-trigger"
+                    onMouseEnter={() => setIsProfileDropdownOpen(true)}
+                    onMouseLeave={() => setIsProfileDropdownOpen(false)}
+                    onClick={toggleProfileDropdown}
+                  >
+                    <span className="nav-link-icon"><FaUser /></span>
+                    {userProfile?.firstName || 'Profile'}
+                  </button>
+                  {isProfileDropdownOpen && (
                     <div
-                      className="tools-dropdown"
-                      onMouseEnter={() => setIsToolsDropdownOpen(true)}
-                      onMouseLeave={() => setIsToolsDropdownOpen(false)}
+                      className="tools-dropdown profile-dropdown"
+                      onMouseEnter={() => setIsProfileDropdownOpen(true)}
+                      onMouseLeave={() => setIsProfileDropdownOpen(false)}
                     >
-                      {link.dropdownItems?.map((item) => (
-                        <button
-                          key={item.label}
-                          type="button"
-                          className="tools-dropdown-item"
-                          onClick={() => navigate(item.href)}
-                        >
-                          {item.label}
-                        </button>
-                      ))}
+                      <button
+                        type="button"
+                        className="tools-dropdown-item logout-item"
+                        onClick={handleLogout}
+                      >
+                        Logout
+                      </button>
                     </div>
                   )}
                 </>
               ) : (
                 <button
                   type="button"
-                  className={`nav-link ${link.icon ? 'nav-link-with-icon' : ''} ${pathname === link.path ? 'active' : ''}`}
-                  onClick={() => {
-                    if (link.path) {
-                      navigate(link.path);
-                    } else if (link.sectionId) {
-                      (scrollToSection || defaultScrollToSection)(link.sectionId);
-                      setIsNavMenuOpen(false);
-                    }
-                  }}
+                  className="nav-link nav-link-with-icon auth-button"
+                  onClick={handleNavbarLoginClick}
                 >
-                  {link.icon && <span className="nav-link-icon">{link.icon}</span>}
-                  {link.label}
+                  <span className="nav-link-icon"><FaUser /></span>
+                  Login
                 </button>
               )}
             </div>
-          ))}
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+
+      {/* Login Modal - Only render when triggered from navbar */}
+      {showLoginModal && navbarLoginTriggered && (
+        <div className="modal-overlay navbar-modal" onClick={() => {
+          setShowLoginModal(false);
+          setNavbarLoginTriggered(false);
+        }}>
+          <motion.div
+            className="login-modal"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="modal-close-button"
+              onClick={() => {
+                setShowLoginModal(false);
+                setNavbarLoginTriggered(false);
+              }}
+              aria-label="Close login modal"
+            >
+              <FaTimes />
+            </button>
+            <div className="auth-container">
+              <div className="auth-header">
+                <h1>SCENITH</h1>
+                <p>Login to Continue</p>
+              </div>
+              {isLoggingIn && (
+                <div className="loading-overlay">
+                  <div className="spinner" />
+                  <p>Logging in...</p>
+                </div>
+              )}
+              {loginError && <div className="error-message">{loginError}</div>}
+              {loginSuccess && <div className="success-message">{loginSuccess}</div>}
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const formData = new FormData(e.currentTarget);
+                  handleLogin({
+                    email: formData.get('email') as string,
+                    password: formData.get('password') as string,
+                  });
+                }}
+                className="auth-form"
+              >
+                <div className="auth-input-label">
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder=" "
+                    className="auth-input"
+                    aria-label="Email address"
+                    disabled={isLoggingIn}
+                    required
+                  />
+                  <span>Email</span>
+                </div>
+                <div className="auth-input-label">
+                  <input
+                    type="password"
+                    name="password"
+                    placeholder=" "
+                    className="auth-input"
+                    aria-label="Password"
+                    disabled={isLoggingIn}
+                    required
+                  />
+                  <span>Password</span>
+                </div>
+                <button type="submit" className="cta-button auth-button" disabled={isLoggingIn}>
+                  {isLoggingIn ? 'Logging in...' : 'Login'}
+                </button>
+              </form>
+              <div className="divider">OR</div>
+              <div id="navbarGoogleSignInButton" className="google-button"></div>
+              <p className="auth-link">
+                New to SCENITH?{' '}
+                <a href="/register">Sign up</a>
+              </p>
+            </div>
+          </motion.div>
+        </div>
+      )}
+    </>
   );
 };
 
