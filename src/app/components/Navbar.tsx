@@ -93,6 +93,10 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
     };
   }, []);
 
+  const dispatchLoginEvent = () => {
+    window.dispatchEvent(new Event('userLoggedIn'));
+  };  
+
   const navigate = (path: string) => {
     if (path.startsWith('/blogs') || path.startsWith('/background-removal') || path.startsWith('/pricing')) {
       router.push(path);
@@ -136,15 +140,15 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
       const response = await axios.post(`${API_BASE_URL}/auth/login`, formData);
       const { token } = response.data;
       localStorage.setItem('token', token);
-      
+
       const userResponse = await axios.get(`${API_BASE_URL}/auth/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      
+
       const fullName = userResponse.data.name || '';
       const nameParts = fullName.trim().split(' ');
       const firstName = nameParts[0] || '';
-      
+
       setUserProfile({
         email: userResponse.data.email || '',
         firstName,
@@ -155,6 +159,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
       setNavbarLoginTriggered(false);
       setLoginSuccess('Login successful!');
       setTimeout(() => setLoginSuccess(''), 3000);
+      dispatchLoginEvent();
     } catch (error: any) {
       setLoginError(error.response?.data?.message || 'Login failed. Please check your credentials.');
     } finally {
@@ -190,6 +195,8 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
       setNavbarLoginTriggered(false);
       setLoginSuccess('Google login successful!');
       setTimeout(() => setLoginSuccess(''), 3000);
+
+      dispatchLoginEvent();
     } catch (error: any) {
       setLoginError(error.response?.data?.message || 'Google login failed');
       setTimeout(() => setLoginError(''), 8000);
