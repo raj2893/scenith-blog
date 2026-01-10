@@ -1978,6 +1978,138 @@
   box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
 }
 
+/* Usage bar color states */
+.usage-bar-fill.normal {
+  background: linear-gradient(90deg, #3B82F6, #8B5CF6);
+}
+
+.usage-bar-fill.warning {
+  background: linear-gradient(90deg, #F59E0B, #FB923C);
+}
+
+.usage-bar-fill.critical {
+  background: linear-gradient(90deg, #EF4444, #DC2626);
+}
+
+/* Inline upgrade CTA */
+.inline-upgrade-cta {
+  margin-top: 12px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+  border-radius: 8px;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.inline-upgrade-cta:hover {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.15));
+  border-color: rgba(59, 130, 246, 0.3);
+  transform: translateY(-2px);
+}
+
+.inline-upgrade-link {
+  color: #3B82F6;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.inline-upgrade-link:hover {
+  color: #2563EB;
+}
+
+/* Micro warning text */
+.usage-micro-warning {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: rgba(245, 158, 11, 0.1);
+  border-left: 3px solid #F59E0B;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: #D97706;
+  font-weight: 600;
+  animation: slideDown 0.3s ease-out;
+}
+
+/* Tier preview locks */
+.tier-preview-container {
+  margin-top: 15px;
+  padding: 12px;
+  background: rgba(59, 130, 246, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(59, 130, 246, 0.1);
+}
+
+.tier-preview-title {
+  font-size: 0.75rem;
+  color: #64748B;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.tier-preview-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tier-preview-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  padding: 6px 10px;
+  background: #FFFFFF;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.tier-preview-item:hover {
+  background: #F8FAFC;
+  transform: translateX(3px);
+}
+
+.tier-preview-item.locked {
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+.tier-name {
+  font-weight: 600;
+  color: #1E293B;
+}
+
+.tier-limit {
+  color: #64748B;
+  font-size: 0.85rem;
+}
+
+.tier-lock {
+  color: #94A3B8;
+  font-size: 1rem;
+}
+
+.tier-unlocked {
+  color: #22C55E;
+  font-size: 1rem;
+}
+
+/* Updated usage label styles with emoji */
+.usage-label.today {
+  color: #F59E0B;
+}
+
+.usage-label.month {
+  color: #3B82F6;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .main-content {

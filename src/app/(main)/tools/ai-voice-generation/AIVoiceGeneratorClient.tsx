@@ -913,10 +913,13 @@ return (
                    ttsUsage.monthly.limit > 0 &&
                    ttsUsage.daily.remaining < ttsUsage.monthly.remaining && (
                     <div className="usage-section">
-                      <p className="usage-label">Daily Usage (Most Restrictive)</p>
+                      <p className="usage-label today">⚠️ Today's Limit</p>
                       <div className="usage-bar-container">
                         <div 
-                          className="usage-bar-fill" 
+                          className={`usage-bar-fill ${
+                            (ttsUsage.daily.used / ttsUsage.daily.limit) >= 0.95 ? 'critical' :
+                            (ttsUsage.daily.used / ttsUsage.daily.limit) >= 0.80 ? 'warning' : 'normal'
+                          }`}
                           style={{ width: `${(ttsUsage.daily.used / ttsUsage.daily.limit) * 100}%` }}
                         />
                       </div>
@@ -924,18 +927,26 @@ return (
                         <strong>{ttsUsage.daily.remaining.toLocaleString()}</strong> characters remaining today
                         ({ttsUsage.daily.used.toLocaleString()} / {ttsUsage.daily.limit.toLocaleString()} used)
                       </p>
+                          
+                      {(ttsUsage.daily.used / ttsUsage.daily.limit) >= 0.80 && 
+                       ttsUsage.daily.remaining > 0 && (
+                        <div className="usage-micro-warning">
+                          You're almost out of free characters. Upgrade to avoid interruption.
+                        </div>
+                      )}
                     </div>
                   )}
 
-                  {/* Monthly Usage Bar - Always show */}
                   <div className="usage-section">
-                    <p className="usage-label">
-                      {ttsUsage.monthly.limit === -1 ? 'Monthly Usage (Unlimited)' :
-                       ttsUsage.daily.limit > 0 && 
-                       ttsUsage.monthly.remaining > 0 && 
-                       ttsUsage.daily.remaining >= ttsUsage.monthly.remaining
-                        ? 'Monthly Usage (Most Restrictive)'
-                        : 'Monthly Usage'}
+                    <p className={`usage-label ${
+                      ttsUsage.monthly.limit === -1 ? '' :
+                      ttsUsage.daily.limit > 0 && 
+                      ttsUsage.monthly.remaining > 0 && 
+                      ttsUsage.daily.remaining >= ttsUsage.monthly.remaining
+                        ? 'month'
+                        : ''
+                    }`}>
+                      📅 {ttsUsage.monthly.limit === -1 ? 'This Month (Unlimited)' : 'This Month\'s Limit'}
                     </p>
                     {ttsUsage.monthly.limit === -1 ? (
                       <p className="usage-text">
@@ -945,7 +956,10 @@ return (
                       <>
                         <div className="usage-bar-container">
                           <div 
-                            className="usage-bar-fill" 
+                            className={`usage-bar-fill ${
+                              (ttsUsage.monthly.used / ttsUsage.monthly.limit) >= 0.95 ? 'critical' :
+                              (ttsUsage.monthly.used / ttsUsage.monthly.limit) >= 0.80 ? 'warning' : 'normal'
+                            }`}
                             style={{ width: `${(ttsUsage.monthly.used / ttsUsage.monthly.limit) * 100}%` }}
                           />
                         </div>
@@ -953,8 +967,31 @@ return (
                           <strong>{ttsUsage.monthly.remaining.toLocaleString()}</strong> characters remaining this month
                           ({ttsUsage.monthly.used.toLocaleString()} / {ttsUsage.monthly.limit.toLocaleString()} used)
                         </p>
+                            
+                        {(ttsUsage.monthly.used / ttsUsage.monthly.limit) >= 0.80 && 
+                         ttsUsage.monthly.remaining > 0 && (
+                          <div className="usage-micro-warning">
+                            You're almost out of free characters. Upgrade to avoid interruption.
+                          </div>
+                        )}
                       </>
                     )}
+
+                    {ttsUsage.role === 'BASIC' && (
+                      <div className="inline-upgrade-cta">
+                        <a href="/pricing" className="inline-upgrade-link">
+                          🔓 Need more? Upgrade to Creator for 10× higher limits
+                        </a>
+                      </div>
+                    )}
+
+                    {ttsUsage.role === 'CREATOR' && (
+                      <div className="inline-upgrade-cta">
+                        <a href="/pricing" className="inline-upgrade-link">
+                          🔓 Need more? Upgrade to STUDIO for 10× higher limits
+                        </a>
+                      </div>
+                    )}                    
                   </div>
                 </div>
               )}
