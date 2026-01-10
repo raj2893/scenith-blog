@@ -1933,5 +1933,57 @@
     "featured": false,
     "slug": "free-ai-voice-generator-complete-guide-2026",
     "difficulty": "Beginner"
-  }    
+  },
+  {
+    "id": 129,
+    "title": "Advanced Free Browser Canvas Editor 2026: Pro-Level Design Without Photoshop or Subscriptions",
+    "excerpt": "The most powerful free browser-based image & canvas editor in 2026: multi-page projects, professional typography with background styling, AI background removal, smart alignment guides, precise controls — completely free, no watermarks, no installation needed.",
+    "category": "Design Tools",
+    "readTime": "20 min",
+    "publishDate": "2026-01-07",
+    "author": "Scenith Team",
+    "image": "🖼️✨",
+    "gradient": "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
+    "tags": [
+      "Free Browser Canvas",
+      "Advanced Image Editor",
+      "Photoshop Alternative",
+      "Canva Alternative",
+      "Multi-page Canvas",
+      "AI Background Removal",
+      "Professional Typography",
+      "Smart Guides Design",
+      "Free Graphic Design 2026",
+      "No Subscription Editor"
+    ],
+    "featured": false,
+    "slug": "advanced-free-browser-canvas-editor-2026-guide",
+    "difficulty": "Beginner to Advanced"
+  },
+  {
+    "id": 130,
+    "title": "Free AI Subtitle Generator: Add Captions to Videos in Seconds (2026 Guide)",
+    "excerpt": "Automatically generate accurate AI subtitles for free in 2026. Complete guide to Whisper AI captioning, 50+ languages, custom styles, and professional video captions without expensive transcription services.",
+    "category": "AI Tools",
+    "readTime": "15 min",
+    "publishDate": "2026-01-10",
+    "author": "Scenith Team",
+    "image": "🎥📝",
+    "gradient": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    "tags": [
+      "AI Subtitle Generator",
+      "Free Video Captions",
+      "Add Subtitles to Video",
+      "Whisper AI Subtitles",
+      "Automatic Captioning",
+      "Video Accessibility",
+      "Free AI Tools",
+      "Multilingual Subtitles",
+      "Burned-in Captions",
+      "Social Media Subtitles"
+    ],
+    "featured": false,
+    "slug": "free-ai-subtitles-generator-2026",
+    "difficulty": "Beginner"
+  }
 ]
