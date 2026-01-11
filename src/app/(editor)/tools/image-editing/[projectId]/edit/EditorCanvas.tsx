@@ -13,7 +13,6 @@ import {
   FaPlus,
   FaFont,
   FaImage,
-  FaShapes,
   FaTrash,
   FaArrowLeft,
   FaEye,
@@ -195,7 +194,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
   const [showRightPanel, setShowRightPanel] = useState<boolean>(true);
   const [showLayersPopup, setShowLayersPopup] = useState(false);
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);  
-  const [activeTab, setActiveTab] = useState<'text' | 'images' | 'shapes' | 'properties' | 'canvas' | 'elements' | 'filters' | 'templates' |null>(null);
+  const [activeTab, setActiveTab] = useState<'text' | 'images' | 'properties' | 'canvas' | 'elements' | 'filters' | 'templates' |null>(null);
   const [resizeHandle, setResizeHandle] = useState<string | null>(null);
   const [resizeStartState, setResizeStartState] = useState<{
     x: number;
@@ -245,7 +244,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
   const [isShiftPressed, setIsShiftPressed] = useState(false); 
   const [pages, setPages] = useState<Array<{
     id: string;
-    canvas: { width: number; height: number; backgroundColor: string };
+    canvas: { width: number; height: number; backgroundColor: string; transparent?: boolean };
     layers: Layer[];
   }>>([]);
   const [currentPageIndex, setCurrentPageIndex] = useState(0);   
@@ -266,6 +265,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
   const [templates, setTemplates] = useState<any[]>([]);
   const [templatesLoading, setTemplatesLoading] = useState(true);  
   const [lastSavedDesign, setLastSavedDesign] = useState<string>(""); 
+  const [isCanvasTransparent, setIsCanvasTransparent] = useState(false);
   
   useEffect(() => {
     const checkMobile = () => {
@@ -528,6 +528,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
             setCanvasWidth(firstPage.canvas.width);
             setCanvasHeight(firstPage.canvas.height);
             setCanvasBgColor(firstPage.canvas.backgroundColor);
+            setIsCanvasTransparent(firstPage.canvas.transparent || false);
             setLayers(firstPage.layers || []);
             saveToHistory(firstPage.layers || []);
           } else {
@@ -869,7 +870,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
         const updatedPages = [...pages];
         updatedPages[currentPageIndex] = {
           ...updatedPages[currentPageIndex],
-          canvas: { width: canvasWidth, height: canvasHeight, backgroundColor: canvasBgColor },
+          canvas: { width: canvasWidth, height: canvasHeight, backgroundColor: canvasBgColor, transparent: isCanvasTransparent },
           layers: layers
         };
 
@@ -889,7 +890,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
 
       return () => clearTimeout(timeoutId);
     }
-  }, [layers, canvasWidth, canvasHeight, canvasBgColor, pages, currentPageIndex, projectId, lastSavedDesign]);
+  }, [layers, canvasWidth, canvasHeight, canvasBgColor, pages, currentPageIndex, projectId, lastSavedDesign, isCanvasTransparent]);
 
   // Undo
   const handleUndo = () => {
@@ -1169,13 +1170,19 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
       const updatedPages = [...pages];
       updatedPages[currentPageIndex] = {
         ...updatedPages[currentPageIndex],
-        canvas: { width: canvasWidth, height: canvasHeight, backgroundColor: canvasBgColor },
+        canvas: { width: canvasWidth, height: canvasHeight, backgroundColor: canvasBgColor, transparent: isCanvasTransparent },
         layers: layers
       };
   
       const designJson = JSON.stringify({
         version: "1.0",
-        pages: updatedPages
+        pages: updatedPages.map(page => ({
+          ...page,
+          canvas: {
+            ...page.canvas,
+            transparent: page.id === pages[currentPageIndex].id ? isCanvasTransparent : false
+          }
+        }))
       });
   
       await axios.put(
@@ -1237,7 +1244,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
       const updatedPages = [...pages];
       updatedPages[currentPageIndex] = {
         ...updatedPages[currentPageIndex],
-        canvas: { width: canvasWidth, height: canvasHeight, backgroundColor: canvasBgColor },
+        canvas: { width: canvasWidth, height: canvasHeight, backgroundColor: canvasBgColor, transparent: isCanvasTransparent },
         layers: layers
       };
   
@@ -1558,7 +1565,6 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
             height: newHeight,
           });
         } else {
-          // For shapes, only update dimensions
           updateLayer(selectedLayerIds[0], {
             x: newX,
             y: newY,
@@ -1872,7 +1878,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
     if (projectId && project && layers.length > 0) {
       autoSave();
     }
-  }, [debouncedLayers, canvasWidth, canvasHeight, canvasBgColor, project, projectId]);
+  }, [debouncedLayers, canvasWidth, canvasHeight, canvasBgColor, project, projectId, isCanvasTransparent]);
 
   const applySegmentColor = (layerId: string) => {
     if (!textSelection || textSelection.layerId !== layerId) return;
@@ -1939,7 +1945,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
   const addNewPage = () => {
     const newPage = {
       id: `page-${Date.now()}`,
-      canvas: { width: canvasWidth, height: canvasHeight, backgroundColor: "#FFFFFF" },
+      canvas: { width: canvasWidth, height: canvasHeight, backgroundColor: "#FFFFFF", transparent: false },
       layers: []
     };
     const updatedPages = [...pages, newPage];
@@ -1984,7 +1990,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
     const updatedPages = [...pages];
     updatedPages[currentPageIndex] = {
       ...updatedPages[currentPageIndex],
-      canvas: { width: canvasWidth, height: canvasHeight, backgroundColor: canvasBgColor },
+      canvas: { width: canvasWidth, height: canvasHeight, backgroundColor: canvasBgColor, transparent: isCanvasTransparent },
       layers: layers
     };
     setPages(updatedPages);
@@ -1995,6 +2001,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
     setCanvasWidth(targetPage.canvas.width);
     setCanvasHeight(targetPage.canvas.height);
     setCanvasBgColor(targetPage.canvas.backgroundColor);
+    setIsCanvasTransparent(targetPage.canvas.transparent || false);
     setLayers(targetPage.layers);
     setSelectedLayerId(null);
     saveToHistory(targetPage.layers);
@@ -2523,13 +2530,6 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
           </svg>
         </button>        
         <button 
-          className={`icon-panel-btn ${activeTab === 'shapes' ? 'active' : ''}`}
-          onClick={() => setActiveTab(activeTab === 'shapes' ? null : 'shapes')}
-          title="Shapes"
-        >
-          <FaShapes size={20} />
-        </button>
-        <button 
           className={`icon-panel-btn ${activeTab === 'properties' ? 'active' : ''}`}
           onClick={() => setActiveTab(activeTab === 'properties' ? null : 'properties')}
           title="Properties"
@@ -2773,39 +2773,6 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
                   ))}
                 </div>
               </div>
-            )}
-    
-            {activeTab === 'shapes' && (
-              // <div className="panel-section">
-              //   <h3>Shapes</h3>
-              //   <div className="shapes-grid">
-              //     <button className="shape-btn" onClick={() => addShapeLayer("rectangle")} title="Rectangle">
-              //       <svg viewBox="0 0 100 100" width="40" height="40">
-              //         <rect x="10" y="20" width="80" height="60" fill="#3B82F6" stroke="#1E40AF" strokeWidth="2" rx="5" />
-              //       </svg>
-              //     </button>
-              //     <button className="shape-btn" onClick={() => addShapeLayer("circle")} title="Circle">
-              //       <svg viewBox="0 0 100 100" width="40" height="40">
-              //         <circle cx="50" cy="50" r="40" fill="#3B82F6" stroke="#1E40AF" strokeWidth="2" />
-              //       </svg>
-              //     </button>
-              //     <button className="shape-btn" onClick={() => addShapeLayer("ellipse")} title="Ellipse">
-              //       <svg viewBox="0 0 100 100" width="40" height="40">
-              //         <ellipse cx="50" cy="50" rx="45" ry="30" fill="#3B82F6" stroke="#1E40AF" strokeWidth="2" />
-              //       </svg>
-              //     </button>
-              //     <button className="shape-btn" onClick={() => addShapeLayer("triangle")} title="Triangle">
-              //       <svg viewBox="0 0 100 100" width="40" height="40">
-              //         <polygon points="50,10 90,90 10,90" fill="#3B82F6" stroke="#1E40AF" strokeWidth="2" />
-              //       </svg>
-              //     </button>
-              //   </div>
-              // </div>
-                <div className="panel-section coming-soon">
-                  <div className="coming-soon-text">
-                    <span>Coming soon…</span>
-                  </div>
-                </div>              
             )}
     
             {activeTab === 'properties' && (
@@ -3250,16 +3217,38 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
                     Ratio: {calculateAspectRatio(canvasWidth, canvasHeight)}
                   </div>
                 </div>
+                
+                {/* ADD THIS NEW SECTION */}
                 <div className="property-group">
-                  <label>Background Color</label>
-                  <input
-                    type="color"
-                    value={canvasBgColor}
-                    onChange={(e) => setCanvasBgColor(e.target.value)}
-                  />
+                  <label>Background Type</label>
+                  <select
+                    value={isCanvasTransparent ? "transparent" : "color"}
+                    onChange={(e) => {
+                      const isTransparent = e.target.value === "transparent";
+                      setIsCanvasTransparent(isTransparent);
+                      if (!isTransparent && !canvasBgColor) {
+                        setCanvasBgColor("#FFFFFF");
+                      }
+                    }}
+                  >
+                    <option value="color">Solid Color</option>
+                    <option value="transparent">Transparent</option>
+                  </select>
                 </div>
+                  
+                {/* Only show color picker when not transparent */}
+                {!isCanvasTransparent && (
+                  <div className="property-group">
+                    <label>Background Color</label>
+                    <input
+                      type="color"
+                      value={canvasBgColor}
+                      onChange={(e) => setCanvasBgColor(e.target.value)}
+                    />
+                  </div>
+                )}
               </div>
-            )}    
+            )}   
 
             {activeTab === 'elements' && (
               <div className="panel-section">
@@ -3590,11 +3579,14 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
               //     </div>
               //   )}
               // </div>
-              <div className="panel-section coming-soon">
+            <div className="panel-section">
+              <h3>Filters & Color Correction</h3>    {/* ← Add this */}
+              <div className="coming-soon">
                 <div className="coming-soon-text">
                   <span>Coming soon…</span>
                 </div>
-              </div>              
+              </div>
+            </div>           
             )}                          
             </div>
             </div>
@@ -3714,7 +3706,12 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
               style={{
                 width: canvasWidth,
                 height: canvasHeight,
-                backgroundColor: canvasBgColor,
+                backgroundColor: isCanvasTransparent ? 'transparent' : canvasBgColor,
+                backgroundImage: isCanvasTransparent 
+                  ? 'linear-gradient(45deg, #e0e0e0 25%, transparent 25%), linear-gradient(-45deg, #e0e0e0 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e0e0e0 75%), linear-gradient(-45deg, transparent 75%, #e0e0e0 75%)'
+                  : 'none',
+                backgroundSize: isCanvasTransparent ? '20px 20px' : 'auto',
+                backgroundPosition: isCanvasTransparent ? '0 0, 0 0, 10px 10px, 10px 10px' : '0 0',
                 transform: `translate(${panOffset.x}px, ${panOffset.y}px) scale(${scale})`,
                 overflow: 'hidden',
               }}

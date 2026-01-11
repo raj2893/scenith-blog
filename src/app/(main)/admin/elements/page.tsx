@@ -39,29 +39,38 @@ export default function ElementsAdmin() {
   };
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const selectedFiles = Array.from(e.target.files || []);
+    if (selectedFiles.length === 0) return;
 
     const formData = new FormData();
-    formData.append("file", file);
-    formData.append("name", file.name.split(".")[0]);
+
+    selectedFiles.forEach((file) => {
+      formData.append("files", file);
+    });
+
     formData.append("category", "general");
 
     setUploading(true);
     try {
       const token = localStorage.getItem("token");
-      await axios.post(`${API_BASE_URL}/api/admin/image-elements/upload`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      alert("Element uploaded successfully!");
+      const response = await axios.post(
+        `${API_BASE_URL}/api/admin/image-elements/upload`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      alert(`Successfully uploaded ${response.data.length} elements!`);
       fetchElements();
     } catch (error: any) {
       alert(error.response?.data?.message || "Upload failed");
     } finally {
       setUploading(false);
+      e.target.value = "";
     }
   };
 
@@ -132,6 +141,7 @@ export default function ElementsAdmin() {
           <input
             type="file"
             accept="image/png,image/jpeg,image/jpg,image/svg+xml"
+            multiple
             onChange={handleUpload}
             disabled={uploading}
             style={{ display: "none" }}
