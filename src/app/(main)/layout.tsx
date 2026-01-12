@@ -110,7 +110,8 @@ export default function RootLayout({
           `}
         </Script>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3084309234365491"
-             crossOrigin="anonymous"></script>        
+             crossOrigin="anonymous"></script>  
+        <meta name="google-adsense-account" content="ca-pub-3084309234365491" />           
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poiret+One&family=Comic+Neue&family=Tangerine&family=Noto+Sans+Mono&family=Imperial+Script&family=Verdana&family=Courier+Prime&family=Times+New+Roman&family=Tahoma&family=Birthstone&family=Lavishly+Yours&family=Amatic+SC&family=Rampart+One&family=Freckle+Face&family=Fredericka+the+Great&family=Kings&family=Kirang+Haerang&family=Rubik+Wet+Paint&family=Fascinate+Inline&family=Barrio&family=Yesteryear&family=Gelasio&family=Doto&family=Butcherman&family=Bungee+Hairline&family=Alumni+Sans+Pinstripe&family=Comic+Sans+MS&family=Mountains+of+Christmas&family=Courier+New&family=Impact&family=Arimo&family=Tinos&family=Carlito&family=Montserrat+Alternates&family=Lexend+Giga&family=Georgia&family=Calibri&display=swap" />
       </head>      
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
