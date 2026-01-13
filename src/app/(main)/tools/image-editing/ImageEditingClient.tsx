@@ -61,6 +61,8 @@ const ImageEditingClient: React.FC = () => {
     canvasHeight: 1080,
     canvasBackgroundColor: "#FFFFFF",
   });
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [projectToDelete, setProjectToDelete] = useState<ImageProject | null>(null);  
 
   // Check auth and fetch projects
   useEffect(() => {
@@ -236,14 +238,16 @@ const ImageEditingClient: React.FC = () => {
     }
   };
 
-  // Delete project
-  const handleDeleteProject = async (projectId: number) => {
-    if (!confirm("Are you sure you want to delete this project?")) return;
+  const handleDeleteProject = async () => {
+    if (!projectToDelete) return;
+
     try {
-      await axios.delete(`${API_BASE_URL}/api/image-editor/projects/${projectId}`, {
+      await axios.delete(`${API_BASE_URL}/api/image-editor/projects/${projectToDelete.id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
-      setProjects(projects.filter((p) => p.id !== projectId));
+      setProjects(projects.filter((p) => p.id !== projectToDelete.id));
+      setShowDeleteModal(false);
+      setProjectToDelete(null);
     } catch (error: any) {
       setError(error.response?.data?.message || "Failed to delete project");
     }
@@ -396,7 +400,11 @@ const ImageEditingClient: React.FC = () => {
                         )}
                         <button
                           className="action-btn delete-btn"
-                          onClick={() => handleDeleteProject(project.id)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setProjectToDelete(project);
+                            setShowDeleteModal(true);
+                          }}
                         >
                           <FaTrash />
                         </button>
@@ -1075,6 +1083,49 @@ const ImageEditingClient: React.FC = () => {
           </motion.div>
         </div>
       )}
+
+      {showDeleteModal && projectToDelete && (
+        <div className="modal-overlay">
+          <motion.div
+            className="delete-modal"
+            initial={{ opacity: 0, scale: 0.8, y: 50 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+          >
+            <div className="delete-modal-icon">
+              <div className="trash-can">
+                <FaTrash />
+              </div>
+            </div>
+            
+            <h2>Delete Project?</h2>
+            <p className="delete-warning">
+              You're about to delete <strong>"{projectToDelete.projectName}"</strong>
+            </p>
+            <p className="delete-description">
+              This action cannot be undone. Your project and all its contents will be permanently removed.
+            </p>
+      
+            <div className="delete-modal-actions">
+              <button
+                className="cancel-delete-btn"
+                onClick={() => {
+                  setShowDeleteModal(false);
+                  setProjectToDelete(null);
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                className="confirm-delete-btn"
+                onClick={handleDeleteProject}
+              >
+                <FaTrash /> Delete Forever
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}      
     </div>
   );
 };
