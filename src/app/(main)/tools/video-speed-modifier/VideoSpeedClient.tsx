@@ -355,16 +355,66 @@ const VideoSpeedClient: React.FC = () => {
       }
     }
   };
+  // Add these constants at the top of your VideoSpeedClient component
+  const SUPPORTED_VIDEO_FORMATS = [
+    'video/mp4',
+    'video/quicktime', // .mov
+    'video/x-msvideo', // .avi
+    'video/x-matroska', // .mkv
+    'video/webm',
+    'video/mpeg',
+    'video/x-flv'
+  ];
 
-  // Handle video upload
+  const SUPPORTED_VIDEO_EXTENSIONS = ['.mp4', '.mov', '.avi', '.mkv', '.webm', '.mpeg', '.mpg', '.flv'];
+
+  const MAX_FILE_SIZE = 500 * 1024 * 1024; // 500MB
+
+  // Add this validation function
+  const validateVideoFile = (file: File): { valid: boolean; error?: string } => {
+    // Check file type
+    const fileExtension = file.name.toLowerCase().substring(file.name.lastIndexOf('.'));
+    const isValidType = SUPPORTED_VIDEO_FORMATS.includes(file.type) ||
+                        SUPPORTED_VIDEO_EXTENSIONS.includes(fileExtension);
+
+    if (!isValidType) {
+      return {
+        valid: false,
+        error: `Unsupported video format. Please upload one of: ${SUPPORTED_VIDEO_EXTENSIONS.join(', ')}`
+      };
+    }
+
+    // Check file size
+    if (file.size > MAX_FILE_SIZE) {
+      return {
+        valid: false,
+        error: `File size exceeds 500MB limit. Your file is ${(file.size / (1024 * 1024)).toFixed(2)}MB`
+      };
+    }
+
+    return { valid: true };
+  };
+
   const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!requireLogin()) return;
+
     const file = e.target.files?.[0];
     if (!file) return;
+
+    // Validate the video file
+    const validation = validateVideoFile(file);
+    if (!validation.valid) {
+      setError(validation.error || 'Invalid video file');
+      e.target.value = ''; // Reset file input
+      return;
+    }
+
     const formData = new FormData();
     formData.append('file', file);
     formData.append('speed', speed.toString());
+
     try {
+      setError(null); // Clear any previous errors
       const response = await axios.post(`${API_BASE_URL}/api/video-speed/upload`, formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -374,8 +424,11 @@ const VideoSpeedClient: React.FC = () => {
       setUploads((prev) => [...prev, response.data]);
       setSelectedUpload(response.data);
       setSpeed(response.data.speed);
+      e.target.value = ''; // Reset file input on success
     } catch (error: any) {
-      setError(error.response?.data?.error || 'Failed to upload video.');
+      const errorMessage = error.response?.data?.error || 'Failed to upload video.';
+      setError(errorMessage);
+      e.target.value = ''; // Reset file input on error
     }
   };
 
