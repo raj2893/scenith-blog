@@ -1142,7 +1142,24 @@ return (
                 </button>
               </motion.div>
             </section>
-          )}      
+          )}    
+          <div className="demo-video-section">
+            <h3 className="demo-video-title">See AI Voice Generation in Action</h3>
+            <div className="youtube-video-wrapper">
+              <iframe
+                width="100%"
+                height="100%"
+                src="https://www.youtube.com/embed/dEeT7Z_b3bY?rel=0&modestbranding=1&showinfo=0"
+                title="AI Voice Generator Demo - Natural Voices from Text"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+            <p className="demo-video-caption">
+              Watch how to turn any text into realistic AI voices in seconds — perfect for videos, podcasts & more!
+            </p>
+          </div>            
           <section className="must-try-section" role="region" aria-labelledby="must-try-title">
             <div className="must-try-header">
               <h2 id="must-try-title">Must Try: More AI Tools on Scenith</h2>
