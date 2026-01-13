@@ -129,9 +129,19 @@ const PremiumUpgradePopup: React.FC<PremiumUpgradePopupProps> = ({ isOpen, onClo
               </div>
 
               <div className="premium-popup-text">
+              <div className="urgency-section">
                 <div className="new-year-popup-badge">🎉 New Year Special! 🎉</div>
-                <h2>Want Higher AI VOICE Generation Limit?</h2>
+                    
+                <div className="fomo-banner">
+                  <span className="fire-emoji">🔥</span>
+                  <strong>18 creators</strong> upgraded this week
+                  <span className="highlight">— only 8 spots left at 75% OFF!</span>
+                  <span className="blink-text">Running out fast</span>
+                </div>
+                    
+                <h2>Want Higher AI Voice Generation Limit?</h2>
                 <p>Upgrade to Pro with the <strong>Cheapest Premium Plan!</strong></p>
+              </div>                
 
                 <div className="discount-highlight">
                   <span className="discount-percentage">75% OFF</span>
