@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { motion } from "framer-motion";
-import { FaEdit, FaArrowLeft, FaTimes } from "react-icons/fa";
+import { FaEdit, FaArrowLeft, FaTimes, FaDownload } from "react-icons/fa";
 import { API_BASE_URL } from "@/app/config";
 import "../../../../../styles/svg-library/SingleElement.css";
+import DownloadModal from "@/app/components/DownloadModal";
 
 interface ImageElement {
   id: number;
@@ -20,6 +21,7 @@ interface ImageElement {
   isActive: boolean;
   displayOrder: number | null;
   createdAt: string;
+  downloadCount: number;
 }
 
 interface SingleElementClientProps {
@@ -34,6 +36,9 @@ const SingleElementClient: React.FC<SingleElementClientProps> = ({ elementSlug }
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [showLoginPrompt, setShowLoginPrompt] = useState<boolean>(false);
   const [isCreatingProject, setIsCreatingProject] = useState<boolean>(false);
+  const [downloadModalOpen, setDownloadModalOpen] = useState(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
 
   // Check authentication
   useEffect(() => {
@@ -51,6 +56,70 @@ const SingleElementClient: React.FC<SingleElementClientProps> = ({ elementSlug }
     }
   }, []);
 
+
+  // Handle login
+  const handleLogin = async (formData: { email: string; password: string }) => {
+    setIsLoggingIn(true);
+    setLoginError(null);
+    try {
+      const response = await axios.post(`${API_BASE_URL}/auth/login`, formData);
+      const { token } = response.data;
+      localStorage.setItem("token", token);
+      const userResponse = await axios.get(`${API_BASE_URL}/auth/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setIsLoggedIn(true);
+      setShowLoginPrompt(false);
+    } catch (error: any) {
+      setLoginError(error.response?.data?.message || "Login failed. Please check your credentials.");
+    } finally {
+      setIsLoggingIn(false);
+    }
+  };
+
+  // Handle Google login
+  const handleGoogleLogin = useCallback(async (credentialResponse: any) => {
+    setLoginError("");
+    setIsLoggingIn(true);
+    try {
+      const response = await axios.post(`${API_BASE_URL}/auth/google`, {
+        token: credentialResponse.credential,
+      });
+      localStorage.setItem("token", response.data.token);
+      setIsLoggedIn(true);
+      setShowLoginPrompt(false);
+    } catch (error: any) {
+      setLoginError(error.response?.data?.message || "Google login failed");
+    } finally {
+      setIsLoggingIn(false);
+    }
+  }, []);
+
+  // Initialize Google Sign-In
+  useEffect(() => {
+    const initializeGoogleSignIn = () => {
+      if (window.google && window.google.accounts) {
+        window.google.accounts.id.initialize({
+          client_id: "397321320139-tpd310sq9j8rdngqd9kdmhgegco52b3g.apps.googleusercontent.com",
+          callback: handleGoogleLogin,
+        });
+        const buttonElement = document.getElementById("googleSignInButton");
+        if (buttonElement) {
+          window.google.accounts.id.renderButton(buttonElement, {
+            theme: "outline",
+            size: "large",
+            width: 300,
+          });
+        }
+      } else {
+        setTimeout(initializeGoogleSignIn, 100);
+      }
+    };
+    if (showLoginPrompt) {
+      initializeGoogleSignIn();
+    }
+  }, [showLoginPrompt, handleGoogleLogin]);    
+
   const createSlug = (name: string): string => {
     return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
   };  
@@ -61,16 +130,13 @@ const SingleElementClient: React.FC<SingleElementClientProps> = ({ elementSlug }
       try {
         const response = await axios.get(`${API_BASE_URL}/api/image-editor/elements`);
         const allElements = response.data;
-        
-        // Find element by matching slug
+
         const currentElement = allElements.find((el: ImageElement) => 
           createSlug(el.name) === elementSlug
         );
-  
+
         if (currentElement) {
           setElement(currentElement);
-  
-          // Get related elements from the same category
           const related = allElements
             .filter(
               (el: ImageElement) =>
@@ -85,7 +151,7 @@ const SingleElementClient: React.FC<SingleElementClientProps> = ({ elementSlug }
         setIsLoading(false);
       }
     };
-  
+
     fetchElementData();
   }, [elementSlug]);
 
@@ -284,22 +350,44 @@ const SingleElementClient: React.FC<SingleElementClientProps> = ({ elementSlug }
                 )}
               </div>
 
-              <button
-                className="edit-in-editor-btn"
-                onClick={() => handleEditInEditor(element)}
-                disabled={isCreatingProject}
-              >
-                {isCreatingProject ? (
-                  <>
-                    <div className="btn-spinner"></div>
-                    Creating Project...
-                  </>
-                ) : (
-                  <>
-                    <FaEdit /> Edit in Image Editor
-                  </>
-                )}
-              </button>
+              <div className="action-buttons">
+                <button
+                  className="download-main-btn"
+                  onClick={() => {
+                    if (!isLoggedIn) {
+                      setShowLoginPrompt(true);
+                      return;
+                    }
+                    setDownloadModalOpen(true);
+                  }}
+                >
+                  <FaDownload /> Download
+                </button>
+
+                <button
+                  className="edit-in-editor-btn"
+                  onClick={() => handleEditInEditor(element)}
+                  disabled={isCreatingProject}
+                >
+                  {isCreatingProject ? (
+                    <>
+                      <div className="btn-spinner"></div>
+                      Creating Project...
+                    </>
+                  ) : (
+                    <>
+                      <FaEdit /> Edit in Image Editor
+                    </>
+                  )}
+                </button>
+              </div>
+                
+              {element.downloadCount > 0 && (
+                <div className="download-stats">
+                  <span className="stats-icon">📥</span>
+                  <span className="stats-text">{element.downloadCount.toLocaleString()} downloads</span>
+                </div>
+              )}
 
               <div className="usage-info">
                 <h3>Usage Rights</h3>
@@ -359,15 +447,32 @@ const SingleElementClient: React.FC<SingleElementClientProps> = ({ elementSlug }
                   </div>
                   <div className="related-info">
                     <h4>{relatedElement.name}</h4>
+                    <div className="related-actions">
                     <button
-                      className="quick-edit-btn"
+                      className="quick-download-btn"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleEditInEditor(relatedElement);
+                        if (!isLoggedIn) {
+                          setShowLoginPrompt(true);
+                          return;
+                        }
+                        setElement(relatedElement);
+                        setDownloadModalOpen(true);
                       }}
+                      title="Download"
                     >
-                      <FaEdit /> Edit
+                      <FaDownload />
                     </button>
+                      <button
+                        className="quick-edit-btn"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEditInEditor(relatedElement);
+                        }}
+                      >
+                        <FaEdit /> Edit
+                      </button>
+                    </div>
                   </div>
                 </motion.div>
               ))}
@@ -444,32 +549,54 @@ const SingleElementClient: React.FC<SingleElementClientProps> = ({ elementSlug }
         </div>
       </section>
 
-      {/* Login Prompt Modal */}
+      {/* Login Modal */}
       {showLoginPrompt && (
         <div className="modal-overlay" onClick={() => setShowLoginPrompt(false)}>
-          <motion.div
-            className="login-prompt-modal"
+          <motion.div 
+            className="login-modal" 
             onClick={(e) => e.stopPropagation()}
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.8 }} 
             animate={{ opacity: 1, scale: 1 }}
           >
             <button className="modal-close" onClick={() => setShowLoginPrompt(false)}>
               <FaTimes />
             </button>
-            <h2>Sign In Required</h2>
-            <p>Please sign in to edit icons in the image editor.</p>
-            <button
-              className="cta-button"
-              onClick={() => {
-                setShowLoginPrompt(false);
-                router.push("/login");
+            <h1>SCENITH</h1>
+            <p>Login to Download</p>
+            {loginError && <div className="error-message">{loginError}</div>}
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const formData = new FormData(e.currentTarget);
+                handleLogin({
+                  email: formData.get("email") as string,
+                  password: formData.get("password") as string,
+                });
               }}
             >
-              Go to Login
-            </button>
+              <input type="email" name="email" placeholder="Email" required disabled={isLoggingIn} />
+              <input type="password" name="password" placeholder="Password" required disabled={isLoggingIn} />
+              <button type="submit" className="cta-button" disabled={isLoggingIn}>
+                {isLoggingIn ? "Logging in..." : "Login"}
+              </button>
+            </form>
+            <div className="divider">OR</div>
+            <div id="googleSignInButton"></div>
+            <p className="auth-link">
+              New to SCENITH? <a href="/register">Sign up</a>
+            </p>
           </motion.div>
         </div>
       )}
+
+      {downloadModalOpen && element && (
+        <DownloadModal
+          isOpen={downloadModalOpen}
+          onClose={() => setDownloadModalOpen(false)}
+          elementId={element.id}
+          elementName={element.name}
+        />
+      )}          
     </div>
   );
 };

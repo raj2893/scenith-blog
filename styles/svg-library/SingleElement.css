@@ -515,6 +515,205 @@
   background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
 }
 
+/* Action Buttons Group */
+.action-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.download-main-btn {
+  width: 100%;
+  padding: 18px 32px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.download-main-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(16, 185, 129, 0.4);
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+}
+
+/* Download Statistics */
+.download-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 100%);
+  border-radius: 10px;
+  margin-bottom: 24px;
+  border: 1px solid rgba(59, 130, 246, 0.15);
+}
+
+.stats-icon {
+  font-size: 1.2rem;
+}
+
+.stats-text {
+  color: #3b82f6;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.related-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.quick-download-btn {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+}
+
+.quick-download-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+}
+
+.login-modal {
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 20px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.login-modal h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.login-modal > p {
+  text-align: center;
+  color: #64748b;
+  font-size: 1rem;
+  margin-bottom: 25px;
+}
+
+.login-modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.login-modal input {
+  width: 100%;
+  padding: 14px 15px;
+  border: 2px solid rgba(59, 130, 246, 0.2);
+  border-radius: 10px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: all 0.3s ease;
+}
+
+.login-modal input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.login-modal input:disabled {
+  background: #f1f5f9;
+  cursor: not-allowed;
+}
+
+.divider {
+  margin: 20px 0;
+  color: #64748b;
+  font-size: 0.9rem;
+  text-align: center;
+  position: relative;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 42%;
+  height: 1px;
+  background: #e5e7eb;
+}
+
+.divider::before {
+  left: 0;
+}
+
+.divider::after {
+  right: 0;
+}
+
+#googleSignInButton {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.auth-link {
+  text-align: center;
+  font-size: 0.95rem;
+  color: #64748b;
+  margin-top: 20px;
+}
+
+.auth-link a {
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.auth-link a:hover {
+  text-decoration: underline;
+}
+
+.error-message {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  text-align: center;
+  border-left: 4px solid #ef4444;
+  font-size: 0.95rem;
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
   .showcase-grid {
@@ -552,6 +751,17 @@
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 16px;
   }
+
+  .action-buttons {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .download-main-btn,
+  .edit-in-editor-btn {
+    padding: 14px 24px;
+    font-size: 1rem;
+  }  
 }
 
 @media (max-width: 480px) {
@@ -576,4 +786,35 @@
   .meta-value {
     font-size: 0.9rem;
   }
+
+  .action-buttons {
+    gap: 10px;
+  }
+
+  .download-main-btn,
+  .edit-in-editor-btn {
+    padding: 12px 20px;
+    font-size: 0.95rem;
+  }
+
+  .download-stats {
+    padding: 10px 16px;
+  }
+
+  .stats-text {
+    font-size: 0.85rem;
+  }
+  
+  .login-modal {
+    padding: 30px 20px;
+  }
+
+  .login-modal h1 {
+    font-size: 1.6rem;
+  }
+
+  .login-modal input {
+    padding: 12px;
+    font-size: 0.95rem;
+  }  
 }
