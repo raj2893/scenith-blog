@@ -160,6 +160,8 @@ const VideoSpeedClient: React.FC = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loginSuccess, setLoginSuccess] = useState<string>('');
+  const [availableQualities, setAvailableQualities] = useState<string[]>([]);
+  const [selectedQuality, setSelectedQuality] = useState<string>('720p');  
 
   // Handle scroll for navbar styling
   useEffect(() => {
@@ -224,6 +226,43 @@ const VideoSpeedClient: React.FC = () => {
     };
     fetchVideos();
   }, [isLoggedIn]);
+
+  const getAvailableQualities = (role: string): string[] => {
+    switch (role) {
+      case 'BASIC':
+        return ['144p', '240p', '360p', '480p', '720p'];
+      case 'CREATOR':
+        return ['144p', '240p', '360p', '480p', '720p', '1080p', '1440p', '2k'];
+      case 'STUDIO':
+      case 'ADMIN':
+        return ['144p', '240p', '360p', '480p', '720p', '1080p', '1440p', '2k', '4k'];
+      default:
+        return ['720p'];
+    }
+  };
+  
+  const getDefaultQuality = (role: string): string => {
+    switch (role) {
+      case 'BASIC':
+        return '720p';
+      case 'CREATOR':
+        return '1080p';
+      case 'STUDIO':
+      case 'ADMIN':
+        return '1440p';
+      default:
+        return '720p';
+    }
+  };
+  
+  // Add useEffect
+  useEffect(() => {
+    if (userProfile.role) {
+      const qualities = getAvailableQualities(userProfile.role);
+      setAvailableQualities(qualities);
+      setSelectedQuality(getDefaultQuality(userProfile.role));
+    }
+  }, [userProfile.role]);  
 
   // Handle login form submission
   const handleLogin = async (formData: LoginFormData) => {
@@ -464,9 +503,10 @@ const VideoSpeedClient: React.FC = () => {
     try {
       const response = await axios.post(
         `${API_BASE_URL}/api/video-speed/${selectedUpload.id}/export`,
-        {},
+        null,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+          params: { quality: selectedQuality } 
         }
       );
       setSelectedUpload(response.data);
@@ -667,6 +707,36 @@ const VideoSpeedClient: React.FC = () => {
                     </div>
                   </div>
                 </div>
+                {selectedUpload && (
+                  <div className="quality-selector-container">
+                    <label htmlFor="quality-select" className="quality-label">
+                      Export Quality:
+                    </label>
+                    <select
+                      id="quality-select"
+                      value={selectedQuality}
+                      onChange={(e) => setSelectedQuality(e.target.value)}
+                      className="quality-select"
+                      disabled={selectedUpload.status === 'PROCESSING'}
+                    >
+                      {availableQualities.map((quality) => (
+                        <option key={quality} value={quality}>
+                          {quality === '2k' ? '2K (1440p)' : quality === '4k' ? '4K (2160p)' : quality.toUpperCase()}
+                        </option>
+                      ))}
+                    </select>
+                    {userProfile.role === 'BASIC' && (
+                      <p className="quality-upgrade-hint">
+                        💡 Upgrade to <a href="/pricing">CREATOR</a> for up to 2K or <a href="/pricing">STUDIO</a> for 4K quality
+                      </p>
+                    )}
+                    {userProfile.role === 'CREATOR' && (
+                      <p className="quality-upgrade-hint">
+                        💡 Upgrade to <a href="/pricing">STUDIO</a> for 4K quality
+                      </p>
+                    )}
+                  </div>
+                )}                
                 <button
                   className="cta-button process-video-button"
                   onClick={handleStartProcessing}
