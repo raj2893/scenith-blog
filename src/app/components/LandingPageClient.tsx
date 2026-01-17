@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { FaPlay, FaMicrophone, FaClosedCaptioning, FaExchangeAlt, FaEraser, FaTachometerAlt, FaPaintBrush, FaCompressArrowsAlt } from 'react-icons/fa';
+import { FaMicrophone, FaClosedCaptioning, FaExchangeAlt, FaEraser, FaTachometerAlt, FaPaintBrush, FaCompressArrowsAlt, FaShapes, FaPlay, FaCheckCircle, FaStar } from 'react-icons/fa';
 import '../../../styles/LandingPage.css';
 import PremiumUpgradePopup from '../components/PremiumUpgradePopup';
 import '../../../styles/components/PremiumUpgradePopup.css';
@@ -17,87 +17,96 @@ interface ToolShowcase {
   link: string;
   color: string;
   badge: string | null;
+  rank: number;
 }
 
 const toolsShowcase: ToolShowcase[] = [
   {
     id: 'ai-voice',
-    title: 'AI Voice Generation',
+    title: 'AI Voice Generator',
     icon: FaMicrophone,
-    description: 'Transform text into natural-sounding speech',
+    description: '40+ natural voices in 20+ languages. Transform text to lifelike speech instantly.',
     link: '/tools/ai-voice-generation',
     color: '#FF6B6B',
-    badge: 'Popular'
-  },
-  {
-    id: 'ai-subtitle',
-    title: 'AI Subtitle Generation',
-    icon: FaClosedCaptioning,
-    description: 'Auto-generate accurate subtitles instantly',
-    link: '/tools/add-subtitles-to-videos',
-    color: '#0b8a82',
-    badge: null
+    badge: '#1 Popular',
+    rank: 1
   },
   {
     id: 'image-editing',
     title: 'Image Editor',
     icon: FaPaintBrush,
-    description: 'A Friendly Image Editor for all your Social Requirements.',
+    description: 'Professional image editing made simple. Perfect for social media.',
     link: '/tools/image-editing',
     color: '#5e59ae',
-    badge: 'New'
+    badge: 'Hot',
+    rank: 2
   },
   {
-    id: 'video-editing',
-    title: 'Video Editor',
-    icon: FaPaintBrush,
-    description: 'A Friendly Video Editor for all your Social Requirements.',
-    link: 'https://scenith.in/dashboard',
-    color: '#8801b1',
-    badge: null
-  },
-  {
-    id: 'bg-remover',
-    title: 'Background Remover',
-    icon: FaEraser,
-    description: 'Remove image backgrounds in seconds',
-    link: '/tools/background-removal',
-    color: '#FFEAA7',
-    badge: 'Popular'
-  },
-  {
-    id: 'media-conversion',
-    title: 'Media Conversion',
-    icon: FaExchangeAlt,
-    description: 'Convert between any media format',
-    link: '/tools/media-conversion-tool',
-    color: '#45B7D1',
-    badge: null
-  },
-  {
-    id: 'media-compression',
-    title: 'Media Compression',
-    icon: FaCompressArrowsAlt,
-    description: 'Reduce file size without losing quality',
-    link: '/tools/compress-media',
-    color: '#96CEB4',
-    badge: null
+    id: 'ai-subtitle',
+    title: 'AI Subtitle Generator',
+    icon: FaClosedCaptioning,
+    description: 'Auto-generate accurate subtitles with AI transcription technology.',
+    link: '/tools/add-subtitles-to-videos',
+    color: '#0b8a82',
+    badge: 'Trending',
+    rank: 3
   },
   {
     id: 'speed-modifier',
     title: 'Video Speed Modifier',
     icon: FaTachometerAlt,
-    description: 'Speed up or slow down your videos',
+    description: 'Speed up or slow down videos with precision control.',
     link: '/tools/video-speed-modifier',
     color: '#62caf7',
-    badge: null
+    badge: null,
+    rank: 4
+  },
+  {
+    id: 'bg-remover',
+    title: 'Background Remover',
+    icon: FaEraser,
+    description: 'Remove image backgrounds in seconds with AI precision.',
+    link: '/tools/background-removal',
+    color: '#FFEAA7',
+    badge: null,
+    rank: 5
+  },
+  {
+    id: 'media-compression',
+    title: 'Media Compression',
+    icon: FaCompressArrowsAlt,
+    description: 'Reduce file size up to 80% without quality loss.',
+    link: '/tools/compress-media',
+    color: '#96CEB4',
+    badge: null,
+    rank: 6
+  },
+  {
+    id: 'media-conversion',
+    title: 'Media Conversion',
+    icon: FaExchangeAlt,
+    description: 'Convert between 20+ media formats instantly.',
+    link: '/tools/media-conversion-tool',
+    color: '#45B7D1',
+    badge: null,
+    rank: 7
+  },
+  {
+    id: 'svg-library',
+    title: 'SVG Library',
+    icon: FaShapes,
+    description: 'Download premium SVG icons and graphics.',
+    link: '/svg-library',
+    color: '#E17055',
+    badge: 'New',
+    rank: 8
   }
 ];
 
 const youtubeTutorials = [
-  { id: 'Yw549sO7RgE', title: 'Scenith Tutorial: Getting Started' },
-  { id: 'XNFJjzScSHU', title: 'Scenith Tutorial: Adding Transitions' },
-  { id: 'qoQSktfHvZ8', title: 'Scenith Tutorial: AI Subtitles' },
+  { id: 'Yw549sO7RgE', title: 'AI Voice Generator Tutorial' },
+  { id: 'XNFJjzScSHU', title: 'Image Editor Quick Start' },
+  { id: 'qoQSktfHvZ8', title: 'AI Subtitles Made Easy' },
 ];
 
 export default function LandingPageClient() {
@@ -118,7 +127,7 @@ export default function LandingPageClient() {
       try {
         setTimeout(() => {
           setShowPremiumPopup(true);
-        }, 2000);
+        }, 3000);
       } catch (error) {
         console.error('Error detecting location:', error);
       }
@@ -138,14 +147,14 @@ export default function LandingPageClient() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
         {/* Primary Meta Tags */}
-        <title>Scenith - Free AI Video Editor & Content Creation Platform | Professional Video Editing Online</title>
+        <title>Scenith - Free AI Voice Generator & Content Creation Tools | Premium SVG Icons</title>
         <meta
           name="description"
-          content="Create professional videos FREE with Scenith's AI-powered video editor. 7+ tools: AI voice generation, auto subtitles, background removal & more. No watermark. Join 10,000+ creators. Start now!"
+          content="Create professional content FREE with Scenith's AI-powered tools. #1 AI Voice Generator with 40+ voices, Image Editor, Auto Subtitles, Background Remover, SVG Library & more. No watermark. Join 10,000+ creators!"
         />
         <meta
           name="keywords"
-          content="free video editor online, AI video editor, video editing software free, online video editor no watermark, professional video editing, AI voice generator, auto subtitle generator, background remover, video speed modifier, media converter, video compression tool, content creation platform, YouTube video editor, TikTok video maker, Instagram Reels editor, Scenith, browser-based video editor, cloud video editing, social media content creator"
+          content="AI voice generator, text to speech, AI voice, voice generator free, TTS online, AI voiceover, image editor online, photo editor free, background remover, auto subtitle generator, video speed changer, media converter, SVG icons free, vector graphics, Scenith, content creation tools, social media tools"
         />
         <meta name="author" content="Scenith" />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
@@ -156,8 +165,8 @@ export default function LandingPageClient() {
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://scenith.in/" />
-        <meta property="og:title" content="Scenith - Free AI Video Editor | Professional Video Editing Online" />
-        <meta property="og:description" content="Create stunning videos FREE with 7+ AI tools. Professional video editor, voice generation, auto subtitles & more. No watermark. Join 10,000+ creators!" />
+        <meta property="og:title" content="Scenith - #1 Free AI Voice Generator & Content Creation Platform" />
+        <meta property="og:description" content="Transform text to natural speech with 40+ AI voices. Plus Image Editor, Auto Subtitles, SVG Icons & more. No watermark. Free forever!" />
         <meta property="og:image" content="https://scenith.in/images/og-image.jpg" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
@@ -167,8 +176,8 @@ export default function LandingPageClient() {
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:url" content="https://scenith.in/" />
-        <meta name="twitter:title" content="Scenith - Free AI Video Editor & Content Creation" />
-        <meta name="twitter:description" content="Professional video editing FREE. 7+ AI tools, no watermark. Join 10,000+ creators!" />
+        <meta name="twitter:title" content="Scenith - Free AI Voice Generator & Content Tools" />
+        <meta name="twitter:description" content="40+ natural AI voices, Image Editor, Auto Subtitles, SVG Icons. Create professional content FREE!" />
         <meta name="twitter:image" content="https://scenith.in/images/twitter-image.jpg" />
         <meta name="twitter:creator" content="@scenith" />
         <meta name="twitter:site" content="@scenith" />
@@ -198,9 +207,9 @@ export default function LandingPageClient() {
               "@context": "https://schema.org",
               "@type": "WebSite",
               "name": "Scenith",
-              "alternateName": "Scenith Video Editor",
+              "alternateName": "Scenith AI Tools",
               "url": "https://scenith.in",
-              "description": "Free AI-powered video editing and content creation platform with professional tools for creators. No watermark, browser-based, 7+ AI tools.",
+              "description": "Free AI-powered content creation platform with voice generation, image editing, subtitle creation, and SVG icons.",
               "potentialAction": {
                 "@type": "SearchAction",
                 "target": {
@@ -223,7 +232,7 @@ export default function LandingPageClient() {
               "name": "Scenith",
               "url": "https://scenith.in",
               "logo": "https://scenith.in/logo.png",
-              "description": "Free AI-powered video editing platform for professional content creation",
+              "description": "Leading platform for AI voice generation, image editing, and content creation tools",
               "foundingDate": "2024",
               "sameAs": [
                 "https://twitter.com/scenith",
@@ -248,7 +257,7 @@ export default function LandingPageClient() {
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "SoftwareApplication",
-              "name": "Scenith Video Editor",
+              "name": "Scenith AI Voice Generator",
               "applicationCategory": "MultimediaApplication",
               "operatingSystem": "Web Browser, Windows, macOS, Linux, iOS, Android",
               "offers": {
@@ -264,15 +273,16 @@ export default function LandingPageClient() {
                 "bestRating": "5",
                 "worstRating": "1"
               },
-              "description": "Professional free online video editor with AI-powered tools for voice generation, subtitle creation, background removal, and more. No watermark, browser-based.",
+              "description": "Professional AI voice generator with 40+ natural voices, image editor, subtitle creator, and premium SVG icons. Free forever, no watermark.",
               "featureList": [
-                "AI Voice Generation",
-                "AI Subtitle Generation",
-                "Background Removal",
+                "AI Voice Generation (40+ voices)",
+                "Image Editor",
+                "AI Subtitle Generator",
+                "Background Remover",
                 "Video Speed Modifier",
                 "Media Compression",
                 "Media Format Conversion",
-                "Image Editing"
+                "SVG Icon Library"
               ],
               "screenshot": "https://scenith.in/images/screenshot.jpg"
             })
@@ -286,9 +296,9 @@ export default function LandingPageClient() {
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "ItemList",
-              "name": "Scenith Professional Tools",
+              "name": "Scenith Professional AI Tools",
               "description": "Free AI-powered tools for content creators",
-              "numberOfItems": 7,
+              "numberOfItems": 8,
               "itemListElement": toolsShowcase.map((tool, index) => ({
                 "@type": "ListItem",
                 "position": index + 1,
@@ -310,25 +320,6 @@ export default function LandingPageClient() {
           }}
         />
 
-        {/* Schema.org Structured Data - Breadcrumb */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "BreadcrumbList",
-              "itemListElement": [
-                {
-                  "@type": "ListItem",
-                  "position": 1,
-                  "name": "Home",
-                  "item": "https://scenith.in"
-                }
-              ]
-            })
-          }}
-        />
-
         {/* Schema.org Structured Data - FAQPage */}
         <script
           type="application/ld+json"
@@ -339,50 +330,42 @@ export default function LandingPageClient() {
               "mainEntity": [
                 {
                   "@type": "Question",
-                  "name": "Is Scenith really free to use?",
+                  "name": "Is Scenith's AI Voice Generator really free?",
                   "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Yes! Scenith offers a completely free tier with access to all essential video editing tools, AI voice generation, subtitle creation, and more. You can create professional videos without any watermarks. Upgrade options are available for advanced features and higher limits."
+                    "text": "Yes! Scenith offers a completely free tier with AI Voice Generation (5,000 characters/month across 40+ voices), Image Editor, Auto Subtitles, Background Remover, and access to our SVG Library. No watermarks, no hidden fees. Upgrade only for higher limits and advanced features."
                   }
                 },
                 {
                   "@type": "Question",
-                  "name": "What makes Scenith different from other video editors?",
+                  "name": "How many AI voices does Scenith offer?",
                   "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Scenith is a browser-based platform requiring no downloads or installations. It combines 7+ professional AI tools in one place, offers free unlimited exports without watermarks, and works on any device with a web browser. Perfect for YouTube, TikTok, Instagram Reels, and more."
+                    "text": "Scenith provides 40+ natural-sounding AI voices across 20+ languages. Our text-to-speech technology creates lifelike voiceovers perfect for YouTube, podcasts, audiobooks, explainer videos, and more. Voices include male, female, and various accents with adjustable speed and pitch."
                   }
                 },
                 {
                   "@type": "Question",
-                  "name": "What AI tools does Scenith provide?",
+                  "name": "What is the SVG Library?",
                   "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Scenith offers AI Voice Generation (text-to-speech with 40+ voices), AI Subtitle Generation (auto-transcription), Background Remover, Video Speed Modifier, Media Compression, Media Format Conversion, and Image Editing. All tools are designed for professional content creation."
+                    "text": "Our SVG Library contains premium vector icons and graphics. Download in SVG, PNG, or JPG formats for your projects. Perfect for web design, presentations, social media, and branding. All icons are high-quality and ready to use."
                   }
                 },
                 {
                   "@type": "Question",
-                  "name": "Do I need to download software to use Scenith?",
+                  "name": "Can I use Scenith tools for commercial projects?",
                   "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "No! Scenith is a fully web-based platform that runs directly in your browser. No downloads, installations, or updates required. Access your projects from any device with an internet connection."
+                    "text": "Yes! Our CREATOR and STUDIO plans include commercial usage rights for AI-generated voices, edited images, and downloaded SVG icons. The BASIC plan is for personal use. Check our pricing page for detailed licensing information."
                   }
                 },
                 {
                   "@type": "Question",
-                  "name": "Can I create videos for YouTube and social media?",
+                  "name": "Does Scenith add watermarks to my content?",
                   "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Absolutely! Scenith has built-in presets for YouTube (1920x1080), TikTok (1080x1920), Instagram Reels, and YouTube Shorts. Export in HD/Full HD with no watermarks, optimized for every platform."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "Does Scenith add watermarks to my videos?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "No! All videos exported from Scenith are completely watermark-free, even on the free BASIC plan. Your content remains professional and ready to publish."
+                    "text": "No watermarks ever! All content created with Scenith—AI voices, edited images, subtitles, converted files—is completely clean and professional. Your brand stays front and center, even on the free BASIC plan."
                   }
                 }
               ]
@@ -392,16 +375,17 @@ export default function LandingPageClient() {
       </Head>
 
       <div className="landing-page">
-        <div className="particle-background">
-          <div className="particle"></div>
-          <div className="particle"></div>
-          <div className="particle"></div>
-          <div className="particle"></div>
-          <div className="particle"></div>
-          <div className="particle"></div>
+        {/* Animated Background */}
+        <div className="animated-background">
+          <div className="gradient-orb orb-1"></div>
+          <div className="gradient-orb orb-2"></div>
+          <div className="gradient-orb orb-3"></div>
+          <div className="floating-shape shape-1"></div>
+          <div className="floating-shape shape-2"></div>
+          <div className="floating-shape shape-3"></div>
         </div>
 
-        {/* Hero Section */}
+        {/* Hero Section - Enhanced */}
         <section className="hero-section" id="hero-section">
           <motion.div
             className="hero-content"
@@ -409,419 +393,274 @@ export default function LandingPageClient() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
+            <div className="hero-badge">
+              <FaStar className="star-icon" />
+              <span>Trusted by 10,000+ Creators</span>
+            </div>
+            
             <h1>
-              Free Online Video Editor with <span className="highlight">AI-Powered Tools</span>
+              Transform Text to Voice with <span className="gradient-text">AI Magic</span>
             </h1>
-            <p>
-              Create professional videos for YouTube, TikTok, and Instagram FREE with Scenith's all-in-one AI platform. Generate lifelike voiceovers, auto-generate subtitles, edit videos, enhance images, and more — all in your browser. No watermark. No downloads. Just create.
+            
+            <p className="hero-subtitle">
+              Create professional voiceovers, edit stunning images, generate subtitles & access Premium SVGs—all FREE. 
+              <strong> No watermarks. No downloads. Just create.</strong>
             </p>
-            <div className="hero-cta">
-              <Link href="/tools/ai-voice-generation" className="cta-button primary">
-                AI Voice Generator
+
+            <div className="hero-features-grid">
+              <div className="hero-feature-item">
+                <FaCheckCircle className="check-icon" />
+                <span>40+ AI Voices</span>
+              </div>
+              <div className="hero-feature-item">
+                <FaCheckCircle className="check-icon" />
+                <span>20+ Languages</span>
+              </div>
+              <div className="hero-feature-item">
+                <FaCheckCircle className="check-icon" />
+                <span>SVG Icons</span>
+              </div>
+              <div className="hero-feature-item">
+                <FaCheckCircle className="check-icon" />
+                <span>No Watermarks</span>
+              </div>
+            </div>
+
+            <div className="hero-cta-wrapper">
+              <Link href="/tools/ai-voice-generation" className="cta-button cta-primary">
+                <FaMicrophone className="cta-icon" />
+                Try AI Voice Generator FREE
               </Link>
-              <Link href="/dashboard" className="cta-button secondary">
-                Video Editor
-              </Link>
-              <Link href="/tools/image-editing" className="cta-button secondary">
-                Image Editor
+              <Link href="/tools/image-editing" className="cta-button cta-secondary">
+                <FaPaintBrush className="cta-icon" />
+                Explore Image Editor
               </Link>
             </div>
+
+            <p className="hero-no-credit">No credit card required • Free forever plan available</p>
           </motion.div>
         </section>
 
-        {/* NEW: SEO-Rich Introduction Section */}
-        <section style={{
-          padding: '80px 20px',
-          background: 'linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%)',
-          borderTop: '1px solid rgba(226, 232, 240, 0.8)'
-        }}>
-          <div className="container" style={{ maxWidth: '1200px', margin: '0 auto' }}>
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-            >
-              <h2 style={{
-                fontSize: 'clamp(2rem, 4vw, 3rem)',
-                marginBottom: '30px',
-                fontWeight: '700',
-                color: '#1E293B',
-                textAlign: 'center'
-              }}>
-                Professional Video Editing Made Simple & Free
-              </h2>
-              <div style={{
-                fontSize: '1.1rem',
-                lineHeight: '1.8',
-                color: '#64748B',
-                maxWidth: '900px',
-                margin: '0 auto'
-              }}>
-                <p style={{ marginBottom: '20px' }}>
-                  <strong style={{ color: '#1E293B' }}>Scenith is the #1 free online video editor</strong> trusted by over 10,000 content creators worldwide. Whether you're a YouTuber, social media influencer, or business owner, our browser-based platform delivers professional-grade video editing without the complexity or cost of traditional desktop software.
-                </p>
-                <p style={{ marginBottom: '20px' }}>
-                  Unlike expensive video editing software like Adobe Premiere Pro or Final Cut Pro, Scenith requires <strong style={{ color: '#1E293B' }}>no downloads, installations, or powerful hardware</strong>. Edit videos directly in your web browser on any device—Windows, Mac, Linux, Chromebook, or even tablets. Our AI-powered tools handle everything from voice generation and subtitle creation to background removal and media conversion.
-                </p>
-                <p>
-                  What makes Scenith special? <strong style={{ color: '#1E293B' }}>Zero watermarks on all exports, even on the free plan.</strong> Create unlimited HD and Full HD videos for YouTube (1920x1080), TikTok (1080x1920), Instagram Reels, Facebook, and more. With built-in presets, GPU acceleration, and cloud storage, you can start creating professional content in seconds—not hours.
-                </p>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Tools Showcase Section */}
-        <section className="tools-showcase-section" id="tools-section">
+        {/* Top Tools Showcase - Featured */}
+        <section className="featured-tools-section">
           <div className="section-header">
-            <h2>7+ Professional AI Tools in One Platform</h2>
-            <p className="section-subtitle">Everything you need for professional video creation—completely free to start</p>
+            <span className="section-label">Most Popular</span>
+            <h2>8 Professional AI Tools in One Platform</h2>
+            <p className="section-subtitle">Everything you need to create professional content—completely free to start</p>
           </div>
+
           <motion.div
-            className="tools-showcase-grid"
+            className="featured-tools-grid"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            {toolsShowcase.map((tool, index) => {
+            {toolsShowcase.sort((a, b) => a.rank - b.rank).map((tool, index) => {
               const IconComponent = tool.icon;
+              const isFeatured = index < 3;
+              
               return (
                 <motion.div
                   key={tool.id}
-                  className="tool-showcase-card"
+                  className={`tool-card ${isFeatured ? 'tool-card-featured' : ''}`}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                  transition={{ duration: 0.4, delay: index * 0.05 }}
                   style={{ '--tool-color': tool.color } as React.CSSProperties}
                 >
                   <Link href={tool.link} className="tool-card-link">
                     {tool.badge && (
-                      <div className={`tool-badge ${tool.badge === 'Coming Soon' ? 'coming-soon' : ''}`}>
+                      <div className={`tool-badge ${tool.badge.includes('#1') ? 'badge-number-one' : ''}`}>
                         {tool.badge}
                       </div>
                     )}
+                    
+                    {isFeatured && <div className="featured-glow"></div>}
+                    
                     <div className="tool-icon-wrapper">
-                      <IconComponent className="tool-showcase-icon" />
+                      <div className="icon-bg"></div>
+                      <IconComponent className="tool-icon" />
                     </div>
+                    
                     <h3>{tool.title}</h3>
                     <p>{tool.description}</p>
-                    <button className="tool-try-button">
-                      Try Now <span className="arrow">→</span>
+                    
+                    <button className="tool-action-btn">
+                      <span>Start Creating</span>
+                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
                     </button>
                   </Link>
                 </motion.div>
               );
             })}
           </motion.div>
-          <div className="tools-cta-wrapper">
-            <p className="tools-cta-text">Can&apos;t decide? Start with our most popular tool</p>
-            <Link href="/tools/ai-voice-generation" className="tools-main-cta">
-              Try AI Voice Generator Free
-            </Link>
-          </div>
         </section>
 
-        {/* NEW: Why Choose Scenith - SEO Comparison */}
-        <section style={{
-          padding: '100px 20px',
-          background: 'linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%)',
-          borderTop: '1px solid rgba(226, 232, 240, 0.8)'
-        }}>
-          <div className="container" style={{ maxWidth: '1400px', margin: '0 auto' }}>
-            <motion.div
-              style={{ textAlign: 'center', marginBottom: '60px' }}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <h2 style={{
-                fontSize: 'clamp(2rem, 4vw, 3.5rem)',
-                marginBottom: '25px',
-                fontWeight: '700',
-                color: '#1E293B'
-              }}>
-                Scenith vs Traditional Video Editors
-              </h2>
-              <p style={{
-                fontSize: '1.2rem',
-                maxWidth: '800px',
-                margin: '0 auto',
-                color: '#64748B'
-              }}>
-                See why creators are switching from desktop software to browser-based editing
-              </p>
-            </motion.div>
-
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-              gap: '30px',
-              marginBottom: '60px'
-            }}>
-              {[
-                {
-                  title: 'No Installation Required',
-                  scenith: 'Works instantly in your browser',
-                  others: 'Hours of downloading & installing',
-                  icon: '⚡'
-                },
-                {
-                  title: 'System Requirements',
-                  scenith: 'Any modern browser, any device',
-                  others: 'High-end PC/Mac required',
-                  icon: '💻'
-                },
-                {
-                  title: 'AI Features',
-                  scenith: 'Built-in: Voice, Subtitles, BG removal',
-                  others: 'Expensive add-ons or subscriptions',
-                  icon: '🤖'
-                },
-                {
-                  title: 'Learning Curve',
-                  scenith: 'Intuitive interface, start in minutes',
-                  others: 'Weeks of tutorials needed',
-                  icon: '📚'
-                },
-                {
-                  title: 'Collaboration',
-                  scenith: 'Cloud-based, access anywhere',
-                  others: 'Complex file transfers',
-                  icon: '☁️'
-                }
-              ].map((comparison, index) => (
-                <motion.div
-                  key={index}
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.95)',
-                    backdropFilter: 'blur(20px)',
-                    border: '1px solid rgba(226, 232, 240, 0.8)',
-                    borderRadius: '20px',
-                    padding: '35px',
-                    transition: 'all 0.3s ease',
-                    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.06)'
-                  }}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  whileHover={{
-                    boxShadow: '0 8px 25px rgba(59, 130, 246, 0.25)',
-                    transform: 'translateY(-5px)'
-                  }}
-                >
-                  <div style={{ fontSize: '3rem', marginBottom: '20px' }}>{comparison.icon}</div>
-                  <h3 style={{
-                    fontSize: '1.4rem',
-                    marginBottom: '20px',
-                    fontWeight: '600',
-                    color: '#1E293B'
-                  }}>
-                    {comparison.title}
-                  </h3>
-                  <div style={{
-                    padding: '15px',
-                    background: 'rgba(59, 130, 246, 0.1)',
-                    borderRadius: '12px',
-                    marginBottom: '15px'
-                  }}>
-                    <div style={{ fontSize: '0.9rem', color: '#3B82F6', fontWeight: '600', marginBottom: '5px' }}>
-                      ✅ Scenith
-                    </div>
-                    <div style={{ color: '#1E293B', fontWeight: '500' }}>
-                      {comparison.scenith}
-                    </div>
-                  </div>
-                  <div style={{
-                    padding: '15px',
-                    background: 'rgba(239, 68, 68, 0.05)',
-                    borderRadius: '12px'
-                  }}>
-                    <div style={{ fontSize: '0.9rem', color: '#EF4444', fontWeight: '600', marginBottom: '5px' }}>
-                      ❌ Traditional Editors
-                    </div>
-                    <div style={{ color: '#64748B' }}>
-                      {comparison.others}
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Social Proof Section */}
-        <section className="social-proof-section">
+        {/* NEW: SVG Library Highlight Section */}
+        <section className="svg-library-showcase">
           <motion.div
-            className="social-proof-container"
+            className="svg-showcase-content"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="svg-showcase-left">
+              <span className="section-label">New Release</span>
+              <h2 className="svg-showcase-title">
+                Premium <span className="gradient-text">SVG Icons</span>
+              </h2>
+              <p className="svg-showcase-description">
+                Browse our massive collection of professional vector icons and graphics. Download in SVG, PNG, or JPG format. 
+                Perfect for websites, presentations, social media, and any design project.
+              </p>
+              
+              <div className="svg-features-list">
+                <div className="svg-feature">
+                  <FaCheckCircle className="check-icon" />
+                  <span>Premium Icons</span>
+                </div>
+                <div className="svg-feature">
+                  <FaCheckCircle className="check-icon" />
+                  <span>SVG, PNG, JPG Formats</span>
+                </div>
+                <div className="svg-feature">
+                  <FaCheckCircle className="check-icon" />
+                  <span>High-Quality Vectors</span>
+                </div>
+                <div className="svg-feature">
+                  <FaCheckCircle className="check-icon" />
+                  <span>Free to Download</span>
+                </div>
+              </div>
+
+              <Link href="/svg-library" className="svg-cta-button">
+                <FaShapes className="cta-icon" />
+                Explore SVG Library
+              </Link>
+            </div>
+
+            <div className="svg-showcase-right">
+              <div className="svg-preview-grid">
+                <div className="svg-preview-card">
+                  <FaShapes style={{ fontSize: '3rem', color: '#E17055' }} />
+                </div>
+                <div className="svg-preview-card">
+                  <FaStar style={{ fontSize: '3rem', color: '#FDCB6E' }} />
+                </div>
+                <div className="svg-preview-card">
+                  <FaMicrophone style={{ fontSize: '3rem', color: '#6C5CE7' }} />
+                </div>
+                <div className="svg-preview-card">
+                  <FaPaintBrush style={{ fontSize: '3rem', color: '#00B894' }} />
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </section>
+
+        {/* Social Proof - Redesigned */}
+        <section className="social-proof-modern">
+          <motion.div
+            className="stats-container"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <div className="stat-item">
-              <div className="stat-number">10,000+</div>
+            <div className="stat-card">
+              <div className="stat-value">10K+</div>
               <div className="stat-label">Active Creators</div>
             </div>
-            <div className="stat-divider"></div>
-            <div className="stat-item">
-              <div className="stat-number">500K+</div>
-              <div className="stat-label">Videos Created</div>
+            <div className="stat-card">
+              <div className="stat-value">500K+</div>
+              <div className="stat-label">Content Created</div>
             </div>
-            <div className="stat-divider"></div>
-            <div className="stat-item">
-              <div className="stat-number">7+</div>
-              <div className="stat-label">AI-Powered Tools</div>
+            <div className="stat-card">
+              <div className="stat-value">40+</div>
+              <div className="stat-label">AI Voices</div>
             </div>
-            <div className="stat-divider"></div>
-            <div className="stat-item">
-              <div className="stat-number">4.9/5</div>
+            <div className="stat-card">
+              <div className="stat-value">4.9/5</div>
               <div className="stat-label">User Rating</div>
             </div>
           </motion.div>
         </section>
 
-        {/* NEW: Feature Deep Dive Section */}
-        <section style={{
-          padding: '100px 20px',
-          background: 'linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%)',
-          borderTop: '1px solid rgba(226, 232, 240, 0.8)'
-        }}>
-          <div className="container" style={{ maxWidth: '1200px', margin: '0 auto' }}>
-            <motion.div
-              style={{ textAlign: 'center', marginBottom: '60px' }}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <h2 style={{
-                fontSize: 'clamp(2rem, 4vw, 3.5rem)',
-                marginBottom: '25px',
-                fontWeight: '700',
-                color: '#1E293B'
-              }}>
-                Everything You Need for Professional Content
-              </h2>
-              <p style={{
-                fontSize: '1.2rem',
-                maxWidth: '800px',
-                margin: '0 auto',
-                color: '#64748B'
-              }}>
-                From video editing to AI voice generation—all the tools content creators love
-              </p>
-            </motion.div>
+        {/* Why Choose Section */}
+        <section className="why-choose-section">
+          <div className="section-header">
+            <h2>Why Creators Choose Scenith</h2>
+            <p className="section-subtitle">The all-in-one platform that replaces expensive subscriptions</p>
+          </div>
 
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-              gap: '40px'
-            }}>
-              {[
-                {
-                  title: 'Free Online Video Editor',
-                  description: 'Professional timeline-based video editor with frame-accurate precision. Cut, trim, merge clips, add transitions, apply effects, and create stunning videos for YouTube, TikTok, Instagram Reels, and more. Built-in presets for 1920x1080 (YouTube), 1080x1920 (vertical shorts), and custom dimensions. GPU-accelerated rendering ensures smooth editing even for 4K content.',
-                  features: ['Multi-track timeline', 'Drag & drop interface', 'Unlimited undo/redo', 'HD & Full HD export', 'No watermarks ever', 'Cloud auto-save']
-                },
-                {
-                  title: 'AI Voice Generator (Text-to-Speech)',
-                  description: 'Transform text into natural-sounding voiceovers with 40+ AI voices across 20+ languages. Perfect for YouTube narration, explainer videos, audiobooks, and podcasts. BASIC plan includes 5,000 characters/month. Advanced plans offer up to 150,000 characters with commercial usage rights. Generate lifelike speech with proper intonation, pauses, and emotion.',
-                  features: ['40+ natural AI voices', '20+ languages supported', 'Adjustable speed & pitch', 'Commercial use rights', 'MP3 & WAV export', 'No robotic sound']
-                },
-                {
-                  title: 'Auto Subtitle Generator (AI Transcription)',
-                  description: 'Automatically generate accurate subtitles from video audio using AI transcription technology. Supports multiple languages with high accuracy. Customize font styles, colors, positions, and animations to match your brand. Perfect for making content accessible and boosting engagement on social media where 85% of videos are watched without sound.',
-                  features: ['Auto speech-to-text', 'Multi-language support', 'Custom styling options', 'SRT/VTT export', 'Animated captions', 'Timestamp editing']
-                },
-                {
-                  title: 'Background Remover (AI-Powered)',
-                  description: 'Remove image backgrounds in seconds using advanced AI technology. Perfect for product photos, profile pictures, thumbnails, and marketing materials. Handles complex edges, hair, and transparent objects. Download as PNG with transparent background or replace with custom colors and gradients. No manual masking required.',
-                  features: ['One-click removal', 'Smart edge detection', 'Transparent PNG export', 'Custom backgrounds', 'Batch processing', 'Hair & fur handling']
-                },
-                {
-                  title: 'Video Speed Modifier',
-                  description: 'Speed up or slow down videos with precision control. Create cinematic slow-motion effects (0.25x-0.5x), accelerate time-lapses (2x-4x), or fine-tune pacing for perfect storytelling. Maintains audio pitch or allows pitch shifting. Export with adjusted speed at original quality—no frame drops or artifacts.',
-                  features: ['0.25x to 4x speed range', 'Frame interpolation', 'Audio pitch control', 'Smooth playback', 'Quality preservation', 'Precise control']
-                },
-                {
-                  title: 'Media Converter & Compressor',
-                  description: 'Convert between any video or audio format (MP4, AVI, MOV, MKV, MP3, WAV, etc.) with one click. Compress large files up to 80% while maintaining visual quality using smart algorithms. Optimize videos for web, social media, or email sharing. Batch processing available for multiple files. Fast cloud-based conversion.',
-                  features: ['20+ format support', 'Up to 80% compression', 'Quality presets', 'Batch processing', 'Fast conversion', 'No quality loss']
-                }
-              ].map((feature, index) => (
-                <motion.div
-                  key={index}
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.95)',
-                    backdropFilter: 'blur(20px)',
-                    border: '1px solid rgba(226, 232, 240, 0.8)',
-                    borderRadius: '24px',
-                    padding: '40px',
-                    transition: 'all 0.3s ease',
-                    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.06)'
-                  }}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  whileHover={{
-                    boxShadow: '0 8px 25px rgba(59, 130, 246, 0.25)',
-                    borderColor: '#3B82F6',
-                    transform: 'translateY(-5px)'
-                  }}
-                >
-                  <h3 style={{
-                    fontSize: '1.8rem',
-                    marginBottom: '20px',
-                    fontWeight: '600',
-                    background: 'linear-gradient(90deg, #3B82F6, #8B5CF6)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent'
-                  }}>
-                    {feature.title}
-                  </h3>
-                  <p style={{
-                    fontSize: '1.05rem',
-                    lineHeight: '1.8',
-                    marginBottom: '25px',
-                    color: '#64748B'
-                  }}>
-                    {feature.description}
-                  </p>
-                  <ul style={{
-                    listStyle: 'none',
-                    padding: 0,
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-                    gap: '10px'
-                  }}>
-                    {feature.features.map((item, i) => (
-                      <li key={i} style={{
-                        fontSize: '0.95rem',
-                        color: '#64748B',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px'
-                      }}>
-                        <span style={{ color: '#3B82F6', fontSize: '1.2rem' }}>✓</span>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </motion.div>
-              ))}
-            </div>
+          <div className="why-choose-grid">
+            {[
+              {
+                title: '#1 AI Voice Generator',
+                description: 'Industry-leading text-to-speech with 40+ ultra-realistic voices. Create voiceovers that sound completely human across 20+ languages.',
+                icon: FaMicrophone,
+                color: '#FF6B6B'
+              },
+              {
+                title: 'Professional Image Editing',
+                description: 'Powerful yet simple image editor perfect for social media. Crop, resize, add filters, text, stickers and more in seconds.',
+                icon: FaPaintBrush,
+                color: '#5e59ae'
+              },
+              {
+                title: 'SVG Icon Library',
+                description: 'Access our massive collection of premium vector graphics. Download in any format for unlimited use in your projects.',
+                icon: FaShapes,
+                color: '#E17055'
+              },
+              {
+                title: 'Zero Watermarks, Ever',
+                description: 'Unlike other free tools, we never add watermarks to your content. Your creations stay 100% professional and branded.',
+                icon: FaCheckCircle,
+                color: '#00B894'
+              },
+              {
+                title: 'Browser-Based, No Downloads',
+                description: 'Everything runs in your browser. No installations, updates, or expensive hardware. Works on any device with internet.',
+                icon: FaPlay,
+                color: '#0984E3'
+              },
+              {
+                title: 'All Tools, One Platform',
+                description: 'Voice generation, image editing, subtitles, background removal, speed modifier, compression, conversion, and SVG library—all in one place.',
+                icon: FaStar,
+                color: '#FDCB6E'
+              }
+            ].map((item, index) => (
+              <motion.div
+                key={index}
+                className="why-choose-card"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                style={{ '--accent-color': item.color } as React.CSSProperties}
+              >
+                <div className="why-icon-wrapper">
+                  <item.icon className="why-icon" />
+                </div>
+                <h3>{item.title}</h3>
+                <p>{item.description}</p>
+              </motion.div>
+            ))}
           </div>
         </section>
 
-        {/* Tutorials Section */}
+        {/* Tutorials Section - Updated */}
         <section className="tutorials-section" id="tutorials-section">
           <div className="section-header">
-            <h2>Learn Video Editing with Scenith Tutorials</h2>
-            <p className="section-subtitle">Master professional video editing in minutes with our step-by-step guides</p>
+            <h2>Learn How to Use Scenith AI Tools</h2>
+            <p className="section-subtitle">Master our tools in minutes with step-by-step video guides</p>
           </div>
           <motion.div
             className="tutorials-grid"
@@ -832,14 +671,16 @@ export default function LandingPageClient() {
           >
             {youtubeTutorials.map((tutorial) => (
               <div className="tutorial-card" key={tutorial.id}>
-                <iframe
-                  src={`https://www.youtube.com/embed/${tutorial.id}`}
-                  title={tutorial.title}
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  loading="lazy"
-                ></iframe>
+                <div className="video-wrapper">
+                  <iframe
+                    src={`https://www.youtube.com/embed/${tutorial.id}`}
+                    title={tutorial.title}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    loading="lazy"
+                  ></iframe>
+                </div>
                 <h3>{tutorial.title}</h3>
               </div>
             ))}
@@ -850,14 +691,14 @@ export default function LandingPageClient() {
             rel="noopener noreferrer"
             className="tutorials-cta"
           >
-            Watch More Free Tutorials on YouTube
+            Watch More Tutorials on YouTube
           </a>
         </section>
 
-        {/* Blog Preview Section */}
+        {/* Blog Preview Section - Updated */}
         <section className="blog-preview-section" id="blog-section">
           <div className="section-header">
-            <h2>Video Editing Tips & Content Creation Guides</h2>
+            <h2>Content Creation Guides & Tips</h2>
             <p className="section-subtitle">Learn from expert creators and grow your audience</p>
           </div>
           <motion.div
@@ -870,7 +711,7 @@ export default function LandingPageClient() {
             <div className="blog-preview-card">
               <div className="blog-preview-content">
                 <h3>How to Add Subtitles to Video (Free & Easy)</h3>
-                <p>Master the art of subtitle creation with our comprehensive guide. Learn AI auto-generation techniques and manual editing tips that make your content accessible and boost engagement by 80%.</p>
+                <p>Master AI subtitle generation with our comprehensive guide. Learn techniques that boost engagement by 80% and make your content accessible worldwide.</p>
                 <Link href="/blogs/how-to-add-subtitles-to-video" className="blog-preview-cta">
                   Read Complete Guide
                 </Link>
@@ -879,7 +720,7 @@ export default function LandingPageClient() {
             <div className="blog-preview-card">
               <div className="blog-preview-content">
                 <h3>How to Reach 4000 Hours Watch Time on YouTube</h3>
-                <p>Discover proven strategies to hit YouTube's monetization milestone. Learn content optimization, audience retention tactics, and SEO techniques used by successful creators to reach 4000 hours fast.</p>
+                <p>Discover proven strategies to hit YouTube monetization milestones. Content optimization, retention tactics, and SEO techniques from successful creators.</p>
                 <Link href="/blogs/how-to-reach-4000-hours-watch-time" className="blog-preview-cta">
                   Read Complete Guide
                 </Link>
@@ -887,235 +728,112 @@ export default function LandingPageClient() {
             </div>
           </motion.div>
           <Link href="/blogs" className="view-all-blogs-cta">
-            View All Video Editing & Marketing Guides
+            View All Creator Guides & Tips
           </Link>
         </section>
 
-        {/* NEW: FAQ Section - Enhanced */}
-        <section style={{
-          padding: '100px 20px',
-          background: 'linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%)',
-          borderTop: '1px solid rgba(226, 232, 240, 0.8)'
-        }}>
-          <div className="container" style={{ maxWidth: '1000px', margin: '0 auto' }}>
-            <motion.div
-              style={{ textAlign: 'center', marginBottom: '60px' }}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <h2 style={{
-                fontSize: 'clamp(2rem, 4vw, 3.5rem)',
-                marginBottom: '25px',
-                fontWeight: '700',
-                color: '#1E293B'
-              }}>
-                Frequently Asked Questions
-              </h2>
-              <p style={{
-                fontSize: '1.2rem',
-                color: '#64748B'
-              }}>
-                Everything you need to know about video editing with Scenith
-              </p>
-            </motion.div>
-
-            <div style={{ display: 'grid', gap: '20px' }}>
-              {[
-                {
-                  q: 'Is Scenith really 100% free to use?',
-                  a: 'Yes! Scenith offers a completely free BASIC plan with 15 projects, up to 60 FPS, HD exports, and ALL core features including AI voice generation (5,000 chars/month), subtitle creation, and background removal. Best part? Zero watermarks on all your videos, forever. Upgrade to CREATOR or STUDIO only if you need unlimited projects, higher FPS, or more AI credits.'
-                },
-                {
-                  q: 'What makes Scenith better than Adobe Premiere or Final Cut Pro?',
-                  a: 'Scenith runs entirely in your web browser—no downloads, no installations, no expensive hardware required. While Premiere costs $20-55/month (or $300+ one-time) and needs a high-end PC, Scenith is free and works on any device. Plus, our AI tools (voice generation, auto-subtitles, BG removal) are built-in, not expensive add-ons. Perfect for creators who want professional results without the technical complexity.'
-                },
-                {
-                  q: 'Can I create videos for YouTube, TikTok, and Instagram Reels?',
-                  a: 'Absolutely! Scenith has optimized presets for every platform: YouTube (1920x1080 @ 30 FPS), YouTube Shorts (1080x1920 @ 60 FPS), TikTok (1080x1920), Instagram Reels (1080x1920), Facebook (1920x1080), and custom dimensions. Choose your aspect ratio, edit with professional tools, and export in HD/Full HD with no watermarks—ready to upload anywhere.'
-                },
-                {
-                  q: 'Do I need powerful hardware or a gaming PC?',
-                  a: 'No! Scenith uses GPU acceleration in your browser, so any modern laptop, desktop, Chromebook, or tablet can edit smoothly. Even older devices with Chrome, Firefox, Safari, or Edge work great. No need for expensive hardware upgrades—if you can browse the web, you can edit professional videos with Scenith.'
-                },
-                {
-                  q: 'What AI features are included in the free plan?',
-                  a: 'BASIC users get AI Voice Generation (5,000 characters/month across 40+ voices), AI Subtitle Generation (auto-transcription with customization), Background Remover (unlimited image BG removal), Video Speed Modifier, Media Converter, and Compression tools. All AI features are fully functional in the free tier—upgrade only for higher character limits or advanced features.'
-                },
-                {
-                  q: 'Are my video projects saved automatically?',
-                  a: 'Yes! Scenith auto-saves your work every 10 seconds to the cloud. Access your projects from any device, anywhere—your edits sync instantly. Close your browser, switch computers, or continue on mobile. Your videos, timelines, and assets are always safe and accessible. Never lose work again.'
-                },
-                {
-                  q: 'Does Scenith add watermarks to exported videos?',
-                  a: 'No watermarks, ever—not even on the free BASIC plan! All videos exported from Scenith are completely clean and professional. Your brand stays front and center. This sets us apart from most free video editors that plaster logos on your content. With Scenith, your videos are truly yours.'
-                },
-                {
-                  q: 'How long does video rendering take?',
-                  a: 'Export speed depends on video length, resolution, and effects complexity. Most 1-5 minute videos in Full HD render in 2-10 minutes using our cloud servers. GPU acceleration ensures smooth editing and fast exports. Premium plans get priority rendering for even faster turnaround. No waiting hours like some desktop editors.'
-                },
-                {
-                  q: 'Can I collaborate with my team on video projects?',
-                  a: 'Scenith projects are cloud-based, making collaboration easy. Share project access with team members, work simultaneously, and all changes sync in real-time. Perfect for content agencies, social media teams, and remote creators. No complex file transfers or version conflicts—everyone works on the latest version automatically.'
-                },
-                {
-                  q: 'What video formats does Scenith support?',
-                  a: 'Import: MP4, AVI, MOV, MKV, WebM, FLV, WMV, and more. Export: MP4 (H.264/H.265), WebM, and platform-optimized formats. Our Media Converter tool handles 20+ formats. Audio support includes MP3, WAV, AAC, OGG, and FLAC. Images: JPEG, PNG, GIF, WebP, SVG. Convert between any format with one click.'
-                }
-              ].map((faq, index) => (
-                <motion.div
-                  key={index}
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.95)',
-                    backdropFilter: 'blur(20px)',
-                    border: '1px solid rgba(226, 232, 240, 0.8)',
-                    borderRadius: '16px',
-                    padding: '30px',
-                    transition: 'all 0.3s ease',
-                    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.06)'
-                  }}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.05 }}
-                  whileHover={{
-                    boxShadow: '0 8px 25px rgba(59, 130, 246, 0.25)',
-                    borderColor: '#3B82F6'
-                  }}
-                >
-                  <h3 style={{
-                    fontSize: '1.2rem',
-                    marginBottom: '15px',
-                    fontWeight: '600',
-                    background: 'linear-gradient(90deg, #3B82F6, #8B5CF6)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent'
-                  }}>
-                    {faq.q}
-                  </h3>
-                  <p style={{
-                    fontSize: '1.05rem',
-                    lineHeight: '1.8',
-                    color: '#64748B'
-                  }}>
-                    {faq.a}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Motivation Section */}
-        <section className="motivation-section" id="motivation-section">
+        {/* FAQ Section - Enhanced */}
+        <section className="faq-section">
           <div className="section-header">
-            <h2>Join 10,000+ Creators Building Their Audience with Scenith</h2>
+            <h2>Frequently Asked Questions</h2>
+            <p className="section-subtitle">Everything you need to know about Scenith AI tools</p>
           </div>
-          <motion.div
-            className="motivation-content"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            <p>
-              Scenith is more than just a free video editor—it&apos;s a complete content creation platform designed to empower creators like you. Whether you&apos;re building a YouTube channel, growing on TikTok, creating Instagram Reels, or producing professional marketing videos, Scenith provides broadcast-quality AI tools in an intuitive browser interface.
-            </p>
-            <p style={{ marginTop: '20px' }}>
-              Our mission is to democratize video creation. No expensive software subscriptions, no powerful hardware requirements, no steep learning curves—just professional results in minutes. From AI voice generation to auto subtitles, background removal to video editing, everything you need is here, free to start.
-            </p>
-            <div className="motivation-features-quick">
-              <div className="quick-feature">✓ No Watermarks Ever</div>
-              <div className="quick-feature">✓ GPU-Accelerated Editing</div>
-              <div className="quick-feature">✓ Free Forever Plan</div>
-              <div className="quick-feature">✓ Cloud Auto-Save</div>
-            </div>
-            <Link href="/signup" className="motivation-cta">
-              Start Creating Videos Free—No Credit Card Required
-            </Link>
-          </motion.div>
+
+          <div className="faq-container">
+            {[
+              {
+                q: 'Is Scenith really 100% free to use?',
+                a: 'Yes! Scenith offers a completely free BASIC plan with AI Voice Generation (5,000 characters/month across 40+ voices), Image Editor, Subtitle Generator, Background Remover, and access to SVG icons. Best part? Zero watermarks on all your content, forever. Upgrade to CREATOR or STUDIO only if you need unlimited projects, higher character limits, or commercial usage rights.'
+              },
+              {
+                q: 'How many AI voices does Scenith provide?',
+                a: 'Scenith offers 40+ natural-sounding AI voices across 20+ languages including English, Spanish, French, German, Hindi, Japanese, and more. Our text-to-speech technology creates lifelike voiceovers with proper intonation, pauses, and emotion. Perfect for YouTube narration, podcasts, audiobooks, explainer videos, and more. Adjust speed, pitch, and tone for complete customization.'
+              },
+              {
+                q: 'What is the SVG Library and how does it work?',
+                a: 'Our SVG Library contains premium vector icons and graphics covering every category—business, technology, social media, education, health, and more. Simply browse, select your icon, and download in SVG (vector), PNG, or JPG format. All icons are high-quality, professionally designed, and ready to use in websites, presentations, social media, apps, and any design project.'
+              },
+              {
+                q: 'Can I use Scenith for commercial projects?',
+                a: 'Yes! Our CREATOR and STUDIO plans include full commercial usage rights for AI-generated voices, edited images, and downloaded SVG icons. Create content for clients, monetized YouTube videos, podcasts, advertisements, and business projects. The BASIC plan is for personal use only. Check our pricing page for detailed licensing terms.'
+              },
+              {
+                q: 'Does Scenith add watermarks to my content?',
+                a: 'No watermarks ever! All content created with Scenith—AI voiceovers, edited images, subtitles, converted files, downloaded SVGs—is completely clean and professional. Your brand stays front and center, even on the free BASIC plan. We believe creators should own their work 100%.'
+              },
+              {
+                q: 'What makes Scenith different from other AI voice generators?',
+                a: 'Scenith combines the #1 AI voice generator with 7 other professional tools in one platform. Unlike competitors, we offer true browser-based creation (no downloads), zero watermarks on free plans, bonus SVG icons, and all tools work together seamlessly. Plus, our AI voices sound more natural than most expensive alternatives.'
+              },
+              {
+                q: 'Do I need to download software to use Scenith?',
+                a: 'No! Scenith is a fully web-based platform that runs directly in your browser. No downloads, installations, or updates required. Works on any device—Windows, Mac, Linux, Chromebooks, tablets, even phones. Just sign in and start creating. Your projects auto-save to the cloud, accessible anywhere with internet.'
+              },
+              {
+                q: 'What formats can I download my AI voice in?',
+                a: 'AI-generated voices can be downloaded as MP3 (smaller file size, great for podcasts and web) or WAV (uncompressed, studio quality for professional projects). Choose based on your needs. Both formats maintain the natural sound quality of our AI voices.'
+              },
+              {
+                q: 'How accurate is the AI subtitle generator?',
+                a: 'Our AI transcription achieves 90-95% accuracy for clear audio in supported languages. Accuracy improves with good audio quality, minimal background noise, and clear speech. You can easily edit any transcript before adding it to your video. Customize font styles, colors, positions, and animations to match your brand.'
+              },
+              {
+                q: 'Can I use multiple tools together in one project?',
+                a: 'Absolutely! That\'s the power of Scenith\'s unified platform. Generate an AI voiceover, add it to a video, create auto-subtitles, edit a thumbnail in the Image Editor, download SVG icons for graphics—all in one workflow. Everything integrates seamlessly for maximum productivity.'
+              }
+            ].map((faq, index) => (
+              <motion.div
+                key={index}
+                className="faq-item"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.05 }}
+              >
+                <h3 className="faq-question">{faq.q}</h3>
+                <p className="faq-answer">{faq.a}</p>
+              </motion.div>
+            ))}
+          </div>
         </section>
 
-        {/* NEW: Final CTA with SEO keywords */}
-        <section style={{
-          padding: '100px 20px',
-          background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%)',
-          textAlign: 'center',
-          borderTop: '1px solid rgba(226, 232, 240, 0.8)'
-        }}>
+        {/* Final CTA Section - Enhanced */}
+        <section className="final-cta-section">
           <motion.div
-            style={{ maxWidth: '900px', margin: '0 auto' }}
+            className="final-cta-content"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 style={{
-              fontSize: 'clamp(2rem, 4vw, 3.5rem)',
-              marginBottom: '30px',
-              fontWeight: '800',
-              color: '#1E293B',
-              lineHeight: '1.2'
-            }}>
-              Ready to Create Professional Videos for Free?
+            <span className="cta-label">Ready to Create?</span>
+            <h2 className="final-cta-title">
+              Start Using Professional AI Tools <span className="gradient-text">Completely Free</span>
             </h2>
-            <p style={{
-              fontSize: '1.2rem',
-              marginBottom: '40px',
-              lineHeight: '1.8',
-              color: '#64748B'
-            }}>
-              Join thousands of YouTubers, TikTokers, and content creators using Scenith's free online video editor.
-              No downloads. No watermarks. No credit card required. Start editing in seconds.
+            <p className="final-cta-description">
+              Join 10,000+ content creators using Scenith's AI-powered platform. Generate natural voiceovers, 
+              edit stunning images, create subtitles, and access SVG icons—all without watermarks.
             </p>
-            <div style={{
-              display: 'flex',
-              gap: '20px',
-              justifyContent: 'center',
-              flexWrap: 'wrap',
-              marginBottom: '40px'
-            }}>
-              <Link href="/dashboard" style={{
-                fontSize: '1.2rem',
-                padding: '18px 50px',
-                background: 'linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%)',
-                border: 'none',
-                borderRadius: '50px',
-                color: 'white',
-                fontWeight: '700',
-                textDecoration: 'none',
-                display: 'inline-block',
-                boxShadow: '0 4px 15px rgba(59, 130, 246, 0.3)',
-                transition: 'all 0.3s ease'
-              }}>
-                Start Video Editing Free 🎬
+            
+            <div className="final-cta-buttons">
+              <Link href="/tools/ai-voice-generation" className="final-cta-primary">
+                <FaMicrophone className="cta-icon" />
+                Start with AI Voice Generator
               </Link>
-              <Link href="/tools/ai-voice-generation" style={{
-                fontSize: '1.2rem',
-                padding: '18px 50px',
-                background: 'white',
-                border: '2px solid #3B82F6',
-                borderRadius: '50px',
-                color: '#3B82F6',
-                fontWeight: '700',
-                textDecoration: 'none',
-                display: 'inline-block',
-                transition: 'all 0.3s ease'
-              }}>
-                Try AI Voice Generator 🎤
+              <Link href="/svg-library" className="final-cta-secondary">
+                <FaShapes className="cta-icon" />
+                Browse SVG Library
               </Link>
             </div>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'center',
-              gap: '30px',
-              flexWrap: 'wrap',
-              fontSize: '1rem',
-              color: '#64748B'
-            }}>
-              {['✅ No Watermarks', '✅ HD/Full HD Export', '✅ 7+ AI Tools', '✅ Cloud Storage', '✅ All Platforms'].map((benefit, i) => (
-                <span key={i} style={{ fontWeight: '500' }}>{benefit}</span>
+
+            <div className="final-cta-features">
+              {['✅ No Credit Card Required', '✅ No Watermarks', '✅ 40+ AI Voices', '✅ SVG Icons', '✅ Free Forever'].map((benefit, i) => (
+                <span key={i} className="cta-feature-badge">{benefit}</span>
               ))}
             </div>
+
+            <p className="final-cta-note">
+              Start free • Upgrade anytime • Cancel anytime
+            </p>
           </motion.div>
         </section>
       </div>

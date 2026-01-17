@@ -261,7 +261,6 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
   const [initialScale, setInitialScale] = useState(1);  
   const [touchAction, setTouchAction] = useState<'none' | 'drag' | 'resize' | 'rotate' | 'crop'>('none');
   const [touchStartPos, setTouchStartPos] = useState<{ x: number; y: number } | null>(null);  
-  const [showTemplateGallery, setShowTemplateGallery] = useState(false); 
   const [templates, setTemplates] = useState<any[]>([]);
   const [templatesLoading, setTemplatesLoading] = useState(true);  
   const [lastSavedDesign, setLastSavedDesign] = useState<string>(""); 
@@ -2454,17 +2453,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
           <FaArrowLeft /> Back
         </button>
         <h2>{project?.projectName || "Editor"}</h2>
-        <div className="toolbar-actions">
-          <button 
-            className="toolbar-btn" 
-            onClick={() => setShowTemplateGallery(true)}
-            title="Browse Templates"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>
-            </svg>
-            Templates
-          </button>          
+        <div className="toolbar-actions">      
           <button className="toolbar-btn" onClick={handleUndo} disabled={historyIndex <= 0}>
             <FaUndo />
           </button>
@@ -4511,13 +4500,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
   
       {/* Toast Messages */}
       {error && <div className="toast error-toast">{error}</div>}
-      {success && <div className="toast success-toast">{success}</div>}
-      {showTemplateGallery && (
-        <TemplateGallery
-          onClose={() => setShowTemplateGallery(false)}
-          onSelectTemplate={handleApplyTemplate}
-        />
-      )}      
+      {success && <div className="toast success-toast">{success}</div>}  
     </div>
   );  
 };

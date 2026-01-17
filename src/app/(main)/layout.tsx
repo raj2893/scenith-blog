@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  description: 'Master video editing with AI-powered tools, tutorials, and professional features. Create stunning videos with automated subtitles, layers, and advanced editing capabilities.',
+  description: 'Create professional content with Scenith using AI Voice, Image Editor, Auto Subtitles, Background Remover and free SVG elements.',
   keywords: [
     'video editing',
     'AI tools',
@@ -41,8 +41,9 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: 'Scenith - Professional Video Editing Platform',
-    description: 'Master video editing with AI-powered tools, tutorials, and professional features.',
+    title: 'Scenith — AI Voice & Creator Toolkit',
+    description:
+      'Create professional content with Scenith: AI Voice Generator, Online Image Editor, Auto Subtitles, Background Remover and free SVG elements.',
     url: 'https://scenith.in',
     siteName: 'Scenith',
     images: [
@@ -50,7 +51,7 @@ export const metadata: Metadata = {
         url: '/images/og-default.jpg',
         width: 1200,
         height: 630,
-        alt: 'Scenith Video Editing Platform',
+        alt: 'Scenith — AI Voice & Creator Tools',
       },
     ],
     locale: 'en_US',
@@ -58,8 +59,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Scenith - Professional Video Editing Platform',
-    description: 'Master video editing with AI-powered tools, tutorials, and professional features.',
+    title: 'Scenith — AI Voice & Creator Toolkit',
+    description:
+      '40+ natural AI voices, Image Editor, Auto Subtitles, and thousands of free SVG elements — all in one place.',
     images: ['/images/twitter-card.jpg'],
     creator: '@scenith',
   },
@@ -110,7 +112,8 @@ export default function RootLayout({
           `}
         </Script>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3084309234365491"
-             crossOrigin="anonymous"></script>        
+             crossOrigin="anonymous"></script>  
+        <meta name="google-adsense-account" content="ca-pub-3084309234365491" />           
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poiret+One&family=Comic+Neue&family=Tangerine&family=Noto+Sans+Mono&family=Imperial+Script&family=Verdana&family=Courier+Prime&family=Times+New+Roman&family=Tahoma&family=Birthstone&family=Lavishly+Yours&family=Amatic+SC&family=Rampart+One&family=Freckle+Face&family=Fredericka+the+Great&family=Kings&family=Kirang+Haerang&family=Rubik+Wet+Paint&family=Fascinate+Inline&family=Barrio&family=Yesteryear&family=Gelasio&family=Doto&family=Butcherman&family=Bungee+Hairline&family=Alumni+Sans+Pinstripe&family=Comic+Sans+MS&family=Mountains+of+Christmas&family=Courier+New&family=Impact&family=Arimo&family=Tinos&family=Carlito&family=Montserrat+Alternates&family=Lexend+Giga&family=Georgia&family=Calibri&display=swap" />
       </head>      
       <body className={`${geistSans.variable} ${geistMono.variable}`}>

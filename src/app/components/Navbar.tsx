@@ -72,26 +72,62 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
           localStorage.removeItem('token');
           localStorage.removeItem('userProfile');
           setIsLoggedIn(false);
+          setUserProfile(null);
         }
+      } else {
+        setIsLoggedIn(false);
+        setUserProfile(null);
       }
     };
+
     checkAuth();
 
-    // Listen for storage changes (login/logout from other tabs or page)
-    const handleStorageChange = () => {
+    const handleLoginEvent = () => {
       checkAuth();
     };
-    
+
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'token' || e.key === null) {
+        checkAuth();
+      }
+    };
+
+    window.addEventListener('userLoggedIn', handleLoginEvent);
     window.addEventListener('storage', handleStorageChange);
-    
-    // Poll for auth changes every 2 seconds
-    const authCheckInterval = setInterval(checkAuth, 2000);
+
+    let pollInterval: NodeJS.Timeout | null = null;
+
+    const startPolling = () => {
+      if (!isLoggedIn) {
+        pollInterval = setInterval(() => {
+          const token = localStorage.getItem('token');
+          if (token && !isLoggedIn) {
+            checkAuth();
+          }
+        }, 2000);
+      }
+    };
+
+    const stopPolling = () => {
+      if (pollInterval) {
+        clearInterval(pollInterval);
+        pollInterval = null;
+      }
+    };
+
+    // Start polling if logged out
+    if (!isLoggedIn) {
+      startPolling();
+    } else {
+      stopPolling();
+    }
 
     return () => {
+      window.removeEventListener('userLoggedIn', handleLoginEvent);
       window.removeEventListener('storage', handleStorageChange);
-      clearInterval(authCheckInterval);
+      stopPolling();
     };
-  }, []);
+  }, [isLoggedIn]); // Re-run when login state changes
 
   const dispatchLoginEvent = () => {
     window.dispatchEvent(new Event('userLoggedIn'));

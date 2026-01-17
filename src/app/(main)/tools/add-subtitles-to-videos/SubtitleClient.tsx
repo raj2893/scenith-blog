@@ -120,13 +120,34 @@ const CustomVideoPlayer = ({ src, userId, subtitles, currentTime, setCurrentTime
     const [isPlaying, setIsPlaying] = useState(false);
     const [duration, setDuration] = useState(0);
     const [isSeeking, setIsSeeking] = useState(false);
+    const [containerDimensions, setContainerDimensions] = useState({ width: 0, height: 0 });
 
     useEffect(() => {
         if (videoRef.current && Math.abs(videoRef.current.currentTime - currentTime) > 0.1) {
             videoRef.current.currentTime = currentTime;
             setIsSeeking(false);
         }
-    }, [currentTime]);    
+    }, [currentTime]);   
+    
+    useEffect(() => {
+        const updateDimensions = () => {
+            if (videoRef.current) {
+                const rect = videoRef.current.getBoundingClientRect();
+                setContainerDimensions({ width: rect.width, height: rect.height });
+            }
+        };
+        
+        updateDimensions();
+        window.addEventListener('resize', updateDimensions);
+        
+        // Force update after a short delay to ensure video is loaded
+        const timer = setTimeout(updateDimensions, 100);
+        
+        return () => {
+            window.removeEventListener('resize', updateDimensions);
+            clearTimeout(timer);
+        };
+    }, [src, subtitles]);    
 
     const videoUrl = src;
 
@@ -190,12 +211,13 @@ const CustomVideoPlayer = ({ src, userId, subtitles, currentTime, setCurrentTime
                     onLoadedMetadata={handleLoadedMetadata}
                     onEnded={handleEnded}
                 />
-                {currentSubtitle && (() => {
+                {currentSubtitle && containerDimensions.width > 0 && (() => {
                     const videoElement = videoRef.current;
                     if (!videoElement) return null;
                     
                     const sourceWidth = videoElement.videoWidth || 1920;
                     const sourceHeight = videoElement.videoHeight || 1080;
+                    if (!sourceWidth || !sourceHeight) return null;
                     const videoRect = videoElement.getBoundingClientRect();
                     
                     // Calculate the actual displayed video dimensions (accounting for object-fit: contain)
@@ -377,6 +399,8 @@ const SubtitleClient: React.FC = () => {
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [applyStyleToSingle, setApplyStyleToSingle] = useState(false);
+  const [availableQualities, setAvailableQualities] = useState<string[]>([]);
+  const [selectedQuality, setSelectedQuality] = useState<string>('720p');
 
   const prevSelectedAiStyleRef = useRef<AiStyle | null>(null);
 
@@ -459,6 +483,47 @@ const SubtitleClient: React.FC = () => {
     };
     fetchUploads();
   }, [isLoggedIn]);
+
+  useEffect(() => {
+    if (userProfile.role) {
+      setSelectedQuality(getDefaultQuality(userProfile.role));
+    }
+  }, [userProfile.role]);  
+
+  useEffect(() => {
+    if (userProfile.role) {
+      const qualities = getAvailableQualities(userProfile.role);
+      setAvailableQualities(qualities);
+    }
+  }, [userProfile.role]); 
+  
+  const getAvailableQualities = (role: string): string[] => {
+    switch (role) {
+      case 'BASIC':
+        return ['144p', '240p', '360p', '480p', '720p'];
+      case 'CREATOR':
+        return ['144p', '240p', '360p', '480p', '720p', '1080p', '1440p', '2k'];
+      case 'STUDIO':
+      case 'ADMIN':
+        return ['144p', '240p', '360p', '480p', '720p', '1080p', '1440p', '2k', '4k'];
+      default:
+        return ['720p'];
+    }
+  };
+  
+  const getDefaultQuality = (role: string): string => {
+    switch (role) {
+      case 'BASIC':
+        return '720p';
+      case 'CREATOR':
+        return '1080p';
+      case 'STUDIO':
+      case 'ADMIN':
+        return '1440p';
+      default:
+        return '720p';
+    }
+  };  
 
   const requireLogin = () => {
     if (!isLoggedIn) {
@@ -874,8 +939,11 @@ const SubtitleClient: React.FC = () => {
     try {
       const response = await axios.post(
         `${API_BASE_URL}/api/subtitles/process/${selectedUpload.id}`,
-        {},
-        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+        null,
+        { 
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+          params: { quality: selectedQuality }
+        }
       );
       setSelectedUpload(response.data);
       // Poll job status
@@ -1239,6 +1307,36 @@ const SubtitleClient: React.FC = () => {
                     </div>
                   )}
                 </div>
+                {selectedUpload && subtitles.length > 0 && (
+                  <div className="quality-selector-container">
+                    <label htmlFor="quality-select" className="quality-label">
+                      Output Quality:
+                    </label>
+                    <select
+                      id="quality-select"
+                      value={selectedQuality}
+                      onChange={(e) => setSelectedQuality(e.target.value)}
+                      className="quality-select"
+                      disabled={isProcessing || isGenerating}
+                    >
+                      {availableQualities.map((quality) => (
+                        <option key={quality} value={quality}>
+                          {quality === '2k' ? '2K (1440p)' : quality === '4k' ? '4K (2160p)' : quality.toUpperCase()}
+                        </option>
+                      ))}
+                    </select>
+                    {userProfile.role === 'BASIC' && (
+                      <p className="quality-upgrade-hint">
+                        💡 Upgrade to <a href="/pricing">CREATOR</a> for up to 2K or <a href="/pricing">STUDIO</a> for 4K quality
+                      </p>
+                    )}
+                    {userProfile.role === 'CREATOR' && (
+                      <p className="quality-upgrade-hint">
+                        💡 Upgrade to <a href="/pricing">STUDIO</a> for 4K quality
+                      </p>
+                    )}
+                  </div>
+                )}                
                 <div className="action-buttons">
                   {selectedUpload && (
                     <div className="button-wrapper">

@@ -10,6 +10,13 @@ export default function ElementsAdmin() {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+  const [showBulkEdit, setShowBulkEdit] = useState(false);
+  const [bulkEditForm, setBulkEditForm] = useState({
+    category: "",
+    tags: "",
+    isActive: null as boolean | null,
+  });
   const [editForm, setEditForm] = useState({
     name: "",
     category: "",
@@ -121,34 +128,204 @@ export default function ElementsAdmin() {
     }
   };
 
+  const toggleSelectAll = () => {
+    if (selectedIds.size === elements.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(elements.map(e => e.id)));
+    }
+  };
+  
+  const toggleSelect = (id: number) => {
+    const newSelected = new Set(selectedIds);
+    if (newSelected.has(id)) {
+      newSelected.delete(id);
+    } else {
+      newSelected.add(id);
+    }
+    setSelectedIds(newSelected);
+  };
+  
+  const handleBulkUpdate = async () => {
+    if (selectedIds.size === 0) {
+      alert("Please select at least one element");
+      return;
+    }
+  
+    if (!bulkEditForm.category && !bulkEditForm.tags && bulkEditForm.isActive === null) {
+      alert("Please specify at least one field to update");
+      return;
+    }
+  
+    try {
+      const token = localStorage.getItem("token");
+      const payload: any = {
+        elementIds: Array.from(selectedIds),
+      };
+  
+      if (bulkEditForm.category) payload.category = bulkEditForm.category;
+      if (bulkEditForm.tags) payload.tags = bulkEditForm.tags;
+      if (bulkEditForm.isActive !== null) payload.isActive = bulkEditForm.isActive;
+  
+      await axios.put(`${API_BASE_URL}/api/admin/image-elements/bulk-update`, payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+  
+      alert(`Successfully updated ${selectedIds.size} elements!`);
+      setSelectedIds(new Set());
+      setShowBulkEdit(false);
+      setBulkEditForm({ category: "", tags: "", isActive: null });
+      fetchElements();
+    } catch (error: any) {
+      alert(error.response?.data?.message || "Bulk update failed");
+    }
+  };  
+
   return (
     <div style={{ padding: "40px", maxWidth: "1400px", margin: "0 auto" }}>
-      <div style={{ marginBottom: "30px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h1 style={{ fontSize: "2rem", fontWeight: "700" }}>Elements Management</h1>
-        <label style={{
-          padding: "12px 24px",
-          background: "linear-gradient(135deg, #3b82f6, #8b5cf6)",
-          color: "#ffffff",
-          borderRadius: "8px",
-          cursor: "pointer",
-          display: "flex",
-          alignItems: "center",
-          gap: "10px",
-          fontWeight: "600",
-        }}>
-          <FaUpload />
-          {uploading ? "Uploading..." : "Upload Element"}
-          <input
-            type="file"
-            accept="image/png,image/jpeg,image/jpg,image/svg+xml"
-            multiple
-            onChange={handleUpload}
-            disabled={uploading}
-            style={{ display: "none" }}
-          />
-        </label>
+      <div style={{ marginBottom: "30px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+          <h1 style={{ fontSize: "2rem", fontWeight: "700" }}>Elements Management</h1>
+          <label style={{
+            padding: "12px 24px",
+            background: "linear-gradient(135deg, #3b82f6, #8b5cf6)",
+            color: "#ffffff",
+            borderRadius: "8px",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            fontWeight: "600",
+          }}>
+            <FaUpload />
+            {uploading ? "Uploading..." : "Upload Element"}
+            <input
+              type="file"
+              accept="image/png,image/jpeg,image/jpg,image/svg+xml"
+              multiple
+              onChange={handleUpload}
+              disabled={uploading}
+              style={{ display: "none" }}
+            />
+          </label>
+        </div>
+  
+        {/* Bulk Actions Bar */}
+        {selectedIds.size > 0 && (
+          <div style={{
+            padding: "16px",
+            background: "#f1f5f9",
+            borderRadius: "8px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "20px",
+          }}>
+            <span style={{ fontWeight: "600" }}>
+              {selectedIds.size} element{selectedIds.size > 1 ? "s" : ""} selected
+            </span>
+            <div style={{ display: "flex", gap: "12px" }}>
+              <button
+                onClick={() => setShowBulkEdit(!showBulkEdit)}
+                style={{
+                  padding: "8px 16px",
+                  background: "#3b82f6",
+                  color: "#ffffff",
+                  border: "none",
+                  borderRadius: "6px",
+                  cursor: "pointer",
+                  fontWeight: "600",
+                }}
+              >
+                {showBulkEdit ? "Cancel" : "Bulk Edit"}
+              </button>
+              <button
+                onClick={() => setSelectedIds(new Set())}
+                style={{
+                  padding: "8px 16px",
+                  background: "#94a3b8",
+                  color: "#ffffff",
+                  border: "none",
+                  borderRadius: "6px",
+                  cursor: "pointer",
+                }}
+              >
+                Clear Selection
+              </button>
+            </div>
+          </div>
+        )}
+  
+        {/* Bulk Edit Form */}
+        {showBulkEdit && selectedIds.size > 0 && (
+          <div style={{
+            padding: "20px",
+            background: "#ffffff",
+            border: "2px solid #3b82f6",
+            borderRadius: "12px",
+            marginBottom: "20px",
+          }}>
+            <h3 style={{ marginBottom: "16px", fontSize: "1.2rem", fontWeight: "600" }}>
+              Bulk Edit {selectedIds.size} Elements
+            </h3>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "16px" }}>
+              <input
+                type="text"
+                value={bulkEditForm.category}
+                onChange={(e) => setBulkEditForm({ ...bulkEditForm, category: e.target.value })}
+                placeholder="Category (leave empty to skip)"
+                style={{ padding: "10px", borderRadius: "6px", border: "1px solid #e2e8f0" }}
+              />
+              <input
+                type="text"
+                value={bulkEditForm.tags}
+                onChange={(e) => setBulkEditForm({ ...bulkEditForm, tags: e.target.value })}
+                placeholder="Tags (leave empty to skip)"
+                style={{ padding: "10px", borderRadius: "6px", border: "1px solid #e2e8f0" }}
+              />
+            </div>
+            <label style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "16px" }}>
+              <input
+                type="checkbox"
+                checked={bulkEditForm.isActive === true}
+                onChange={(e) => setBulkEditForm({ 
+                  ...bulkEditForm, 
+                  isActive: e.target.checked ? true : null 
+                })}
+              />
+              Set as Active
+            </label>
+            <button
+              onClick={handleBulkUpdate}
+              style={{
+                padding: "12px 24px",
+                background: "#10b981",
+                color: "#ffffff",
+                border: "none",
+                borderRadius: "6px",
+                cursor: "pointer",
+                fontWeight: "600",
+                width: "100%",
+              }}
+            >
+              Apply to {selectedIds.size} Elements
+            </button>
+          </div>
+        )}
+  
+        {/* Select All Checkbox */}
+        <div style={{ marginBottom: "12px" }}>
+          <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer" }}>
+            <input
+              type="checkbox"
+              checked={selectedIds.size === elements.length && elements.length > 0}
+              onChange={toggleSelectAll}
+            />
+            <span style={{ fontWeight: "600" }}>Select All ({elements.length})</span>
+          </label>
+        </div>
       </div>
-
+  
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -157,13 +334,23 @@ export default function ElementsAdmin() {
             <div
               key={element.id}
               style={{
-                background: "#ffffff",
-                border: "2px solid #e2e8f0",
+                background: selectedIds.has(element.id) ? "#eff6ff" : "#ffffff",
+                border: selectedIds.has(element.id) ? "2px solid #3b82f6" : "2px solid #e2e8f0",
                 borderRadius: "12px",
                 padding: "16px",
                 transition: "all 0.3s ease",
               }}
             >
+              {/* Checkbox */}
+              <div style={{ display: "flex", alignItems: "center", marginBottom: "12px" }}>
+                <input
+                  type="checkbox"
+                  checked={selectedIds.has(element.id)}
+                  onChange={() => toggleSelect(element.id)}
+                  style={{ cursor: "pointer", width: "18px", height: "18px" }}
+                />
+              </div>
+  
               <img
                 src={element.cdnUrl}
                 alt={element.name}
@@ -176,7 +363,7 @@ export default function ElementsAdmin() {
                   marginBottom: "12px",
                 }}
               />
-
+  
               {editingId === element.id ? (
                 <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                   <input

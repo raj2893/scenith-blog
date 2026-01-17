@@ -468,6 +468,14 @@ export default function PricingPageClient() {
 
   return (
     <div className="pricing-page">
+      <div className="urgency-banner">
+        <div className="banner-content">
+          <span className="fire-emoji">🔥</span>
+          <strong>18 people</strong> just upgraded to Scenith Premium this week
+          <span className="highlight">— only 8 spots left at 75% OFF!</span>
+          <span className="blink-text">Hurry — offer ends soon</span>
+        </div>
+      </div>      
     {!isPricingReady ? (
       <div className="pricing-loading">
         <div className="spinner-large"></div>
