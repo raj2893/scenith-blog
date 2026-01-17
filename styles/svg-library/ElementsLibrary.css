@@ -787,7 +787,7 @@
 /* Mobile Responsive (max-width: 768px) */
 @media (max-width: 768px) {
   .library-hero {
-    padding: 60px 20px 40px;
+    padding: 90px 20px 40px;
   }
 
   .library-hero h1 {
@@ -905,7 +905,7 @@
 /* Small Mobile (max-width: 480px) */
 @media (max-width: 480px) {
   .library-hero {
-    padding: 50px 16px 30px;
+    padding: 80px 16px 30px;
   }
 
   .library-hero h1 {
