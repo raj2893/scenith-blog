@@ -244,8 +244,16 @@ const PDFToolsPage: React.FC = () => {
       {/* Add after the existing SEO Content Section */}
 
       {/* NEW: Understanding PDF Tools Section */}
-      <div className="understanding-pdf-section" style={{ maxWidth: '900px', margin: '60px auto', padding: '0 20px', background: '#f8fafc', borderRadius: '12px', padding: '40px' }}>
-        <h2 style={{ fontSize: '28px', marginBottom: '20px', color: '#1e293b' }}>
+      <div
+  className="understanding-pdf-section"
+  style={{
+    maxWidth: '900px',
+    margin: '60px auto',
+    padding: '40px 20px',           // ← combined (top/bottom 40px, left/right 20px)
+    background: '#f8fafc',
+    borderRadius: '12px',
+  }}
+>        <h2 style={{ fontSize: '28px', marginBottom: '20px', color: '#1e293b' }}>
           Understanding PDF Tools: The Complete Guide to Document Management
         </h2>
 
