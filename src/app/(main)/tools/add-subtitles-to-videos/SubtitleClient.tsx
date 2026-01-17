@@ -120,13 +120,34 @@ const CustomVideoPlayer = ({ src, userId, subtitles, currentTime, setCurrentTime
     const [isPlaying, setIsPlaying] = useState(false);
     const [duration, setDuration] = useState(0);
     const [isSeeking, setIsSeeking] = useState(false);
+    const [containerDimensions, setContainerDimensions] = useState({ width: 0, height: 0 });
 
     useEffect(() => {
         if (videoRef.current && Math.abs(videoRef.current.currentTime - currentTime) > 0.1) {
             videoRef.current.currentTime = currentTime;
             setIsSeeking(false);
         }
-    }, [currentTime]);    
+    }, [currentTime]);   
+    
+    useEffect(() => {
+        const updateDimensions = () => {
+            if (videoRef.current) {
+                const rect = videoRef.current.getBoundingClientRect();
+                setContainerDimensions({ width: rect.width, height: rect.height });
+            }
+        };
+        
+        updateDimensions();
+        window.addEventListener('resize', updateDimensions);
+        
+        // Force update after a short delay to ensure video is loaded
+        const timer = setTimeout(updateDimensions, 100);
+        
+        return () => {
+            window.removeEventListener('resize', updateDimensions);
+            clearTimeout(timer);
+        };
+    }, [src, subtitles]);    
 
     const videoUrl = src;
 
@@ -190,12 +211,13 @@ const CustomVideoPlayer = ({ src, userId, subtitles, currentTime, setCurrentTime
                     onLoadedMetadata={handleLoadedMetadata}
                     onEnded={handleEnded}
                 />
-                {currentSubtitle && (() => {
+                {currentSubtitle && containerDimensions.width > 0 && (() => {
                     const videoElement = videoRef.current;
                     if (!videoElement) return null;
                     
                     const sourceWidth = videoElement.videoWidth || 1920;
                     const sourceHeight = videoElement.videoHeight || 1080;
+                    if (!sourceWidth || !sourceHeight) return null;
                     const videoRect = videoElement.getBoundingClientRect();
                     
                     // Calculate the actual displayed video dimensions (accounting for object-fit: contain)
