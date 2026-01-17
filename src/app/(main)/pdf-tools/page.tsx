@@ -114,7 +114,7 @@ const PDFToolsPage: React.FC = () => {
 
   const handleToolClick = (toolId: string, available: boolean) => {
     if (available) {
-      router.push(`/tools/pdf-tools/${toolId}`);
+      router.push(`/pdf-tools/${toolId}`);
     }
   };
 
