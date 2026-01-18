@@ -12,6 +12,8 @@ interface DownloadModalProps {
   onClose: () => void;
   elementId: number;
   elementName: string;
+  selectedColor?: string;
+  fileFormat?: string;  
 }
 
 const FORMATS = [
@@ -34,6 +36,8 @@ const DownloadModal: React.FC<DownloadModalProps> = ({
   onClose,
   elementId,
   elementName,
+  selectedColor = "#000000",
+  fileFormat = "SVG",  
 }) => {
   const [selectedFormat, setSelectedFormat] = useState("PNG");
   const [selectedResolution, setSelectedResolution] = useState("512x512");
@@ -53,6 +57,10 @@ const DownloadModal: React.FC<DownloadModalProps> = ({
       if (selectedFormat !== "SVG") {
         params.append("resolution", selectedResolution);
       }
+
+      if (fileFormat.toLowerCase() === 'svg' && selectedColor && selectedColor !== "#000000") {
+        params.append("color", selectedColor.replace('#', ''));
+      }      
 
       const response = await axios.get(
         `${API_BASE_URL}/api/image-editor/elements/${elementId}/download?${params}`,

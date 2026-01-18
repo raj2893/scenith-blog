@@ -186,6 +186,78 @@
   }
 }
 
+.color-section {
+  margin-bottom: 24px;
+}
+
+.color-section h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.color-picker-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.color-input {
+  width: 60px;
+  height: 44px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 4px;
+  background: white;
+}
+
+.color-input:hover {
+  border-color: #667eea;
+}
+
+.color-text-input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.color-text-input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.reset-color-btn {
+  padding: 10px 16px;
+  background: #f8f9fa;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+}
+
+.reset-color-btn:hover {
+  background: #e9ecef;
+  border-color: #ccc;
+  color: #333;
+}
+
+.color-hint {
+  display: block;
+  font-size: 12px;
+  color: #666;
+  margin-top: 8px;
+}
+
 @media (max-width: 768px) {
   .format-grid,
   .resolution-grid {
@@ -195,4 +267,23 @@
   .download-modal {
     padding: 24px;
   }
+
+  .color-picker-container {
+    flex-wrap: wrap;
+  }
+  
+  .color-input {
+    width: 50px;
+    height: 40px;
+  }
+  
+  .color-text-input {
+    flex: 1;
+    min-width: 120px;
+  }
+  
+  .reset-color-btn {
+    padding: 8px 12px;
+    font-size: 13px;
+  }  
 }
