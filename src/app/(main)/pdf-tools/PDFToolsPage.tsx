@@ -127,7 +127,7 @@ const PDFToolsPage: React.FC = () => {
             <FaFilePdf size={48} />
           </div>
           <h1>Free PDF Tools Online - Professional PDF Editor</h1>
-          <p>All-in-one PDF toolkit for merging, splitting, compressing, and converting PDFs. Fast, secure, and completely free - no signup required!</p>
+          <p>All-in-one PDF toolkit for merging, splitting, compressing, and converting PDFs. Fast, secure, and completely free.</p>
         </div>
       </div>
 

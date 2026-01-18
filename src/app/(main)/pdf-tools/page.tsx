@@ -3,7 +3,7 @@ import PDFToolsPage from "./PDFToolsPage";
 
 export const metadata: Metadata = {
   title: 'Free PDF Tools Online - Merge, Split, Compress & Convert PDFs | SCENITH',
-  description: 'Professional PDF tools online for free. Merge, split, compress, rotate, and convert PDFs instantly. Secure, fast, and easy to use - no signup required. Process unlimited PDFs with high quality.',
+  description: 'Professional PDF tools online for free. Merge, split, compress, rotate, and convert PDFs instantly. Secure, fast, and easy to use. Process unlimited PDFs with high quality.',
   keywords: [
     'PDF tools online',
     'free PDF editor',
