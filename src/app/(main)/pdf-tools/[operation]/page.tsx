@@ -5,7 +5,7 @@ import PDFToolsWorkspace from "./PDFToolsWorkspace";
 const toolMetadata: Record<string, Metadata> = {
   "merge-pdf": {
     title: 'Merge PDF Files Online Free - Combine Multiple PDFs into One | SCENITH',
-    description: 'Merge multiple PDF files into one document for free. Combine PDFs in any order, rearrange pages, and download instantly. Fast, secure, and unlimited merges - no signup required!',
+    description: 'Merge multiple PDF files into one document for free. Combine PDFs in any order, rearrange pages, and download instantly. Fast, secure, and unlimited merges .',
     keywords: [
       'merge PDF online',
       'combine PDF files',
@@ -29,7 +29,7 @@ const toolMetadata: Record<string, Metadata> = {
   },
   "split-pdf": {
     title: 'Split PDF Online Free - Extract Pages from PDF | SCENITH',
-    description: 'Split PDF files into multiple documents or extract specific pages for free. Choose page ranges, split all pages, or create custom splits. Fast, secure, and unlimited - no signup needed!',
+    description: 'Split PDF files into multiple documents or extract specific pages for free. Choose page ranges, split all pages, or create custom splits. Fast, secure, and unlimited.',
     keywords: [
       'split PDF online',
       'extract PDF pages',
@@ -77,7 +77,7 @@ const toolMetadata: Record<string, Metadata> = {
   },
   "rotate-pdf": {
     title: 'Rotate PDF Pages Online Free - 90°, 180° PDF Rotation | SCENITH',
-    description: 'Rotate PDF pages online for free. Turn pages 90°, 180°, or 270° clockwise or counterclockwise. Fix orientation instantly and download - no signup required!',
+    description: 'Rotate PDF pages online for free. Turn pages 90°, 180°, or 270° clockwise or counterclockwise. Fix orientation instantly and download .',
     keywords: [
       'rotate PDF online',
       'turn PDF pages',
@@ -101,7 +101,7 @@ const toolMetadata: Record<string, Metadata> = {
   },
   "images-to-pdf": {
     title: 'Images to PDF Converter Online Free - JPG, PNG to PDF | SCENITH',
-    description: 'Convert images to PDF online for free. Combine multiple JPG, PNG, or other image formats into one PDF document. Drag to reorder, fast conversion - no signup needed!',
+    description: 'Convert images to PDF online for free. Combine multiple JPG, PNG, or other image formats into one PDF document. Drag to reorder, fast conversion.',
     keywords: [
       'images to PDF',
       'JPG to PDF',
@@ -149,7 +149,7 @@ const toolMetadata: Record<string, Metadata> = {
   },
   "add-watermark": {
     title: 'Add Watermark to PDF Online Free - Protect PDF Documents | SCENITH',
-    description: 'Add text watermark to PDF files online for free. Protect and brand your PDFs with custom watermark text. Fast, secure, and unlimited - no signup required!',
+    description: 'Add text watermark to PDF files online for free. Protect and brand your PDFs with custom watermark text. Fast, secure, and unlimited .',
     keywords: [
       'add watermark to PDF',
       'PDF watermark free',
@@ -173,7 +173,7 @@ const toolMetadata: Record<string, Metadata> = {
   },
   "lock-pdf": {
     title: 'Lock PDF with Password Online Free - Secure PDF Documents | SCENITH',
-    description: 'Password protect PDF files online for free. Lock PDFs with strong encryption to prevent unauthorized access. Secure, fast, and unlimited - no signup needed!',
+    description: 'Password protect PDF files online for free. Lock PDFs with strong encryption to prevent unauthorized access. Secure, fast, and unlimited.',
     keywords: [
       'lock PDF online',
       'password protect PDF',
@@ -197,7 +197,7 @@ const toolMetadata: Record<string, Metadata> = {
   },
   "unlock-pdf": {
     title: 'Unlock PDF Online Free - Remove PDF Password Protection | SCENITH',
-    description: 'Remove password from PDF files online for free. Unlock protected PDFs you own by entering the password. Fast, secure removal - no signup required!',
+    description: 'Remove password from PDF files online for free. Unlock protected PDFs you own by entering the password. Fast, secure removal .',
     keywords: [
       'unlock PDF online',
       'remove PDF password',
