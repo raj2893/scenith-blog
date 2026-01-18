@@ -443,16 +443,21 @@
   gap: 36px;
 }
 
+/* Smaller, more elegant tool cards */
 .tool-card {
   position: relative;
   background: white;
-  border-radius: 28px;
-  padding: 48px 40px;
+  border-radius: 24px;
+  padding: 36px 28px;           /* ← Reduced padding (was 48px 40px) */
   overflow: hidden;
-  transition: all 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 16px 48px rgba(0,0,0,0.08), 0 4px 16px rgba(102,126,234,0.06);
-  border: 1px solid rgba(102,126,234,0.08);
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow:
+    0 12px 40px rgba(0,0,0,0.07),
+    0 4px 16px rgba(102,126,234,0.05);
+  border: 1px solid rgba(102,126,234,0.07);
   cursor: pointer;
+  max-width: 380px;             /* ← Caps max width so cards don't stretch too wide */
+  margin: 0 auto;               /* Centers each card in its grid cell */
 }
 
 .tool-card::before {

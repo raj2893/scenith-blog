@@ -132,6 +132,7 @@ const PDFToolsPage: React.FC = () => {
       </div>
 
       {/* Tools Grid */}
+      <div className="tools-grid-wrapper">
       <div className="tools-grid">
         {tools.map((tool) => (
           <div
@@ -162,6 +163,7 @@ const PDFToolsPage: React.FC = () => {
             <div className="tool-arrow">→</div>
           </div>
         ))}
+      </div>
       </div>
 
       {/* Features Section */}
