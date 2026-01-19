@@ -115,8 +115,9 @@
   top: 20px;
   left: 50%;
   transform: translateX(-50%);
-  width: 90%;
-  max-width: 1000px;
+  width: 94%;                    /* ← slightly wider on big screens */
+    max-width: 1180px;             /* ← the most important change – was 1000px */
+    padding: 12px 28px;
   background: rgba(255, 255, 255, 0.95);
   z-index: 1000;
   padding: 12px 24px;
@@ -847,4 +848,70 @@
     padding: 12px 25px !important;
     font-size: 0.95rem !important;
   }  
+}
+/* Add these styles to your Navbar.css file */
+
+/* Prevent line breaks in nav links */
+.nav-bar .nav-content .nav-links .nav-item .nav-link {
+  white-space: nowrap !important;
+}
+
+.nav-link-text {
+  white-space: nowrap !important;
+}
+
+/* NEW badge styling */
+.new-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: linear-gradient(135deg, #EF4444, #DC2626) !important;
+  color: #FFFFFF !important;
+  font-size: 0.6rem !important;
+  font-weight: 700 !important;
+  padding: 2px 6px !important;
+  border-radius: 6px !important;
+  margin-left: 6px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3) !important;
+  animation: pulse-badge 2s ease-in-out infinite !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+  vertical-align: middle !important;
+}
+
+@keyframes pulse-badge {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 2px 12px rgba(239, 68, 68, 0.5);
+  }
+}
+
+/* Ensure the nav link container can hold the badge */
+.nav-bar .nav-content .nav-links .nav-item .nav-link-with-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  white-space: nowrap !important;
+}
+
+/* Mobile adjustments for NEW badge */
+@media (max-width: 768px) {
+  .new-badge {
+    font-size: 0.55rem !important;
+    padding: 2px 5px !important;
+    margin-left: 4px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .new-badge {
+    font-size: 0.5rem !important;
+    padding: 1px 4px !important;
+    margin-left: 3px !important;
+  }
 }

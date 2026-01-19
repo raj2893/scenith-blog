@@ -160,6 +160,8 @@ const VideoSpeedClient: React.FC = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loginSuccess, setLoginSuccess] = useState<string>('');
+  const [availableQualities, setAvailableQualities] = useState<string[]>([]);
+  const [selectedQuality, setSelectedQuality] = useState<string>('720p');  
 
   // Handle scroll for navbar styling
   useEffect(() => {
@@ -224,6 +226,43 @@ const VideoSpeedClient: React.FC = () => {
     };
     fetchVideos();
   }, [isLoggedIn]);
+
+  const getAvailableQualities = (role: string): string[] => {
+    switch (role) {
+      case 'BASIC':
+        return ['144p', '240p', '360p', '480p', '720p'];
+      case 'CREATOR':
+        return ['144p', '240p', '360p', '480p', '720p', '1080p', '1440p', '2k'];
+      case 'STUDIO':
+      case 'ADMIN':
+        return ['144p', '240p', '360p', '480p', '720p', '1080p', '1440p', '2k', '4k'];
+      default:
+        return ['720p'];
+    }
+  };
+  
+  const getDefaultQuality = (role: string): string => {
+    switch (role) {
+      case 'BASIC':
+        return '720p';
+      case 'CREATOR':
+        return '1080p';
+      case 'STUDIO':
+      case 'ADMIN':
+        return '1440p';
+      default:
+        return '720p';
+    }
+  };
+  
+  // Add useEffect
+  useEffect(() => {
+    if (userProfile.role) {
+      const qualities = getAvailableQualities(userProfile.role);
+      setAvailableQualities(qualities);
+      setSelectedQuality(getDefaultQuality(userProfile.role));
+    }
+  }, [userProfile.role]);  
 
   // Handle login form submission
   const handleLogin = async (formData: LoginFormData) => {
@@ -355,16 +394,66 @@ const VideoSpeedClient: React.FC = () => {
       }
     }
   };
+  // Add these constants at the top of your VideoSpeedClient component
+  const SUPPORTED_VIDEO_FORMATS = [
+    'video/mp4',
+    'video/quicktime', // .mov
+    'video/x-msvideo', // .avi
+    'video/x-matroska', // .mkv
+    'video/webm',
+    'video/mpeg',
+    'video/x-flv'
+  ];
 
-  // Handle video upload
+  const SUPPORTED_VIDEO_EXTENSIONS = ['.mp4', '.mov', '.avi', '.mkv', '.webm', '.mpeg', '.mpg', '.flv'];
+
+  const MAX_FILE_SIZE = 500 * 1024 * 1024; // 500MB
+
+  // Add this validation function
+  const validateVideoFile = (file: File): { valid: boolean; error?: string } => {
+    // Check file type
+    const fileExtension = file.name.toLowerCase().substring(file.name.lastIndexOf('.'));
+    const isValidType = SUPPORTED_VIDEO_FORMATS.includes(file.type) ||
+                        SUPPORTED_VIDEO_EXTENSIONS.includes(fileExtension);
+
+    if (!isValidType) {
+      return {
+        valid: false,
+        error: `Unsupported video format. Please upload one of: ${SUPPORTED_VIDEO_EXTENSIONS.join(', ')}`
+      };
+    }
+
+    // Check file size
+    if (file.size > MAX_FILE_SIZE) {
+      return {
+        valid: false,
+        error: `File size exceeds 500MB limit. Your file is ${(file.size / (1024 * 1024)).toFixed(2)}MB`
+      };
+    }
+
+    return { valid: true };
+  };
+
   const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!requireLogin()) return;
+
     const file = e.target.files?.[0];
     if (!file) return;
+
+    // Validate the video file
+    const validation = validateVideoFile(file);
+    if (!validation.valid) {
+      setError(validation.error || 'Invalid video file');
+      e.target.value = ''; // Reset file input
+      return;
+    }
+
     const formData = new FormData();
     formData.append('file', file);
     formData.append('speed', speed.toString());
+
     try {
+      setError(null); // Clear any previous errors
       const response = await axios.post(`${API_BASE_URL}/api/video-speed/upload`, formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -374,8 +463,11 @@ const VideoSpeedClient: React.FC = () => {
       setUploads((prev) => [...prev, response.data]);
       setSelectedUpload(response.data);
       setSpeed(response.data.speed);
+      e.target.value = ''; // Reset file input on success
     } catch (error: any) {
-      setError(error.response?.data?.error || 'Failed to upload video.');
+      const errorMessage = error.response?.data?.error || 'Failed to upload video.';
+      setError(errorMessage);
+      e.target.value = ''; // Reset file input on error
     }
   };
 
@@ -411,9 +503,10 @@ const VideoSpeedClient: React.FC = () => {
     try {
       const response = await axios.post(
         `${API_BASE_URL}/api/video-speed/${selectedUpload.id}/export`,
-        {},
+        null,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+          params: { quality: selectedQuality } 
         }
       );
       setSelectedUpload(response.data);
@@ -614,6 +707,36 @@ const VideoSpeedClient: React.FC = () => {
                     </div>
                   </div>
                 </div>
+                {selectedUpload && (
+                  <div className="quality-selector-container">
+                    <label htmlFor="quality-select" className="quality-label">
+                      Export Quality:
+                    </label>
+                    <select
+                      id="quality-select"
+                      value={selectedQuality}
+                      onChange={(e) => setSelectedQuality(e.target.value)}
+                      className="quality-select"
+                      disabled={selectedUpload.status === 'PROCESSING'}
+                    >
+                      {availableQualities.map((quality) => (
+                        <option key={quality} value={quality}>
+                          {quality === '2k' ? '2K (1440p)' : quality === '4k' ? '4K (2160p)' : quality.toUpperCase()}
+                        </option>
+                      ))}
+                    </select>
+                    {userProfile.role === 'BASIC' && (
+                      <p className="quality-upgrade-hint">
+                        💡 Upgrade to <a href="/pricing">CREATOR</a> for up to 2K or <a href="/pricing">STUDIO</a> for 4K quality
+                      </p>
+                    )}
+                    {userProfile.role === 'CREATOR' && (
+                      <p className="quality-upgrade-hint">
+                        💡 Upgrade to <a href="/pricing">STUDIO</a> for 4K quality
+                      </p>
+                    )}
+                  </div>
+                )}                
                 <button
                   className="cta-button process-video-button"
                   onClick={handleStartProcessing}

@@ -1,0 +1,198 @@
+.download-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.download-modal {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+  transition: color 0.2s;
+}
+
+.modal-close-btn:hover {
+  color: #000;
+}
+
+.download-modal h2 {
+  margin: 0 0 24px 0;
+  font-size: 24px;
+  color: #1a1a1a;
+}
+
+.format-section,
+.resolution-section {
+  margin-bottom: 24px;
+}
+
+.format-section h3,
+.resolution-section h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.format-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.format-card {
+  background: #f8f9fa;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  text-align: center;
+}
+
+.format-card:hover {
+  background: #e9ecef;
+  transform: translateY(-2px);
+}
+
+.format-card.selected {
+  background: #e8f5e9;
+  border-color: #4caf50;
+}
+
+.format-label {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 4px;
+}
+
+.format-description {
+  font-size: 12px;
+  color: #666;
+}
+
+.resolution-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.resolution-card {
+  background: #f8f9fa;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  text-align: center;
+}
+
+.resolution-card:hover {
+  background: #e9ecef;
+  transform: translateY(-2px);
+}
+
+.resolution-card.selected {
+  background: #e3f2fd;
+  border-color: #2196f3;
+}
+
+.resolution-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 2px;
+}
+
+.resolution-size {
+  font-size: 11px;
+  color: #666;
+}
+
+.check-icon {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: #4caf50;
+  font-size: 16px;
+}
+
+.download-btn {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.download-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.download-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .format-grid,
+  .resolution-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .download-modal {
+    padding: 24px;
+  }
+}

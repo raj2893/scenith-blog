@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { FaBars, FaDollarSign, FaHome, FaTools, FaBlog, FaTimes, FaUser } from 'react-icons/fa';
+import { FaBars, FaDollarSign, FaHome, FaTools, FaBlog, FaTimes, FaUser, FaFilePdf } from 'react-icons/fa';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { API_BASE_URL } from '../config';
@@ -20,6 +20,7 @@ interface NavLink {
   isDropdown?: boolean;
   dropdownItems?: { label: string; href: string }[];
   icon?: React.ReactNode;
+  isNew?: boolean; // Add this line
 }
 
 interface UserProfile {
@@ -39,7 +40,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
   const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
   const [isToolsDropdownOpen, setIsToolsDropdownOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-  
+
   // Auth states
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
@@ -72,33 +73,69 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
           localStorage.removeItem('token');
           localStorage.removeItem('userProfile');
           setIsLoggedIn(false);
+          setUserProfile(null);
         }
+      } else {
+        setIsLoggedIn(false);
+        setUserProfile(null);
       }
     };
+
     checkAuth();
 
-    // Listen for storage changes (login/logout from other tabs or page)
-    const handleStorageChange = () => {
+    const handleLoginEvent = () => {
       checkAuth();
     };
-    
+
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'token' || e.key === null) {
+        checkAuth();
+      }
+    };
+
+    window.addEventListener('userLoggedIn', handleLoginEvent);
     window.addEventListener('storage', handleStorageChange);
-    
-    // Poll for auth changes every 2 seconds
-    const authCheckInterval = setInterval(checkAuth, 2000);
+
+    let pollInterval: NodeJS.Timeout | null = null;
+
+    const startPolling = () => {
+      if (!isLoggedIn) {
+        pollInterval = setInterval(() => {
+          const token = localStorage.getItem('token');
+          if (token && !isLoggedIn) {
+            checkAuth();
+          }
+        }, 2000);
+      }
+    };
+
+    const stopPolling = () => {
+      if (pollInterval) {
+        clearInterval(pollInterval);
+        pollInterval = null;
+      }
+    };
+
+    // Start polling if logged out
+    if (!isLoggedIn) {
+      startPolling();
+    } else {
+      stopPolling();
+    }
 
     return () => {
+      window.removeEventListener('userLoggedIn', handleLoginEvent);
       window.removeEventListener('storage', handleStorageChange);
-      clearInterval(authCheckInterval);
+      stopPolling();
     };
-  }, []);
+  }, [isLoggedIn]); // Re-run when login state changes
 
   const dispatchLoginEvent = () => {
     window.dispatchEvent(new Event('userLoggedIn'));
-  };  
+  };
 
   const navigate = (path: string) => {
-    if (path.startsWith('/blogs') || path.startsWith('/background-removal') || path.startsWith('/pricing')) {
+    if (path.startsWith('/blogs') || path.startsWith('/background-removal') || path.startsWith('/pricing') || path.startsWith('/pdf-tools')) {
       router.push(path);
     } else {
       window.location.href = `https://scenith.in${path}`;
@@ -176,15 +213,15 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
         token: credentialResponse.credential,
       });
       localStorage.setItem('token', response.data.token);
-      
+
       const userResponse = await axios.get(`${API_BASE_URL}/auth/me`, {
         headers: { Authorization: `Bearer ${response.data.token}` },
       });
-      
+
       const fullName = userResponse.data.name || '';
       const nameParts = fullName.trim().split(' ');
       const firstName = nameParts[0] || '';
-      
+
       setUserProfile({
         email: userResponse.data.email || '',
         firstName,
@@ -221,7 +258,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
 
   useEffect(() => {
     if (!showLoginModal || !navbarLoginTriggered) return;
-  
+
     const timer = setTimeout(() => {
       const initializeGoogleSignIn = () => {
         if (window.google && window.google.accounts) {
@@ -229,7 +266,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
             // Check if Google Sign-In is already initialized globally
             const existingButton = document.getElementById('navbarGoogleSignInButton');
             if (!existingButton) return;
-          
+
             // Only render if the button container is empty
             if (existingButton.children.length === 0) {
               window.google.accounts.id.initialize({
@@ -250,10 +287,10 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
           setTimeout(initializeGoogleSignIn, 100);
         }
       };
-    
+
       initializeGoogleSignIn();
     }, 150);
-  
+
     return () => {
       clearTimeout(timer);
     };
@@ -265,16 +302,23 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
         setNavbarLoginTriggered(false);
       }
     };
-  }, [showLoginModal, navbarLoginTriggered]);  
+  }, [showLoginModal, navbarLoginTriggered]);
 
   const baseNavLinks: NavLink[] = [
     { label: 'Home', path: '/', icon: <FaHome /> },
+    {
+      label: 'PDF Tools',
+      path: '/pdf-tools',
+      icon: <FaFilePdf />,
+      isNew: true // Add this flag
+    },
     {
       label: 'Tools',
       isDropdown: true,
       icon: <FaTools />,
       dropdownItems: [
         { label: 'AI Voice Generator', href: '/tools/ai-voice-generation' },
+        { label: 'PDF Tools', href: '/pdf-tools' },
         { label: 'AI Subtitle Generator', href: '/tools/add-subtitles-to-videos' },
         { label: 'Image Editing', href: '/tools/image-editing' },
         { label: 'Background Remover', href: '/tools/background-removal' },
@@ -358,12 +402,13 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
                     }}
                   >
                     {link.icon && <span className="nav-link-icon">{link.icon}</span>}
-                    {link.label}
+                    <span className="nav-link-text">{link.label}</span>
+                    {link.isNew && <span className="new-badge">NEW</span>}
                   </button>
                 )}
               </div>
             ))}
-            
+
             {/* Auth Button */}
             <div className="nav-item auth-nav-item">
               {isLoggedIn ? (
