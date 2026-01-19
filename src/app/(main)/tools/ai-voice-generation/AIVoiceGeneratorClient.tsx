@@ -853,7 +853,7 @@ return (
               name: 'How many characters can I generate for free?',
               acceptedAnswer: {
                 '@type': 'Answer',
-                text: 'The free BASIC plan includes 5,000 characters per month with a daily limit of 1,000 characters. CREATOR plan offers 50,000 characters/month with 5,000 characters/day. STUDIO plan provides 150,000 characters/month with no daily limits. Each request supports up to 5,000 characters.'
+                text: 'The free BASIC plan includes 3,000 characters per month with a daily limit of 7,00 characters. CREATOR plan offers 50,000 characters/month with 5,000 characters/day. STUDIO plan provides 150,000 characters/month with no daily limits.'
               }
             }
           ]
@@ -1247,6 +1247,175 @@ return (
       </motion.div>
     )}
 
+    {/* NEW: Step-by-Step How to Generate Section */}
+    <section className="how-to-generate-section" id="how-to-generate" role="region" aria-labelledby="how-to-generate-title">
+      <div className="container">
+        <h2 id="how-to-generate-title">How to Generate AI Voice from Text: Complete Step-by-Step Guide</h2>
+        <p className="section-description">
+          Follow this detailed walkthrough to create professional AI voiceovers in minutes. No technical experience required—just your script and our advanced text-to-speech technology.
+        </p>
+
+        <div className="tutorial-steps">
+          <article className="tutorial-step">
+            <div className="tutorial-step-number">Step 1</div>
+            <div className="tutorial-step-content">
+              <h3>Write or Paste Your Script</h3>
+              <p>
+                Begin by entering your text into the generator. You can type directly, or paste your text:
+              </p>
+              <ul className="tutorial-checklist">
+                <li>YouTube video scripts (2-5 minute videos)</li>
+                <li>Podcast episode segments</li>
+                <li>Product descriptions and reviews</li>
+                <li>Educational course narration</li>
+                <li>Marketing copy and advertisements</li>
+              </ul>
+              <div className="tutorial-tip">
+                <strong>💡 Pro Tip:</strong> For best results, use proper punctuation. Commas create natural pauses, periods signal sentence endings, and question marks adjust intonation automatically.
+              </div>
+            </div>
+          </article>
+
+          <article className="tutorial-step">
+            <div className="tutorial-step-number">Step 2</div>
+            <div className="tutorial-step-content">
+              <h3>Select Your Perfect AI Voice</h3>
+              <p>
+                Browse our library of <strong>40+ natural-sounding voices</strong> across 20+ languages. Use filters to narrow your search:
+              </p>
+              <div className="filter-guide">
+                <div className="filter-option">
+                  <strong>Language Filter:</strong> Choose from English (US, UK, Australian, Indian), Spanish, French, German, Mandarin, Hindi, Portuguese, and more.
+                </div>
+                <div className="filter-option">
+                  <strong>Gender Filter:</strong> Select male or female based on your content needs.
+                </div>
+                <div className="filter-option">
+                  <strong>Voice Preview:</strong> Click the play button (▶️) to hear a demo before generating your full audio.
+                </div>
+              </div>
+              <div className="tutorial-tip">
+                <strong>💡 Pro Tip:</strong> Match voice characteristics to your audience. Professional content works well with clear, authoritative voices. Entertainment content benefits from energetic, conversational tones.
+              </div>
+            </div>
+          </article>
+
+          <article className="tutorial-step">
+            <div className="tutorial-step-number">Step 3</div>
+            <div className="tutorial-step-content">
+              <h3>Generate Your AI Audio</h3>
+              <p>
+                Click the <strong>"Generate AI Voice"</strong> button and watch the magic happen. Our neural text-to-speech engine processes your script in seconds, analyzing:
+              </p>
+              <ul className="tutorial-checklist">
+                <li><strong>Pronunciation:</strong> Proper phonetic conversion for accurate word delivery</li>
+                <li><strong>Prosody:</strong> Natural rhythm, stress, and intonation patterns</li>
+                <li><strong>Pacing:</strong> Appropriate speaking speed for comprehension</li>
+                <li><strong>Emotion:</strong> Contextual tone matching based on punctuation and word choice</li>
+              </ul>
+              <p>
+                Generation typically completes in <strong>3-5 seconds</strong>, regardless of text length. You'll see a progress indicator during processing.
+              </p>
+            </div>
+          </article>
+
+          <article className="tutorial-step">
+            <div className="tutorial-step-number">Step 4</div>
+            <div className="tutorial-step-content">
+              <h3>Preview and Download Your Audio</h3>
+              <p>
+                Once generated, your audio appears with a built-in player. <strong>Listen to preview</strong> the results before downloading:
+              </p>
+              <div className="download-options">
+                <div className="download-format">
+                  <strong>Format:</strong> High-quality MP3 (128kbps+)
+                </div>
+                <div className="download-format">
+                  <strong>Compatibility:</strong> Works with all video editors, audio software, and platforms
+                </div>
+                <div className="download-format">
+                  <strong>Usage Rights:</strong> Full commercial use allowed, no attribution required
+                </div>
+              </div>
+              <p>
+                Click <strong>"Download MP3"</strong> to save your voiceover. The file downloads instantly to your device, ready for immediate use in your projects.
+              </p>
+              <div className="tutorial-tip">
+                <strong>💡 Pro Tip:</strong> Organize downloads with descriptive filenames like "intro-narration-v2.mp3" or "product-demo-voice.mp3" for easy project management.
+              </div>
+            </div>
+          </article>
+
+          <article className="tutorial-step advanced">
+            <div className="tutorial-step-number">Step 5</div>
+            <div className="tutorial-step-content">
+              <h3>Edit and Re-generate as Needed</h3>
+              <p>
+                Not satisfied with the first attempt? Our system makes iteration effortless:
+              </p>
+              <ul className="tutorial-checklist">
+                <li>Modify your script text and regenerate instantly</li>
+                <li>Try different voices to find the perfect match</li>
+                <li>Adjust punctuation to change pacing and emphasis</li>
+                <li>Test multiple versions for A/B testing</li>
+              </ul>
+              <p>
+                Each regeneration uses your remaining character quota. <strong>Free users get 3,000 characters/month</strong> (700/day). Upgrade for unlimited generations and access to premium voices.
+              </p>
+            </div>
+          </article>
+        </div>
+
+        <div className="common-questions">
+          <h3>Common Questions During Generation</h3>
+          <div className="quick-qa-grid">
+            <div className="quick-qa">
+              <strong>Q: How long does generation take?</strong>
+              <p>A: 3-5 seconds regardless of text length. Our optimized servers process requests instantly.</p>
+            </div>
+            <div className="quick-qa">
+              <strong>Q: Can I edit after generating?</strong>
+              <p>A: Yes! Simply modify your text and click generate again. No need to start over.</p>
+            </div>
+            <div className="quick-qa">
+              <strong>Q: What if I exceed character limits?</strong>
+              <p>A: Split long scripts into sections or upgrade to CREATOR/STUDIO plans for higher limits.</p>
+            </div>
+            <div className="quick-qa">
+              <strong>Q: Can I use the same voice for all my content?</strong>
+              <p>A: Absolutely! Save your favorite voice selection for consistent brand audio across all projects.</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="integration-guide">
+          <h3>Using Your Generated Audio in Popular Tools</h3>
+          <div className="integration-cards">
+            <div className="integration-card">
+              <span className="integration-icon">🎬</span>
+              <h4>Video Editing Software</h4>
+              <p><strong>Adobe Premiere, Final Cut Pro, DaVinci Resolve:</strong> Import MP3 directly into timeline, sync with video, adjust levels.</p>
+            </div>
+            <div className="integration-card">
+              <span className="integration-icon">▶️</span>
+              <h4>YouTube & Social Media</h4>
+              <p><strong>YouTube Studio, TikTok, Instagram:</strong> Upload MP3 as audio track, combine with visuals, optimize for platform.</p>
+            </div>
+            <div className="integration-card">
+              <span className="integration-icon">🎙️</span>
+              <h4>Podcast Platforms</h4>
+              <p><strong>Anchor, Buzzsprout, Podbean:</strong> Use as intro/outro, episode narration, or complete audio content.</p>
+            </div>
+            <div className="integration-card">
+              <span className="integration-icon">📚</span>
+              <h4>E-Learning Platforms</h4>
+              <p><strong>Teachable, Thinkific, Kajabi:</strong> Embed in course modules, create audio lessons, accessibility features.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>    
+
     {/* NEW: Educational Introduction Section */}
     <section className="educational-intro" role="complementary" aria-labelledby="intro-title">
       <div className="container">
@@ -1489,7 +1658,7 @@ return (
           <motion.article className="step-card" whileHover={{ scale: 1.05 }} role="listitem">
             <div className="step-number" aria-label="Step 1">1</div>
             <h3>Type Your Text</h3>
-            <p>Enter any text up to 5,000 characters. Perfect for scripts, articles, or presentations. Our AI handles natural phrasing and intonation automatically.</p>
+            <p>Enter any text. Perfect for scripts, articles, or presentations. Our AI handles natural phrasing and intonation automatically.</p>
           </motion.article>
           <motion.article className="step-card" whileHover={{ scale: 1.05 }} role="listitem">
             <div className="step-number" aria-label="Step 2">2</div>
@@ -1901,7 +2070,7 @@ return (
           </article>
           <article className="faq-item" role="listitem">
             <h3>How many characters can I generate for free?</h3>
-            <p>The free BASIC plan includes 5,000 characters per month with a daily limit of 1,000 characters. CREATOR plan offers 50,000 characters/month with 5,000 characters/day. STUDIO plan provides 150,000 characters/month with no daily limits. Each request supports up to 5,000 characters.</p>
+            <p>The free BASIC plan includes 3,000 characters per month with a daily limit of 700 characters. CREATOR plan offers 50,000 characters/month with 5,000 characters/day. STUDIO plan provides 150,000 characters/month with no daily limits. Each request supports up to 5,000 characters.</p>
           </article>
           <article className="faq-item" role="listitem">
             <h3>Can I adjust voice speed, pitch, or tone?</h3>

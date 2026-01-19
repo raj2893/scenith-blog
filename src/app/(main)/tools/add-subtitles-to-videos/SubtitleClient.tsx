@@ -653,6 +653,11 @@ const SubtitleClient: React.FC = () => {
       });
       setUploads((prev) => [...prev, response.data]);
       setSelectedUpload(response.data);
+      setSubtitles([]);
+      setSelectedSubtitles([]);
+      setEditingSubtitle(null);
+      setOriginalSubtitle(null);
+      setCurrentTime(0);      
     } catch (error: any) {
       setError(error.response?.data?.message || 'Failed to upload video.');
     } finally {
@@ -721,6 +726,10 @@ const SubtitleClient: React.FC = () => {
                           clearInterval(pollInterval);
                           setIsGenerating(false);
                           setSubtitles(JSON.parse(updatedMedia.subtitlesJson));
+
+                          setUploads(prev => prev.map(u => 
+                              u.id === updatedMedia.id ? updatedMedia : u
+                          ));                          
                           
                           // Scroll to subtitles list
                           const subtitlesList = document.querySelector('.subtitles-list-container');

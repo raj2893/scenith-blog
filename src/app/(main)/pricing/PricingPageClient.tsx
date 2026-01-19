@@ -18,10 +18,6 @@ interface PricingPlan {
   ttsLimit: number;
   popular?: boolean;
   symbol?: string;
-  subtitleGenerationLimit: number;
-  videoSpeedModifierLimit: number;
-  maxVideoLength: number;
-  maxQuality: string;  
 }
 
 interface UserProfile {
@@ -363,22 +359,12 @@ export default function PricingPageClient() {
           price: 0,
           currency: 'FREE',
           ttsLimit: 5000,
-          subtitleGenerationLimit: 5,
-          videoSpeedModifierLimit: 5,
-          maxVideoLength: 5,
-          maxQuality: '720p',          
           features: [
             '5,000 Characters/month',
             '1,000 Characters/day',
             '500 Characters per request',
             '30+ AI Voices in multiple languages',
-            '5 Subtitle Generations/month',
-            '5 Video Speed Modifications/month',
-            'Max 5 minutes video length',
-            'Up to 720p quality',
-            'Elements & Templates FREE for limited Time!',
-            'Basic support',
-            'Commercial use allowed'
+            'Basic support'
           ]
         },
         {
@@ -387,23 +373,14 @@ export default function PricingPageClient() {
           price: 0,
           currency: 'LOADING',
           ttsLimit: 50000,
-          subtitleGenerationLimit: 10,
-          videoSpeedModifierLimit: 10,
-          maxVideoLength: 15,
-          maxQuality: '1440p',
           popular: true,
           features: [
             '50,000 Characters/month',
             '5,000 Characters/day',
             '2,500 Characters per request',
             'All Premium AI Voices',
-            '10 Subtitle Generations/month',
-            '10 Video Speed Modifications/month',
-            'Max 15 minutes video length',
-            'Up to 1440p (2K) quality',
-            'Elements & Templates',
-            'Priority support',
-            'Commercial use allowed'
+            'Elements & Templates (Coming Soon)',
+            'Priority support'
           ]
         },
         {
@@ -412,22 +389,13 @@ export default function PricingPageClient() {
           price: 0,
           currency: 'LOADING',
           ttsLimit: 150000,
-          subtitleGenerationLimit: -1,
-          videoSpeedModifierLimit: -1,
-          maxVideoLength: -1,
-          maxQuality: '4K',
           features: [
             '1,50,000 Characters/month',
             'Unlimited daily usage',
             '5,000 Characters per request',
             'All Premium AI Voices',
-            'Unlimited Subtitle Generations',
-            'Unlimited Video Speed Modifications',
-            'Unlimited video length',
-            'Up to 4K quality',
-            'Elements & Templates',
-            'Dedicated support',
-            'Commercial use allowed'
+            'Elements & Templates (Coming Soon)',
+            'Dedicated support'
           ]
         }
       ];
@@ -449,20 +417,11 @@ export default function PricingPageClient() {
         price: 0,
         currency: 'FREE',
         ttsLimit: 5000,
-        subtitleGenerationLimit: 5,
-        videoSpeedModifierLimit: 5,
-        maxVideoLength: 5,
-        maxQuality: '720p',          
         features: [
           '5,000 Characters/month',
           '1,000 Characters/day',
           '500 Characters per request',
           '30+ AI Voices in multiple languages',
-          '5 Subtitle Generations/month',
-          '5 Video Speed Modifications/month',
-          'Max 5 minutes video length',
-          'Up to 720p quality',
-          'Elements & Templates FREE for limited Time!',
           'Basic support',
           'Commercial use allowed'
         ]
@@ -470,24 +429,18 @@ export default function PricingPageClient() {
       {
         name: 'Creator',
         role: 'CREATOR',
-        price: 0,
-        currency: 'LOADING',
+        price: creatorPrice,
+        originalPrice: originalCreatorPrice,
+        currency: currency,
+        symbol: symbol,
         ttsLimit: 50000,
-        subtitleGenerationLimit: 10,
-        videoSpeedModifierLimit: 10,
-        maxVideoLength: 15,
-        maxQuality: '1440p',
         popular: true,
         features: [
           '50,000 Characters/month',
           '5,000 Characters/day',
           '2,500 Characters per request',
           'All Premium AI Voices',
-          '10 Subtitle Generations/month',
-          '10 Video Speed Modifications/month',
-          'Max 15 minutes video length',
-          'Up to 1440p (2K) quality',
-          'Elements & Templates',
+          'Elements & Templates (Coming Soon)',
           'Priority support',
           'Commercial use allowed'
         ]
@@ -495,23 +448,17 @@ export default function PricingPageClient() {
       {
         name: 'Studio',
         role: 'STUDIO',
-        price: 0,
-        currency: 'LOADING',
+        price: studioPrice,
+        originalPrice: originalStudioPrice,
+        currency: currency,
+        symbol: symbol,
         ttsLimit: 150000,
-        subtitleGenerationLimit: -1,
-        videoSpeedModifierLimit: -1,
-        maxVideoLength: -1,
-        maxQuality: '4K',
         features: [
           '1,50,000 Characters/month',
           'Unlimited daily usage',
           '5,000 Characters per request',
           'All Premium AI Voices',
-          'Unlimited Subtitle Generations',
-          'Unlimited Video Speed Modifications',
-          'Unlimited video length',
-          'Up to 4K quality',
-          'Elements & Templates',
+          'Elements & Templates (Coming Soon)',
           'Dedicated support',
           'Commercial use allowed'
         ]
@@ -745,30 +692,6 @@ export default function PricingPageClient() {
                 <td>All premium voices</td>
               </tr>
               <tr>
-                <td>Subtitle Generation/Month</td>
-                <td>5 videos</td>
-                <td>10 videos</td>
-                <td>Unlimited</td>
-              </tr>
-              <tr>
-                <td>Video Speed Modifier/Month</td>
-                <td>5 videos</td>
-                <td>10 videos</td>
-                <td>Unlimited</td>
-              </tr>
-              <tr>
-                <td>Max Video Length</td>
-                <td>5 minutes</td>
-                <td>15 minutes</td>
-                <td>Unlimited</td>
-              </tr>
-              <tr>
-                <td>Video Quality</td>
-                <td>Up to 720p</td>
-                <td>Up to 1440p (2K)</td>
-                <td>Up to 4K</td>
-              </tr>              
-              <tr>
                 <td>Commercial Use</td>
                 <td>✓</td>
                 <td>✓</td>
@@ -782,9 +705,9 @@ export default function PricingPageClient() {
               </tr>
               <tr>
                 <td>Elements & Templates</td>
-                <td>FREE for Limited Time!</td>
-                <td>FREE</td>
-                <td>FREE</td>
+                <td>✗</td>
+                <td>Coming Soon</td>
+                <td>Coming Soon</td>
               </tr>              
               <tr>
                 <td>API Access</td>

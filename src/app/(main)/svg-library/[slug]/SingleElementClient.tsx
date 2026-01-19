@@ -39,6 +39,9 @@ const SingleElementClient: React.FC<SingleElementClientProps> = ({ elementSlug }
   const [downloadModalOpen, setDownloadModalOpen] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
   const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
+  const [selectedColor, setSelectedColor] = useState<string>("#000000");
+  const [previewImageUrl, setPreviewImageUrl] = useState<string>("");
+
 
   // Check authentication
   useEffect(() => {
@@ -56,6 +59,41 @@ const SingleElementClient: React.FC<SingleElementClientProps> = ({ elementSlug }
     }
   }, []);
 
+  useEffect(() => {
+    if (element && element.fileFormat.toLowerCase() === 'svg') {
+      // If color is changed, fetch the colored version
+      if (selectedColor !== "#000000") {
+        const fetchColoredSvg = async () => {
+          try {
+            const token = localStorage.getItem("token");
+            const response = await axios.get(
+              `${API_BASE_URL}/api/image-editor/elements/${element.id}/download?format=SVG&color=${selectedColor.replace('#', '')}`,
+              {
+                headers: token ? { Authorization: `Bearer ${token}` } : {},
+                responseType: 'blob',
+              }
+            );
+            const url = URL.createObjectURL(response.data);
+            setPreviewImageUrl(url);
+          } catch (error) {
+            console.error("Failed to fetch colored SVG:", error);
+          }
+        };
+        fetchColoredSvg();
+      } else {
+        // Reset to original
+        setPreviewImageUrl(element.cdnUrl);
+      }
+    }
+  }, [selectedColor, element]);
+  
+  // Update preview URL when element changes
+  useEffect(() => {
+    if (element) {
+      setPreviewImageUrl(element.cdnUrl);
+      setSelectedColor("#000000"); // Reset color when element changes
+    }
+  }, [element]);
 
   // Handle login
   const handleLogin = async (formData: { email: string; password: string }) => {
@@ -312,7 +350,7 @@ const SingleElementClient: React.FC<SingleElementClientProps> = ({ elementSlug }
           <div className="showcase-grid">
             <div className="element-preview-large">
               <div className="preview-container">
-                <img src={element.cdnUrl} alt={element.name} />
+                <img src={previewImageUrl || element.cdnUrl} alt={element.name} />
               </div>
             </div>
 
@@ -349,6 +387,38 @@ const SingleElementClient: React.FC<SingleElementClientProps> = ({ elementSlug }
                   </div>
                 )}
               </div>
+
+              {element.fileFormat.toLowerCase() === 'svg' && (
+                <div className="color-customization">
+                  <h3>Customize Color</h3>
+                  <div className="color-picker-container">
+                    <input
+                      type="color"
+                      value={selectedColor}
+                      onChange={(e) => setSelectedColor(e.target.value)}
+                      className="color-input"
+                    />
+                    <input
+                      type="text"
+                      value={selectedColor}
+                      onChange={(e) => setSelectedColor(e.target.value)}
+                      placeholder="#000000"
+                      className="color-text-input"
+                      maxLength={7}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setSelectedColor("#000000")}
+                      className="reset-color-btn"
+                    >
+                      Reset Color
+                    </button>
+                  </div>
+                  <small className="color-hint">
+                    Preview updates in real-time. Downloads will use this color.
+                  </small>
+                </div>
+              )}              
 
               <div className="action-buttons">
                 <button
@@ -595,6 +665,8 @@ const SingleElementClient: React.FC<SingleElementClientProps> = ({ elementSlug }
           onClose={() => setDownloadModalOpen(false)}
           elementId={element.id}
           elementName={element.name}
+          selectedColor={selectedColor}
+          fileFormat={element.fileFormat}          
         />
       )}          
     </div>
