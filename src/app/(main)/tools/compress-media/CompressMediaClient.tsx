@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { FaTimes, FaArrowUp } from "react-icons/fa";
 import { API_BASE_URL, CDN_URL } from "../../../config";
 import "../../../../../styles/tools/CompressMedia.css";
+import DeleteConfirmModal from '../../../../components/DeleteConfirmModal';
 
 // Interfaces
 interface UserProfile {
@@ -60,6 +61,10 @@ const CompressMediaClient: React.FC = () => {
   const [uploadSuccess, setUploadSuccess] = useState<string | null>(null);
   const [editingMediaId, setEditingMediaId] = useState<number | null>(null);
   const [newTargetSize, setNewTargetSize] = useState<string>("");
+
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<{id: number; name: string; type: string} | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Handle scroll for navbar styling
   useEffect(() => {
@@ -186,6 +191,23 @@ const CompressMediaClient: React.FC = () => {
       setIsLoggingIn(false);
     }
   }, []);
+const handleDeleteConfirm = async () => {
+  if (!itemToDelete) return;
+  setIsDeleting(true);
+  try {
+    await axios.delete(
+      `${API_BASE_URL}/api/compression/delete/${itemToDelete.id}`,
+      { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+    );
+    setMediaList(mediaList.filter(m => m.id !== itemToDelete.id));
+    setDeleteModalOpen(false);
+    setItemToDelete(null);
+  } catch (error: any) {
+    setError(error.response?.data?.message || 'Failed to delete media.');
+  } finally {
+    setIsDeleting(false);
+  }
+};
 
   // Initialize Google Sign-In
   useEffect(() => {
@@ -569,92 +591,112 @@ const CompressMediaClient: React.FC = () => {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.3 }}
                       >
-                        <div className="media-details">
-                          <div className="media-title">{media.originalFileName}</div>
-                          <div className="media-info">
-                            {editingMediaId === media.id ? (
-                              <div className="edit-target-size">
-                                <input
-                                  type="text"
-                                  value={newTargetSize}
-                                  onChange={(e) => setNewTargetSize(e.target.value)}
-                                  placeholder="e.g., 500KB or 2MB"
-                                  className="target-size-input"
-                                  aria-label="New target file size"
-                                />
-                                <button
-                                  onClick={() => handleUpdateTargetSize(media.id)}
-                                  className="cta-button save-button"
-                                  aria-label={`Save new target size for ${media.originalFileName}`}
-                                >
-                                  Save
-                                </button>
-                                <button
-                                  onClick={() => setEditingMediaId(null)}
-                                  className="cta-button cancel-button"
-                                  aria-label="Cancel editing"
-                                >
-                                  Cancel
-                                </button>
-                              </div>
-                            ) : (
-                              <>
-                                <span>Status: {media.status}</span>
-                                <span>Target Size: {media.targetSize}</span>
-                                <button
-                                  onClick={() => {
-                                    setEditingMediaId(media.id);
-                                    setNewTargetSize(media.targetSize);
-                                  }}
-                                  className="cta-button edit-button"
-                                  aria-label={`Edit target size for ${media.originalFileName}`}
-                                >
-                                  Edit Size
-                                </button>
-                                {media.errorMessage && <span>Error: {media.errorMessage}</span>}
-                              </>
-                            )}
-                          </div>
-                          {(media.status === "UPLOADED" || media.status === "SUCCESS" || media.status === "FAILED") && editingMediaId !== media.id && (
-                            <button
-                              onClick={() => handleCompress(media.id)}
-                              className="cta-button compress-button"
-                              disabled={isCompressing}
-                              aria-label={
-                                media.status === "SUCCESS"
-                                  ? `Re-compress ${media.originalFileName}`
-                                  : media.status === "FAILED"
-                                  ? `Try again to compress ${media.originalFileName}`
-                                  : `Compress ${media.originalFileName}`
-                              }
-                            >
-                              {isCompressing ? (
-                                <span className="compressing-spinner">Compressing...</span>
-                              ) : media.status === "SUCCESS" ? (
-                                "Re-compress"
-                              ) : media.status === "FAILED" ? (
-                                "Try Again"
+                        <div className="media-item">
+                          <div className="media-details">
+                            <div className="media-title">{media.originalFileName}</div>
+                            <div className="media-info">
+                              {editingMediaId === media.id ? (
+                                <div className="edit-target-size">
+                                  <input
+                                    type="text"
+                                    value={newTargetSize}
+                                    onChange={(e) => setNewTargetSize(e.target.value)}
+                                    placeholder="e.g., 500KB or 2MB"
+                                    className="target-size-input"
+                                    aria-label="New target file size"
+                                  />
+                                  <button
+                                    onClick={() => handleUpdateTargetSize(media.id)}
+                                    className="cta-button save-button"
+                                    aria-label={`Save new target size for ${media.originalFileName}`}
+                                  >
+                                    Save
+                                  </button>
+                                  <button
+                                    onClick={() => setEditingMediaId(null)}
+                                    className="cta-button cancel-button"
+                                    aria-label="Cancel editing"
+                                  >
+                                    Cancel
+                                  </button>
+                                </div>
                               ) : (
-                                "Compress"
+                                <>
+                                  <span>Status: {media.status}</span>
+                                  <span>Target Size: {media.targetSize}</span>
+                                  <button
+                                    onClick={() => {
+                                      setEditingMediaId(media.id);
+                                      setNewTargetSize(media.targetSize);
+                                    }}
+                                    className="cta-button edit-button"
+                                    aria-label={`Edit target size for ${media.originalFileName}`}
+                                  >
+                                    Edit Size
+                                  </button>
+                                  {media.errorMessage && <span>Error: {media.errorMessage}</span>}
+                                </>
                               )}
-                            </button>
-                          )}
-                          {media.status === "SUCCESS" && media.processedCdnUrl && (
-                            <button
-                              onClick={() =>
-                                media.processedCdnUrl &&
-                                handleDownload(
-                                  media.processedCdnUrl,
-                                  `compressed_${media.originalFileName}`
-                                )
-                              }
-                              className="cta-button download-button"
-                              aria-label={`Download compressed ${media.originalFileName}`}
-                              disabled={!media.processedCdnUrl}
-                            >
-                              Download
-                            </button>
-                          )}
+                            </div>
+                            {(media.status === "UPLOADED" || media.status === "SUCCESS" || media.status === "FAILED") && editingMediaId !== media.id && (
+                              <button
+                                onClick={() => handleCompress(media.id)}
+                                className="cta-button compress-button"
+                                disabled={isCompressing}
+                                aria-label={
+                                  media.status === "SUCCESS"
+                                    ? `Re-compress ${media.originalFileName}`
+                                    : media.status === "FAILED"
+                                    ? `Try again to compress ${media.originalFileName}`
+                                    : `Compress ${media.originalFileName}`
+                                }
+                              >
+                                {isCompressing ? (
+                                  <span className="compressing-spinner">Compressing...</span>
+                                ) : media.status === "SUCCESS" ? (
+                                  "Re-compress"
+                                ) : media.status === "FAILED" ? (
+                                  "Try Again"
+                                ) : (
+                                  "Compress"
+                                )}
+                              </button>
+                            )}
+                            {media.status === "SUCCESS" && media.processedCdnUrl && (
+                              <button
+                                onClick={() =>
+                                  media.processedCdnUrl &&
+                                  handleDownload(
+                                    media.processedCdnUrl,
+                                    `compressed_${media.originalFileName}`
+                                  )
+                                }
+                                className="cta-button download-button"
+                                aria-label={`Download compressed ${media.originalFileName}`}
+                                disabled={!media.processedCdnUrl}
+                              >
+                                Download
+                              </button>
+                            )}
+                           <button
+                             onClick={() => {
+                               setDeleteModalOpen(true);
+                               setItemToDelete({
+                                 id: media.id,
+                                 name: media.originalFileName,
+                                 type: 'media'
+                               });
+                             }}
+                             className="elegant-delete-button elegant-delete-button-with-text"
+                             aria-label={`Delete ${media.originalFileName}`}
+                             title="Delete this media"
+                           >
+                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                               <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6"/>
+                             </svg>
+                             <span>Delete</span>
+                           </button>
+                          </div>
                         </div>
                       </motion.div>
                     ))}
@@ -1338,6 +1380,16 @@ const CompressMediaClient: React.FC = () => {
           </div>
         </motion.div>
       </section>
+      <DeleteConfirmModal
+        isOpen={deleteModalOpen}
+        onClose={() => {
+          setDeleteModalOpen(false);
+          setItemToDelete(null);
+        }}
+        onConfirm={handleDeleteConfirm}
+        itemName={itemToDelete?.name || ''}
+        isDeleting={isDeleting}
+      />
 
       {showLoginModal && (
         <div className="modal-overlay">

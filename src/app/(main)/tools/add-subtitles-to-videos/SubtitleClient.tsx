@@ -12,6 +12,7 @@ import Script from 'next/script';
 import { debounce } from 'lodash';
 import SubtitleEditorPanel from './SubtitleEditorPanel';
 import CustomStyleDropdown from './CustomStyleDropdown';
+import DeleteConfirmModal from '../../../../components/DeleteConfirmModal';
 
 // Interfaces
 interface UserProfile {
@@ -401,6 +402,9 @@ const SubtitleClient: React.FC = () => {
   const [applyStyleToSingle, setApplyStyleToSingle] = useState(false);
   const [availableQualities, setAvailableQualities] = useState<string[]>([]);
   const [selectedQuality, setSelectedQuality] = useState<string>('720p');
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<{id: number; name: string; type: string} | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const prevSelectedAiStyleRef = useRef<AiStyle | null>(null);
 
@@ -611,6 +615,26 @@ const SubtitleClient: React.FC = () => {
       setTimeout(() => setLoginError(''), 8000);
     }
   }, []);
+
+const handleDeleteConfirm = async () => {
+  if (!itemToDelete) return;
+  setIsDeleting(true);
+  try {
+    await axios.delete(
+      `${API_BASE_URL}/api/subtitles/delete/${itemToDelete.id}`,
+      { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+    );
+    setUploads(uploads.filter(u => u.id !== itemToDelete.id));
+    setSelectedUpload(null);
+    setSubtitles([]);
+    setDeleteModalOpen(false);
+    setItemToDelete(null);
+  } catch (error: any) {
+    setError(error.response?.data?.message || 'Failed to delete media.');
+  } finally {
+    setIsDeleting(false);
+  }
+};
 
   useEffect(() => {
     const initializeGoogleSignIn = () => {
@@ -1131,7 +1155,7 @@ const SubtitleClient: React.FC = () => {
                     <div className="upload-spinner"></div>
                     <p>Uploading your video...</p>
                   </div>
-                )}              
+                )}
                 <div className="upload-section-container">
                   <label className="compact-upload-button">
                     <input
@@ -1154,8 +1178,8 @@ const SubtitleClient: React.FC = () => {
                   >
                     <option value="">Select a Video</option>
                     {uploads.map((upload) => {
-                      const truncatedName = upload.originalFileName.length > 30 
-                        ? upload.originalFileName.substring(0, 30) + '...' 
+                      const truncatedName = upload.originalFileName.length > 30
+                        ? upload.originalFileName.substring(0, 30) + '...'
                         : upload.originalFileName;
                       return (
                         <option key={upload.id} value={upload.id} title={upload.originalFileName}>
@@ -1164,6 +1188,25 @@ const SubtitleClient: React.FC = () => {
                       );
                     })}
                   </select>
+                  {selectedUpload && (
+                    <button
+                      className="elegant-delete-button"
+                      onClick={() => {
+                        setDeleteModalOpen(true);
+                        setItemToDelete({
+                          id: selectedUpload.id,
+                          name: selectedUpload.originalFileName,
+                          type: 'subtitle'
+                        });
+                      }}
+                      aria-label={`Delete ${selectedUpload.originalFileName}`}
+                      title="Delete this video"
+                    >
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6"/>
+                      </svg>
+                    </button>
+                  )}
                 </div>
                 <div className="video-filter-container">
                   {/* Video Preview */}
@@ -2141,7 +2184,16 @@ const SubtitleClient: React.FC = () => {
           </div>
         </motion.div>
       </section>
-
+<DeleteConfirmModal
+  isOpen={deleteModalOpen}
+  onClose={() => {
+    setDeleteModalOpen(false);
+    setItemToDelete(null);
+  }}
+  onConfirm={handleDeleteConfirm}
+  itemName={itemToDelete?.name || ''}
+  isDeleting={isDeleting}
+/>
       {showLoginModal && (
         <div className="modal-overlay">
           <motion.div
