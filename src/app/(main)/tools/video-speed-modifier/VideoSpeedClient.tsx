@@ -162,6 +162,7 @@ const VideoSpeedClient: React.FC = () => {
   const [loginSuccess, setLoginSuccess] = useState<string>('');
   const [availableQualities, setAvailableQualities] = useState<string[]>([]);
   const [selectedQuality, setSelectedQuality] = useState<string>('720p');  
+  const [isUploading, setIsUploading] = useState(false);
 
   // Handle scroll for navbar styling
   useEffect(() => {
@@ -448,6 +449,7 @@ const VideoSpeedClient: React.FC = () => {
       return;
     }
 
+    setIsUploading(true);
     const formData = new FormData();
     formData.append('file', file);
     formData.append('speed', speed.toString());
@@ -468,6 +470,8 @@ const VideoSpeedClient: React.FC = () => {
       const errorMessage = error.response?.data?.error || 'Failed to upload video.';
       setError(errorMessage);
       e.target.value = ''; // Reset file input on error
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -654,12 +658,19 @@ const VideoSpeedClient: React.FC = () => {
           <div className="hero-cta-section">
             <div className="main-content">
               <div className="video-input-section">
+                {isUploading && (
+                  <div className="upload-loading-overlay">
+                    <div className="upload-spinner"></div>
+                    <p>Uploading your video...</p>
+                  </div>
+                )}    
+
                 <label className="custom-file-upload">
                   <input
                     type="file"
                     accept="video/*"
                     onChange={handleVideoUpload}
-                    disabled={!isLoggedIn}
+                    disabled={!isLoggedIn || isUploading}
                     className="video-upload-input"
                     aria-label="Upload video for speed adjustment"
                   />
@@ -669,7 +680,7 @@ const VideoSpeedClient: React.FC = () => {
                   value={selectedUpload?.id || ''}
                   onChange={(e) => handleVideoSelect(e.target.value)}
                   className="video-select"
-                  disabled={!isLoggedIn || uploads.length === 0}
+                  disabled={!isLoggedIn || uploads.length === 0 || isUploading}
                   aria-label="Select uploaded video"
                 >
                   <option value="">Select a Video</option>

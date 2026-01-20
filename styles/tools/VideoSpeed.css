@@ -104,6 +104,7 @@
   padding: 40px 30px;
   box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(59, 130, 246, 0.1);
+  position: relative;
 }
 
 /* Custom file upload button */
@@ -1194,6 +1195,37 @@
 
 .quality-upgrade-hint a:hover {
   text-decoration: underline;
+}
+
+.upload-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  border-radius: 16px;
+}
+
+.upload-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #E5E7EB;
+  border-top: 5px solid #3B82F6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+.upload-loading-overlay p {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1E293B;
 }
 
 /* Responsive Design */

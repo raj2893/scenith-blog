@@ -65,6 +65,7 @@ const MediaConversionClient: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [lastConvertedFormat, setLastConvertedFormat] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   const videoFormats = ['MP4', 'AVI', 'MKV', 'MOV', 'WEBM', 'FLV', 'WMV'];
   const imageFormats = ['PNG', 'JPG', 'BMP', 'GIF', 'TIFF', 'WEBP'];
@@ -232,6 +233,7 @@ const MediaConversionClient: React.FC = () => {
     if (!requireLogin()) return;
     const file = e.target.files?.[0];
     if (!file) return;
+    setIsUploading(true);
     const formData = new FormData();
     formData.append('file', file);
     // Set default target format based on media type
@@ -249,6 +251,8 @@ const MediaConversionClient: React.FC = () => {
       setTargetFormat(response.data.targetFormat);
     } catch (error: any) {
       setError(error.response?.data?.message || 'Failed to upload media.');
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -431,13 +435,20 @@ const MediaConversionClient: React.FC = () => {
           </p>
           <div className="hero-cta-section">
             <div className="main-content">
-              <div className="media-input-section">
+              <div className="media-input-section" style={{ position: 'relative' }}>
+                {isUploading && (
+                  <div className="upload-loading-overlay">
+                    <div className="upload-spinner"></div>
+                    <p>Uploading your media...</p>
+                  </div>
+                )}   
+
                 <label className="custom-file-upload">
                   <input
                     type="file"
                     accept="video/*,image/*"
                     onChange={handleMediaUpload}
-                    disabled={!isLoggedIn}
+                    disabled={!isLoggedIn || isUploading}
                     className="media-upload-input"
                     aria-label="Upload media for conversion"
                   />
@@ -447,7 +458,7 @@ const MediaConversionClient: React.FC = () => {
                   value={selectedUpload?.id || ''}
                   onChange={(e) => handleMediaSelect(e.target.value)}
                   className="media-select"
-                  disabled={!isLoggedIn || uploads.length === 0}
+                  disabled={!isLoggedIn || uploads.length === 0 || isUploading}
                   aria-label="Select uploaded media"
                 >
                   <option value="">Select a Media</option>
