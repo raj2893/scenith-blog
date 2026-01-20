@@ -130,6 +130,18 @@ const CustomAudioPlayer = ({ src }: { src: string }) => {
   );
 };
 
+const EMOTION_PRESETS = [
+  { value: 'default', label: 'Default (Natural)', icon: '🎭', description: 'Natural speaking tone' },
+  { value: 'happy', label: 'Happy/Excited', icon: '😊', description: 'Upbeat and energetic' },
+  { value: 'calm', label: 'Calm/Relaxed', icon: '😌', description: 'Soothing and peaceful' },
+  { value: 'angry', label: 'Angry/Intense', icon: '😠', description: 'Powerful and assertive' },
+  { value: 'sad', label: 'Sad/Somber', icon: '😢', description: 'Melancholic and reflective' },
+  { value: 'announcer', label: 'Announcer', icon: '📢', description: 'Clear and authoritative' },
+  { value: 'meditation', label: 'Meditation', icon: '🧘', description: 'Very slow and peaceful' },
+  { value: 'enthusiastic', label: 'Enthusiastic', icon: '🎉', description: 'Very energetic and exciting' },
+  { value: 'professional', label: 'Professional', icon: '📚', description: 'Business-like and neutral' },
+];
+
 const AIVoiceGeneratorClient: React.FC = () => {
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
@@ -176,6 +188,11 @@ const AIVoiceGeneratorClient: React.FC = () => {
   } | null>(null);
   const [characterCount, setCharacterCount] = useState(0);
   const [showPremiumPopup, setShowPremiumPopup] = useState(false);
+  const [selectedEmotion, setSelectedEmotion] = useState<string>('default');
+  const [showAdvancedControls, setShowAdvancedControls] = useState<boolean>(false);
+  const [isPlayingEmotionPreview, setIsPlayingEmotionPreview] = useState(false);
+  const emotionPreviewAudioRef = useRef<HTMLAudioElement | null>(null);  
+
   // Handle scroll for navbar styling
   useEffect(() => {
     const handleScroll = () => {
@@ -249,7 +266,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
     }
   }, []);
 
-  const handlePlayDemo = (voice: Voice) => {
+  const handlePlayDemo = (voice: Voice, useEmotion: boolean = false) => {
     const voiceId = `${voice.voiceName}-${voice.voiceStyle || 'default'}`;
     
     // Stop any currently playing demo
@@ -257,10 +274,16 @@ const AIVoiceGeneratorClient: React.FC = () => {
       demoAudioRef.current.pause();
       demoAudioRef.current.currentTime = 0;
     }
+    
+    if (emotionPreviewAudioRef.current) {
+      emotionPreviewAudioRef.current.pause();
+      emotionPreviewAudioRef.current.currentTime = 0;
+    }
   
     // If clicking the same voice, just stop
     if (playingDemo === voiceId) {
       setPlayingDemo(null);
+      setIsPlayingEmotionPreview(false);
       return;
     }
   
@@ -268,42 +291,84 @@ const AIVoiceGeneratorClient: React.FC = () => {
     const genderFolder = voice.gender.toUpperCase();
     const languageFolder = voice.language.replace(/\s*\(.*?\)\s*/g, '').trim().replace(/\s+/g, '%20');
     
-    // For voice variations, construct filename with style
-    // e.g., "Rohit-Intense.mp3" or "Alia-Excited.mp3"
     let demoFileName;
     if (voice.voiceStyle) {
-      // Capitalize first letter of style for filename
       const styleCapitalized = voice.voiceStyle.charAt(0).toUpperCase() + voice.voiceStyle.slice(1);
       const baseName = voice.humanName?.split('-')[0] || voice.voiceName;
       demoFileName = `${baseName}-${styleCapitalized}.mp3`;
     } else {
-      // Base voice without style
       demoFileName = `${voice.humanName || voice.voiceName}.mp3`;
     }
     
     const demoUrl = `${CDN_URL}/AiVoicesDemo/${languageFolder}/${genderFolder}/${demoFileName}`;
     
-    console.log('🎵 Playing demo:', demoUrl); // Debug log
+    console.log('🎵 Playing demo:', demoUrl);
   
-    // Create and play new audio
+    // Create and play audio
     const audio = new Audio(demoUrl);
+    
+    // Apply emotion-based playback adjustments if requested
+    if (useEmotion && selectedEmotion !== 'default') {
+      const emotionSettings = getEmotionPlaybackSettings(selectedEmotion);
+      audio.playbackRate = emotionSettings.playbackRate;
+      audio.volume = emotionSettings.volume;
+      setIsPlayingEmotionPreview(true);
+    } else {
+      setIsPlayingEmotionPreview(false);
+    }
+    
     audio.play().catch((error) => {
       console.error('Error playing demo:', error);
       setPlayingDemo(null);
+      setIsPlayingEmotionPreview(false);
     });
   
     audio.onended = () => {
       setPlayingDemo(null);
+      setIsPlayingEmotionPreview(false);
     };
   
     audio.onerror = () => {
       console.error('Error loading demo audio:', demoUrl);
       setPlayingDemo(null);
+      setIsPlayingEmotionPreview(false);
     };
   
-    demoAudioRef.current = audio;
+    if (useEmotion) {
+      emotionPreviewAudioRef.current = audio;
+    } else {
+      demoAudioRef.current = audio;
+    }
+    
     setPlayingDemo(voiceId);
   };
+
+  const getEmotionPlaybackSettings = (emotion: string): { playbackRate: number; volume: number } => {
+    switch (emotion.toLowerCase()) {
+      case 'happy':
+      case 'excited':
+        return { playbackRate: 1.15, volume: 1.0 }; // Slightly faster, full volume
+      case 'calm':
+      case 'relaxed':
+        return { playbackRate: 0.85, volume: 0.8 }; // Slower, quieter
+      case 'angry':
+      case 'intense':
+        return { playbackRate: 1.1, volume: 1.0 }; // Faster, full volume
+      case 'sad':
+      case 'somber':
+        return { playbackRate: 0.8, volume: 0.75 }; // Much slower, quieter
+      case 'announcer':
+        return { playbackRate: 1.0, volume: 1.0 }; // Normal speed, full volume
+      case 'meditation':
+        return { playbackRate: 0.7, volume: 0.7 }; // Very slow, softer
+      case 'enthusiastic':
+        return { playbackRate: 1.25, volume: 1.0 }; // Very fast, full volume
+      case 'professional':
+        return { playbackRate: 0.95, volume: 0.9 }; // Slightly slower, clear
+      default:
+        return { playbackRate: 1.0, volume: 1.0 }; // Default settings
+    }
+  };  
 
   useEffect(() => {
     return () => {
@@ -311,8 +376,12 @@ const AIVoiceGeneratorClient: React.FC = () => {
         demoAudioRef.current.pause();
         demoAudioRef.current = null;
       }
+      if (emotionPreviewAudioRef.current) {
+        emotionPreviewAudioRef.current.pause();
+        emotionPreviewAudioRef.current = null;
+      }
     };
-  }, []);  
+  }, []);
 
   // Handle login form submission
   const handleLogin = async (formData: LoginFormData) => {
@@ -510,17 +579,14 @@ const AIVoiceGeneratorClient: React.FC = () => {
       setTimeout(() => setError(null), 10000);
       return;
     }
-
+  
     // Check if this request would exceed remaining limits
     if (ttsUsage) {
-      // Check daily limit (only if it exists, -1 means unlimited)
       const wouldExceedDaily = ttsUsage.daily.limit > 0 && 
                                (ttsUsage.daily.remaining < aiVoiceText.length);
-
-      // Check monthly limit (only if it exists, -1 means unlimited)
       const wouldExceedMonthly = ttsUsage.monthly.limit > 0 && 
                                  (ttsUsage.monthly.remaining < aiVoiceText.length);
-
+  
       if (wouldExceedDaily) {
         setError(`This request would exceed your daily limit. You have ${ttsUsage.daily.remaining.toLocaleString()} characters remaining today, but this text is ${aiVoiceText.length.toLocaleString()} characters long.`);
         setTimeout(() => {
@@ -532,7 +598,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
         setTimeout(() => setError(null), 10000);
         return;
       }
-
+  
       if (wouldExceedMonthly) {
         setError(`This request would exceed your monthly limit. You have ${ttsUsage.monthly.remaining.toLocaleString()} characters remaining this month, but this text is ${aiVoiceText.length.toLocaleString()} characters long.`);
         setTimeout(() => {
@@ -545,7 +611,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
         return;
       }
     }
-
+  
     setIsGenerating(true);
     setError(null);
     try {
@@ -553,12 +619,11 @@ const AIVoiceGeneratorClient: React.FC = () => {
         text: aiVoiceText,
         voiceName: selectedVoice.voiceName,
         languageCode: selectedVoice.languageCode,
+        emotion: selectedEmotion,  // Always send the selected emotion
       };
       
-      // Add SSML config if available
-      if (selectedVoice.ssmlConfig) {
-        requestBody.ssmlConfig = selectedVoice.ssmlConfig;
-      }
+      // REMOVED: Do NOT send ssmlConfig anymore - let backend handle it via emotion
+      // The emotion parameter will control all SSML settings on the backend
       
       const response = await fetch(`${API_BASE_URL}/api/sole-tts/generate`, {
         method: 'POST',
@@ -568,11 +633,11 @@ const AIVoiceGeneratorClient: React.FC = () => {
         },
         body: JSON.stringify(requestBody),
       });
-
+  
       if (!response.ok) {
         const contentType = response.headers.get('content-type');
         let errorMessage = `HTTP error! status: ${response.status}`;
-
+  
         if (contentType && contentType.includes('application/json')) {
           const errorData = await response.json();
           errorMessage = errorData.message || errorData.error || errorMessage;
@@ -580,13 +645,13 @@ const AIVoiceGeneratorClient: React.FC = () => {
           const errorText = await response.text();
           errorMessage = errorText || errorMessage;
         }
-
+  
         throw new Error(errorMessage);
       }
-
+  
       const data = await response.json();
       setGeneratedAudio(`${CDN_URL}/${data.audioPath}`);
-
+  
       const usageResponse = await fetch(`${API_BASE_URL}/api/sole-tts/usage`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -610,7 +675,6 @@ const AIVoiceGeneratorClient: React.FC = () => {
       const errorMessage = err.message || 'Failed to generate audio.';
       setError(errorMessage);
     
-      // Scroll to error message
       setTimeout(() => {
         const errorElement = document.querySelector('.error-message');
         if (errorElement) {
@@ -621,7 +685,6 @@ const AIVoiceGeneratorClient: React.FC = () => {
         }
       }, 100);
     
-      // Auto-clear error after 10 seconds
       setTimeout(() => {
         setError(null);
       }, 10000);
@@ -898,12 +961,50 @@ return (
               />
 
               {isLoggedIn && (
-                <div className="character-count-container">
-                  <p className="character-count">
-                    <span className={characterCount > getMaxCharsPerRequest() ? 'count-exceeded' : characterCount > getMaxCharsPerRequest() * 0.9 ? 'count-warning' : ''}>
-                      {characterCount.toLocaleString()}
-                    </span> / {getMaxCharsPerRequest().toLocaleString()} characters per request
-                  </p>
+                <div className="emotion-control-section">
+                  <div className="emotion-selector-wrapper">
+                    <label className="emotion-label-text" htmlFor="emotion-select">
+                      🎭 Voice Emotion:
+                    </label>
+                    
+                    <select
+                      id="emotion-select"
+                      value={selectedEmotion}
+                      onChange={(e) => setSelectedEmotion(e.target.value)}
+                      className="emotion-dropdown"
+                      aria-label="Select voice emotion"
+                    >
+                      {EMOTION_PRESETS.map((emotion) => (
+                        <option key={emotion.value} value={emotion.value}>
+                          {emotion.label}
+                        </option>
+                      ))}
+                    </select>
+                    
+                    <button
+                      type="button"
+                      className={`emotion-preview-button ${isPlayingEmotionPreview ? 'playing' : ''}`}
+                      onClick={() => {
+                        if (!selectedVoice) {
+                          setError('Please select a voice first');
+                          setTimeout(() => setError(null), 3000);
+                          return;
+                        }
+                        handlePlayDemo(selectedVoice, true);
+                      }}
+                      disabled={!selectedVoice || isGenerating}
+                      aria-label="Preview selected emotion"
+                    >
+                      {isPlayingEmotionPreview ? '⏸️ Playing...' : '▶️ Preview Emotion'}
+                    </button>
+                  </div>
+                  
+                  {selectedEmotion !== 'default' && (
+                    <div className="emotion-info-tooltip">
+                      <strong>{EMOTION_PRESETS.find(e => e.value === selectedEmotion)?.label}:</strong>{' '}
+                      {EMOTION_PRESETS.find(e => e.value === selectedEmotion)?.description}
+                    </div>
+                  )}
                 </div>
               )}
 
