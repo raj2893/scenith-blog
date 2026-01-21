@@ -215,6 +215,43 @@
   }
 }
 
+.template-status {
+  margin-top: 8px;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.draft {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-badge.published {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-badge.archived {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.publish-btn {
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+}
+
+.unpublish-btn {
+  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+}
+
 @media (max-width: 768px) {
   .templates-list-container {
     padding: 20px;

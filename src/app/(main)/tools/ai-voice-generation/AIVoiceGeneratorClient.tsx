@@ -496,13 +496,16 @@ const AIVoiceGeneratorClient: React.FC = () => {
 
   // Fetch unique languages and genders for dropdowns
   useEffect(() => {
-    if (!isLoggedIn) return;
     const fetchMetadata = async () => {
       try {
+        const token = localStorage.getItem('token');
+        const headers: HeadersInit = {};
+        if (token) {
+          headers.Authorization = `Bearer ${token}`;
+        }
+        
         const response = await fetch(`${API_BASE_URL}/api/ai-voices/get-all-voices`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
+          headers,
         });
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
@@ -517,13 +520,18 @@ const AIVoiceGeneratorClient: React.FC = () => {
       }
     };
     fetchMetadata();
-  }, [isLoggedIn]);
+  }, []);
 
   // Fetch filtered voices based on language and gender
   useEffect(() => {
     const fetchFilteredVoices = async () => {
-      if (!isLoggedIn) return;
       try {
+        const token = localStorage.getItem('token');
+        const headers: HeadersInit = {};
+        if (token) {
+          headers.Authorization = `Bearer ${token}`;
+        }
+        
         let url = `${API_BASE_URL}/api/ai-voices/get-all-voices`;
         if (filterLanguage && filterGender) {
           url = `${API_BASE_URL}/api/ai-voices/voices-by-language-and-gender?language=${encodeURIComponent(filterLanguage)}&gender=${encodeURIComponent(filterGender)}`;
@@ -534,9 +542,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
         }
 
         const response = await fetch(url, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
+          headers,
         });
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
@@ -547,7 +553,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
       }
     };
     fetchFilteredVoices();
-  }, [filterLanguage, filterGender, isLoggedIn]);
+  }, [filterLanguage, filterGender]);
 
   const handleGenerateAiAudio = async () => {
     if (!isLoggedIn) {
@@ -960,53 +966,52 @@ return (
                 maxLength={getMaxCharsPerRequest()}
               />
 
-              {isLoggedIn && (
-                <div className="emotion-control-section">
-                  <div className="emotion-selector-wrapper">
-                    <label className="emotion-label-text" htmlFor="emotion-select">
-                      🎭 Voice Emotion:
-                    </label>
-                    
-                    <select
-                      id="emotion-select"
-                      value={selectedEmotion}
-                      onChange={(e) => setSelectedEmotion(e.target.value)}
-                      className="emotion-dropdown"
-                      aria-label="Select voice emotion"
-                    >
-                      {EMOTION_PRESETS.map((emotion) => (
-                        <option key={emotion.value} value={emotion.value}>
-                          {emotion.label}
-                        </option>
-                      ))}
-                    </select>
-                    
-                    <button
-                      type="button"
-                      className={`emotion-preview-button ${isPlayingEmotionPreview ? 'playing' : ''}`}
-                      onClick={() => {
-                        if (!selectedVoice) {
-                          setError('Please select a voice first');
-                          setTimeout(() => setError(null), 3000);
-                          return;
-                        }
-                        handlePlayDemo(selectedVoice, true);
-                      }}
-                      disabled={!selectedVoice || isGenerating}
-                      aria-label="Preview selected emotion"
-                    >
-                      {isPlayingEmotionPreview ? '⏸️ Playing...' : '▶️ Preview Emotion'}
-                    </button>
-                  </div>
+              
+              <div className="emotion-control-section">
+                <div className="emotion-selector-wrapper">
+                  <label className="emotion-label-text" htmlFor="emotion-select">
+                    🎭 Voice Emotion:
+                  </label>
                   
-                  {selectedEmotion !== 'default' && (
-                    <div className="emotion-info-tooltip">
-                      <strong>{EMOTION_PRESETS.find(e => e.value === selectedEmotion)?.label}:</strong>{' '}
-                      {EMOTION_PRESETS.find(e => e.value === selectedEmotion)?.description}
-                    </div>
-                  )}
+                  <select
+                    id="emotion-select"
+                    value={selectedEmotion}
+                    onChange={(e) => setSelectedEmotion(e.target.value)}
+                    className="emotion-dropdown"
+                    aria-label="Select voice emotion"
+                  >
+                    {EMOTION_PRESETS.map((emotion) => (
+                      <option key={emotion.value} value={emotion.value}>
+                        {emotion.label}
+                      </option>
+                    ))}
+                  </select>
+                  
+                  <button
+                    type="button"
+                    className={`emotion-preview-button ${isPlayingEmotionPreview ? 'playing' : ''}`}
+                    onClick={() => {
+                      if (!selectedVoice) {
+                        setError('Please select a voice first');
+                        setTimeout(() => setError(null), 3000);
+                        return;
+                      }
+                      handlePlayDemo(selectedVoice, true);
+                    }}
+                    disabled={!selectedVoice || isGenerating}
+                    aria-label="Preview selected emotion"
+                  >
+                    {isPlayingEmotionPreview ? '⏸️ Playing...' : '▶️ Preview Emotion'}
+                  </button>
                 </div>
-              )}
+                
+                {selectedEmotion !== 'default' && (
+                  <div className="emotion-info-tooltip">
+                    <strong>{EMOTION_PRESETS.find(e => e.value === selectedEmotion)?.label}:</strong>{' '}
+                    {EMOTION_PRESETS.find(e => e.value === selectedEmotion)?.description}
+                  </div>
+                )}
+              </div>
 
               {isLoggedIn && ttsUsage && (
                 <div className="usage-info">
@@ -1147,7 +1152,6 @@ return (
                     value={filterLanguage}
                     onChange={(e) => setFilterLanguage(e.target.value)}
                     className="filter-select"
-                    disabled={!isLoggedIn}
                     aria-label="Filter voices by language"
                   >
                     <option value="">All Languages</option>
@@ -1178,7 +1182,7 @@ return (
               <div className="scrollable-voices">
                 {voices.length === 0 ? (
                   <div className="empty-state">
-                    {!isLoggedIn ? 'Login to discover voices!' : 'Loading voices...'}
+                    Loading voices...
                   </div>
                 ) : (
                   <div className="voice-list">
