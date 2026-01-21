@@ -1864,7 +1864,7 @@
     "image": "🎨",
     "gradient": "linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)",
     "tags": ["Free Image Editor", "Graphic Design", "AI Background Removal", "Canva Alternative", "Online Design Tool"],
-    "featured": true,
+    "featured": false,
     "slug": "image-editor-for-social-media-marketing",
     "difficulty": "Beginner"
   },
@@ -2274,5 +2274,32 @@
     "featured": false,
     "slug": "scenith-free-pdf-tools-suite-guide-2026",
     "difficulty": "Beginner to Advanced"
+  },
+  {
+    "id": 142,
+    "title": "Emotional AI Voice Generation Just Got Real: New Emotion Control Feature (2026 Guide)",
+    "excerpt": "Scenith just launched Emotion Control — instantly add happy 😊, angry 😠, calm 😌, sad 😢, enthusiastic 🎉 tones to your AI voices. Full 2026 guide: how it works, best presets, use cases, scripting tips, comparisons & more.",
+    "category": "AI Tools",
+    "readTime": "18 min",
+    "publishDate": "2026-01-21",
+    "author": "Scenith Team",
+    "image": "🎭",
+    "gradient": "linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%)",
+    "tags": [
+      "Emotional AI Voice",
+      "AI Voice with Emotion",
+      "Text to Speech Emotion",
+      "Emotional TTS",
+      "AI Voice Generator",
+      "Expressive AI Voices",
+      "Free Emotional TTS",
+      "Voice Emotion Presets",
+      "Scenith Emotion Feature",
+      "YouTube Voiceover Emotion",
+      "Podcast Narration Emotion"
+    ],
+    "featured": false,
+    "slug": "emotional-ai-voice-generation-new-feature-2026",
+    "difficulty": "Beginner to Intermediate"
   }
 ]
