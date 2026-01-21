@@ -1162,7 +1162,6 @@ return (
                     value={filterGender}
                     onChange={(e) => setFilterGender(e.target.value)}
                     className="filter-select"
-                    disabled={!isLoggedIn}
                     aria-label="Filter voices by gender"
                   >
                     <option value="">All Genders</option>
