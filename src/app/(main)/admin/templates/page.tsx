@@ -19,6 +19,7 @@ interface Template {
   isPremium: boolean;
   usageCount: number;
   createdAt: string;
+  status: string;
 }
 
 const TemplatesListPage = () => {
@@ -83,6 +84,38 @@ const TemplatesListPage = () => {
     }
   };
 
+  const handlePublishTemplate = async (templateId: number) => {
+    if (!confirm("Publish this template? It will be visible to all users.")) return;
+  
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post(
+        `${API_BASE_URL}/api/admin/image-templates/${templateId}/publish`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      fetchTemplates();
+    } catch (err) {
+      console.error("Error publishing template:", err);
+    }
+  };
+  
+  const handleUnpublishTemplate = async (templateId: number) => {
+    if (!confirm("Unpublish this template? It will be hidden from users.")) return;
+  
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post(
+        `${API_BASE_URL}/api/admin/image-templates/${templateId}/unpublish`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      fetchTemplates();
+    } catch (err) {
+      console.error("Error unpublishing template:", err);
+    }
+  };  
+
   if (loading) {
     return (
       <div className="templates-loading">
@@ -137,6 +170,12 @@ const TemplatesListPage = () => {
                   <span className="usage-count">Used {template.usageCount} times</span>
                 </div>
 
+                <div className="template-status">
+                  <span className={`status-badge ${template.status?.toLowerCase() || 'draft'}`}>
+                    {template.status || 'DRAFT'}
+                  </span>
+                </div>                
+
                 <div className="template-actions">
                   <button
                     className="action-btn edit-btn"
@@ -155,6 +194,30 @@ const TemplatesListPage = () => {
                   >
                     {template.isActive ? <FaEye /> : <FaEyeSlash />}
                   </button>
+
+                  {template.status === 'DRAFT' && (
+                    <button
+                      className="action-btn publish-btn"
+                      onClick={() => handlePublishTemplate(template.id)}
+                      title="Publish"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                      </svg>
+                    </button>
+                  )}
+
+                  {template.status === 'PUBLISHED' && (
+                    <button
+                      className="action-btn unpublish-btn"
+                      onClick={() => handleUnpublishTemplate(template.id)}
+                      title="Unpublish"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M18 6L6 18M6 6l12 12"/>
+                      </svg>
+                    </button>
+                  )}                  
 
                   <button
                     className="action-btn delete-btn"

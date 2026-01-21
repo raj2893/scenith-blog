@@ -10,6 +10,7 @@ import { API_BASE_URL, CDN_URL } from '../../../config';
 import '../../../../../styles/tools/VideoSpeed.css';
 import Script from 'next/script';
 import { debounce } from 'lodash';
+import DeleteConfirmModal from '../../../../components/DeleteConfirmModal';
 
 // Define TypeScript interfaces
 interface UserProfile {
@@ -163,6 +164,9 @@ const VideoSpeedClient: React.FC = () => {
   const [availableQualities, setAvailableQualities] = useState<string[]>([]);
   const [selectedQuality, setSelectedQuality] = useState<string>('720p');  
   const [isUploading, setIsUploading] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<{id: number; name: string; type: string} | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Handle scroll for navbar styling
   useEffect(() => {
@@ -343,6 +347,26 @@ const VideoSpeedClient: React.FC = () => {
       setTimeout(() => setLoginError(''), 8000);
     }
   }, []);
+
+  const handleDeleteConfirm = async () => {
+    if (!itemToDelete) return;
+    setIsDeleting(true);
+    try {
+      await axios.delete(
+        `${API_BASE_URL}/api/video-speed/${itemToDelete.id}`,
+        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+      );
+      setUploads(uploads.filter(u => u.id !== itemToDelete.id));
+      setSelectedUpload(null);
+      setSpeed(1.0);
+      setDeleteModalOpen(false);
+      setItemToDelete(null);
+    } catch (error: any) {
+      setError(error.response?.data?.message || 'Failed to delete video.');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   useEffect(() => {
     const initializeGoogleSignIn = () => {
@@ -665,31 +689,52 @@ const VideoSpeedClient: React.FC = () => {
                   </div>
                 )}    
 
-                <label className="custom-file-upload">
-                  <input
-                    type="file"
-                    accept="video/*"
-                    onChange={handleVideoUpload}
-                    disabled={!isLoggedIn || isUploading}
-                    className="video-upload-input"
-                    aria-label="Upload video for speed adjustment"
-                  />
-                  <span className="upload-button">Upload Video <span className="upload-icon">⬆️</span></span>
-                </label>
-                <select
-                  value={selectedUpload?.id || ''}
-                  onChange={(e) => handleVideoSelect(e.target.value)}
-                  className="video-select"
-                  disabled={!isLoggedIn || uploads.length === 0 || isUploading}
-                  aria-label="Select uploaded video"
-                >
-                  <option value="">Select a Video</option>
-                  {uploads.map((upload) => (
-                    <option key={upload.id} value={upload.id}>
-                      Video {upload.id} (Speed: {upload.speed}x)
-                    </option>
-                  ))}
-                </select>
+                <div className="upload-section-container" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  <label className="custom-file-upload">
+                    <input
+                      type="file"
+                      accept="video/*"
+                      onChange={handleVideoUpload}
+                      disabled={!isLoggedIn || isUploading}
+                      className="video-upload-input"
+                      aria-label="Upload video for speed adjustment"
+                    />
+                    <span className="upload-button">Upload Video <span className="upload-icon">⬆️</span></span>
+                  </label>
+                  <select
+                    value={selectedUpload?.id || ''}
+                    onChange={(e) => handleVideoSelect(e.target.value)}
+                    className="video-select"
+                    disabled={!isLoggedIn || uploads.length === 0 || isUploading}
+                    aria-label="Select uploaded video"
+                  >
+                    <option value="">Select a Video</option>
+                    {uploads.map((upload) => (
+                      <option key={upload.id} value={upload.id}>
+                        Video {upload.id} (Speed: {upload.speed}x)
+                      </option>
+                    ))}
+                  </select>
+                  {selectedUpload && (
+                    <button
+                      className="elegant-delete-button"
+                      onClick={() => {
+                        setDeleteModalOpen(true);
+                        setItemToDelete({
+                          id: selectedUpload.id,
+                          name: `Video ${selectedUpload.id}`,
+                          type: 'video'
+                        });
+                      }}
+                      aria-label={`Delete video ${selectedUpload.id}`}
+                      title="Delete this video"
+                    >
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6"/>
+                      </svg>
+                    </button>
+                  )}
+                </div>
                 <div className="video-filter-container">
                   {selectedUpload && userProfile.id && selectedUpload.originalFilePath && (
                     <div className="video-preview">
@@ -990,7 +1035,16 @@ const VideoSpeedClient: React.FC = () => {
           </div>
         </motion.div>
       </section>
-
+<DeleteConfirmModal
+  isOpen={deleteModalOpen}
+  onClose={() => {
+    setDeleteModalOpen(false);
+    setItemToDelete(null);
+  }}
+  onConfirm={handleDeleteConfirm}
+  itemName={itemToDelete?.name || ''}
+  isDeleting={isDeleting}
+/>
       {showLoginModal && (
         <div className="modal-overlay">
           <motion.div

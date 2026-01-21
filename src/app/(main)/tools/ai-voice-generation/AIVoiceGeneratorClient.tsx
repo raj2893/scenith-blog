@@ -496,13 +496,16 @@ const AIVoiceGeneratorClient: React.FC = () => {
 
   // Fetch unique languages and genders for dropdowns
   useEffect(() => {
-    if (!isLoggedIn) return;
     const fetchMetadata = async () => {
       try {
+        const token = localStorage.getItem('token');
+        const headers: HeadersInit = {};
+        if (token) {
+          headers.Authorization = `Bearer ${token}`;
+        }
+        
         const response = await fetch(`${API_BASE_URL}/api/ai-voices/get-all-voices`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
+          headers,
         });
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
@@ -517,13 +520,18 @@ const AIVoiceGeneratorClient: React.FC = () => {
       }
     };
     fetchMetadata();
-  }, [isLoggedIn]);
+  }, []);
 
   // Fetch filtered voices based on language and gender
   useEffect(() => {
     const fetchFilteredVoices = async () => {
-      if (!isLoggedIn) return;
       try {
+        const token = localStorage.getItem('token');
+        const headers: HeadersInit = {};
+        if (token) {
+          headers.Authorization = `Bearer ${token}`;
+        }
+        
         let url = `${API_BASE_URL}/api/ai-voices/get-all-voices`;
         if (filterLanguage && filterGender) {
           url = `${API_BASE_URL}/api/ai-voices/voices-by-language-and-gender?language=${encodeURIComponent(filterLanguage)}&gender=${encodeURIComponent(filterGender)}`;
@@ -534,9 +542,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
         }
 
         const response = await fetch(url, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
+          headers,
         });
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
@@ -547,7 +553,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
       }
     };
     fetchFilteredVoices();
-  }, [filterLanguage, filterGender, isLoggedIn]);
+  }, [filterLanguage, filterGender]);
 
   const handleGenerateAiAudio = async () => {
     if (!isLoggedIn) {
@@ -960,53 +966,52 @@ return (
                 maxLength={getMaxCharsPerRequest()}
               />
 
-              {isLoggedIn && (
-                <div className="emotion-control-section">
-                  <div className="emotion-selector-wrapper">
-                    <label className="emotion-label-text" htmlFor="emotion-select">
-                      🎭 Voice Emotion:
-                    </label>
-                    
-                    <select
-                      id="emotion-select"
-                      value={selectedEmotion}
-                      onChange={(e) => setSelectedEmotion(e.target.value)}
-                      className="emotion-dropdown"
-                      aria-label="Select voice emotion"
-                    >
-                      {EMOTION_PRESETS.map((emotion) => (
-                        <option key={emotion.value} value={emotion.value}>
-                          {emotion.label}
-                        </option>
-                      ))}
-                    </select>
-                    
-                    <button
-                      type="button"
-                      className={`emotion-preview-button ${isPlayingEmotionPreview ? 'playing' : ''}`}
-                      onClick={() => {
-                        if (!selectedVoice) {
-                          setError('Please select a voice first');
-                          setTimeout(() => setError(null), 3000);
-                          return;
-                        }
-                        handlePlayDemo(selectedVoice, true);
-                      }}
-                      disabled={!selectedVoice || isGenerating}
-                      aria-label="Preview selected emotion"
-                    >
-                      {isPlayingEmotionPreview ? '⏸️ Playing...' : '▶️ Preview Emotion'}
-                    </button>
-                  </div>
+              
+              <div className="emotion-control-section">
+                <div className="emotion-selector-wrapper">
+                  <label className="emotion-label-text" htmlFor="emotion-select">
+                    🎭 Voice Emotion:
+                  </label>
                   
-                  {selectedEmotion !== 'default' && (
-                    <div className="emotion-info-tooltip">
-                      <strong>{EMOTION_PRESETS.find(e => e.value === selectedEmotion)?.label}:</strong>{' '}
-                      {EMOTION_PRESETS.find(e => e.value === selectedEmotion)?.description}
-                    </div>
-                  )}
+                  <select
+                    id="emotion-select"
+                    value={selectedEmotion}
+                    onChange={(e) => setSelectedEmotion(e.target.value)}
+                    className="emotion-dropdown"
+                    aria-label="Select voice emotion"
+                  >
+                    {EMOTION_PRESETS.map((emotion) => (
+                      <option key={emotion.value} value={emotion.value}>
+                        {emotion.label}
+                      </option>
+                    ))}
+                  </select>
+                  
+                  <button
+                    type="button"
+                    className={`emotion-preview-button ${isPlayingEmotionPreview ? 'playing' : ''}`}
+                    onClick={() => {
+                      if (!selectedVoice) {
+                        setError('Please select a voice first');
+                        setTimeout(() => setError(null), 3000);
+                        return;
+                      }
+                      handlePlayDemo(selectedVoice, true);
+                    }}
+                    disabled={!selectedVoice || isGenerating}
+                    aria-label="Preview selected emotion"
+                  >
+                    {isPlayingEmotionPreview ? '⏸️ Playing...' : '▶️ Preview Emotion'}
+                  </button>
                 </div>
-              )}
+                
+                {selectedEmotion !== 'default' && (
+                  <div className="emotion-info-tooltip">
+                    <strong>{EMOTION_PRESETS.find(e => e.value === selectedEmotion)?.label}:</strong>{' '}
+                    {EMOTION_PRESETS.find(e => e.value === selectedEmotion)?.description}
+                  </div>
+                )}
+              </div>
 
               {isLoggedIn && ttsUsage && (
                 <div className="usage-info">
@@ -1147,7 +1152,6 @@ return (
                     value={filterLanguage}
                     onChange={(e) => setFilterLanguage(e.target.value)}
                     className="filter-select"
-                    disabled={!isLoggedIn}
                     aria-label="Filter voices by language"
                   >
                     <option value="">All Languages</option>
@@ -1177,7 +1181,7 @@ return (
               <div className="scrollable-voices">
                 {voices.length === 0 ? (
                   <div className="empty-state">
-                    {!isLoggedIn ? 'Login to discover voices!' : 'Loading voices...'}
+                    Loading voices...
                   </div>
                 ) : (
                   <div className="voice-list">
@@ -1514,7 +1518,446 @@ return (
           </div>
         </div>
       </div>
-    </section>    
+    </section>
+
+    {/* NEW: Emotions in AI Voice Generation Section */}
+    <section className="emotions-feature-section" id="ai-voice-emotions" role="region" aria-labelledby="emotions-title">
+      <div className="container">
+        <h2 id="emotions-title">AI Voice Emotions: Add Feeling & Personality to Your Audio</h2>
+        <p className="section-description">
+          Transform flat narration into emotionally engaging content. Our AI voice emotion presets automatically adjust speech patterns, pacing, and intonation to match the mood of your content—no manual tweaking required.
+        </p>
+    
+        <div className="emotion-showcase">
+          <div className="emotion-intro">
+            <h3>What Are AI Voice Emotions?</h3>
+            <p>
+              <strong>AI voice emotions</strong> are pre-configured settings that modify how text-to-speech engines deliver your content. By adjusting parameters like speaking rate, pitch variation, emphasis patterns, and pauses, emotions create distinct vocal characteristics that convey specific moods and tones. This technology bridges the gap between robotic text-to-speech and human-like expressiveness.
+            </p>
+            <p>
+              Unlike manual SSML (Speech Synthesis Markup Language) editing which requires technical knowledge, our emotion presets apply sophisticated vocal adjustments with a single click. Whether you need <strong>enthusiastic energy for promotional content</strong> or <strong>calm relaxation for meditation</strong>, emotions help your audio resonate with listeners on an emotional level.
+            </p>
+          </div>
+    
+          <div className="emotion-benefits-grid">
+            <div className="emotion-benefit">
+              <span className="emotion-benefit-icon">🎯</span>
+              <h4>Match Content Context</h4>
+              <p>Automatically align voice delivery with your content's purpose. Marketing videos get energetic excitement, tutorials receive patient clarity, and bedtime stories convey soothing calmness.</p>
+            </div>
+            <div className="emotion-benefit">
+              <span className="emotion-benefit-icon">⚡</span>
+              <h4>One-Click Enhancement</h4>
+              <p>No technical skills needed. Select your desired emotion from the dropdown, and our AI instantly applies optimal vocal adjustments—rate, pitch, emphasis, and pacing—saving hours of manual editing.</p>
+            </div>
+            <div className="emotion-benefit">
+              <span className="emotion-benefit-icon">🎭</span>
+              <h4>Professional Results</h4>
+              <p>Achieve broadcast-quality emotional delivery that rivals professional voice actors. Our presets are carefully calibrated to sound natural and authentic, never exaggerated or artificial.</p>
+            </div>
+            <div className="emotion-benefit">
+              <span className="emotion-benefit-icon">🔄</span>
+              <h4>Experiment Freely</h4>
+              <p>Test different emotions instantly. Preview how "Happy" sounds versus "Professional" before generating your final audio. Perfect for A/B testing which tone resonates best with your audience.</p>
+            </div>
+          </div>
+    
+          <div className="emotion-presets-explained">
+            <h3>Complete Guide to Available Emotion Presets</h3>
+            <p className="presets-intro">
+              Each emotion preset is meticulously designed for specific use cases. Here's what makes each one unique and when to use them:
+            </p>
+    
+            <div className="preset-cards">
+              <div className="preset-card">
+                <div className="preset-header">
+                  <span className="preset-icon">😊</span>
+                  <div className="preset-title-group">
+                    <h4>Happy / Excited</h4>
+                    <span className="preset-badge energy">High Energy</span>
+                  </div>
+                </div>
+                <div className="preset-specs">
+                  <span className="spec-item">⚡ 15% faster speech</span>
+                  <span className="spec-item">📈 Higher pitch variation</span>
+                  <span className="spec-item">💪 Strong emphasis</span>
+                </div>
+                <p className="preset-description">
+                  <strong>Perfect for:</strong> Product launches, promotional videos, celebration announcements, motivational content, unboxing videos, success stories, event invitations, and any content designed to energize and excite your audience.
+                </p>
+                <p className="preset-technical">
+                  <strong>Technical details:</strong> Increases speaking rate to 1.15x, elevates pitch by 10-15%, adds dynamic emphasis to key words, and reduces pause duration for continuous energy flow.
+                </p>
+              </div>
+    
+              <div className="preset-card">
+                <div className="preset-header">
+                  <span className="preset-icon">😌</span>
+                  <div className="preset-title-group">
+                    <h4>Calm / Relaxed</h4>
+                    <span className="preset-badge soothing">Soothing</span>
+                  </div>
+                </div>
+                <div className="preset-specs">
+                  <span className="spec-item">🐌 15% slower speech</span>
+                  <span className="spec-item">📉 Gentle pitch curves</span>
+                  <span className="spec-item">🌊 Smooth transitions</span>
+                </div>
+                <p className="preset-description">
+                  <strong>Perfect for:</strong> Meditation guides, sleep stories, yoga instructions, spa/wellness content, ASMR videos, nature documentaries, relaxation apps, mindfulness exercises, and therapeutic audio.
+                </p>
+                <p className="preset-technical">
+                  <strong>Technical details:</strong> Reduces speaking rate to 0.85x, softens volume to 80%, creates gentle pitch variation, extends pause duration, and minimizes abrupt transitions for a flowing, peaceful delivery.
+                </p>
+              </div>
+    
+              <div className="preset-card">
+                <div className="preset-header">
+                  <span className="preset-icon">😠</span>
+                  <div className="preset-title-group">
+                    <h4>Angry / Intense</h4>
+                    <span className="preset-badge powerful">Powerful</span>
+                  </div>
+                </div>
+                <div className="preset-specs">
+                  <span className="spec-item">⚡ 10% faster speech</span>
+                  <span className="spec-item">💥 Sharp emphasis</span>
+                  <span className="spec-item">🔊 Full volume</span>
+                </div>
+                <p className="preset-description">
+                  <strong>Perfect for:</strong> Action movie trailers, sports commentary, urgent announcements, dramatic storytelling, competitive gaming content, protest speeches, passionate advocacy, and high-stakes scenarios.
+                </p>
+                <p className="preset-technical">
+                  <strong>Technical details:</strong> Increases rate to 1.1x, applies maximum volume, adds forceful emphasis to stressed syllables, shortens pauses for urgency, and creates sharper pitch contrasts for dramatic effect.
+                </p>
+              </div>
+    
+              <div className="preset-card">
+                <div className="preset-header">
+                  <span className="preset-icon">😢</span>
+                  <div className="preset-title-group">
+                    <h4>Sad / Somber</h4>
+                    <span className="preset-badge reflective">Reflective</span>
+                  </div>
+                </div>
+                <div className="preset-specs">
+                  <span className="spec-item">🐌 20% slower speech</span>
+                  <span className="spec-item">📉 Lower pitch range</span>
+                  <span className="spec-item">🔉 Reduced volume</span>
+                </div>
+                <p className="preset-description">
+                  <strong>Perfect for:</strong> Memorial tributes, emotional storytelling, documentary narration about sensitive topics, charity appeals, dramatic scenes, reflective content, loss-related content, and empathetic messaging.
+                </p>
+                <p className="preset-technical">
+                  <strong>Technical details:</strong> Slows rate to 0.8x, reduces volume to 75%, lowers pitch baseline, extends pauses significantly, minimizes pitch variation for monotone effect, creating a heavy, contemplative atmosphere.
+                </p>
+              </div>
+    
+              <div className="preset-card">
+                <div className="preset-header">
+                  <span className="preset-icon">📢</span>
+                  <div className="preset-title-group">
+                    <h4>Announcer</h4>
+                    <span className="preset-badge authoritative">Authoritative</span>
+                  </div>
+                </div>
+                <div className="preset-specs">
+                  <span className="spec-item">⏱️ Standard pace</span>
+                  <span className="spec-item">🎯 Clear articulation</span>
+                  <span className="spec-item">💼 Professional tone</span>
+                </div>
+                <p className="preset-description">
+                  <strong>Perfect for:</strong> News broadcasts, radio commercials, event announcements, airport/train station announcements, sports commentary, public service announcements, award ceremonies, and official statements.
+                </p>
+                <p className="preset-technical">
+                  <strong>Technical details:</strong> Maintains 1.0x rate, uses full volume, applies precise emphasis for clarity, includes controlled pauses for comprehension, and creates authoritative pitch patterns that command attention.
+                </p>
+              </div>
+    
+              <div className="preset-card">
+                <div className="preset-header">
+                  <span className="preset-icon">🧘</span>
+                  <div className="preset-title-group">
+                    <h4>Meditation</h4>
+                    <span className="preset-badge zen">Zen</span>
+                  </div>
+                </div>
+                <div className="preset-specs">
+                  <span className="spec-item">🐌 30% slower speech</span>
+                  <span className="spec-item">🌊 Ultra-smooth flow</span>
+                  <span className="spec-item">🔉 Very soft volume</span>
+                </div>
+                <p className="preset-description">
+                  <strong>Perfect for:</strong> Guided meditations, deep relaxation exercises, hypnotherapy sessions, sleep hypnosis, breathwork guidance, spiritual content, wellness apps, and therapeutic audio programs.
+                </p>
+                <p className="preset-technical">
+                  <strong>Technical details:</strong> Dramatically reduces rate to 0.7x, lowers volume to 70%, creates extremely gentle pitch variation, extends pauses to 2-3 seconds, eliminates all sharp transitions for transcendent calmness.
+                </p>
+              </div>
+    
+              <div className="preset-card">
+                <div className="preset-header">
+                  <span className="preset-icon">🎉</span>
+                  <div className="preset-title-group">
+                    <h4>Enthusiastic</h4>
+                    <span className="preset-badge explosive">Explosive</span>
+                  </div>
+                </div>
+                <div className="preset-specs">
+                  <span className="spec-item">⚡ 25% faster speech</span>
+                  <span className="spec-item">🚀 Maximum energy</span>
+                  <span className="spec-item">🎊 Extreme variation</span>
+                </div>
+                <p className="preset-description">
+                  <strong>Perfect for:</strong> Hype videos, game show hosting, children's content, fitness motivation, sales pitches, concert announcements, viral social media content, influencer introductions, and high-energy entertainment.
+                </p>
+                <p className="preset-technical">
+                  <strong>Technical details:</strong> Accelerates rate to 1.25x, maximizes volume and emphasis, creates extreme pitch variation (20%+), minimizes pauses to near-zero, producing an explosive, contagious energy that captures immediate attention.
+                </p>
+              </div>
+    
+              <div className="preset-card">
+                <div className="preset-header">
+                  <span className="preset-icon">📚</span>
+                  <div className="preset-title-group">
+                    <h4>Professional</h4>
+                    <span className="preset-badge neutral">Neutral</span>
+                  </div>
+                </div>
+                <div className="preset-specs">
+                  <span className="spec-item">⏱️ Slightly slower</span>
+                  <span className="spec-item">🎯 Measured delivery</span>
+                  <span className="spec-item">💼 Corporate tone</span>
+                </div>
+                <p className="preset-description">
+                  <strong>Perfect for:</strong> Corporate training, business presentations, technical documentation, educational courses, legal disclaimers, financial reports, HR communications, and any formal, professional business context.
+                </p>
+                <p className="preset-technical">
+                  <strong>Technical details:</strong> Slightly reduces rate to 0.95x, maintains 90% volume for clarity without being loud, uses minimal pitch variation for neutrality, includes measured pauses for professionalism, creating trustworthy, credible delivery.
+                </p>
+              </div>
+    
+              <div className="preset-card default-preset">
+                <div className="preset-header">
+                  <span className="preset-icon">🎭</span>
+                  <div className="preset-title-group">
+                    <h4>Default (Natural)</h4>
+                    <span className="preset-badge standard">Standard</span>
+                  </div>
+                </div>
+                <div className="preset-specs">
+                  <span className="spec-item">⏱️ Natural pace</span>
+                  <span className="spec-item">🎯 Balanced tone</span>
+                  <span className="spec-item">✨ Versatile</span>
+                </div>
+                <p className="preset-description">
+                  <strong>Perfect for:</strong> General narration, standard tutorials, blog article audio, casual content, product descriptions, informational videos, and any content where neutral delivery is appropriate.
+                </p>
+                <p className="preset-technical">
+                  <strong>Technical details:</strong> No modifications applied. Uses base voice characteristics with 1.0x rate, standard volume, natural pitch variation, and normal pause duration. The AI's default expressive patterns shine through.
+                </p>
+              </div>
+            </div>
+          </div>
+    
+          <div className="emotion-best-practices">
+            <h3>Best Practices: Getting the Most from Emotion Presets</h3>
+            <div className="practices-grid">
+              <div className="practice-item">
+                <span className="practice-number">1</span>
+                <div className="practice-content">
+                  <h4>Match Emotion to Content Purpose</h4>
+                  <p>Consider your content's goal before selecting an emotion. <strong>Sales-driven content</strong> benefits from "Enthusiastic" or "Happy" to create urgency and excitement. <strong>Educational content</strong> works best with "Professional" or "Default" for clear comprehension. <strong>Wellness content</strong> requires "Calm" or "Meditation" for therapeutic effect.</p>
+                  <ul className="practice-examples">
+                    <li><strong>YouTube Tutorial:</strong> Professional → Clear, trustworthy learning</li>
+                    <li><strong>Product Launch:</strong> Enthusiastic → Maximum excitement and FOMO</li>
+                    <li><strong>Bedtime Story:</strong> Meditation → Soothing relaxation for sleep</li>
+                    <li><strong>Workout Video:</strong> Happy → Energizing motivation to push harder</li>
+                  </ul>
+                </div>
+              </div>
+    
+              <div className="practice-item">
+                <span className="practice-number">2</span>
+                <div className="practice-content">
+                  <h4>Preview Before Final Generation</h4>
+                  <p>Always use the <strong>"Preview Emotion"</strong> button to hear how your selected emotion sounds with your chosen voice. Different base voices respond differently to emotion presets. A male voice might sound more authoritative with "Announcer" while a female voice could feel more empathetic. Test multiple combinations to find your perfect match.</p>
+                  <div className="practice-tip">
+                    <strong>💡 Pro Tip:</strong> Generate 2-3 variations with different emotions and A/B test with your audience. Track engagement metrics to identify which emotional tone resonates best for your specific niche.
+                  </div>
+                </div>
+              </div>
+    
+              <div className="practice-item">
+                <span className="practice-number">3</span>
+                <div className="practice-content">
+                  <h4>Consider Your Target Audience</h4>
+                  <p><strong>Demographics matter.</strong> Younger audiences (Gen Z, Millennials) respond well to energetic emotions like "Enthusiastic" and "Happy." Professional B2B audiences prefer "Professional" or "Announcer" for credibility. Wellness-focused audiences connect with "Calm" and "Meditation." Match emotional intensity to audience expectations.</p>
+                  <ul className="practice-examples">
+                    <li><strong>Gen Z TikTok:</strong> Enthusiastic, fast-paced, high energy</li>
+                    <li><strong>Corporate Webinar:</strong> Professional, measured, authoritative</li>
+                    <li><strong>Parent Audience:</strong> Calm, reassuring, patient delivery</li>
+                    <li><strong>Fitness Community:</strong> Happy, motivating, energizing tone</li>
+                  </ul>
+                </div>
+              </div>
+    
+              <div className="practice-item">
+                <span className="practice-number">4</span>
+                <div className="practice-content">
+                  <h4>Adjust Your Script for Emotions</h4>
+                  <p>Write differently based on your chosen emotion. <strong>"Enthusiastic" works best with shorter sentences</strong> and exclamation points—AI emphasizes these naturally. <strong>"Meditation" requires longer, flowing sentences</strong> with ellipses (...) for natural pauses. <strong>"Angry" benefits from strong, direct statements</strong> without qualifiers. Script structure impacts emotional effectiveness.</p>
+                  <div className="script-comparison">
+                    <div className="script-example">
+                      <strong>For "Enthusiastic":</strong>
+                      <p>"This is amazing! You won't believe what's coming next! It's incredible!"</p>
+                    </div>
+                    <div className="script-example">
+                      <strong>For "Meditation":</strong>
+                      <p>"Breathe deeply... feel the air filling your lungs... let peace wash over you..."</p>
+                    </div>
+                    <div className="script-example">
+                      <strong>For "Professional":</strong>
+                      <p>"Our quarterly results demonstrate consistent growth across all key performance indicators."</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+    
+              <div className="practice-item">
+                <span className="practice-number">5</span>
+                <div className="practice-content">
+                  <h4>Don't Overuse Extreme Emotions</h4>
+                  <p><strong>Listener fatigue is real.</strong> "Enthusiastic" for 10+ minutes becomes exhausting. "Sad" for extended periods can depress viewers. Use extreme emotions (Enthusiastic, Angry, Meditation) strategically for <strong>2-5 minute segments maximum</strong>. For longer content, default to "Professional" or "Default" with emotion shifts at key moments only.</p>
+                  <div className="practice-tip">
+                    <strong>⚠️ Warning:</strong> YouTube retention drops significantly after 3 minutes of continuous high-intensity emotion. Balance energy with neutral delivery for optimal viewer retention.
+                  </div>
+                </div>
+              </div>
+    
+              <div className="practice-item">
+                <span className="practice-number">6</span>
+                <div className="practice-content">
+                  <h4>Combine with Voice Selection</h4>
+                  <p>Emotion + Voice = Perfect combination. <strong>Deep male voices</strong> sound commanding with "Announcer" or "Angry." <strong>Soft female voices</strong> excel with "Calm" or "Meditation." <strong>Energetic voices</strong> naturally enhance "Happy" and "Enthusiastic." Test different voice-emotion pairings to discover unexpected magic combinations that elevate your content.</p>
+                  <ul className="practice-examples">
+                    <li><strong>Deep Male + Announcer:</strong> News anchor authority</li>
+                    <li><strong>Soft Female + Meditation:</strong> Therapeutic calmness</li>
+                    <li><strong>Youthful Voice + Enthusiastic:</strong> Viral TikTok energy</li>
+                    <li><strong>Mature Voice + Professional:</strong> Corporate credibility</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+    
+          <div className="emotion-comparison">
+            <h3>Emotion vs. Default: Hear the Difference</h3>
+            <p>Understanding the impact of emotions requires direct comparison. Here's how the same text sounds with different emotion presets:</p>
+            
+            <div className="comparison-example">
+              <div className="comparison-text">
+                <strong>Sample Text:</strong>
+                <p className="sample-text">"Welcome to our new product launch. This innovation will change everything you know about productivity. Get ready for something amazing."</p>
+              </div>
+              
+              <div className="comparison-results">
+                <div className="comparison-item">
+                  <div className="comparison-emotion">
+                    <span className="emotion-dot default-dot"></span>
+                    <strong>Default (Natural)</strong>
+                  </div>
+                  <p className="comparison-delivery">Neutral, balanced delivery. Clear articulation with standard pacing. Professional but not particularly memorable. Works for general content but lacks emotional punch.</p>
+                  <span className="comparison-rating">Engagement: ⭐⭐⭐☆☆</span>
+                </div>
+    
+                <div className="comparison-item">
+                  <div className="comparison-emotion">
+                    <span className="emotion-dot enthusiastic-dot"></span>
+                    <strong>Enthusiastic</strong>
+                  </div>
+                  <p className="comparison-delivery">Fast, energetic, exciting! Higher pitch variation creates buzz. Emphasis on "amazing" and "change everything" drives FOMO. Perfect for product launches and hype content.</p>
+                  <span className="comparison-rating">Engagement: ⭐⭐⭐⭐⭐</span>
+                </div>
+    
+                <div className="comparison-item">
+                  <div className="comparison-emotion">
+                    <span className="emotion-dot professional-dot"></span>
+                    <strong>Professional</strong>
+                  </div>
+                  <p className="comparison-delivery">Measured, credible tone. Slightly slower pace emphasizes "innovation" and "productivity." Creates trust and authority. Ideal for B2B audiences and corporate contexts.</p>
+                  <span className="comparison-rating">Engagement: ⭐⭐⭐⭐☆</span>
+                </div>
+    
+                <div className="comparison-item">
+                  <div className="comparison-emotion">
+                    <span className="emotion-dot calm-dot"></span>
+                    <strong>Calm</strong>
+                  </div>
+                  <p className="comparison-delivery">Gentle, reassuring delivery. Softens the promotional nature. Better for wellness products or low-pressure introductions. Creates comfortable, no-stress atmosphere.</p>
+                  <span className="comparison-rating">Engagement: ⭐⭐⭐☆☆</span>
+                </div>
+              </div>
+            </div>
+          </div>
+    
+          <div className="emotion-faq">
+            <h3>Frequently Asked Questions About AI Voice Emotions</h3>
+            <div className="emotion-faq-grid">
+              <div className="emotion-faq-item">
+                <h4>Can I use multiple emotions in one video?</h4>
+                <p>Not within a single generation, but you can generate separate audio clips with different emotions and combine them in your video editor. For example, use "Enthusiastic" for your intro, "Professional" for the main content, and "Happy" for your call-to-action. This creates dynamic, engaging narration with emotional variety.</p>
+              </div>
+    
+              <div className="emotion-faq-item">
+                <h4>Do emotions work with all languages?</h4>
+                <p>Yes! Emotion presets are language-agnostic and work across all 20+ supported languages. The underlying speech parameters (rate, pitch, emphasis) apply universally. However, some languages may display emotion more subtly due to cultural speech patterns. Romance languages often show more expressive emotion than East Asian languages.</p>
+              </div>
+    
+              <div className="emotion-faq-item">
+                <h4>Will emotions slow down generation time?</h4>
+                <p>No. Emotions are applied during synthesis with zero additional processing time. Your audio still generates in 3-5 seconds regardless of which emotion preset you select. The AI processes rate, pitch, and emphasis modifications instantly as part of the standard generation pipeline.</p>
+              </div>
+    
+              <div className="emotion-faq-item">
+                <h4>Can I customize emotion parameters manually?</h4>
+                <p>Currently, emotion presets are optimized configurations that can't be manually adjusted. This ensures consistent, professional results without technical knowledge. However, we're developing advanced SSML controls for power users. Upgrading to STUDIO plan will unlock custom emotion tuning when it launches.</p>
+              </div>
+    
+              <div className="emotion-faq-item">
+                <h4>Which emotion is best for YouTube videos?</h4>
+                <p>Depends on your niche. <strong>Tech reviews:</strong> Professional. <strong>Gaming:</strong> Enthusiastic or Happy. <strong>Educational:</strong> Professional or Default. <strong>Wellness:</strong> Calm. <strong>Product unboxings:</strong> Happy or Enthusiastic. <strong>News commentary:</strong> Announcer. Test with your specific audience—engagement metrics will reveal the optimal emotion for your content style.</p>
+              </div>
+    
+              <div className="emotion-faq-item">
+                <h4>Do emotions affect pronunciation accuracy?</h4>
+                <p>No. Emotions only modify delivery characteristics (speed, pitch, emphasis). Pronunciation remains identical regardless of emotion selected. All text is processed through the same phonetic conversion engine before emotion parameters are applied, ensuring accuracy across all presets.</p>
+              </div>
+            </div>
+          </div>
+    
+          <div className="emotion-cta">
+            <h3>Ready to Add Emotion to Your AI Voices?</h3>
+            <p>Transform flat narration into engaging, emotionally resonant audio. Select any emotion preset and hear the difference instantly.</p>
+            <button
+              className="cta-button emotion-cta-button"
+              onClick={() => {
+                scrollToSection('hero');
+              }}
+              aria-label="Try emotions in AI voice generator"
+            >
+              Try Emotions Now - It's Free!
+            </button>
+            <div className="emotion-cta-features">
+              <span>✨ 9 Unique Emotions</span>
+              <span>🎯 One-Click Application</span>
+              <span>🎧 Instant Preview</span>
+              <span>🚀 No Learning Curve</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>           
 
     {/* NEW: Educational Introduction Section */}
     <section className="educational-intro" role="complementary" aria-labelledby="intro-title">
