@@ -2223,7 +2223,7 @@
     "difficulty": "Beginner to Intermediate"
   },
   {
-    "id": 145,
+    "id": 140,
     "title": "Scenith Free Online Image Editor 2026: The Complete Guide to Professional Photo Editing Without Software",
     "excerpt": "Ultimate 2026 guide to Scenith's free browser-based image editor: layers, text, shapes, filters, AI enhancements, export options, workflows for social media, e-commerce, marketing — no downloads, no subscriptions, unlimited use.",
     "category": "Design Tools",
@@ -2244,8 +2244,35 @@
       "Ecommerce Product Photo Editor",
       "Professional Image Editing Browser"
     ],
-    "featured": true,
+    "featured": false,
     "slug": "scenith-free-online-image-editor-guide-2026",
+    "difficulty": "Beginner to Advanced"
+  },
+  {
+    "id": 141,
+    "title": "Scenith Free PDF Tools Suite 2026: The Complete Guide to Professional PDF Management Without Software",
+    "excerpt": "Ultimate 2026 guide to Scenith's free PDF tools suite: merge, split, compress, rotate, images to PDF, PDF to images, add watermark, lock & unlock — detailed workflows, use cases for business, education, marketing, advanced tips, best practices, comparisons, and future predictions.",
+    "category": "Design Tools",
+    "readTime": "18 min",
+    "publishDate": "2026-01-25",
+    "author": "Scenith Team",
+    "image": "📄🔒",
+    "gradient": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    "tags": [
+      "Free PDF Tools Suite 2026",
+      "Scenith PDF Tools Guide",
+      "Merge PDF Free Online",
+      "Split PDF Custom Ranges",
+      "Compress PDF Without Quality Loss",
+      "Rotate PDF Pages Free",
+      "Images to PDF Converter Free",
+      "PDF to Images High Quality",
+      "Add Watermark PDF Professional",
+      "Lock Unlock PDF Secure",
+      "Best Free PDF Editor 2026"
+    ],
+    "featured": false,
+    "slug": "scenith-free-pdf-tools-suite-guide-2026",
     "difficulty": "Beginner to Advanced"
   }
 ]
