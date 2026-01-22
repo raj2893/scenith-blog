@@ -966,6 +966,16 @@ return (
                 maxLength={getMaxCharsPerRequest()}
               />
 
+              {isLoggedIn && (
+                <div className="character-count-container">
+                  <p className="character-count">
+                    <span className={characterCount > getMaxCharsPerRequest() ? 'count-exceeded' : characterCount > getMaxCharsPerRequest() * 0.9 ? 'count-warning' : ''}>
+                      {characterCount.toLocaleString()}
+                    </span> / {getMaxCharsPerRequest().toLocaleString()} characters per request
+                  </p>
+                </div>
+              )}              
+
               
               <div className="emotion-control-section">
                 <div className="emotion-selector-wrapper">
