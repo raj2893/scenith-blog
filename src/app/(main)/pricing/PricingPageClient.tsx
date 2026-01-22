@@ -358,11 +358,11 @@ export default function PricingPageClient() {
           role: 'BASIC',
           price: 0,
           currency: 'FREE',
-          ttsLimit: 5000,
+          ttsLimit: 3500,
           features: [
-            '5,000 Characters/month',
+            '3,500 Characters/month',
             '1,000 Characters/day',
-            '500 Characters per request',
+            '350 Characters per request',
             '30+ AI Voices in multiple languages',
             'Basic support'
           ]
@@ -416,11 +416,11 @@ export default function PricingPageClient() {
         role: 'BASIC',
         price: 0,
         currency: 'FREE',
-        ttsLimit: 5000,
+        ttsLimit: 3500,
         features: [
-          '5,000 Characters/month',
+          '3,500 Characters/month',
           '1,000 Characters/day',
-          '500 Characters per request',
+          '350 Characters per request',
           '30+ AI Voices in multiple languages',
           'Basic support',
           'Commercial use allowed'
@@ -669,7 +669,7 @@ export default function PricingPageClient() {
             <tbody>
               <tr>
                 <td>Monthly Characters</td>
-                <td>5,000</td>
+                <td>3,500</td>
                 <td>50,000</td>
                 <td>150,000</td>
               </tr>
@@ -681,7 +681,7 @@ export default function PricingPageClient() {
               </tr>
               <tr>
                 <td>Max Characters per Request</td>
-                <td>500</td>
+                <td>350</td>
                 <td>2,500</td>
                 <td>5,000</td>
               </tr>
