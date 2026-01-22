@@ -35,6 +35,12 @@ interface SubtitleMedia {
   status: 'UPLOADED' | 'SUCCESS' | 'PROCESSING' | 'FAILED';
 }
 
+interface WordTimestamp {
+  word: string;
+  start: number;
+  end: number;
+}
+
 export interface SubtitleDTO {
   id: string;
   text: string;
@@ -62,6 +68,7 @@ export interface SubtitleDTO {
   rotation: number;
   isSubtitle: boolean;
   keyframes: object;
+  words?: WordTimestamp[];  
 }
 
 interface AiStyle {
