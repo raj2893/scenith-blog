@@ -27,6 +27,7 @@ const TemplateEditorPageContent = () => {
   const [canvasSize, setCanvasSize] = useState({ width: 1080, height: 1080 });
   const [isLoading, setIsLoading] = useState(true);  
   const designJsonRef = useRef<string>("");
+  const [showSidebar, setShowSidebar] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -188,7 +189,18 @@ const TemplateEditorPageContent = () => {
   return (
     <div className="template-editor-container">
       {/* Template Info Sidebar */}
-      <div className="template-info-sidebar">
+      <div className={`template-info-sidebar ${showSidebar ? 'visible' : 'collapsed'}`}>
+        {/* Toggle button - always visible */}
+        <button
+          className="sidebar-toggle"
+          onClick={() => setShowSidebar(!showSidebar)}
+          title={showSidebar ? 'Hide sidebar' : 'Show sidebar'}
+        >
+          {showSidebar ? '←' : '→'}
+        </button>
+      
+        {showSidebar && (
+          <>
         <h2>{isCreating ? "Create Template" : "Edit Template"}</h2>
 
         <div className="form-group">
@@ -262,6 +274,8 @@ const TemplateEditorPageContent = () => {
 
         {error && <div className="error-message">{error}</div>}
         {success && <div className="success-message">{success}</div>}
+      </>
+        )}
       </div>
 
     <div className="template-editor-canvas">
