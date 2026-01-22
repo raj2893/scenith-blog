@@ -265,6 +265,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
   const [templatesLoading, setTemplatesLoading] = useState(true);  
   const [lastSavedDesign, setLastSavedDesign] = useState<string>(""); 
   const [isCanvasTransparent, setIsCanvasTransparent] = useState(false);
+  const [isAltPressed, setIsAltPressed] = useState(false);
   
   useEffect(() => {
     const checkMobile = () => {
@@ -756,6 +757,10 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
       if (e.shiftKey && !isShiftPressed) {
         setIsShiftPressed(true);
       }
+
+      if (e.altKey && !isAltPressed) {
+        setIsAltPressed(true);
+      }      
   
       // Copy: Ctrl+C or Cmd+C
       if ((e.ctrlKey || e.metaKey) && e.key === 'c' && selectedLayerIds.length > 0) {
@@ -816,6 +821,10 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
       if (!e.shiftKey && isShiftPressed) {
         setIsShiftPressed(false);
       }
+
+      if (!e.altKey && isAltPressed) {
+        setIsAltPressed(false);
+      }      
     };
   
     window.addEventListener('keydown', handleKeyDown);
@@ -825,7 +834,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [isSpacePressed, isShiftPressed, selectedLayerIds, layers, clipboard]);
+  }, [isSpacePressed, isShiftPressed, isAltPressed, selectedLayerIds, layers, clipboard]);
 
   useEffect(() => {
     const preventZoom = (e: WheelEvent) => {
@@ -1466,33 +1475,58 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
         let newX = layer.x;
         let newY = layer.y;
       
-        switch (resizeHandle) {
-          case 'nw':
-            fontSizeDelta = -Math.max(rotatedDeltaX, rotatedDeltaY);
-            // Move position opposite to resize direction
-            const nwScaleFactor = fontSizeDelta / startFontSize;
-            newX = resizeStartState.x - (rotatedDeltaX * 0.5);
-            newY = resizeStartState.y - (rotatedDeltaY * 0.5);
-            break;
-          case 'ne':
-            fontSizeDelta = Math.max(rotatedDeltaX, -rotatedDeltaY);
-            newY = resizeStartState.y + (rotatedDeltaY * 0.5);
-            break;
-          case 'sw':
-            fontSizeDelta = Math.max(-rotatedDeltaX, rotatedDeltaY);
-            newX = resizeStartState.x + (rotatedDeltaX * 0.5);
-            break;
-          case 'se':
-            fontSizeDelta = Math.max(rotatedDeltaX, rotatedDeltaY);
-            break;
+        if (isAltPressed) {
+          // Resize from center for text
+          switch (resizeHandle) {
+            case 'nw':
+            case 'ne':
+            case 'sw':
+            case 'se':
+              const maxDelta = Math.max(Math.abs(rotatedDeltaX), Math.abs(rotatedDeltaY));
+              fontSizeDelta = resizeHandle.includes('e') || resizeHandle.includes('s') 
+                ? maxDelta * 2 
+                : -maxDelta * 2;
+              break;
+          }
+        } else {
+          // Normal resize behavior
+          switch (resizeHandle) {
+            case 'nw':
+              fontSizeDelta = -Math.max(rotatedDeltaX, rotatedDeltaY);
+              newX = resizeStartState.x - (rotatedDeltaX * 0.5);
+              newY = resizeStartState.y - (rotatedDeltaY * 0.5);
+              break;
+            case 'ne':
+              fontSizeDelta = Math.max(rotatedDeltaX, -rotatedDeltaY);
+              newY = resizeStartState.y + (rotatedDeltaY * 0.5);
+              break;
+            case 'sw':
+              fontSizeDelta = Math.max(-rotatedDeltaX, rotatedDeltaY);
+              newX = resizeStartState.x + (rotatedDeltaX * 0.5);
+              break;
+            case 'se':
+              fontSizeDelta = Math.max(rotatedDeltaX, rotatedDeltaY);
+              break;
+          }
         }
       
         const newFontSize = Math.max(12, Math.round(startFontSize + fontSizeDelta * 0.5));
-
+    
+        // Calculate position for snapping
+        const testLayer = {
+          ...layer,
+          fontSize: newFontSize,
+          x: isAltPressed ? resizeStartState.x : newX,
+          y: isAltPressed ? resizeStartState.y : newY
+        };
+    
+        const detectedGuides = detectAlignmentGuides(testLayer, layers);
+        setGuides(detectedGuides);
+    
         updateLayer(selectedLayerIds[0], {
           fontSize: newFontSize,
-          x: newX,
-          y: newY
+          x: isAltPressed ? resizeStartState.x : newX,
+          y: isAltPressed ? resizeStartState.y : newY
         });
         return;
       }
@@ -1509,66 +1543,169 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
     
       const aspectRatio = resizeStartState.width / resizeStartState.height;
     
-      switch (resizeHandle) {
-        case 'nw':
-          const nwDelta = Math.max(rotatedDeltaX, rotatedDeltaY / aspectRatio);
-          newX = resizeStartState.x + nwDelta;
-          newY = resizeStartState.y + nwDelta / aspectRatio;
-          newWidth = resizeStartState.width - nwDelta;
-          newHeight = resizeStartState.height - nwDelta / aspectRatio;
-          break;
-        case 'ne':
-          const neDelta = Math.max(rotatedDeltaX, -rotatedDeltaY / aspectRatio);
-          newY = resizeStartState.y - neDelta / aspectRatio;
-          newWidth = resizeStartState.width + neDelta;
-          newHeight = resizeStartState.height + neDelta / aspectRatio;
-          break;
-        case 'sw':
-          const swDelta = Math.max(-rotatedDeltaX, rotatedDeltaY / aspectRatio);
-          newX = resizeStartState.x - swDelta;
-          newWidth = resizeStartState.width + swDelta;
-          newHeight = resizeStartState.height + swDelta / aspectRatio;
-          break;
-        case 'se':
-          const seDelta = Math.max(rotatedDeltaX, rotatedDeltaY / aspectRatio);
-          newWidth = resizeStartState.width + seDelta;
-          newHeight = resizeStartState.height + seDelta / aspectRatio;
-          break;
+      if (isAltPressed) {
+        // Resize from center - calculate deltas from both sides
+        switch (resizeHandle) {
+          case 'nw':
+            const nwDelta = Math.max(rotatedDeltaX, rotatedDeltaY / aspectRatio);
+            newX = resizeStartState.x + nwDelta;
+            newY = resizeStartState.y + nwDelta / aspectRatio;
+            newWidth = resizeStartState.width - nwDelta * 2;
+            newHeight = resizeStartState.height - (nwDelta / aspectRatio) * 2;
+            break;
+          case 'ne':
+            const neDelta = Math.max(rotatedDeltaX, -rotatedDeltaY / aspectRatio);
+            newY = resizeStartState.y - neDelta / aspectRatio;
+            newWidth = resizeStartState.width + neDelta * 2;
+            newHeight = resizeStartState.height + (neDelta / aspectRatio) * 2;
+            break;
+          case 'sw':
+            const swDelta = Math.max(-rotatedDeltaX, rotatedDeltaY / aspectRatio);
+            newX = resizeStartState.x - swDelta;
+            newWidth = resizeStartState.width + swDelta * 2;
+            newHeight = resizeStartState.height + (swDelta / aspectRatio) * 2;
+            break;
+          case 'se':
+            const seDelta = Math.max(rotatedDeltaX, rotatedDeltaY / aspectRatio);
+            newWidth = resizeStartState.width + seDelta * 2;
+            newHeight = resizeStartState.height + (seDelta / aspectRatio) * 2;
+            // Adjust position to keep center fixed
+            newX = resizeStartState.x - seDelta;
+            newY = resizeStartState.y - seDelta / aspectRatio;
+            break;
+        }
+      } else {
+        // Normal resize from corner
+        switch (resizeHandle) {
+          case 'nw':
+            const nwDelta = Math.max(rotatedDeltaX, rotatedDeltaY / aspectRatio);
+            newX = resizeStartState.x + nwDelta;
+            newY = resizeStartState.y + nwDelta / aspectRatio;
+            newWidth = resizeStartState.width - nwDelta;
+            newHeight = resizeStartState.height - nwDelta / aspectRatio;
+            break;
+          case 'ne':
+            const neDelta = Math.max(rotatedDeltaX, -rotatedDeltaY / aspectRatio);
+            newY = resizeStartState.y - neDelta / aspectRatio;
+            newWidth = resizeStartState.width + neDelta;
+            newHeight = resizeStartState.height + neDelta / aspectRatio;
+            break;
+          case 'sw':
+            const swDelta = Math.max(-rotatedDeltaX, rotatedDeltaY / aspectRatio);
+            newX = resizeStartState.x - swDelta;
+            newWidth = resizeStartState.width + swDelta;
+            newHeight = resizeStartState.height + swDelta / aspectRatio;
+            break;
+          case 'se':
+            const seDelta = Math.max(rotatedDeltaX, rotatedDeltaY / aspectRatio);
+            newWidth = resizeStartState.width + seDelta;
+            newHeight = resizeStartState.height + seDelta / aspectRatio;
+            break;
+        }
       }
     
       if (newWidth > 20 && newHeight > 20) {
+        // Create test layer for snapping detection
+        const testLayer = {
+          ...layer,
+          x: newX,
+          y: newY,
+          width: newWidth,
+          height: newHeight
+        };
+    
+        const detectedGuides = detectAlignmentGuides(testLayer, layers);
+        setGuides(detectedGuides);
+    
+        // Apply magnetic snapping to resize
+        const SNAP_THRESHOLD = 10;
+        let snappedX = newX;
+        let snappedY = newY;
+        let snappedWidth = newWidth;
+        let snappedHeight = newHeight;
+    
+        // Snap edges based on which handle is being dragged
+        if (detectedGuides.vertical.length > 0) {
+          const closestVertical = detectedGuides.vertical.reduce((prev, curr) => 
+            Math.abs(curr - (testLayer.x + testLayer.width / 2)) < Math.abs(prev - (testLayer.x + testLayer.width / 2)) ? curr : prev
+          );
+    
+          // Snap based on handle
+          if (resizeHandle.includes('w')) {
+            // Left edge
+            if (Math.abs(closestVertical - testLayer.x) < SNAP_THRESHOLD) {
+              const diff = closestVertical - testLayer.x;
+              snappedX = closestVertical;
+              snappedWidth = newWidth - diff;
+            }
+          } else if (resizeHandle.includes('e')) {
+            // Right edge
+            if (Math.abs(closestVertical - (testLayer.x + testLayer.width)) < SNAP_THRESHOLD) {
+              snappedWidth = closestVertical - testLayer.x;
+            }
+          }
+    
+          // Center alignment
+          if (Math.abs(closestVertical - (testLayer.x + testLayer.width / 2)) < SNAP_THRESHOLD) {
+            const centerOffset = closestVertical - (testLayer.x + testLayer.width / 2);
+            snappedX = testLayer.x + centerOffset;
+          }
+        }
+    
+        if (detectedGuides.horizontal.length > 0) {
+          const closestHorizontal = detectedGuides.horizontal.reduce((prev, curr) => 
+            Math.abs(curr - (testLayer.y + testLayer.height / 2)) < Math.abs(prev - (testLayer.y + testLayer.height / 2)) ? curr : prev
+          );
+    
+          // Snap based on handle
+          if (resizeHandle.includes('n')) {
+            // Top edge
+            if (Math.abs(closestHorizontal - testLayer.y) < SNAP_THRESHOLD) {
+              const diff = closestHorizontal - testLayer.y;
+              snappedY = closestHorizontal;
+              snappedHeight = newHeight - diff;
+            }
+          } else if (resizeHandle.includes('s')) {
+            // Bottom edge
+            if (Math.abs(closestHorizontal - (testLayer.y + testLayer.height)) < SNAP_THRESHOLD) {
+              snappedHeight = closestHorizontal - testLayer.y;
+            }
+          }
+    
+          // Center alignment
+          if (Math.abs(closestHorizontal - (testLayer.y + testLayer.height / 2)) < SNAP_THRESHOLD) {
+            const centerOffset = closestHorizontal - (testLayer.y + testLayer.height / 2);
+            snappedY = testLayer.y + centerOffset;
+          }
+        }
+    
         if (layer.type === 'image' && layer.scale !== undefined) {
           const img = document.querySelector(`img[src="${layer.src}"]`) as HTMLImageElement;
           if (!img) return;
         
           const naturalWidth = img.naturalWidth;
           const naturalHeight = img.naturalHeight;
-
-          // Calculate current crop percentages
+    
           const cropHoriz = (layer.cropLeft ?? 0) + (layer.cropRight ?? 0);
           const cropVert = (layer.cropTop ?? 0) + (layer.cropBottom ?? 0);
-
-          // Calculate the scale needed to achieve the new dimensions
-          // while maintaining the current crop percentages
-          const newScaleX = newWidth / (naturalWidth * (100 - cropHoriz) / 100);
-          const newScaleY = newHeight / (naturalHeight * (100 - cropVert) / 100);
-
-          // Use the average scale to maintain aspect ratio
+    
+          const newScaleX = snappedWidth / (naturalWidth * (100 - cropHoriz) / 100);
+          const newScaleY = snappedHeight / (naturalHeight * (100 - cropVert) / 100);
           const newScale = (newScaleX + newScaleY) / 2;
         
           updateLayer(selectedLayerIds[0], {
-            x: newX,
-            y: newY,
+            x: snappedX,
+            y: snappedY,
             scale: newScale,
-            width: newWidth,
-            height: newHeight,
+            width: snappedWidth,
+            height: snappedHeight,
           });
         } else {
           updateLayer(selectedLayerIds[0], {
-            x: newX,
-            y: newY,
-            width: newWidth,
-            height: newHeight,
+            x: snappedX,
+            y: snappedY,
+            width: snappedWidth,
+            height: snappedHeight,
           });
         }
       }
