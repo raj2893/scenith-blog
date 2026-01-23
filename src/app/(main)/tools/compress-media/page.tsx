@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import CompressMediaClient from "./CompressMediaClient";
+import MediaCompressionWorkspace from "./MediaCompressionWorkspace";
 
 export const metadata: Metadata = {
   title: "Free Media Compressor - Images & Videos Online | SCENITH",
@@ -50,5 +50,5 @@ export const metadata: Metadata = {
 };
 
 export default function CompressMediaPage() {
-  return <CompressMediaClient />;
+  return <MediaCompressionWorkspace />;
 }
