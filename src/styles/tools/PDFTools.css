@@ -1101,9 +1101,117 @@
 html {
   scroll-behavior: smooth;
 }
+/* ===== MOBILE MERGE PDF LAYOUT ===== */
+@media (max-width: 1024px) {
+  .merge-layout-mobile-only {
+    display: block !important;
+  }
 
+  .merge-layout-desktop-only {
+    display: none !important;
+  }
+
+  .mobile-merge-notice {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 16px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    text-align: center;
+  }
+
+  .mobile-merge-notice-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+  }
+
+  .mobile-merge-notice h4 {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+  }
+
+  .mobile-merge-notice p {
+    font-size: 13px;
+    margin: 0;
+    line-height: 1.5;
+    opacity: 0.95;
+  }
+}
+
+@media (min-width: 1025px) {
+  .merge-layout-mobile-only {
+    display: none !important;
+  }
+
+  .merge-layout-desktop-only {
+    display: grid !important;
+  }
+}
 /* Focus visible for accessibility */
 *:focus-visible {
   outline: 2px solid #3B82F6;
   outline-offset: 2px;
+}
+
+/* ===== SPLIT PDF TABLE - MOBILE SCROLLING FIX ===== */
+.split-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-top: 16px;
+}
+
+.split-table-container {
+  min-width: 600px; /* Ensures table doesn't compress too much */
+}
+
+@media (max-width: 768px) {
+  .split-table-wrapper {
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+
+  .split-table-container {
+    min-width: 650px; /* Slightly wider on mobile to prevent cramping */
+  }
+
+  /* Ensure the option-group containing split ranges is scrollable */
+  .option-group:has(.split-table-wrapper) {
+    overflow: visible; /* Allow child to handle overflow */
+  }
+
+  /* Add subtle scroll indicator */
+  .split-table-wrapper::after {
+    content: '← Scroll →';
+    display: block;
+    text-align: center;
+    font-size: 0.75rem;
+    color: #94a3b8;
+    padding: 8px;
+    background: linear-gradient(to right, transparent, #f8fafc 20%, #f8fafc 80%, transparent);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  /* Hide scroll indicator when scrolled */
+  .split-table-wrapper::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .split-table-wrapper::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 3px;
+  }
+
+  .split-table-wrapper::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+  }
+
+  .split-table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
 }
