@@ -865,7 +865,7 @@ return (
             {
               '@type': 'HowToStep',
               name: 'Enter Your Text',
-              text: 'Type or paste your script into the text area. You can use up to 5,000 characters per request.',
+              text: 'Type or paste your script into the text area. You can use up to 350 characters per request.',
               position: 1
             },
             {
@@ -2419,7 +2419,7 @@ return (
           <article className="feature-card" role="listitem">
             <span className="feature-icon" aria-hidden="true">🆓</span>
             <h3>Unlimited Free Access</h3>
-            <p>13,500 characters monthly included free. No subscriptions, no watermarks, full commercial rights. Upgrade for unlimited generation and premium voices.</p>
+            <p>3,500 characters monthly included free. No subscriptions, no watermarks, full commercial rights. Upgrade for unlimited generation and premium voices.</p>
           </article>
           <article className="feature-card" role="listitem">
             <span className="feature-icon" aria-hidden="true">🌍</span>
