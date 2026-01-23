@@ -92,6 +92,14 @@ const PDFToolsWorkspace: React.FC<{ operation: string }> = ({ operation }) => {
   const [isLoadingPreview, setIsLoadingPreview] = useState(false);
   const [draggedPageIndex, setDraggedPageIndex] = useState<number | null>(null);
   const [dragOverPageIndex, setDragOverPageIndex] = useState<number | null>(null);
+  const [showReorderConfirmation, setShowReorderConfirmation] = useState(false);
+  const [pendingPdfReorder, setPendingPdfReorder] = useState<{
+    draggedIndex: number;
+    dropIndex: number;
+  } | null>(null);
+  const [hasManuallyReorderedPages, setHasManuallyReorderedPages] = useState(false);
+  const [rotationPages, setRotationPages] = useState<string>("all");
+  const [customRotationPages, setCustomRotationPages] = useState<string>("");
 
 
 // Handlers for page drag and drop
@@ -112,6 +120,7 @@ const handlePageDrop = (index: number) => {
   newPages.splice(index, 0, draggedPage);
 
   setSelectedPdfPages(newPages);
+  setHasManuallyReorderedPages(true); // Mark that pages have been manually reordered
 
   // Update preview to show the dropped page
   if (previewPageIndex === draggedPageIndex) {
@@ -452,13 +461,76 @@ useEffect(() => {
   const handleDrop = (index: number) => {
     if (draggedIndex === null) return;
 
+    // Check if user has manually reordered pages
+    if (hasManuallyReorderedPages && operation === "merge-pdf") {
+      // Store the pending reorder and show confirmation
+      setPendingPdfReorder({ draggedIndex, dropIndex: index });
+      setShowReorderConfirmation(true);
+      setDraggedIndex(null);
+      setDragOverIndex(null);
+      return;
+    }
+
+    // Proceed with PDF reordering
+    executePdfReorder(draggedIndex, index);
+  };
+
+  // New function to execute PDF reordering
+  // New function to execute PDF reordering
+  const executePdfReorder = (fromIndex: number, toIndex: number) => {
     const newFiles = [...uploadedFiles];
-    const [draggedFile] = newFiles.splice(draggedIndex, 1);
-    newFiles.splice(index, 0, draggedFile);
+    const [draggedFile] = newFiles.splice(fromIndex, 1);
+    newFiles.splice(toIndex, 0, draggedFile);
 
     setUploadedFiles(newFiles);
+
+    // Reorder pages according to new PDF order AND reset to default page order within each PDF
+    if (operation === "merge-pdf") {
+      const reorderedPages: typeof selectedPdfPages = [];
+
+      newFiles.forEach(file => {
+        // Get the page count for this PDF
+        const pageCount = pdfPageCounts.get(file.id);
+
+        if (pageCount) {
+          // Recreate pages in their original sequential order (1, 2, 3, ...)
+          const pagesInOriginalOrder = Array.from({ length: pageCount }, (_, i) => ({
+            uploadId: file.id,
+            fileName: file.fileName,
+            pageNumber: i + 1,
+            totalPages: pageCount
+          }));
+
+          reorderedPages.push(...pagesInOriginalOrder);
+        } else {
+          // Fallback: if page count not available, use existing pages but sort them
+          const pagesForThisFile = selectedPdfPages
+            .filter(page => page.uploadId === file.id)
+            .sort((a, b) => a.pageNumber - b.pageNumber); // Sort by original page number
+
+          reorderedPages.push(...pagesForThisFile);
+        }
+      });
+
+      setSelectedPdfPages(reorderedPages);
+      setPreviewPageIndex(0); // Reset preview to first page
+    }
+
     setDraggedIndex(null);
     setDragOverIndex(null);
+  };
+
+  // Handle confirmation response
+  const handleReorderConfirmation = (confirmed: boolean) => {
+    setShowReorderConfirmation(false);
+
+    if (confirmed && pendingPdfReorder) {
+      // Reset manual reordering flag and execute PDF reorder
+      setHasManuallyReorderedPages(false);
+      executePdfReorder(pendingPdfReorder.draggedIndex, pendingPdfReorder.dropIndex);
+    }
+
+    setPendingPdfReorder(null);
   };
 
   // Process operation
@@ -565,19 +637,40 @@ switch (operation) {
    break;
  }
 
-  case "rotate-pdf":
+  case "rotate-pdf": {
+    const rotateParams: any = {
+      uploadId: uploadIds[0],
+      direction: rotationDegrees,
+    };
+
+    if (rotationPages === "custom") {
+      if (!customRotationPages.trim()) {
+        showMessage('error', "Please enter page numbers to rotate");
+        setIsProcessing(false);
+        return;
+      }
+
+      // Validate page numbers before processing
+      if (!validateRotationPages(customRotationPages.trim())) {
+        setIsProcessing(false);
+        return;
+      }
+
+      rotateParams.pages = customRotationPages.trim();
+    } else {
+      rotateParams.pages = "all";
+    }
+
     response = await axios.post(
       `${API_BASE_URL}/api/documents/rotate-pdf`,
       null,
       {
-        params: {
-          uploadId: uploadIds[0],
-          direction: rotationDegrees,
-        },
+        params: rotateParams,
         headers: { Authorization: `Bearer ${token}` },
       }
     );
     break;
+  }
 
   case "images-to-pdf": {
     const params = new URLSearchParams();
@@ -765,9 +858,63 @@ switch (operation) {
     }
   };
 
+// Validate custom rotation pages
+const validateRotationPages = (pageSpec: string): boolean => {
+  if (!pageSpec || pdfPageCount === 0) return true;
+
+  const parts = pageSpec.split(',');
+  const invalidPages: string[] = [];
+
+  for (const part of parts) {
+    const trimmedPart = part.trim();
+
+    if (trimmedPart.includes('-')) {
+      // Range validation (e.g., "1-5")
+      const [start, end] = trimmedPart.split('-').map(s => s.trim());
+      const startNum = parseInt(start);
+      const endNum = parseInt(end);
+
+      if (isNaN(startNum) || isNaN(endNum)) {
+        invalidPages.push(trimmedPart);
+        continue;
+      }
+
+      if (startNum > pdfPageCount || endNum > pdfPageCount) {
+        invalidPages.push(trimmedPart);
+      } else if (startNum < 1 || endNum < 1) {
+        invalidPages.push(trimmedPart);
+      } else if (startNum > endNum) {
+        invalidPages.push(trimmedPart);
+      }
+    } else {
+      // Single page validation (e.g., "3")
+      const pageNum = parseInt(trimmedPart);
+
+      if (isNaN(pageNum)) {
+        invalidPages.push(trimmedPart);
+        continue;
+      }
+
+      if (pageNum < 1 || pageNum > pdfPageCount) {
+        invalidPages.push(trimmedPart);
+      }
+    }
+  }
+
+  if (invalidPages.length > 0) {
+    showMessage('error',
+      `Invalid page numbers detected: "${invalidPages.join(', ')}". ` +
+      `Valid page range is 1-${pdfPageCount}.`
+    );
+    return false;
+  }
+
+  return true;
+};
+
   // Call this function when a PDF is uploaded for split operation
   useEffect(() => {
-    if (operation === "split-pdf" && uploadedFiles.length > 0) {
+    if ((operation === "split-pdf" || operation === "rotate-pdf") && uploadedFiles.length > 0) {
       fetchPdfPageCount(uploadedFiles[0].id);
     }
   }, [uploadedFiles, operation]);
@@ -817,6 +964,8 @@ useEffect(() => {
     setPassword("");
     setWatermarkText("CONFIDENTIAL");
     setPageRanges("");
+    setRotationPages("all");
+    setCustomRotationPages("");
   };
 
   // Format file size
@@ -909,14 +1058,233 @@ useEffect(() => {
             </div>
 
         {/* Three-Section Layout for Merge PDF */}
+        {/* Three-Section Layout for Merge PDF */}
         {operation === "merge-pdf" && uploadedFiles.length > 0 && (
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: '300px 1fr 300px',
-            gap: '16px',
-            height: '600px',
-            marginTop: '20px'
-          }}>
+          <>
+           {/* Mobile Notice */}
+               <div className="mobile-merge-notice merge-layout-mobile-only">
+                 <div className="mobile-merge-notice-icon">💻📱</div>
+                 <h4>Limited Mobile View</h4>
+                 <p style={{ marginBottom: '8px' }}>
+                   You can reorder PDFs below by dragging and dropping them.
+                 </p>
+                 <p style={{
+                   background: 'rgba(255, 255, 255, 0.15)',
+                   padding: '8px 12px',
+                   borderRadius: '8px',
+                   fontSize: '12px',
+                   fontWeight: 600,
+                   margin: 0
+                 }}>
+                   ⚠️ For better control over PDF merging (page-level reordering, preview, and individual page management),
+                   please use a laptop or desktop computer.
+                 </p>
+               </div>
+
+            {/* Mobile View - PDF List Only */}
+            <div className="merge-layout-mobile-only" style={{
+              marginTop: '20px'
+            }}>
+              <div style={{
+                border: '2px solid #e2e8f0',
+                borderRadius: '12px',
+                padding: '16px',
+                background: 'white'
+              }}>
+                <h3 style={{ marginBottom: '16px', fontSize: '18px', fontWeight: 600, textAlign: 'center' }}>
+                  Uploaded PDFs ({uploadedFiles.length})
+                </h3>
+                <p style={{
+                          fontSize: '13px',
+                          color: '#64748b',
+                          textAlign: 'center',
+                          marginBottom: '16px',
+                          lineHeight: '1.5',
+                          background: '#f1f5f9',
+                          padding: '10px',
+                          borderRadius: '8px',
+                          border: '1px solid #e2e8f0'
+                        }}>
+                          <strong>📋 Instructions:</strong> Press and hold a PDF card, then drag it up or down to reorder.
+                          PDFs will be merged in the order shown below.
+                        </p>
+
+                {uploadedFiles.map((file, index) => (
+                  <div key={file.id} style={{ marginBottom: '12px' }}>
+                    {/* Insert Button Above */}
+                    {index === 0 && (
+                      <button
+                        onClick={() => fileInputRef.current?.click()}
+                        style={{
+                          width: '100%',
+                          padding: '10px',
+                          marginBottom: '8px',
+                          border: '2px dashed #667eea',
+                          borderRadius: '8px',
+                          background: 'rgba(102, 126, 234, 0.05)',
+                          color: '#667eea',
+                          cursor: 'pointer',
+                          fontSize: '14px',
+                          fontWeight: 600,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '8px'
+                        }}
+                      >
+                        <FaPlus size={14} /> Add PDF Here
+                      </button>
+                    )}
+
+                    {/* PDF Card */}
+                    <div
+                                  draggable
+                                  onDragStart={() => handleDragStart(index)}
+                                  onDragOver={(e) => {
+                                    e.preventDefault();
+                                    handleDragOver(e, index);
+                                  }}
+                                  onDrop={(e) => {
+                                    e.preventDefault();
+                                    handleDrop(index);
+                                  }}
+                                  onDragEnd={() => {
+                                    setDraggedIndex(null);
+                                    setDragOverIndex(null);
+                                  }}
+                                  onTouchStart={(e) => {
+                                    // Enable touch drag for mobile
+                                    handleDragStart(index);
+                                  }}
+                                  onTouchMove={(e) => {
+                                    e.preventDefault();
+                                    // Find element under touch point
+                                    const touch = e.touches[0];
+                                    const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+                                    const cardElements = document.querySelectorAll('[data-pdf-card]');
+                                    cardElements.forEach((el, idx) => {
+                                      if (el.contains(elementBelow)) {
+                                        handleDragOver(e as any, idx);
+                                      }
+                                    });
+                                  }}
+                                  onTouchEnd={() => {
+                                    if (draggedIndex !== null && dragOverIndex !== null) {
+                                      handleDrop(dragOverIndex);
+                                    }
+                                    setDraggedIndex(null);
+                                    setDragOverIndex(null);
+                                  }}
+                                  data-pdf-card="true"
+                                  style={{
+                                                  padding: '14px',
+                                                  border: dragOverIndex === index
+                                                    ? '3px solid #667eea'
+                                                    : draggedIndex === index
+                                                      ? '2px dashed #667eea'
+                                                      : '2px solid #e2e8f0',
+                                                  borderRadius: '10px',
+                                                  background: draggedIndex === index
+                                                    ? 'rgba(102, 126, 234, 0.15)'
+                                                    : dragOverIndex === index
+                                                      ? 'rgba(102, 126, 234, 0.08)'
+                                                      : '#f8fafc',
+                                                  cursor: 'move',
+                                                  transition: 'all 0.2s',
+                                                  boxShadow: draggedIndex === index
+                                                    ? '0 6px 16px rgba(102, 126, 234, 0.3)'
+                                                    : dragOverIndex === index
+                                                      ? '0 4px 12px rgba(102, 126, 234, 0.15)'
+                                                      : '0 2px 4px rgba(0,0,0,0.05)',
+                                                  opacity: draggedIndex === index ? 0.6 : 1,
+                                                  transform: draggedIndex === index ? 'scale(1.02)' : 'scale(1)',
+                                                  touchAction: 'none'
+                                                }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <FaGripVertical color="#94a3b8" size={18} />
+                        <div style={{
+                          minWidth: '36px',
+                          height: '36px',
+                          borderRadius: '8px',
+                          background: 'linear-gradient(135deg, #ef4444, #dc2626)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          flexShrink: 0
+                        }}>
+                          <FaFilePdf color="white" size={18} />
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{
+                            fontSize: '14px',
+                            fontWeight: 600,
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            color: '#1e293b'
+                          }}>
+                            {file.fileName}
+                          </div>
+                          <div style={{ fontSize: '12px', color: '#64748b', marginTop: '2px' }}>
+                            {pdfPageCounts.get(file.id) || '...'} pages • {formatFileSize(file.fileSizeBytes)}
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => handleDeleteFile(file.id)}
+                          style={{
+                            padding: '8px',
+                            border: 'none',
+                            borderRadius: '8px',
+                            background: '#fee2e2',
+                            color: '#dc2626',
+                            cursor: 'pointer',
+                            flexShrink: 0,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}
+                        >
+                          <FaTimes size={14} />
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Insert Button Below */}
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      style={{
+                        width: '100%',
+                        padding: '10px',
+                        marginTop: '8px',
+                        border: '2px dashed #667eea',
+                        borderRadius: '8px',
+                        background: 'rgba(102, 126, 234, 0.05)',
+                        color: '#667eea',
+                        cursor: 'pointer',
+                        fontSize: '14px',
+                        fontWeight: 600,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '8px'
+                      }}
+                    >
+                      <FaPlus size={14} /> Add PDF Here
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Desktop View - Three Column Layout */}
+            <div className="merge-layout-desktop-only" style={{
+              display: 'grid',
+              gridTemplateColumns: '300px 1fr 300px',
+              gap: '16px',
+              height: '600px',
+              marginTop: '20px'
+            }}>
             {/* LEFT SECTION - Uploaded PDFs with Insert Options */}
             <div style={{
               border: '2px solid #e2e8f0',
@@ -1329,6 +1697,7 @@ useEffect(() => {
                         e.stopPropagation();
                         const newPages = selectedPdfPages.filter((_, i) => i !== index);
                         setSelectedPdfPages(newPages);
+                        setHasManuallyReorderedPages(true); // Mark that pages have been manually modified
                         if (previewPageIndex >= index && previewPageIndex > 0) {
                           setPreviewPageIndex(previewPageIndex - 1);
                         } else if (previewPageIndex >= newPages.length && newPages.length > 0) {
@@ -1352,6 +1721,7 @@ useEffect(() => {
               ))}
             </div>
           </div>
+            </>
         )}
 
             {/* Operation Options */}
@@ -1477,26 +1847,125 @@ useEffect(() => {
                 )}
 
                 {operation === "rotate-pdf" && (
-                  <div className="option-group">
-                    <label>Rotation Direction</label>
-                    <div className="radio-group">
-                      {[
-                        { value: "right", label: "90° Right" },
-                        { value: "left", label: "90° Left" },
-                        { value: "top", label: "180°" },
-                      ].map((opt) => (
-                        <label key={opt.value} className="radio-label">
+                  <>
+                    <div className="option-group">
+                      <label>Rotation Direction</label>
+                      <div className="radio-group">
+                        {[
+                          { value: "right", label: "90° Right" },
+                          { value: "left", label: "90° Left" },
+                          { value: "top", label: "180°" },
+                        ].map((opt) => (
+                          <label key={opt.value} className="radio-label">
+                            <input
+                              type="radio"
+                              value={opt.value}
+                              checked={rotationDegrees === opt.value}
+                              onChange={(e) => setRotationDegrees(e.target.value)}
+                            />
+                            <span>{opt.label}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="option-group">
+                      <label>Pages to Rotate</label>
+                      <div className="radio-group">
+                        <label className="radio-label">
                           <input
                             type="radio"
-                            value={opt.value}
-                            checked={rotationDegrees === opt.value}
-                            onChange={(e) => setRotationDegrees(e.target.value)}
+                            value="all"
+                            checked={rotationPages === "all"}
+                            onChange={(e) => {
+                              setRotationPages(e.target.value);
+                              setCustomRotationPages("");
+                            }}
                           />
-                          <span>{opt.label}</span>
+                          <span>All Pages</span>
                         </label>
-                      ))}
+
+                        <label className="radio-label">
+                          <input
+                            type="radio"
+                            value="custom"
+                            checked={rotationPages === "custom"}
+                            onChange={(e) => setRotationPages(e.target.value)}
+                          />
+                          <span>Custom Pages</span>
+                        </label>
+                      </div>
+
+                      {rotationPages === "custom" && (
+                        <div style={{
+                          marginTop: '16px',
+                          padding: '16px',
+                          background: 'white',
+                          borderRadius: '8px',
+                          border: '2px solid #667eea'
+                        }}>
+                          <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: 600 }}>
+                            Enter Page Numbers
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="e.g., 1,3,5 or 1-5 or 1,3-7,10"
+                            value={customRotationPages}
+                            onChange={(e) => setCustomRotationPages(e.target.value)}
+                            onBlur={(e) => {
+                              // Validate page numbers when user leaves the input field
+                              if (e.target.value.trim() && pdfPageCount > 0) {
+                                validateRotationPages(e.target.value.trim());
+                              }
+                            }}
+                            style={{
+                              width: '100%',
+                              padding: '10px',
+                              border: '2px solid #e2e8f0',
+                              borderRadius: '6px',
+                              fontSize: '14px'
+                            }}
+                          />
+                          <p style={{
+                            fontSize: '12px',
+                            color: '#64748b',
+                            marginTop: '8px',
+                            marginBottom: pdfPageCount > 0 ? '8px' : 0
+                          }}>
+                            Examples: "1" (page 1), "1,3,5" (pages 1, 3, and 5), "1-5" (pages 1 to 5), "1,3-7,10" (mixed)
+                          </p>
+                          {pdfPageCount > 0 && (
+                            <div style={{
+                              padding: '10px',
+                              background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))',
+                              borderRadius: '6px',
+                              border: '1px solid rgba(102, 126, 234, 0.3)'
+                            }}>
+                              <p style={{
+                                fontSize: '13px',
+                                color: '#667eea',
+                                margin: 0,
+                                fontWeight: 600,
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '6px'
+                              }}>
+                                <span>📄</span>
+                                Total pages in PDF: {pdfPageCount}
+                              </p>
+                              <p style={{
+                                fontSize: '11px',
+                                color: '#64748b',
+                                margin: '4px 0 0 0'
+                              }}>
+                                Valid page range: 1-{pdfPageCount}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
-                  </div>
+                  </>
                 )}
 
                 {operation === "split-pdf" && (
@@ -1553,13 +2022,14 @@ useEffect(() => {
                             </div>
 
                             {/* Split Ranges Table */}
-                            <div style={{
-                              border: '2px solid #e2e8f0',
-                              borderRadius: '12px',
-                              overflow: 'hidden',
-                              background: 'white',
-                              boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
-                            }}>
+                            <div className="split-table-wrapper">
+                              <div className="split-table-container" style={{
+                                border: '2px solid #e2e8f0',
+                                borderRadius: '12px',
+                                overflow: 'hidden',
+                                background: 'white',
+                                boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
+                              }}>
                               {/* Table Header */}
                               <div style={{
                                 display: 'grid',
@@ -1853,7 +2323,8 @@ useEffect(() => {
                                   </div>
                                 </div>
                               ))}
-                            </div>
+                          </div>
+                       </div>
 
                             {/* Add Another Split Button */}
                             <button
@@ -2250,6 +2721,127 @@ useEffect(() => {
           </div>
         </div>
       )}
+  {/* PDF Reorder Confirmation Modal */}
+  {showReorderConfirmation && (
+    <div className="modal-overlay" style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0, 0, 0, 0.75)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 9999,
+    }}>
+      <div style={{
+        backgroundColor: 'white',
+        borderRadius: '16px',
+        padding: '32px',
+        maxWidth: '500px',
+        width: '90%',
+        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+      }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          gap: '16px',
+          marginBottom: '24px'
+        }}>
+          <div style={{
+            fontSize: '48px',
+            lineHeight: 1
+          }}>
+            ⚠️
+          </div>
+          <div style={{ flex: 1 }}>
+            <h3 style={{
+              fontSize: '20px',
+              fontWeight: 700,
+              color: '#1e293b',
+              margin: '0 0 12px 0'
+            }}>
+              Reorder PDFs?
+            </h3>
+            <p style={{
+              fontSize: '15px',
+              lineHeight: '1.6',
+              color: '#475569',
+              margin: 0
+            }}>
+              You have manually reordered pages. Reordering PDFs will reset your page arrangement to match the new PDF order. All your custom page arrangements will be lost.
+            </p>
+            <p style={{
+              fontSize: '14px',
+              lineHeight: '1.6',
+              color: '#64748b',
+              margin: '12px 0 0 0',
+              fontWeight: 500
+            }}>
+              Do you want to continue and reorder the PDFs?
+            </p>
+          </div>
+        </div>
+
+        <div style={{
+          display: 'flex',
+          gap: '12px',
+          justifyContent: 'flex-end'
+        }}>
+          <button
+            onClick={() => handleReorderConfirmation(false)}
+            style={{
+              padding: '12px 24px',
+              border: '2px solid #e2e8f0',
+              borderRadius: '10px',
+              background: 'white',
+              color: '#475569',
+              fontSize: '15px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              transition: 'all 0.2s'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = '#f8fafc';
+              e.currentTarget.style.borderColor = '#cbd5e1';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'white';
+              e.currentTarget.style.borderColor = '#e2e8f0';
+            }}
+          >
+            Cancel
+          </button>
+          <button
+            onClick={() => handleReorderConfirmation(true)}
+            style={{
+              padding: '12px 24px',
+              border: 'none',
+              borderRadius: '10px',
+              background: 'linear-gradient(135deg, #667eea, #764ba2)',
+              color: 'white',
+              fontSize: '15px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+              boxShadow: '0 4px 12px rgba(102, 126, 234, 0.3)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 6px 16px rgba(102, 126, 234, 0.4)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(102, 126, 234, 0.3)';
+            }}
+          >
+            Yes, Reorder PDFs
+          </button>
+        </div>
+      </div>
+    </div>
+  )}
     {/* SEO Content Section - Add this right before the final closing </div> */}
     {!result && (
       <div className="seo-content-section" style={{ maxWidth: '900px', margin: '60px auto 40px', padding: '0 20px' }}>
