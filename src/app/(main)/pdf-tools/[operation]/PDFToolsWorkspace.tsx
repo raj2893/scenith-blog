@@ -649,6 +649,13 @@ switch (operation) {
         setIsProcessing(false);
         return;
       }
+
+      // Validate page numbers before processing
+      if (!validateRotationPages(customRotationPages.trim())) {
+        setIsProcessing(false);
+        return;
+      }
+
       rotateParams.pages = customRotationPages.trim();
     } else {
       rotateParams.pages = "all";
@@ -850,6 +857,60 @@ switch (operation) {
       showMessage('error', "Failed to fetch PDF page count");
     }
   };
+
+// Validate custom rotation pages
+const validateRotationPages = (pageSpec: string): boolean => {
+  if (!pageSpec || pdfPageCount === 0) return true;
+
+  const parts = pageSpec.split(',');
+  const invalidPages: string[] = [];
+
+  for (const part of parts) {
+    const trimmedPart = part.trim();
+
+    if (trimmedPart.includes('-')) {
+      // Range validation (e.g., "1-5")
+      const [start, end] = trimmedPart.split('-').map(s => s.trim());
+      const startNum = parseInt(start);
+      const endNum = parseInt(end);
+
+      if (isNaN(startNum) || isNaN(endNum)) {
+        invalidPages.push(trimmedPart);
+        continue;
+      }
+
+      if (startNum > pdfPageCount || endNum > pdfPageCount) {
+        invalidPages.push(trimmedPart);
+      } else if (startNum < 1 || endNum < 1) {
+        invalidPages.push(trimmedPart);
+      } else if (startNum > endNum) {
+        invalidPages.push(trimmedPart);
+      }
+    } else {
+      // Single page validation (e.g., "3")
+      const pageNum = parseInt(trimmedPart);
+
+      if (isNaN(pageNum)) {
+        invalidPages.push(trimmedPart);
+        continue;
+      }
+
+      if (pageNum < 1 || pageNum > pdfPageCount) {
+        invalidPages.push(trimmedPart);
+      }
+    }
+  }
+
+  if (invalidPages.length > 0) {
+    showMessage('error',
+      `Invalid page numbers detected: "${invalidPages.join(', ')}". ` +
+      `Valid page range is 1-${pdfPageCount}.`
+    );
+    return false;
+  }
+
+  return true;
+};
 
   // Call this function when a PDF is uploaded for split operation
   useEffect(() => {
@@ -1851,6 +1912,12 @@ useEffect(() => {
                             placeholder="e.g., 1,3,5 or 1-5 or 1,3-7,10"
                             value={customRotationPages}
                             onChange={(e) => setCustomRotationPages(e.target.value)}
+                            onBlur={(e) => {
+                              // Validate page numbers when user leaves the input field
+                              if (e.target.value.trim() && pdfPageCount > 0) {
+                                validateRotationPages(e.target.value.trim());
+                              }
+                            }}
                             style={{
                               width: '100%',
                               padding: '10px',
@@ -1863,20 +1930,37 @@ useEffect(() => {
                             fontSize: '12px',
                             color: '#64748b',
                             marginTop: '8px',
-                            marginBottom: 0
+                            marginBottom: pdfPageCount > 0 ? '8px' : 0
                           }}>
                             Examples: "1" (page 1), "1,3,5" (pages 1, 3, and 5), "1-5" (pages 1 to 5), "1,3-7,10" (mixed)
                           </p>
                           {pdfPageCount > 0 && (
-                            <p style={{
-                              fontSize: '12px',
-                              color: '#667eea',
-                              marginTop: '8px',
-                              marginBottom: 0,
-                              fontWeight: 600
+                            <div style={{
+                              padding: '10px',
+                              background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))',
+                              borderRadius: '6px',
+                              border: '1px solid rgba(102, 126, 234, 0.3)'
                             }}>
-                              Total pages in PDF: {pdfPageCount}
-                            </p>
+                              <p style={{
+                                fontSize: '13px',
+                                color: '#667eea',
+                                margin: 0,
+                                fontWeight: 600,
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '6px'
+                              }}>
+                                <span>📄</span>
+                                Total pages in PDF: {pdfPageCount}
+                              </p>
+                              <p style={{
+                                fontSize: '11px',
+                                color: '#64748b',
+                                margin: '4px 0 0 0'
+                              }}>
+                                Valid page range: 1-{pdfPageCount}
+                              </p>
+                            </div>
                           )}
                         </div>
                       )}
