@@ -831,18 +831,13 @@ return (
           '@type': 'SoftwareApplication',
           name: 'Scenith AI Voice Generator',
           description: 'Free AI-powered text-to-speech tool for generating natural-sounding voices from text in multiple languages.',
-          url: typeof window !== 'undefined' ? window.location.href : '/tools/ai-voice-generation',
+          url: 'https://scenith.in/tools/ai-voice-generation',
           applicationCategory: 'MultimediaApplication',
           operatingSystem: 'Web Browser',
           offers: {
             '@type': 'Offer',
             price: '0',
             priceCurrency: 'USD',
-          },
-          aggregateRating: {
-            '@type': 'AggregateRating',
-            ratingValue: '4.7',
-            reviewCount: '8562',
           },
           author: {
             '@type': 'Organization',

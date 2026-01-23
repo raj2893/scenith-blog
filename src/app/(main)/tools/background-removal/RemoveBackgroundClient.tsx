@@ -120,13 +120,6 @@ const RemoveBackgroundClient: React.FC = () => {
               price: '0',
               priceCurrency: 'USD',
             },
-            aggregateRating: {
-              '@type': 'AggregateRating',
-              ratingValue: '4.8',
-              reviewCount: '12847',
-              bestRating: '5',
-              worstRating: '1'
-            },
             author: {
               '@type': 'Organization',
               name: 'SCENITH AI VIDEO EDITOR',

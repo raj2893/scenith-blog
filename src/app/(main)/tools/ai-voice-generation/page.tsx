@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import AIVoiceGeneratorClient from './AIVoiceGeneratorClient';
 
 export const metadata: Metadata = {
-  title: 'AI Voice Generator for YouTube & Marketing (Natural Voices) | SCENITH',
+  title: 'Free AI Voice Generator (Hindi + English) – 40+ Natural Voices | Scenith',
   description: 'Generate realistic AI voices from text instantly for free. Convert text to speech in 100+ languages with natural-sounding voices. Perfect for videos, podcasts, and more - no signup required!',
   keywords: [
     'AI voice generator',

@@ -412,7 +412,6 @@ const MediaConversionClient: React.FC = () => {
             applicationCategory: 'MultimediaApplication',
             operatingSystem: 'Web Browser',
             offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-            aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.9', reviewCount: '15000' },
             author: { '@type': 'Organization', name: 'SCENITH AI VIDEO EDITOR' },
           }),
         }}
