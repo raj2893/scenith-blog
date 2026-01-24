@@ -4,7 +4,6 @@ import React, { useState, useEffect, useRef, JSX, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import "../../../../../../../styles/tools/EditorCanvas.css";
-import TemplateGallery from "../../../../../components/TemplateGallery";
 import {
   FaSave,
   FaDownload,
@@ -4244,8 +4243,10 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
                     </>
                   )}
 
-                  {selectedLayerId === layer.id && !layer.locked && layer.type === 'text' && 
-                   layer.backgroundWidth && layer.backgroundHeight && (layer.backgroundOpacity ?? 0) > 0 && (
+                  {selectedLayerIds.length === 1 &&
+                   selectedLayerIds[0] === layer.id &&
+                   !layer.locked &&
+                   layer.type === 'text' && (
                     <>
                       <div 
                         className="bg-resize-handle bg-n" 
