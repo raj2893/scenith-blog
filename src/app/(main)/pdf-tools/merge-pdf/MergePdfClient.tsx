@@ -189,7 +189,7 @@ export default function MergePdfClient() {
                 </ul>
               </div>
 
-              <div style={{ backgroundColor: '#faf5ff', padding: '25px', borderRadius: '12px', borderTop: '4px' ,solid :'#a855f7' }}>
+              <div style={{ backgroundColor: '#faf5ff', padding: '25px', borderRadius: '12px', borderTop: '4px solid #a855f7' }}>
                 <h3 style={{ fontSize: '20px', color: '#7e22ce', marginBottom: '15px', fontWeight: 600 }}>👨‍💼 Personal & Professional</h3>
                 <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '15px' }}>
                   <li style={{ marginBottom: '10px' }}>• Merge job application documents</li>
