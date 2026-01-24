@@ -80,6 +80,9 @@ const PDFToolsWorkspace: React.FC<{ operation: string }> = ({ operation }) => {
   const [loginError, setLoginError] = useState<string | null>(null);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState<string>('');
+  const [imagePreviewUrls, setImagePreviewUrls] = useState<Map<number, string>>(new Map());
+  const [draggedImageIndex, setDraggedImageIndex] = useState<number | null>(null);
+  const [dragOverImageIndex, setDragOverImageIndex] = useState<number | null>(null);
 
   const [selectedPdfPages, setSelectedPdfPages] = useState<Array<{
     uploadId: number;
@@ -398,7 +401,25 @@ useEffect(() => {
         }
       );
 
-      setUploadedFiles((prev) => [...prev, ...response.data.uploads]);
+      const newUploads = response.data.uploads;
+      setUploadedFiles((prev) => [...prev, ...newUploads]);
+
+      // Generate preview URLs for images
+      if (operation === "images-to-pdf") {
+        const newPreviews = new Map(imagePreviewUrls);
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          if (file.type.startsWith('image/')) {
+            const previewUrl = URL.createObjectURL(file);
+            const uploadId = newUploads[i]?.id;
+            if (uploadId) {
+              newPreviews.set(uploadId, previewUrl);
+            }
+          }
+        }
+        setImagePreviewUrls(newPreviews);
+      }
+
       showMessage('success', `${files.length} file(s) uploaded successfully!`);
     } catch (err: any) {
       console.error("Upload error:", err);
@@ -436,6 +457,18 @@ useEffect(() => {
       });
 
       setUploadedFiles((prev) => prev.filter((f) => f.id !== uploadId));
+
+      // Clean up preview URL for images
+      if (operation === "images-to-pdf" && imagePreviewUrls.has(uploadId)) {
+        const previewUrl = imagePreviewUrls.get(uploadId);
+        if (previewUrl) {
+          URL.revokeObjectURL(previewUrl);
+        }
+        const newPreviews = new Map(imagePreviewUrls);
+        newPreviews.delete(uploadId);
+        setImagePreviewUrls(newPreviews);
+      }
+
       showMessage('success', "File removed successfully");
     } catch (err: any) {
       if (err.response?.status === 401) {
@@ -447,6 +480,35 @@ useEffect(() => {
       }
     }
   };
+
+  // Image drag and drop handlers for images-to-pdf
+  const handleImageDragStart = (index: number) => {
+    setDraggedImageIndex(index);
+  };
+
+  const handleImageDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    setDragOverImageIndex(index);
+  };
+
+  const handleImageDrop = (index: number) => {
+    if (draggedImageIndex === null) return;
+
+    const newFiles = [...uploadedFiles];
+    const [draggedFile] = newFiles.splice(draggedImageIndex, 1);
+    newFiles.splice(index, 0, draggedFile);
+
+    setUploadedFiles(newFiles);
+    setDraggedImageIndex(null);
+    setDragOverImageIndex(null);
+  };
+
+  // Cleanup preview URLs on unmount or operation change
+  useEffect(() => {
+    return () => {
+      imagePreviewUrls.forEach(url => URL.revokeObjectURL(url));
+    };
+  }, [operation]);
 
   // Drag and drop handlers
   const handleDragStart = (index: number) => {
@@ -1723,6 +1785,285 @@ useEffect(() => {
           </div>
             </>
         )}
+
+    {/* Images to PDF Preview Section */}
+    {operation === "images-to-pdf" && uploadedFiles.length > 0 && (
+      <div style={{
+        marginTop: '20px',
+        border: '2px solid #e2e8f0',
+        borderRadius: '12px',
+        padding: '20px',
+        background: 'white'
+      }}>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '16px'
+        }}>
+          <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 600 }}>
+            Image Preview ({uploadedFiles.length} {uploadedFiles.length === 1 ? 'image' : 'images'})
+          </h3>
+          <span style={{
+            fontSize: '13px',
+            color: '#667eea',
+            background: 'rgba(102, 126, 234, 0.1)',
+            padding: '6px 14px',
+            borderRadius: '20px',
+            fontWeight: 600
+          }}>
+            Drag to reorder
+          </span>
+        </div>
+
+        <p style={{
+          fontSize: '13px',
+          color: '#64748b',
+          marginBottom: '20px',
+          padding: '12px',
+          background: '#f8fafc',
+          borderRadius: '8px',
+          border: '1px solid #e2e8f0'
+        }}>
+          📋 <strong>Tip:</strong> Drag and drop images to rearrange their order in the final PDF.
+          Images will appear in the PDF in the order shown below.
+        </p>
+
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+          gap: '16px'
+        }}>
+          {uploadedFiles.map((file, index) => (
+            <div
+              key={file.id}
+              draggable
+              onDragStart={() => handleImageDragStart(index)}
+              onDragOver={(e) => handleImageDragOver(e, index)}
+              onDrop={() => handleImageDrop(index)}
+              onDragEnd={() => {
+                setDraggedImageIndex(null);
+                setDragOverImageIndex(null);
+              }}
+              // Mobile touch support
+              onTouchStart={(e) => {
+                handleImageDragStart(index);
+                e.currentTarget.style.opacity = '0.6';
+                e.currentTarget.style.transform = 'scale(0.95)';
+              }}
+              onTouchMove={(e) => {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+
+                const allImageCards = document.querySelectorAll('[data-image-card]');
+                allImageCards.forEach((card, idx) => {
+                  if (card.contains(elementBelow) || card === elementBelow) {
+                    handleImageDragOver(e as any, idx);
+                  }
+                });
+              }}
+              onTouchEnd={(e) => {
+                e.currentTarget.style.opacity = '1';
+                e.currentTarget.style.transform = draggedImageIndex === index ? 'scale(0.95)' : 'scale(1)';
+
+                if (draggedImageIndex !== null && dragOverImageIndex !== null) {
+                  handleImageDrop(dragOverImageIndex);
+                }
+                setDraggedImageIndex(null);
+                setDragOverImageIndex(null);
+              }}
+              data-image-card={index}
+              style={{
+                position: 'relative',
+                border: dragOverImageIndex === index
+                  ? '3px solid #667eea'
+                  : draggedImageIndex === index
+                    ? '2px dashed #667eea'
+                    : '2px solid #e2e8f0',
+                borderRadius: '12px',
+                overflow: 'hidden',
+                background: draggedImageIndex === index
+                  ? 'rgba(102, 126, 234, 0.1)'
+                  : 'white',
+                cursor: 'move',
+                transition: 'all 0.2s',
+                opacity: draggedImageIndex === index ? 0.6 : 1,
+                transform: draggedImageIndex === index ? 'scale(0.95)' : 'scale(1)',
+                boxShadow: dragOverImageIndex === index
+                  ? '0 4px 12px rgba(102, 126, 234, 0.3)'
+                  : '0 2px 4px rgba(0,0,0,0.05)',
+                touchAction: 'none',
+                WebkitUserSelect: 'none',
+                userSelect: 'none'
+              }}
+            >
+              {/* Order Badge */}
+              <div style={{
+                position: 'absolute',
+                top: '8px',
+                left: '8px',
+                zIndex: 10,
+                background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                color: 'white',
+                width: '32px',
+                height: '32px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '14px',
+                fontWeight: 700,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                pointerEvents: 'none'
+              }}>
+                {index + 1}
+              </div>
+
+              {/* Delete Button */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteFile(file.id);
+                }}
+                onTouchEnd={(e) => {
+                  e.stopPropagation();
+                  handleDeleteFile(file.id);
+                }}
+                style={{
+                  position: 'absolute',
+                  top: '8px',
+                  right: '8px',
+                  zIndex: 10,
+                  width: '32px',
+                  height: '32px',
+                  border: 'none',
+                  borderRadius: '50%',
+                  background: 'rgba(220, 38, 38, 0.9)',
+                  color: 'white',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                  transition: 'all 0.2s'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#dc2626';
+                  e.currentTarget.style.transform = 'scale(1.1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(220, 38, 38, 0.9)';
+                  e.currentTarget.style.transform = 'scale(1)';
+                }}
+              >
+                <FaTimes size={14} />
+              </button>
+
+              {/* Image Preview */}
+              <div style={{
+                width: '100%',
+                height: '200px',
+                background: '#f8fafc',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'hidden',
+                pointerEvents: 'none'
+              }}>
+                {imagePreviewUrls.has(file.id) ? (
+                  <img
+                    src={imagePreviewUrls.get(file.id)}
+                    alt={file.fileName}
+                    style={{
+                      maxWidth: '100%',
+                      maxHeight: '100%',
+                      objectFit: 'contain',
+                      pointerEvents: 'none'
+                    }}
+                    draggable={false}
+                  />
+                ) : (
+                  <FaImage size={48} color="#cbd5e1" />
+                )}
+              </div>
+
+              {/* File Info */}
+              <div style={{
+                padding: '12px',
+                background: 'white',
+                borderTop: '1px solid #e2e8f0',
+                pointerEvents: 'none'
+              }}>
+                <div style={{
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  color: '#1e293b',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                  marginBottom: '4px'
+                }}>
+                  {file.fileName}
+                </div>
+                <div style={{
+                  fontSize: '11px',
+                  color: '#64748b'
+                }}>
+                  {formatFileSize(file.fileSizeBytes)}
+                </div>
+              </div>
+
+              {/* Drag Handle Indicator */}
+              <div style={{
+                position: 'absolute',
+                bottom: '12px',
+                right: '12px',
+                color: '#94a3b8',
+                opacity: 0.5,
+                pointerEvents: 'none'
+              }}>
+                <FaGripVertical size={16} />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Add More Images Button */}
+        <button
+          onClick={() => fileInputRef.current?.click()}
+          style={{
+            width: '100%',
+            padding: '16px',
+            marginTop: '16px',
+            border: '2px dashed #667eea',
+            borderRadius: '12px',
+            background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05))',
+            color: '#667eea',
+            cursor: 'pointer',
+            fontSize: '15px',
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '10px',
+            transition: 'all 0.3s'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))';
+            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.boxShadow = '0 4px 12px rgba(102, 126, 234, 0.2)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05))';
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        >
+          <FaPlus size={14} /> Add More Images
+        </button>
+      </div>
+    )}
 
             {/* Operation Options */}
             {config.requiresOptions && uploadedFiles.length > 0 && (
