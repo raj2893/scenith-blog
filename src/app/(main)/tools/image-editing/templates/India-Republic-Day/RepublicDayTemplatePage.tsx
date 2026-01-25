@@ -248,9 +248,6 @@ export default function RepublicDayTemplatePage() {
               <button className="cta-button primary" onClick={handleUseTemplate}>
                 <FaEdit /> Use This Template
               </button>
-              <p className="cta-note">
-                {isLoggedIn ? '✨ Opens in new tab' : '🔐 Free account required'}
-              </p>
               <div className="social-proof">
                 <div className="avatars">
                   <div className="avatar">👤</div>
