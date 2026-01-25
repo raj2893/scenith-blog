@@ -1,27 +1,28 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import axios from 'axios';
-import { motion } from 'framer-motion';
-import { FaTimes } from 'react-icons/fa';
-import { API_BASE_URL } from '../../../config';
-import '../../../../../styles/tools/MediaConversion.css';
-import Script from 'next/script';
-import { debounce } from 'lodash';
+import React, { useState, useRef, useCallback, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { API_BASE_URL } from "@/app/config";
+import "../../../../../styles/tools/MediaConversion.css";
+import axios from "axios";
+import {
+  FaArrowLeft,
+  FaUpload,
+  FaTrash,
+  FaDownload,
+  FaSpinner,
+  FaCheckCircle,
+  FaExclamationCircle,
+  FaPlus,
+  FaTimes,
+  FaVideo,
+  FaImage,
+  FaExchangeAlt,
+} from "react-icons/fa";
+
+
 
 // Interfaces
-interface UserProfile {
-  id: number;
-  email: string;
-  firstName: string;
-  lastName: string;
-  picture: string | null;
-  googleAuth: boolean;
-  role: string;
-}
-
 interface ConvertedMedia {
   id: number;
   originalFileName: string;
@@ -36,168 +37,140 @@ interface ConvertedMedia {
   errorMessage: string | null;
 }
 
-interface LoginFormData {
-  email: string;
-  password: string;
-}
-
-const MediaConversionClient: React.FC = () => {
+const MediaConversionWorkspace: React.FC = () => {
   const router = useRouter();
-  const [isScrolled, setIsScrolled] = useState<boolean>(false);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [userProfile, setUserProfile] = useState<UserProfile>({
-    id: 0,
-    email: '',
-    firstName: '',
-    lastName: '',
-    picture: null,
-    googleAuth: false,
-    role: '',
-  });
-  const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
-  const [loginError, setLoginError] = useState<string | null>(null);
-  const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
-  const [uploads, setUploads] = useState<ConvertedMedia[]>([]);
-  const [selectedUpload, setSelectedUpload] = useState<ConvertedMedia | null>(null);
-  const [targetFormat, setTargetFormat] = useState<string>('');
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [isSaving, setIsSaving] = useState(false);
-  const [saveSuccess, setSaveSuccess] = useState(false);
-  const [lastConvertedFormat, setLastConvertedFormat] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // State
+  const [uploadedFiles, setUploadedFiles] = useState<ConvertedMedia[]>([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [result, setResult] = useState<ConvertedMedia | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [loginSuccess, setLoginSuccess] = useState<string>('');
+  const [targetFormat, setTargetFormat] = useState<string>('');
+  const [selectedFile, setSelectedFile] = useState<ConvertedMedia | null>(null);
+  const [pollingInterval, setPollingInterval] = useState<NodeJS.Timeout | null>(null);
 
   const videoFormats = ['MP4', 'AVI', 'MKV', 'MOV', 'WEBM', 'FLV', 'WMV'];
-  const imageFormats = ['PNG', 'JPG', 'BMP', 'GIF', 'TIFF', 'WEBP'];
+  const imageFormats = ['PNG', 'JPG', 'JPEG', 'BMP', 'GIF', 'TIFF', 'WEBP'];
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
       axios
         .get(`${API_BASE_URL}/auth/me`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
-          const fullName = res.data.name || '';
-          const nameParts = fullName.trim().split(' ');
-          const firstName = nameParts[0] || '';
-          const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
-          setUserProfile({
-            id: res.data.id || 0,
-            email: res.data.email || '',
-            firstName,
-            lastName,
-            picture: res.data.picture || null,
-            googleAuth: res.data.googleAuth || false,
-            role: res.data.role || 'BASIC',
-          });
-          setIsLoggedIn(true);
-          setShowLoginModal(false);
+          setIsAuthenticated(true);
+          setIsCheckingAuth(false);
+          fetchUserMedia(token);
         })
         .catch((error) => {
-          console.error('Error fetching user profile:', error);
+          console.error("Error fetching user profile:", error);
           if (error.response?.status === 401) {
-            localStorage.removeItem('token');
-            setIsLoggedIn(false);
+            localStorage.removeItem("token");
+            setIsAuthenticated(false);
+            setIsCheckingAuth(false);
           }
         });
     } else {
-      setIsLoggedIn(false);
+      setIsAuthenticated(false);
+      setIsCheckingAuth(false);
     }
-  }, []);
 
-  useEffect(() => {
-    if (!isLoggedIn) return;
-    const fetchUploads = async () => {
-      try {
-        const response = await axios.get(`${API_BASE_URL}/api/conversion/user-media`, {
-          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-        });
-        setUploads(response.data);
-      } catch (error) {
-        console.error('Error fetching uploads:', error);
-        setUploads([]);
+    return () => {
+      if (pollingInterval) {
+        clearInterval(pollingInterval);
       }
     };
-    fetchUploads();
-  }, [isLoggedIn]);
+  }, []);
 
-  const handleLogin = async (formData: LoginFormData) => {
-    setIsLoggingIn(true);
-    setLoginError(null);
+  const fetchUserMedia = async (token: string) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/auth/login`, formData);
-      const { token } = response.data;
-      localStorage.setItem('token', token);
-      const res = await axios.get(`${API_BASE_URL}/auth/me`, {
+      const response = await axios.get(`${API_BASE_URL}/api/conversion/user-media`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      const fullName = res.data.name || '';
-      const nameParts = fullName.trim().split(' ');
-      const firstName = nameParts[0] || '';
-      const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
-      setUserProfile({
-        id: res.data.id || 0,
-        email: res.data.email || '',
-        firstName,
-        lastName,
-        picture: res.data.picture || null,
-        googleAuth: res.data.googleAuth || false,
-        role: res.data.role || 'BASIC',
+      setUploadedFiles(response.data);
+    } catch (error) {
+      console.error("Error fetching media:", error);
+    }
+  };
+
+  const handleLogin = async (formData: { email: string; password: string }) => {
+    setIsLoggingIn(true);
+    setLoginError(null);
+    setLoginSuccess('');
+
+    try {
+      const response = await axios.post(`${API_BASE_URL}/auth/login`, formData, {
+        timeout: 10000,
       });
-      setIsLoggedIn(true);
-      setShowLoginModal(false);
+
+      const { token } = response.data;
+
+      if (!token) {
+        throw new Error("No token received from server");
+      }
+
+      localStorage.setItem('token', token);
+
+      await axios.get(`${API_BASE_URL}/auth/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+        timeout: 7000,
+      });
+
+      setLoginSuccess('Login successful!');
+
+      setTimeout(() => {
+        setIsAuthenticated(true);
+        setShowLoginModal(false);
+        showMessage('success', 'Logged in successfully!');
+        setIsLoggingIn(false);
+        fetchUserMedia(token);
+      }, 1000);
+
     } catch (error: any) {
-      setLoginError(error.response?.data?.message || 'Login failed.');
-    } finally {
+      const message = error.response?.data?.message
+        || error.response?.data?.error
+        || error.message
+        || "Login failed. Please check your credentials or try again later.";
+
+      setLoginError(message);
+      console.error("Login error:", error);
+      setTimeout(() => setLoginError(''), 8000);
       setIsLoggingIn(false);
     }
   };
 
   const handleGoogleLogin = useCallback(async (credentialResponse: any) => {
     setLoginError('');
+    setLoginSuccess('');
     setIsLoggingIn(true);
+
     try {
       const response = await axios.post(`${API_BASE_URL}/auth/google`, {
         token: credentialResponse.credential,
       });
+
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('userProfile', JSON.stringify({
-        email: response.data.email,
-        name: response.data.name,
-        picture: response.data.picture || null,
-        googleAuth: true,
-      }));
+      setLoginSuccess('Google login successful!');
+
       setTimeout(() => {
-        axios.get(`${API_BASE_URL}/auth/me`, {
-          headers: { Authorization: `Bearer ${response.data.token}` },
-        }).then((res) => {
-          const fullName = res.data.name || '';
-          const nameParts = fullName.trim().split(' ');
-          const firstName = nameParts[0] || '';
-          const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
-          setUserProfile({
-            id: res.data.id || 0,
-            email: res.data.email || '',
-            firstName,
-            lastName,
-            picture: res.data.picture || null,
-            googleAuth: res.data.googleAuth || false,
-            role: res.data.role || 'BASIC',
-          });
-          setIsLoggedIn(true);
-          setShowLoginModal(false);
-          setIsLoggingIn(false);
-        });
+        setIsAuthenticated(true);
+        setShowLoginModal(false);
+        showMessage('success', 'Google login successful!');
+        setIsLoggingIn(false);
+        fetchUserMedia(response.data.token);
       }, 1000);
+
     } catch (error: any) {
       setIsLoggingIn(false);
       setLoginError(error.response?.data?.message || 'Google login failed');
@@ -229,605 +202,895 @@ const MediaConversionClient: React.FC = () => {
     }
   }, [showLoginModal, handleGoogleLogin]);
 
-  const handleMediaUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!requireLogin()) return;
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const showMessage = useCallback((type: 'success' | 'error', message: string) => {
+    if (type === 'success') {
+      setSuccess(message);
+      setTimeout(() => setSuccess(null), 3000);
+    } else {
+      setError(message);
+      setTimeout(() => setError(null), 5000);
+    }
+  }, []);
+
+  const handleFileUpload = async (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+
+    if (!isAuthenticated) {
+      setShowLoginModal(true);
+      return;
+    }
+
     setIsUploading(true);
-    const formData = new FormData();
-    formData.append('file', file);
-    // Set default target format based on media type
-    const defaultFormat = file.type.startsWith('video/') ? 'MP4' : 'PNG';
-    formData.append('targetFormat', targetFormat || defaultFormat);
+    setError(null);
+
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/conversion/upload`, formData, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      setUploads((prev) => [...prev, response.data]);
-      setSelectedUpload(response.data);
-      setTargetFormat(response.data.targetFormat);
-    } catch (error: any) {
-      setError(error.response?.data?.message || 'Failed to upload media.');
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setShowLoginModal(true);
+        return;
+      }
+
+      const file = files[0];
+      const formData = new FormData();
+      formData.append("file", file);
+
+      // Determine media type and set default format
+      const isVideo = file.type.startsWith('video/');
+      const defaultFormat = isVideo ? 'MP4' : 'PNG';
+      formData.append("targetFormat", defaultFormat);
+
+      const response = await axios.post(
+        `${API_BASE_URL}/api/conversion/upload`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      const newUpload = response.data;
+      setUploadedFiles((prev) => [...prev, newUpload]);
+      setSelectedFile(newUpload);
+      setTargetFormat(newUpload.targetFormat);
+
+      showMessage('success', 'File uploaded successfully!');
+    } catch (err: any) {
+      console.error("Upload error:", err);
+      if (err.response?.status === 401) {
+        localStorage.removeItem("token");
+        setIsAuthenticated(false);
+        setShowLoginModal(true);
+      } else {
+        showMessage('error', err.response?.data?.message || "Failed to upload file");
+      }
     } finally {
       setIsUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     }
   };
 
-  const handleMediaSelect = async (mediaId: string) => {
-    const upload = uploads.find((u) => u.id === Number(mediaId));
-    setSelectedUpload(upload || null);
-    if (upload) {
-      setTargetFormat(upload.targetFormat);
-      setLastConvertedFormat(upload.status === 'SUCCESS' && upload.processedCdnUrl ? upload.targetFormat : null);
+  const handleDeleteFile = async (mediaId: number) => {
+    if (!isAuthenticated) {
+      setShowLoginModal(true);
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setShowLoginModal(true);
+        return;
+      }
+
+      await axios.delete(`${API_BASE_URL}/api/conversion/delete/${mediaId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setUploadedFiles((prev) => prev.filter((f) => f.id !== mediaId));
+      if (selectedFile?.id === mediaId) {
+        setSelectedFile(null);
+        setTargetFormat('');
+      }
+
+      showMessage('success', "File removed successfully");
+    } catch (err: any) {
+      if (err.response?.status === 401) {
+        localStorage.removeItem("token");
+        setIsAuthenticated(false);
+        setShowLoginModal(true);
+      } else {
+        showMessage('error', "Failed to delete file");
+      }
     }
   };
 
-  const debouncedSave = useCallback(
-    debounce(async (newTargetFormat: string) => {
-      if (!requireLogin() || !selectedUpload) return;
-      setIsSaving(true);
-      setSaveSuccess(false);
+  const handleFormatChange = async (newFormat: string) => {
+    setTargetFormat(newFormat);
+
+    if (!selectedFile) return;
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      const response = await axios.put(
+        `${API_BASE_URL}/api/conversion/update-target-format/${selectedFile.id}`,
+        null,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          params: { newTargetFormat: newFormat },
+        }
+      );
+
+      setSelectedFile(response.data);
+      setUploadedFiles((prev) =>
+        prev.map((f) => (f.id === selectedFile.id ? response.data : f))
+      );
+    } catch (error: any) {
+      showMessage('error', error.response?.data?.message || 'Failed to update format');
+    }
+  };
+
+  const pollJobStatus = async (mediaId: number) => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    const interval = setInterval(async () => {
       try {
-        const response = await axios.put(
-          `${API_BASE_URL}/api/conversion/update-target-format/${selectedUpload.id}`,
-          null,
+        const response = await axios.get(
+          `${API_BASE_URL}/api/conversion/user-media`,
           {
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-            params: { newTargetFormat },
+            headers: { Authorization: `Bearer ${token}` },
           }
         );
-        setSelectedUpload(response.data);
-        setSaveSuccess(true);
-        setTimeout(() => setSaveSuccess(false), 2000);
-      } catch (error: any) {
-        setError(error.response?.data?.message || 'Failed to update target format.');
-      } finally {
-        setIsSaving(false);
-      }
-    }, 500),
-    [selectedUpload]
-  );
 
-  const handleTargetFormatChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newTargetFormat = e.target.value;
-    setTargetFormat(newTargetFormat);
-    setLastConvertedFormat(null);
-    debouncedSave(newTargetFormat);
+        const updatedMedia = response.data.find((m: ConvertedMedia) => m.id === mediaId);
+
+        if (updatedMedia) {
+          setSelectedFile(updatedMedia);
+          setUploadedFiles((prev) =>
+            prev.map((f) => (f.id === mediaId ? updatedMedia : f))
+          );
+
+          if (updatedMedia.status === 'SUCCESS') {
+            clearInterval(interval);
+            setPollingInterval(null);
+            setIsProcessing(false);
+            setResult(updatedMedia);
+            showMessage('success', 'Conversion completed successfully!');
+          } else if (updatedMedia.status === 'FAILED') {
+            clearInterval(interval);
+            setPollingInterval(null);
+            setIsProcessing(false);
+            showMessage('error', updatedMedia.errorMessage || 'Conversion failed');
+          }
+        }
+      } catch (error) {
+        console.error("Error polling status:", error);
+        clearInterval(interval);
+        setPollingInterval(null);
+        setIsProcessing(false);
+      }
+    }, 2000);
+
+    setPollingInterval(interval);
   };
 
-  const handleStartProcessing = async () => {
-    if (!requireLogin() || !selectedUpload) {
-      setError('Please select a media file to process.');
+  const handleProcess = async () => {
+    if (!isAuthenticated) {
+      setShowLoginModal(true);
       return;
     }
-    if (!selectedUpload.targetFormat) {
-      setError('Please set a target format before processing.');
+
+    if (!selectedFile) {
+      showMessage('error', "Please select a file to convert");
       return;
     }
+
+    if (!targetFormat) {
+      showMessage('error', "Please select a target format");
+      return;
+    }
+
     setIsProcessing(true);
     setError(null);
+    setResult(null);
+
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setShowLoginModal(true);
+        return;
+      }
+
       const response = await axios.post(
-        `${API_BASE_URL}/api/conversion/convert/${selectedUpload.id}`,
+        `${API_BASE_URL}/api/conversion/convert/${selectedFile.id}`,
         {},
-        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
-      setSelectedUpload(response.data);
-      const pollJobStatus = async () => {
-        const interval = setInterval(async () => {
-          try {
-            const statusResponse = await axios.get(
-              `${API_BASE_URL}/api/conversion/user-media`,
-              { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
-            );
-            const updatedMedia = statusResponse.data.find((m: ConvertedMedia) => m.id === selectedUpload.id);
-            setSelectedUpload(updatedMedia);
-            if (updatedMedia.status === 'SUCCESS' && updatedMedia.processedCdnUrl) {
-              clearInterval(interval);
-              setIsProcessing(false);
-              setLastConvertedFormat(updatedMedia.targetFormat); // Set the converted format
-              const outputSection = document.querySelector('.download-section');
-              if (outputSection) {
-                outputSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              }
-            } else if (updatedMedia.status === 'FAILED') {
-              clearInterval(interval);
-              setIsProcessing(false);
-              setError(updatedMedia.errorMessage || 'Media conversion failed.');
-            }
-          } catch (error) {
-            clearInterval(interval);
-            setIsProcessing(false);
-            setError('Error checking job status.');
-          }
-        }, 2000);
-      };
-      pollJobStatus();
-    } catch (error: any) {
-      setError(error.response?.data?.message || 'Failed to process media conversion.');
+
+      setSelectedFile(response.data);
+      pollJobStatus(selectedFile.id);
+    } catch (err: any) {
+      console.error("Processing error:", err);
+      if (err.response?.status === 401) {
+        localStorage.removeItem("token");
+        setIsAuthenticated(false);
+        setShowLoginModal(true);
+      } else {
+        showMessage('error', err.response?.data?.message || "Processing failed");
+      }
       setIsProcessing(false);
     }
   };
 
   const handleDownload = async () => {
-    if (selectedUpload?.processedCdnUrl && userProfile.id && lastConvertedFormat) {
-      try {
-        const response = await fetch(selectedUpload.processedCdnUrl, {
-          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-        });
-        if (!response.ok) throw new Error('Failed to fetch media.');
-        const blob = await response.blob();
-        const blobUrl = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = blobUrl;
-        const extension = lastConvertedFormat.toLowerCase();
-        link.download = `converted-media-${Date.now()}.${extension}`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(blobUrl);
-      } catch (error) {
-        console.error('Download failed:', error);
-        setError('Failed to download media. Please try again.');
+    if (!result?.processedCdnUrl) return;
+
+    try {
+      const response = await fetch(result.processedCdnUrl, {
+        method: 'GET',
+        mode: 'cors',
+        credentials: 'omit',
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch file: ${response.statusText}`);
       }
+
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = result.processedFileName || `converted.${targetFormat.toLowerCase()}`;
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+
+      showMessage('success', "Download started!");
+    } catch (err) {
+      console.error("Download failed:", err);
+      showMessage('error', "Download failed. Please try again.");
     }
   };
 
-  const requireLogin = () => {
-    if (!isLoggedIn) {
-      setShowLoginModal(true);
-      return false;
+  const handleReset = () => {
+    setSelectedFile(null);
+    setResult(null);
+    setError(null);
+    setSuccess(null);
+    setTargetFormat('');
+    if (pollingInterval) {
+      clearInterval(pollingInterval);
+      setPollingInterval(null);
     }
-    return true;
   };
 
-  const scrollToSection = (sectionId: string) => {
-    const section = document.getElementById(sectionId);
-    if (!section) {
-      if (sectionId === 'footer-section') {
-        window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
-      }
-      return;
-    }
-    const navHeight = 80;
-    const offsetPosition = section.offsetTop - navHeight - 20;
-    window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+  if (isCheckingAuth) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+      }}>
+        <div style={{
+          textAlign: 'center',
+          color: 'white'
+        }}>
+          <FaSpinner className="spinner" size={48} style={{
+            animation: 'spin 1s linear infinite'
+          }} />
+          <p style={{ marginTop: '20px', fontSize: '18px' }}>Loading...</p>
+        </div>
+        <style jsx>{`
+          @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+          }
+        `}</style>
+      </div>
+    );
+  }
+
+  const getAvailableFormats = () => {
+    if (!selectedFile) return [];
+    return selectedFile.mediaType === 'VIDEO' ? videoFormats : imageFormats;
   };
 
   return (
-    <div className="media-conversion-page">
-      <Script
-        id="media-conversion-structured-data"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'SoftwareApplication',
-            name: 'Scenith AI Media Converter',
-            description: 'Free AI-powered tool to convert videos and images to various formats. Upload, select format, and download instantly.',
-            url: typeof window !== 'undefined' ? window.location.href : '/tools/convert-media',
-            applicationCategory: 'MultimediaApplication',
-            operatingSystem: 'Web Browser',
-            offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-            author: { '@type': 'Organization', name: 'SCENITH AI VIDEO EDITOR' },
-          }),
-        }}
-      />
+    <div className="media-conversion-container">
 
+      {/* Optional: you can keep or remove particle background */}
       <div className="particle-background">
-        {[...Array(6)].map((_, i) => <div key={i} className="particle" />)}
+        <div className="particle"></div>
+        <div className="particle"></div>
+        <div className="particle"></div>
+        <div className="particle"></div>
+        <div className="particle"></div>
+        <div className="particle"></div>
       </div>
 
-      <section className="hero-section" id="hero" role="main">
-        <motion.div
-          className="hero-content"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+      {/* Header section */}
+      <div className="media-conversion-header">
+        <button
+          className="back-btn"
+          onClick={() => router.push("/tools")}
         >
-          <h1>Free AI Media Converter - Convert Videos & Images Instantly</h1>
-          <p className="hero-description">
-            Easily convert your videos and images to various formats with our AI-powered tool. Perfect for social media, professional projects, and more. Download high-quality files instantly.
-          </p>
-          <div className="hero-cta-section">
-            <div className="main-content">
-              <div className="media-input-section" style={{ position: 'relative' }}>
-                {isUploading && (
-                  <div className="upload-loading-overlay">
-                    <div className="upload-spinner"></div>
-                    <p>Uploading your media...</p>
-                  </div>
-                )}   
+          <FaArrowLeft size={18} />
+          Back to Tools
+        </button>
 
-                <label className="custom-file-upload">
-                  <input
-                    type="file"
-                    accept="video/*,image/*"
-                    onChange={handleMediaUpload}
-                    disabled={!isLoggedIn || isUploading}
-                    className="media-upload-input"
-                    aria-label="Upload media for conversion"
-                  />
-                  <span className="upload-button">Upload Media <span className="upload-icon">⬆️</span></span>
-                </label>
-                <select
-                  value={selectedUpload?.id || ''}
-                  onChange={(e) => handleMediaSelect(e.target.value)}
-                  className="media-select"
-                  disabled={!isLoggedIn || uploads.length === 0 || isUploading}
-                  aria-label="Select uploaded media"
-                >
-                  <option value="">Select a Media</option>
-                  {uploads.map((upload) => (
-                    <option key={upload.id} value={upload.id}>
-                      {upload.originalFileName}
-                    </option>
-                  ))}
-                </select>
-                <div className="media-conversion-container">
-                  <div className="conversion-controls">
-                    <h3>Convert Media Format</h3>
-                    <div className="format-selector">
-                      <label>Target Format</label>
-                        <select
-                          value={targetFormat}
-                          onChange={handleTargetFormatChange}
-                          disabled={!isLoggedIn || !selectedUpload}
-                          className="format-select"
-                          aria-label="Select target format"
-                        >
-                          <option value="">Select Format</option>
-                          {selectedUpload?.mediaType === 'VIDEO' && (
-                            <optgroup label="Video Formats">
-                              {videoFormats.map((format) => (
-                                <option key={format} value={format}>
-                                  {format}
-                                </option>
-                              ))}
-                            </optgroup>
-                          )}
-                          {selectedUpload?.mediaType === 'IMAGE' && (
-                            <optgroup label="Image Formats">
-                              {imageFormats.map((format) => (
-                                <option key={format} value={format}>
-                                  {format}
-                                </option>
-                              ))}
-                            </optgroup>
-                          )}
-                        </select>
-                    </div>
-                  </div>
-                </div>
-                <div className="action-buttons">
-                  <button
-                    className="cta-button process-media-button"
-                    onClick={handleStartProcessing}
-                    disabled={isLoggedIn && (!selectedUpload || isProcessing || !selectedUpload.targetFormat)}
-                    aria-label="Start media conversion"
-                  >
-                    {isProcessing ? 'Processing...' : isLoggedIn ? 'Convert Media' : 'Login to Convert'}
-                  </button>
-                </div>
-                {selectedUpload?.processedCdnUrl && lastConvertedFormat && (
-                  <div className="download-section" role="region" aria-labelledby="download-title">
-                    <h3 id="download-title">Download Your Converted Media</h3>
-                    <button
-                      onClick={handleDownload}
-                      className="cta-button download-button"
-                      aria-label="Download converted media"
-                    >
-                      Download {lastConvertedFormat}
-                    </button>
-                  </div>
-                )}
-                <div className="editor-save-status">
-                  {isSaving && <span className="saving-indicator">💾 Saving...</span>}
-                  {saveSuccess && <span className="saved-indicator">✓ Saved</span>}
-                </div>
+        <div className="header-content">
+          <div className="header-icon">
+            <FaExchangeAlt />
+          </div>
+          <h1>Media Conversion Tool</h1>
+          <p>Convert videos and images to various formats instantly</p>
+        </div>
+      </div>
+
+      <div className="conversion-content">
+
+        {!result && (
+          <div className="upload-section">
+
+            {/* Upload / Dropzone area */}
+            <div
+              className="dropzone"
+              onClick={() => fileInputRef.current?.click()}
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => {
+                e.preventDefault();
+                handleFileUpload(e.dataTransfer.files);
+              }}
+            >
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="video/*,image/*"
+                onChange={(e) => handleFileUpload(e.target.files)}
+                style={{ display: "none" }}
+              />
+
+              <FaUpload size={64} />
+              <h3>Click or drag files here</h3>
+              <p>Upload a video or image file to convert</p>
+
+              <div className="file-types" style={{ marginTop: '16px' }}>
+                Supported: Videos (MP4, AVI, MKV, MOV, WEBM, FLV, WMV) • Images (PNG, JPG, JPEG, BMP, GIF, TIFF, WEBP)
               </div>
             </div>
-            <div className="trust-indicators">
-              <span className="trust-item">✅ 100% Free</span>
-              <span className="trust-item">🎥 Video & Image Conversion</span>
-              <span className="trust-item">🌟 Multiple Formats</span>
-              <span className="trust-item">📥 Instant Download</span>
+
+            {/* Uploaded files list */}
+            {uploadedFiles.length > 0 && (
+              <div className="uploaded-files-list">
+                <h3>Your Files ({uploadedFiles.length})</h3>
+                {uploadedFiles.map((file) => (
+                  <div
+                    key={file.id}
+                    className={`media-card ${selectedFile?.id === file.id ? 'selected' : ''}`}
+                    onClick={() => {
+                      setSelectedFile(file);
+                      setTargetFormat(file.targetFormat);
+                    }}
+                  >
+                    <div className={`media-type-badge ${file.mediaType.toLowerCase()}`}>
+                      {file.mediaType === 'VIDEO' ? <FaVideo /> : <FaImage />}
+                      {file.mediaType}
+                    </div>
+
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontWeight: 600, marginBottom: 4 }}>
+                        {file.originalFileName}
+                      </div>
+                      <div style={{ fontSize: '0.9rem', color: '#64748b' }}>
+                        Target: {file.targetFormat} • Status: {file.status}
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteFile(file.id);
+                      }}
+                      style={{ background: 'none', border: 'none', color: '#dc2626', fontSize: '1.1rem' }}
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Format selection */}
+            {selectedFile && (
+              <div className="format-selection-panel">
+                <h3>Convert To</h3>
+                <p>Select the target format for your {selectedFile.mediaType.toLowerCase()}</p>
+
+                <div className="format-selector">
+                  <select
+                    value={targetFormat}
+                    onChange={(e) => handleFormatChange(e.target.value)}
+                  >
+                    <option value="">Select Format</option>
+                    {getAvailableFormats().map((format) => (
+                      <option key={format} value={format}>
+                        {format}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            )}
+
+            {/* Convert button */}
+            {selectedFile && targetFormat && (
+              <button
+                className="process-media-button"
+                onClick={handleProcess}
+                disabled={isProcessing || !isAuthenticated}
+              >
+                {isProcessing ? (
+                  <>
+                    <FaSpinner className="spinner" /> Converting...
+                  </>
+                ) : (
+                  <>
+                    <FaExchangeAlt /> Convert to {targetFormat}
+                  </>
+                )}
+              </button>
+            )}
+
+          </div>
+        )}
+
+        {/* Result section */}
+        {result && result.status === 'SUCCESS' && (
+          <div className="result-card">
+            <FaCheckCircle size={80} color="#10b981" />
+            <h2>Conversion Complete!</h2>
+            <p>Your {result.mediaType.toLowerCase()} has been successfully converted</p>
+
+            <div className="result-info">
+              <div className="info-item">
+                <span className="label">File Name</span>
+                <span className="value">{result.processedFileName || 'converted-file'}</span>
+              </div>
+              <div className="info-item">
+                <span className="label">Type</span>
+                <span className="value">{result.mediaType === 'VIDEO' ? 'Video' : 'Image'}</span>
+              </div>
+              <div className="info-item">
+                <span className="label">Format</span>
+                <span className="value">{result.targetFormat}</span>
+              </div>
+            </div>
+
+            <div className="result-actions">
+              <button className="download-btn" onClick={handleDownload}>
+                <FaDownload /> Download File
+              </button>
+              <button className="reset-btn" onClick={handleReset}>
+                <FaPlus /> Convert Another
+              </button>
             </div>
           </div>
-          <figure className="hero-image-container">
-            <Image
-              src="/images/MediaConversionSS.png"
-              alt="Media converter example showing format selection"
-              className="hero-image"
-              width={800}
-              height={400}
-              priority
-            />
-            <figcaption className="sr-only">Example of media converter with format selection</figcaption>
-          </figure>
-        </motion.div>
-      </section>
+        )}
 
+      </div>
+
+      {/* Toast Messages */}
       {error && (
-        <div className="error-message" role="alert">
-          {error}
+        <div style={{
+          position: 'fixed',
+          bottom: '24px',
+          right: '24px',
+          background: '#fee2e2',
+          color: '#dc2626',
+          padding: '16px 24px',
+          borderRadius: '12px',
+          boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          maxWidth: '400px',
+          zIndex: 1000,
+          animation: 'slideIn 0.3s ease-out'
+        }}>
+          <FaExclamationCircle size={20} />
+          <span style={{ fontWeight: 600 }}>{error}</span>
         </div>
       )}
 
-      <section className="how-section" id="how-it-works" role="region" aria-labelledby="how-it-works-title">
-        <motion.div
-          className="container"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          <h2 id="how-it-works-title">How to Convert Media in 3 Simple Steps</h2>
-          <p className="section-description">
-            Easily convert your videos and images to your desired format with our intuitive tool. No advanced skills required.
-          </p>
-          <div className="steps-grid" role="list">
-            <motion.article className="step-card" whileHover={{ scale: 1.05 }} role="listitem">
-              <div className="step-number" aria-label="Step 1">1</div>
-              <h3>Upload Your Media</h3>
-              <p>Upload any video or image file (MP4, PNG, etc.). Our system securely stores it for processing.</p>
-            </motion.article>
-            <motion.article className="step-card" whileHover={{ scale: 1.05 }} role="listitem">
-              <div className="step-number" aria-label="Step 2">2</div>
-              <h3>Select Target Format</h3>
-              <p>Choose your desired output format from a wide range of video and image formats.</p>
-            </motion.article>
-            <motion.article className="step-card" whileHover={{ scale: 1.05 }} role="listitem">
-              <div className="step-number" aria-label="Step 3">3</div>
-              <h3>Convert & Download</h3>
-              <p>Convert your media and download the high-quality file instantly.</p>
-            </motion.article>
-          </div>
-        </motion.div>
-      </section>
+      {success && (
+        <div style={{
+          position: 'fixed',
+          bottom: '24px',
+          right: '24px',
+          background: '#d1fae5',
+          color: '#059669',
+          padding: '16px 24px',
+          borderRadius: '12px',
+          boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          maxWidth: '400px',
+          zIndex: 1000,
+          animation: 'slideIn 0.3s ease-out'
+        }}>
+          <FaCheckCircle size={20} />
+          <span style={{ fontWeight: 600 }}>{success}</span>
+        </div>
+      )}
 
-      <section className="features-section" id="features" role="region" aria-labelledby="features-title">
-        <motion.div
-          className="container"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          <h2 id="features-title">Why Choose Our Media Converter?</h2>
-          <p className="section-description">
-            Convert videos and images to various formats with ease and precision. No expensive software needed.
-          </p>
-          <div className="features-grid" role="list">
-            <motion.article className="feature-card" whileHover={{ scale: 1.05 }} role="listitem">
-              <span className="feature-icon" aria-hidden="true">⚡</span>
-              <h3>Fast Conversion</h3>
-              <p>Convert your media in seconds using our optimized processing pipeline.</p>
-            </motion.article>
-            <motion.article className="feature-card" whileHover={{ scale: 1.05 }} role="listitem">
-              <span className="feature-icon" aria-hidden="true">🎨</span>
-              <h3>Multiple Formats</h3>
-              <p>Support for a wide range of video and image formats for all your needs.</p>
-            </motion.article>
-            <motion.article className="feature-card" whileHover={{ scale: 1.05 }} role="listitem">
-              <span className="feature-icon" aria-hidden="true">🆓</span>
-              <h3>Free Access</h3>
-              <p>Unlimited free usage with full commercial rights. No watermarks.</p>
-            </motion.article>
-            <motion.article className="feature-card" whileHover={{ scale: 1.05 }} role="listitem">
-              <span className="feature-icon" aria-hidden="true">📱</span>
-              <h3>Mobile Optimized</h3>
-              <p>Convert media on any device with our responsive interface.</p>
-            </motion.article>
+      {isUploading && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0,0,0,0.7)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 9998
+        }}>
+          <div style={{
+            background: 'white',
+            borderRadius: '16px',
+            padding: '48px',
+            textAlign: 'center',
+            boxShadow: '0 20px 60px rgba(0,0,0,0.3)'
+          }}>
+            <FaSpinner className="spinner" size={48} color="#10b981" style={{
+              animation: 'spin 1s linear infinite'
+            }} />
+            <p style={{
+              marginTop: '24px',
+              fontSize: '18px',
+              fontWeight: 600,
+              color: '#1e293b'
+            }}>
+              Uploading file...
+            </p>
           </div>
-        </motion.div>
-      </section>
+        </div>
+      )}
 
-      <section className="use-cases-section" id="use-cases" role="region" aria-labelledby="use-cases-title">
-        <motion.div
-          className="container"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          <h2 id="use-cases-title">Perfect for Every Media Project</h2>
-          <p className="section-description">
-            Discover how creators and professionals use our media converter for their projects.
-          </p>
-          <div className="use-cases-grid" role="list">
-            <motion.article className="use-case-card" whileHover={{ scale: 1.03 }} role="listitem">
-              <h3>🎥 Social Media Content</h3>
-              <p>Convert videos and images for Instagram, TikTok, and YouTube compatibility.</p>
-            </motion.article>
-            <motion.article className="use-case-card" whileHover={{ scale: 1.03 }} role="listitem">
-              <h3>🎬 Film Production</h3>
-              <p>Convert media for films or documentaries to desired formats.</p>
-            </motion.article>
-            <motion.article className="use-case-card" whileHover={{ scale: 1.03 }} role="listitem">
-              <h3>💼 Educational Content</h3>
-              <p>Format tutorials and courses for optimal platform compatibility.</p>
-            </motion.article>
-            <motion.article className="use-case-card" whileHover={{ scale: 1.03 }} role="listitem">
-              <h3>🎨 Creative Projects</h3>
-              <p>Convert media for music videos, vlogs, or art projects with ease.</p>
-            </motion.article>
-          </div>
-        </motion.div>
-      </section>
-
-      <section className="testimonials-section" id="testimonials" role="region" aria-labelledby="testimonials-title">
-        <motion.div
-          className="container"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          <h2 id="testimonials-title">Trusted by Over 50,000+ Creators Worldwide</h2>
-          <p className="section-description">
-            Join thousands of satisfied users who rely on our media converter for their projects.
-          </p>
-          <div className="testimonials-grid" role="list">
-            <motion.blockquote className="testimonial-card" whileHover={{ scale: 1.05 }} role="listitem">
-              <p>"This tool made converting my videos for social media so easy!"</p>
-              <cite>– Sarah Kim, Content Creator</cite>
-              <div className="rating" aria-label="5 out of 5 stars">⭐⭐⭐⭐⭐</div>
-            </motion.blockquote>
-            <motion.blockquote className="testimonial-card" whileHover={{ scale: 1.05 }} role="listitem">
-              <p>"Perfect for my film projects. The format options are great."</p>
-              <cite>– Michael Chen, Filmmaker</cite>
-              <div className="rating" aria-label="5 out of 5 stars">⭐⭐⭐⭐⭐</div>
-            </motion.blockquote>
-            <motion.blockquote className="testimonial-card" whileHover={{ scale: 1.05 }} role="listitem">
-              <p>"Converting images for our courses was seamless. Highly recommend!"</p>
-              <cite>– Emma Watson, Educator</cite>
-              <div className="rating" aria-label="5 out of 5 stars">⭐⭐⭐⭐⭐</div>
-            </motion.blockquote>
-          </div>
-        </motion.div>
-      </section>
-
-      <section className="faq-section" id="faq" role="region" aria-labelledby="faq-title">
-        <motion.div
-          className="container"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          <h2 id="faq-title">Frequently Asked Questions</h2>
-          <div className="faq-grid" role="list">
-            <article className="faq-item" role="listitem">
-              <h3>What media formats are supported?</h3>
-              <p>We support videos (MP4, AVI, MOV, etc.) and images (PNG, JPG, etc.).</p>
-            </article>
-            <article className="faq-item" role="listitem">
-              <h3>Can I change the format after uploading?</h3>
-              <p>Yes, you can update the target format before conversion starts.</p>
-            </article>
-            <article className="faq-item" role="listitem">
-              <h3>Will the media quality be affected?</h3>
-              <p>Our tool maintains high-quality output using optimized encoding settings.</p>
-            </article>
-            <article className="faq-item" role="listitem">
-              <h3>Is it really free?</h3>
-              <p>Yes, our tool is completely free with no watermarks or usage limits.</p>
-            </article>
-          </div>
-        </motion.div>
-      </section>
-
-      <section className="cta-section" id="get-started" role="region" aria-labelledby="cta-title">
-        <motion.div
-          className="container"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          <h2 id="cta-title">Ready to Convert Your Media?</h2>
-          <p>Join over 50,000+ creators who trust our AI media converter. Start converting your media today - completely free!</p>
-          <button
-            className="cta-button"
-            onClick={() => {
-              if (!isLoggedIn) {
-                setShowLoginModal(true);
-              } else {
-                scrollToSection('hero');
-              }
-            }}
-            aria-label="Start using the free media converter"
-          >
-            {isLoggedIn ? 'Start Converting Media Now - Free!' : 'Login to Start Converting'}
-          </button>
-          <div className="cta-features">
-            <span>⚡ Fast conversion</span>
-            <span>🔒 Secure & private</span>
-          </div>
-        </motion.div>
-      </section>
-
+      {/* Login Modal */}
       {showLoginModal && (
-        <div className="modal-overlay">
-          <motion.div
-            className="login-modal"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3 }}
-          >
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.75)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 9999,
+          padding: '20px'
+        }}>
+          <div style={{
+            background: 'white',
+            borderRadius: '16px',
+            padding: '40px',
+            maxWidth: '450px',
+            width: '100%',
+            position: 'relative',
+            boxShadow: '0 20px 60px rgba(0,0,0,0.3)'
+          }}>
             <button
-              className="modal-close-button"
               onClick={() => setShowLoginModal(false)}
-              aria-label="Close login modal"
+              style={{
+                position: 'absolute',
+                top: '20px',
+                right: '20px',
+                background: 'none',
+                border: 'none',
+                fontSize: '24px',
+                cursor: 'pointer',
+                color: '#64748b',
+                padding: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '8px',
+                transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#f1f5f9';
+                e.currentTarget.style.color = '#1e293b';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'none';
+                e.currentTarget.style.color = '#64748b';
+              }}
             >
               <FaTimes />
             </button>
-            <div className="auth-container">
-              <div className="auth-header">
-                <h1>SCENITH</h1>
-                <p>Login to Continue</p>
-              </div>
-              {isLoggingIn && (
-                <div className="loading-overlay">
-                  <div className="spinner" />
-                  <p>Logging in...</p>
-                </div>
-              )}
-              {loginError && <div className="error-message">{loginError}</div>}
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  const formData = new FormData(e.currentTarget);
-                  handleLogin({
-                    email: formData.get('email') as string,
-                    password: formData.get('password') as string,
-                  });
-                }}
-                className="auth-form"
-              >
-                <div className="auth-input-label">
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder=" "
-                    className="auth-input"
-                    aria-label="Email address"
-                    disabled={isLoggingIn}
-                    required
-                  />
-                  <span>Email</span>
-                </div>
-                <div className="auth-input-label">
-                  <input
-                    type="password"
-                    name="password"
-                    placeholder=" "
-                    className="auth-input"
-                    aria-label="Password"
-                    disabled={isLoggingIn}
-                    required
-                  />
-                  <span>Password</span>
-                </div>
-                <button type="submit" className="cta-button auth-button" disabled={isLoggingIn}>
-                  {isLoggingIn ? 'Logging in...' : 'Login'}
-                </button>
-              </form>
-              <div className="divider">OR</div>
-              <div id="googleSignInButton" className="google-button"></div>
-              <p className="auth-link">
-                New to SCENITH? <a href="/register">Sign up</a>
+
+            <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+              <h1 style={{
+                fontSize: '32px',
+                fontWeight: 700,
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                marginBottom: '8px'
+              }}>
+                SCENITH
+              </h1>
+              <p style={{
+                fontSize: '16px',
+                color: '#64748b',
+                margin: 0
+              }}>
+                Login to Continue
               </p>
             </div>
-          </motion.div>
+
+            {isLoggingIn && (
+              <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: 'rgba(255, 255, 255, 0.95)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '16px',
+                zIndex: 10
+              }}>
+                <FaSpinner className="spinner" size={32} color="#10b981" style={{
+                  animation: 'spin 1s linear infinite'
+                }} />
+                <p style={{
+                  marginTop: '16px',
+                  fontSize: '16px',
+                  fontWeight: 600,
+                  color: '#1e293b'
+                }}>
+                  Logging in...
+                </p>
+              </div>
+            )}
+
+            {loginError && (
+              <div style={{
+                background: '#fee2e2',
+                color: '#dc2626',
+                padding: '14px 16px',
+                borderRadius: '10px',
+                marginBottom: '20px',
+                fontSize: '14px',
+                fontWeight: 600,
+                border: '2px solid #fecaca'
+              }}>
+                {loginError}
+              </div>
+            )}
+
+            {loginSuccess && (
+              <div style={{
+                background: '#d1fae5',
+                color: '#059669',
+                padding: '14px 16px',
+                borderRadius: '10px',
+                marginBottom: '20px',
+                fontSize: '14px',
+                fontWeight: 600,
+                border: '2px solid #a7f3d0'
+              }}>
+                {loginSuccess}
+              </div>
+            )}
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const formData = new FormData(e.currentTarget);
+                handleLogin({
+                  email: formData.get('email') as string,
+                  password: formData.get('password') as string,
+                });
+              }}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '20px'
+              }}
+            >
+              <div>
+                <label style={{
+                  display: 'block',
+                  marginBottom: '8px',
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  color: '#475569'
+                }}>
+                  Email
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  required
+                  disabled={isLoggingIn}
+                  style={{
+                    width: '100%',
+                    padding: '14px 16px',
+                    border: '2px solid #e2e8f0',
+                    borderRadius: '10px',
+                    fontSize: '15px',
+                    transition: 'all 0.2s',
+                    background: 'white'
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#10b981';
+                    e.target.style.boxShadow = '0 0 0 3px #d1fae520';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = '#e2e8f0';
+                    e.target.style.boxShadow = 'none';
+                  }}
+                />
+              </div>
+
+              <div>
+                <label style={{
+                  display: 'block',
+                  marginBottom: '8px',
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  color: '#475569'
+                }}>
+                  Password
+                </label>
+                <input
+                  type="password"
+                  name="password"
+                  required
+                  disabled={isLoggingIn}
+                  style={{
+                    width: '100%',
+                    padding: '14px 16px',
+                    border: '2px solid #e2e8f0',
+                    borderRadius: '10px',
+                    fontSize: '15px',
+                    transition: 'all 0.2s',
+                    background: 'white'
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#10b981';
+                    e.target.style.boxShadow = '0 0 0 3px #d1fae520';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = '#e2e8f0';
+                    e.target.style.boxShadow = 'none';
+                  }}
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoggingIn}
+                style={{
+                  padding: '16px',
+                  background: 'linear-gradient(135deg, #10b981, #059669)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '10px',
+                  fontSize: '16px',
+                  fontWeight: 700,
+                  cursor: isLoggingIn ? 'not-allowed' : 'pointer',
+                  opacity: isLoggingIn ? 0.7 : 1,
+                  transition: 'all 0.3s',
+                  boxShadow: '0 4px 16px rgba(16, 185, 129, 0.3)'
+                }}
+                onMouseEnter={(e) => {
+                  if (!isLoggingIn) {
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.boxShadow = '0 6px 20px rgba(16, 185, 129, 0.4)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isLoggingIn) {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 4px 16px rgba(16, 185, 129, 0.3)';
+                  }
+                }}
+              >
+                {isLoggingIn ? 'Logging in...' : 'Login'}
+              </button>
+            </form>
+
+            <div style={{
+              textAlign: 'center',
+              margin: '24px 0',
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '16px'
+            }}>
+              <div style={{ flex: 1, height: '1px', background: '#e2e8f0' }}></div>
+              <span style={{ color: '#64748b', fontSize: '14px', fontWeight: 600 }}>OR</span>
+              <div style={{ flex: 1, height: '1px', background: '#e2e8f0' }}></div>
+            </div>
+
+            <div id="googleSignInButton" style={{
+              display: 'flex',
+              justifyContent: 'center',
+              marginBottom: '24px'
+            }}></div>
+
+            <p style={{
+              textAlign: 'center',
+              margin: 0,
+              fontSize: '14px',
+              color: '#64748b'
+            }}>
+              New to SCENITH?{' '}
+              <a href="/register" style={{
+                color: '#10b981',
+                textDecoration: 'none',
+                fontWeight: 700
+              }}>
+                Sign up
+              </a>
+            </p>
+          </div>
         </div>
       )}
+
+      <style jsx>{`
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        @keyframes slideIn {
+          from {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+        @media (max-width: 768px) {
+          h1 {
+            font-size: 24px !important;
+          }
+          h2 {
+            font-size: 28px !important;
+          }
+          h3 {
+            font-size: 16px !important;
+          }
+        }
+      `}</style>
     </div>
   );
 };
 
-export default MediaConversionClient;
+export default MediaConversionWorkspace;

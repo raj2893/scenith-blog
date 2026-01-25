@@ -127,30 +127,65 @@ interface Project {
 }
 
 const googleFonts = [
-  // System fonts (already in OS)
-  'Arial', 'Times New Roman', 'Courier New', 'Calibri', 'Verdana',
-  'Georgia', 'Comic Sans MS', 'Impact', 'Tahoma',
-
-  // Your uploaded fonts (from /public/fonts)
+  'Noto Sans Devanagari',
   'Alumni Sans Pinstripe',
-  'Lexend Giga', 'Lexend Giga Black', 'Lexend Giga Bold',
-  'Montserrat Alternates', 'Montserrat Alternates Black', 'Montserrat Alternates Medium Italic',
-  'Noto Sans Mono', 'Noto Sans Mono Bold',
+  'Amatic SC',
+  'Amatic SC:700',
+  'Arimo',
+  'Arimo:700',
+  'Arimo:700italic',
+  'Arimo:italic',
+  'Barriecito',
+  'Barrio',
+  'Birthstone',
+  'Bungee Hairline',
+  'Butcherman',
+  'Carlito',
+  'Carlito:700',
+  'Carlito:700italic',
+  'Carlito:italic',
+  'Comic Neue',
+  'Comic Neue:700',
+  'Comic Neue:700italic',
+  'Comic Neue:italic',
+  'Courier Prime',
+  'Courier Prime:700',
+  'Courier Prime:700italic',
+  'Courier Prime:italic',
+  'Doto Black',
+  'Doto ExtraBold',
+  'Doto Rounded Bold',
+  'Fascinate Inline',
+  'Freckle Face',
+  'Fredericka the Great',
+  'Gelasio',
+  'Gelasio:700',
+  'Gelasio:700italic',
+  'Gelasio:italic',
+  'Imperial Script',
+  'Kings',
+  'Kirang Haerang',
+  'Lavishly Yours',
+  'Lexend Giga',
+  'Lexend Giga:900',
+  'Lexend Giga:700',
+  'Montserrat Alternates',
+  'Montserrat Alternates:900',
+  'Montserrat Alternates:500italic',
+  'Mountains of Christmas',
+  'Mountains of Christmas:700',
+  'Noto Sans Mono',
+  'Noto Sans Mono:700',
   'Poiret One',
-  'Arimo', 'Arimo Bold', 'Arimo Bold Italic', 'Arimo Italic',
-  'Carlito', 'Carlito Bold', 'Carlito Bold Italic', 'Carlito Italic',
-  'Comic Neue', 'Comic Neue Bold', 'Comic Neue Bold Italic', 'Comic Neue Italic',
-  'Courier Prime', 'Courier Prime Bold', 'Courier Prime Bold Italic', 'Courier Prime Italic',
-  'Gelasio', 'Gelasio Bold', 'Gelasio Bold Italic', 'Gelasio Italic',
-  'Tinos', 'Tinos Bold', 'Tinos Bold Italic', 'Tinos Italic',
-  'Amatic SC', 'Amatic SC Bold',
-  'Barriecito', 'Barrio', 'Birthstone', 'Bungee Hairline', 'Butcherman',
-  'Doto Black', 'Doto ExtraBold', 'Doto Rounded Bold',
-  'Fascinate Inline', 'Freckle Face', 'Fredericka the Great',
-  'Imperial Script', 'Kings', 'Kirang Haerang', 'Lavishly Yours',
-  'Mountains of Christmas', 'Mountains of Christmas Bold',
-  'Rampart One', 'Rubik Wet Paint',
-  'Tangerine', 'Tangerine Bold', 'Yesteryear',
+  'Rampart One',
+  'Rubik Wet Paint',
+  'Tangerine',
+  'Tangerine:700',
+  'Tinos',
+  'Tinos:700',
+  'Tinos:700italic',
+  'Tinos:italic',
+  'Yesteryear',
 ];
 
 interface EditorCanvasProps {
@@ -160,6 +195,31 @@ interface EditorCanvasProps {
   canvasWidth?: number;
   canvasHeight?: number;
 }
+
+const parseFont = (fontFamily: string) => {
+  let weight: string = 'normal';
+  let style: string = 'normal';
+  let family: string = fontFamily;
+
+  if (fontFamily.includes(':700') || fontFamily.includes('Bold')) {
+    weight = 'bold';
+    family = fontFamily.replace(/:700| Bold/g, '');
+  }
+  if (fontFamily.includes(':900') || fontFamily.includes('Black')) {
+    weight = '900';
+    family = fontFamily.replace(/:900| Black/g, '');
+  }
+  if (fontFamily.includes('ExtraBold')) {
+    weight = '800';
+    family = fontFamily.replace(' ExtraBold', '');
+  }
+  if (fontFamily.includes(':italic') || fontFamily.includes('Italic')) {
+    style = 'italic';
+    family = family.replace(/:italic| Italic/g, '');
+  }
+
+  return { family, weight, style };
+};
 
 const EditorCanvas: React.FC<EditorCanvasProps> = ({
   projectId,
@@ -491,7 +551,6 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
   }, [canvasWidth, canvasHeight]);
 
   useEffect(() => {
-    // Only load WebFont in the browser
     if (typeof window !== 'undefined') {
       import('webfontloader').then((WebFont) => {
         WebFont.load({
@@ -501,7 +560,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
         });
       });
     }
-  }, []);  
+  }, []);
 
   // Initialize design - either from project API or from props (template mode)
   useEffect(() => {
@@ -3021,9 +3080,35 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
                           <select
                             value={selectedLayer.fontFamily}
                             onChange={(e) => updateLayer(selectedLayer.id, { fontFamily: e.target.value })}
+                            style={{
+                              fontFamily: parseFont(selectedLayer.fontFamily || 'Arial').family,
+                              fontWeight: parseFont(selectedLayer.fontFamily || 'Arial').weight,
+                              fontStyle: parseFont(selectedLayer.fontFamily || 'Arial').style,
+                            }}
                           >
+                            {/* Standard system fonts - same as subtitle */}
+                            <option value="Arial" style={{ fontFamily: 'Arial' }}>Arial</option>
+                            <option value="Times New Roman" style={{ fontFamily: 'Times New Roman' }}>Times New Roman</option>
+                            <option value="Courier New" style={{ fontFamily: 'Courier New' }}>Courier New</option>
+                            <option value="Calibri" style={{ fontFamily: 'Calibri' }}>Calibri</option>
+                            <option value="Verdana" style={{ fontFamily: 'Verdana' }}>Verdana</option>
+                            <option value="Georgia" style={{ fontFamily: 'Georgia' }}>Georgia</option>
+                            <option value="Comic Sans MS" style={{ fontFamily: 'Comic Sans MS' }}>Comic Sans MS</option>
+                            <option value="Impact" style={{ fontFamily: 'Impact' }}>Impact</option>
+                            <option value="Tahoma" style={{ fontFamily: 'Tahoma' }}>Tahoma</option>
+                            <option value="Noto Sans Devanagari" style={{ fontFamily: 'Noto Sans Devanagari' }}>Noto Sans Devanagari (Hindi)</option>
+
+                            {/* Google Fonts */}
                             {googleFonts.map((font) => (
-                              <option key={font} value={font} style={{ fontFamily: font }}>
+                              <option
+                                key={font}
+                                value={font}
+                                style={{
+                                  fontFamily: parseFont(font).family,
+                                  fontWeight: parseFont(font).weight,
+                                  fontStyle: parseFont(font).style,
+                                }}
+                              >
                                 {font}
                               </option>
                             ))}
