@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import AIVoiceGeneratorClient from './AIVoiceGeneratorClient';
 
 export const metadata: Metadata = {
-  title: 'AI Voice Generator for YouTube & Marketing (Natural Voices) | SCENITH',
+  title: 'Free AI Voice Generator (Hindi + English) – 40+ Natural Voices | Scenith',
   description: 'Generate realistic AI voices from text instantly for free. Convert text to speech in 100+ languages with natural-sounding voices. Perfect for videos, podcasts, and more - no signup required!',
   keywords: [
     'AI voice generator',
@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     title: 'AI Voice Generator for YouTube & Marketing (Natural Voices) - Instant Text to Speech Online',
     description: 'Create lifelike AI voices from your text in seconds. Free text-to-speech tool supporting multiple languages and voices for content creators, educators, and businesses.',
     type: 'website',
+    url: 'https://scenith.in/tools/ai-voice-generation',
     images: [
       {
         url: '/images/og-ai-voice-generator-hero.jpg',
@@ -39,6 +40,7 @@ export const metadata: Metadata = {
     title: 'AI Voice Generator for YouTube & Marketing (Natural Voices) - Text to Speech in Seconds',
     description: 'Transform text into natural AI voices effortlessly. Free online TTS tool for podcasts, videos, and presentations - download MP3 instantly!',
     images: ['/images/twitter-card-ai-voice.jpg'],
+    creator: '@scenith_1902',
   },
   robots: {
     index: true,

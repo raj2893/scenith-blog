@@ -4,7 +4,6 @@ import React, { useState, useEffect, useRef, JSX, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import "../../../../../../../styles/tools/EditorCanvas.css";
-import TemplateGallery from "../../../../../components/TemplateGallery";
 import {
   FaSave,
   FaDownload,
@@ -1569,7 +1568,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
           }
         }
       
-        const newFontSize = Math.max(12, Math.round(startFontSize + fontSizeDelta * 0.5));
+      const newFontSize = Math.max(12, Math.round(startFontSize + fontSizeDelta * 0.5));
     
         // Calculate position for snapping
         const testLayer = {
@@ -1582,10 +1581,19 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
         const detectedGuides = detectAlignmentGuides(testLayer, layers);
         setGuides(detectedGuides);
     
+        const text = layer.text || "";
+        const estimatedTextWidth = text.length * newFontSize * 0.6;
+        const estimatedTextHeight = newFontSize * 1.5;
+    
         updateLayer(selectedLayerIds[0], {
           fontSize: newFontSize,
           x: isAltPressed ? resizeStartState.x : newX,
-          y: isAltPressed ? resizeStartState.y : newY
+          y: isAltPressed ? resizeStartState.y : newY,
+          // Update background dimensions if they exist
+          ...(layer.backgroundWidth ? {
+            backgroundWidth: Math.max(estimatedTextWidth + 20, 50),
+            backgroundHeight: Math.max(estimatedTextHeight + 10, 30)
+          } : {})
         });
         return;
       }
@@ -3976,7 +3984,25 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
                         <textarea
                           ref={textInputRef}
                           value={layer.text}
-                          onChange={(e) => updateLayer(layer.id, { text: e.target.value })}
+                          onChange={(e) => {
+                            const newText = e.target.value;
+                            const fontSize = layer.fontSize || 32;
+                            // Count lines for better height calculation
+                            const lines = newText.split('\n');
+                            const lineCount = lines.length;
+                            const maxLineLength = Math.max(...lines.map(line => line.length), 1);
+                            
+                            const estimatedTextWidth = maxLineLength * fontSize * 0.6;
+                            const estimatedTextHeight = fontSize * 1.5 * lineCount;
+
+                            updateLayer(layer.id, { 
+                              text: newText,
+                              ...(layer.backgroundWidth ? {
+                                backgroundWidth: Math.max(estimatedTextWidth + 20, 50),
+                                backgroundHeight: Math.max(estimatedTextHeight + 10, 30)
+                              } : {})
+                            });
+                          }}
                           onBlur={() => setEditingLayerId(null)}
                           onSelect={(e) => {
                             const target = e.target as HTMLTextAreaElement;
@@ -4044,7 +4070,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
                                        layer.verticalAlign === "bottom" ? "flex-end" : "center",
                             justifyContent: layer.textAlign === "center" ? "center" : 
                                            layer.textAlign === "right" ? "flex-end" : "flex-start",
-                            whiteSpace: "nowrap",
+                            whiteSpace: layer.wordWrap ? "pre-wrap" : "pre",
                             width: layer.backgroundWidth ? `${layer.backgroundWidth}px` : "auto",
                             height: layer.backgroundHeight ? `${layer.backgroundHeight}px` : "auto",
                             minWidth: "max-content",
@@ -4302,8 +4328,10 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
                     </>
                   )}
 
-                  {selectedLayerId === layer.id && !layer.locked && layer.type === 'text' && 
-                   layer.backgroundWidth && layer.backgroundHeight && (layer.backgroundOpacity ?? 0) > 0 && (
+                  {selectedLayerIds.length === 1 &&
+                   selectedLayerIds[0] === layer.id &&
+                   !layer.locked &&
+                   layer.type === 'text' && (
                     <>
                       <div 
                         className="bg-resize-handle bg-n" 

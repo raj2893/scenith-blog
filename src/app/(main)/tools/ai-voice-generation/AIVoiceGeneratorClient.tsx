@@ -566,7 +566,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
     }
     if (aiVoiceText.length > getMaxCharsPerRequest()) {
       const roleBasedLimit = ttsUsage?.role === 'STUDIO' ? 5000 : 
-                            ttsUsage?.role === 'CREATOR' ? 2500 : 250;
+                            ttsUsage?.role === 'CREATOR' ? 2500 : 350;
       const limitType = ttsUsage?.daily.remaining !== -1 && 
                         (ttsUsage?.daily.remaining ?? 0) < (ttsUsage?.monthly.remaining ?? 0)
         ? 'daily' 
@@ -769,7 +769,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
     // Determine role-based limit
     const roleBasedLimit = ttsUsage.role === 'ADMIN' ? 10000 :
                           ttsUsage.role === 'STUDIO' ? 5000 : 
-                          ttsUsage.role === 'CREATOR' ? 2500 : 250;
+                          ttsUsage.role === 'CREATOR' ? 2500 : 350;
 
     const dailyRemaining = ttsUsage.daily.remaining;
     const monthlyRemaining = ttsUsage.monthly.remaining;
@@ -831,18 +831,13 @@ return (
           '@type': 'SoftwareApplication',
           name: 'Scenith AI Voice Generator',
           description: 'Free AI-powered text-to-speech tool for generating natural-sounding voices from text in multiple languages.',
-          url: typeof window !== 'undefined' ? window.location.href : '/tools/ai-voice-generation',
+          url: 'https://scenith.in/tools/ai-voice-generation',
           applicationCategory: 'MultimediaApplication',
           operatingSystem: 'Web Browser',
           offers: {
             '@type': 'Offer',
             price: '0',
             priceCurrency: 'USD',
-          },
-          aggregateRating: {
-            '@type': 'AggregateRating',
-            ratingValue: '4.7',
-            reviewCount: '8562',
           },
           author: {
             '@type': 'Organization',
@@ -865,7 +860,7 @@ return (
             {
               '@type': 'HowToStep',
               name: 'Enter Your Text',
-              text: 'Type or paste your script into the text area. You can use up to 5,000 characters per request.',
+              text: 'Type or paste your script into the text area. You can use up to 350 characters per request.',
               position: 1
             },
             {
@@ -922,7 +917,7 @@ return (
               name: 'How many characters can I generate for free?',
               acceptedAnswer: {
                 '@type': 'Answer',
-                text: 'The free BASIC plan includes 3,000 characters per month with a daily limit of 7,00 characters. CREATOR plan offers 50,000 characters/month with 5,000 characters/day. STUDIO plan provides 150,000 characters/month with no daily limits.'
+                text: 'The free BASIC plan includes 3,500 characters per month with a daily limit of 1,000 characters. CREATOR plan offers 50,000 characters/month with 5,000 characters/day. STUDIO plan provides 150,000 characters/month with no daily limits.'
               }
             }
           ]
@@ -965,6 +960,16 @@ return (
                 aria-label="Text input for AI voice generation"
                 maxLength={getMaxCharsPerRequest()}
               />
+
+              {isLoggedIn && (
+                <div className="character-count-container">
+                  <p className="character-count">
+                    <span className={characterCount > getMaxCharsPerRequest() ? 'count-exceeded' : characterCount > getMaxCharsPerRequest() * 0.9 ? 'count-warning' : ''}>
+                      {characterCount.toLocaleString()}
+                    </span> / {getMaxCharsPerRequest().toLocaleString()} characters per request
+                  </p>
+                </div>
+              )}              
 
               
               <div className="emotion-control-section">
@@ -1464,7 +1469,7 @@ return (
                 <li>Test multiple versions for A/B testing</li>
               </ul>
               <p>
-                Each regeneration uses your remaining character quota. <strong>Free users get 3,000 characters/month</strong> (700/day). Upgrade for unlimited generations and access to premium voices.
+                Each regeneration uses your remaining character quota. <strong>Free users get 3,500 characters/month</strong> (1,000/day). Upgrade for unlimited generations and access to premium voices.
               </p>
             </div>
           </article>
@@ -2409,7 +2414,7 @@ return (
           <article className="feature-card" role="listitem">
             <span className="feature-icon" aria-hidden="true">🆓</span>
             <h3>Unlimited Free Access</h3>
-            <p>13,500 characters monthly included free. No subscriptions, no watermarks, full commercial rights. Upgrade for unlimited generation and premium voices.</p>
+            <p>3,500 characters monthly included free. No subscriptions, no watermarks, full commercial rights. Upgrade for unlimited generation and premium voices.</p>
           </article>
           <article className="feature-card" role="listitem">
             <span className="feature-icon" aria-hidden="true">🌍</span>
@@ -2613,7 +2618,7 @@ return (
           </article>
           <article className="faq-item" role="listitem">
             <h3>How many characters can I generate for free?</h3>
-            <p>The free BASIC plan includes 3,000 characters per month with a daily limit of 700 characters. CREATOR plan offers 50,000 characters/month with 5,000 characters/day. STUDIO plan provides 150,000 characters/month with no daily limits. Each request supports up to 5,000 characters.</p>
+            <p>The free BASIC plan includes 3,500 characters per month with a daily limit of 1,000 characters. CREATOR plan offers 50,000 characters/month with 5,000 characters/day. STUDIO plan provides 150,000 characters/month with no daily limits. Each request supports up to 5,000 characters.</p>
           </article>
           <article className="faq-item" role="listitem">
             <h3>Can I adjust voice speed, pitch, or tone?</h3>
