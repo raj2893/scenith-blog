@@ -139,7 +139,6 @@ const googleFonts = [
   'Barrio',
   'Birthstone',
   'Bungee Hairline',
-  'Butcherman',
   'Carlito',
   'Carlito:700',
   'Carlito:700italic',
@@ -152,9 +151,6 @@ const googleFonts = [
   'Courier Prime:700',
   'Courier Prime:700italic',
   'Courier Prime:italic',
-  'Doto Black',
-  'Doto ExtraBold',
-  'Doto Rounded Bold',
   'Fascinate Inline',
   'Freckle Face',
   'Fredericka the Great',
@@ -167,11 +163,11 @@ const googleFonts = [
   'Kirang Haerang',
   'Lavishly Yours',
   'Lexend Giga',
-  'Lexend Giga:900',
   'Lexend Giga:700',
+  'Lexend Giga:900',
   'Montserrat Alternates',
-  'Montserrat Alternates:900',
   'Montserrat Alternates:500italic',
+  'Montserrat Alternates:900',
   'Mountains of Christmas',
   'Mountains of Christmas:700',
   'Noto Sans Mono',
@@ -201,6 +197,7 @@ const parseFont = (fontFamily: string) => {
   let style: string = 'normal';
   let family: string = fontFamily;
 
+  // Google Fonts variant suffixes first (most specific)
   if (fontFamily.includes(':700') || fontFamily.includes('Bold')) {
     weight = 'bold';
     family = fontFamily.replace(/:700| Bold/g, '');
@@ -213,6 +210,16 @@ const parseFont = (fontFamily: string) => {
     weight = '800';
     family = fontFamily.replace(' ExtraBold', '');
   }
+  if (fontFamily.includes('Medium')) {
+    weight = '500';
+    family = fontFamily.replace(' Medium', '');
+  }
+  if (fontFamily.includes('Rounded Bold')) {
+    weight = 'bold';
+    family = fontFamily.replace(' Rounded Bold', '');
+  }
+
+  // Italic / oblique
   if (fontFamily.includes(':italic') || fontFamily.includes('Italic')) {
     style = 'italic';
     family = family.replace(/:italic| Italic/g, '');
@@ -3086,7 +3093,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
                               fontStyle: parseFont(selectedLayer.fontFamily || 'Arial').style,
                             }}
                           >
-                            {/* Standard system fonts - same as subtitle */}
+                            {/* Standard system fonts – same as SubtitleEditorPanel */}
                             <option value="Arial" style={{ fontFamily: 'Arial' }}>Arial</option>
                             <option value="Times New Roman" style={{ fontFamily: 'Times New Roman' }}>Times New Roman</option>
                             <option value="Courier New" style={{ fontFamily: 'Courier New' }}>Courier New</option>
@@ -3096,18 +3103,16 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
                             <option value="Comic Sans MS" style={{ fontFamily: 'Comic Sans MS' }}>Comic Sans MS</option>
                             <option value="Impact" style={{ fontFamily: 'Impact' }}>Impact</option>
                             <option value="Tahoma" style={{ fontFamily: 'Tahoma' }}>Tahoma</option>
-                            <option value="Noto Sans Devanagari" style={{ fontFamily: 'Noto Sans Devanagari' }}>Noto Sans Devanagari (Hindi)</option>
+                            <option value="Noto Sans Devanagari" style={{ fontFamily: 'Noto Sans Devanagari' }}>
+                              Noto Sans Devanagari (Hindi)
+                            </option>
 
-                            {/* Google Fonts */}
+                            {/* Google Fonts – exactly the same list as subtitle */}
                             {googleFonts.map((font) => (
                               <option
                                 key={font}
                                 value={font}
-                                style={{
-                                  fontFamily: parseFont(font).family,
-                                  fontWeight: parseFont(font).weight,
-                                  fontStyle: parseFont(font).style,
-                                }}
+                                style={{ fontFamily: font }}   // ← use raw name like subtitle
                               >
                                 {font}
                               </option>
