@@ -86,13 +86,41 @@ const ImageEditingClient: React.FC = () => {
     if (!selectedTemplate) return;
     
     try {
+      // Parse the template's design JSON to get canvas dimensions
+      const templateDesign = JSON.parse(selectedTemplate.designJson);
+      const firstPage = templateDesign.pages?.[0];
+      
+      // Create a new project with the template's design
       const response = await axios.post(
-        `${API_BASE_URL}/api/image-editor/projects/from-template/${selectedTemplate.id}`,
-        {},
+        `${API_BASE_URL}/api/image-editor/projects`,
+        {
+          projectName: `${selectedTemplate.templateName} Copy`,
+          canvasWidth: firstPage?.canvas?.width || selectedTemplate.canvasWidth || 1080,
+          canvasHeight: firstPage?.canvas?.height || selectedTemplate.canvasHeight || 1080,
+          canvasBackgroundColor: firstPage?.canvas?.backgroundColor || "#FFFFFF",
+        },
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
+      
+      // IMPORTANT: Update the project with the template's designJson
+      await axios.put(
+        `${API_BASE_URL}/api/image-editor/projects/${response.data.id}`,
+        { designJson: selectedTemplate.designJson },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+      
+      // Increment template usage count
+      await axios.get(
+        `${API_BASE_URL}/api/image-editor/templates/${selectedTemplate.id}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+      
       setProjects([response.data, ...projects]);
       setShowTemplateModal(false);
       setSelectedTemplate(null);
