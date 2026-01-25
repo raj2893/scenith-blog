@@ -358,6 +358,23 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
   }, []);  
 
   useEffect(() => {
+    const checkMobile = () => {
+      const isMobileDevice = window.innerWidth <= 768;
+      setIsMobile(isMobileDevice);
+      
+      // Set default zoom for mobile
+      if (isMobileDevice && scale === 1) {
+        setScale(0.25); // 35% zoom for mobile
+      }
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);  
+
+  useEffect(() => {
     const handleTouchMoveGlobal = (e: TouchEvent) => {
       if (resizeHandle || isRotatingLayer || cropHandle || isResizingBackground) {
         e.preventDefault();
@@ -1939,7 +1956,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
   const handleTouchStart = (e: React.TouchEvent) => {
     // Don't prevent default on the canvas container itself - let layer touches bubble up
     if (e.touches.length === 2) {
-      // Pinch zoom
+      // Pinch zoom - allow on canvas too
       e.preventDefault();
       const touch1 = e.touches[0];
       const touch2 = e.touches[1];
@@ -1954,6 +1971,8 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
       });
       setInitialScale(scale);
       setTouchAction('none');
+      setIsPanning(false); // Ensure we're not panning
+      setIsDragging(false); // Ensure we're not dragging
     } else if (e.touches.length === 1 && isSpacePressed) {
       // Pan mode
       e.preventDefault();
@@ -1976,8 +1995,9 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
   
   const handleTouchMove = (e: React.TouchEvent) => {
     if (e.touches.length === 2 && touchStart) {
-      // Pinch zoom
+      // Pinch zoom - works anywhere
       e.preventDefault();
+      e.stopPropagation(); // Stop event bubbling
       const touch1 = e.touches[0];
       const touch2 = e.touches[1];
       const distance = Math.hypot(
@@ -1987,6 +2007,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
       const scaleChange = distance / touchStart.distance;
       const newScale = Math.min(Math.max(0.1, initialScale * scaleChange), 3);
       setScale(newScale);
+      return; // Exit early, don't process other touch actions
     } else if (e.touches.length === 1 && isPanning) {
       // Pan canvas
       e.preventDefault();

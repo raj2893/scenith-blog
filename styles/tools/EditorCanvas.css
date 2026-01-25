@@ -28,7 +28,7 @@ html, body {
   justify-content: space-between;
   padding: 0 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  z-index: 100;
+  z-index: 250;
 }
 
 .editor-toolbar h2 {
@@ -103,7 +103,7 @@ html, body {
   min-width: 180px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
   border-radius: 8px;
-  z-index: 1000;
+  z-index: 10000;
   overflow: hidden;
 }
 
@@ -1770,12 +1770,6 @@ body {
   pointer-events: none;
 }
 
-/* Reuse the same toggle button style (already exists for left panel) */
-.right-toggle {
-  left: -28px;
-  border-radius: 8px 0 0 8px;
-}
-
 .layers-slim-panel {
   padding: 16px 8px;
   width: 100%;
@@ -2060,24 +2054,21 @@ body {
     min-height: 50px;
     padding: 8px 12px;
     flex-wrap: wrap;
+    justify-content: space-between;
   }
   
   .editor-toolbar h2 {
-    font-size: 1rem;
-    order: 1;
-    flex: 0 0 100%;
-    margin-bottom: 8px;
-    text-align: left;
+    display: none;
   }
   
   .back-btn {
-    order: 2;
+    order: 1;
     font-size: 0.8rem;
     padding: 6px 10px;
   }
   
   .toolbar-actions {
-    order: 3;
+    order: 2;
     gap: 6px;
     flex-wrap: wrap;
   }
@@ -2155,14 +2146,6 @@ body {
     font-size: 0.8rem;
   }
   
-  /* Pages panel adjustments */
-  .pages-panel {
-    left: 0;
-    right: 0;
-    height: 90px;
-    padding: 8px 12px;
-  }
-  
   .pages-list {
     gap: 8px;
   }
@@ -2178,9 +2161,14 @@ body {
   }
   
   .pages-toggle {
-    top: -28px;
-    width: 50px;
-    height: 28px;
+    width: 45px;
+    height: 24px;
+    top: -24px;
+  }
+  
+  .pages-toggle svg {
+    width: 16px;
+    height: 16px;
   }
   
   /* Property adjustments */
@@ -2290,6 +2278,51 @@ body {
   .template-thumbnail > div:last-child {
     font-size: 0.85rem;
   }  
+
+  .right-toggle {
+    width: 24px;
+    height: 40px;
+    font-size: 0.9rem;
+  }
+  
+  .right-toggle svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .right-sidebar-new {
+    width: 50px; /* Reduced from 70px */
+  }
+  
+  .right-sidebar-new .layers-slim-panel {
+    padding: 12px 4px; /* Reduced padding */
+  }  
+
+  .layers-icon-btn {
+    padding: 10px 4px; /* Reduced padding */
+    border-radius: 8px;
+  }
+  
+  .layer-stack-icon {
+    width: 28px; /* Reduced from 36px */
+  }
+  
+  .layer-rect {
+    height: 4px; /* Reduced from 6px */
+  }
+  
+  .layers-icon-btn span {
+    font-size: 0.75rem; /* Smaller font */
+    padding: 2px 6px; /* Smaller padding */
+  }
+  
+  /* Adjust pages panel to account for smaller right sidebar */
+  .pages-panel {
+    left: 0;
+    right: 50px; /* Changed from 70px to match new width */
+    height: 90px;
+    padding: 8px 12px;
+  }  
 }
 
 /* Mobile portrait (480px) */
@@ -2394,6 +2427,11 @@ body {
     height: 26px;
     top: -26px;
   }
+
+  .pages-toggle svg {
+    width: 4px;
+    height: 4px;
+  }  
   
   /* Properties */
   .property-group {
@@ -2606,6 +2644,31 @@ body {
 
   .template-thumbnail:hover {
     transform: translateY(-4px) scale(1.02);
+  }  
+
+  .right-sidebar-new {
+    width: 45px;
+  }
+  
+  .layers-icon-btn {
+    padding: 8px 3px;
+  }
+  
+  .layer-stack-icon {
+    width: 24px;
+  }
+  
+  .layer-rect {
+    height: 3px;
+  }
+  
+  .layers-icon-btn span {
+    font-size: 0.7rem;
+    padding: 1px 4px;
+  }
+  
+  .pages-panel {
+    right: 45px;
   }  
 }
 
