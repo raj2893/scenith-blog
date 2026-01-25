@@ -770,129 +770,125 @@ export default function RepublicDayTemplatePage() {
         </div>
       </section>
 
-
-                 {/* Related Resources */}
-                 <section className="resources-section">
-                   <div className="container">
-                     <div className="section-header">
-                       <h2>More Resources for Your Republic Day Campaign</h2>
-                       <p>Everything you need for successful social media marketing</p>
-                     </div>
-                     <div className="resources-grid">
-                       {[
-                         {
-                           title: 'Republic Day Caption Ideas',
-                           desc: '50+ ready-to-use captions for Instagram, Facebook, and LinkedIn with relevant hashtags and emojis.',
-                           link: '#'
-                         },
-                         {
-                           title: 'Indian Flag Color Codes',
-                           desc: 'Exact hex codes and RGB values for India\'s flag colors to maintain authenticity in all designs.',
-                           link: '#'
-                         },
-                         {
-                           title: 'Social Media Size Guide',
-                           desc: 'Complete dimensions guide for all social platforms - Instagram, Facebook, LinkedIn, Twitter, and more.',
-                           link: '#'
-                         },
-                         {
-                           title: 'Republic Day Hashtags 2026',
-                           desc: 'Trending and evergreen hashtags for maximum reach on Republic Day including regional variations.',
-                           link: '#'
-                         },
-                       ].map((resource, idx) => (
-                         <motion.div
-                           key={idx}
-                           className="resource-card"
-                           initial={{ opacity: 0, y: 20 }}
-                           whileInView={{ opacity: 1, y: 0 }}
-                           transition={{ duration: 0.4, delay: idx * 0.1 }}
-                           viewport={{ once: true }}
-                         >
-                           <h3>{resource.title}</h3>
-                           <p>{resource.desc}</p>
-                           <a href={resource.link} className="resource-link">
-                             Learn More →
-                           </a>
-                         </motion.div>
-                       ))}
-                     </div>
-                   </div>
-                 </section>
-
-                 {/* FAQ Section */}
-                       <section className="faq-section">
-                         <div className="container-narrow">
-                           <div className="section-header">
-                             <h2>Frequently Asked Questions About Republic Day Templates</h2>
-                             <p>Everything you need to know about using our Republic Day template</p>
-                           </div>
-                           <div className="faq-grid">
-                             {[
-                               {
-                                 q: 'Is this Republic Day template really completely free?',
-                                 a: 'Yes! This template is 100% free for both personal and commercial use. There are no hidden costs, no watermarks on exports, no project limits, and no premium features locked away. Download and customize as many times as you want without spending a rupee.',
-                               },
-                               {
-                                 q: 'Do I need design experience to customize this template?',
-                                 a: 'Not at all! Our editor is specifically designed for non-designers. Simple click-to-edit functionality, intuitive drag-and-drop interface, pre-aligned elements, and smart guides make customization easy. Most users complete their designs in under 5 minutes.',
-                               },
-                               {
-                                 q: 'What file formats can I export my Republic Day design?',
-                                 a: 'Export your customized design as PNG (with transparent background support), JPG (optimized for social media platforms), or PDF (print-ready with high resolution). All formats maintain design quality without compression artifacts.',
-                               },
-                               {
-                                 q: 'Can I use this template for my business Instagram account?',
-                                 a: 'Absolutely! This template is perfect for businesses of all sizes - from startups to enterprises. Use it for Instagram posts, Stories, Facebook timeline, LinkedIn updates, WhatsApp Business status, and even print materials like posters.',
-                               },
-                               {
-                                 q: 'How do I add my company logo to the template?',
-                                 a: 'Click the upload button in the editor toolbar, select your logo file (PNG, JPG, or SVG), and it appears on your canvas. Drag to position, resize using corner handles, and adjust opacity if needed. Logo placement is remembered for future projects.',
-                               },
-                               {
-                                 q: 'Will my customized Republic Day design be saved automatically?',
-                                 a: 'Yes! Every change you make is automatically saved to your free Scenith account. Access your projects from any device, anywhere. Return later to make updates, create variations, or export again. Your designs never expire.',
-                               },
-                               {
-                                 q: 'What dimensions should I use for different social media platforms?',
-                                 a: 'This template is 1080×1400px (perfect for Instagram). For Instagram Stories, extend to 1080×1920px. For Facebook, use as-is or crop to 1200×628px. For LinkedIn, 1200×627px works best. Our editor allows easy resizing for any platform.',
-                               },
-                               {
-                                 q: 'Can I change the colors in the template?',
-                                 a: 'Yes! Every element is fully customizable. Change background colors, text colors, shape fills, and more. Use our color picker to match your exact brand colors by entering hex codes. Create completely unique variations while maintaining the patriotic theme.',
-                               },
-                               {
-                                 q: 'How many times can I download my Republic Day design?',
-                                 a: 'Unlimited! Once you create a design, download it as many times as you want in any format. Need different versions for Instagram, Facebook, and print? Export all three without restrictions. No download limits ever.',
-                               },
-                               {
-                                 q: 'Can I create multiple versions of the Republic Day template?',
-                                 a: 'Definitely! Duplicate your project to create variations for different social channels, test A/B versions with different messaging, create regional language versions, design variations for different products/services, or save copies before major changes.',
-                               },
-                               {
-                                 q: 'Is there a limit to how many templates I can use?',
-                                 a: 'No limits! Use this Republic Day template and browse our entire template library for other occasions. Independence Day, Diwali, Holi, and other festival templates are all available with no usage restrictions.',
-                               },
-                               {
-                                 q: 'Can I use the template for print materials?',
-                                 a: 'Yes! Export as high-resolution PDF for print. The design works great for posters, flyers, banners, standees, and promotional materials. For large format printing, you can adjust resolution settings in the export options.',
-                               },
-                             ].map((item, idx) => (
-                               <motion.div
-                                 key={idx}
-                                 className="faq-item"
-                                 initial={{ opacity: 0, y: 15 }}
-                                 whileInView={{ opacity: 1, y: 0 }}
-                                 transition={{ duration: 0.4, delay: idx * 0.05 }}
-                                 viewport={{ once: true }}
-                               >
-                                 <h3>{item.q}</h3>
-                                 <p>{item.a}</p>
-                               </motion.div>
-                             ))}
-                           </div>
-                         </div>
-                       </section>
-               </div>
-             );
-           }
+      <section className="resources-section">
+        <div className="container">
+          <div className="section-header">
+            <h2>More Resources for Your Republic Day Campaign</h2>
+            <p>Everything you need for successful social media marketing</p>
+          </div>
+          <div className="resources-grid">
+            {[
+              {
+                title: 'Republic Day Caption Ideas',
+                desc: '50+ ready-to-use captions for Instagram, Facebook, and LinkedIn with relevant hashtags and emojis.',
+                link: '#'
+              },
+              {
+                title: 'Indian Flag Color Codes',
+                desc: 'Exact hex codes and RGB values for India\'s flag colors to maintain authenticity in all designs.',
+                link: '#'
+              },
+              {
+                title: 'Social Media Size Guide',
+                desc: 'Complete dimensions guide for all social platforms - Instagram, Facebook, LinkedIn, Twitter, and more.',
+                link: '#'
+              },
+              {
+                title: 'Republic Day Hashtags 2026',
+                desc: 'Trending and evergreen hashtags for maximum reach on Republic Day including regional variations.',
+                link: '#'
+              },
+            ].map((resource, idx) => (
+              <motion.div
+                key={idx}
+                className="resource-card"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: idx * 0.1 }}
+                viewport={{ once: true }}
+              >
+                <h3>{resource.title}</h3>
+                <p>{resource.desc}</p>
+                <a href={resource.link} className="resource-link">
+                  Learn More →
+                </a>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>     
+            <section className="faq-section">
+              <div className="container-narrow">
+                <div className="section-header">
+                  <h2>Frequently Asked Questions About Republic Day Templates</h2>
+                  <p>Everything you need to know about using our Republic Day template</p>
+                </div>
+                <div className="faq-grid">
+                  {[
+                    {
+                      q: 'Is this Republic Day template really completely free?',
+                      a: 'Yes! This template is 100% free for both personal and commercial use. There are no hidden costs, no watermarks on exports, no project limits, and no premium features locked away. Download and customize as many times as you want without spending a rupee.',
+                    },
+                    {
+                      q: 'Do I need design experience to customize this template?',
+                      a: 'Not at all! Our editor is specifically designed for non-designers. Simple click-to-edit functionality, intuitive drag-and-drop interface, pre-aligned elements, and smart guides make customization easy. Most users complete their designs in under 5 minutes.',
+                    },
+                    {
+                      q: 'What file formats can I export my Republic Day design?',
+                      a: 'Export your customized design as PNG (with transparent background support), JPG (optimized for social media platforms), or PDF (print-ready with high resolution). All formats maintain design quality without compression artifacts.',
+                    },
+                    {
+                      q: 'Can I use this template for my business Instagram account?',
+                      a: 'Absolutely! This template is perfect for businesses of all sizes - from startups to enterprises. Use it for Instagram posts, Stories, Facebook timeline, LinkedIn updates, WhatsApp Business status, and even print materials like posters.',
+                    },
+                    {
+                      q: 'How do I add my company logo to the template?',
+                      a: 'Click the upload button in the editor toolbar, select your logo file (PNG, JPG, or SVG), and it appears on your canvas. Drag to position, resize using corner handles, and adjust opacity if needed. Logo placement is remembered for future projects.',
+                    },
+                    {
+                      q: 'Will my customized Republic Day design be saved automatically?',
+                      a: 'Yes! Every change you make is automatically saved to your free Scenith account. Access your projects from any device, anywhere. Return later to make updates, create variations, or export again. Your designs never expire.',
+                    },
+                    {
+                      q: 'What dimensions should I use for different social media platforms?',
+                      a: 'This template is 1080×1400px (perfect for Instagram). For Instagram Stories, extend to 1080×1920px. For Facebook, use as-is or crop to 1200×628px. For LinkedIn, 1200×627px works best. Our editor allows easy resizing for any platform.',
+                    },
+                    {
+                      q: 'Can I change the colors in the template?',
+                      a: 'Yes! Every element is fully customizable. Change background colors, text colors, shape fills, and more. Use our color picker to match your exact brand colors by entering hex codes. Create completely unique variations while maintaining the patriotic theme.',
+                    },
+                    {
+                      q: 'How many times can I download my Republic Day design?',
+                      a: 'Unlimited! Once you create a design, download it as many times as you want in any format. Need different versions for Instagram, Facebook, and print? Export all three without restrictions. No download limits ever.',
+                    },
+                    {
+                      q: 'Can I create multiple versions of the Republic Day template?',
+                      a: 'Definitely! Duplicate your project to create variations for different social channels, test A/B versions with different messaging, create regional language versions, design variations for different products/services, or save copies before major changes.',
+                    },
+                    {
+                      q: 'Is there a limit to how many templates I can use?',
+                      a: 'No limits! Use this Republic Day template and browse our entire template library for other occasions. Independence Day, Diwali, Holi, and other festival templates are all available with no usage restrictions.',
+                    },
+                    {
+                      q: 'Can I use the template for print materials?',
+                      a: 'Yes! Export as high-resolution PDF for print. The design works great for posters, flyers, banners, standees, and promotional materials. For large format printing, you can adjust resolution settings in the export options.',
+                    },
+                  ].map((item, idx) => (
+                    <motion.div
+                      key={idx}
+                      className="faq-item"
+                      initial={{ opacity: 0, y: 15 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, delay: idx * 0.05 }}
+                      viewport={{ once: true }}
+                    >
+                      <h3>{item.q}</h3>
+                      <p>{item.a}</p>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </section>
+    </div>
+  );
+}

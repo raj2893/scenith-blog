@@ -163,8 +163,7 @@ const googleFonts = [
   'Kirang Haerang',
   'Lavishly Yours',
   'Lexend Giga',
-  'Lexend Giga:700',
-  'Lexend Giga:900',
+  'Lexend Giga:900',           // ← only this one (matches subtitle)
   'Montserrat Alternates',
   'Montserrat Alternates:500italic',
   'Montserrat Alternates:900',
@@ -195,9 +194,23 @@ interface EditorCanvasProps {
 const parseFont = (fontFamily: string) => {
   let weight: string = 'normal';
   let style: string = 'normal';
-  let family: string = fontFamily;
+  let family: string = fontFamily; // Start with full value
 
-  // Google Fonts variant suffixes first (most specific)
+  // ────────────────────────────────────────────────
+  // Critical: Special mapping for variants backend actually supports
+  // These match your backend's fontMap keys exactly
+  // ────────────────────────────────────────────────
+  if (fontFamily === 'Montserrat Alternates:900') {
+    return { family: 'Montserrat Alternates Black', weight: '900', style: 'normal' };
+  }
+  if (fontFamily === 'Montserrat Alternates:500italic') {
+    return { family: 'Montserrat Alternates Medium Italic', weight: '500', style: 'italic' };
+  }
+  if (fontFamily === 'Lexend Giga:900') {
+    return { family: 'Lexend Giga Black', weight: '900', style: 'normal' };
+  }
+
+  // Fallback parsing for other fonts (keep your original logic but don't strip known good ones)
   if (fontFamily.includes(':700') || fontFamily.includes('Bold')) {
     weight = 'bold';
     family = fontFamily.replace(/:700| Bold/g, '');
@@ -219,7 +232,7 @@ const parseFont = (fontFamily: string) => {
     family = fontFamily.replace(' Rounded Bold', '');
   }
 
-  // Italic / oblique
+  // Italic handling (after weight so compound works)
   if (fontFamily.includes(':italic') || fontFamily.includes('Italic')) {
     style = 'italic';
     family = family.replace(/:italic| Italic/g, '');
@@ -2411,6 +2424,8 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
   
   const renderLayerPreview = (layer: Layer) => {
     if (layer.type === 'text') {
+      const fontInfo = parseFont(layer.fontFamily || 'Arial'); // reuse your parseFont
+  
       return (
         <div 
           style={{
@@ -2420,8 +2435,10 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
             alignItems: 'center',
             justifyContent: 'center',
             fontSize: '10px',
-            fontFamily: layer.fontFamily,
-            color: layer.color,
+            fontFamily: fontInfo.family,          // base family
+            fontWeight: fontInfo.weight,           // bold/900/etc
+            fontStyle: fontInfo.style,             // italic
+            color: layer.color || '#000',
             backgroundColor: '#f8f9fa',
             borderRadius: '4px',
             overflow: 'hidden',
@@ -3086,14 +3103,14 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
                           <label>Font Family</label>
                           <select
                             value={selectedLayer.fontFamily}
-                            onChange={(e) => updateLayer(selectedLayer.id, { fontFamily: e.target.value })}
+                            onChange={(e) => updateLayer(selectedLayer.id, { fontFamily: e.target.value }) /* or updateField('fontFamily', e.target.value) */}
                             style={{
-                              fontFamily: parseFont(selectedLayer.fontFamily || 'Arial').family,
-                              fontWeight: parseFont(selectedLayer.fontFamily || 'Arial').weight,
-                              fontStyle: parseFont(selectedLayer.fontFamily || 'Arial').style,
+                              fontFamily: selectedLayer.fontFamily?.split(' ')[0] || 'Arial', // base family for preview
+                              fontWeight: selectedLayer.fontFamily?.includes('Bold') || selectedLayer.fontFamily?.includes('Black') ? 'bold' : 'normal',
+                              fontStyle: selectedLayer.fontFamily?.includes('Italic') ? 'italic' : 'normal',
                             }}
                           >
-                            {/* Standard system fonts – same as SubtitleEditorPanel */}
+                            {/* Standard System Fonts */}
                             <option value="Arial" style={{ fontFamily: 'Arial' }}>Arial</option>
                             <option value="Times New Roman" style={{ fontFamily: 'Times New Roman' }}>Times New Roman</option>
                             <option value="Courier New" style={{ fontFamily: 'Courier New' }}>Courier New</option>
@@ -3106,17 +3123,66 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
                             <option value="Noto Sans Devanagari" style={{ fontFamily: 'Noto Sans Devanagari' }}>
                               Noto Sans Devanagari (Hindi)
                             </option>
-
-                            {/* Google Fonts – exactly the same list as subtitle */}
-                            {googleFonts.map((font) => (
-                              <option
-                                key={font}
-                                value={font}
-                                style={{ fontFamily: font }}   // ← use raw name like subtitle
-                              >
-                                {font}
-                              </option>
-                            ))}
+                          
+                            {/* Google Fonts – exact backend-mapped names */}
+                            <option value="Alumni Sans Pinstripe" style={{ fontFamily: 'Alumni Sans Pinstripe' }}>Alumni Sans Pinstripe</option>
+                            <option value="Amatic SC" style={{ fontFamily: 'Amatic SC' }}>Amatic SC</option>
+                            <option value="Amatic SC Bold" style={{ fontFamily: 'Amatic SC', fontWeight: 'bold' }}>Amatic SC Bold</option>
+                            <option value="Arimo" style={{ fontFamily: 'Arimo' }}>Arimo</option>
+                            <option value="Arimo Bold" style={{ fontFamily: 'Arimo', fontWeight: 'bold' }}>Arimo Bold</option>
+                            <option value="Arimo Bold Italic" style={{ fontFamily: 'Arimo', fontWeight: 'bold', fontStyle: 'italic' }}>Arimo Bold Italic</option>
+                            <option value="Arimo Italic" style={{ fontFamily: 'Arimo', fontStyle: 'italic' }}>Arimo Italic</option>
+                            <option value="Barriecito" style={{ fontFamily: 'Barriecito' }}>Barriecito</option>
+                            <option value="Barrio" style={{ fontFamily: 'Barrio' }}>Barrio</option>
+                            <option value="Birthstone" style={{ fontFamily: 'Birthstone' }}>Birthstone</option>
+                            <option value="Bungee Hairline" style={{ fontFamily: 'Bungee Hairline' }}>Bungee Hairline</option>
+                            <option value="Butcherman" style={{ fontFamily: 'Butcherman' }}>Butcherman</option>
+                            <option value="Carlito" style={{ fontFamily: 'Carlito' }}>Carlito</option>
+                            <option value="Carlito Bold" style={{ fontFamily: 'Carlito', fontWeight: 'bold' }}>Carlito Bold</option>
+                            <option value="Carlito Bold Italic" style={{ fontFamily: 'Carlito', fontWeight: 'bold', fontStyle: 'italic' }}>Carlito Bold Italic</option>
+                            <option value="Carlito Italic" style={{ fontFamily: 'Carlito', fontStyle: 'italic' }}>Carlito Italic</option>
+                            <option value="Comic Neue" style={{ fontFamily: 'Comic Neue' }}>Comic Neue</option>
+                            <option value="Comic Neue Bold" style={{ fontFamily: 'Comic Neue', fontWeight: 'bold' }}>Comic Neue Bold</option>
+                            <option value="Comic Neue Bold Italic" style={{ fontFamily: 'Comic Neue', fontWeight: 'bold', fontStyle: 'italic' }}>Comic Neue Bold Italic</option>
+                            <option value="Comic Neue Italic" style={{ fontFamily: 'Comic Neue', fontStyle: 'italic' }}>Comic Neue Italic</option>
+                            <option value="Courier Prime" style={{ fontFamily: 'Courier Prime' }}>Courier Prime</option>
+                            <option value="Courier Prime Bold" style={{ fontFamily: 'Courier Prime', fontWeight: 'bold' }}>Courier Prime Bold</option>
+                            <option value="Courier Prime Bold Italic" style={{ fontFamily: 'Courier Prime', fontWeight: 'bold', fontStyle: 'italic' }}>Courier Prime Bold Italic</option>
+                            <option value="Courier Prime Italic" style={{ fontFamily: 'Courier Prime', fontStyle: 'italic' }}>Courier Prime Italic</option>
+                            <option value="Doto Black" style={{ fontFamily: 'Doto', fontWeight: '900' }}>Doto Black</option>
+                            <option value="Doto ExtraBold" style={{ fontFamily: 'Doto', fontWeight: '800' }}>Doto ExtraBold</option>
+                            <option value="Doto Rounded Bold" style={{ fontFamily: 'Doto', fontWeight: 'bold' }}>Doto Rounded Bold</option>
+                            <option value="Fascinate Inline" style={{ fontFamily: 'Fascinate Inline' }}>Fascinate Inline</option>
+                            <option value="Freckle Face" style={{ fontFamily: 'Freckle Face' }}>Freckle Face</option>
+                            <option value="Fredericka the Great" style={{ fontFamily: 'Fredericka the Great' }}>Fredericka the Great</option>
+                            <option value="Gelasio" style={{ fontFamily: 'Gelasio' }}>Gelasio</option>
+                            <option value="Gelasio Bold" style={{ fontFamily: 'Gelasio', fontWeight: 'bold' }}>Gelasio Bold</option>
+                            <option value="Gelasio Bold Italic" style={{ fontFamily: 'Gelasio', fontWeight: 'bold', fontStyle: 'italic' }}>Gelasio Bold Italic</option>
+                            <option value="Gelasio Italic" style={{ fontFamily: 'Gelasio', fontStyle: 'italic' }}>Gelasio Italic</option>
+                            <option value="Imperial Script" style={{ fontFamily: 'Imperial Script' }}>Imperial Script</option>
+                            <option value="Kings" style={{ fontFamily: 'Kings' }}>Kings</option>
+                            <option value="Kirang Haerang" style={{ fontFamily: 'Kirang Haerang' }}>Kirang Haerang</option>
+                            <option value="Lavishly Yours" style={{ fontFamily: 'Lavishly Yours' }}>Lavishly Yours</option>
+                            <option value="Lexend Giga" style={{ fontFamily: 'Lexend Giga' }}>Lexend Giga</option>
+                            <option value="Lexend Giga Black" style={{ fontFamily: 'Lexend Giga', fontWeight: '900' }}>Lexend Giga Black</option>
+                            <option value="Lexend Giga Bold" style={{ fontFamily: 'Lexend Giga', fontWeight: 'bold' }}>Lexend Giga Bold</option>
+                            <option value="Montserrat Alternates" style={{ fontFamily: 'Montserrat Alternates' }}>Montserrat Alternates</option>
+                            <option value="Montserrat Alternates Black" style={{ fontFamily: 'Montserrat Alternates', fontWeight: '900' }}>Montserrat Alternates Black</option>
+                            <option value="Montserrat Alternates Medium Italic" style={{ fontFamily: 'Montserrat Alternates', fontWeight: '500', fontStyle: 'italic' }}>Montserrat Alternates Medium Italic</option>
+                            <option value="Mountains of Christmas" style={{ fontFamily: 'Mountains of Christmas' }}>Mountains of Christmas</option>
+                            <option value="Mountains of Christmas Bold" style={{ fontFamily: 'Mountains of Christmas', fontWeight: 'bold' }}>Mountains of Christmas Bold</option>
+                            <option value="Noto Sans Mono" style={{ fontFamily: 'Noto Sans Mono' }}>Noto Sans Mono</option>
+                            <option value="Noto Sans Mono Bold" style={{ fontFamily: 'Noto Sans Mono', fontWeight: 'bold' }}>Noto Sans Mono Bold</option>
+                            <option value="Poiret One" style={{ fontFamily: 'Poiret One' }}>Poiret One</option>
+                            <option value="Rampart One" style={{ fontFamily: 'Rampart One' }}>Rampart One</option>
+                            <option value="Rubik Wet Paint" style={{ fontFamily: 'Rubik Wet Paint' }}>Rubik Wet Paint</option>
+                            <option value="Tangerine" style={{ fontFamily: 'Tangerine' }}>Tangerine</option>
+                            <option value="Tangerine Bold" style={{ fontFamily: 'Tangerine', fontWeight: 'bold' }}>Tangerine Bold</option>
+                            <option value="Tinos" style={{ fontFamily: 'Tinos' }}>Tinos</option>
+                            <option value="Tinos Bold" style={{ fontFamily: 'Tinos', fontWeight: 'bold' }}>Tinos Bold</option>
+                            <option value="Tinos Bold Italic" style={{ fontFamily: 'Tinos', fontWeight: 'bold', fontStyle: 'italic' }}>Tinos Bold Italic</option>
+                            <option value="Tinos Italic" style={{ fontFamily: 'Tinos', fontStyle: 'italic' }}>Tinos Italic</option>
+                            <option value="Yesteryear" style={{ fontFamily: 'Yesteryear' }}>Yesteryear</option>
                           </select>
                         </div>
         
@@ -4062,19 +4128,19 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
                             }
                           }}
                           style={{
-                            fontFamily: layer.fontFamily,
+                            fontFamily: parseFont(layer.fontFamily || 'Arial').family,
                             fontSize: layer.fontSize,
-                            fontWeight: layer.fontWeight,
-                            fontStyle: layer.fontStyle,
+                            fontWeight: parseFont(layer.fontFamily || 'Arial').weight,
+                            fontStyle: parseFont(layer.fontFamily || 'Arial').style,
                             textAlign: layer.textAlign as any,
                             textDecoration: layer.textDecoration,
                             textTransform: layer.textTransform,
                             WebkitTextStroke: (layer.outlineWidth ?? 0) > 0 ? `${layer.outlineWidth}px ${layer.outlineColor}` : undefined,
                             display: (layer.backgroundOpacity ?? 0) > 0 ? "flex" : "inline-flex",
                             alignItems: layer.verticalAlign === "top" ? "flex-start" : 
-                                       layer.verticalAlign === "bottom" ? "flex-end" : "center",
+                                        layer.verticalAlign === "bottom" ? "flex-end" : "center",
                             justifyContent: layer.textAlign === "center" ? "center" : 
-                                           layer.textAlign === "right" ? "flex-end" : "flex-start",
+                                            layer.textAlign === "right" ? "flex-end" : "flex-start",
                             whiteSpace: layer.wordWrap ? "pre-wrap" : "pre",
                             width: layer.backgroundWidth ? `${layer.backgroundWidth}px` : "auto",
                             height: layer.backgroundHeight ? `${layer.backgroundHeight}px` : "auto",
