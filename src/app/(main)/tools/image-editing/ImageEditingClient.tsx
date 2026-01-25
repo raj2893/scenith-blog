@@ -35,6 +35,109 @@ interface LoginFormData {
   password: string;
 }
 
+const googleFonts = [
+  'Noto Sans Devanagari',
+  'Alumni Sans Pinstripe',
+  'Amatic SC',
+  'Amatic SC:700',
+  'Arimo',
+  'Arimo:700',
+  'Arimo:700italic',
+  'Arimo:italic',
+  'Barriecito',
+  'Barrio',
+  'Birthstone',
+  'Bungee Hairline',
+  'Carlito',
+  'Carlito:700',
+  'Carlito:700italic',
+  'Carlito:italic',
+  'Comic Neue',
+  'Comic Neue:700',
+  'Comic Neue:700italic',
+  'Comic Neue:italic',
+  'Courier Prime',
+  'Courier Prime:700',
+  'Courier Prime:700italic',
+  'Courier Prime:italic',
+  'Fascinate Inline',
+  'Freckle Face',
+  'Fredericka the Great',
+  'Gelasio',
+  'Gelasio:700',
+  'Gelasio:700italic',
+  'Gelasio:italic',
+  'Imperial Script',
+  'Kings',
+  'Kirang Haerang',
+  'Lavishly Yours',
+  'Lexend Giga',
+  'Lexend Giga:900',           // ← only this one (matches subtitle)
+  'Montserrat Alternates',
+  'Montserrat Alternates:500italic',
+  'Montserrat Alternates:900',
+  'Mountains of Christmas',
+  'Mountains of Christmas:700',
+  'Noto Sans Mono',
+  'Noto Sans Mono:700',
+  'Poiret One',
+  'Rampart One',
+  'Rubik Wet Paint',
+  'Tangerine',
+  'Tangerine:700',
+  'Tinos',
+  'Tinos:700',
+  'Tinos:700italic',
+  'Tinos:italic',
+  'Yesteryear',
+];
+
+const parseFont = (fontFamily: string) => {
+  let weight: string = 'normal';
+  let style: string = 'normal';
+  let family: string = fontFamily; 
+  
+  if (fontFamily === 'Montserrat Alternates:900') {
+    return { family: 'Montserrat Alternates Black', weight: '900', style: 'normal' };
+  }
+  if (fontFamily === 'Montserrat Alternates:500italic') {
+    return { family: 'Montserrat Alternates Medium Italic', weight: '500', style: 'italic' };
+  }
+  if (fontFamily === 'Lexend Giga:900') {
+    return { family: 'Lexend Giga Black', weight: '900', style: 'normal' };
+  }
+
+  // Fallback parsing for other fonts (keep your original logic but don't strip known good ones)
+  if (fontFamily.includes(':700') || fontFamily.includes('Bold')) {
+    weight = 'bold';
+    family = fontFamily.replace(/:700| Bold/g, '');
+  }
+  if (fontFamily.includes(':900') || fontFamily.includes('Black')) {
+    weight = '900';
+    family = fontFamily.replace(/:900| Black/g, '');
+  }
+  if (fontFamily.includes('ExtraBold')) {
+    weight = '800';
+    family = fontFamily.replace(' ExtraBold', '');
+  }
+  if (fontFamily.includes('Medium')) {
+    weight = '500';
+    family = fontFamily.replace(' Medium', '');
+  }
+  if (fontFamily.includes('Rounded Bold')) {
+    weight = 'bold';
+    family = fontFamily.replace(' Rounded Bold', '');
+  }
+
+  // Italic handling (after weight so compound works)
+  if (fontFamily.includes(':italic') || fontFamily.includes('Italic')) {
+    style = 'italic';
+    family = family.replace(/:italic| Italic/g, '');
+  }
+
+  return { family, weight, style };
+};
+
 const ImageEditingClient: React.FC = () => {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -562,14 +665,14 @@ const ImageEditingClient: React.FC = () => {
                                         }}
                                       />
                                     )}
-                                    
+
                                     {/* Text content - always full opacity */}
                                     <div
                                       style={{
-                                        fontFamily: layer.fontFamily ?? 'Arial',
+                                        fontFamily: parseFont(layer.fontFamily ?? 'Arial').family,
                                         fontSize: (layer.fontSize ?? 32) * minScale,
-                                        fontWeight: layer.fontWeight ?? 'normal',
-                                        fontStyle: layer.fontStyle ?? 'normal',
+                                        fontWeight: parseFont(layer.fontFamily ?? 'Arial').weight,
+                                        fontStyle: parseFont(layer.fontFamily ?? 'Arial').style,
                                         color: layer.color ?? '#000000',
                                         textAlign: (layer.textAlign ?? 'left') as 'left' | 'center' | 'right',
                                         textDecoration: layer.textDecoration ?? 'none',

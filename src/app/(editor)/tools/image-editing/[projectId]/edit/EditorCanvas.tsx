@@ -2851,19 +2851,18 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
                                 {layer.type === 'text' && (
                                   <div
                                     style={{
-                                      fontFamily: layer.fontFamily ?? 'Arial',
+                                      fontFamily: parseFont(layer.fontFamily ?? 'Arial').family,
                                       fontSize: (layer.fontSize ?? 32) * minScale,
-                                      fontWeight: layer.fontWeight ?? 'normal',
-                                      fontStyle: layer.fontStyle ?? 'normal',
+                                      fontWeight: parseFont(layer.fontFamily ?? 'Arial').weight,
+                                      fontStyle: parseFont(layer.fontFamily ?? 'Arial').style,
                                       color: layer.color ?? '#000000',
                                       textAlign: (layer.textAlign ?? 'left') as 'left' | 'center' | 'right',
                                       textDecoration: layer.textDecoration ?? 'none',
                                       textTransform: (layer.textTransform ?? 'none') as 'uppercase' | 'lowercase' | 'capitalize' | 'none',
-                                      // Perfect text stroke (outline)
                                       WebkitTextStroke: layer.outlineWidth != null && (layer.outlineWidth ?? 0) > 0
                                         ? `${(layer.outlineWidth ?? 0) * minScale}px ${layer.outlineColor ?? '#000000'}`
                                         : undefined,
-                                      paintOrder: 'stroke fill', // Ensures stroke is behind fill
+                                      paintOrder: 'stroke fill',
                                       whiteSpace: layer.wordWrap ? 'pre-wrap' : 'nowrap',
                                       wordBreak: layer.wordWrap ? 'break-word' : 'normal',
                                       overflow: 'hidden',
@@ -2874,29 +2873,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
                                       backgroundColor: (layer.backgroundOpacity ?? 0) > 0 ? (layer.backgroundColor ?? 'transparent') : undefined,
                                       opacity: (layer.backgroundOpacity ?? 0) > 0 ? (layer.backgroundOpacity ?? 1) : 1,
                                       padding: (layer.backgroundOpacity ?? 0) > 0 ? `${8 * minScale}px` : '0',
-                                      borderRadius: layer.backgroundBorderRadius != null 
-                                        ? `${(layer.backgroundBorderRadius ?? 0) * minScale}px` 
-                                        : undefined,
-                                      border: layer.backgroundBorderWidth != null && (layer.backgroundBorderWidth ?? 0) > 0
-                                        ? `${(layer.backgroundBorderWidth ?? 0) * minScale}px solid ${layer.backgroundBorder ?? '#000000'}`
-                                        : undefined,
-                                      boxShadow: layer.shadow ? 
-                                        `${(layer.shadow.offsetX ?? 0) * minScale}px ${(layer.shadow.offsetY ?? 0) * minScale}px ${(layer.shadow.blur ?? 0) * minScale}px ${layer.shadow.color ?? 'rgba(0,0,0,0.25)'}` 
-                                        : undefined,
-                                      // Curve hint
-                                      transform: layer.curveRadius != null && Math.abs(layer.curveRadius ?? 0) > 50
-                                        ? `rotate(${layer.curveRadius > 0 ? 8 : -8}deg)`
-                                        : undefined,
-                                      display: 'flex',
-                                      alignItems: layer.verticalAlign === 'top' ? 'flex-start' 
-                                        : layer.verticalAlign === 'bottom' ? 'flex-end' 
-                                        : 'center',
-                                      justifyContent: layer.textAlign === 'center' ? 'center' 
-                                        : layer.textAlign === 'right' ? 'flex-end' 
-                                        : 'flex-start',
-                                      width: '100%',
-                                      height: '100%',
-                                      boxSizing: 'border-box',
+                                      zIndex: 1,
                                     }}
                                   >
                                     {layer.text || 'Text'}
