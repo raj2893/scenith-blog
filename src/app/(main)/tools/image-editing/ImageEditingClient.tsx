@@ -62,7 +62,60 @@ const ImageEditingClient: React.FC = () => {
     canvasBackgroundColor: "#FFFFFF",
   });
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
-  const [projectToDelete, setProjectToDelete] = useState<ImageProject | null>(null);  
+  const [projectToDelete, setProjectToDelete] = useState<ImageProject | null>(null); 
+  // Add these to your existing state declarations
+  const [activeSection, setActiveSection] = useState<'templates' | 'projects'>('templates');
+  const [showTemplateModal, setShowTemplateModal] = useState<boolean>(false);
+  const [selectedTemplate, setSelectedTemplate] = useState<any | null>(null);
+  const [templates, setTemplates] = useState<any[]>([]);
+  const [templatesLoading, setTemplatesLoading] = useState(true);    
+  
+  // Add this function to handle template selection
+  const handleTemplateClick = (template: any) => {
+    if (!isLoggedIn) {
+      setSelectedTemplate(template);
+      setShowLoginModal(true);
+      return;
+    }
+    setSelectedTemplate(template);
+    setShowTemplateModal(true);
+  };
+  
+  // Add this function to create project from template
+  const handleUseTemplate = async () => {
+    if (!selectedTemplate) return;
+    
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/api/image-editor/projects/from-template/${selectedTemplate.id}`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+      setProjects([response.data, ...projects]);
+      setShowTemplateModal(false);
+      setSelectedTemplate(null);
+      window.open(`/tools/image-editing/${response.data.id}/edit`, '_blank');
+    } catch (error: any) {
+      setError(error.response?.data?.message || "Failed to create project from template");
+    }
+  };
+  
+  // Update the templates fetch to not require auth
+  useEffect(() => {
+    // Fetch templates without requiring token
+    axios
+      .get(`${API_BASE_URL}/api/image-editor/templates`)
+      .then((res) => {
+        setTemplates(res.data);
+        setTemplatesLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching templates:", err);
+        setTemplatesLoading(false);
+      });
+  }, []); 
 
   // Check auth and fetch projects
   useEffect(() => {
@@ -308,17 +361,266 @@ const ImageEditingClient: React.FC = () => {
           <p className="hero-description">
             Create stunning graphics with our intuitive online editor. Add layers, text, shapes, and apply professional filters. Perfect for social media, marketing, and creative projects!
           </p>
-
-          <button
-            className="cta-button create-project-btn"
-            onClick={() => (isLoggedIn ? setShowCreateModal(true) : setShowLoginModal(true))}
-          >
-            <FaPlus /> {isLoggedIn ? "Create New Project" : "Sign In to Start Designing"}
-          </button>
+      
+          {/* Section Tabs */}
+          <div className="section-tabs">
+            <button
+              className={`section-tab ${activeSection === 'templates' ? 'active' : ''}`}
+              onClick={() => setActiveSection('templates')}
+            >
+              <span className="tab-icon">🎨</span>
+              Templates
+            </button>
+            <button
+              className={`section-tab ${activeSection === 'projects' ? 'active' : ''}`}
+              onClick={() => {
+                if (!isLoggedIn) {
+                  setShowLoginModal(true);
+                } else {
+                  setActiveSection('projects');
+                }
+              }}
+            >
+              <span className="tab-icon">📁</span>
+              My Projects
+            </button>
+          </div>
+      
+          {activeSection === 'templates' && (
+            <button
+              className="cta-button create-project-btn"
+              onClick={() => (isLoggedIn ? setShowCreateModal(true) : setShowLoginModal(true))}
+            >
+              <FaPlus /> Create Blank Project
+            </button>
+          )}
         </motion.div>
       </section>
 
-      {isLoggedIn && (
+      {activeSection === 'templates' && (
+        <section className="templates-showcase-section">
+          <div className="container">
+            <div className="section-header">
+              <div>
+                <h2>Ready-to-Use Templates</h2>
+                <p className="section-subtitle">Start with professionally designed templates and customize them to your needs</p>
+              </div>
+            </div>
+      
+            {templatesLoading ? (
+              <div className="loading-state">
+                <div className="spinner"></div>
+                <p>Loading templates...</p>
+              </div>
+            ) : templates.length === 0 ? (
+              <div className="empty-state">
+                <FaImage className="empty-icon" />
+                <h3>No Templates Available</h3>
+                <p>Check back soon for new templates!</p>
+              </div>
+            ) : (
+              <div className="templates-showcase-grid">
+                {templates.map((template, index) => {
+                  let firstPage;
+                  try {
+                    const design = JSON.parse(template.designJson);
+                    firstPage = design.pages?.[0];
+                  } catch (e) {
+                    return null;
+                  }
+                  if (!firstPage) return null;
+                
+                  const { width, height, backgroundColor } = firstPage.canvas;
+                  const aspectRatio = width / height;
+
+                  // Fixed container dimensions
+                  const containerWidth = 240; // Match grid minmax
+                  const containerHeight = 350;
+
+                  // Calculate preview size to fit within container while maintaining aspect ratio
+                  let previewWidth, previewHeight;
+
+                  if (aspectRatio > containerWidth / containerHeight) {
+                    // Width is the limiting factor
+                    previewWidth = containerWidth - 40; // Account for padding
+                    previewHeight = previewWidth / aspectRatio;
+                  } else {
+                    // Height is the limiting factor
+                    previewHeight = containerHeight - 80; // Account for padding and button area
+                    previewWidth = previewHeight * aspectRatio;
+                  }
+
+                  const scaleX = previewWidth / width;
+                  const scaleY = previewHeight / height;
+                  const minScale = Math.min(scaleX, scaleY);
+                
+                  return (
+                    <motion.div
+                      key={template.id}
+                      className="template-showcase-card"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: index * 0.05 }}
+                      onClick={() => handleTemplateClick(template)}
+                    >
+                      <div className="template-preview-wrapper">
+                        <div
+                          className="template-preview-canvas"
+                          style={{
+                            width: `${previewWidth}px`,
+                            height: `${previewHeight}px`,
+                            backgroundColor: backgroundColor || '#FFFFFF',
+                            position: 'relative',
+                            overflow: 'hidden',
+                          }}
+                        >
+                          {(firstPage.layers as any[])
+                            .filter((l: any) => l.visible)
+                            .sort((a: any, b: any) => a.zIndex - b.zIndex)
+                            .map((layer: any) => (
+                              <div
+                                key={layer.id}
+                                style={{
+                                  position: 'absolute',
+                                  left: layer.x * scaleX,
+                                  top: layer.y * scaleY,
+                                  width: layer.type === 'text'
+                                    ? (layer.backgroundWidth ? layer.backgroundWidth * scaleX : 'auto')
+                                    : layer.width * scaleX,
+                                  height: layer.type === 'text'
+                                    ? (layer.backgroundHeight ? layer.backgroundHeight * scaleY : 'auto')
+                                    : layer.height * scaleY,
+                                  opacity: layer.opacity,
+                                  transform: `rotate(${layer.rotation}deg)`,
+                                  pointerEvents: 'none',
+                                  overflow: 'visible',
+                                }}
+                              >
+                                {/* Text Layer */}
+                                {layer.type === 'text' && (
+                                  <div
+                                    style={{
+                                      position: 'relative',
+                                      width: '100%',
+                                      height: '100%',
+                                      display: 'flex',
+                                      alignItems: layer.verticalAlign === 'top' ? 'flex-start'
+                                        : layer.verticalAlign === 'bottom' ? 'flex-end'
+                                        : 'center',
+                                      justifyContent: layer.textAlign === 'center' ? 'center'
+                                        : layer.textAlign === 'right' ? 'flex-end'
+                                        : 'flex-start',
+                                    }}
+                                  >
+                                    {/* Background layer - separate from text */}
+                                    {(layer.backgroundOpacity ?? 0) > 0 && (
+                                      <div
+                                        style={{
+                                          position: 'absolute',
+                                          top: 0,
+                                          left: 0,
+                                          width: '100%',
+                                          height: '100%',
+                                          backgroundColor: layer.backgroundColor ?? '#FFFFFF',
+                                          opacity: layer.backgroundOpacity ?? 1,
+                                          borderRadius: layer.backgroundBorderRadius != null
+                                            ? `${(layer.backgroundBorderRadius ?? 0) * minScale}px`
+                                            : undefined,
+                                          border: layer.backgroundBorderWidth != null && (layer.backgroundBorderWidth ?? 0) > 0
+                                            ? `${(layer.backgroundBorderWidth ?? 0) * minScale}px solid ${layer.backgroundBorder ?? '#000000'}`
+                                            : undefined,
+                                          pointerEvents: 'none',
+                                          zIndex: -1,
+                                        }}
+                                      />
+                                    )}
+                                    
+                                    {/* Text content - always full opacity */}
+                                    <div
+                                      style={{
+                                        fontFamily: layer.fontFamily ?? 'Arial',
+                                        fontSize: (layer.fontSize ?? 32) * minScale,
+                                        fontWeight: layer.fontWeight ?? 'normal',
+                                        fontStyle: layer.fontStyle ?? 'normal',
+                                        color: layer.color ?? '#000000',
+                                        textAlign: (layer.textAlign ?? 'left') as 'left' | 'center' | 'right',
+                                        textDecoration: layer.textDecoration ?? 'none',
+                                        textTransform: (layer.textTransform ?? 'none') as 'uppercase' | 'lowercase' | 'capitalize' | 'none',
+                                        WebkitTextStroke: layer.outlineWidth != null && (layer.outlineWidth ?? 0) > 0
+                                          ? `${(layer.outlineWidth ?? 0) * minScale}px ${layer.outlineColor ?? '#000000'}`
+                                          : undefined,
+                                        paintOrder: 'stroke fill',
+                                        whiteSpace: layer.wordWrap ? 'pre-wrap' : 'nowrap',
+                                        wordBreak: layer.wordWrap ? 'break-word' : 'normal',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        lineHeight: 1.2,
+                                        padding: (layer.backgroundOpacity ?? 0) > 0 ? `${8 * minScale}px` : '0',
+                                        zIndex: 1,
+                                      }}
+                                    >
+                                      {layer.text || 'Text'}
+                                    </div>
+                                  </div>
+                                )}
+
+                                {/* Image Layer */}
+                                {layer.type === 'image' && layer.src && (
+                                  <img
+                                    src={layer.src}
+                                    alt=""
+                                    style={{
+                                      width: '100%',
+                                      height: '100%',
+                                      objectFit: 'cover',
+                                    }}
+                                  />
+                                )}
+
+                                {/* Shape Layer */}
+                                {layer.type === 'shape' && (
+                                  <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
+                                    {layer.shape === 'rectangle' && (
+                                      <rect
+                                        x="0" y="0" width="100" height="100"
+                                        fill={layer.fill || '#3b82f6'}
+                                        stroke={layer.stroke || '#000'}
+                                        strokeWidth={layer.strokeWidth || 2}
+                                        rx={layer.borderRadius || 0}
+                                      />
+                                    )}
+                                    {layer.shape === 'circle' && (
+                                      <circle cx="50" cy="50" r="45" fill={layer.fill || '#3b82f6'} stroke={layer.stroke} strokeWidth={layer.strokeWidth || 2} />
+                                    )}
+                                    {layer.shape === 'ellipse' && (
+                                      <ellipse cx="50" cy="50" rx="45" ry="30" fill={layer.fill || '#3b82f6'} stroke={layer.stroke} strokeWidth={layer.strokeWidth || 2} />
+                                    )}
+                                    {layer.shape === 'triangle' && (
+                                      <polygon points="50,5 95,90 5,90" fill={layer.fill || '#3b82f6'} stroke={layer.stroke} strokeWidth={layer.strokeWidth || 2} />
+                                    )}
+                                  </svg>
+                                )}
+                              </div>
+                            ))}
+                        </div>
+                      </div>
+                      <div className="template-info">
+                        <h3>{template.templateName}</h3>
+                        <p className="template-dimensions">{width} × {height}px</p>
+                        <button className="use-template-btn">
+                          Use Template <span>→</span>
+                        </button>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </section>
+      )}      
+
+      {isLoggedIn && activeSection === 'projects' && (
         <section className="projects-section">
           <div className="container">
             <div className="section-header">
@@ -1048,11 +1350,14 @@ const ImageEditingClient: React.FC = () => {
       {showLoginModal && (
         <div className="modal-overlay">
           <motion.div className="login-modal" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }}>
-            <button className="modal-close" onClick={() => setShowLoginModal(false)}>
+            <button className="modal-close" onClick={() => {
+              setShowLoginModal(false);
+              setSelectedTemplate(null);
+            }}>
               <FaTimes />
             </button>
             <h1>SCENITH</h1>
-            <p>Login to Continue</p>
+            <p>{selectedTemplate ? 'Login to use this template' : 'Login to Continue'}</p>
             {loginError && <div className="error-message">{loginError}</div>}
             <form
               onSubmit={(e) => {
@@ -1120,7 +1425,54 @@ const ImageEditingClient: React.FC = () => {
             </div>
           </motion.div>
         </div>
-      )}      
+      )}   
+
+      {/* Template Confirmation Modal */}
+      {showTemplateModal && selectedTemplate && (
+        <div className="modal-overlay" onClick={() => setShowTemplateModal(false)}>
+          <motion.div
+            className="template-modal"
+            initial={{ opacity: 0, scale: 0.8, y: 50 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button className="modal-close" onClick={() => setShowTemplateModal(false)}>
+              <FaTimes />
+            </button>
+            
+            <div className="template-modal-icon">
+              <span className="template-icon-large">🎨</span>
+            </div>
+            
+            <h2>Use This Template?</h2>
+            <p className="template-modal-description">
+              You're about to create a new project using <strong>"{selectedTemplate.templateName}"</strong>
+            </p>
+            <p className="template-modal-subtitle">
+              All elements will be editable and you can customize them to your needs.
+            </p>
+      
+            <div className="template-modal-actions">
+              <button
+                className="cancel-template-btn"
+                onClick={() => {
+                  setShowTemplateModal(false);
+                  setSelectedTemplate(null);
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                className="confirm-template-btn"
+                onClick={handleUseTemplate}
+              >
+                <FaPlus /> Create Project
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}         
     </div>
   );
 };

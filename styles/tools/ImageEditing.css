@@ -1349,6 +1349,273 @@
   transform: translateY(0);
 }
 
+/* Section Tabs */
+.section-tabs {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin: 40px 0 30px;
+  flex-wrap: wrap;
+}
+
+.section-tab {
+  padding: 14px 32px;
+  background: #ffffff;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #64748b;
+}
+
+.section-tab.active {
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+}
+
+.section-tab:hover:not(.active) {
+  border-color: #3b82f6;
+  color: #3b82f6;
+  transform: translateY(-2px);
+}
+
+.tab-icon {
+  font-size: 1.3rem;
+}
+
+/* Templates Showcase Section */
+.templates-showcase-section {
+  padding: 30px 10px 40px;
+  background: #ffffff;
+}
+
+.templates-showcase-section .section-header {
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 50px;
+}
+
+.templates-showcase-section .section-header h2 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 10px;
+}
+
+.templates-showcase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 25px;
+}
+
+.template-showcase-card {
+  background: #ffffff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 2px solid rgba(59, 130, 246, 0.1);
+  cursor: pointer;
+}
+
+.template-showcase-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(59, 130, 246, 0.2);
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
+.template-preview-wrapper {
+  width: 100%;
+  padding: 20px;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: auto;
+  overflow: visible;
+}
+
+.template-preview-canvas {
+  position: relative;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  overflow: hidden;
+  max-width: 100%;
+  height: auto;
+}
+
+.template-info {
+  padding: 18px;
+}
+
+.template-info h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 6px;
+}
+
+.template-dimensions {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-bottom: 12px;
+}
+
+.use-template-btn {
+  width: 100%;
+  padding: 10px 16px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.use-template-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+}
+
+.use-template-btn span {
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.template-showcase-card:hover .use-template-btn span {
+  transform: translateX(5px);
+}
+
+/* Template Confirmation Modal */
+.template-modal {
+  background: #ffffff;
+  padding: 50px 40px 40px;
+  border-radius: 24px;
+  max-width: 480px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.template-modal::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+}
+
+.template-modal-icon {
+  margin: 0 auto 25px;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.template-icon-large {
+  font-size: 3.5rem;
+  animation: templatePulse 2s infinite;
+}
+
+@keyframes templatePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.template-modal h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 15px;
+}
+
+.template-modal-description {
+  font-size: 1.1rem;
+  color: #475569;
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+.template-modal-description strong {
+  color: #3b82f6;
+  font-weight: 600;
+}
+
+.template-modal-subtitle {
+  font-size: 0.95rem;
+  color: #64748b;
+  margin-bottom: 35px;
+  line-height: 1.6;
+}
+
+.template-modal-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.cancel-template-btn,
+.confirm-template-btn {
+  padding: 14px 32px;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  justify-content: center;
+  max-width: 180px;
+}
+
+.cancel-template-btn {
+  background: #f1f5f9;
+  color: #475569;
+  border: 2px solid #e2e8f0;
+}
+
+.cancel-template-btn:hover {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.confirm-template-btn {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+.confirm-template-btn:hover {
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
 @media (max-width: 1024px) {
   .comparison-table th,
   .comparison-table td {
@@ -1461,6 +1728,46 @@
 
   .tutorial-number {
     font-size: 2rem;
+  }  
+
+  .section-tabs {
+    gap: 10px;
+  }
+
+  .section-tab {
+    padding: 12px 24px;
+    font-size: 1rem;
+  }
+
+  .templates-showcase-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Even smaller on mobile */
+  }
+
+  .template-modal {
+    padding: 40px 25px 30px;
+  }
+
+  .template-modal h2 {
+    font-size: 1.6rem;
+  }
+
+  .template-modal-actions {
+    flex-direction: column;
+  }
+
+  .cancel-template-btn,
+  .confirm-template-btn {
+    max-width: 100%;
+    width: 100%;
+  }  
+
+  .template-preview-wrapper {
+    padding: 12px;
+    max-height: 280px;
+  }
+  
+  .template-preview-canvas {
+    max-height: 250px;
   }  
 }
 
