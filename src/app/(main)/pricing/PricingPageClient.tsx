@@ -427,11 +427,13 @@ export default function PricingPageClient() {
       ];
     }
 
-    const originalCreatorPrice = isIndianUser ? 499 : 15;
-    const originalStudioPrice = isIndianUser ? 1299 : 25;
+// Final prices AFTER 25% discount
+const creatorPrice = isIndianUser ? 349 : 9;
+const studioPrice = isIndianUser ? 749 : 19;
 
-    const creatorPrice = Math.round(originalCreatorPrice * 0.25);
-    const studioPrice = Math.round(originalStudioPrice * 0.25);
+// Calculate original prices BEFORE discount (final price is 75% of original, so original = final / 0.75)
+const originalCreatorPrice = Math.round(creatorPrice / 0.75);
+const originalStudioPrice = Math.round(studioPrice / 0.75);
 
     const currency = isIndianUser ? 'INR' : 'USD';
     const symbol = isIndianUser ? '₹' : '$';
@@ -555,15 +557,16 @@ export default function PricingPageClient() {
     const currency = isIndianUser ? 'INR' : 'USD';
     const symbol = isIndianUser ? '₹' : '$';
   
-    // Pricing: INR ₹249/month, USD $10/month for each individual plan
-    const voiceOriginal = isIndianUser ? 199 : 5;
-    const subtitleOriginal = isIndianUser ? 199 : 5;
-    const speedOriginal = isIndianUser ? 199 : 5;
-  
-    const voicePrice = Math.round(voiceOriginal);
-    const subtitlePrice = Math.round(subtitleOriginal);
-    const speedPrice = Math.round(speedOriginal);
-  
+   // Final prices after 25% discount
+   const voicePrice = isIndianUser ? 199 : 5;
+   const subtitlePrice = isIndianUser ? 199 : 5;
+   const speedPrice = isIndianUser ? 199 : 5;
+
+   // Calculate original prices by adding 25% (original = price / 0.75)
+   const voiceOriginal = Math.round(voicePrice / 0.75);
+   const subtitleOriginal = Math.round(subtitlePrice / 0.75);
+   const speedOriginal = Math.round(speedPrice / 0.75);
+
     return [
       {
         name: 'AI Voice Pro',
@@ -771,14 +774,6 @@ export default function PricingPageClient() {
 
   return (
     <div className="pricing-page">
-      <div className="urgency-banner">
-        <div className="banner-content">
-          <span className="fire-emoji">🔥</span>
-          <strong>18 people</strong> just upgraded to Scenith Premium this week
-          <span className="highlight">— only 8 spots left at 75% OFF!</span>
-          <span className="blink-text">Hurry — offer ends soon</span>
-        </div>
-      </div>      
     {!isPricingReady ? (
       <div className="pricing-loading">
         <div className="spinner-large"></div>
@@ -787,11 +782,10 @@ export default function PricingPageClient() {
     ) : (
       <>
         <section className="pricing-hero">
-          <div className="new-year-badge">🎉 Happy New Year 2026! 🎉</div>
           <h1>Simple, Transparent Pricing</h1>
           <div className="discount-banner">
-            <span className="discount-text">75% OFF</span>
-            <span className="limited-offer">First 26 Users Only!</span>
+            <span className="discount-text">25% OFF</span>
+            <span className="limited-offer">Limited Time Offer!</span>
           </div>
           <p>Choose the plan that fits your needs</p>
         </section>
@@ -864,31 +858,34 @@ export default function PricingPageClient() {
               <h2>{plan.name}</h2>
               <div className="plan-subtitle">{plan.role} PLAN</div>
             
-              <div className="price">
-                {plan.price === 0 ? (
-                  'FREE'
-                ) : plan.currency === 'LOADING' ? (
-                  <span>Loading...</span>
-                ) : (
-                  <>
-                    {plan.originalPrice && (
-                      <div className="original-price">
-                        <span className="currency">{plan.symbol}</span>
-                        <span className="amount">{plan.originalPrice}</span>
-                      </div>
-                    )}
-                    <div className="discounted-price">
-                      <span className="currency">{plan.symbol}</span>
-                      <span className="amount">{plan.price}</span>
-                    </div>
-                  </>
-                )}
-              </div>
+             <div className="price">
+               {plan.currency === 'LOADING' ? (
+                 <span className="loading-text">Loading...</span>
+               ) : plan.price === 0 ? (
+                 <span className="free-price">FREE</span>
+               ) : (
+                 <div className="price-main-row">
+                   {plan.originalPrice ? (
+                     <span className="original-price">
+                       {plan.symbol}
+                       {plan.originalPrice}
+                       <span className="slash-period"> /mo</span>
+                     </span>
+                   ) : null}
+
+                   <span className="current-price">
+                     {plan.symbol}
+                     {plan.price}
+                     <span className="slash-period"> /mo</span>
+                   </span>
+
+                 </div>
+               )}
+             </div>
               <div className="price-description">
                 {plan.price === 0 ? 'Forever free' : (
                   <>
-                    <span className="savings-badge">Save 75%</span>
-                    <span>per month</span>
+                    <span className="savings-badge">Save 25%</span>
                   </>
                 )}
               </div>
@@ -944,25 +941,31 @@ export default function PricingPageClient() {
               
               <div className="price">
                 {plan.currency === 'LOADING' ? (
-                  <span>Loading...</span>
+                  <span className="loading-text">Loading...</span>
+                ) : plan.price === 0 ? (
+                  <span className="free-price">FREE</span>
                 ) : (
-                  <>
-                    {plan.originalPrice && (
-                      <div className="original-price">
-                        <span className="currency">{plan.symbol}</span>
-                        <span className="amount">{plan.originalPrice}</span>
-                      </div>
-                    )}
-                    <div className="discounted-price">
-                      <span className="currency">{plan.symbol}</span>
-                      <span className="amount">{plan.price}</span>
-                    </div>
-                  </>
+                  <div className="price-main-row">
+                    {plan.originalPrice ? (
+                      <span className="original-price">
+                        {plan.symbol}
+                        {plan.originalPrice}
+                        <span className="slash-period"> /mo</span>
+                      </span>
+                    ) : null}
+
+                    <span className="current-price">
+                      {plan.symbol}
+                      {plan.price}
+                      <span className="slash-period"> /mo</span>
+                    </span>
+
+
+                  </div>
                 )}
               </div>
               <div className="price-description">
-                <span className="savings-badge">Save 75%</span>
-                <span>per month</span>
+                <span className="savings-badge">Save 25%</span>
               </div>
               
               <ul className="features">
@@ -1159,8 +1162,8 @@ export default function PricingPageClient() {
           </div>
           <div className="trust-item">
             <div className="trust-icon">💯</div>
-            <h3>Quality Guarantee</h3>
-            <p>7-day money-back guarantee on all plans</p>
+            <h3>Quality Guaranteed</h3>
+            <p>Premium AI voices with natural intonation</p>
           </div>
         </div>
       </section>      
