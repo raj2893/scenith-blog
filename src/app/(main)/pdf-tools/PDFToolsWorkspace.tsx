@@ -103,6 +103,13 @@ const PDFToolsWorkspace: React.FC<{ operation: string }> = ({ operation }) => {
   const [hasManuallyReorderedPages, setHasManuallyReorderedPages] = useState(false);
   const [rotationPages, setRotationPages] = useState<string>("all");
   const [customRotationPages, setCustomRotationPages] = useState<string>("");
+  const [showPageModal, setShowPageModal] = useState(false);
+  const [modalPageData, setModalPageData] = useState<{
+    uploadId: number;
+    pageNumber: number;
+    fileName: string;
+    totalPages: number;
+  } | null>(null);
 
 
 // Handlers for page drag and drop
@@ -354,6 +361,40 @@ useEffect(() => {
     initializeGoogleSignIn();
   }
 }, [showLoginModal, handleGoogleLogin]);
+
+// Keyboard navigation for modal
+useEffect(() => {
+  const handleKeyPress = (e: KeyboardEvent) => {
+    if (!showPageModal) return;
+
+    if (e.key === 'Escape') {
+      setShowPageModal(false);
+    } else if (e.key === 'ArrowLeft' && previewPageIndex > 0) {
+      const newIndex = previewPageIndex - 1;
+      setPreviewPageIndex(newIndex);
+      const prevPage = selectedPdfPages[newIndex];
+      setModalPageData({
+        uploadId: prevPage.uploadId,
+        pageNumber: prevPage.pageNumber,
+        fileName: prevPage.fileName,
+        totalPages: prevPage.totalPages
+      });
+    } else if (e.key === 'ArrowRight' && previewPageIndex < selectedPdfPages.length - 1) {
+      const newIndex = previewPageIndex + 1;
+      setPreviewPageIndex(newIndex);
+      const nextPage = selectedPdfPages[newIndex];
+      setModalPageData({
+        uploadId: nextPage.uploadId,
+        pageNumber: nextPage.pageNumber,
+        fileName: nextPage.fileName,
+        totalPages: nextPage.totalPages
+      });
+    }
+  };
+
+  window.addEventListener('keydown', handleKeyPress);
+  return () => window.removeEventListener('keydown', handleKeyPress);
+}, [showPageModal, previewPageIndex, selectedPdfPages]);
 
   // Auto-dismiss messages
   const showMessage = useCallback((type: 'success' | 'error', message: string) => {
@@ -1016,6 +1057,109 @@ useEffect(() => {
     });
   }
 }, [uploadedFiles, operation]);
+// Function to insert PDF at specific position
+const handleInsertPdfAtPosition = async (files: FileList | null, insertIndex: number) => {
+  if (!files || files.length === 0) return;
+
+  if (!isAuthenticated) {
+    setShowLoginModal(true);
+    return;
+  }
+
+  setIsUploading(true);
+  setError(null);
+
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setShowLoginModal(true);
+      return;
+    }
+
+    const formData = new FormData();
+    Array.from(files).forEach((file) => {
+      formData.append("files", file);
+    });
+
+    const response = await axios.post(
+      `${API_BASE_URL}/api/documents/uploads`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    const newUploads = response.data.uploads;
+
+    // Insert new uploads at the specified position
+    setUploadedFiles((prev) => {
+      const updated = [...prev];
+      updated.splice(insertIndex, 0, ...newUploads);
+      return updated;
+    });
+
+    // Fetch page counts for new PDFs and insert their pages at correct position
+    for (const upload of newUploads) {
+      try {
+        const pageCountResponse = await axios.get(
+          `${API_BASE_URL}/api/documents/page-count/${upload.id}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        const pageCount = pageCountResponse.data.pageCount;
+        setPdfPageCounts(prev => new Map(prev).set(upload.id, pageCount));
+
+        // Create pages for this PDF
+        const pages = Array.from({ length: pageCount }, (_, i) => ({
+          uploadId: upload.id,
+          fileName: upload.fileName,
+          pageNumber: i + 1,
+          totalPages: pageCount
+        }));
+
+        // Calculate where to insert pages based on PDFs before this position
+        setSelectedPdfPages(prev => {
+          const updated = [...prev];
+
+          // Find the index where pages should be inserted
+          let pageInsertIndex = 0;
+          const pdfsBeforeInsert = uploadedFiles.slice(0, insertIndex);
+
+          for (const pdf of pdfsBeforeInsert) {
+            const pagesForPdf = prev.filter(p => p.uploadId === pdf.id);
+            pageInsertIndex += pagesForPdf.length;
+          }
+
+          updated.splice(pageInsertIndex, 0, ...pages);
+          return updated;
+        });
+      } catch (err) {
+        console.error(`Failed to fetch page count for ${upload.id}:`, err);
+      }
+    }
+
+    showMessage('success', `${files.length} file(s) added successfully!`);
+  } catch (err: any) {
+    console.error("Upload error:", err);
+    if (err.response?.status === 401) {
+      localStorage.removeItem("token");
+      setIsAuthenticated(false);
+      setShowLoginModal(true);
+    } else {
+      showMessage('error', err.response?.data?.error || err.response?.data?.message || "Failed to upload files");
+    }
+  } finally {
+    setIsUploading(false);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  }
+};
 
   // Reset workflow
   const handleReset = () => {
@@ -1342,9 +1486,10 @@ useEffect(() => {
             {/* Desktop View - Three Column Layout */}
             <div className="merge-layout-desktop-only" style={{
               display: 'grid',
-              gridTemplateColumns: '300px 1fr 300px',
-              gap: '16px',
-              height: '600px',
+              gridTemplateColumns: '280px 1fr 280px',
+              gap: '20px',
+              height: 'calc(100vh - 350px)',
+              minHeight: '700px',
               marginTop: '20px'
             }}>
             {/* LEFT SECTION - Uploaded PDFs with Insert Options */}
@@ -1355,16 +1500,47 @@ useEffect(() => {
               overflowY: 'auto',
               background: 'white'
             }}>
-              <h3 style={{ marginBottom: '16px', fontSize: '16px', fontWeight: 600 }}>
-                Uploaded PDFs ({uploadedFiles.length})
-              </h3>
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '16px',
+                paddingBottom: '12px',
+                borderBottom: '2px solid #e2e8f0'
+              }}>
+                <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 600 }}>
+                  PDFs ({uploadedFiles.length})
+                </h3>
+                <span style={{
+                  fontSize: '11px',
+                  color: '#667eea',
+                  background: 'rgba(102, 126, 234, 0.1)',
+                  padding: '4px 10px',
+                  borderRadius: '12px',
+                  fontWeight: 600
+                }}>
+                  Drag to reorder
+                </span>
+              </div>
 
               {uploadedFiles.map((file, index) => (
-                <div key={file.id} style={{ marginBottom: '12px' }}>
+                <div key={file.id} style={{ marginBottom: '10px' }}>
                   {/* Insert Button Above */}
                   {index === 0 && (
                     <button
-                      onClick={() => fileInputRef.current?.click()}
+                      onClick={() => {
+                        const input = document.createElement('input');
+                        input.type = 'file';
+                        input.accept = 'application/pdf';
+                        input.multiple = true;
+                        input.onchange = (e) => {
+                          const target = e.target as HTMLInputElement;
+                          if (target.files) {
+                            handleInsertPdfAtPosition(target.files, 0);
+                          }
+                        };
+                        input.click();
+                      }}
                       style={{
                         width: '100%',
                         padding: '8px',
@@ -1374,15 +1550,24 @@ useEffect(() => {
                         background: 'rgba(102, 126, 234, 0.05)',
                         color: '#667eea',
                         cursor: 'pointer',
-                        fontSize: '13px',
+                        fontSize: '12px',
                         fontWeight: 600,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        gap: '6px'
+                        gap: '6px',
+                        transition: 'all 0.2s'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = 'rgba(102, 126, 234, 0.1)';
+                        e.currentTarget.style.transform = 'translateY(-1px)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = 'rgba(102, 126, 234, 0.05)';
+                        e.currentTarget.style.transform = 'translateY(0)';
                       }}
                     >
-                      <FaPlus size={12} />  PDF Here
+                      <FaPlus size={10} /> Add PDF Here
                     </button>
                   )}
 
@@ -1394,26 +1579,46 @@ useEffect(() => {
                     onDrop={() => handleDrop(index)}
                     style={{
                       padding: '12px',
-                      border: '2px solid #e2e8f0',
+                      border: dragOverIndex === index
+                        ? '2px solid #667eea'
+                        : draggedIndex === index
+                          ? '2px dashed #667eea'
+                          : '2px solid #e2e8f0',
                       borderRadius: '8px',
-                      background: '#f8fafc',
-                      cursor: 'move'
+                      background: draggedIndex === index
+                        ? 'rgba(102, 126, 234, 0.1)'
+                        : '#f8fafc',
+                      cursor: 'move',
+                      transition: 'all 0.2s',
+                      opacity: draggedIndex === index ? 0.6 : 1
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <FaGripVertical color="#94a3b8" />
-                      <FaFilePdf color="#ef4444" size={20} />
+                      <FaGripVertical color="#94a3b8" size={14} />
+                      <div style={{
+                        minWidth: '32px',
+                        height: '40px',
+                        borderRadius: '6px',
+                        background: 'linear-gradient(135deg, #ef4444, #dc2626)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0
+                      }}>
+                        <FaFilePdf color="white" size={16} />
+                      </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{
                           fontSize: '13px',
                           fontWeight: 600,
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap'
+                          whiteSpace: 'nowrap',
+                          color: '#1e293b'
                         }}>
                           {file.fileName}
                         </div>
-                        <div style={{ fontSize: '11px', color: '#64748b' }}>
+                        <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px' }}>
                           {pdfPageCounts.get(file.id) || '...'} pages • {formatFileSize(file.fileSizeBytes)}
                         </div>
                       </div>
@@ -1425,7 +1630,18 @@ useEffect(() => {
                           borderRadius: '6px',
                           background: '#fee2e2',
                           color: '#dc2626',
-                          cursor: 'pointer'
+                          cursor: 'pointer',
+                          flexShrink: 0,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          transition: 'all 0.2s'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = '#fecaca';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = '#fee2e2';
                         }}
                       >
                         <FaTimes size={12} />
@@ -1435,7 +1651,19 @@ useEffect(() => {
 
                   {/* Insert Button Below */}
                   <button
-                    onClick={() => fileInputRef.current?.click()}
+                    onClick={() => {
+                      const input = document.createElement('input');
+                      input.type = 'file';
+                      input.accept = 'application/pdf';
+                      input.multiple = true;
+                      input.onchange = (e) => {
+                        const target = e.target as HTMLInputElement;
+                        if (target.files) {
+                          handleInsertPdfAtPosition(target.files, index + 1);
+                        }
+                      };
+                      input.click();
+                    }}
                     style={{
                       width: '100%',
                       padding: '8px',
@@ -1445,15 +1673,24 @@ useEffect(() => {
                       background: 'rgba(102, 126, 234, 0.05)',
                       color: '#667eea',
                       cursor: 'pointer',
-                      fontSize: '13px',
+                      fontSize: '12px',
                       fontWeight: 600,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      gap: '6px'
+                      gap: '6px',
+                      transition: 'all 0.2s'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = 'rgba(102, 126, 234, 0.1)';
+                      e.currentTarget.style.transform = 'translateY(-1px)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'rgba(102, 126, 234, 0.05)';
+                      e.currentTarget.style.transform = 'translateY(0)';
                     }}
                   >
-                    <FaPlus size={12} /> PDF Here
+                    <FaPlus size={10} /> Add PDF Here
                   </button>
                 </div>
               ))}
@@ -1467,197 +1704,246 @@ useEffect(() => {
              background: 'white',
              display: 'flex',
              flexDirection: 'column',
-             overflow: 'hidden'
+             overflow: 'hidden',
+             position: 'relative'
            }}>
-
-             {selectedPdfPages.length > 0 ? (
-               <div style={{
-                 flex: 1,
-                 overflowY: 'auto',
-                 overflowX: 'hidden',
-                 padding: '8px',
-                 background: '#f8fafc',
-                 borderRadius: '8px'
-               }}>
-                 {/* Render all pages in order */}
-                 {selectedPdfPages.map((page, index) => (
-                   <div
-                     key={`preview-${page.uploadId}-${page.pageNumber}-${index}`}
-                     onClick={() => setPreviewPageIndex(index)}
-                     style={{
-                       marginBottom: '16px',
-                       cursor: 'pointer',
-                       position: 'relative',
-                       transition: 'all 0.2s'
+             <div style={{
+               display: 'flex',
+               justifyContent: 'space-between',
+               alignItems: 'center',
+               marginBottom: '12px',
+               paddingBottom: '12px',
+               borderBottom: '2px solid #e2e8f0'
+             }}>
+               <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 600 }}>
+                 Page Preview
+               </h3>
+               {selectedPdfPages.length > 0 && (
+                 <div style={{
+                   display: 'flex',
+                   gap: '8px',
+                   alignItems: 'center'
+                 }}>
+                   <span style={{
+                     fontSize: '12px',
+                     color: '#64748b',
+                     fontWeight: 500
+                   }}>
+                     {selectedPdfPages.length} pages
+                   </span>
+                   <button
+                     onClick={() => {
+                       const previewContainer = document.getElementById('preview-scroll-container');
+                       if (previewContainer) {
+                         previewContainer.scrollTo({ top: 0, behavior: 'smooth' });
+                       }
                      }}
-                   >
-                     {/* Page Number Badge */}
-                     <div style={{
-                       position: 'absolute',
-                       top: '8px',
-                       left: '8px',
-                       zIndex: 10,
-                       background: previewPageIndex === index
-                         ? 'linear-gradient(135deg, #667eea, #764ba2)'
-                         : 'rgba(0, 0, 0, 0.7)',
-                       color: 'white',
+                     style={{
                        padding: '6px 12px',
-                       borderRadius: '20px',
+                       background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                       color: 'white',
+                       border: 'none',
+                       borderRadius: '6px',
                        fontSize: '12px',
-                       fontWeight: 700,
-                       boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                       fontWeight: 600,
+                       cursor: 'pointer',
                        display: 'flex',
                        alignItems: 'center',
-                       gap: '6px'
-                     }}>
-                       <span>Page {index + 1}</span>
-                       {previewPageIndex === index && (
-                         <span style={{ fontSize: '10px' }}>👁️</span>
-                       )}
-                     </div>
-
-                     {/* PDF Page Preview using Canvas */}
-                     <div style={{
-                       width: '100%',
-                       border: previewPageIndex === index
-                         ? '3px solid #667eea'
-                         : '2px solid #e2e8f0',
-                       borderRadius: '8px',
-                       overflow: 'hidden',
-                       background: 'white',
-                       boxShadow: previewPageIndex === index
-                         ? '0 4px 16px rgba(102, 126, 234, 0.3)'
-                         : '0 2px 8px rgba(0,0,0,0.1)',
-                       transition: 'all 0.2s',
-                       position: 'relative'
+                       gap: '4px',
+                       transition: 'all 0.2s'
                      }}
                      onMouseEnter={(e) => {
-                       if (previewPageIndex !== index) {
-                         e.currentTarget.style.borderColor = '#94a3b8';
-                         e.currentTarget.style.transform = 'scale(1.02)';
-                       }
+                       e.currentTarget.style.transform = 'translateY(-1px)';
+                       e.currentTarget.style.boxShadow = '0 4px 12px rgba(102, 126, 234, 0.4)';
                      }}
                      onMouseLeave={(e) => {
-                       if (previewPageIndex !== index) {
-                         e.currentTarget.style.borderColor = '#e2e8f0';
-                         e.currentTarget.style.transform = 'scale(1)';
-                       }
+                       e.currentTarget.style.transform = 'translateY(0)';
+                       e.currentTarget.style.boxShadow = 'none';
                      }}
-                     >
-                       {/* Embed PDF page using object tag for clean rendering */}
-                       <object
-                         data={`${uploadedFiles.find(f => f.id === page.uploadId)?.presignedUrl}#page=${page.pageNumber}&view=FitH&toolbar=0&navpanes=0&scrollbar=0`}
-                         type="application/pdf"
-                         style={{
-                           width: '100%',
-                           height: '400px',
-                           display: 'block',
-                           pointerEvents: 'none'
-                         }}
-                       >
-                         {/* Fallback for browsers that don't support object tag */}
-                         <div style={{
-                           width: '100%',
-                           height: '400px',
-                           display: 'flex',
-                           alignItems: 'center',
-                           justifyContent: 'center',
-                           background: '#f8fafc',
-                           color: '#64748b',
-                           fontSize: '13px'
-                         }}>
-                           📄 Page {page.pageNumber}
-                         </div>
-                       </object>
-                     </div>
+                   >
+                     ↑ Top
+                   </button>
+                 </div>
+               )}
+             </div>
 
-                     {/* Page Info Footer */}
-                     <div style={{
-                       marginTop: '8px',
-                       padding: '8px 12px',
-                       background: previewPageIndex === index
-                         ? 'rgba(102, 126, 234, 0.1)'
-                         : 'white',
-                       borderRadius: '6px',
-                       border: '1px solid #e2e8f0',
-                       display: 'flex',
-                       justifyContent: 'space-between',
-                       alignItems: 'center'
-                     }}>
-                       <div style={{ flex: 1, minWidth: 0 }}>
+             {selectedPdfPages.length > 0 ? (
+               <div
+                 id="preview-scroll-container"
+                 style={{
+                   flex: 1,
+                   overflowY: 'auto',
+                   overflowX: 'hidden',
+                   padding: '8px',
+                   background: '#f8fafc',
+                   borderRadius: '8px'
+                 }}
+               >
+                 {/* Render all pages as thumbnails */}
+                 <div style={{
+                   display: 'grid',
+                   gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
+                   gap: '16px'
+                 }}>
+                   {selectedPdfPages.map((page, index) => (
+                     <div
+                       key={`preview-${page.uploadId}-${page.pageNumber}-${index}`}
+                       onClick={() => {
+                         setPreviewPageIndex(index);
+                         setModalPageData({
+                           uploadId: page.uploadId,
+                           pageNumber: page.pageNumber,
+                           fileName: page.fileName,
+                           totalPages: page.totalPages
+                         });
+                         setShowPageModal(true);
+                       }}
+                       style={{
+                         cursor: 'pointer',
+                         position: 'relative',
+                         transition: 'all 0.2s',
+                         background: 'white',
+                         borderRadius: '8px',
+                         overflow: 'hidden',
+                         border: previewPageIndex === index
+                           ? '3px solid #667eea'
+                           : '2px solid #e2e8f0',
+                         boxShadow: previewPageIndex === index
+                           ? '0 4px 16px rgba(102, 126, 234, 0.3)'
+                           : '0 2px 8px rgba(0,0,0,0.05)'
+                       }}
+                       onMouseEnter={(e) => {
+                         if (previewPageIndex !== index) {
+                           e.currentTarget.style.transform = 'scale(1.03)';
+                           e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.15)';
+                         }
+                       }}
+                       onMouseLeave={(e) => {
+                         if (previewPageIndex !== index) {
+                           e.currentTarget.style.transform = 'scale(1)';
+                           e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)';
+                         }
+                       }}
+                     >
+                       {/* Page Number Badge */}
+                       <div style={{
+                         position: 'absolute',
+                         top: '6px',
+                         left: '6px',
+                         zIndex: 10,
+                         background: previewPageIndex === index
+                           ? 'linear-gradient(135deg, #667eea, #764ba2)'
+                           : 'rgba(0, 0, 0, 0.7)',
+                         color: 'white',
+                         padding: '4px 10px',
+                         borderRadius: '12px',
+                         fontSize: '11px',
+                         fontWeight: 700,
+                         boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
+                         display: 'flex',
+                         alignItems: 'center',
+                         gap: '4px'
+                       }}>
+                         <span>{index + 1}</span>
+                       </div>
+
+                       {/* Eye Icon for Full View */}
+                       <div style={{
+                         position: 'absolute',
+                         top: '6px',
+                         right: '6px',
+                         zIndex: 10,
+                         background: 'rgba(0, 0, 0, 0.7)',
+                         color: 'white',
+                         width: '28px',
+                         height: '28px',
+                         borderRadius: '50%',
+                         display: 'flex',
+                         alignItems: 'center',
+                         justifyContent: 'center',
+                         fontSize: '12px',
+                         opacity: 0.8,
+                         transition: 'all 0.2s'
+                       }}>
+                         <FaEye />
+                       </div>
+
+                       {/* PDF Thumbnail Preview */}
+                       <div style={{
+                         width: '100%',
+                         height: '220px',
+                         background: '#f8fafc',
+                         display: 'flex',
+                         alignItems: 'center',
+                         justifyContent: 'center',
+                         overflow: 'hidden',
+                         position: 'relative'
+                       }}>
+                         <object
+                           data={`${uploadedFiles.find(f => f.id === page.uploadId)?.presignedUrl}#page=${page.pageNumber}&view=FitH&toolbar=0&navpanes=0&scrollbar=0`}
+                           type="application/pdf"
+                           style={{
+                             width: '100%',
+                             height: '100%',
+                             display: 'block',
+                             pointerEvents: 'none'
+                           }}
+                         >
+                           <div style={{
+                             width: '100%',
+                             height: '100%',
+                             display: 'flex',
+                             alignItems: 'center',
+                             justifyContent: 'center',
+                             background: '#f8fafc',
+                             color: '#64748b',
+                             fontSize: '11px',
+                             flexDirection: 'column',
+                             gap: '8px'
+                           }}>
+                             <FaFilePdf size={32} />
+                             <span>Page {page.pageNumber}</span>
+                           </div>
+                         </object>
+                       </div>
+
+                       {/* Page Info Footer */}
+                       <div style={{
+                         padding: '8px 10px',
+                         background: previewPageIndex === index
+                           ? 'rgba(102, 126, 234, 0.1)'
+                           : 'white',
+                         borderTop: '1px solid #e2e8f0'
+                       }}>
                          <div style={{
-                           fontSize: '12px',
+                           fontSize: '11px',
                            fontWeight: 600,
                            color: '#1e293b',
                            overflow: 'hidden',
                            textOverflow: 'ellipsis',
-                           whiteSpace: 'nowrap'
+                           whiteSpace: 'nowrap',
+                           marginBottom: '2px'
                          }}>
                            {page.fileName}
                          </div>
                          <div style={{
                            fontSize: '10px',
                            color: '#64748b',
-                           marginTop: '2px'
+                           display: 'flex',
+                           justifyContent: 'space-between',
+                           alignItems: 'center'
                          }}>
-                           Original: Page {page.pageNumber} of {page.totalPages}
+                           <span>Pg {page.pageNumber}/{page.totalPages}</span>
+                           <span style={{
+                             color: '#667eea',
+                             fontWeight: 600
+                           }}>
+                             #{index + 1}
+                           </span>
                          </div>
                        </div>
-                       <div style={{
-                         fontSize: '11px',
-                         color: '#667eea',
-                         fontWeight: 600,
-                         padding: '4px 8px',
-                         background: 'rgba(102, 126, 234, 0.1)',
-                         borderRadius: '4px'
-                       }}>
-                         #{index + 1}
-                       </div>
                      </div>
-                   </div>
-                 ))}
-
-                 {/* Scroll to Top Button (appears after scrolling) */}
-                 <div style={{
-                   position: 'sticky',
-                   bottom: '16px',
-                   display: 'flex',
-                   justifyContent: 'center',
-                   marginTop: '16px'
-                 }}>
-                   <button
-                     onClick={() => {
-                       const previewContainer = document.querySelector('[style*="overflowY: auto"]');
-                       if (previewContainer) {
-                         previewContainer.scrollTo({ top: 0, behavior: 'smooth' });
-                       }
-                     }}
-                     style={{
-                       padding: '10px 20px',
-                       background: 'linear-gradient(135deg, #667eea, #764ba2)',
-                       color: 'white',
-                       border: 'none',
-                       borderRadius: '20px',
-                       fontSize: '13px',
-                       fontWeight: 600,
-                       cursor: 'pointer',
-                       boxShadow: '0 4px 12px rgba(102, 126, 234, 0.4)',
-                       display: 'flex',
-                       alignItems: 'center',
-                       gap: '8px',
-                       transition: 'all 0.2s'
-                     }}
-                     onMouseEnter={(e) => {
-                       e.currentTarget.style.transform = 'scale(1.05)';
-                       e.currentTarget.style.boxShadow = '0 6px 16px rgba(102, 126, 234, 0.5)';
-                     }}
-                     onMouseLeave={(e) => {
-                       e.currentTarget.style.transform = 'scale(1)';
-                       e.currentTarget.style.boxShadow = '0 4px 12px rgba(102, 126, 234, 0.4)';
-                     }}
-                   >
-                     ↑ Scroll to Top
-                   </button>
+                   ))}
                  </div>
                </div>
              ) : (
@@ -2883,7 +3169,288 @@ useEffect(() => {
         </div>
       )}
 
-      {/* Login Modal */}
+{/* Full Page Preview Modal */}
+{showPageModal && modalPageData && (
+  <div
+    style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: 'rgba(0, 0, 0, 0.95)',
+      zIndex: 10001,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '20px',
+      backdropFilter: 'blur(8px)'
+    }}
+    onClick={() => setShowPageModal(false)}
+  >
+    {/* Modal Header */}
+    <div style={{
+      position: 'absolute',
+      top: '20px',
+      left: '50%',
+      transform: 'translateX(-50%)',
+      background: 'rgba(255, 255, 255, 0.95)',
+      padding: '12px 24px',
+      borderRadius: '30px',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '12px',
+      boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+      zIndex: 10002
+    }}>
+      <div style={{
+        background: 'linear-gradient(135deg, #667eea, #764ba2)',
+        color: 'white',
+        width: '32px',
+        height: '32px',
+        borderRadius: '50%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: '14px',
+        fontWeight: 700
+      }}>
+        {previewPageIndex + 1}
+      </div>
+      <div>
+        <div style={{
+          fontSize: '13px',
+          fontWeight: 700,
+          color: '#1e293b',
+          maxWidth: '400px',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap'
+        }}>
+          {modalPageData.fileName}
+        </div>
+        <div style={{
+          fontSize: '11px',
+          color: '#64748b'
+        }}>
+          Page {modalPageData.pageNumber} of {modalPageData.totalPages}
+        </div>
+      </div>
+    </div>
+
+    {/* Close Button */}
+    <button
+      onClick={() => setShowPageModal(false)}
+      style={{
+        position: 'absolute',
+        top: '20px',
+        right: '20px',
+        width: '48px',
+        height: '48px',
+        background: 'rgba(255, 255, 255, 0.95)',
+        border: 'none',
+        borderRadius: '50%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: 'pointer',
+        fontSize: '20px',
+        color: '#1e293b',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+        transition: 'all 0.2s',
+        zIndex: 10002
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.background = '#fee2e2';
+        e.currentTarget.style.color = '#dc2626';
+        e.currentTarget.style.transform = 'scale(1.1)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.95)';
+        e.currentTarget.style.color = '#1e293b';
+        e.currentTarget.style.transform = 'scale(1)';
+      }}
+    >
+      <FaTimes />
+    </button>
+
+    {/* Navigation Buttons */}
+    {previewPageIndex > 0 && (
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          const newIndex = previewPageIndex - 1;
+          setPreviewPageIndex(newIndex);
+          const prevPage = selectedPdfPages[newIndex];
+          setModalPageData({
+            uploadId: prevPage.uploadId,
+            pageNumber: prevPage.pageNumber,
+            fileName: prevPage.fileName,
+            totalPages: prevPage.totalPages
+          });
+        }}
+        style={{
+          position: 'absolute',
+          left: '20px',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          width: '56px',
+          height: '56px',
+          background: 'rgba(255, 255, 255, 0.95)',
+          border: 'none',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          fontSize: '24px',
+          color: '#667eea',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+          transition: 'all 0.2s',
+          zIndex: 10002
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+          e.currentTarget.style.color = 'white';
+          e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.95)';
+          e.currentTarget.style.color = '#667eea';
+          e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
+        }}
+      >
+        ‹
+      </button>
+    )}
+
+    {previewPageIndex < selectedPdfPages.length - 1 && (
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          const newIndex = previewPageIndex + 1;
+          setPreviewPageIndex(newIndex);
+          const nextPage = selectedPdfPages[newIndex];
+          setModalPageData({
+            uploadId: nextPage.uploadId,
+            pageNumber: nextPage.pageNumber,
+            fileName: nextPage.fileName,
+            totalPages: nextPage.totalPages
+          });
+        }}
+        style={{
+          position: 'absolute',
+          right: '20px',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          width: '56px',
+          height: '56px',
+          background: 'rgba(255, 255, 255, 0.95)',
+          border: 'none',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          fontSize: '24px',
+          color: '#667eea',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+          transition: 'all 0.2s',
+          zIndex: 10002
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+          e.currentTarget.style.color = 'white';
+          e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.95)';
+          e.currentTarget.style.color = '#667eea';
+          e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
+        }}
+      >
+        ›
+      </button>
+    )}
+
+    {/* PDF Viewer */}
+    <div
+      onClick={(e) => e.stopPropagation()}
+      style={{
+        width: '100%',
+        maxWidth: '900px',
+        height: 'calc(100vh - 140px)',
+        background: 'white',
+        borderRadius: '16px',
+        overflow: 'hidden',
+        boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+    >
+      <object
+        data={`${uploadedFiles.find(f => f.id === modalPageData.uploadId)?.presignedUrl}#page=${modalPageData.pageNumber}&view=Fit&toolbar=1&navpanes=0`}
+        type="application/pdf"
+        style={{
+          width: '100%',
+          height: '100%',
+          border: 'none'
+        }}
+      >
+        <div style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '20px',
+          color: '#64748b'
+        }}>
+          <FaFilePdf size={64} />
+          <p style={{ fontSize: '16px', fontWeight: 600 }}>
+            Unable to display PDF
+          </p>
+          <a
+            href={uploadedFiles.find(f => f.id === modalPageData.uploadId)?.presignedUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              padding: '12px 24px',
+              background: 'linear-gradient(135deg, #667eea, #764ba2)',
+              color: 'white',
+              borderRadius: '8px',
+              textDecoration: 'none',
+              fontWeight: 600
+            }}
+          >
+            Open in New Tab
+          </a>
+        </div>
+      </object>
+    </div>
+
+    {/* Hint */}
+    <div style={{
+      position: 'absolute',
+      bottom: '20px',
+      left: '50%',
+      transform: 'translateX(-50%)',
+      background: 'rgba(255, 255, 255, 0.9)',
+      padding: '8px 20px',
+      borderRadius: '20px',
+      fontSize: '12px',
+      color: '#64748b',
+      fontWeight: 500,
+      boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+    }}>
+      Click outside or press ESC to close • Use ‹ › arrows to navigate
+    </div>
+  </div>
+)}
+
       {/* Login Modal */}
       {showLoginModal && (
         <div className="modal-overlay" style={{
