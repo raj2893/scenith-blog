@@ -1215,3 +1215,59 @@ html {
     background: #94a3b8;
   }
 }
+/* ADD TO PDFTools.css */
+
+/* Better scrollbar styling for preview */
+#preview-scroll-container::-webkit-scrollbar {
+  width: 10px;
+}
+
+#preview-scroll-container::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+
+#preview-scroll-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 10px;
+}
+
+#preview-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #5568d3, #653a8b);
+}
+
+/* Ensure workspace uses full width */
+.pdf-workspace-container {
+  max-width: 100%;
+  padding: 0 20px;
+}
+
+.workspace-content {
+  max-width: 100%;
+  width: 100%;
+}
+
+/* Professional shadows for better depth */
+.merge-layout-desktop-only > div {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Smooth transitions */
+.merge-layout-desktop-only > div > div {
+  transition: all 0.2s ease;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .pdf-workspace-container {
+    padding: 0 12px;
+  }
+
+  .workspace-header {
+    padding: 16px;
+  }
+
+  .workspace-header h1 {
+    font-size: 1.5rem;
+  }
+}
