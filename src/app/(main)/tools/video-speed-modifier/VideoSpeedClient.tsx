@@ -167,6 +167,32 @@ const VideoSpeedClient: React.FC = () => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<{id: number; name: string; type: string} | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [planLimits, setPlanLimits] = useState<{
+    videosPerMonth: number;
+    videosUsed: number;
+    maxVideoLength: number;
+    maxQuality: string;
+  } | null>(null);  
+
+  useEffect(() => {
+    const fetchPlanLimits = async () => {
+      if (!isLoggedIn) {
+        setPlanLimits(null);
+        return;
+      }
+  
+      try {
+        const response = await axios.get(`${API_BASE_URL}/api/video-speed/plan-limits`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        });
+        setPlanLimits(response.data);
+      } catch (error) {
+        console.error('Error fetching plan limits:', error);
+      }
+    };
+  
+    fetchPlanLimits();
+  }, [isLoggedIn, userProfile.role]);  
 
   // Handle scroll for navbar styling
   useEffect(() => {
@@ -493,7 +519,15 @@ const VideoSpeedClient: React.FC = () => {
     } catch (error: any) {
       const errorMessage = error.response?.data?.error || 'Failed to upload video.';
       setError(errorMessage);
-      e.target.value = ''; // Reset file input on error
+      
+      setTimeout(() => {
+        const errorElement = document.querySelector('.error-message');
+        if (errorElement) {
+          errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+      
+      e.target.value = '';
     } finally {
       setIsUploading(false);
     }
@@ -573,7 +607,16 @@ const VideoSpeedClient: React.FC = () => {
       };
       pollJobStatus();
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to process video.');
+      const errorMessage = err.response?.data?.error || 'Failed to process video.';
+      setError(errorMessage);
+      
+      setTimeout(() => {
+        const errorElement = document.querySelector('.error-message');
+        if (errorElement) {
+          errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+      
       setIsProcessing(false);
     }
   };
@@ -758,6 +801,54 @@ const VideoSpeedClient: React.FC = () => {
                     </div>
                   </div>
                 </div>
+                {planLimits && (
+                  <div className="usage-info">
+                    <div className="usage-section">
+                      <p className="usage-label month">📅 Speed Videos This Month</p>
+                      {planLimits.videosPerMonth === -1 ? (
+                        <p className="usage-text">
+                          <strong>Unlimited</strong> - No monthly video limit
+                        </p>
+                      ) : (
+                        <>
+                          <div className="usage-bar-container">
+                            <div 
+                              className={`usage-bar-fill ${
+                                (planLimits.videosUsed / planLimits.videosPerMonth) >= 0.95 ? 'critical' :
+                                (planLimits.videosUsed / planLimits.videosPerMonth) >= 0.80 ? 'warning' : 'normal'
+                              }`}
+                              style={{ width: `${(planLimits.videosUsed / planLimits.videosPerMonth) * 100}%` }}
+                            />
+                          </div>
+                          <p className="usage-text">
+                            <strong>{planLimits.videosPerMonth - planLimits.videosUsed}</strong> videos remaining
+                            ({planLimits.videosUsed} / {planLimits.videosPerMonth} used)
+                          </p>
+                              
+                          {(planLimits.videosUsed / planLimits.videosPerMonth) >= 0.80 && 
+                           (planLimits.videosPerMonth - planLimits.videosUsed) > 0 && (
+                            <div className="usage-micro-warning">
+                              You're almost out of free videos. Upgrade to avoid interruption.
+                            </div>
+                          )}
+                        </>
+                      )}
+
+                      {userProfile.role === 'BASIC' && (
+                        <div className="inline-upgrade-cta">
+                          <a href="/pricing" className="inline-upgrade-link">
+                            🔓 Need more? Upgrade to Creator for 9× more videos (45/month)
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="limits-info">
+                      <p>📏 Max video length: <strong>{planLimits.maxVideoLength === -1 ? 'Unlimited' : `${planLimits.maxVideoLength} minutes`}</strong></p>
+                      <p>🎬 Max quality: <strong>{planLimits.maxQuality}</strong></p>
+                    </div>
+                  </div>
+                )}                
                 {selectedUpload && (
                   <div className="quality-selector-container">
                     <label htmlFor="quality-select" className="quality-label">

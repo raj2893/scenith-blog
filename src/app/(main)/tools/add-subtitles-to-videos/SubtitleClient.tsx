@@ -414,6 +414,32 @@ const SubtitleClient: React.FC = () => {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const prevSelectedAiStyleRef = useRef<AiStyle | null>(null);
+  const [planLimits, setPlanLimits] = useState<{
+    videosPerMonth: number;
+    videosUsed: number;
+    maxVideoLength: number;
+    maxQuality: string;
+  } | null>(null);  
+
+  useEffect(() => {
+    const fetchPlanLimits = async () => {
+      if (!isLoggedIn) {
+        setPlanLimits(null);
+        return;
+      }
+  
+      try {
+        const response = await axios.get(`${API_BASE_URL}/api/subtitles/plan-limits`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        });
+        setPlanLimits(response.data);
+      } catch (error) {
+        console.error('Error fetching plan limits:', error);
+      }
+    };
+  
+    fetchPlanLimits();
+  }, [isLoggedIn, userProfile.role]);  
 
   // Handle scroll for navbar
   useEffect(() => {
@@ -690,7 +716,16 @@ const handleDeleteConfirm = async () => {
       setOriginalSubtitle(null);
       setCurrentTime(0);      
     } catch (error: any) {
-      setError(error.response?.data?.message || 'Failed to upload video.');
+      const errorMessage = error.response?.data?.message || 'Failed to upload video.';
+      setError(errorMessage);
+      
+      // Scroll to error message
+      setTimeout(() => {
+        const errorElement = document.querySelector('.error-message');
+        if (errorElement) {
+          errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
     } finally {
       setIsUploading(false);
     }
@@ -1017,7 +1052,17 @@ const handleDeleteConfirm = async () => {
       };
       pollJobStatus();
     } catch (error: any) {
-      setError(error.response?.data?.message || 'Failed to process subtitles.');
+      const errorMessage = error.response?.data?.message || 'Failed to process subtitles.';
+      setError(errorMessage);
+      
+      // Scroll to error message
+      setTimeout(() => {
+        const errorElement = document.querySelector('.error-message');
+        if (errorElement) {
+          errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+      
       setIsProcessing(false);
     }
   };
@@ -1395,7 +1440,55 @@ const handleDeleteConfirm = async () => {
                       </p>
                     )}
                   </div>
-                )}                
+                )}        
+                {planLimits && (
+                  <div className="usage-info">
+                    <div className="usage-section">
+                      <p className="usage-label month">📅 Subtitle Videos This Month</p>
+                      {planLimits.videosPerMonth === -1 ? (
+                        <p className="usage-text">
+                          <strong>Unlimited</strong> - No monthly video limit
+                        </p>
+                      ) : (
+                        <>
+                          <div className="usage-bar-container">
+                            <div 
+                              className={`usage-bar-fill ${
+                                (planLimits.videosUsed / planLimits.videosPerMonth) >= 0.95 ? 'critical' :
+                                (planLimits.videosUsed / planLimits.videosPerMonth) >= 0.80 ? 'warning' : 'normal'
+                              }`}
+                              style={{ width: `${(planLimits.videosUsed / planLimits.videosPerMonth) * 100}%` }}
+                            />
+                          </div>
+                          <p className="usage-text">
+                            <strong>{planLimits.videosPerMonth - planLimits.videosUsed}</strong> videos remaining
+                            ({planLimits.videosUsed} / {planLimits.videosPerMonth} used)
+                          </p>
+                              
+                          {(planLimits.videosUsed / planLimits.videosPerMonth) >= 0.80 && 
+                           (planLimits.videosPerMonth - planLimits.videosUsed) > 0 && (
+                            <div className="usage-micro-warning">
+                              You're almost out of free videos. Upgrade to avoid interruption.
+                            </div>
+                          )}
+                        </>
+                      )}
+
+                      {userProfile.role === 'BASIC' && (
+                        <div className="inline-upgrade-cta">
+                          <a href="/pricing" className="inline-upgrade-link">
+                            🔓 Need more? Upgrade to Creator for 9× more videos (45/month)
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="limits-info">
+                      <p>📏 Max video length: <strong>{planLimits.maxVideoLength === -1 ? 'Unlimited' : `${planLimits.maxVideoLength} minutes`}</strong></p>
+                      <p>🎬 Max quality: <strong>{planLimits.maxQuality}</strong></p>
+                    </div>
+                  </div>
+                )}                        
                 <div className="action-buttons">
                   {selectedUpload && (
                     <div className="button-wrapper">

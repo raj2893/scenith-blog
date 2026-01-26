@@ -29,6 +29,17 @@ interface UserProfile {
   role: string;
 }
 
+interface IndividualPlan {
+  name: string;
+  planType: 'AI_VOICE_PRO' | 'AI_SUBTITLE_PRO' | 'AI_SPEED_PRO';
+  price: number;
+  originalPrice?: number;
+  currency: string;
+  features: string[];
+  symbol?: string;
+  service: string; // e.g., "AI Voice Generation"
+}
+
 export default function PricingPageClient() {
   const router = useRouter();
   const [currentPlan, setCurrentPlan] = useState<'BASIC' | 'CREATOR' | 'STUDIO'>('BASIC');
@@ -364,7 +375,12 @@ export default function PricingPageClient() {
             '1,000 Characters/day',
             '350 Characters per request',
             '30+ AI Voices in multiple languages',
-            'Basic support'
+            '5 Subtitle videos/month',
+            '5 Speed videos/month',
+            '5 minutes per video',
+            'Up to 720p quality',
+            'Basic support',
+            'Commercial use allowed'
           ]
         },
         {
@@ -372,15 +388,20 @@ export default function PricingPageClient() {
           role: 'CREATOR',
           price: 0,
           currency: 'LOADING',
-          ttsLimit: 50000,
+          ttsLimit: 60000,
           popular: true,
           features: [
-            '50,000 Characters/month',
-            '5,000 Characters/day',
-            '2,500 Characters per request',
+            '60,000 Characters/month',
+            '15,000 Characters/day',
+            '3,500 Characters per request',
             'All Premium AI Voices',
+            '45 Subtitle videos/month',
+            '45 Speed videos/month',
+            '30 minutes per video',
+            'Up to 1440p quality',
             'Elements & Templates (Coming Soon)',
-            'Priority support'
+            'Priority support',
+            'Commercial use allowed'
           ]
         },
         {
@@ -388,14 +409,19 @@ export default function PricingPageClient() {
           role: 'STUDIO',
           price: 0,
           currency: 'LOADING',
-          ttsLimit: 150000,
+          ttsLimit: 200000,
           features: [
-            '1,50,000 Characters/month',
+            '200,000 Characters/month',
             'Unlimited daily usage',
             '5,000 Characters per request',
             'All Premium AI Voices',
+            'Unlimited Subtitle videos/month',
+            'Unlimited Speed videos/month',
+            'Unlimited video length',
+            'Up to 4K quality',
             'Elements & Templates (Coming Soon)',
-            'Dedicated support'
+            'Dedicated support',
+            'Commercial use allowed'
           ]
         }
       ];
@@ -422,6 +448,10 @@ export default function PricingPageClient() {
           '1,000 Characters/day',
           '350 Characters per request',
           '30+ AI Voices in multiple languages',
+          '5 Subtitle videos/month',
+          '5 Speed videos/month',
+          '5 minutes per video',
+          'Up to 720p quality',
           'Basic support',
           'Commercial use allowed'
         ]
@@ -433,13 +463,17 @@ export default function PricingPageClient() {
         originalPrice: originalCreatorPrice,
         currency: currency,
         symbol: symbol,
-        ttsLimit: 50000,
+        ttsLimit: 60000,
         popular: true,
         features: [
-          '50,000 Characters/month',
-          '5,000 Characters/day',
-          '2,500 Characters per request',
+          '60,000 Characters/month',
+          '15,000 Characters/day',
+          '3,500 Characters per request',
           'All Premium AI Voices',
+          '45 Subtitle videos/month',
+          '45 Speed videos/month',
+          '30 minutes per video',
+          'Up to 1440p quality',
           'Elements & Templates (Coming Soon)',
           'Priority support',
           'Commercial use allowed'
@@ -452,19 +486,288 @@ export default function PricingPageClient() {
         originalPrice: originalStudioPrice,
         currency: currency,
         symbol: symbol,
-        ttsLimit: 150000,
+        ttsLimit: 200000,
         features: [
-          '1,50,000 Characters/month',
+          '200,000 Characters/month',
           'Unlimited daily usage',
           '5,000 Characters per request',
           'All Premium AI Voices',
+          'Unlimited Subtitle videos/month',
+          'Unlimited Speed videos/month',
+          'Unlimited video length',
+          'Up to 4K quality',
           'Elements & Templates (Coming Soon)',
           'Dedicated support',
           'Commercial use allowed'
         ]
       }
     ];
-  };
+  };  
+
+  const getIndividualPlans = (): IndividualPlan[] => {
+    if (isIndianUser === null) {
+      return [
+        {
+          name: 'AI Voice Pro',
+          planType: 'AI_VOICE_PRO',
+          price: 0,
+          currency: 'LOADING',
+          service: 'AI Voice Generation',
+          features: [
+            '50,000 Characters/month',
+            '10,000 Characters/day',
+            '2,500 Characters per request',
+            'All Premium AI Voices',
+            'Priority support'
+          ]
+        },
+        {
+          name: 'AI Subtitle Pro',
+          planType: 'AI_SUBTITLE_PRO',
+          price: 0,
+          currency: 'LOADING',
+          service: 'AI Subtitle Generation',
+          features: [
+            '30 videos/month',
+            '20 minutes per video',
+            'Up to 1440p quality',
+            'Word-level timing',
+            'Custom styling'
+          ]
+        },
+        {
+          name: 'AI Speed Pro',
+          planType: 'AI_SPEED_PRO',
+          price: 0,
+          currency: 'LOADING',
+          service: 'Video Speed Control',
+          features: [
+            '30 videos/month',
+            '20 minutes per video',
+            'Up to 1440p quality',
+            '0.5x - 15x speed range',
+            'Audio pitch correction'
+          ]
+        }
+      ];
+    }
+  
+    const currency = isIndianUser ? 'INR' : 'USD';
+    const symbol = isIndianUser ? '₹' : '$';
+  
+    // Pricing: INR ₹249/month, USD $10/month for each individual plan
+    const voiceOriginal = isIndianUser ? 199 : 5;
+    const subtitleOriginal = isIndianUser ? 199 : 5;
+    const speedOriginal = isIndianUser ? 199 : 5;
+  
+    const voicePrice = Math.round(voiceOriginal);
+    const subtitlePrice = Math.round(subtitleOriginal);
+    const speedPrice = Math.round(speedOriginal);
+  
+    return [
+      {
+        name: 'AI Voice Pro',
+        planType: 'AI_VOICE_PRO',
+        price: voicePrice,
+        originalPrice: voiceOriginal,
+        currency: currency,
+        symbol: symbol,
+        service: 'AI Voice Generation',
+        features: [
+          '50,000 Characters/month',
+          '10,000 Characters/day',
+          '2,500 Characters per request',
+          'All Premium AI Voices',
+          'Priority support',
+          'Commercial use allowed'
+        ]
+      },
+      {
+        name: 'AI Subtitle Pro',
+        planType: 'AI_SUBTITLE_PRO',
+        price: subtitlePrice,
+        originalPrice: subtitleOriginal,
+        currency: currency,
+        symbol: symbol,
+        service: 'AI Subtitle Generation',
+        features: [
+          '30 videos/month',
+          '20 minutes per video',
+          'Up to 1440p quality',
+          'Word-level timing',
+          'Custom styling',
+          'Commercial use allowed'
+        ]
+      },
+      {
+        name: 'AI Speed Pro',
+        planType: 'AI_SPEED_PRO',
+        price: speedPrice,
+        originalPrice: speedOriginal,
+        currency: currency,
+        symbol: symbol,
+        service: 'Video Speed Control',
+        features: [
+          '30 videos/month',
+          '20 minutes per video',
+          'Up to 1440p quality',
+          '0.5x - 15x speed range',
+          'Audio pitch correction',
+          'Commercial use allowed'
+        ]
+      }
+    ];
+  };  
+
+  const handleIndividualPlanUpgrade = async (plan: IndividualPlan) => {
+    if (!isLoggedIn) {
+      setShowLoginModal(true);
+      return;
+    }
+  
+    setLoading(plan.planType);
+  
+    try {
+      const orderResponse = await axios.post(
+        `${API_BASE_URL}/api/payments/create-order`,
+        {
+          planType: plan.planType, // AI_VOICE_PRO, AI_SUBTITLE_PRO, or AI_SPEED_PRO
+          amount: plan.price,
+          currency: plan.currency
+        },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        }
+      );
+  
+      const {
+        internalOrderId,
+        gatewayOrderId,
+        keyId,
+        gateway
+      } = orderResponse.data;
+  
+      if (gateway === 'razorpay') {
+        if (!document.getElementById('razorpay-script')) {
+          const script = document.createElement('script');
+          script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+          script.id = 'razorpay-script';
+          document.body.appendChild(script);
+        }
+  
+        const options = {
+          key: keyId,
+          amount: plan.price * 100,
+          currency: 'INR',
+          order_id: gatewayOrderId,
+          name: 'Scenith',
+          description: `${plan.name} - ${plan.service}`,
+          handler: async function (response: any) {
+            try {
+              await axios.post(
+                `${API_BASE_URL}/api/payments/verify-razorpay`,
+                {
+                  internalOrderId,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_signature: response.razorpay_signature
+                },
+                {
+                  headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+                }
+              );
+  
+              alert(`🎉 Successfully purchased ${plan.name}!`);
+              router.push('/tools/ai-voice-generation');
+            } catch (err: any) {
+              console.error('Verification failed:', err);
+              alert('Payment verification failed. Please contact support.');
+            }
+          },
+          prefill: {
+            email: userProfile?.email || '',
+            name: userProfile ? `${userProfile.firstName} ${userProfile.lastName}`.trim() : ''
+          },
+          theme: {
+            color: '#667eea'
+          }
+        };
+  
+        // @ts-ignore
+        const rzp = new window.Razorpay(options);
+        rzp.open();
+      } else if (gateway === 'paypal') {
+        let paypalContainer = document.getElementById('paypal-button-container');
+        if (!paypalContainer) {
+          paypalContainer = document.createElement('div');
+          paypalContainer.id = 'paypal-button-container';
+          paypalContainer.style.position = 'fixed';
+          paypalContainer.style.top = '50%';
+          paypalContainer.style.left = '50%';
+          paypalContainer.style.transform = 'translate(-50%, -50%)';
+          paypalContainer.style.zIndex = '1000';
+          paypalContainer.style.background = 'white';
+          paypalContainer.style.padding = '20px';
+          paypalContainer.style.borderRadius = '12px';
+          paypalContainer.style.boxShadow = '0 10px 30px rgba(0,0,0,0.3)';
+          document.body.appendChild(paypalContainer);
+        }
+  
+        paypalContainer.innerHTML = '';
+  
+        // @ts-ignore
+        paypal.Buttons({
+          createOrder: () => gatewayOrderId,
+          onApprove: async (data: any) => {
+            try {
+              const captureResponse = await axios.post(
+                `${API_BASE_URL}/api/payments/capture-paypal`,
+                {
+                  internalOrderId,
+                  paypalOrderId: data.orderID
+                },
+                {
+                  headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+                }
+              );
+  
+              if (captureResponse.data.status === 'SUCCESS') {
+                alert(`🎉 Successfully purchased ${plan.name} via PayPal!`);
+                router.push('/tools/ai-voice-generation');
+              } else {
+                alert('Payment capture failed. Please try again.');
+              }
+            } catch (err: any) {
+              console.error('PayPal capture error:', err);
+              alert('Error capturing payment: ' + (err.response?.data || 'Unknown error'));
+            } finally {
+              if (paypalContainer) {
+                document.body.removeChild(paypalContainer);
+              }
+            }
+          },
+          onCancel: () => {
+            alert('Payment cancelled.');
+            if (paypalContainer) {
+              document.body.removeChild(paypalContainer);
+            }
+          },
+          onError: (err: any) => {
+            console.error('PayPal error:', err);
+            alert('PayPal error occurred.');
+            if (paypalContainer) {
+              document.body.removeChild(paypalContainer);
+            }
+          }
+        }).render('#paypal-button-container');
+      }
+    } catch (error: any) {
+      console.error('Payment error:', error);
+      alert('Error: ' + (error.response?.data || error.message));
+    } finally {
+      setLoading(null);
+    }
+  };  
 
   return (
     <div className="pricing-page">
@@ -622,6 +925,64 @@ export default function PricingPageClient() {
         })}
       </div>
 
+      {/* Individual Service Plans */}
+      <section className="individual-plans-section">
+        <h2>Or Choose Individual Services</h2>
+        <p className="section-subtitle">Get exactly what you need without committing to a full bundle</p>
+        
+        <div className="individual-plans-grid">
+          {getIndividualPlans().map((plan) => (
+            <motion.div
+              key={plan.planType}
+              className="individual-plan-card"
+              whileHover={{ scale: 1.03 }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <div className="service-label">{plan.service}</div>
+              <h3>{plan.name}</h3>
+              
+              <div className="price">
+                {plan.currency === 'LOADING' ? (
+                  <span>Loading...</span>
+                ) : (
+                  <>
+                    {plan.originalPrice && (
+                      <div className="original-price">
+                        <span className="currency">{plan.symbol}</span>
+                        <span className="amount">{plan.originalPrice}</span>
+                      </div>
+                    )}
+                    <div className="discounted-price">
+                      <span className="currency">{plan.symbol}</span>
+                      <span className="amount">{plan.price}</span>
+                    </div>
+                  </>
+                )}
+              </div>
+              <div className="price-description">
+                <span className="savings-badge">Save 75%</span>
+                <span>per month</span>
+              </div>
+              
+              <ul className="features">
+                {plan.features.map((feature, index) => (
+                  <li key={index}>{feature}</li>
+                ))}
+              </ul>
+              
+              <button
+                className="upgrade-button"
+                onClick={() => handleIndividualPlanUpgrade(plan)}
+                disabled={loading !== null}
+              >
+                {loading === plan.planType ? 'Processing...' : 'Purchase Now'}
+              </button>
+            </motion.div>
+          ))}
+        </div>
+      </section>      
+
       {/* FAQ Section */}
       <section className="pricing-faq">
         <h2>Frequently Asked Questions</h2>
@@ -668,22 +1029,52 @@ export default function PricingPageClient() {
             </thead>
             <tbody>
               <tr>
-                <td>Monthly Characters</td>
+                <td>Monthly Characters (AI Voice)</td>
                 <td>3,500</td>
-                <td>50,000</td>
-                <td>150,000</td>
+                <td>60,000</td>
+                <td>200,000</td>
               </tr>
               <tr>
-                <td>Daily Character Limit</td>
+                <td>Daily Character Limit (AI Voice)</td>
                 <td>1,000</td>
-                <td>5,000</td>
+                <td>15,000</td>
                 <td>Unlimited</td>
               </tr>
               <tr>
                 <td>Max Characters per Request</td>
                 <td>350</td>
-                <td>2,500</td>
+                <td>3,500</td>
                 <td>5,000</td>
+              </tr>
+              <tr>
+                <td>Subtitle Videos/Month</td>
+                <td>5 videos</td>
+                <td>45 videos</td>
+                <td>Unlimited</td>
+              </tr>
+              <tr>
+                <td>Max Video Length (Subtitle)</td>
+                <td>5 minutes</td>
+                <td>30 minutes</td>
+                <td>Unlimited</td>
+              </tr>
+              <tr>
+                <td>Speed Videos/Month</td>
+                <td>5 videos</td>
+                <td>45 videos</td>
+                <td>Unlimited</td>
+              </tr>
+              <tr>
+                <td>Max Video Length (Speed)</td>
+                <td>5 minutes</td>
+                <td>30 minutes</td>
+                <td>Unlimited</td>
+              </tr>
+              <tr>
+                <td>Max Video Quality</td>
+                <td>720p</td>
+                <td>1440p</td>
+                <td>4K</td>
               </tr>
               <tr>
                 <td>AI Voice Library</td>
@@ -706,16 +1097,16 @@ export default function PricingPageClient() {
               <tr>
                 <td>Elements & Templates</td>
                 <td>✗</td>
-                <td>Coming Soon</td>
-                <td>Coming Soon</td>
-              </tr>              
+                <td>✓</td>
+                <td>✓</td>
+              </tr>
               <tr>
                 <td>API Access</td>
                 <td>✗</td>
                 <td>✗</td>
                 <td>Coming Soon</td>
               </tr>
-            </tbody>
+            </tbody>            
           </table>
         </div>
       </section>
