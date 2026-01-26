@@ -822,103 +822,148 @@ const AIVoiceGeneratorClient: React.FC = () => {
 
 return (
   <div className="ai-voice-generator-page">
-    {/* Structured Data Scripts */}
+    <nav aria-label="Breadcrumb" className="breadcrumb-nav">
+      <ol itemScope itemType="https://schema.org/BreadcrumbList">
+        <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+          <a href="/" itemProp="item">
+            <span itemProp="name">Home</span>
+          </a>
+          <meta itemProp="position" content="1" />
+        </li>
+        <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+          <a href="/tools" itemProp="item">
+            <span itemProp="name">Tools</span>
+          </a>
+          <meta itemProp="position" content="2" />
+        </li>
+        <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+          <span itemProp="name">AI Voice Generator</span>
+          <meta itemProp="position" content="3" />
+        </li>
+      </ol>
+    </nav>    
     <script
       type="application/ld+json"
       dangerouslySetInnerHTML={{
         __html: JSON.stringify({
           '@context': 'https://schema.org',
-          '@type': 'SoftwareApplication',
-          name: 'Scenith AI Voice Generator',
-          description: 'Free AI-powered text-to-speech tool for generating natural-sounding voices from text in multiple languages.',
-          url: 'https://scenith.in/tools/ai-voice-generation',
-          applicationCategory: 'MultimediaApplication',
-          operatingSystem: 'Web Browser',
-          offers: {
-            '@type': 'Offer',
-            price: '0',
-            priceCurrency: 'USD',
-          },
-          author: {
-            '@type': 'Organization',
-            name: 'SCENITH AI VIDEO EDITOR',
-          },
-        }),
-      }}
-    />
-
-    {/* Add HowTo Schema for better SEO */}
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify({
-          '@context': 'https://schema.org',
-          '@type': 'HowTo',
-          name: 'How to Generate AI Voice from Text',
-          description: 'Step-by-step guide to creating professional AI voices using text-to-speech technology',
-          step: [
+          '@graph': [
             {
-              '@type': 'HowToStep',
-              name: 'Enter Your Text',
-              text: 'Type or paste your script into the text area. You can use up to 350 characters per request.',
-              position: 1
-            },
-            {
-              '@type': 'HowToStep',
-              name: 'Select Voice and Language',
-              text: 'Browse through 40+ AI voices across 20+ languages. Filter by gender, accent, and style. Play demos to preview each voice.',
-              position: 2
-            },
-            {
-              '@type': 'HowToStep',
-              name: 'Generate and Download',
-              text: 'Click Generate AI Voice to create your audio. Download the high-quality MP3 file for use in your projects.',
-              position: 3
-            }
-          ]
-        }),
-      }}
-    />
-
-    {/* Add FAQ Schema */}
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify({
-          '@context': 'https://schema.org',
-          '@type': 'FAQPage',
-          mainEntity: [
-            {
-              '@type': 'Question',
-              name: 'What is AI voice generation and how does it work?',
-              acceptedAnswer: {
-                '@type': 'Answer',
-                text: 'AI voice generation uses neural text-to-speech (TTS) technology to convert written text into natural-sounding speech. Our system analyzes your text, processes linguistic patterns, applies prosody (rhythm and intonation), and synthesizes audio using deep learning models trained on human voices.'
+              '@type': 'WebApplication',
+              '@id': 'https://scenith.in/tools/ai-voice-generation#webapp',
+              name: 'Scenith AI Voice Generator',
+              description: 'Free AI-powered text-to-speech tool for generating natural-sounding voices from text in 20+ languages with 40+ realistic voices.',
+              url: 'https://scenith.in/tools/ai-voice-generation',
+              applicationCategory: 'MultimediaApplication',
+              operatingSystem: 'Web Browser',
+              offers: {
+                '@type': 'Offer',
+                price: '0',
+                priceCurrency: 'USD',
+                availability: 'https://schema.org/InStock'
+              },
+              featureList: [
+                '40+ natural AI voices',
+                '20+ languages supported',
+                'Instant MP3 download',
+                'Commercial use allowed',
+                'No watermarks'
+              ],
+              screenshot: 'https://scenith.in/images/AIVoiceGenerationSS.png',
+              author: {
+                '@type': 'Organization',
+                '@id': 'https://scenith.in/#organization',
+                name: 'Scenith'
               }
             },
             {
-              '@type': 'Question',
-              name: 'What languages and voices are available?',
-              acceptedAnswer: {
-                '@type': 'Answer',
-                text: 'We support 20+ languages including American English, UK English, Spanish, French, German, Mandarin, Hindi, and more. Each language features multiple natural-sounding voices with various genders, accents, and styles. You can filter and preview all voices before generating.'
-              }
+              '@type': 'BreadcrumbList',
+              '@id': 'https://scenith.in/tools/ai-voice-generation#breadcrumb',
+              itemListElement: [
+                {
+                  '@type': 'ListItem',
+                  position: 1,
+                  name: 'Home',
+                  item: 'https://scenith.in'
+                },
+                {
+                  '@type': 'ListItem',
+                  position: 2,
+                  name: 'Tools',
+                  item: 'https://scenith.in/tools'
+                },
+                {
+                  '@type': 'ListItem',
+                  position: 3,
+                  name: 'AI Voice Generator',
+                  item: 'https://scenith.in/tools/ai-voice-generation'
+                }
+              ]
             },
             {
-              '@type': 'Question',
-              name: 'Is the generated audio commercial use allowed?',
-              acceptedAnswer: {
-                '@type': 'Answer',
-                text: 'Yes! All AI-generated audio can be used commercially. You retain full rights to download and use the MP3 files in videos, podcasts, apps, marketing materials, and any other projects without attribution requirements.'
-              }
+              '@type': 'FAQPage',
+              '@id': 'https://scenith.in/tools/ai-voice-generation#faq',
+              mainEntity: [
+                {
+                  '@type': 'Question',
+                  name: 'What is AI voice generation?',
+                  acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: 'AI voice generation uses neural text-to-speech (TTS) technology to convert written text into natural-sounding speech. It analyzes your text, processes linguistic patterns, applies prosody (rhythm and intonation), and synthesizes audio using deep learning models trained on human voices.'
+                  }
+                },
+                {
+                  '@type': 'Question',
+                  name: 'Is AI voice generation free?',
+                  acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: 'Yes! The free BASIC plan includes 3,500 characters per month with a daily limit of 1,000 characters. All generated audio can be used commercially with full rights, no watermarks, and instant MP3 downloads.'
+                  }
+                },
+                {
+                  '@type': 'Question',
+                  name: 'How many languages does the AI voice generator support?',
+                  acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: 'We support 20+ languages including English (US, UK, Australian, Indian accents), Spanish, French, German, Mandarin, Hindi, Portuguese, and more. Each language features multiple natural-sounding voices with various genders and styles.'
+                  }
+                },
+                {
+                  '@type': 'Question',
+                  name: 'Can I use AI-generated voices for YouTube?',
+                  acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: 'Yes! YouTube allows AI-generated voices for monetized content. You retain full commercial rights to download and use the MP3 files in videos, podcasts, apps, and marketing materials without attribution requirements.'
+                  }
+                }
+              ]
             },
             {
-              '@type': 'Question',
-              name: 'How many characters can I generate for free?',
-              acceptedAnswer: {
-                '@type': 'Answer',
-                text: 'The free BASIC plan includes 3,500 characters per month with a daily limit of 1,000 characters. CREATOR plan offers 50,000 characters/month with 5,000 characters/day. STUDIO plan provides 150,000 characters/month with no daily limits.'
-              }
+              '@type': 'HowTo',
+              '@id': 'https://scenith.in/tools/ai-voice-generation#howto',
+              name: 'How to Generate AI Voice from Text',
+              description: 'Step-by-step guide to creating professional AI voices using text-to-speech technology',
+              totalTime: 'PT2M',
+              step: [
+                {
+                  '@type': 'HowToStep',
+                  name: 'Enter Your Text',
+                  text: 'Type or paste your script into the text area. You can use up to 5,000 characters per request depending on your plan.',
+                  position: 1,
+                },
+                {
+                  '@type': 'HowToStep',
+                  name: 'Select Voice and Language',
+                  text: 'Browse through 40+ AI voices across 20+ languages. Filter by gender, accent, and style. Play demos to preview each voice.',
+                  position: 2,
+                },
+                {
+                  '@type': 'HowToStep',
+                  name: 'Generate and Download',
+                  text: 'Click Generate AI Voice to create your audio in 3 seconds. Download the high-quality MP3 file for use in your projects.',
+                  position: 3,
+                }
+              ]
             }
           ]
         }),
@@ -941,9 +986,13 @@ return (
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        <h1>AI Voice Generator for YouTube & Marketing (Natural Voices)</h1>
+        <h1>Free AI Voice Generator: Text to Speech Online (YouTube & Marketing)</h1>
         <p className="hero-description">
-          Transform your text into lifelike AI voices instantly. Choose from 40+ natural-sounding voices across multiple languages. Perfect for videos, podcasts, presentations, and content creation. Completely free with MP3 downloads!
+          Transform your text into lifelike AI voices instantly. Choose from 40+ natural-sounding voices across multiple languages. Perfect for{' '}
+          <a href="/tools/add-subtitles-to-videos" className="inline-link">videos with subtitles</a>,{' '}
+          podcasts, presentations, and content creation. Combine with our{' '}
+          <a href="/tools/image-editing" className="inline-link">free image editor</a>{' '}
+          for complete multimedia projects. Completely free with MP3 downloads!
         </p>
         <div className="hero-cta-section">
           <div className="main-content">
@@ -1332,7 +1381,7 @@ return (
         <figure className="hero-image-container">
           <Image
             src="/images/AIVoiceGenerationSS.png"
-            alt="AI voice generation example - text transforming into speech waveform with diverse voice avatars"
+            alt="Free AI voice generator interface showing text-to-speech conversion with 40+ natural voices in multiple languages"
             className="hero-image"
             width={800}
             height={400}
@@ -1971,7 +2020,7 @@ return (
         <div className="intro-content-grid">
           <div className="intro-text">
             <p className="intro-paragraph">
-              <strong>AI voice generation</strong> has revolutionized content creation by converting written text into natural-sounding speech in seconds. Whether you're a content creator, educator, podcaster, or business professional, our advanced <strong>text-to-speech (TTS)</strong> tool helps you produce professional audio without expensive recording equipment or voice actors.
+              Our <strong>free AI voice generator</strong> has revolutionized content creation by converting written <strong>text to speech</strong> in seconds. This advanced <strong>text-to-speech (TTS) online tool</strong> helps content creators, educators, podcasters, and businesses produce professional audio without expensive recording equipment or voice actors. Whether you need a <strong>realistic AI voice</strong> for YouTube videos, e-learning courses, or marketing content, our <strong>natural AI voices</strong> deliver broadcast-quality results instantly.
             </p>
             <p className="intro-paragraph">
               Our neural network-powered system supports <strong>40+ realistic voices across 20+ languages</strong>, offering diverse accents, genders, and speaking styles. Each voice is trained on extensive datasets to capture human-like intonation, emotion, and natural pacing—perfect for videos, presentations, e-learning courses, podcasts, and accessibility features.
@@ -1997,6 +2046,19 @@ return (
               <div className="stat-number">3 sec</div>
               <div className="stat-label">Generation Time</div>
             </div>
+          </div>
+        </div>
+      </div>
+    </section>    
+
+    <section className="quick-definition-section" role="region" aria-labelledby="quick-definition">
+      <div className="container">
+        <div className="featured-snippet-target">
+          <h2 id="quick-definition" className="visually-hidden">AI Voice Generator Definition</h2>
+          <div className="definition-box">
+            <p className="definition-text">
+              An <strong>AI voice generator</strong> is a text-to-speech (TTS) tool that uses artificial intelligence to convert written text into realistic, natural-sounding audio. It leverages neural networks trained on human speech to create voiceovers in multiple languages, accents, and styles without requiring professional voice actors or recording equipment. Users can generate high-quality audio in seconds for videos, podcasts, e-learning, and more.
+            </p>
           </div>
         </div>
       </div>
@@ -2430,6 +2492,43 @@ return (
       </div>
     </section>
 
+    <section className="competitors-comparison" role="region" aria-labelledby="vs-competitors">
+      <div className="container">
+        <h2 id="vs-competitors">AI Voice Generator Comparison: Scenith vs Competitors</h2>
+        <div className="comparison-grid">
+          <div className="vs-card">
+            <h3>Scenith vs ElevenLabs</h3>
+            <ul>
+              <li>✅ <strong>Scenith:</strong> Free 3,500 chars/month, no credit card required</li>
+              <li>❌ <strong>ElevenLabs:</strong> 10,000 chars free but requires signup, $5+ paid</li>
+              <li>✅ <strong>Scenith:</strong> Commercial use on free plan</li>
+              <li>⚠️ <strong>ElevenLabs:</strong> Attribution required on free plan</li>
+            </ul>
+          </div>
+                
+          <div className="vs-card">
+            <h3>Scenith vs Murf.ai</h3>
+            <ul>
+              <li>✅ <strong>Scenith:</strong> Instant MP3 download, no watermark</li>
+              <li>❌ <strong>Murf.ai:</strong> Free trial only, watermarked audio</li>
+              <li>✅ <strong>Scenith:</strong> 40+ voices included free</li>
+              <li>❌ <strong>Murf.ai:</strong> Limited voices on free tier</li>
+            </ul>
+          </div>
+                
+          <div className="vs-card">
+            <h3>Scenith vs Google TTS</h3>
+            <ul>
+              <li>✅ <strong>Scenith:</strong> User-friendly web interface, no coding</li>
+              <li>❌ <strong>Google TTS:</strong> Requires API integration, technical knowledge</li>
+              <li>✅ <strong>Scenith:</strong> Instant preview and download</li>
+              <li>⚠️ <strong>Google TTS:</strong> Pay-per-character pricing model</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>    
+
     {/* NEW: Technical Comparison Section */}
     <section className="comparison-section" role="region" aria-labelledby="comparison-title">
       <div className="container">
@@ -2639,6 +2738,33 @@ return (
         </div>
       </div>
     </section>
+
+    <section className="people-also-ask" role="region" aria-labelledby="paa-title">
+      <div className="container">
+        <h2 id="paa-title">People Also Ask About AI Voice Generators</h2>
+        <div className="paa-grid">
+          <div className="paa-item">
+            <h3>Can AI voice generators clone my voice?</h3>
+            <p>Our tool uses pre-trained AI voices and does not offer voice cloning. For custom voice cloning, specialized services like ElevenLabs or Descript offer this feature, but they require uploading voice samples and typically cost $25-$100/month.</p>
+          </div>
+                
+          <div className="paa-item">
+            <h3>Is AI-generated audio detectable?</h3>
+            <p>Modern AI voices are highly realistic, but audio analysis tools can sometimes detect synthetic speech through subtle patterns in pitch variation, breathing, and emotional consistency. For most use cases (YouTube, podcasts, e-learning), AI voices are indistinguishable to human listeners.</p>
+          </div>
+                
+          <div className="paa-item">
+            <h3>Which AI voice generator is best for YouTube?</h3>
+            <p>The best AI voice for YouTube depends on your niche. For tech reviews, use professional male voices. For lifestyle content, conversational female voices perform better. Our tool offers 40+ voices optimized for video content with natural pacing and emphasis.</p>
+          </div>
+                
+          <div className="paa-item">
+            <h3>Do I need attribution for AI-generated voices?</h3>
+            <p>No attribution required! All audio generated with Scenith comes with full commercial use rights. You can use it in YouTube videos, client projects, podcasts, or any commercial application without crediting our tool.</p>
+          </div>
+        </div>
+      </div>
+    </section>    
 
     {/* ORIGINAL CTA Section */}
     <section className="cta-section" id="get-started" role="region" aria-labelledby="cta-title">

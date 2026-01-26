@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import AIVoiceGeneratorClient from './AIVoiceGeneratorClient';
 
 export const metadata: Metadata = {
-  title: 'Free AI Voice Generator (Hindi + English) – 40+ Natural Voices | Scenith',
+  title: 'Free AI Voice Generator – Text to Speech Online (40+ Natural Voices) | Scenith',
   description: 'Generate realistic AI voices from text instantly for free. Convert text to speech in 100+ languages with natural-sounding voices. Perfect for videos, podcasts, and more - no signup required!',
   keywords: [
     'AI voice generator',
@@ -47,8 +47,16 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: '/tools/ai-voice-generation',
+    canonical: 'https://scenith.in/tools/ai-voice-generation',
   },
+  viewport: 'width=device-width, initial-scale=1',
+  themeColor: '#1a73e8',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Scenith AI Voice',
+  },
+  manifest: '/manifest.json',  
 };
 
 export default function AIVoiceGeneratorPage() {
