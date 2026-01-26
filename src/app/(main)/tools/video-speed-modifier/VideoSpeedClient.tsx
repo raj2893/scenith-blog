@@ -920,6 +920,12 @@ const VideoSpeedClient: React.FC = () => {
             <figcaption className="sr-only">Example of video speed editor with speed slider and video preview</figcaption>
           </figure>
         </motion.div>
+        <div className="cross-tool-promo">
+          <p className="promo-text">
+            💡 <strong>Pro Tip:</strong> Get all 3 AI tools (Voice + Subtitles + Speed) with Creator plan for less than buying individually!
+          </p>
+          <a href="/pricing" className="promo-link">Compare Plans →</a>
+        </div>        
       </section>
 
       {error && (
@@ -1208,6 +1214,21 @@ const VideoSpeedClient: React.FC = () => {
           </motion.div>
         </div>
       )}
+
+      {isLoggedIn && userProfile.role === 'BASIC' && (
+        <div className="floating-upgrade-cta">
+          <button 
+            className="floating-upgrade-btn"
+            onClick={() => window.location.href = '/pricing'}
+          >
+            <span className="float-icon">⚡</span>
+            <span className="float-text">
+              <strong>Upgrade for 9× More Videos</strong>
+              <small>Or get AI Speed Pro</small>
+            </span>
+          </button>
+        </div>
+      )}      
     </div>
   );
 };

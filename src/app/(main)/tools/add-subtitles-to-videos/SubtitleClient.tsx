@@ -1415,6 +1415,11 @@ const handleDeleteConfirm = async () => {
                   <div className="quality-selector-container">
                     <label htmlFor="quality-select" className="quality-label">
                       Output Quality:
+                      {(userProfile.role === 'BASIC' || userProfile.role === 'CREATOR') && (
+                        <span className="unlock-badge" onClick={() => window.location.href = '/pricing'}>
+                          🔓 Unlock {userProfile.role === 'BASIC' ? '4K' : '4K'}
+                        </span>
+                      )}
                     </label>
                     <select
                       id="quality-select"
@@ -1488,7 +1493,22 @@ const handleDeleteConfirm = async () => {
                       <p>🎬 Max quality: <strong>{planLimits.maxQuality}</strong></p>
                     </div>
                   </div>
-                )}                        
+                )} 
+                {planLimits && planLimits.videosPerMonth > 0 && (
+                  (planLimits.videosUsed / planLimits.videosPerMonth >= 0.6) && (
+                    <div className="upgrade-nudge-banner">
+                      <div className="nudge-icon">🎬</div>
+                      <div className="nudge-content">
+                        <h4>You're creating amazing content!</h4>
+                        <p>You've used {Math.round((planLimits.videosUsed / planLimits.videosPerMonth) * 100)}% of your subtitled videos. Unlock <strong>9× more videos</strong> with Creator or get focused power with AI Subtitle Pro.</p>
+                        <div className="nudge-actions">
+                          <a href="/pricing" className="nudge-btn primary">Upgrade Bundle</a>
+                          <a href="/pricing?tab=individual" className="nudge-btn secondary">AI Subtitle Pro</a>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                )}                                       
                 <div className="action-buttons">
                   {selectedUpload && (
                     <div className="button-wrapper">
@@ -1569,6 +1589,12 @@ const handleDeleteConfirm = async () => {
             <figcaption className="sr-only">Example of AI subtitle generator with style selection and subtitle editing</figcaption>
           </figure>
         </motion.div>
+        <div className="cross-tool-promo">
+          <p className="promo-text">
+            💡 <strong>Pro Tip:</strong> Get all 3 AI tools (Voice + Subtitles + Speed) with Creator plan for less than buying individually!
+          </p>
+          <a href="/pricing" className="promo-link">Compare Plans →</a>
+        </div>        
       </section>
 
       {error && (

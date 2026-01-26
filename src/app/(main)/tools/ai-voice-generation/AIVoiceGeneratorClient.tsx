@@ -187,11 +187,10 @@ const AIVoiceGeneratorClient: React.FC = () => {
     role: string;
   } | null>(null);
   const [characterCount, setCharacterCount] = useState(0);
-  const [showPremiumPopup, setShowPremiumPopup] = useState(false);
   const [selectedEmotion, setSelectedEmotion] = useState<string>('default');
-  const [showAdvancedControls, setShowAdvancedControls] = useState<boolean>(false);
   const [isPlayingEmotionPreview, setIsPlayingEmotionPreview] = useState(false);
   const emotionPreviewAudioRef = useRef<HTMLAudioElement | null>(null);  
+  const [downloadSuccess, setDownloadSuccess] = useState(false);
 
   // Handle scroll for navbar styling
   useEffect(() => {
@@ -721,23 +720,12 @@ const AIVoiceGeneratorClient: React.FC = () => {
 
         // Clean up the blob URL
         window.URL.revokeObjectURL(blobUrl);
-
-        if (userProfile.role != 'STUDIO') {
-          setTimeout(() => {
-            setShowPremiumPopup(true);
-          }, 2000); // Show popup 1.5 seconds after download starts
-        }
+        setDownloadSuccess(true);
+        setTimeout(() => setDownloadSuccess(false), 5000);
       } catch (error) {
         console.error('Download failed:', error);
         // Fallback to opening in new tab if download fails
         window.open(generatedAudio, '_blank');
-
-        // Still show popup even if fallback method is used
-        if (userProfile.role === 'BASIC' || userProfile.role === 'CREATOR') {
-          setTimeout(() => {
-            setShowPremiumPopup(true);
-          }, 2000);
-        }
       }
     }
   };
@@ -791,11 +779,6 @@ const AIVoiceGeneratorClient: React.FC = () => {
     // Both have limits, use the most restrictive
     return Math.min(roleBasedLimit, dailyRemaining, monthlyRemaining);
   }, [isLoggedIn, ttsUsage]);
-  
-  // Add handler to close popup
-  const handleClosePremiumPopup = () => {
-    setShowPremiumPopup(false);
-  };  
 
   const isLimitsExceeded = useCallback(() => {
     if (!isLoggedIn || !ttsUsage) return false;
@@ -1140,7 +1123,7 @@ return (
                     {ttsUsage.role === 'BASIC' && (
                       <div className="inline-upgrade-cta">
                         <a href="/pricing" className="inline-upgrade-link">
-                          🔓 Need more? Upgrade to Creator for 10× higher limits
+                          🔓 Need more? Upgrade to AI Voice PRO OR CREATOR for 10× higher limits
                         </a>
                       </div>
                     )}
@@ -1155,6 +1138,28 @@ return (
                   </div>
                 </div>
               )}
+
+              {ttsUsage && ttsUsage.role === 'BASIC' && (
+                ttsUsage.monthly.used / ttsUsage.monthly.limit >= 0.5 && (
+                  <div className="upgrade-prompt-card">
+                    <div className="upgrade-prompt-content">
+                      <span className="upgrade-prompt-icon">⚡</span>
+                      <div className="upgrade-prompt-text">
+                        <h4>Running low on characters?</h4>
+                        <p>Upgrade to Creator for <strong>17× more characters</strong> (60,000/month) or get individual AI Voice Pro for focused power.</p>
+                      </div>
+                      <div className="upgrade-prompt-actions">
+                        <a href="/pricing" className="upgrade-prompt-btn primary">
+                          View Plans
+                        </a>
+                        <a href="/pricing?tab=individual" className="upgrade-prompt-btn secondary">
+                          Individual Plans
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                )
+              )}              
 
               {isLimitsExceeded() ? (
                 <a
@@ -1300,7 +1305,26 @@ return (
                 </button>
               </motion.div>
             </section>
-          )}    
+          )} 
+          {downloadSuccess && userProfile.role === 'BASIC' && (
+            <motion.div 
+              className="download-success-banner"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+            >
+              <div className="success-content">
+                <span className="success-icon">✅</span>
+                <div className="success-text">
+                  <strong>Download successful!</strong>
+                  <p>Want to create more? Get 17× more characters with Creator or AI Voice Pro.</p>
+                </div>
+                <a href="/pricing" className="success-cta-btn">
+                  View Plans
+                </a>
+              </div>
+            </motion.div>
+          )}             
           <div className="demo-video-section">
             <h3 className="demo-video-title">See AI Voice Generation in Action</h3>
             <div className="youtube-video-wrapper">
@@ -1377,6 +1401,12 @@ return (
             <span className="trust-item">🌍 Multi-Language</span>
             <span className="trust-item">📥 Instant MP3 Download</span>
           </div>
+          <div className="cross-tool-promo">
+            <p className="promo-text">
+              💡 <strong>Pro Tip:</strong> Get all 3 AI tools (Voice + Subtitles + Speed) with Creator plan for less than buying individually!
+            </p>
+            <a href="/pricing" className="promo-link">Compare Plans →</a>
+          </div>          
         </div>
         <figure className="hero-image-container">
           <Image
@@ -2869,10 +2899,20 @@ return (
         </div>
       )}
 
-      <PremiumUpgradePopup 
-        isOpen={showPremiumPopup} 
-        onClose={handleClosePremiumPopup} 
-      />      
+      {isLoggedIn && userProfile.role === 'BASIC' && (
+        <div className="floating-upgrade-cta">
+          <button 
+            className="floating-upgrade-btn"
+            onClick={() => window.location.href = '/pricing'}
+          >
+            <span className="float-icon">⚡</span>
+            <span className="float-text">
+              <strong>Upgrade for 17× More Characters</strong>
+              <small>Creator or AI Voice Pro</small>
+            </span>
+          </button>
+        </div>
+      )}   
     </div>
   );
 };

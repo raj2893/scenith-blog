@@ -6,8 +6,6 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { FaMicrophone, FaClosedCaptioning, FaExchangeAlt, FaEraser, FaTachometerAlt, FaPaintBrush, FaCompressArrowsAlt, FaShapes, FaPlay, FaCheckCircle, FaStar } from 'react-icons/fa';
 import '../../../styles/LandingPage.css';
-import PremiumUpgradePopup from '../components/PremiumUpgradePopup';
-import '../../../styles/components/PremiumUpgradePopup.css';
 
 interface ToolShowcase {
   id: string;
@@ -111,7 +109,6 @@ const youtubeTutorials = [
 
 export default function LandingPageClient() {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [showPremiumPopup, setShowPremiumPopup] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -121,24 +118,6 @@ export default function LandingPageClient() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  useEffect(() => {
-    const detectLocationAndShowPopup = async () => {
-      try {
-        setTimeout(() => {
-          setShowPremiumPopup(true);
-        }, 3000);
-      } catch (error) {
-        console.error('Error detecting location:', error);
-      }
-    };
-
-    detectLocationAndShowPopup();
-  }, []);
-
-  const handleClosePremiumPopup = () => {
-    setShowPremiumPopup(false);
-  };
 
   return (
     <>
@@ -837,10 +816,6 @@ export default function LandingPageClient() {
           </motion.div>
         </section>
       </div>
-      <PremiumUpgradePopup
-        isOpen={showPremiumPopup}
-        onClose={handleClosePremiumPopup}
-      />
     </>
   );
 }
