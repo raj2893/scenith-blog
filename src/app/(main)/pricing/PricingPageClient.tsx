@@ -51,6 +51,8 @@ export default function PricingPageClient() {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isIndianUser, setIsIndianUser] = useState<boolean | null>(null);
   const [isPricingReady, setIsPricingReady] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+    const [activeSection, setActiveSection] = useState<'individual' | 'bundle'>('individual');
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -782,15 +784,33 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
     ) : (
       <>
         <section className="pricing-hero">
-          <h1>Simple, Transparent Pricing</h1>
-          <div className="discount-banner">
-            <span className="discount-text">25% OFF</span>
-            <span className="limited-offer">Limited Time Offer!</span>
-          </div>
-          <p>Choose the plan that fits your needs</p>
-        </section>
+                <h1>Simple, Transparent Pricing</h1>
+                <div className="discount-banner">
+                  <span className="discount-text">25% OFF</span>
+                  <span className="limited-offer">Limited Time Offer!</span>
+                </div>
+                <p>Choose the plan that fits your needs</p>
 
-      <div className="pricing-grid">
+                {/* Section Tabs */}
+                <div className="section-tabs" style={{ marginTop: '30px' }}>
+                  <button
+                    className={`section-tab ${activeSection === 'individual' ? 'active' : ''}`}
+                    onClick={() => setActiveSection('individual')}
+                  >
+                    <span className="tab-icon">💎</span>
+                    Individual Plans
+                  </button>
+                  <button
+                    className={`section-tab ${activeSection === 'bundle' ? 'active' : ''}`}
+                    onClick={() => setActiveSection('bundle')}
+                  >
+                    <span className="tab-icon">📦</span>
+                    Bundle Plans
+                  </button>
+                </div>
+              </section>
+      {activeSection === 'bundle' && (
+              <div className="pricing-grid">
         {getPlans().map((plan) => {
           const planIcons = {
             BASIC: (
@@ -921,9 +941,12 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
           );
         })}
       </div>
+       )}
 
       {/* Individual Service Plans */}
-      <section className="individual-plans-section">
+      {/* Individual Service Plans */}
+            {activeSection === 'individual' && (
+              <section className="individual-plans-section">
         <h2>Or Choose Individual Services</h2>
         <p className="section-subtitle">Get exactly what you need without committing to a full bundle</p>
         
@@ -984,7 +1007,8 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
             </motion.div>
           ))}
         </div>
-      </section>      
+      </section>
+            )}
 
       {/* FAQ Section */}
       <section className="pricing-faq">
