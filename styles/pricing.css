@@ -840,12 +840,21 @@
 }
 
 .original-price {
-  font-size: 1.5rem;
-  color: #94a3b8;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: #111827;        /* very dark gray – clearly visible */
+   display: flex;
   text-decoration: line-through;
-  margin-bottom: 5px;
-  opacity: 0.7;
+  text-decoration-thickness: 2px;
+  text-decoration-color: #6b7280;
+  opacity: 1;
+  align-items: baseline;
+  white-space: nowrap;
+    gap: 4px;
+  padding: 0 6px;
 }
+
+
 
 .discounted-price {
   font-size: 3rem;
@@ -970,4 +979,70 @@
   .banner-content {
     gap: 8px;
   }
+}
+.price {
+  margin: 24px 0 16px;
+  min-height: 70px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.price-with-discount {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.original-price .currency {
+  font-size: 1.1rem;
+}
+.original-price .amount {
+  font-size: 1.4rem;
+}
+.discounted-price {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  font-size: 2.8rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.discounted-price .currency {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.discounted-price .amount {
+  font-size: 2.9rem;
+}
+.free-plan-price {
+  font-size: 3.2rem;
+  font-weight: 800;
+  color: #10b981;
+  background: none;
+}
+
+.slash {
+  font-size: 1.4rem;
+  color: #94a3b8;
+  font-weight: 400;
+  margin: 0 2px;
+}
+
+.period {
+  font-size: 1.1rem;
+  color: #64748b;
+  font-weight: 500;
+}
+/* Make sure savings badge looks good with new layout */
+.price-description {
+  margin-top: 4px;
+  font-size: 0.95rem;
+  color: #64748b;
 }
