@@ -737,7 +737,7 @@ switch (operation) {
    if (compressionMode === "filesize") {
      // Convert to bytes based on selected unit
      const multiplier = targetFileSizeUnit === "MB" ? 1024 * 1024 : 1024;
-     const targetBytes = targetFileSize * multiplier;
+     const targetBytes = parseFloat(String(targetFileSize)) * multiplier;
 
      params.compressionMode = "filesize";
      params.targetFileSizeBytes = targetBytes;
