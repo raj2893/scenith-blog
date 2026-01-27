@@ -120,7 +120,7 @@ const PDFToolsWorkspace: React.FC<{ operation: string }> = ({ operation }) => {
      const isTargetTooLarge =
        originalSizeBytes > 0 &&
        targetInBytes > originalSizeBytes &&
-       targetFileSize !== '' &&
+       targetFileSize > 0 &&
        !isNaN(targetFileSize);
 
 // Handlers for page drag and drop
