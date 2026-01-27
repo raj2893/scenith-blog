@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, JSX, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import "../../../../../../../styles/tools/EditorCanvas.css";
+import ImageTextSylesData from '../../../../../../../public/data/ImageTextStyles.json';
 import {
   FaSave,
   FaDownload,
@@ -58,7 +59,6 @@ interface Layer {
   text?: string;
   fontFamily?: string;
   fontSize?: number;
-  fontWeight?: string;
   fontStyle?: string;
   color?: string;
   textAlign?: string;
@@ -345,6 +345,9 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
   const [lastSavedDesign, setLastSavedDesign] = useState<string>(""); 
   const [isCanvasTransparent, setIsCanvasTransparent] = useState(false);
   const [isAltPressed, setIsAltPressed] = useState(false);
+  const [textStyles, setTextStyles] = useState<any[]>([]);
+  const [selectedStyleCategory, setSelectedStyleCategory] = useState<string>('headings');
+  const [styleCategories, setStyleCategories] = useState<any[]>([]);  
   
   useEffect(() => {
     const checkMobile = () => {
@@ -438,6 +441,12 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
         console.error("Error fetching templates:", err);
         setTemplatesLoading(false);
       });
+  }, []); 
+  
+  useEffect(() => {
+    // Load text styles from JSON
+    setTextStyles(ImageTextSylesData.styles);
+    setStyleCategories(ImageTextSylesData.categories);
   }, []);  
 
   const saveToHistory = useCallback((newLayers: Layer[]) => {
@@ -1035,7 +1044,6 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
       text: "New Text",
       fontFamily: "Arial",
       fontSize: 32,
-      fontWeight: "normal",
       fontStyle: "normal",
       color: "#000000",
       textAlign: "center",
@@ -2694,6 +2702,65 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
     }
   };  
 
+  const addTextLayerFromStyle = (style: any) => {
+    const fontSize = style.fontSize || 32;
+    const text = style.text || "New Text";
+    const estimatedTextWidth = text.length * fontSize * 0.6;
+    const estimatedTextHeight = fontSize * 1.5;
+    const defaultBackgroundWidth = estimatedTextWidth + 20;
+    const defaultBackgroundHeight = estimatedTextHeight + 10;
+  
+    const newLayer: Layer = {
+      id: `text-${Date.now()}`,
+      type: "text",
+      zIndex: layers.length,
+      opacity: 1,
+      x: canvasWidth / 2 - 100,
+      y: canvasHeight / 2 - 25,
+      width: 0,
+      height: 0,
+      rotation: 0,
+      visible: true,
+      locked: false,
+      text: style.text || "New Text",
+      fontFamily: style.fontFamily || "Arial",
+      fontSize: style.fontSize || 32,
+      fontStyle: "normal",
+      color: style.color || "#000000",
+      textAlign: (style.textAlign || "center") as "left" | "center" | "right",
+      textDecoration: (style.textDecoration || "none") as "underline" | "line-through" | "none",
+      textTransform: (style.textTransform || "none") as "uppercase" | "lowercase" | "capitalize" | "none",
+      outlineWidth: style.outlineWidth || 0,
+      outlineColor: style.outlineColor || "#000000",
+      backgroundOpacity: style.backgroundOpacity || 0,
+      backgroundColor: style.backgroundColor || "#FFFFFF",
+      backgroundWidth: (style.backgroundOpacity || 0) > 0 ? defaultBackgroundWidth : undefined,
+      backgroundHeight: (style.backgroundOpacity || 0) > 0 ? defaultBackgroundHeight : undefined,
+      backgroundBorder: style.backgroundBorder,
+      backgroundBorderWidth: style.backgroundBorderWidth || 2,
+      backgroundBorderRadius: style.backgroundBorderRadius || 8,
+      verticalAlign: "middle",
+      wordWrap: true,
+      curveRadius: 0,
+    };
+    
+    const updatedLayers = [...layers, newLayer];
+    setLayers(updatedLayers);
+    setSelectedLayerId(newLayer.id);
+    saveToHistory(updatedLayers);
+    
+    // Show success message
+    setSuccess(`"${style.name}" style applied!`);
+    setTimeout(() => setSuccess(null), 1500);
+  };  
+
+  const getFilteredStyles = () => {
+    if (selectedStyleCategory === 'all') {
+      return textStyles;
+    }
+    return textStyles.filter(style => style.category === selectedStyleCategory);
+  };  
+
   return (
     <div className="editor-container">
       {/* Top Toolbar */}
@@ -2954,10 +3021,109 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
 
             {activeTab === 'text' && (
               <div className="panel-section">
-                <h3>Text</h3>
-                <button className="element-btn" onClick={addTextLayer}>
+                <h3>Text Styles</h3>
+                
+                {/* Category Tabs */}
+                <div className="style-categories">
+                  <button
+                    className={`category-tab ${selectedStyleCategory === 'all' ? 'active' : ''}`}
+                    onClick={() => setSelectedStyleCategory('all')}
+                  >
+                    <span className="category-icon">∗</span>
+                    <span>All</span>
+                  </button>
+                  {styleCategories.map((category) => (
+                    <button
+                      key={category.id}
+                      className={`category-tab ${selectedStyleCategory === category.id ? 'active' : ''}`}
+                      onClick={() => setSelectedStyleCategory(category.id)}
+                      title={category.description}
+                    >
+                      <span className="category-icon">{category.icon}</span>
+                      <span>{category.name}</span>
+                    </button>
+                  ))}
+                </div>
+            
+                {/* Text Styles Grid */}
+                <div className="text-styles-section">
+                  {textStyles.length === 0 ? (
+                    <div className="styles-loading">
+                      <div className="spinner"></div>
+                      <p>Loading text styles...</p>
+                    </div>
+                  ) : getFilteredStyles().length === 0 ? (
+                    <div className="styles-empty">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      <p>No styles in this category</p>
+                    </div>
+                  ) : (
+                    <div className="styles-grid">
+                      {getFilteredStyles().map((style) => {
+                        const fontInfo = parseFont(style.fontFamily || 'Arial');
+                        
+                        return (
+                          <div
+                            key={style.id}
+                            className="style-item"
+                            onClick={() => addTextLayerFromStyle(style)}
+                            title={`Click to add: ${style.name}`}
+                          >
+                            <div className="style-preview">
+                              <div
+                                className="style-preview-text"
+                                style={{
+                                  fontFamily: fontInfo.family,
+                                  fontSize: `${Math.min(style.fontSize * 0.4, 28)}px`,
+                                  fontWeight: fontInfo.weight,
+                                  fontStyle: fontInfo.style,
+                                  color: style.color,
+                                  textAlign: style.textAlign as any,
+                                  textTransform: style.textTransform as any,
+                                  textDecoration: style.textDecoration as any,
+                                  WebkitTextStroke: (style.outlineWidth || 0) > 0 
+                                    ? `${Math.max(1, (style.outlineWidth || 0) * 0.4)}px ${style.outlineColor}` 
+                                    : undefined,
+                                  paintOrder: 'stroke fill',
+                                  backgroundColor: (style.backgroundOpacity || 0) > 0 
+                                    ? style.backgroundColor 
+                                    : 'transparent',
+                                  opacity: (style.backgroundOpacity || 0) > 0 
+                                    ? style.backgroundOpacity 
+                                    : 1,
+                                  padding: (style.backgroundOpacity || 0) > 0 ? '8px 12px' : '0',
+                                  borderRadius: (style.backgroundOpacity || 0) > 0 
+                                    ? `${style.backgroundBorderRadius || 8}px` 
+                                    : '0',
+                                  border: (style.backgroundOpacity || 0) > 0 && style.backgroundBorder
+                                    ? `${style.backgroundBorderWidth || 2}px solid ${style.backgroundBorder}`
+                                    : 'none',
+                                  maxWidth: '100%',
+                                  wordWrap: 'break-word',
+                                  lineHeight: 1.2,
+                                }}
+                              >
+                                {style.text}
+                              </div>
+                            </div>
+                            <div className="style-name">{style.name}</div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+            
+                {/* Add Plain Text Button */}
+                <button 
+                  className="element-btn" 
+                  onClick={addTextLayer}
+                  style={{ marginTop: '12px' }}
+                >
                   <FaFont size={20} />
-                  <span>Add Text</span>
+                  <span>Add Plain Text</span>
                 </button>
               </div>
             )}
@@ -3208,17 +3374,6 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
                               });
                             }}
                           />
-                        </div>
-        
-                        <div className="property-group">
-                          <label>Font Weight</label>
-                          <select
-                            value={selectedLayer.fontWeight}
-                            onChange={(e) => updateLayer(selectedLayer.id, { fontWeight: e.target.value })}
-                          >
-                            <option value="normal">Normal</option>
-                            <option value="bold">Bold</option>
-                          </select>
                         </div>
         
                         <div className="property-group">
@@ -4089,7 +4244,6 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
                             minHeight: "40px",
                             fontFamily: layer.fontFamily,
                             fontSize: layer.fontSize,
-                            fontWeight: layer.fontWeight,
                             fontStyle: layer.fontStyle,
                             textAlign: layer.textAlign as any,
                             textDecoration: layer.textDecoration,
