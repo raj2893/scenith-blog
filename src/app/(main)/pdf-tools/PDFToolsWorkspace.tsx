@@ -110,7 +110,18 @@ const PDFToolsWorkspace: React.FC<{ operation: string }> = ({ operation }) => {
     fileName: string;
     totalPages: number;
   } | null>(null);
-
+    const [compressionMode, setCompressionMode] = useState<string>("preset");
+   const [targetFileSize, setTargetFileSize] = useState<number | string>(10);
+   const [targetFileSizeUnit, setTargetFileSizeUnit] = useState<string>("MB");
+   const originalSizeBytes = uploadedFiles[0]?.fileSizeBytes || 0;
+   const targetInBytes = targetFileSize
+     ? parseFloat(String(targetFileSize)) * (targetFileSizeUnit === 'MB' ? 1024 * 1024 : 1024)
+     : 0;
+     const isTargetTooLarge =
+       originalSizeBytes > 0 &&
+       targetInBytes > originalSizeBytes &&
+       parseFloat(String(targetFileSize)) > 0 &&
+       !isNaN(parseFloat(String(targetFileSize)));
 
 // Handlers for page drag and drop
 const handlePageDragStart = (index: number) => {
@@ -723,9 +734,18 @@ switch (operation) {
      uploadId: uploadIds[0],
    };
 
-   if (useCustomCompression) {
+   if (compressionMode === "filesize") {
+     // Convert to bytes based on selected unit
+     const multiplier = targetFileSizeUnit === "MB" ? 1024 * 1024 : 1024;
+     const targetBytes = parseFloat(String(targetFileSize)) * multiplier;
+
+     params.compressionMode = "filesize";
+     params.targetFileSizeBytes = targetBytes;
+   } else if (compressionMode === "percentage") {
+     params.compressionMode = "percentage";
      params.customPercentage = compressionPercentage;
    } else {
+     params.compressionMode = "preset";
      params.compressionLevel = compressionLevel;
    }
 
@@ -2359,62 +2379,90 @@ const handleInsertPdfAtPosition = async (files: FileList | null, insertIndex: nu
                 {operation === "compress-pdf" && (
                   <>
                     <div className="option-group">
-                      <label>Compression Level</label>
+                      <label>Compression Mode</label>
                       <div className="compression-options" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                         <div className="radio-group">
                           <label className="radio-label">
                             <input
                               type="radio"
-                              value="low"
-                              checked={!useCustomCompression && compressionLevel === "low"}
+                              value="preset"
+                              checked={compressionMode === "preset"}
                               onChange={(e) => {
-                                setUseCustomCompression(false);
-                                setCompressionLevel(e.target.value);
-                                setCompressionPercentage(75);
+                                setCompressionMode(e.target.value);
                               }}
                             />
-                            <span>Low (75% of original size)</span>
+                            <span>Preset Levels</span>
                           </label>
 
                           <label className="radio-label">
                             <input
                               type="radio"
-                              value="medium"
-                              checked={!useCustomCompression && compressionLevel === "medium"}
+                              value="percentage"
+                              checked={compressionMode === "percentage"}
                               onChange={(e) => {
-                                setUseCustomCompression(false);
-                                setCompressionLevel(e.target.value);
-                                setCompressionPercentage(50);
+                                setCompressionMode(e.target.value);
                               }}
                             />
-                            <span>Medium (50% of original size)</span>
+                            <span>Percentage</span>
                           </label>
 
                           <label className="radio-label">
                             <input
                               type="radio"
-                              value="high"
-                              checked={!useCustomCompression && compressionLevel === "high"}
+                              value="filesize"
+                              checked={compressionMode === "filesize"}
                               onChange={(e) => {
-                                setUseCustomCompression(false);
-                                setCompressionLevel(e.target.value);
-                                setCompressionPercentage(25);
+                                setCompressionMode(e.target.value);
                               }}
                             />
-                            <span>High (25% of original size)</span>
-                          </label>
-
-                          <label className="radio-label">
-                            <input
-                              type="radio"
-                              checked={useCustomCompression}
-                              onChange={() => setUseCustomCompression(true)}
-                            />
-                            <span>Custom</span>
+                            <span>Target File Size</span>
                           </label>
                         </div>
 
-                        {useCustomCompression && (
+                        {/* PRESET MODE */}
+                        {compressionMode === "preset" && (
+                          <div style={{
+                            background: 'white',
+                            padding: '16px',
+                            borderRadius: '8px',
+                            border: '2px solid #667eea'
+                          }}>
+                            <div className="radio-group">
+                              <label className="radio-label">
+                                <input
+                                  type="radio"
+                                  value="low"
+                                  checked={compressionLevel === "low"}
+                                  onChange={(e) => setCompressionLevel(e.target.value)}
+                                />
+                                <span>Low (75% of original size)</span>
+                              </label>
+
+                              <label className="radio-label">
+                                <input
+                                  type="radio"
+                                  value="medium"
+                                  checked={compressionLevel === "medium"}
+                                  onChange={(e) => setCompressionLevel(e.target.value)}
+                                />
+                                <span>Medium (50% of original size)</span>
+                              </label>
+
+                              <label className="radio-label">
+                                <input
+                                  type="radio"
+                                  value="high"
+                                  checked={compressionLevel === "high"}
+                                  onChange={(e) => setCompressionLevel(e.target.value)}
+                                />
+                                <span>High (25% of original size)</span>
+                              </label>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* PERCENTAGE MODE */}
+                        {compressionMode === "percentage" && (
                           <div style={{
                             background: 'white',
                             padding: '16px',
@@ -2422,13 +2470,13 @@ const handleInsertPdfAtPosition = async (files: FileList | null, insertIndex: nu
                             border: '2px solid #667eea'
                           }}>
                             <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: 600 }}>
-                              Custom Compression Percentage (1-99%)
+                              Custom Compression Percentage (10-95%)
                             </label>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                               <input
                                 type="range"
-                                min="1"
-                                max="99"
+                                min="10"
+                                max="95"
                                 value={compressionPercentage}
                                 onChange={(e) => setCompressionPercentage(parseInt(e.target.value))}
                                 style={{ flex: 1 }}
@@ -2436,12 +2484,12 @@ const handleInsertPdfAtPosition = async (files: FileList | null, insertIndex: nu
                               <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <input
                                   type="number"
-                                  min="1"
-                                  max="99"
+                                  min="10"
+                                  max="95"
                                   value={compressionPercentage}
                                   onChange={(e) => {
                                     const val = parseInt(e.target.value);
-                                    if (val >= 1 && val <= 99) {
+                                    if (val >= 10 && val <= 95) {
                                       setCompressionPercentage(val);
                                     }
                                   }}
@@ -2465,6 +2513,181 @@ const handleInsertPdfAtPosition = async (files: FileList | null, insertIndex: nu
                               marginBottom: 0
                             }}>
                               Target size: {compressionPercentage}% of original
+                            </p>
+                          </div>
+                        )}
+
+
+                        {/* TARGET FILE SIZE MODE */}
+                        {compressionMode === "filesize" && (
+                          <div
+                            style={{
+                              background: 'white',
+                              padding: '16px',
+                              borderRadius: '12px',
+                              border: '2px solid #667eea',
+                              // Better mobile spacing
+                              margin: '0 4px 16px',
+                              boxSizing: 'border-box'
+                            }}
+                          >
+                            <label
+                              style={{
+                                display: 'block',
+                                marginBottom: '10px',
+                                fontSize: '15px',           // ↑ slightly more readable
+                                fontWeight: 600
+                              }}
+                            >
+                              Target File Size
+                            </label>
+
+                            {uploadedFiles.length > 0 && (
+                              <div
+                                style={{
+                                  padding: '10px 12px',
+                                  background: 'linear-gradient(135deg, rgba(102,126,234,0.08), rgba(118,75,162,0.08))',
+                                  borderRadius: '8px',
+                                  marginBottom: '14px',
+                                  border: '1px solid rgba(102,126,234,0.25)'
+                                }}
+                              >
+                                <p
+                                  style={{
+                                    fontSize: '14px',
+                                    color: '#4f46e5',
+                                    margin: 0,
+                                    fontWeight: 600
+                                  }}
+                                >
+                                  📄 Original: {formatFileSize(uploadedFiles[0].fileSizeBytes)}
+                                </p>
+                              </div>
+                            )}
+
+                            <div
+                              style={{
+                                display: 'flex',
+                                flexWrap: 'wrap',           // ← key for mobile: allows stacking on narrow screens
+                                gap: '12px',
+                                alignItems: 'center'
+                              }}
+                            >
+                              <div
+                                style={{
+                                  flex: '1 1 140px',        // grows, but won't shrink below ~140px
+                                  minWidth: '140px',
+                                  position: 'relative'
+                                }}
+                              >
+                                <input
+                                  type="number"
+                                  min="0.1"
+                                  step="0.1"
+                                  inputMode="decimal"       // ← better mobile keyboard (shows decimal pad)
+                                  value={targetFileSize}
+                                  onChange={(e) => {
+                                    const val = parseFloat(e.target.value);
+                                    if (!isNaN(val) && val >= 0.1) {
+                                      setTargetFileSize(val);
+                                    } else if (e.target.value === '' || e.target.value === '.') {
+                                      setTargetFileSize(e.target.value); // allow typing decimal point
+                                    }
+                                  }}
+                                  placeholder="e.g. 2.5"
+                                  style={{
+                                    width: '100%',
+                                    padding: '14px 16px',     // comfortable vertical padding
+                                    fontSize: '20px',         // ↓ reduced from 24px → better balance mobile/desktop
+                                    fontWeight: 600,
+                                    textAlign: 'center',
+                                    border: '2px solid #d1d5db',
+                                    borderRadius: '10px',
+                                    backgroundColor: '#ffffff',
+                                    boxSizing: 'border-box',
+                                    minHeight: '54px',        // ← important: ensures good touch target height
+                                    transition: 'border-color 0.15s, box-shadow 0.15s, background-color 0.15s',
+                                    ...(isTargetTooLarge
+                                      ? {
+                                          borderColor: '#ef4444',
+                                          backgroundColor: '#fef2f2',
+                                          color: '#991b1b'
+                                        }
+                                      : {})
+                                  }}
+                                  onFocus={(e) => {
+                                    if (!isTargetTooLarge) {
+                                      e.target.style.borderColor = '#6366f1';
+                                      e.target.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.2)';
+                                      e.target.style.backgroundColor = '#f8f9ff';
+                                    }
+                                  }}
+                                  onBlur={(e) => {
+                                    if (!isTargetTooLarge) {
+                                      e.target.style.borderColor = '#d1d5db';
+                                      e.target.style.boxShadow = 'none';
+                                      e.target.style.backgroundColor = '#ffffff';
+                                    }
+                                  }}
+                                />
+
+                                {isTargetTooLarge && (
+                                  <div
+                                    style={{
+                                      color: '#ef4444',
+                                      fontSize: '13px',
+                                      marginTop: '8px',
+                                      padding: '8px 12px',
+                                      background: '#fef2f2',
+                                      borderRadius: '6px',
+                                      border: '1px solid #fecaca',
+                                      lineHeight: '1.4'
+                                    }}
+                                  >
+                                    ⚠️ Target cannot be larger than original ({formatFileSize(uploadedFiles[0]?.fileSizeBytes || 0)})
+                                  </div>
+                                )}
+                              </div>
+
+                              <select
+                                value={targetFileSizeUnit}
+                                onChange={(e) => setTargetFileSizeUnit(e.target.value)}
+                                style={{
+                                  padding: '14px 18px',
+                                  fontSize: '18px',           // readable & fits better
+                                  fontWeight: 600,
+                                  border: '2px solid #d1d5db',
+                                  borderRadius: '10px',
+                                  backgroundColor: '#ffffff',
+                                  cursor: 'pointer',
+                                  minWidth: '100px',
+                                  minHeight: '54px',          // ← same height as input → consistent touch target
+                                  appearance: 'none',         // remove default arrow (optional – style yourself)
+                                  backgroundImage: 'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'12\' fill=\'none\' viewBox=\'0 0 12 12\'><path stroke=\'%236b7280\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'1.5\' d=\'m1 4 5 5 5-5\'/></svg>")',
+                                  backgroundRepeat: 'no-repeat',
+                                  backgroundPosition: 'right 12px center',
+                                  backgroundSize: '12px',
+                                  paddingRight: '36px'        // space for custom arrow
+                                }}
+                              >
+                                <option value="KB">KB</option>
+                                <option value="MB">MB</option>
+                              </select>
+                            </div>
+
+                            <p
+                              style={{
+                                fontSize: '13px',
+                                color: '#6b7280',
+                                marginTop: '16px',
+                                marginBottom: 0,
+                                padding: '10px 12px',
+                                background: '#f8fafc',
+                                borderRadius: '8px',
+                                lineHeight: '1.5'
+                              }}
+                            >
+                              💡 <strong>Tip:</strong> Compression aims for your target size. Very small values may noticeably reduce quality.
                             </p>
                           </div>
                         )}
