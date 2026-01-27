@@ -779,8 +779,8 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
 
               setIsPaymentInProgress(false);
               if (captureResponse.data.status === 'SUCCESS') {
-                alert(`🎉 Successfully upgraded to ${plan.name} via PayPal!`);
-                setCurrentPlan(plan.role);
+                alert(`🎉 Successfully purchased ${plan.name} via PayPal!`);
+                // Don't set currentPlan for individual plans - they don't affect the main role
                 router.push('/tools/ai-voice-generation');
               } else {
                 alert('Payment capture failed. Please try again.');
