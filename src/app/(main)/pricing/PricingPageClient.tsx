@@ -53,6 +53,7 @@ export default function PricingPageClient() {
   const [isPricingReady, setIsPricingReady] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
     const [activeSection, setActiveSection] = useState<'individual' | 'bundle'>('individual');
+  const [isPaymentInProgress, setIsPaymentInProgress] = useState(false);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -101,7 +102,21 @@ export default function PricingPageClient() {
 
     initializeGoogleSignIn();
   }, [showLoginModal]);
+    useEffect(() => {
+      const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+        if (isPaymentInProgress) {
+          e.preventDefault();
+          e.returnValue = 'Payment is in progress. Closing this tab may affect your transaction. Are you sure you want to leave?';
+          return e.returnValue;
+        }
+      };
 
+      window.addEventListener('beforeunload', handleBeforeUnload);
+
+      return () => {
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+      };
+    }, [isPaymentInProgress]);
   useEffect(() => {
     const detectCountry = async () => {
       try {
@@ -154,59 +169,68 @@ export default function PricingPageClient() {
         gateway
       } = orderResponse.data;
 
-      if (gateway === 'razorpay') {
-        // Load Razorpay script if not already loaded
-        if (!document.getElementById('razorpay-script')) {
-          const script = document.createElement('script');
-          script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-          script.id = 'razorpay-script';
-          document.body.appendChild(script);
-        }
+if (gateway === 'razorpay') {
+  // Load Razorpay script if not already loaded
+  if (!document.getElementById('razorpay-script')) {
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.id = 'razorpay-script';
+    document.body.appendChild(script);
+  }
 
-        const options = {
-          key: keyId,
-          amount: plan.price * 100, // paise
-          currency: 'INR',
-          order_id: gatewayOrderId,
-          name: 'Scenith',
-          description: `Upgrade to ${plan.name}`,
-          handler: async function (response: any) {
-            try {
-              // Verify payment on backend
-              await axios.post(
-                `${API_BASE_URL}/api/payments/verify-razorpay`,
-                {
-                  internalOrderId,
-                  razorpay_payment_id: response.razorpay_payment_id,
-                  razorpay_order_id: response.razorpay_order_id,
-                  razorpay_signature: response.razorpay_signature
-                },
-                {
-                  headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-                }
-              );
-
-              alert(`🎉 Successfully upgraded to ${plan.name}!`);
-              setCurrentPlan(plan.role);
-              router.push('/tools/ai-voice-generation');
-            } catch (err: any) {
-              console.error('Verification failed:', err);
-              alert('Payment verification failed. Please contact support.');
-            }
+  const options = {
+    key: keyId,
+    amount: plan.price * 100, // paise
+    currency: 'INR',
+    order_id: gatewayOrderId,
+    name: 'Scenith',
+    description: `Upgrade to ${plan.name}`,
+    modal: {
+      ondismiss: function() {
+        setIsPaymentInProgress(false);
+        setLoading(null);
+      }
+    },
+    handler: async function (response: any) {
+      setIsPaymentInProgress(true);
+      try {
+        // Verify payment on backend
+        await axios.post(
+          `${API_BASE_URL}/api/payments/verify-razorpay`,
+          {
+            internalOrderId,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_signature: response.razorpay_signature
           },
-          prefill: {
-            email: userProfile?.email || '',
-            name: userProfile ? `${userProfile.firstName} ${userProfile.lastName}`.trim() : ''
-          },
-          theme: {
-            color: '#667eea'
+          {
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
           }
-        };
+        );
 
-        // @ts-ignore - Razorpay type not available
-        const rzp = new window.Razorpay(options);
-        rzp.open();
-      }  else if (gateway === 'paypal') {
+        setIsPaymentInProgress(false);
+        alert(`🎉 Successfully upgraded to ${plan.name}!`);
+        setCurrentPlan(plan.role);
+        router.push('/tools/ai-voice-generation');
+      } catch (err: any) {
+        console.error('Verification failed:', err);
+        setIsPaymentInProgress(false);
+        alert('Payment verification failed. Please contact support.');
+      }
+    },
+    prefill: {
+      email: userProfile?.email || '',
+      name: userProfile ? `${userProfile.firstName} ${userProfile.lastName}`.trim() : ''
+    },
+    theme: {
+      color: '#667eea'
+    }
+  };
+
+  // @ts-ignore - Razorpay type not available
+  const rzp = new window.Razorpay(options);
+  rzp.open();
+  } else if (gateway === 'paypal') {
           // Create a container for PayPal buttons if not already present
           let paypalContainer = document.getElementById('paypal-button-container');
           if (!paypalContainer) {
@@ -234,6 +258,7 @@ export default function PricingPageClient() {
               return gatewayOrderId;  // Use the order ID created by backend
             },
             onApprove: async (data: any, actions: any) => {
+              setIsPaymentInProgress(true);
               try {
                 // Capture payment on backend
                 const captureResponse = await axios.post(
@@ -247,6 +272,7 @@ export default function PricingPageClient() {
                   }
                 );
 
+                setIsPaymentInProgress(false);
                 if (captureResponse.data.status === 'SUCCESS') {
                   alert(`🎉 Successfully upgraded to ${plan.name} via PayPal!`);
                   setCurrentPlan(plan.role);
@@ -256,6 +282,7 @@ export default function PricingPageClient() {
                 }
               } catch (err: any) {
                 console.error('PayPal capture error:', err);
+                setIsPaymentInProgress(false);
                 alert('Error capturing payment: ' + (err.response?.data || 'Unknown error'));
               } finally {
                 // Remove container after success/fail
@@ -280,12 +307,13 @@ export default function PricingPageClient() {
           }).render('#paypal-button-container');
         }
 
-    } catch (error: any) {
-      console.error('Payment error:', error);
-      alert('Error: ' + (error.response?.data || error.message));
-    } finally {
-      setLoading(null);
-    }
+        } catch (error: any) {
+        console.error('Payment error:', error);
+        setIsPaymentInProgress(false);
+        alert('Error: ' + (error.response?.data || error.message));
+      } finally {
+        setLoading(null);
+      }
   };
 
   const handleLogin = async (formData: { email: string; password: string }) => {
@@ -653,22 +681,31 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
       } = orderResponse.data;
   
       if (gateway === 'razorpay') {
+        // Load Razorpay script if not already loaded
         if (!document.getElementById('razorpay-script')) {
           const script = document.createElement('script');
           script.src = 'https://checkout.razorpay.com/v1/checkout.js';
           script.id = 'razorpay-script';
           document.body.appendChild(script);
         }
-  
+
         const options = {
           key: keyId,
-          amount: plan.price * 100,
+          amount: plan.price * 100, // paise
           currency: 'INR',
           order_id: gatewayOrderId,
           name: 'Scenith',
           description: `${plan.name} - ${plan.service}`,
+          modal: {
+            ondismiss: function() {
+              setIsPaymentInProgress(false);
+              setLoading(null);
+            }
+          },
           handler: async function (response: any) {
+            setIsPaymentInProgress(true);
             try {
+              // Verify payment on backend
               await axios.post(
                 `${API_BASE_URL}/api/payments/verify-razorpay`,
                 {
@@ -681,11 +718,13 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
                   headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
                 }
               );
-  
+
+              setIsPaymentInProgress(false);
               alert(`🎉 Successfully purchased ${plan.name}!`);
               router.push('/tools/ai-voice-generation');
             } catch (err: any) {
               console.error('Verification failed:', err);
+              setIsPaymentInProgress(false);
               alert('Payment verification failed. Please contact support.');
             }
           },
@@ -697,11 +736,11 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
             color: '#667eea'
           }
         };
-  
+
         // @ts-ignore
         const rzp = new window.Razorpay(options);
         rzp.open();
-      } else if (gateway === 'paypal') {
+        } else if (gateway === 'paypal') {
         let paypalContainer = document.getElementById('paypal-button-container');
         if (!paypalContainer) {
           paypalContainer = document.createElement('div');
@@ -723,8 +762,10 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
         // @ts-ignore
         paypal.Buttons({
           createOrder: () => gatewayOrderId,
-          onApprove: async (data: any) => {
+          onApprove: async (data: any, actions: any) => {
+            setIsPaymentInProgress(true);
             try {
+              // Capture payment on backend
               const captureResponse = await axios.post(
                 `${API_BASE_URL}/api/payments/capture-paypal`,
                 {
@@ -735,17 +776,21 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
                   headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
                 }
               );
-  
+
+              setIsPaymentInProgress(false);
               if (captureResponse.data.status === 'SUCCESS') {
-                alert(`🎉 Successfully purchased ${plan.name} via PayPal!`);
+                alert(`🎉 Successfully upgraded to ${plan.name} via PayPal!`);
+                setCurrentPlan(plan.role);
                 router.push('/tools/ai-voice-generation');
               } else {
                 alert('Payment capture failed. Please try again.');
               }
             } catch (err: any) {
               console.error('PayPal capture error:', err);
+              setIsPaymentInProgress(false);
               alert('Error capturing payment: ' + (err.response?.data || 'Unknown error'));
             } finally {
+              // Remove container after success/fail
               if (paypalContainer) {
                 document.body.removeChild(paypalContainer);
               }
@@ -767,11 +812,12 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
         }).render('#paypal-button-container');
       }
     } catch (error: any) {
-      console.error('Payment error:', error);
-      alert('Error: ' + (error.response?.data || error.message));
-    } finally {
-      setLoading(null);
-    }
+          console.error('Payment error:', error);
+          setIsPaymentInProgress(false);
+          alert('Error: ' + (error.response?.data || error.message));
+        } finally {
+          setLoading(null);
+        }
   };  
 
   return (
