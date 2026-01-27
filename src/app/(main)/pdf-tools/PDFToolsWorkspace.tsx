@@ -115,13 +115,13 @@ const PDFToolsWorkspace: React.FC<{ operation: string }> = ({ operation }) => {
    const [targetFileSizeUnit, setTargetFileSizeUnit] = useState<string>("MB");
    const originalSizeBytes = uploadedFiles[0]?.fileSizeBytes || 0;
    const targetInBytes = targetFileSize
-     ? targetFileSize * (targetFileSizeUnit === 'MB' ? 1024 * 1024 : 1024)
+     ? parseFloat(String(targetFileSize)) * (targetFileSizeUnit === 'MB' ? 1024 * 1024 : 1024)
      : 0;
      const isTargetTooLarge =
        originalSizeBytes > 0 &&
        targetInBytes > originalSizeBytes &&
-       targetFileSize > 0 &&
-       !isNaN(targetFileSize);
+       parseFloat(String(targetFileSize)) > 0 &&
+       !isNaN(parseFloat(String(targetFileSize)));
 
 // Handlers for page drag and drop
 const handlePageDragStart = (index: number) => {
