@@ -111,7 +111,7 @@ const PDFToolsWorkspace: React.FC<{ operation: string }> = ({ operation }) => {
     totalPages: number;
   } | null>(null);
     const [compressionMode, setCompressionMode] = useState<string>("preset");
-   const [targetFileSize, setTargetFileSize] = useState<number>(10);
+   const [targetFileSize, setTargetFileSize] = useState<number | string>(10);
    const [targetFileSizeUnit, setTargetFileSizeUnit] = useState<string>("MB");
    const originalSizeBytes = uploadedFiles[0]?.fileSizeBytes || 0;
    const targetInBytes = targetFileSize
