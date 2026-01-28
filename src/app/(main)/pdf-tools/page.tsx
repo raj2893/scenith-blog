@@ -2,24 +2,24 @@ import type { Metadata } from "next";
 import PDFToolsPage from "./PDFToolsPage";
 
 export const metadata: Metadata = {
-  title: 'Free PDF Tools Online - Merge, Split, Compress & Convert PDFs | SCENITH',
-  description: 'Professional PDF tools online for free. Merge, split, compress, rotate, and convert PDFs instantly. Secure, fast, and easy to use. Process unlimited PDFs with high quality.',
+  title: 'Free PDF Tools Online - Merge, Split, Compress & Convert PDFs Instantly | SCENITH',
+  description: 'Professional PDF tools 100% free. Merge PDFs, split pages, compress files up to 80%, rotate, convert, add watermarks, lock/unlock PDFs. No signup, no watermarks, unlimited use.',
   keywords: [
-    'PDF tools online',
-    'free PDF editor',
+    'PDF tools online free',
     'merge PDF online',
     'split PDF free',
-    'compress PDF',
-    'PDF converter',
-    'rotate PDF',
-    'PDF to images',
+    'compress PDF without losing quality',
+    'PDF converter online',
+    'free PDF editor',
+    'PDF to images converter',
     'images to PDF',
-    'lock PDF',
+    'rotate PDF online',
+    'lock PDF with password',
     'unlock PDF',
-    'PDF watermark',
-    'online PDF tools',
-    'PDF manipulation',
-    'free PDF software'
+    'add watermark to PDF',
+    'online PDF manipulation',
+    'best free PDF tools',
+    'PDF software alternative'
   ],
   openGraph: {
     title: 'Free PDF Tools Online - Professional PDF Editor & Converter',

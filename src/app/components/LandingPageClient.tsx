@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { FaMicrophone, FaClosedCaptioning, FaExchangeAlt, FaEraser, FaTachometerAlt, FaPaintBrush, FaCompressArrowsAlt, FaShapes, FaPlay, FaCheckCircle, FaStar } from 'react-icons/fa';
+import { FaMicrophone, FaClosedCaptioning, FaExchangeAlt, FaEraser, FaTachometerAlt, FaPaintBrush, FaCompressArrowsAlt, FaShapes, FaPlay, FaCheckCircle, FaStar, FaFilePdf } from 'react-icons/fa';
 import '../../../styles/LandingPage.css';
 
 interface ToolShowcase {
@@ -40,6 +40,16 @@ const toolsShowcase: ToolShowcase[] = [
     rank: 2
   },
   {
+    id: 'pdf-tools',
+    title: 'PDF Tools Suite',
+    icon: FaFilePdf,
+    description: 'Merge, split, compress, convert PDFs. 9 professional tools in one place.',
+    link: '/pdf-tools',
+    color: '#E74C3C',
+    badge: null,
+    rank: 3 // Or adjust ranks accordingly
+  },  
+  {
     id: 'ai-subtitle',
     title: 'AI Subtitle Generator',
     icon: FaClosedCaptioning,
@@ -47,7 +57,7 @@ const toolsShowcase: ToolShowcase[] = [
     link: '/tools/add-subtitles-to-videos',
     color: '#0b8a82',
     badge: 'Trending',
-    rank: 3
+    rank: 4
   },
   {
     id: 'speed-modifier',
@@ -57,7 +67,7 @@ const toolsShowcase: ToolShowcase[] = [
     link: '/tools/video-speed-modifier',
     color: '#62caf7',
     badge: null,
-    rank: 4
+    rank: 5
   },
   {
     id: 'bg-remover',
@@ -67,7 +77,7 @@ const toolsShowcase: ToolShowcase[] = [
     link: '/tools/background-removal',
     color: '#FFEAA7',
     badge: null,
-    rank: 5
+    rank: 6
   },
   {
     id: 'media-compression',
@@ -77,7 +87,7 @@ const toolsShowcase: ToolShowcase[] = [
     link: '/tools/compress-media',
     color: '#96CEB4',
     badge: null,
-    rank: 6
+    rank: 7
   },
   {
     id: 'media-conversion',
@@ -87,7 +97,7 @@ const toolsShowcase: ToolShowcase[] = [
     link: '/tools/media-conversion-tool',
     color: '#45B7D1',
     badge: null,
-    rank: 7
+    rank: 8
   },
   {
     id: 'svg-library',
@@ -97,7 +107,7 @@ const toolsShowcase: ToolShowcase[] = [
     link: '/svg-library',
     color: '#E17055',
     badge: 'New',
-    rank: 8
+    rank: 9
   }
 ];
 

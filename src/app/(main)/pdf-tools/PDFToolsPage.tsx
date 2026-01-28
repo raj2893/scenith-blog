@@ -16,6 +16,140 @@ import {
 } from "react-icons/fa";
 import "@/styles/tools/PDFTools.css";
 
+const pdfToolsStructuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://scenith.in/pdf-tools#webapp",
+      "name": "SCENITH Free PDF Tools",
+      "description": "Professional online PDF toolkit for merging, splitting, compressing, converting, and editing PDFs. 100% free, no watermarks, unlimited use.",
+      "url": "https://scenith.in/pdf-tools",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Web Browser, Windows, macOS, Linux, iOS, Android",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
+      },
+      "featureList": [
+        "Merge multiple PDFs",
+        "Split PDF pages",
+        "Compress PDF files",
+        "Rotate PDF pages",
+        "Convert images to PDF",
+        "Extract PDF to images",
+        "Add text watermark",
+        "Password protect PDF",
+        "Remove PDF password"
+      ],
+      "screenshot": "https://scenith.in/images/pdf-tools-screenshot.png",
+      "author": {
+        "@type": "Organization",
+        "@id": "https://scenith.in/#organization",
+        "name": "SCENITH"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "8500",
+        "bestRating": "5",
+        "worstRating": "1"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://scenith.in/pdf-tools#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://scenith.in"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Tools",
+          "item": "https://scenith.in/tools"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "PDF Tools",
+          "item": "https://scenith.in/pdf-tools"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://scenith.in/pdf-tools#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Are online PDF tools safe to use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, when using reputable services like SCENITH. We employ bank-grade SSL encryption for file transfers, process documents on secure servers, and automatically delete all files within 1 hour after processing. Unlike some competitors that retain files for analytics, we prioritize your privacy."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I merge multiple PDF files?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Use our Merge PDF tool: (1) Upload multiple PDF files, (2) Drag to reorder pages as needed, (3) Click 'Merge PDFs', (4) Download your combined PDF. The process takes seconds and maintains original quality, fonts, and formatting."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I compress a PDF without losing quality?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! Our Compress PDF tool offers three levels: Low (75% compression, minimal quality loss), Medium (50%, recommended for most documents), and High (25%, text-only files). We use smart compression that reduces file size while preserving readability and important visual elements."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there a file size limit for PDF tools?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Currently, there are no hard file size limits on SCENITH PDF tools. However, very large files (500MB+) may take longer to upload and process depending on your internet connection. Most users process files under 100MB without issues."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "@id": "https://scenith.in/pdf-tools#howto-merge",
+      "name": "How to Merge PDF Files Online",
+      "description": "Step-by-step guide to combining multiple PDF documents into one file",
+      "totalTime": "PT2M",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "Upload PDF Files",
+          "text": "Click 'Select Files' or drag and drop multiple PDF documents into the upload area. You can add as many PDFs as needed.",
+          "position": 1
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Arrange Pages",
+          "text": "Drag and drop to reorder pages in your preferred sequence. Preview thumbnails help you organize content perfectly.",
+          "position": 2
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Merge and Download",
+          "text": "Click 'Merge PDFs' button. Processing completes in seconds. Download your combined PDF with all pages in perfect order.",
+          "position": 3
+        }
+      ]
+    }
+  ]
+};
+
 interface PDFTool {
   id: string;
   name: string;
@@ -111,16 +245,36 @@ const PDFToolsPage: React.FC = () => {
   };
 
   return (
+    <>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(pdfToolsStructuredData),
+      }}
+    />    
     <div className="pdf-tools-container">
       {/* Header */}
       <div className="pdf-tools-header">
-        <button
-          className="back-btn"
-          onClick={() => router.push("/tools")}
-        >
-          <FaArrowLeft size={18} />
-          <span>Back to Tools</span>
-        </button>
+        <nav aria-label="Breadcrumb" className="breadcrumb-nav">
+          <ol itemScope itemType="https://schema.org/BreadcrumbList">
+            <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+              <a href="/" itemProp="item">
+                <span itemProp="name">Home</span>
+              </a>
+              <meta itemProp="position" content="1" />
+            </li>
+            <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+              <a href="/tools" itemProp="item">
+                <span itemProp="name">Tools</span>
+              </a>
+              <meta itemProp="position" content="2" />
+            </li>
+            <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+              <span itemProp="name">PDF Tools</span>
+              <meta itemProp="position" content="3" />
+            </li>
+          </ol>
+        </nav>
 
         <div className="header-content">
           <div className="header-icon">
@@ -130,6 +284,20 @@ const PDFToolsPage: React.FC = () => {
           <p>All-in-one PDF toolkit for merging, splitting, compressing, and converting PDFs. Fast, secure, and completely free.</p>
         </div>
       </div>
+
+      {/* Add this section right after the header-content div */}
+      <section className="quick-definition-section" role="region" aria-labelledby="quick-definition">
+        <div className="container" style={{ maxWidth: '900px', margin: '40px auto', padding: '0 20px' }}>
+          <div className="featured-snippet-target">
+            <h2 id="quick-definition" className="visually-hidden">What Are PDF Tools?</h2>
+            <div className="definition-box" style={{ background: 'white', padding: '24px', borderRadius: '12px', border: '2px solid #e2e8f0', borderLeft: '4px solid #3b82f6' }}>
+              <p className="definition-text" style={{ fontSize: '1.05rem', lineHeight: '1.8', color: '#1e293b', margin: 0 }}>
+                <strong>PDF tools</strong> are online applications that allow you to manipulate PDF documents without installing software. Common operations include merging multiple PDFs into one file, splitting large PDFs into smaller documents, compressing file sizes, rotating pages, converting images to PDF format, adding watermarks, and password-protecting sensitive documents. SCENITH offers all these tools completely free with no watermarks, no file size limits, and instant processing.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>      
 
       {/* Tools Grid */}
       <div className="tools-grid-wrapper">
@@ -193,6 +361,44 @@ const PDFToolsPage: React.FC = () => {
         </div>
       </div>
 
+      {/* Add before the existing seo-content-section */}
+      <section className="competitors-comparison" style={{ maxWidth: '900px', margin: '60px auto', padding: '40px 20px', background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(139, 92, 246, 0.05))', borderRadius: '16px' }} role="region" aria-labelledby="vs-competitors">
+        <h2 id="vs-competitors" style={{ fontSize: '28px', marginBottom: '20px', color: '#1e293b', textAlign: 'center' }}>
+          SCENITH vs Other PDF Tools: Why We're Better
+        </h2>
+        <div className="comparison-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '25px', marginTop: '30px' }}>
+          <div className="vs-card" style={{ background: 'white', padding: '30px', borderRadius: '12px', boxShadow: '0 4px 15px rgba(0,0,0,0.08)' }}>
+            <h3 style={{ color: '#3b82f6', marginBottom: '15px', fontSize: '1.3rem' }}>SCENITH vs Smallpdf</h3>
+            <ul style={{ listStyle: 'none', padding: 0 }}>
+              <li style={{ padding: '8px 0', borderBottom: '1px solid #e0e0e0' }}>✅ <strong>SCENITH:</strong> Completely free, no file limits</li>
+              <li style={{ padding: '8px 0', borderBottom: '1px solid #e0e0e0' }}>❌ <strong>Smallpdf:</strong> 2 files/day free, then $12/month</li>
+              <li style={{ padding: '8px 0', borderBottom: '1px solid #e0e0e0' }}>✅ <strong>SCENITH:</strong> Zero watermarks on all outputs</li>
+              <li style={{ padding: '8px 0' }}>⚠️ <strong>Smallpdf:</strong> Watermarks on free plan</li>
+            </ul>
+          </div>
+            
+          <div className="vs-card" style={{ background: 'white', padding: '30px', borderRadius: '12px', boxShadow: '0 4px 15px rgba(0,0,0,0.08)' }}>
+            <h3 style={{ color: '#3b82f6', marginBottom: '15px', fontSize: '1.3rem' }}>SCENITH vs iLovePDF</h3>
+            <ul style={{ listStyle: 'none', padding: 0 }}>
+              <li style={{ padding: '8px 0', borderBottom: '1px solid #e0e0e0' }}>✅ <strong>SCENITH:</strong> No signup required, instant use</li>
+              <li style={{ padding: '8px 0', borderBottom: '1px solid #e0e0e0' }}>❌ <strong>iLovePDF:</strong> Account required for most tools</li>
+              <li style={{ padding: '8px 0', borderBottom: '1px solid #e0e0e0' }}>✅ <strong>SCENITH:</strong> Unlimited batch processing</li>
+              <li style={{ padding: '8px 0' }}>⚠️ <strong>iLovePDF:</strong> Limited files per operation</li>
+            </ul>
+          </div>
+            
+          <div className="vs-card" style={{ background: 'white', padding: '30px', borderRadius: '12px', boxShadow: '0 4px 15px rgba(0,0,0,0.08)' }}>
+            <h3 style={{ color: '#3b82f6', marginBottom: '15px', fontSize: '1.3rem' }}>SCENITH vs Adobe Acrobat</h3>
+            <ul style={{ listStyle: 'none', padding: 0 }}>
+              <li style={{ padding: '8px 0', borderBottom: '1px solid #e0e0e0' }}>✅ <strong>SCENITH:</strong> $0/month forever</li>
+              <li style={{ padding: '8px 0', borderBottom: '1px solid #e0e0e0' }}>❌ <strong>Adobe:</strong> $19.99/month minimum</li>
+              <li style={{ padding: '8px 0', borderBottom: '1px solid #e0e0e0' }}>✅ <strong>SCENITH:</strong> Works in browser, any device</li>
+              <li style={{ padding: '8px 0' }}>⚠️ <strong>Adobe:</strong> Large software download required</li>
+            </ul>
+          </div>
+        </div>
+      </section>      
+
       {/* SEO Content Section */}
       <div className="seo-content-section" style={{ maxWidth: '900px', margin: '60px auto', padding: '0 20px' }}>
         <h2 style={{ fontSize: '28px', marginBottom: '20px', color: '#1e293b' }}>
@@ -247,15 +453,15 @@ const PDFToolsPage: React.FC = () => {
 
       {/* NEW: Understanding PDF Tools Section */}
       <div
-  className="understanding-pdf-section"
-  style={{
-    maxWidth: '900px',
-    margin: '60px auto',
-    padding: '40px 20px',           // ← combined (top/bottom 40px, left/right 20px)
-    background: '#f8fafc',
-    borderRadius: '12px',
-  }}
->        <h2 style={{ fontSize: '28px', marginBottom: '20px', color: '#1e293b' }}>
+        className="understanding-pdf-section"
+        style={{
+          maxWidth: '900px',
+          margin: '60px auto',
+          padding: '40px 20px',           // ← combined (top/bottom 40px, left/right 20px)
+          background: '#f8fafc',
+          borderRadius: '12px',
+        }}
+      >        <h2 style={{ fontSize: '28px', marginBottom: '20px', color: '#1e293b' }}>
           Understanding PDF Tools: The Complete Guide to Document Management
         </h2>
 
@@ -437,6 +643,50 @@ const PDFToolsPage: React.FC = () => {
         </div>
       </div>
 
+      {/* Add before the existing detailed-faq-section */}
+      <section className="people-also-ask" style={{ maxWidth: '900px', margin: '60px auto', padding: '0 20px' }} role="region" aria-labelledby="paa-title">
+        <h2 id="paa-title" style={{ fontSize: '28px', marginBottom: '20px', color: '#1e293b', textAlign: 'center' }}>
+          People Also Ask About PDF Tools
+        </h2>
+        <div className="paa-grid" style={{ display: 'grid', gap: '20px', marginTop: '30px' }}>
+          {[
+            {
+              q: "What's the difference between merge and combine PDFs?",
+              a: "They're the same operation. Merging (combining) PDFs takes multiple separate PDF files and creates one unified document. All pages from each PDF are added sequentially into a single file, making it easier to share, store, and manage. SCENITH's Merge PDF tool lets you reorder pages before combining."
+            },
+            {
+              q: "How much can I compress a PDF without losing quality?",
+              a: "Safe compression ranges: 25-30% reduction for image-heavy PDFs with minimal visible quality loss, 50-60% for mixed content (recommended), 70-80% for text-only documents. SCENITH offers Low/Medium/High presets or custom compression (1-99%) so you control the quality vs. file size tradeoff."
+            },
+            {
+              q: "Can I edit text inside a PDF with these tools?",
+              a: "Our current PDF tools focus on document-level operations (merge, split, compress, rotate, convert, watermark, lock/unlock). For text editing within PDFs, we recommend Adobe Acrobat or PDFescape. However, you can split out specific pages, edit them in another tool, then merge back using our platform."
+            },
+            {
+              q: "Which PDF tool is best for reducing file size for email?",
+              a: "Use our Compress PDF tool with Medium compression (50%). This typically reduces files by 40-60%, perfect for email attachments (most services limit to 25MB). For very large files, try High compression or split the PDF into smaller documents using our Split PDF tool."
+            },
+            {
+              q: "Do online PDF tools add watermarks to my files?",
+              a: "SCENITH never adds watermarks to any processed PDFs. Unlike many 'free' PDF services that stamp branding on your documents, all SCENITH outputs are clean and professional. What you upload is what you download—no logos, no attribution requirements, no compromise on quality."
+            },
+            {
+              q: "How do I convert multiple images into one PDF?",
+              a: "Use our Images to PDF tool: (1) Upload all your image files (JPG, PNG, GIF, BMP), (2) Arrange images in your preferred order using drag-and-drop, (3) Click 'Convert to PDF', (4) Download your multi-page PDF. Each image becomes a separate page in the final document."
+            }
+          ].map((item, index) => (
+            <div key={index} style={{ background: 'white', padding: '20px', borderRadius: '12px', border: '2px solid #e2e8f0', borderLeft: '4px solid #3b82f6' }}>
+              <h3 style={{ fontSize: '18px', color: '#3b82f6', marginBottom: '12px', fontWeight: 600 }}>
+                {item.q}
+              </h3>
+              <p style={{ fontSize: '16px', lineHeight: '1.7', color: '#475569', margin: 0 }}>
+                {item.a}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>      
+
       {/* NEW: SEO-Optimized FAQ Section */}
       <div className="detailed-faq-section" style={{ maxWidth: '900px', margin: '60px auto', padding: '0 20px' }}>
         <h2 style={{ fontSize: '28px', marginBottom: '20px', color: '#1e293b' }}>
@@ -498,7 +748,79 @@ const PDFToolsPage: React.FC = () => {
           ))}
         </div>
       </div>
+      <section className="must-try-section" style={{ padding: '60px 20px', background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%)', borderTop: '1px solid rgba(59, 130, 246, 0.1)', margin: '60px -20px 0' }} role="region" aria-labelledby="must-try-title">
+        <div className="must-try-header" style={{ textAlign: 'center', marginBottom: '40px' }}>
+          <h2 id="must-try-title" style={{ fontSize: '2rem', fontWeight: 700, color: '#1e293b', marginBottom: '10px' }}>
+            More AI-Powered Tools on SCENITH
+          </h2>
+          <p style={{ fontSize: '1.1rem', color: '#64748b' }}>Supercharge your content creation workflow</p>
+        </div>
+        <div className="must-try-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '30px', maxWidth: '1000px', margin: '0 auto' }}>
+          <a 
+            href="https://scenith.in/tools/ai-voice-generation?utm_source=pdf_tools_page&utm_medium=cross_tool_promotion" 
+            className="must-try-card"
+            style={{ background: '#fff', borderRadius: '20px', padding: '35px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', border: '2px solid rgba(59, 130, 246, 0.1)', textDecoration: 'none', display: 'block', transition: 'all 0.3s ease' }}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span style={{ fontSize: '3.5rem', display: 'block', marginBottom: '20px' }}>🎤</span>
+            <span style={{ display: 'inline-block', background: 'linear-gradient(135deg, #F59E0B, #EF4444)', color: '#fff', fontSize: '0.7rem', fontWeight: 700, padding: '4px 12px', borderRadius: '12px', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '15px' }}>
+              🔥 #1 Popular
+            </span>
+            <h3 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#1e293b', marginBottom: '12px' }}>AI Voice Generator</h3>
+            <p style={{ fontSize: '1.05rem', color: '#64748b', lineHeight: 1.6, marginBottom: '20px' }}>
+              Transform text to lifelike speech with 40+ natural AI voices. Perfect for videos, podcasts & audiobooks.
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '20px' }}>
+              <span style={{ fontSize: '0.95rem', color: '#475569', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                ✓ 40+ Realistic Voices
+              </span>
+              <span style={{ fontSize: '0.95rem', color: '#475569', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                ✓ 20+ Languages
+              </span>
+              <span style={{ fontSize: '0.95rem', color: '#475569', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                ✓ Instant MP3 Download
+              </span>
+            </div>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '12px 28px', background: 'linear-gradient(135deg, #3B82F6, #8B5CF6)', color: '#fff', borderRadius: '50px', fontWeight: 600, fontSize: '1rem' }}>
+              Try Voice Generator →
+            </span>
+          </a>
+      
+          <a 
+            href="https://scenith.in/tools/add-subtitles-to-videos?utm_source=pdf_tools_page&utm_medium=cross_tool_promotion" 
+            className="must-try-card"
+            style={{ background: '#fff', borderRadius: '20px', padding: '35px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', border: '2px solid rgba(59, 130, 246, 0.1)', textDecoration: 'none', display: 'block', transition: 'all 0.3s ease' }}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span style={{ fontSize: '3.5rem', display: 'block', marginBottom: '20px' }}>💬</span>
+            <span style={{ display: 'inline-block', background: 'linear-gradient(135deg, #06B6D4, #0EA5E9)', color: '#fff', fontSize: '0.7rem', fontWeight: 700, padding: '4px 12px', borderRadius: '12px', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '15px' }}>
+              Trending
+            </span>
+            <h3 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#1e293b', marginBottom: '12px' }}>AI Subtitle Generator</h3>
+            <p style={{ fontSize: '1.05rem', color: '#64748b', lineHeight: 1.6, marginBottom: '20px' }}>
+              Auto-generate accurate subtitles with AI transcription. Boost engagement by 80% with professional captions.
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '20px' }}>
+              <span style={{ fontSize: '0.95rem', color: '#475569', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                ✓ Auto Speech-to-Text
+              </span>
+              <span style={{ fontSize: '0.95rem', color: '#475569', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                ✓ 25+ Text Styles
+              </span>
+              <span style={{ fontSize: '0.95rem', color: '#475569', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                ✓ Custom Animations
+              </span>
+            </div>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '12px 28px', background: 'linear-gradient(135deg, #3B82F6, #8B5CF6)', color: '#fff', borderRadius: '50px', fontWeight: 600, fontSize: '1rem' }}>
+              Generate Subtitles →
+            </span>
+          </a>
+        </div>
+      </section>      
     </div>
+    </>
   );
 };
 
