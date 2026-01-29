@@ -300,30 +300,168 @@ const ElementsLibraryClient: React.FC = () => {
 
   return (
     <div className="elements-library-page">
+      {/* Breadcrumb Navigation */}
+      <nav aria-label="Breadcrumb" className="breadcrumb-nav">
+        <ol itemScope itemType="https://schema.org/BreadcrumbList">
+          <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+            <a href="/" itemProp="item">
+              <span itemProp="name">Home</span>
+            </a>
+            <meta itemProp="position" content="1" />
+          </li>
+          <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+            <a href="/tools" itemProp="item">
+              <span itemProp="name">Tools</span>
+            </a>
+            <meta itemProp="position" content="2" />
+          </li>
+          <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+            <span itemProp="name">SVG Icons Library</span>
+            <meta itemProp="position" content="3" />
+          </li>
+        </ol>
+      </nav>      
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "CollectionPage",
-            name: "Free SVG Icons Library - Download & Edit Vector Graphics | Scenith",
-            description: "Download free SVG icons, vector graphics, and illustrations. Over 10,000+ customizable icons for web design, UI/UX, mobile apps, and graphic design. No attribution required.",
-            url: typeof window !== "undefined" ? window.location.href : "/svg-library",
-            keywords: "free svg icons, vector icons, download svg, free icons, icon library, scalable vector graphics, web icons, ui icons, flaticon alternative, png icons, transparent icons",
-            mainEntity: {
-              "@type": "ItemList",
-              numberOfItems: elements.length,
-              itemListElement: elements.slice(0, 10).map((element, index) => ({
-                "@type": "ListItem",
-                position: index + 1,
-                item: {
-                  "@type": "ImageObject",
-                  name: element.name,
-                  contentUrl: element.cdnUrl,
-                  encodingFormat: element.fileFormat,
+            "@graph": [
+              {
+                "@type": "WebApplication",
+                "@id": "https://scenith.in/svg-library#webapp",
+                name: "Scenith Free SVG Icons Library",
+                description: "Download and customize 10,000+ free SVG icons and vector graphics. Edit online with built-in editor. Export as SVG, PNG, JPG, PDF. No attribution required.",
+                url: "https://scenith.in/svg-library",
+                applicationCategory: "DesignApplication",
+                operatingSystem: "Web Browser",
+                offers: {
+                  "@type": "Offer",
+                  price: "0",
+                  priceCurrency: "USD",
+                  availability: "https://schema.org/InStock"
+                },
+                featureList: [
+                  "10,000+ free SVG icons",
+                  "Built-in online editor",
+                  "Export SVG, PNG, JPG, PDF",
+                  "No attribution required",
+                  "Commercial use allowed",
+                  "Instant customization"
+                ],
+                screenshot: "https://scenith.in/images/svg-library-screenshot.png",
+                author: {
+                  "@type": "Organization",
+                  "@id": "https://scenith.in/#organization",
+                  name: "Scenith"
                 }
-              }))
-            }
+              },
+              {
+                "@type": "BreadcrumbList",
+                "@id": "https://scenith.in/svg-library#breadcrumb",
+                itemListElement: [
+                  {
+                    "@type": "ListItem",
+                    position: 1,
+                    name: "Home",
+                    item: "https://scenith.in"
+                  },
+                  {
+                    "@type": "ListItem",
+                    position: 2,
+                    name: "Tools",
+                    item: "https://scenith.in/tools"
+                  },
+                  {
+                    "@type": "ListItem",
+                    position: 3,
+                    name: "SVG Icons Library",
+                    item: "https://scenith.in/svg-library"
+                  }
+                ]
+              },
+              {
+                "@type": "FAQPage",
+                "@id": "https://scenith.in/svg-library#faq",
+                mainEntity: [
+                  {
+                    "@type": "Question",
+                    name: "What are SVG icons and why use them?",
+                    acceptedAnswer: {
+                      "@type": "Answer",
+                      text: "SVG (Scalable Vector Graphics) icons are XML-based vector image files that scale infinitely without losing quality. Unlike PNG or JPG, SVG icons remain crisp at any size, load faster, and can be styled with CSS. They're perfect for responsive web design, mobile apps, and high-resolution displays."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    name: "Are these SVG icons really free?",
+                    acceptedAnswer: {
+                      "@type": "Answer",
+                      text: "Yes! All 10,000+ icons are completely free for personal and commercial use. No attribution required, no hidden costs, no watermarks. You can use them in client projects, commercial websites, mobile apps, products for sale, and any business purpose without crediting Scenith."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    name: "How do I download SVG icons?",
+                    acceptedAnswer: {
+                      "@type": "Answer",
+                      text: "Simply browse or search for icons, click on your desired icon, and click the download button. Choose your preferred format (SVG, PNG, JPG, or PDF) and download instantly. No registration required, though creating a free account unlocks additional features."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    name: "Can I customize icons before downloading?",
+                    acceptedAnswer: {
+                      "@type": "Answer",
+                      text: "Yes! Click 'Edit in Editor' on any icon to open our online editing tool. You can change colors, resize, rotate, add text, combine icons, apply effects, and export in multiple formats - all without installing design software."
+                    }
+                  }
+                ]
+              },
+              {
+                "@type": "HowTo",
+                "@id": "https://scenith.in/svg-library#howto",
+                name: "How to Download and Use Free SVG Icons",
+                description: "Step-by-step guide to finding, downloading, and using free SVG icons from Scenith",
+                totalTime: "PT2M",
+                step: [
+                  {
+                    "@type": "HowToStep",
+                    name: "Search for Icons",
+                    text: "Use the search bar or browse categories to find icons that match your needs. Filter by style, category, or keyword.",
+                    position: 1
+                  },
+                  {
+                    "@type": "HowToStep",
+                    name: "Preview and Select",
+                    text: "Click on any icon to view details. Preview how it looks and check available formats before downloading.",
+                    position: 2
+                  },
+                  {
+                    "@type": "HowToStep",
+                    name: "Download or Edit",
+                    text: "Click download to get the icon instantly, or click 'Edit in Editor' to customize colors, size, and effects before exporting.",
+                    position: 3
+                  }
+                ]
+              },
+              {
+                "@type": "CollectionPage",
+                "@id": "https://scenith.in/svg-library#collection",
+                name: "Free SVG Icons Collection",
+                numberOfItems: elements.length,
+                itemListElement: elements.slice(0, 10).map((element, index) => ({
+                  "@type": "ListItem",
+                  position: index + 1,
+                  item: {
+                    "@type": "ImageObject",
+                    name: element.name,
+                    contentUrl: element.cdnUrl,
+                    encodingFormat: element.fileFormat
+                  }
+                }))
+              }
+            ]
           }),
         }}
       />
@@ -338,7 +476,9 @@ const ElementsLibraryClient: React.FC = () => {
           >
             <h1>Free SVG Icons & Vector Graphics Library</h1>
             <p className="hero-subtitle">
-              Download and edit over 10,000+ free SVG icons, vector graphics, and illustrations. Perfect for web design, apps, presentations, and more. No attribution required.
+              Download and edit over 10,000+ free SVG icons, vector graphics, and illustrations. Perfect for web design, apps, presentations, and more. Use our{' '}
+              <a href="/tools/image-editing" className="inline-link">free image editor</a>{' '}
+              to customize any icon instantly. No attribution required.
             </p>
 
             <div className="search-container">
@@ -382,6 +522,19 @@ const ElementsLibraryClient: React.FC = () => {
           </motion.div>
         </div>
       </section>
+
+      <section className="quick-definition-section" role="region" aria-labelledby="quick-definition">
+        <div className="container">
+          <div className="featured-snippet-target">
+            <h2 id="quick-definition" className="visually-hidden">SVG Icons Definition</h2>
+            <div className="definition-box">
+              <p className="definition-text">
+                <strong>SVG icons</strong> are scalable vector graphic image files that maintain perfect quality at any size. Unlike raster formats (PNG, JPG), SVG icons use mathematical equations to draw shapes, allowing infinite scaling without pixelation. SVG files are smaller, faster-loading, CSS-styleable, and ideal for responsive web design, mobile apps, and high-resolution displays. They're the industry standard for modern icon systems.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>      
 
       <section className="elements-grid-section">
         <div className="container">
@@ -507,6 +660,134 @@ const ElementsLibraryClient: React.FC = () => {
         </div>
       </section>
 
+      <section className="how-to-section" id="how-to-use" role="region" aria-labelledby="how-to-title">
+        <div className="container">
+          <h2 id="how-to-title">How to Download and Use Free SVG Icons: Complete Guide</h2>
+          <p className="section-description">
+            Follow this step-by-step tutorial to find, download, customize, and implement SVG icons in your projects. Perfect for beginners and professionals alike.
+          </p>
+              
+          <div className="tutorial-steps">
+            <article className="tutorial-step">
+              <div className="tutorial-step-number">Step 1</div>
+              <div className="tutorial-step-content">
+                <h3>Search and Browse SVG Icons</h3>
+                <p>
+                  Start by exploring our comprehensive library of 10,000+ free icons:
+                </p>
+                <ul className="tutorial-checklist">
+                  <li>Use the search bar to find specific icons (e.g., "shopping cart", "social media", "arrows")</li>
+                  <li>Click category filters to browse themed collections (Business, Technology, Social Media, etc.)</li>
+                  <li>Filter by multiple criteria to narrow down results quickly</li>
+                  <li>Preview icons at full size before downloading</li>
+                </ul>
+                <div className="tutorial-tip">
+                  <strong>💡 Pro Tip:</strong> Use descriptive keywords like "outlined heart icon" or "filled star icon" for better search results. Our search engine understands natural language and icon styles.
+                </div>
+              </div>
+            </article>
+              
+            <article className="tutorial-step">
+              <div className="tutorial-step-number">Step 2</div>
+              <div className="tutorial-step-content">
+                <h3>Download Your Chosen Icon</h3>
+                <p>
+                  Getting your icon is quick and straightforward:
+                </p>
+                <div className="filter-guide">
+                  <div className="filter-option">
+                    <strong>Instant Download:</strong> Click the download button (⬇️) on any icon card for immediate access to the SVG file.
+                  </div>
+                  <div className="filter-option">
+                    <strong>Format Selection:</strong> Choose from SVG (scalable), PNG (transparent), JPG (solid background), or PDF (print-ready).
+                  </div>
+                  <div className="filter-option">
+                    <strong>No Registration Required:</strong> Download instantly without creating an account (though accounts unlock favorites and history).
+                  </div>
+                </div>
+                <div className="tutorial-tip">
+                  <strong>💡 Pro Tip:</strong> For web projects, always choose SVG format. It's 50-80% smaller than PNG and scales perfectly on all devices. Use PNG only when SVG support is unavailable.
+                </div>
+              </div>
+            </article>
+              
+            <article className="tutorial-step">
+              <div className="tutorial-step-number">Step 3</div>
+              <div className="tutorial-step-content">
+                <h3>Customize Icons (Optional but Powerful)</h3>
+                <p>
+                  Click "Edit in Editor" to unlock advanced customization without design software:
+                </p>
+                <ul className="tutorial-checklist">
+                  <li><strong>Change Colors:</strong> Use our color picker to match your brand palette instantly</li>
+                  <li><strong>Resize & Scale:</strong> Adjust dimensions while maintaining perfect proportions</li>
+                  <li><strong>Rotate & Transform:</strong> Rotate to any angle for creative orientations</li>
+                  <li><strong>Add Text:</strong> Combine icons with custom typography for logos or badges</li>
+                  <li><strong>Combine Icons:</strong> Layer multiple icons to create unique compositions</li>
+                  <li><strong>Apply Effects:</strong> Add shadows, transparency, filters for visual impact</li>
+                </ul>
+                <p>
+                  All edits happen in real-time with instant preview. Export customized icons in any format when finished.
+                </p>
+              </div>
+            </article>
+              
+            <article className="tutorial-step">
+              <div className="tutorial-step-number">Step 4</div>
+              <div className="tutorial-step-content">
+                <h3>Implement Icons in Your Project</h3>
+                <p>
+                  Use downloaded icons across platforms and applications:
+                </p>
+                <div className="download-options">
+                  <div className="download-format">
+                    <strong>Web Development</strong>
+                    Insert SVG code directly in HTML, use as IMG src, or set as CSS background-image
+                  </div>
+                  <div className="download-format">
+                    <strong>Design Software</strong>
+                    Import into Figma, Sketch, Adobe XD, Illustrator, Photoshop for further editing
+                  </div>
+                  <div className="download-format">
+                    <strong>No-Code Platforms</strong>
+                    Upload PNG/JPG to WordPress, Wix, Squarespace, Webflow, Shopify
+                  </div>
+                  <div className="download-format">
+                    <strong>Presentations</strong>
+                    Insert into PowerPoint, Keynote, Google Slides to enhance visual communication
+                  </div>
+                </div>
+                <div className="tutorial-tip">
+                  <strong>💡 Pro Tip:</strong> For websites, use inline SVG for icons you'll style with CSS (colors, hover effects). Use IMG tags for static icons that won't change. This optimizes performance and flexibility.
+                </div>
+              </div>
+            </article>
+          </div>
+              
+          <div className="common-questions">
+            <h3>Common Questions During Download</h3>
+            <div className="quick-qa-grid">
+              <div className="quick-qa">
+                <strong>Q: Do I need to create an account?</strong>
+                <p>A: No, downloads work instantly without registration. Accounts are optional and unlock favorites, download history, and early access to new icons.</p>
+              </div>
+              <div className="quick-qa">
+                <strong>Q: Can I download multiple icons at once?</strong>
+                <p>A: Currently, icons download individually for best quality control. Batch download is coming soon for premium users.</p>
+              </div>
+              <div className="quick-qa">
+                <strong>Q: What if the icon doesn't look right on my site?</strong>
+                <p>A: SVG icons inherit text color by default. Set explicit fill color in CSS or use our editor to hard-code colors before downloading.</p>
+              </div>
+              <div className="quick-qa">
+                <strong>Q: How do I credit Scenith?</strong>
+                <p>A: Attribution is appreciated but not required! Use our icons freely without any credit or backlinks. Focus on creating amazing work.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>      
+
       <section className="icon-categories-section">
         <div className="container">
           <h2>Popular Free SVG Icon Categories</h2>
@@ -612,6 +893,73 @@ const ElementsLibraryClient: React.FC = () => {
           </div>
         </div>
       </section>
+
+      <section className="faq-section" id="faq" role="region" aria-labelledby="faq-title">
+        <div className="container">
+          <h2 id="faq-title">Frequently Asked Questions About Free SVG Icons</h2>
+          <div className="faq-grid" role="list">
+            <article className="faq-item" role="listitem">
+              <h3>What are SVG icons and why use them?</h3>
+              <p>SVG (Scalable Vector Graphics) icons are XML-based vector images that scale infinitely without quality loss. Unlike PNG or JPG, SVG icons remain crisp at any size, load faster (typically 50-80% smaller files), can be styled with CSS, animated with JavaScript, and are perfect for responsive designs and retina displays.</p>
+            </article>
+            <article className="faq-item" role="listitem">
+              <h3>Are these SVG icons completely free?</h3>
+              <p>Yes! All 10,000+ icons are 100% free for both personal and commercial use. No attribution required, no hidden fees, no watermarks, and no download limits. Use them in client projects, commercial websites, apps, products, marketing materials - anywhere you need professional icons.</p>
+            </article>
+            <article className="faq-item" role="listitem">
+              <h3>How do I download SVG icons from Scenith?</h3>
+              <p>Browse our library using search or category filters, click on any icon to view it, then click the download button. Choose your format (SVG for web, PNG with transparency, JPG, or PDF for print) and download instantly. No registration required for downloads.</p>
+            </article>
+            <article className="faq-item" role="listitem">
+              <h3>Can I customize icons before downloading?</h3>
+              <p>Absolutely! Click "Edit in Editor" on any icon to open our online editing tool. Change colors with our color picker, resize proportionally, rotate, add custom text, combine multiple icons, apply filters, adjust transparency, and export in any format - all without design software.</p>
+            </article>
+            <article className="faq-item" role="listitem">
+              <h3>What's the difference between SVG and PNG icons?</h3>
+              <p>SVG is a vector format that scales infinitely without pixelation, perfect for responsive web design. PNG is a raster format good for specific sizes but pixelates when scaled. SVG files are typically 50-80% smaller, can be styled with CSS, and work perfectly on all screen resolutions including retina and 4K displays.</p>
+            </article>
+            <article className="faq-item" role="listitem">
+              <h3>Can I use these icons for commercial projects?</h3>
+              <p>Yes! Full commercial use is allowed. Use our free SVG icons in client work, commercial websites, SaaS products, mobile applications, templates for sale, merchandise, marketing materials, and any business purpose. No attribution needed, no royalties, no restrictions.</p>
+            </article>
+            <article className="faq-item" role="listitem">
+              <h3>How is Scenith better than Flaticon or IconFinder?</h3>
+              <p>Unlike Flaticon Premium or IconFinder Pro which require paid subscriptions, Scenith offers 10,000+ icons completely free with zero attribution requirements. We include a built-in online editor (no external software needed), multiple export formats, and full commercial rights - all at no cost.</p>
+            </article>
+            <article className="faq-item" role="listitem">
+              <h3>What formats can I export icons in?</h3>
+              <p>Export in SVG (scalable vector for web), PNG with transparent background (general use), JPG (photo compositions), or high-quality PDF (professional printing). Choose any resolution: 72 DPI for web, 150 DPI for standard printing, 300 DPI for professional printing, or custom resolutions.</p>
+            </article>
+          </div>
+        </div>
+      </section>      
+
+      <section className="people-also-ask" role="region" aria-labelledby="paa-title">
+        <div className="container">
+          <h2 id="paa-title">People Also Ask About SVG Icons</h2>
+          <div className="paa-grid">
+            <div className="paa-item">
+              <h3>Where can I find free SVG icons without attribution?</h3>
+              <p>Scenith offers 10,000+ free SVG icons with zero attribution requirements. Unlike Flaticon's free tier which requires credit, all Scenith icons come with full commercial rights and no mandatory attribution. Other options include Heroicons, Feather Icons, and Bootstrap Icons, but Scenith provides the largest selection with built-in editing capabilities.</p>
+            </div>
+              
+            <div className="paa-item">
+              <h3>How do I use SVG icons in HTML/CSS?</h3>
+              <p>Inline SVG directly in HTML for maximum control: copy SVG code and paste into your HTML. Or use as IMG tag: &lt;img src="icon.svg" alt="description"&gt;. For CSS background: background-image: url('icon.svg'). Inline SVG allows CSS styling and animations, while IMG/CSS methods are simpler but less flexible.</p>
+            </div>
+              
+            <div className="paa-item">
+              <h3>What's the best SVG icon library for React?</h3>
+              <p>Scenith icons work perfectly in React - download SVG files and import as React components. Alternatives include React Icons (aggregates multiple icon sets), Heroicons (Tailwind's official icons), and Lucide React. Scenith's advantage: edit icons visually before exporting, ensuring perfect fit for your React project without code changes.</p>
+            </div>
+              
+            <div className="paa-item">
+              <h3>Are SVG icons better than icon fonts?</h3>
+              <p>Yes, SVG icons are generally superior. They offer better accessibility (screen readers can describe them), sharper rendering at all sizes, support for multi-color designs, easier animation and interactivity, and no FOIT (Flash Of Invisible Text) issues. Icon fonts were popular 5-10 years ago but SVG is now the industry standard.</p>
+            </div>
+          </div>
+        </div>
+      </section>      
 
       <section className="seo-content-section">
         <div className="container">

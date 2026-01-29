@@ -2,9 +2,32 @@ import { Metadata } from "next";
 import LandingPageClient from "../components/LandingPageClient";
 
 export const metadata: Metadata = {
-  title: "Scenith - Free AI Voice Generator & Content Creation Tools | Premium SVG Icons",
-  description: "Create professional content FREE with Scenith's AI-powered tools. #1 AI Voice Generator with 40+ voices, Image Editor, Auto Subtitles, Background Remover, SVG Library & more. No watermark. Join 10,000+ creators!",
+  title: "Scenith - Free AI Voice Generator & Content Creation Platform | 9 Professional Tools",
+  description: "Create professional content with Scenith's all-in-one platform. AI Voice Generator (40+ voices), Image Editor, Subtitles, PDF Tools, 10K+ SVG Icons. Free forever, no watermarks. Join 10,000+ creators saving $600+ yearly vs Adobe/Canva.",
   keywords: [
+    // Primary keywords
+    "AI content creation platform",
+    "free AI tools for content creators",
+    "AI voice generator free",
+    "best content creation software",
+    "online content creation tools",
+    
+    // Comparison keywords
+    "Scenith vs Adobe Creative Cloud",
+    "Scenith vs Canva",
+    "alternative to Adobe Creative Cloud",
+    "cheap content creation software",
+    "content creation platform for YouTubers",
+    
+    // Long-tail keywords
+    "how to create professional content free",
+    "AI tools for video creators",
+    "text to speech for YouTube",
+    "free image editor online",
+    "auto subtitle generator",
+    "free PDF tools",
+    "vector icons library",
+    "content creation workflow",
     "AI voice generator",
     "text to speech",
     "AI voice",
