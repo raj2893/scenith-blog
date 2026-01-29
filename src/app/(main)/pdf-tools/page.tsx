@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: '/pdf-tools',
+    canonical: 'https://scenith.in/pdf-tools',
   },
 };
 

@@ -1040,6 +1040,16 @@ return (
                   >
                     {isPlayingEmotionPreview ? '⏸️ Playing...' : '▶️ Preview Emotion'}
                   </button>
+                  {selectedEmotion !== 'default' && (
+                    <div className="emotion-preview-disclaimer" style={{
+                      fontSize: '0.75rem',
+                      color: '#666',
+                      marginTop: '0.25rem',
+                      fontStyle: 'italic'
+                    }}>
+                      ⚠️ Preview shows speed only. Final audio will be much better.
+                    </div>
+                  )}                  
                 </div>
                 
                 {selectedEmotion !== 'default' && (
