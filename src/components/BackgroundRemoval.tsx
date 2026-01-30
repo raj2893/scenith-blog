@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import axios from 'axios';
-import { FaUpload, FaSpinner, FaDownload, FaTimes } from 'react-icons/fa';
+import { FaUpload, FaSpinner, FaDownload, FaTimes, FaEdit } from 'react-icons/fa';
 import '../../styles/tools/BackgroundRemoval.css';
 import '../../styles/tools/Auth.css';
 import { API_BASE_URL, CDN_URL } from '../app/config';
@@ -38,6 +38,7 @@ const BackgroundRemoval: React.FC = () => {
   const [loginError, setLoginError] = useState<string>('');
   const [loginSuccess, setLoginSuccess] = useState<string>('');
   const [loginLoading, setLoginLoading] = useState<boolean>(false);
+  const [isCreatingProject, setIsCreatingProject] = useState<boolean>(false);
 
   // Check authentication on mount
   useEffect(() => {
@@ -360,6 +361,104 @@ const BackgroundRemoval: React.FC = () => {
     setImageId(null);
   };
 
+  const handleEditInEditor = async (imageUrl: string, imageName: string) => {
+    if (!isLoggedIn) {
+      setShowLoginModal(true);
+      return;
+    }
+  
+    setIsCreatingProject(true);
+  
+    try {
+      const token = localStorage.getItem("token");
+  
+      // Create a new project
+      const projectResponse = await axios.post(
+        `${API_BASE_URL}/api/image-editor/projects`,
+        {
+          projectName: `${imageName} Design`,
+          canvasWidth: 1080,
+          canvasHeight: 1080,
+          canvasBackgroundColor: "#FFFFFF",
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+  
+      const projectId = projectResponse.data.id;
+  
+      // Load the image to get natural dimensions
+      const img = new Image();
+      img.onload = async () => {
+        const scale = 1.0;
+        const displayWidth = img.naturalWidth * scale;
+        const displayHeight = img.naturalHeight * scale;
+  
+        // Create layer JSON with the image
+        const layer = {
+          id: `image-${Date.now()}`,
+          type: "image",
+          zIndex: 0,
+          opacity: 1,
+          x: Math.round(540 - displayWidth / 2),
+          y: Math.round(540 - displayHeight / 2),
+          width: displayWidth,
+          height: displayHeight,
+          scale: scale,
+          rotation: 0,
+          visible: true,
+          locked: false,
+          src: imageUrl,
+          cropTop: 0,
+          cropRight: 0,
+          cropBottom: 0,
+          cropLeft: 0,
+        };
+  
+        const designJson = JSON.stringify({
+          version: "1.0",
+          pages: [
+            {
+              id: `page-${Date.now()}`,
+              canvas: {
+                width: 1080,
+                height: 1080,
+                backgroundColor: "#FFFFFF",
+              },
+              layers: [layer],
+            },
+          ],
+        });
+  
+        // Update the project with the image layer
+        await axios.put(
+          `${API_BASE_URL}/api/image-editor/projects/${projectId}`,
+          { designJson },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+  
+        // Open the editor in a new tab
+        window.open(`/tools/image-editing/${projectId}/edit`, "_blank");
+        setIsCreatingProject(false);
+      };
+  
+      img.onerror = () => {
+        console.error("Failed to load image");
+        setIsCreatingProject(false);
+        alert("Failed to load the image. Please try again.");
+      };
+  
+      img.src = imageUrl;
+    } catch (error: any) {
+      console.error("Error creating project:", error);
+      setIsCreatingProject(false);
+      alert(error.response?.data?.message || "Failed to create project");
+    }
+  };  
+
   return (
     <div className="background-removal-page">
       <div className="particle-background">
@@ -424,6 +523,22 @@ const BackgroundRemoval: React.FC = () => {
               <div className="image-card">
                 <h3>Original Image</h3>
                 <img src={previewUrl} alt="Original" className="preview-image" />
+                <button
+                  className="edit-in-editor-btn"
+                  onClick={() => handleEditInEditor(previewUrl, selectedFile?.name || 'original-image')}
+                  disabled={isCreatingProject}
+                >
+                  {isCreatingProject ? (
+                    <>
+                      <div className="btn-spinner"></div>
+                      Creating Project...
+                    </>
+                  ) : (
+                    <>
+                      <FaEdit /> Edit in Image Editor
+                    </>
+                  )}
+                </button>
               </div>
             )}
             {processedImage && (
@@ -434,10 +549,31 @@ const BackgroundRemoval: React.FC = () => {
                   alt="Processed"
                   className="preview-image"
                 />
-                <button className="download-button" onClick={handleDownload}>
-                  <FaDownload className="download-icon" />
-                  Download
-                </button>
+                <div className="button-group">
+                  <button className="download-button" onClick={handleDownload}>
+                    <FaDownload className="download-icon" />
+                    Download
+                  </button>
+                  <button
+                    className="edit-in-editor-btn"
+                    onClick={() => handleEditInEditor(
+                      processedImage.processedPresignedUrl ?? processedImage.processedCdnUrl ?? '',
+                      processedImage.processedFileName || 'processed-image'
+                    )}
+                    disabled={isCreatingProject}
+                  >
+                    {isCreatingProject ? (
+                      <>
+                        <div className="btn-spinner"></div>
+                        Creating Project...
+                      </>
+                    ) : (
+                      <>
+                        <FaEdit /> Edit in Editor
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
             )}
             {(previewUrl || processedImage) && (

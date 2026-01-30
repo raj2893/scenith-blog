@@ -103,6 +103,26 @@ const RemoveBackgroundClient: React.FC = () => {
 
   return (
     <div className="remove-background-page">
+      <nav aria-label="Breadcrumb" className="breadcrumb-nav">
+        <ol itemScope itemType="https://schema.org/BreadcrumbList">
+          <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+            <a href="/" itemProp="item">
+              <span itemProp="name">Home</span>
+            </a>
+            <meta itemProp="position" content="1" />
+          </li>
+          <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+            <a href="/tools" itemProp="item">
+              <span itemProp="name">Tools</span>
+            </a>
+            <meta itemProp="position" content="2" />
+          </li>
+          <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+            <span itemProp="name">Background Removal</span>
+            <meta itemProp="position" content="3" />
+          </li>
+        </ol>
+      </nav>      
       {/* Enhanced Structured Data Scripts */}
       <script
         type="application/ld+json"
@@ -289,6 +309,12 @@ const RemoveBackgroundClient: React.FC = () => {
               <span className="trust-item">📱 Works on All Devices</span>
               <span className="trust-item">💼 Commercial Use OK</span>
             </div>
+            <div className="cross-tool-promo">
+              <p className="promo-text">
+                💡 <strong>Pro Tip:</strong> Combine with our <a href="/tools/image-editing" className="inline-link">Free Image Editor</a> to add backgrounds, text & effects after removal!
+              </p>
+              <a href="/tools/image-editing" className="promo-link">Try Image Editor →</a>
+            </div>            
           </div>
           <figure className="hero-image-container">
             <Image
@@ -303,6 +329,37 @@ const RemoveBackgroundClient: React.FC = () => {
           </figure>
         </motion.div>
       </section>
+
+      <div className="demo-video-section">
+        <h3 className="demo-video-title">See AI Background Removal in Action</h3>
+        <div className="youtube-video-wrapper">
+          <iframe
+            width="100%"
+            height="100%"
+            src="https://www.youtube.com/embed/oA6CDPqrjx0?si=jEZSehS1lTqLqBAD"
+            title="AI Background Remover Demo - Remove Photo Backgrounds in Seconds"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        </div>
+        <p className="demo-video-caption">
+          Watch how to remove backgrounds from any image in 5 seconds — perfect for e-commerce, social media & design!
+        </p>
+      </div>      
+
+      <section className="quick-definition-section" role="region" aria-labelledby="quick-definition">
+        <div className="container">
+          <div className="featured-snippet-target">
+            <h2 id="quick-definition" className="visually-hidden">AI Background Remover Definition</h2>
+            <div className="definition-box">
+              <p className="definition-text">
+                An <strong>AI background remover</strong> is an automated tool that uses artificial intelligence to detect and remove backgrounds from images, creating transparent PNG files. It leverages computer vision and machine learning to separate foreground subjects from backgrounds in seconds, eliminating the need for manual photo editing software like Photoshop.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>      
 
       {/* NEW: Educational Introduction Section */}
       <section className="educational-intro" role="complementary" aria-labelledby="intro-title">
@@ -633,6 +690,43 @@ const RemoveBackgroundClient: React.FC = () => {
         </motion.div>
       </section>
 
+      <section className="competitors-comparison" role="region" aria-labelledby="vs-competitors">
+        <div className="container">
+          <h2 id="vs-competitors">AI Background Remover Comparison: Scenith vs Competitors</h2>
+          <div className="comparison-grid">
+            <div className="vs-card">
+              <h3>Scenith vs Remove.bg</h3>
+              <ul>
+                <li>✅ <strong>Scenith:</strong> Completely free, unlimited uses</li>
+                <li>❌ <strong>Remove.bg:</strong> 1 free preview, $9+ for HD downloads</li>
+                <li>✅ <strong>Scenith:</strong> Full resolution downloads included</li>
+                <li>⚠️ <strong>Remove.bg:</strong> Watermarked free downloads</li>
+              </ul>
+            </div>
+
+            <div className="vs-card">
+              <h3>Scenith vs Canva Background Remover</h3>
+              <ul>
+                <li>✅ <strong>Scenith:</strong> No subscription required</li>
+                <li>❌ <strong>Canva:</strong> Requires Canva Pro ($12.99/month)</li>
+                <li>✅ <strong>Scenith:</strong> Works with any image editor</li>
+                <li>❌ <strong>Canva:</strong> Locked to Canva platform only</li>
+              </ul>
+            </div>
+
+            <div className="vs-card">
+              <h3>Scenith vs Adobe Photoshop</h3>
+              <ul>
+                <li>✅ <strong>Scenith:</strong> One-click removal, instant results</li>
+                <li>❌ <strong>Photoshop:</strong> Manual selection, steep learning curve</li>
+                <li>✅ <strong>Scenith:</strong> Free web tool, no installation</li>
+                <li>⚠️ <strong>Photoshop:</strong> $54.99/month subscription required</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>      
+
       <section className="faq-section" id="faq" role="region" aria-labelledby="faq-title">
         <motion.div
           className="container"
@@ -678,6 +772,33 @@ const RemoveBackgroundClient: React.FC = () => {
           </div>
         </motion.div>
       </section>
+
+      <section className="people-also-ask" role="region" aria-labelledby="paa-title">
+        <div className="container">
+          <h2 id="paa-title">People Also Ask About Background Removal</h2>
+          <div className="paa-grid">
+            <div className="paa-item">
+              <h3>Can I remove backgrounds from multiple images at once?</h3>
+              <p>Currently, our tool processes one image at a time for optimal quality. For bulk background removal, upload and process images individually. Each removal takes only 5 seconds, making even large batches manageable.</p>
+            </div>
+
+            <div className="paa-item">
+              <h3>What's the difference between JPG and PNG for transparent backgrounds?</h3>
+              <p>JPG format doesn't support transparency - it fills transparent areas with white. PNG format preserves transparency, making it essential for overlay images, logos, and product photos. Our tool outputs transparent PNG files.</p>
+            </div>
+
+            <div className="paa-item">
+              <h3>Which background remover is best for e-commerce?</h3>
+              <p>For e-commerce, you need tools that create clean, marketplace-compliant images. Our AI background remover produces professional transparent PNGs that meet Amazon, Shopify, and eBay requirements - all free with no watermarks.</p>
+            </div>
+
+            <div className="paa-item">
+              <h3>Can I use removed background images commercially?</h3>
+              <p>Yes! All images processed with Scenith come with full commercial use rights. Use them for product listings, marketing materials, client work, or any business purpose without attribution or licensing fees.</p>
+            </div>
+          </div>
+        </div>
+      </section>      
 
       <section className="cta-section" id="get-started" role="region" aria-labelledby="cta-title">
         <motion.div

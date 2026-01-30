@@ -533,7 +533,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
               <div id="navbarGoogleSignInButton" className="google-button"></div>
               <p className="auth-link">
                 New to SCENITH?{' '}
-                <a href="/register">Sign up</a>
+                <a href="/signup">Sign up</a>
               </p>
             </div>
           </motion.div>

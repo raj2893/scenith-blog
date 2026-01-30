@@ -10,25 +10,26 @@
 
 body {
   font-family: 'Montserrat', sans-serif;
-  overflow: hidden; /* Prevent any scrolling on the body */
+  overflow: auto; /* Allow vertical scroll when needed */
 }
 
-/* Full-page wrapper */
 .auth-page {
   display: flex;
-  justify-content: space-between; /* Distribute space between left and right */
-  align-items: center; /* Center vertically */
-  height: 100vh; /* Exactly the viewport height */
-  background: #FAFAFA; /* Soft White */
+  justify-content: space-between;
+  align-items: center;
+  min-height: 100vh;
+  background: #FAFAFA;
   position: relative;
-  overflow: hidden; /* Ensure no overflow */
-  padding: 20px; /* Reduced padding to give more space */
+  overflow: hidden; /* Prevent horizontal scroll */
+  padding: 20px;
+  padding-top: 100px;
+  padding-bottom: 80px;
 }
 
-/* Gradient overlay */
+/* Gradient overlay - Also make it fixed */
 .auth-page::before {
   content: '';
-  position: absolute;
+  position: fixed; /* Changed to fixed */
   top: 0;
   left: 0;
   width: 100%;
@@ -36,6 +37,7 @@ body {
   background: linear-gradient(135deg, rgba(183, 108, 253, 0.2), rgba(80, 227, 194, 0.2)); /* Neon Purple to Bright Aqua */
   animation: gradientShift 10s ease-in-out infinite;
   z-index: -1;
+  pointer-events: none;
 }
 
 /* Diagonal Waveform SVG (same for both pages now) */
@@ -47,7 +49,6 @@ body {
   height: 100%;
   fill: rgba(63, 142, 252, 0.15); /* Electric Blue (match Sign Up) */
   filter: drop-shadow(0 0 10px rgba(63, 142, 252, 0.3));
-  animation: waveFlow 6s linear infinite; /* Updated: Combine animations, use linear timing */
   z-index: 0;
 }
 
@@ -75,52 +76,6 @@ body {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
-}
-
-/* Removed wavePulse and combined into waveFlow */
-
-/* Combined animation for smooth back-and-forth motion with pulsation */
-@keyframes waveFlow {
-  0% {
-    transform: translate(0, 0);
-    opacity: 0.7;
-  }
-  25% {
-    transform: translate(-50px, -31.25px) translateY(3px); /* Reduced distance, add pulsation */
-    opacity: 1;
-  }
-  50% {
-    transform: translate(-100px, -62.5px); /* Peak of the forward motion */
-    opacity: 0.7;
-  }
-  75% {
-    transform: translate(-50px, -31.25px) translateY(3px); /* Mirror the forward motion on return */
-    opacity: 1;
-  }
-  100% {
-    transform: translate(0, 0);
-    opacity: 0.7;
-  }
-}
-
-/* Main container */
-.auth-container {
-  background: rgba(255, 255, 255, 0.95); /* White with slight transparency */
-  backdrop-filter: blur(10px);
-  padding: 30px; /* Reduced padding to save space */
-  border-radius: 20px;
-  border: 1px solid rgba(63, 142, 252, 0.3); /* Electric Blue */
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1), 0 0 15px rgba(63, 142, 252, 0.2);
-  width: 100%;
-  max-width: 460px;
-  height: fit-content; /* Updated: Fit the content */
-  max-height: calc(100vh - 40px); /* Updated: Ensure it doesn't exceed viewport */
-  overflow: hidden; /* Updated: Prevent scrolling */
-  text-align: center;
-  font-family: 'Montserrat', sans-serif;
-  animation: zoomIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-  position: relative;
-  z-index: 10;
 }
 
 /* Glowing container effect */
@@ -480,42 +435,12 @@ body {
   transform: translate(-50%, -50%);
 }
 
-/* Bouncing animation */
-@keyframes bounce {
-  0%, 100% {
-    transform: translateY(0) translateX(-50%);
-  }
-  50% {
-    transform: translateY(-10px) translateX(-50%);
-  }
-}
-
-/* Animation to move the logo element over each letter (S to H and back) */
-@keyframes moveOverLetters {
-  /* Forward: S -> C -> E -> N -> I -> T -> H */
-  0%, 7.14% { left: calc(50% - 85px); } /* S */
-  7.14%, 14.28% { left: calc(50% - 65px); } /* C */
-  14.28%, 21.42% { left: calc(50% - 45px); } /* E */
-  21.42%, 28.56% { left: calc(50% - 25px); } /* N */
-  28.56%, 35.7% { left: calc(50% - 5px); } /* I */
-  35.7%, 42.84% { left: calc(50% + 38px); } /* T - Updated */
-  42.84%, 50% { left: calc(50% + 62px); } /* H - Updated */
-  /* Reverse: H -> T -> I -> N -> E -> C -> S */
-  50%, 57.14% { left: calc(50% + 62px); } /* H - Updated */
-  57.14%, 64.28% { left: calc(50% + 38px); } /* T - Updated */
-  64.28%, 71.42% { left: calc(50% - 5px); } /* I */
-  71.42%, 78.56% { left: calc(50% - 25px); } /* N */
-  78.56%, 85.7% { left: calc(50% - 45px); } /* E */
-  85.7%, 92.84% { left: calc(50% - 65px); } /* C */
-  92.84%, 100% { left: calc(50% - 85px); } /* S */
-}
-
 /* Rotating text container */
 .rotating-text-container {
   flex: 1; /* Take up the left half of the space */
   display: flex;
   justify-content: center; /* Center horizontally within the left half */
-  align-items: center; /* Center vertically */
+  align-items: flex-start; /* Center vertically */
   z-index: 5; /* Above background but below auth container */
   padding: 15px; /* Reduced padding */
   background: rgba(255, 255, 255, 0.1); /* Subtle transparent background */
@@ -615,36 +540,103 @@ body {
   100% { transform: rotate(360deg); }
 }
 
+.signup-benefits-section,
+.login-quick-access {
+  position: fixed; /* Changed from absolute to fixed */
+  bottom: 20px;
+  left: 20px;
+  max-width: 450px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  z-index: 5;
+  animation: slideInFromLeft 0.6s ease-out;
+}
+
+@keyframes slideInFromLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Auth container adjustments for scrollable page */
+.auth-container {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 30px;
+  border-radius: 20px;
+  border: 1px solid rgba(63, 142, 252, 0.3);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1), 0 0 15px rgba(63, 142, 252, 0.2);
+  width: 100%;
+  max-width: 460px;
+  height: fit-content;
+  max-height: none; /* Remove max-height restriction */
+  overflow: visible; /* Changed from hidden to visible */
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  animation: zoomIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  z-index: 10;
+  margin: 20px auto; /* Add margin for better spacing */
+}
+
+@media (max-width: 1200px) {
+  .signup-benefits-section,
+  .login-quick-access {
+    display: none;
+  }
+  
+  .auth-page {
+    padding-bottom: 40px; /* Reduce bottom padding when section is hidden */
+  }
+}
+
 /* Responsive design */
 @media (max-width: 1024px) {
   .rotating-text-container {
     max-width: 45%;
   }
   .rotating-text {
-    font-size: 28px; /* Adjusted for smaller screens */
+    font-size: 28px;
   }
   .rotating-text-wrapper {
-    height: 80px; /* Adjusted height */
+    height: 80px;
   }
   .auth-container {
-    max-height: calc(100vh - 40px); /* Keep max-height for smaller screens */
+    margin: 20px auto;
   }
+  .auth-page {
+    padding-top: 100px;
+  }
+
+  .signup-benefits-section,
+  .login-quick-access {
+    display: none;
+  }  
 }
 
 @media (max-width: 768px) {
   .rotating-text-container {
     max-width: 40%;
-    padding: 10px; /* Further reduced padding */
+    padding: 10px;
   }
   .rotating-text {
-    font-size: 24px; /* Further reduced */
+    font-size: 24px;
   }
   .rotating-text-wrapper {
-    height: 60px; /* Further reduced height */
+    height: 60px;
   }
   .auth-container {
-    padding: 20px; /* Further reduced padding */
-    max-height: calc(100vh - 40px);
+    padding: 20px;
+    margin: 20px auto;
   }
   .auth-header h1 {
     font-size: 30px;
@@ -656,19 +648,23 @@ body {
     padding: 12px;
     font-size: 14px;
   }
+  .auth-page {
+    padding-top: 100px;
+    padding-bottom: 40px;
+  }
 }
 
 @media (max-width: 480px) {
   .auth-page {
-    flex-direction: column; /* Stack elements vertically */
-    justify-content: center;
+    flex-direction: column;
+    justify-content: flex-start; /* Changed from center */
     align-items: center;
-    padding: 15px; /* Further reduced padding */
+    padding: 100px 15px 40px 15px; /* Top padding to clear navbar */
   }
   .auth-container {
     padding: 20px;
     max-width: 90%;
-    max-height: calc(100vh - 30px); /* Adjust for smaller padding */
+    margin: 0 auto;
   }
   .auth-header h1 {
     font-size: 28px;

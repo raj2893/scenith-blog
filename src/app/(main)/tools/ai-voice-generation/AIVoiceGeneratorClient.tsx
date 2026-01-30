@@ -2902,7 +2902,7 @@ return (
               <div id="googleSignInButton" className="google-button"></div>
               <p className="auth-link">
                 New to SCENITH?{' '}
-                <a href="/register">Sign up</a>
+                <a href="/signup">Sign up</a>
               </p>
             </div>
           </motion.div>

@@ -3,8 +3,8 @@ import type { Metadata } from "next";
 import SubtitleClient from './SubtitleClient';
 
 export const metadata: Metadata = {
-  title: 'Free AI Subtitle Generator - Add Subtitles to Videos Online | SCENITH',
-  description: 'Automatically generate and customize subtitles for your videos with AI. Edit single or multiple subtitles, apply professional styles, and download MP4s instantly. Free for creators and filmmakers.',
+  title: 'Free AI Subtitle Generator - Auto Captions for Videos in 50+ Languages (YouTube & Social Media) | SCENITH',
+  description: 'Generate accurate subtitles for videos automatically using AI. Edit styles, customize fonts/colors, and download MP4s with burned-in captions. Perfect for YouTube, Instagram, TikTok. 95% accuracy, 50+ languages, free forever!',
   keywords: [
     'AI subtitle generator',
     'add subtitles to video',

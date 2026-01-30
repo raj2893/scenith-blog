@@ -1050,7 +1050,7 @@ const MediaConversionWorkspace: React.FC = () => {
               color: '#64748b'
             }}>
               New to SCENITH?{' '}
-              <a href="/register" style={{
+              <a href="/signup" style={{
                 color: '#10b981',
                 textDecoration: 'none',
                 fontWeight: 700

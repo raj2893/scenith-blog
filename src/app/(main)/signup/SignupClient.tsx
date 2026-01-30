@@ -15,22 +15,46 @@ const SignupClient: React.FC = () => {
   const [showVerificationMessage, setShowVerificationMessage] = useState(false);
   const [serverError, setServerError] = useState("");
 
-  // Structured Data
   useEffect(() => {
     const script = document.createElement('script');
     script.type = 'application/ld+json';
     script.innerHTML = JSON.stringify({
       "@context": "https://schema.org",
       "@type": "WebPage",
-      "name": "Scenith Sign Up",
-      "description": "Create a free Scenith account to access professional online video editing tools.",
+      "name": "Scenith Sign Up - Free AI Content Creation Platform",
+      "description": "Create a free Scenith account to access professional AI-powered content creation tools including Voice Generator, Image Editor, Subtitle Generator, PDF Tools, and 10,000+ SVG Icons.",
       "url": "https://scenith.in/signup",
       "breadcrumb": {
         "@type": "BreadcrumbList",
         "itemListElement": [
           { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://scenith.in/" },
-          { "@type": "ListItem", "position": 2, "name": "Sign Up" }
+          { "@type": "ListItem", "position": 2, "name": "Sign Up", "item": "https://scenith.in/signup" }
         ]
+      },
+      "potentialAction": {
+        "@type": "RegisterAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://scenith.in/signup",
+          "actionPlatform": [
+            "http://schema.org/DesktopWebPlatform",
+            "http://schema.org/MobileWebPlatform"
+          ]
+        },
+        "result": {
+          "@type": "CreativeWork",
+          "name": "Scenith User Account"
+        }
+      },
+      "about": {
+        "@type": "SoftwareApplication",
+        "name": "Scenith",
+        "applicationCategory": "MultimediaApplication",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
       }
     });
     document.head.appendChild(script);
@@ -230,6 +254,47 @@ const SignupClient: React.FC = () => {
           </>
         )}
       </div>
+      {/* SEO-Optimized Benefits Section */}
+      <div className="signup-benefits-section" style={{
+        position: 'absolute',
+        bottom: '20px',
+        left: '20px',
+        maxWidth: '450px',
+        background: 'rgba(255, 255, 255, 0.95)',
+        backdropFilter: 'blur(10px)',
+        padding: '20px',
+        borderRadius: '16px',
+        border: '1px solid rgba(102, 126, 234, 0.3)',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
+        zIndex: 5
+      }}>
+        <h3 style={{ 
+          fontSize: '1.2rem', 
+          fontWeight: 700, 
+          color: '#333333', 
+          marginBottom: '12px',
+          background: 'linear-gradient(90deg, #3F8EFC, #B76CFD)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent'
+        }}>
+          What You Get With Scenith
+        </h3>
+        <ul style={{ 
+          listStyle: 'none', 
+          padding: 0, 
+          margin: 0,
+          fontSize: '0.9rem',
+          color: '#4a5568',
+          lineHeight: '1.8'
+        }}>
+          <li style={{ marginBottom: '8px' }}>✅ <strong>40+ AI Voices</strong> in 20+ languages</li>
+          <li style={{ marginBottom: '8px' }}>✅ <strong>Professional Image Editor</strong> for social media</li>
+          <li style={{ marginBottom: '8px' }}>✅ <strong>AI Subtitle Generator</strong> (92-96% accuracy)</li>
+          <li style={{ marginBottom: '8px' }}>✅ <strong>Premium SVG Icons</strong></li>
+          <li style={{ marginBottom: '8px' }}>✅ <strong>PDF Tools Suite</strong> (merge, split, compress)</li>
+          <li style={{ marginBottom: '0' }}>✅ <strong>Zero watermarks</strong> on free plan forever</li>
+        </ul>
+      </div>      
     </div>
   );
 };

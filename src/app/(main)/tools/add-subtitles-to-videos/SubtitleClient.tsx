@@ -1106,6 +1106,89 @@ const handleDeleteConfirm = async () => {
 
   return (
     <div className="video-filter-page">
+      <nav aria-label="Breadcrumb" className="breadcrumb-nav">
+        <ol itemScope itemType="https://schema.org/BreadcrumbList">
+          <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+            <a href="/" itemProp="item">
+              <span itemProp="name">Home</span>
+            </a>
+            <meta itemProp="position" content="1" />
+          </li>
+          <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+            <a href="/tools" itemProp="item">
+              <span itemProp="name">Tools</span>
+            </a>
+            <meta itemProp="position" content="2" />
+          </li>
+          <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+            <span itemProp="name">AI Subtitle Generator</span>
+            <meta itemProp="position" content="3" />
+          </li>
+        </ol>
+      </nav>   
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@graph': [
+              {
+                '@type': 'WebApplication',
+                '@id': 'https://scenith.in/tools/add-subtitles-to-videos#webapp',
+                name: 'Scenith AI Subtitle Generator',
+                description: 'Free AI-powered subtitle generation tool for creating accurate, customizable video captions in 50+ languages with professional styling options.',
+                url: 'https://scenith.in/tools/add-subtitles-to-videos',
+                applicationCategory: 'MultimediaApplication',
+                operatingSystem: 'Web Browser',
+                offers: {
+                  '@type': 'Offer',
+                  price: '0',
+                  priceCurrency: 'USD',
+                  availability: 'https://schema.org/InStock'
+                },
+                featureList: [
+                  'AI-powered subtitle generation',
+                  '95-98% transcription accuracy',
+                  '50+ language support',
+                  'Custom subtitle styling',
+                  'Instant MP4 download',
+                  'No watermarks'
+                ],
+                screenshot: 'https://scenith.in/images/AddSubtitlesSS.png',
+                author: {
+                  '@type': 'Organization',
+                  '@id': 'https://scenith.in/#organization',
+                  name: 'Scenith'
+                }
+              },
+              {
+                '@type': 'BreadcrumbList',
+                '@id': 'https://scenith.in/tools/add-subtitles-to-videos#breadcrumb',
+                itemListElement: [
+                  {
+                    '@type': 'ListItem',
+                    position: 1,
+                    name: 'Home',
+                    item: 'https://scenith.in'
+                  },
+                  {
+                    '@type': 'ListItem',
+                    position: 2,
+                    name: 'Tools',
+                    item: 'https://scenith.in/tools'
+                  },
+                  {
+                    '@type': 'ListItem',
+                    position: 3,
+                    name: 'AI Subtitle Generator',
+                    item: 'https://scenith.in/tools/add-subtitles-to-videos'
+                  }
+                ]
+              },
+            ]
+          }),
+        }}
+      />         
       <Script
         id="subtitle-faq-schema"
         type="application/ld+json"
@@ -1197,7 +1280,11 @@ const handleDeleteConfirm = async () => {
         >
           <h1>Free AI Subtitle Generator - Add Subtitles in Seconds</h1>
           <p className="hero-description">
-            Automatically generate and customize subtitles for your videos with AI. Choose from professional styles, edit manually, and download MP4s instantly. Perfect for creators and filmmakers.
+            Automatically generate and customize subtitles for your videos with AI. Choose from professional styles, edit manually, and download MP4s instantly. Perfect for creators and filmmakers. Pair with our{' '}
+            <a href="/tools/ai-voice-generation" className="inline-link">AI voice generator</a>{' '}
+            to create complete videos, or use our{' '}
+            <a href="/tools/image-editing" className="inline-link">free image editor</a>{' '}
+            for thumbnail design.
           </p>
           <div className="hero-cta-section">
             <div className="main-content">
@@ -1448,49 +1535,77 @@ const handleDeleteConfirm = async () => {
                 )}        
                 {planLimits && (
                   <div className="usage-info">
-                    <div className="usage-section">
-                      <p className="usage-label month">📅 Subtitle Videos This Month</p>
-                      {planLimits.videosPerMonth === -1 ? (
-                        <p className="usage-text">
-                          <strong>Unlimited</strong> - No monthly video limit
-                        </p>
-                      ) : (
-                        <>
-                          <div className="usage-bar-container">
-                            <div 
-                              className={`usage-bar-fill ${
-                                (planLimits.videosUsed / planLimits.videosPerMonth) >= 0.95 ? 'critical' :
-                                (planLimits.videosUsed / planLimits.videosPerMonth) >= 0.80 ? 'warning' : 'normal'
-                              }`}
-                              style={{ width: `${(planLimits.videosUsed / planLimits.videosPerMonth) * 100}%` }}
-                            />
-                          </div>
-                          <p className="usage-text">
-                            <strong>{planLimits.videosPerMonth - planLimits.videosUsed}</strong> videos remaining
-                            ({planLimits.videosUsed} / {planLimits.videosPerMonth} used)
-                          </p>
-                              
-                          {(planLimits.videosUsed / planLimits.videosPerMonth) >= 0.80 && 
-                           (planLimits.videosPerMonth - planLimits.videosUsed) > 0 && (
-                            <div className="usage-micro-warning">
-                              You're almost out of free videos. Upgrade to avoid interruption.
-                            </div>
+                    <div className="usage-grid">
+                      {/* Main Usage Section */}
+                      <div className="usage-main">
+                        <div className="usage-header">
+                          <span className="usage-label">
+                            📅 {/* For VideoSpeed: "Speed Videos" | For Subtitles: "Subtitle Videos" */} This Month
+                          </span>
+                          {planLimits.videosPerMonth !== -1 && (
+                            <span className="usage-badge">
+                              {planLimits.videosUsed}/{planLimits.videosPerMonth}
+                            </span>
                           )}
-                        </>
-                      )}
-
-                      {userProfile.role === 'BASIC' && (
-                        <div className="inline-upgrade-cta">
-                          <a href="/pricing" className="inline-upgrade-link">
-                            🔓 Need more? Upgrade to Creator for 9× more videos (45/month)
-                          </a>
                         </div>
-                      )}
-                    </div>
-                    
-                    <div className="limits-info">
-                      <p>📏 Max video length: <strong>{planLimits.maxVideoLength === -1 ? 'Unlimited' : `${planLimits.maxVideoLength} minutes`}</strong></p>
-                      <p>🎬 Max quality: <strong>{planLimits.maxQuality}</strong></p>
+                
+                        {planLimits.videosPerMonth === -1 ? (
+                          <p className="usage-text">
+                            <strong>Unlimited</strong> - No monthly video limit
+                          </p>
+                        ) : (
+                          <>
+                            <div className="usage-bar-container">
+                              <div 
+                                className={`usage-bar-fill ${
+                                  (planLimits.videosUsed / planLimits.videosPerMonth) >= 0.95 ? 'critical' :
+                                  (planLimits.videosUsed / planLimits.videosPerMonth) >= 0.80 ? 'warning' : 'normal'
+                                }`}
+                                style={{ width: `${(planLimits.videosUsed / planLimits.videosPerMonth) * 100}%` }}
+                              />
+                            </div>
+                            <p className="usage-text">
+                              <strong>{planLimits.videosPerMonth - planLimits.videosUsed}</strong> videos remaining
+                            </p>
+                                
+                            {(planLimits.videosUsed / planLimits.videosPerMonth) >= 0.80 && 
+                             (planLimits.videosPerMonth - planLimits.videosUsed) > 0 && (
+                              <div className="usage-micro-warning">
+                                ⚠️ Almost out of videos - Upgrade to avoid interruption
+                              </div>
+                            )}
+                
+                            {userProfile.role === 'BASIC' && (
+                              <div className="inline-upgrade-cta">
+                                <a href="/pricing" className="inline-upgrade-link">
+                                  🔓 Upgrade to Creator for 9× more videos (45/month) →
+                                </a>
+                              </div>
+                            )}
+                          </>
+                        )}
+                      </div>
+                
+                      {/* Limits Sidebar */}
+                      <div className="limits-sidebar">
+                        <div className="limit-item">
+                          <span className="limit-icon">📏</span>
+                          <div className="limit-details">
+                            <div className="limit-label">Max Length</div>
+                            <div className="limit-value">
+                              {planLimits.maxVideoLength === -1 ? 'Unlimited' : `${planLimits.maxVideoLength} min`}
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="limit-item">
+                          <span className="limit-icon">🎬</span>
+                          <div className="limit-details">
+                            <div className="limit-label">Max Quality</div>
+                            <div className="limit-value">{planLimits.maxQuality}</div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 )} 
@@ -1575,7 +1690,7 @@ const handleDeleteConfirm = async () => {
               <span className="trust-item">🎥 AI Subtitles</span>
               <span className="trust-item">🌟 Custom Styles</span>
               <span className="trust-item">📥 Instant MP4 Download</span>
-            </div>
+            </div>         
           </div>
           <figure className="hero-image-container">
             <Image
@@ -1602,6 +1717,19 @@ const handleDeleteConfirm = async () => {
           {error}
         </div>
       )}
+
+      <section className="quick-definition-section" role="region" aria-labelledby="quick-definition">
+        <div className="container">
+          <div className="featured-snippet-target">
+            <h2 id="quick-definition" className="visually-hidden">AI Subtitle Generator Definition</h2>
+            <div className="definition-box">
+              <p className="definition-text">
+                An <strong>AI subtitle generator</strong> is an automated tool that uses artificial intelligence and speech recognition to create accurate, time-synced captions for videos. It transcribes audio into text, synchronizes subtitles with video timing, and allows customization of fonts, colors, and positioning - all without manual typing or expensive transcription services.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>      
 
       <section className="how-section" id="how-it-works" role="region" aria-labelledby="how-it-works-title">
         <motion.div
@@ -1742,6 +1870,43 @@ const handleDeleteConfirm = async () => {
         </motion.div>
       </section>
 
+      <section className="competitors-comparison" role="region" aria-labelledby="vs-competitors">
+        <div className="container">
+          <h2 id="vs-competitors">AI Subtitle Generator Comparison: Scenith vs Competitors</h2>
+          <div className="comparison-grid">
+            <div className="vs-card">
+              <h3>Scenith vs Rev.com</h3>
+              <ul>
+                <li>✅ <strong>Scenith:</strong> Free AI subtitles with unlimited editing</li>
+                <li>❌ <strong>Rev.com:</strong> $1.25/minute manual transcription</li>
+                <li>✅ <strong>Scenith:</strong> Instant 1-2 minute processing</li>
+                <li>❌ <strong>Rev.com:</strong> 12-24 hour turnaround time</li>
+              </ul>
+            </div>
+
+            <div className="vs-card">
+              <h3>Scenith vs Kapwing</h3>
+              <ul>
+                <li>✅ <strong>Scenith:</strong> No watermarks on free plan</li>
+                <li>❌ <strong>Kapwing:</strong> Watermark on all free videos</li>
+                <li>✅ <strong>Scenith:</strong> 25+ custom subtitle styles</li>
+                <li>⚠️ <strong>Kapwing:</strong> Limited styling on free tier</li>
+              </ul>
+            </div>
+
+            <div className="vs-card">
+              <h3>Scenith vs Descript</h3>
+              <ul>
+                <li>✅ <strong>Scenith:</strong> Browser-based, no download needed</li>
+                <li>❌ <strong>Descript:</strong> Requires desktop app installation</li>
+                <li>✅ <strong>Scenith:</strong> Free up to 5 videos/month</li>
+                <li>❌ <strong>Descript:</strong> $12/month minimum subscription</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>      
+
       <section className="faq-section" id="faq" role="region" aria-labelledby="faq-title">
         <motion.div
           className="container"
@@ -1803,6 +1968,33 @@ const handleDeleteConfirm = async () => {
           </div>
         </motion.div>
       </section>
+
+      <section className="people-also-ask" role="region" aria-labelledby="paa-title">
+        <div className="container">
+          <h2 id="paa-title">People Also Ask About AI Subtitle Generators</h2>
+          <div className="paa-grid">
+            <div className="paa-item">
+              <h3>Can AI subtitle generators handle multiple speakers?</h3>
+              <p>Yes! Advanced AI models like Whisper can identify speaker changes and create separate subtitle segments. However, you may need to manually label speakers (Speaker 1, Speaker 2) if the AI doesn't distinguish them automatically. Our editor makes this easy with color-coded speaker identification.</p>
+            </div>
+
+            <div className="paa-item">
+              <h3>Which AI subtitle generator is best for YouTube?</h3>
+              <p>For YouTube, choose generators that export SRT files or burn subtitles directly into MP4. Scenith offers both options - downloadable SRT for YouTube's built-in captions, or burned-in subtitles for guaranteed display. Burned-in subtitles work better for shorts and reels where viewers can't toggle captions.</p>
+            </div>
+
+            <div className="paa-item">
+              <h3>Do I need to edit AI-generated subtitles?</h3>
+              <p>AI achieves 95-98% accuracy for clear audio, but reviewing is recommended. Expect to spend 5-10 minutes correcting: technical terms, proper nouns, homophones (there/their), and timing adjustments. This is still 90% faster than manual transcription which takes 4-6 hours per hour of video.</p>
+            </div>
+
+            <div className="paa-item">
+              <h3>Can AI subtitle generators work with accents?</h3>
+              <p>Modern AI models handle most accents well, especially common ones (British, Australian, Indian English). Accuracy drops with heavy regional accents or non-native speakers. Test with a short sample first. If accuracy is below 85%, consider manual transcription for that specific video or use hybrid approach (AI draft + human review).</p>
+            </div>
+          </div>
+        </div>
+      </section>      
 
       <section className="educational-intro" role="complementary" aria-labelledby="intro-title">
         <div className="container">
@@ -2389,12 +2581,26 @@ const handleDeleteConfirm = async () => {
               <div className="divider">OR</div>
               <div id="googleSignInButton" className="google-button"></div>
               <p className="auth-link">
-                New to SCENITH? <a href="/register">Sign up</a>
+                New to SCENITH? <a href="/signup">Sign up</a>
               </p>
             </div>
           </motion.div>
         </div>
       )}
+      {isLoggedIn && userProfile.role === 'BASIC' && (
+        <div className="floating-upgrade-cta">
+          <button 
+            className="floating-upgrade-btn"
+            onClick={() => window.location.href = '/pricing'}
+          >
+            <span className="float-icon">⚡</span>
+            <span className="float-text">
+              <strong>Upgrade for 9× More Videos</strong>
+              <small>Or get AI Subtitle Pro</small>
+            </span>
+          </button>
+        </div>
+      )}      
     </div>
   );
 };

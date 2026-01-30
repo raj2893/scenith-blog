@@ -1455,7 +1455,7 @@ const handleDeleteConfirm = async () => {
               <div className="divider">OR</div>
               <div id="googleSignInButton" className="google-button"></div>
               <p className="auth-link">
-                New to SCENITH? <a href="/register">Sign up</a>
+                New to SCENITH? <a href="/signup">Sign up</a>
               </p>
             </div>
           </motion.div>

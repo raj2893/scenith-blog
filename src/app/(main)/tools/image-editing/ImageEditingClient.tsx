@@ -481,6 +481,27 @@ const ImageEditingClient: React.FC = () => {
         <div className="particle"></div>
       </div>
 
+      <nav aria-label="Breadcrumb" className="breadcrumb-nav">
+        <ol itemScope itemType="https://schema.org/BreadcrumbList">
+          <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+            <a href="/" itemProp="item">
+              <span itemProp="name">Home</span>
+            </a>
+            <meta itemProp="position" content="1" />
+          </li>
+          <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+            <a href="/tools" itemProp="item">
+              <span itemProp="name">Tools</span>
+            </a>
+            <meta itemProp="position" content="2" />
+          </li>
+          <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+            <span itemProp="name">Image Editor</span>
+            <meta itemProp="position" content="3" />
+          </li>
+        </ol>
+      </nav>      
+
       <section className="hero-section" id="hero" role="main">
         <motion.div
           className="hero-content"
@@ -846,6 +867,28 @@ const ImageEditingClient: React.FC = () => {
         </section>
       )}
 
+      <div className="cross-tool-promo">
+        <p className="promo-text">
+          💡 <strong>Pro Tip:</strong> Remove backgrounds from images with our{' '}
+          <a href="/tools/background-removal" className="inline-link">Free AI Background Remover</a>,
+          then edit them here!
+        </p>
+        <a href="/tools/background-removal" className="promo-link">Try Background Remover →</a>
+      </div>     
+
+      <section className="quick-definition-section" role="region" aria-labelledby="quick-definition">
+        <div className="container">
+          <div className="featured-snippet-target">
+            <h2 id="quick-definition" className="visually-hidden">Free Image Editor Definition</h2>
+            <div className="definition-box">
+              <p className="definition-text">
+                A <strong>free image editor</strong> is an online graphic design tool that allows users to create, edit, and enhance images using layers, text, shapes, filters, and effects without downloading software. Perfect for creating social media graphics, YouTube thumbnails, marketing materials, and professional designs directly in your web browser.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>         
+
       {/* SEO Content Sections */}
       <section className="features-section">
         <div className="container">
@@ -873,7 +916,7 @@ const ImageEditingClient: React.FC = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> 
 
       <section className="use-cases-section">
         <div className="container">
@@ -961,6 +1004,70 @@ const ImageEditingClient: React.FC = () => {
           </div>
         </div>
       </section>
+
+      <section className="competitors-comparison-new" role="region" aria-labelledby="vs-competitors">
+        <div className="container">
+          <h2 id="vs-competitors">Image Editor Comparison: Scenith vs Competitors</h2>
+          <div className="comparison-grid-new">
+            <div className="vs-card-new">
+              <h3>Scenith vs Canva Free</h3>
+              <ul>
+                <li>✅ <strong>Scenith:</strong> True layer-based editing like Photoshop</li>
+                <li>❌ <strong>Canva:</strong> Template-based, limited layer control</li>
+                <li>✅ <strong>Scenith:</strong> Unlimited projects, no restrictions</li>
+                <li>⚠️ <strong>Canva:</strong> Limited templates and storage on free plan</li>
+              </ul>
+            </div>
+
+            <div className="vs-card-new">
+              <h3>Scenith vs Photopea</h3>
+              <ul>
+                <li>✅ <strong>Scenith:</strong> Simplified interface, easier to learn</li>
+                <li>⚠️ <strong>Photopea:</strong> Complex Photoshop clone, steep learning curve</li>
+                <li>✅ <strong>Scenith:</strong> Cloud project storage included</li>
+                <li>❌ <strong>Photopea:</strong> Ads on free version</li>
+              </ul>
+            </div>
+
+            <div className="vs-card-new">
+              <h3>Scenith vs Pixlr</h3>
+              <ul>
+                <li>✅ <strong>Scenith:</strong> No watermarks, completely free</li>
+                <li>❌ <strong>Pixlr:</strong> Watermarks on free exports</li>
+                <li>✅ <strong>Scenith:</strong> Faster, cleaner interface</li>
+                <li>⚠️ <strong>Pixlr:</strong> Ad-heavy free version</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="people-also-ask-new" role="region" aria-labelledby="paa-title">
+        <div className="container">
+          <h2 id="paa-title">People Also Ask About Image Editors</h2>
+          <div className="paa-grid-new">
+            <div className="paa-item-new">
+              <h3>Can I use Scenith Image Editor on mobile?</h3>
+              <p>Yes! Scenith works on all devices including smartphones and tablets. The responsive design adapts to your screen size, and touch gestures allow you to move, resize, and edit elements on mobile. For complex projects, we recommend desktop for the best experience.</p>
+            </div>
+
+            <div className="paa-item-new">
+              <h3>Is there a watermark on free exports?</h3>
+              <p>No watermarks ever! All images you create and export from Scenith are 100% yours with no branding, logos, or watermarks. Download high-quality PNG, JPG, or PDF files ready to use anywhere.</p>
+            </div>
+
+            <div className="paa-item-new">
+              <h3>What's the best free alternative to Photoshop?</h3>
+              <p>Scenith offers professional features like layers, filters, and effects without Photoshop's complexity or cost. While Photoshop has more advanced tools, Scenith provides everything most users need for social media graphics, marketing materials, and creative projects—completely free.</p>
+            </div>
+
+            <div className="paa-item-new">
+              <h3>Can I create YouTube thumbnails with this editor?</h3>
+              <p>Absolutely! We have preset canvas sizes specifically for YouTube thumbnails (1920x1080px). Add eye-catching text, shapes, filters, and effects to create thumbnails that get clicks. Export as JPG or PNG and upload directly to YouTube.</p>
+            </div>
+          </div>
+        </div>
+      </section>      
 
       {/* CTA Section */}
       <section className="final-cta-section">
@@ -1509,7 +1616,7 @@ const ImageEditingClient: React.FC = () => {
             <div className="divider">OR</div>
             <div id="googleSignInButton"></div>
             <p className="auth-link">
-              New to SCENITH? <a href="/register">Sign up</a>
+              New to SCENITH? <a href="/signup">Sign up</a>
             </p>
           </motion.div>
         </div>
