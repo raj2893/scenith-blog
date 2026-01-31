@@ -510,6 +510,24 @@ useEffect(() => {
 
       setUploadedFiles((prev) => prev.filter((f) => f.id !== uploadId));
 
+      // For merge-pdf operation: Remove all pages associated with this PDF
+      if (operation === "merge-pdf") {
+        setSelectedPdfPages((prev) => prev.filter((page) => page.uploadId !== uploadId));
+        setPdfPageCounts((prev) => {
+          const newCounts = new Map(prev);
+          newCounts.delete(uploadId);
+          return newCounts;
+        });
+
+        // Reset preview index if needed
+        setPreviewPageIndex((prevIndex) => {
+          const remainingPages = selectedPdfPages.filter((page) => page.uploadId !== uploadId);
+          if (remainingPages.length === 0) return 0;
+          if (prevIndex >= remainingPages.length) return remainingPages.length - 1;
+          return prevIndex;
+        });
+      }
+
       // Clean up preview URL for images
       if (operation === "images-to-pdf" && imagePreviewUrls.has(uploadId)) {
         const previewUrl = imagePreviewUrls.get(uploadId);
@@ -686,15 +704,15 @@ useEffect(() => {
 
 switch (operation) {
   case "merge-pdf": {
-    const params = new URLSearchParams();
-    uploadIds.forEach(id => params.append('uploadIds', id.toString()));
-
     // Build the page mapping for the backend
     const pageMapping = selectedPdfPages.map(page => ({
       uploadId: page.uploadId,
       pageNumber: page.pageNumber
     }));
 
+    // DON'T send uploadIds - only send pageMapping
+    // The backend will extract unique uploadIds from the pageMapping
+    const params = new URLSearchParams();
     params.append('pageMapping', JSON.stringify(pageMapping));
 
     response = await axios.post(
@@ -1044,39 +1062,48 @@ const validateRotationPages = (pageSpec: string): boolean => {
 
 // Fetch page counts for all uploaded PDFs in merge operation
 useEffect(() => {
-  if (operation === "merge-pdf" && uploadedFiles.length > 0) {
-    uploadedFiles.forEach(async (upload) => {
-      if (!pdfPageCounts.has(upload.id)) {
-        try {
-          const token = localStorage.getItem("token");
-          if (!token) return;
+    if (operation === "merge-pdf" && uploadedFiles.length > 0) {
+      uploadedFiles.forEach(async (upload) => {
+        if (!pdfPageCounts.has(upload.id)) {
+          try {
+            const token = localStorage.getItem("token");
+            if (!token) return;
 
-          const response = await axios.get(
-            `${API_BASE_URL}/api/documents/page-count/${upload.id}`,
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          );
+            const response = await axios.get(
+              `${API_BASE_URL}/api/documents/page-count/${upload.id}`,
+              {
+                headers: { Authorization: `Bearer ${token}` },
+              }
+            );
 
-          const pageCount = response.data.pageCount;
-          setPdfPageCounts(prev => new Map(prev).set(upload.id, pageCount));
+            const pageCount = response.data.pageCount;
+            setPdfPageCounts(prev => new Map(prev).set(upload.id, pageCount));
 
-          // Initialize selected pages for this PDF
-          const pages = Array.from({ length: pageCount }, (_, i) => ({
-            uploadId: upload.id,
-            fileName: upload.fileName,
-            pageNumber: i + 1,
-            totalPages: pageCount
-          }));
+            // ONLY add pages if they don't already exist
+            setSelectedPdfPages(prev => {
+              const hasPages = prev.some(page => page.uploadId === upload.id);
+              if (hasPages) {
+                return prev; // Don't add again
+              }
 
-          setSelectedPdfPages(prev => [...prev, ...pages]);
-        } catch (err) {
-          console.error(`Failed to fetch page count for ${upload.id}:`, err);
+              // Initialize pages for this PDF
+              const pages = Array.from({ length: pageCount }, (_, i) => ({
+                uploadId: upload.id,
+                fileName: upload.fileName,
+                pageNumber: i + 1,
+                totalPages: pageCount
+              }));
+
+              return [...prev, ...pages];
+            });
+          } catch (err) {
+            console.error(`Failed to fetch page count for ${upload.id}:`, err);
+          }
         }
-      }
-    });
-  }
-}, [uploadedFiles, operation]);
+      });
+    }
+  }, [uploadedFiles, operation]);
+
 // Function to insert PDF at specific position
 const handleInsertPdfAtPosition = async (files: FileList | null, insertIndex: number) => {
   if (!files || files.length === 0) return;
@@ -1114,6 +1141,19 @@ const handleInsertPdfAtPosition = async (files: FileList | null, insertIndex: nu
 
     const newUploads = response.data.uploads;
 
+    // Get current state snapshot for calculations
+    const currentUploadedFiles = uploadedFiles;
+    const currentSelectedPages = selectedPdfPages;
+
+    // Calculate page insert index BEFORE updating uploadedFiles
+    let pageInsertIndex = 0;
+    const pdfsBeforeInsert = currentUploadedFiles.slice(0, insertIndex);
+
+    for (const pdf of pdfsBeforeInsert) {
+      const pagesForPdf = currentSelectedPages.filter(p => p.uploadId === pdf.id);
+      pageInsertIndex += pagesForPdf.length;
+    }
+
     // Insert new uploads at the specified position
     setUploadedFiles((prev) => {
       const updated = [...prev];
@@ -1122,6 +1162,8 @@ const handleInsertPdfAtPosition = async (files: FileList | null, insertIndex: nu
     });
 
     // Fetch page counts for new PDFs and insert their pages at correct position
+    const allNewPages: typeof selectedPdfPages = [];
+
     for (const upload of newUploads) {
       try {
         const pageCountResponse = await axios.get(
@@ -1142,26 +1184,18 @@ const handleInsertPdfAtPosition = async (files: FileList | null, insertIndex: nu
           totalPages: pageCount
         }));
 
-        // Calculate where to insert pages based on PDFs before this position
-        setSelectedPdfPages(prev => {
-          const updated = [...prev];
-
-          // Find the index where pages should be inserted
-          let pageInsertIndex = 0;
-          const pdfsBeforeInsert = uploadedFiles.slice(0, insertIndex);
-
-          for (const pdf of pdfsBeforeInsert) {
-            const pagesForPdf = prev.filter(p => p.uploadId === pdf.id);
-            pageInsertIndex += pagesForPdf.length;
-          }
-
-          updated.splice(pageInsertIndex, 0, ...pages);
-          return updated;
-        });
+        allNewPages.push(...pages);
       } catch (err) {
         console.error(`Failed to fetch page count for ${upload.id}:`, err);
       }
     }
+
+    // Insert all new pages at once at the calculated position
+    setSelectedPdfPages(prev => {
+      const updated = [...prev];
+      updated.splice(pageInsertIndex, 0, ...allNewPages);
+      return updated;
+    });
 
     showMessage('success', `${files.length} file(s) added successfully!`);
   } catch (err: any) {
@@ -1340,7 +1374,19 @@ const handleInsertPdfAtPosition = async (files: FileList | null, insertIndex: nu
                     {/* Insert Button Above */}
                     {index === 0 && (
                       <button
-                        onClick={() => fileInputRef.current?.click()}
+                        onClick={() => {
+                          const input = document.createElement('input');
+                          input.type = 'file';
+                          input.accept = 'application/pdf';
+                          input.multiple = true;
+                          input.onchange = (e) => {
+                            const target = e.target as HTMLInputElement;
+                            if (target.files) {
+                              handleInsertPdfAtPosition(target.files, 0);
+                            }
+                          };
+                          input.click();
+                        }}
                         style={{
                           width: '100%',
                           padding: '10px',
@@ -1478,7 +1524,19 @@ const handleInsertPdfAtPosition = async (files: FileList | null, insertIndex: nu
 
                     {/* Insert Button Below */}
                     <button
-                      onClick={() => fileInputRef.current?.click()}
+                      onClick={() => {
+                        const input = document.createElement('input');
+                        input.type = 'file';
+                        input.accept = 'application/pdf';
+                        input.multiple = true;
+                        input.onchange = (e) => {
+                          const target = e.target as HTMLInputElement;
+                          if (target.files) {
+                            handleInsertPdfAtPosition(target.files, index + 1);
+                          }
+                        };
+                        input.click();
+                      }}
                       style={{
                         width: '100%',
                         padding: '10px',
@@ -3358,9 +3416,9 @@ const handleInsertPdfAtPosition = async (files: FileList | null, insertIndex: nu
                   <span>Download File</span>
                 </button>
 
-                <button className="reset-btn" onClick={handleReset}>
-                  <FaPlus size={20} />
-                  <span>Process Another</span>
+                <button className="reset-btn" onClick={() => router.push("/pdf-tools")}>
+                  <FaArrowLeft size={20} />
+                  <span>Back to PDF Tools</span>
                 </button>
               </div>
             </div>
