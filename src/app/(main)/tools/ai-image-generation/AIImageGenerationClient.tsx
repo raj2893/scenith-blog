@@ -1,0 +1,1076 @@
+"use client";
+
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import axios from 'axios';
+import { motion } from 'framer-motion';
+import { API_BASE_URL, CDN_URL } from '../../../config';
+import { FaTimes } from 'react-icons/fa';
+import '../../../../../styles/tools/AIImageGeneration.css';
+
+// TypeScript interfaces
+interface UserProfile {
+  email: string;
+  firstName: string;
+  lastName: string;
+  picture: string | null;
+  googleAuth: boolean;
+  role: string;
+}
+
+interface GeneratedImage {
+  id: number;
+  imagePath: string;
+  prompt: string;
+  negativePrompt?: string;
+  resolution: string;
+  createdAt: string;
+}
+
+interface ImageUsage {
+  monthly: {
+    used: number;
+    limit: number;
+    remaining: number;
+  };
+  daily: {
+    used: number;
+    limit: number;
+    remaining: number;
+  };
+  role: string;
+  imagesPerRequest: number;
+  resolution: string;
+}
+
+interface LoginFormData {
+  email: string;
+  password: string;
+}
+
+const STYLE_PRESETS = [
+  { value: 'realistic', label: 'Realistic Photo', icon: '📷', description: 'Photorealistic images' },
+  { value: 'artistic', label: 'Artistic/Painting', icon: '🎨', description: 'Artistic painterly style' },
+  { value: 'anime', label: 'Anime/Manga', icon: '🎌', description: 'Japanese anime style' },
+  { value: 'digital-art', label: 'Digital Art', icon: '💻', description: 'Modern digital illustration' },
+  { value: '3d-render', label: '3D Render', icon: '🎮', description: 'Three-dimensional rendering' },
+  { value: 'fantasy', label: 'Fantasy', icon: '🧙', description: 'Fantasy and magical themes' },
+  { value: 'sci-fi', label: 'Sci-Fi', icon: '🚀', description: 'Science fiction aesthetic' },
+  { value: 'vintage', label: 'Vintage/Retro', icon: '📼', description: 'Nostalgic retro style' },
+];
+
+const AIImageGeneratorClient: React.FC = () => {
+  const router = useRouter();
+  const [isScrolled, setIsScrolled] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [userProfile, setUserProfile] = useState<UserProfile>({
+    email: '',
+    firstName: '',
+    lastName: '',
+    picture: null,
+    googleAuth: false,
+    role: '',
+  });
+  const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
+
+  // Image generation states
+  const [prompt, setPrompt] = useState('');
+  const [negativePrompt, setNegativePrompt] = useState('');
+  const [selectedStyle, setSelectedStyle] = useState<string>('realistic');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedImages, setGeneratedImages] = useState<GeneratedImage[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [imageUsage, setImageUsage] = useState<ImageUsage | null>(null);
+  const [promptCharCount, setPromptCharCount] = useState(0);
+  const [imageHistory, setImageHistory] = useState<GeneratedImage[]>([]);
+  const [showHistory, setShowHistory] = useState(false);
+  const [downloadSuccess, setDownloadSuccess] = useState(false);
+  const [loginSuccess, setLoginSuccess] = useState<string>('');
+
+  // Handle scroll for navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Fetch image usage when user logs in
+  useEffect(() => {
+    const fetchImageUsage = async () => {
+      if (!isLoggedIn) {
+        setImageUsage(null);
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/sole-image-gen/usage`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setImageUsage(data);
+        }
+      } catch (error) {
+        console.error('Error fetching image usage:', error);
+      }
+    };
+
+    fetchImageUsage();
+  }, [isLoggedIn]);
+
+  // Check auth status and fetch user profile
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      axios
+        .get(`${API_BASE_URL}/auth/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          const fullName = res.data.name || '';
+          const nameParts = fullName.trim().split(' ');
+          const firstName = nameParts[0] || '';
+          const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+          setUserProfile({
+            email: res.data.email || '',
+            firstName,
+            lastName,
+            picture: res.data.picture || null,
+            googleAuth: res.data.googleAuth || false,
+            role: res.data.role || 'BASIC',
+          });
+          setIsLoggedIn(true);
+          setShowLoginModal(false);
+        })
+        .catch((error) => {
+          console.error('Error fetching user profile:', error);
+          if (error.response?.status === 401) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userProfile');
+            setIsLoggedIn(false);
+          }
+        });
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
+
+  // Handle login
+  const handleLogin = async (formData: LoginFormData) => {
+    setIsLoggingIn(true);
+    setLoginError(null);
+    try {
+      const response = await axios.post(`${API_BASE_URL}/auth/login`, formData);
+      const { token } = response.data;
+      localStorage.setItem('token', token);
+      await axios.get(`${API_BASE_URL}/auth/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      }).then((res) => {
+        const fullName = res.data.name || '';
+        const nameParts = fullName.trim().split(' ');
+        const firstName = nameParts[0] || '';
+        const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+        setUserProfile({
+          email: res.data.email || '',
+          firstName,
+          lastName,
+          picture: res.data.picture || null,
+          googleAuth: res.data.googleAuth || false,
+          role: res.data.role || 'BASIC',
+        });
+        setIsLoggedIn(true);
+        setShowLoginModal(false);
+      });
+    } catch (error: any) {
+      setLoginError(error.response?.data?.message || 'Login failed. Please check your credentials.');
+    } finally {
+      setIsLoggingIn(false);
+    }
+  };
+
+  const handleGoogleLogin = useCallback(async (credentialResponse: any) => {
+    setLoginError('');
+    setLoginSuccess('');
+    setIsLoggingIn(true);
+    try {
+      const response = await axios.post(`${API_BASE_URL}/auth/google`, {
+        token: credentialResponse.credential,
+      });
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('userProfile', JSON.stringify({
+        email: response.data.email,
+        name: response.data.name,
+        picture: response.data.picture || null,
+        googleAuth: true,
+      }));
+      setLoginSuccess('Google login successful!');
+      setTimeout(() => {
+        axios.get(`${API_BASE_URL}/auth/me`, {
+          headers: { Authorization: `Bearer ${response.data.token}` },
+        }).then((res) => {
+          const fullName = res.data.name || '';
+          const nameParts = fullName.trim().split(' ');
+          const firstName = nameParts[0] || '';
+          const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+          setUserProfile({
+            email: res.data.email || '',
+            firstName,
+            lastName,
+            picture: res.data.picture || null,
+            googleAuth: res.data.googleAuth || false,
+            role: res.data.role || 'BASIC',
+          });
+          setIsLoggedIn(true);
+          setShowLoginModal(false);
+          setIsLoggingIn(false);
+        });
+      }, 1000);
+    } catch (error: any) {
+      setIsLoggingIn(false);
+      setLoginError(error.response?.data?.message || 'Google login failed');
+      setTimeout(() => setLoginError(''), 8000);
+    }
+  }, []);
+
+  useEffect(() => {
+    const initializeGoogleSignIn = () => {
+      if (window.google && window.google.accounts) {
+        window.google.accounts.id.initialize({
+          client_id: '397321320139-tpd310sq9j8rdngqd9kdmhgegco52b3g.apps.googleusercontent.com',
+          callback: handleGoogleLogin,
+        });
+        const buttonElement = document.getElementById('googleSignInButton');
+        if (buttonElement) {
+          window.google.accounts.id.renderButton(buttonElement, {
+            theme: 'outline',
+            size: 'large',
+            width: 300,
+          });
+        }
+      } else {
+        setTimeout(initializeGoogleSignIn, 100);
+      }
+    };
+    if (showLoginModal) {
+      initializeGoogleSignIn();
+    }
+  }, [showLoginModal, handleGoogleLogin]);
+
+  const handleGenerateImage = async () => {
+    if (!isLoggedIn) {
+      setShowLoginModal(true);
+      return;
+    }
+
+    if (!prompt.trim()) {
+      setError('Please enter a description for your image.');
+      return;
+    }
+
+    // Check usage limits
+    if (imageUsage) {
+      const monthlyExceeded = imageUsage.monthly.limit > 0 && imageUsage.monthly.remaining <= 0;
+      const dailyExceeded = imageUsage.daily.limit > 0 && imageUsage.daily.remaining <= 0;
+
+      if (monthlyExceeded) {
+        setError(`Monthly image generation limit exceeded for ${imageUsage.role} plan. Upgrade to generate more images.`);
+        setTimeout(() => setError(null), 10000);
+        return;
+      }
+
+      if (dailyExceeded) {
+        setError(`Daily image generation limit exceeded for ${imageUsage.role} plan. Try again tomorrow or upgrade for higher limits.`);
+        setTimeout(() => setError(null), 10000);
+        return;
+      }
+    }
+
+    setIsGenerating(true);
+    setError(null);
+    setGeneratedImages([]);
+
+    try {
+      // Add style to prompt
+      let enhancedPrompt = prompt;
+      const stylePreset = STYLE_PRESETS.find(s => s.value === selectedStyle);
+      if (stylePreset && selectedStyle !== 'realistic') {
+        enhancedPrompt = `${prompt}, ${selectedStyle} style`;
+      }
+
+      const response = await fetch(`${API_BASE_URL}/api/sole-image-gen/generate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify({
+          prompt: enhancedPrompt,
+          negativePrompt: negativePrompt.trim() || 'blurry, low quality, distorted',
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new Error(errorData?.message || `HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const images: GeneratedImage[] = data.images.map((img: any) => ({
+        id: img.id,
+        imagePath: `${CDN_URL}/${img.imagePath}`,
+        prompt: img.prompt,
+        negativePrompt: img.negativePrompt,
+        resolution: img.resolution,
+        createdAt: img.createdAt,
+      }));
+
+      setGeneratedImages(images);
+
+      // Refresh usage
+      const usageResponse = await fetch(`${API_BASE_URL}/api/sole-image-gen/usage`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      if (usageResponse.ok) {
+        const usageData = await usageResponse.json();
+        setImageUsage(usageData);
+      }
+
+      // Scroll to results
+      setTimeout(() => {
+        const resultsSection = document.querySelector('.image-results-section');
+        if (resultsSection) {
+          resultsSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+    } catch (err: any) {
+      const errorMessage = err.message || 'Failed to generate image.';
+      setError(errorMessage);
+      
+      setTimeout(() => {
+        const errorElement = document.querySelector('.error-message');
+        if (errorElement) {
+          errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+
+      setTimeout(() => setError(null), 10000);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleDownloadImage = async (imageUrl: string, imageId: number) => {
+    try {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = `ai-image-${imageId}-${Date.now()}.png`;
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      window.URL.revokeObjectURL(blobUrl);
+      setDownloadSuccess(true);
+      setTimeout(() => setDownloadSuccess(false), 5000);
+    } catch (error) {
+      console.error('Download failed:', error);
+      window.open(imageUrl, '_blank');
+    }
+  };
+
+  const fetchHistory = async () => {
+    if (!isLoggedIn) return;
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/sole-image-gen/history`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const history: GeneratedImage[] = data.map((img: any) => ({
+          id: img.id,
+          imagePath: `${CDN_URL}/${img.imagePath}`,
+          prompt: img.prompt,
+          negativePrompt: img.negativePrompt,
+          resolution: img.resolution,
+          createdAt: img.createdAt,
+        }));
+        setImageHistory(history);
+      }
+    } catch (error) {
+      console.error('Error fetching history:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchHistory();
+    }
+  }, [isLoggedIn]);
+
+  const scrollToSection = (sectionId: string) => {
+    const section = document.getElementById(sectionId);
+    if (!section) {
+      console.error(`Section with ID ${sectionId} not found.`);
+      return;
+    }
+    const navHeight = 80;
+    const offsetPosition = section.offsetTop - navHeight - 20;
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: 'smooth',
+    });
+  };
+
+  const isLimitsExceeded = useCallback(() => {
+    if (!isLoggedIn || !imageUsage) return false;
+    const monthlyExceeded = imageUsage.monthly.limit > 0 && imageUsage.monthly.remaining <= 0;
+    const dailyExceeded = imageUsage.daily.limit > 0 && imageUsage.daily.remaining <= 0;
+    return monthlyExceeded || dailyExceeded;
+  }, [isLoggedIn, imageUsage]);
+
+  return (
+    <div className="ai-image-generator-page">
+      <nav aria-label="Breadcrumb" className="breadcrumb-nav">
+        <ol itemScope itemType="https://schema.org/BreadcrumbList">
+          <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+            <a href="/" itemProp="item">
+              <span itemProp="name">Home</span>
+            </a>
+            <meta itemProp="position" content="1" />
+          </li>
+          <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+            <a href="/tools" itemProp="item">
+              <span itemProp="name">Tools</span>
+            </a>
+            <meta itemProp="position" content="2" />
+          </li>
+          <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+            <span itemProp="name">AI Image Generator</span>
+            <meta itemProp="position" content="3" />
+          </li>
+        </ol>
+      </nav>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@graph': [
+              {
+                '@type': 'WebApplication',
+                '@id': 'https://scenith.in/tools/ai-image-generation#webapp',
+                name: 'Scenith AI Image Generator',
+                description: 'Free AI-powered image generator for creating stunning visuals from text descriptions. Generate high-quality images instantly for social media, marketing, and creative projects.',
+                url: 'https://scenith.in/tools/ai-image-generation',
+                applicationCategory: 'MultimediaApplication',
+                operatingSystem: 'Web Browser',
+                offers: {
+                  '@type': 'Offer',
+                  price: '0',
+                  priceCurrency: 'USD',
+                  availability: 'https://schema.org/InStock'
+                },
+                featureList: [
+                  'Text-to-image AI generation',
+                  '8 artistic styles',
+                  'High-resolution output',
+                  'Commercial use allowed',
+                  'No watermarks'
+                ],
+                screenshot: 'https://scenith.in/images/AIImageGenerationSS.png',
+                author: {
+                  '@type': 'Organization',
+                  '@id': 'https://scenith.in/#organization',
+                  name: 'Scenith'
+                }
+              },
+              {
+                '@type': 'BreadcrumbList',
+                '@id': 'https://scenith.in/tools/ai-image-generation#breadcrumb',
+                itemListElement: [
+                  {
+                    '@type': 'ListItem',
+                    position: 1,
+                    name: 'Home',
+                    item: 'https://scenith.in'
+                  },
+                  {
+                    '@type': 'ListItem',
+                    position: 2,
+                    name: 'Tools',
+                    item: 'https://scenith.in/tools'
+                  },
+                  {
+                    '@type': 'ListItem',
+                    position: 3,
+                    name: 'AI Image Generator',
+                    item: 'https://scenith.in/tools/ai-image-generation'
+                  }
+                ]
+              },
+              {
+                '@type': 'FAQPage',
+                '@id': 'https://scenith.in/tools/ai-image-generation#faq',
+                mainEntity: [
+                  {
+                    '@type': 'Question',
+                    name: 'What is an AI image generator?',
+                    acceptedAnswer: {
+                      '@type': 'Answer',
+                      text: 'An AI image generator uses artificial intelligence to create images from text descriptions. It analyzes your prompt, understands the context, and generates unique visual content using deep learning models trained on millions of images.'
+                    }
+                  },
+                  {
+                    '@type': 'Question',
+                    name: 'Is AI image generation free?',
+                    acceptedAnswer: {
+                      '@type': 'Answer',
+                      text: 'Yes! The free BASIC plan includes 30 image generations per month with 3 per day. All generated images can be used commercially with full rights and no watermarks.'
+                    }
+                  },
+                  {
+                    '@type': 'Question',
+                    name: 'What image styles are available?',
+                    acceptedAnswer: {
+                      '@type': 'Answer',
+                      text: 'We support 8 artistic styles: Realistic Photo, Artistic/Painting, Anime/Manga, Digital Art, 3D Render, Fantasy, Sci-Fi, and Vintage/Retro. Each style creates unique visual aesthetics.'
+                    }
+                  },
+                  {
+                    '@type': 'Question',
+                    name: 'Can I use AI-generated images commercially?',
+                    acceptedAnswer: {
+                      '@type': 'Answer',
+                      text: 'Yes! You retain full commercial rights to all generated images. Use them in marketing materials, social media, websites, products, and any commercial projects without attribution.'
+                    }
+                  }
+                ]
+              },
+              {
+                '@type': 'HowTo',
+                '@id': 'https://scenith.in/tools/ai-image-generation#howto',
+                name: 'How to Generate AI Images from Text',
+                description: 'Step-by-step guide to creating professional images using AI',
+                totalTime: 'PT1M',
+                step: [
+                  {
+                    '@type': 'HowToStep',
+                    name: 'Describe Your Image',
+                    text: 'Type a detailed description of what you want to create. Be specific about subjects, colors, mood, and composition.',
+                    position: 1,
+                  },
+                  {
+                    '@type': 'HowToStep',
+                    name: 'Choose Art Style',
+                    text: 'Select from 8 artistic styles including realistic, anime, digital art, and more. Each style produces unique visual aesthetics.',
+                    position: 2,
+                  },
+                  {
+                    '@type': 'HowToStep',
+                    name: 'Generate and Download',
+                    text: 'Click Generate to create your image in seconds. Download high-resolution PNG files for use in your projects.',
+                    position: 3,
+                  }
+                ]
+              }
+            ]
+          }),
+        }}
+      />
+
+      <div className="particle-background">
+        <div className="particle"></div>
+        <div className="particle"></div>
+        <div className="particle"></div>
+        <div className="particle"></div>
+        <div className="particle"></div>
+        <div className="particle"></div>
+      </div>
+
+      <section className="hero-section" id="hero" role="main">
+        <motion.div
+          className="hero-content"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <h1>Free AI Image Generator: Create Stunning Visuals from Text (Social Media & Marketing)</h1>
+          <p className="hero-description">
+            Transform your ideas into beautiful images instantly with AI. Create professional visuals for{' '}
+            <a href="/tools/add-subtitles-to-videos" className="inline-link">video thumbnails</a>,{' '}
+            social media posts, marketing materials, and creative projects. Works perfectly with our{' '}
+            <a href="/tools/image-editing" className="inline-link">free image editor</a>{' '}
+            for complete design workflows. Generate unlimited creativity - completely free!
+          </p>
+
+          <div className="hero-cta-section">
+            <div className="main-content">
+              <div className="input-section">
+                <textarea
+                  value={prompt}
+                  onChange={(e) => {
+                    setPrompt(e.target.value);
+                    setPromptCharCount(e.target.value.length);
+                  }}
+                  placeholder="Describe your image... (e.g., 'A serene mountain landscape at sunset with vibrant orange sky')"
+                  className="prompt-textarea"
+                  disabled={!isLoggedIn}
+                  aria-label="Image description prompt"
+                  maxLength={2000}
+                />
+
+                {isLoggedIn && (
+                  <div className="character-count-container">
+                    <p className="character-count">
+                      <span className={promptCharCount > 1800 ? 'count-warning' : ''}>
+                        {promptCharCount.toLocaleString()}
+                      </span> / 2,000 characters
+                    </p>
+                  </div>
+                )}
+
+                <div className="style-selector-section">
+                  <label className="style-label-text" htmlFor="style-select">
+                    🎨 Art Style:
+                  </label>
+                  
+                  <select
+                    id="style-select"
+                    value={selectedStyle}
+                    onChange={(e) => setSelectedStyle(e.target.value)}
+                    className="style-dropdown"
+                    aria-label="Select art style"
+                  >
+                    {STYLE_PRESETS.map((style) => (
+                      <option key={style.value} value={style.value}>
+                        {style.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {selectedStyle !== 'realistic' && (
+                  <div className="style-info-tooltip">
+                    <strong>{STYLE_PRESETS.find(s => s.value === selectedStyle)?.label}:</strong>{' '}
+                    {STYLE_PRESETS.find(s => s.value === selectedStyle)?.description}
+                  </div>
+                )}
+
+                <details className="advanced-options">
+                  <summary>Advanced Options (Optional)</summary>
+                  <textarea
+                    value={negativePrompt}
+                    onChange={(e) => setNegativePrompt(e.target.value)}
+                    placeholder="What to avoid... (e.g., 'blurry, distorted, low quality')"
+                    className="negative-prompt-textarea"
+                    aria-label="Negative prompt"
+                    maxLength={500}
+                  />
+                  <p className="help-text">Specify what you DON'T want in the image</p>
+                </details>
+
+                {isLoggedIn && imageUsage && (
+                  <div className="usage-info">
+                    {imageUsage.daily.limit > 0 && 
+                     imageUsage.monthly.limit > 0 &&
+                     imageUsage.daily.remaining < imageUsage.monthly.remaining && (
+                      <div className="usage-section">
+                        <p className="usage-label today">⚠️ Today's Limit</p>
+                        <div className="usage-bar-container">
+                          <div 
+                            className={`usage-bar-fill ${
+                              (imageUsage.daily.used / imageUsage.daily.limit) >= 0.95 ? 'critical' :
+                              (imageUsage.daily.used / imageUsage.daily.limit) >= 0.80 ? 'warning' : 'normal'
+                            }`}
+                            style={{ width: `${(imageUsage.daily.used / imageUsage.daily.limit) * 100}%` }}
+                          />
+                        </div>
+                        <p className="usage-text">
+                          <strong>{imageUsage.daily.remaining.toLocaleString()}</strong> images remaining today
+                          ({imageUsage.daily.used.toLocaleString()} / {imageUsage.daily.limit.toLocaleString()} used)
+                        </p>
+                      </div>
+                    )}
+
+                    <div className="usage-section">
+                      <p className={`usage-label ${
+                        imageUsage.monthly.limit === -1 ? '' :
+                        imageUsage.daily.limit > 0 && 
+                        imageUsage.monthly.remaining > 0 && 
+                        imageUsage.daily.remaining >= imageUsage.monthly.remaining
+                          ? 'month'
+                          : ''
+                      }`}>
+                        📅 {imageUsage.monthly.limit === -1 ? 'This Month (Unlimited)' : 'This Month\'s Limit'}
+                      </p>
+                      {imageUsage.monthly.limit === -1 ? (
+                        <p className="usage-text">
+                          <strong>Unlimited</strong> - No monthly generation limit
+                        </p>
+                      ) : (
+                        <>
+                          <div className="usage-bar-container">
+                            <div 
+                              className={`usage-bar-fill ${
+                                (imageUsage.monthly.used / imageUsage.monthly.limit) >= 0.95 ? 'critical' :
+                                (imageUsage.monthly.used / imageUsage.monthly.limit) >= 0.80 ? 'warning' : 'normal'
+                              }`}
+                              style={{ width: `${(imageUsage.monthly.used / imageUsage.monthly.limit) * 100}%` }}
+                            />
+                          </div>
+                          <p className="usage-text">
+                            <strong>{imageUsage.monthly.remaining.toLocaleString()}</strong> images remaining this month
+                            ({imageUsage.monthly.used.toLocaleString()} / {imageUsage.monthly.limit.toLocaleString()} used)
+                          </p>
+                        </>
+                      )}
+
+                      {imageUsage.role === 'BASIC' && (
+                        <div className="inline-upgrade-cta">
+                          <a href="/pricing" className="inline-upgrade-link">
+                            🔓 Need more? Upgrade to CREATOR for 13× more images (400/month)
+                          </a>
+                        </div>
+                      )}
+
+                      {imageUsage.role === 'CREATOR' && (
+                        <div className="inline-upgrade-cta">
+                          <a href="/pricing" className="inline-upgrade-link">
+                            🔓 Need more? Upgrade to STUDIO for 2× more images (900/month)
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {isLimitsExceeded() ? (
+                  <a
+                    href="https://scenith.in/pricing"
+                    className="cta-button upgrade-button"
+                    aria-label="Upgrade to unlock more image generations"
+                  >
+                    <span className="upgrade-icon">🚀</span>
+                    Upgrade to Pro - Generate More Images
+                    <span className="upgrade-badge">Limited Time</span>
+                  </a>
+                ) : (
+                  <button
+                    className="cta-button generate-button"
+                    onClick={handleGenerateImage}
+                    disabled={
+                      !isLoggedIn ? false : (
+                        !prompt.trim() || 
+                        isGenerating ||
+                        undefined
+                      )
+                    }
+                    aria-label="Generate AI image from description"
+                  >
+                    {isGenerating ? 'Creating Your Image...' : isLoggedIn ? 'Generate Image' : 'Login to Generate'}
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {generatedImages.length > 0 && (
+              <section className="image-results-section" role="region" aria-labelledby="results-title">
+                <motion.div
+                  className="container"
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8 }}
+                  viewport={{ once: true }}
+                >
+                  <h2 id="results-title">Your Generated Images</h2>
+                  <div className="images-grid">
+                    {generatedImages.map((image) => (
+                      <div key={image.id} className="image-result-card">
+                        <img
+                          src={image.imagePath}
+                          alt={image.prompt}
+                          className="generated-image"
+                        />
+                        <div className="image-actions">
+                          <button
+                            onClick={() => handleDownloadImage(image.imagePath, image.id)}
+                            className="download-image-btn"
+                            aria-label="Download image"
+                          >
+                            📥 Download PNG
+                          </button>
+                        </div>
+                        <p className="image-prompt">{image.prompt}</p>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              </section>
+            )}
+
+            <section className="must-try-section" role="region" aria-labelledby="must-try-title">
+              <div className="must-try-header">
+                <h2 id="must-try-title">Complete Your Creative Workflow</h2>
+                <p>Powerful tools to enhance your AI-generated images</p>
+              </div>
+              <div className="must-try-grid">
+                <a 
+                  href="https://scenith.in/tools/image-editing?utm_source=ai_image_page&utm_medium=must_try_section&utm_campaign=cross_tool_promotion" 
+                  className="must-try-card"
+                  aria-label="Try Free Image Editor"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span className="must-try-icon">🖼️</span>
+                  <span className="must-try-badge">✨ Perfect Match</span>
+                  <h3 className="must-try-title">Free Image Editor</h3>
+                  <p className="must-try-description">
+                    Edit your AI-generated images with professional tools. Add text, filters, effects, and more to create perfect visuals.
+                  </p>
+                  <div className="must-try-features">
+                    <span className="must-try-feature">Advanced editing tools</span>
+                    <span className="must-try-feature">Filters & effects</span>
+                    <span className="must-try-feature">Text overlays</span>
+                  </div>
+                  <span className="must-try-cta">
+                    Open Image Editor →
+                  </span>
+                </a>
+
+                <a 
+                  href="https://scenith.in/tools/ai-voice-generation?utm_source=ai_image_page&utm_medium=must_try_section&utm_campaign=cross_tool_promotion" 
+                  className="must-try-card"
+                  aria-label="Try AI Voice Generator"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span className="must-try-icon">🎤</span>
+                  <span className="must-try-badge">🔥 Popular</span>
+                  <h3 className="must-try-title">AI Voice Generator</h3>
+                  <p className="must-try-description">
+                    Add professional voiceovers to your visuals. Perfect for creating complete video content with your AI images.
+                  </p>
+                  <div className="must-try-features">
+                    <span className="must-try-feature">40+ natural voices</span>
+                    <span className="must-try-feature">20+ languages</span>
+                    <span className="must-try-feature">Instant MP3 download</span>
+                  </div>
+                  <span className="must-try-cta">
+                    Try Voice Generator →
+                  </span>
+                </a>
+              </div>
+            </section>
+
+            <div className="trust-indicators">
+              <span className="trust-item">✅ 100% Free</span>
+              <span className="trust-item">🎨 8 Art Styles</span>
+              <span className="trust-item">⚡ Instant Generation</span>
+              <span className="trust-item">📥 High-Res Downloads</span>
+            </div>
+          </div>
+
+          <figure className="hero-image-container">
+            <Image
+              src="/images/AIImageGenerationSS.png"
+              alt="Free AI image generator interface showing text-to-image creation with multiple artistic styles"
+              className="hero-image"
+              width={800}
+              height={400}
+              priority
+            />
+            <figcaption className="sr-only">Example of AI image generation showing style selection and visual output</figcaption>
+          </figure>
+        </motion.div>
+      </section>
+
+      {error && (
+        <motion.div 
+          className="error-message" 
+          role="alert"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3 }}
+        >
+          <strong>⚠️ Error:</strong> {error}
+        </motion.div>
+      )}
+
+      {/* Educational sections would continue here following the same pattern as AI Voice */}
+      {/* I'll include the key sections below */}
+
+      <section className="how-section" id="how-it-works" role="region" aria-labelledby="how-it-works-title">
+        <motion.div
+          className="container"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+        >
+          <h2 id="how-it-works-title">How to Generate AI Images in 3 Simple Steps</h2>
+          <p className="section-description">
+            Our advanced AI image generation makes creating professional visuals effortless. No design skills needed - just describe what you want.
+          </p>
+          <div className="steps-grid" role="list">
+            <motion.article className="step-card" whileHover={{ scale: 1.05 }} role="listitem">
+              <div className="step-number" aria-label="Step 1">1</div>
+              <h3>Describe Your Vision</h3>
+              <p>Type what you want to see. Be specific about subjects, colors, mood, and composition. The more detailed, the better!</p>
+            </motion.article>
+            <motion.article className="step-card" whileHover={{ scale: 1.05 }} role="listitem">
+              <div className="step-number" aria-label="Step 2">2</div>
+              <h3>Choose Art Style</h3>
+              <p>Select from 8 artistic styles including realistic photos, anime, digital art, and more. Each creates unique visual aesthetics.</p>
+            </motion.article>
+            <motion.article className="step-card" whileHover={{ scale: 1.05 }} role="listitem">
+              <div className="step-number" aria-label="Step 3">3</div>
+              <h3>Generate & Download</h3>
+              <p>Get your high-quality image in seconds. Download PNG files ready for social media, marketing, or any creative project.</p>
+            </motion.article>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="cta-section" id="get-started" role="region" aria-labelledby="cta-title">
+        <div className="container">
+          <h2 id="cta-title">Ready to Create Stunning Images?</h2>
+          <p>Join thousands of creators using AI to bring their ideas to life. Start generating professional images today - completely free!</p>
+          <button
+            className="cta-button"
+            onClick={() => {
+              if (!isLoggedIn) {
+                setShowLoginModal(true);
+              } else {
+                scrollToSection('hero');
+              }
+            }}
+            aria-label="Start using the free AI image generator"
+          >
+            {isLoggedIn ? 'Generate Images Now - Free!' : 'Login to Start Creating'}
+          </button>
+          <div className="cta-features">
+            <span>⚡ Instant generation</span>
+            <span>🔒 Secure & private</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Login Modal */}
+      {showLoginModal && (
+        <div className="modal-overlay">
+          <motion.div
+            className="login-modal"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            <button
+              className="modal-close-button"
+              onClick={() => setShowLoginModal(false)}
+              aria-label="Close login modal"
+            >
+              <FaTimes />
+            </button>
+            <div className="auth-container">
+              <div className="auth-header">
+                <h1>SCENITH</h1>
+                <p>Login to Continue</p>
+              </div>
+              {isLoggingIn && (
+                <div className="loading-overlay">
+                  <div className="spinner" />
+                  <p>Logging in...</p>
+                </div>
+              )}
+              {loginError && <div className="error-message">{loginError}</div>}
+              {loginSuccess && <div className="success-message">{loginSuccess}</div>}
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const formData = new FormData(e.currentTarget);
+                  handleLogin({
+                    email: formData.get('email') as string,
+                    password: formData.get('password') as string,
+                  });
+                }}
+                className="auth-form"
+              >
+                <div className="auth-input-label">
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder=" "
+                    className="auth-input"
+                    aria-label="Email address"
+                    disabled={isLoggingIn}
+                    required
+                  />
+                  <span>Email</span>
+                </div>
+                <div className="auth-input-label">
+                  <input
+                    type="password"
+                    name="password"
+                    placeholder=" "
+                    className="auth-input"
+                    aria-label="Password"
+                    disabled={isLoggingIn}
+                    required
+                  />
+                  <span>Password</span>
+                </div>
+                <button type="submit" className="cta-button auth-button" disabled={isLoggingIn}>
+                  {isLoggingIn ? 'Logging in...' : 'Login'}
+                </button>
+              </form>
+              <div className="divider">OR</div>
+              <div id="googleSignInButton" className="google-button"></div>
+              <p className="auth-link">
+                New to SCENITH?{' '}
+                <a href="/signup">Sign up</a>
+              </p>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {isLoggedIn && userProfile.role === 'BASIC' && (
+        <div className="floating-upgrade-cta">
+          <button 
+            className="floating-upgrade-btn"
+            onClick={() => window.location.href = '/pricing'}
+          >
+            <span className="float-icon">⚡</span>
+            <span className="float-text">
+              <strong>Upgrade for 13× More Images</strong>
+              <small>CREATOR Plan</small>
+            </span>
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default AIImageGeneratorClient;
