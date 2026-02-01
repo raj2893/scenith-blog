@@ -881,6 +881,178 @@ const AIImageGeneratorClient: React.FC = () => {
               </div>
             </section>
 
+
+            <section className="how-to-generate-section" id="how-to-generate" role="region" aria-labelledby="how-to-generate-title">
+              <div className="container">
+                <h2 id="how-to-generate-title">How to Generate AI Images from Text: Complete Step-by-Step Guide</h2>
+                <p className="section-description">
+                  Follow this detailed walkthrough to create professional AI-generated images in minutes. No design experience required—just your imagination and our advanced text-to-image technology.
+                </p>
+
+                <div className="tutorial-steps">
+                  <article className="tutorial-step">
+                    <div className="tutorial-step-number">Step 1</div>
+                    <div className="tutorial-step-content">
+                      <h3>Write a Detailed Image Description</h3>
+                      <p>
+                        Begin by describing exactly what you want to see in your image. The more specific you are, the better your results:
+                      </p>
+                      <ul className="tutorial-checklist">
+                        <li>Subject: Main focus (person, object, scene)</li>
+                        <li>Setting: Location, time of day, season</li>
+                        <li>Colors: Dominant color palette or specific hues</li>
+                        <li>Mood: Atmosphere (happy, dramatic, serene)</li>
+                        <li>Composition: Camera angle, framing, perspective</li>
+                      </ul>
+                      <div className="tutorial-tip">
+                        <strong>💡 Pro Tip:</strong> Instead of "a dog," try "a golden retriever puppy playing in a sunny meadow filled with wildflowers, soft morning light, warm color palette." Specific details create stunning results.
+                      </div>
+                    </div>
+                  </article>
+
+                  <article className="tutorial-step">
+                    <div className="tutorial-step-number">Step 2</div>
+                    <div className="tutorial-step-content">
+                      <h3>Select Your Artistic Style</h3>
+                      <p>
+                        Choose from <strong>8 artistic style presets</strong> that dramatically change your image's aesthetic:
+                      </p>
+                      <div className="filter-guide">
+                        <div className="filter-option">
+                          <strong>Realistic Photo:</strong> Photorealistic images perfect for product mockups, social media posts, and professional content.
+                        </div>
+                        <div className="filter-option">
+                          <strong>Anime/Manga:</strong> Japanese animation style ideal for character art, illustrations, and creative storytelling.
+                        </div>
+                        <div className="filter-option">
+                          <strong>Digital Art:</strong> Modern illustration style great for posters, graphics, and contemporary designs.
+                        </div>
+                        <div className="filter-option">
+                          <strong>3D Render:</strong> Three-dimensional rendered look perfect for product visualization and technical imagery.
+                        </div>
+                      </div>
+                      <div className="tutorial-tip">
+                        <strong>💡 Pro Tip:</strong> Test the same prompt with 2-3 different styles. A landscape in "Realistic Photo" mode creates travel photography, while "Fantasy" style produces magical artwork.
+                      </div>
+                    </div>
+                  </article>
+
+                  <article className="tutorial-step">
+                    <div className="tutorial-step-number">Step 3</div>
+                    <div className="tutorial-step-content">
+                      <h3>Use Advanced Options (Optional)</h3>
+                      <p>
+                        Fine-tune your generation with negative prompts—tell the AI what to <strong>avoid</strong> in your image:
+                      </p>
+                      <ul className="tutorial-checklist">
+                        <li><strong>Common exclusions:</strong> "blurry, low quality, distorted, watermark"</li>
+                        <li><strong>Unwanted elements:</strong> "text, logo, signature, frame, border"</li>
+                        <li><strong>Style refinement:</strong> "cartoon, painting" (for realistic photos)</li>
+                        <li><strong>Quality control:</strong> "ugly, deformed, duplicate, cropped"</li>
+                      </ul>
+                      <p>
+                        Negative prompts help the AI understand what NOT to include, significantly improving output quality and relevance.
+                      </p>
+                    </div>
+                  </article>
+
+                  <article className="tutorial-step">
+                    <div className="tutorial-step-number">Step 4</div>
+                    <div className="tutorial-step-content">
+                      <h3>Generate Your AI Image</h3>
+                      <p>
+                        Click <strong>"Generate Image"</strong> and watch the magic happen. Our AI processes your description in seconds:
+                      </p>
+                      <ul className="tutorial-checklist">
+                        <li><strong>Analysis:</strong> AI interprets your text, identifying subjects, styles, and composition</li>
+                        <li><strong>Synthesis:</strong> Neural networks create the image pixel-by-pixel based on learned patterns</li>
+                        <li><strong>Refinement:</strong> Quality checks ensure output meets style and description requirements</li>
+                        <li><strong>Delivery:</strong> High-resolution PNG file ready for immediate download</li>
+                      </ul>
+                      <p>
+                        Generation typically completes in <strong>3-5 seconds</strong>. You'll see your image appear with download options immediately.
+                      </p>
+                    </div>
+                  </article>
+
+                  <article className="tutorial-step advanced">
+                    <div className="tutorial-step-number">Step 5</div>
+                    <div className="tutorial-step-content">
+                      <h3>Download and Iterate</h3>
+                      <p>
+                        Once generated, you have several options for using and refining your images:
+                      </p>
+                      <div className="download-options">
+                        <div className="download-format">
+                          <strong>Format:</strong> High-quality PNG
+                        </div>
+                        <div className="download-format">
+                          <strong>Resolution:</strong> 1024x1024 pixels
+                        </div>
+                        <div className="download-format">
+                          <strong>Usage Rights:</strong> Full commercial use
+                        </div>
+                      </div>
+                      <p>
+                        Not satisfied? Simply modify your prompt and regenerate. Each variation provides new creative possibilities. Combine with our <strong>free image editor</strong> for additional customization—add text, filters, effects, and more.
+                      </p>
+                      <div className="tutorial-tip">
+                        <strong>💡 Pro Tip:</strong> Save prompts that work well. Building a prompt library helps you recreate successful styles and speeds up future projects.
+                      </div>
+                    </div>
+                  </article>
+                </div>
+
+                <div className="common-questions">
+                  <h3>Common Questions During Generation</h3>
+                  <div className="quick-qa-grid">
+                    <div className="quick-qa">
+                      <strong>Q: Why doesn't my image match my description exactly?</strong>
+                      <p>A: AI interprets prompts creatively. Be more specific with details like "on the left side," "in the foreground," or "bright red color" for precise control.</p>
+                    </div>
+                    <div className="quick-qa">
+                      <strong>Q: Can I generate images of real people?</strong>
+                      <p>A: For privacy and ethical reasons, avoid using names of real individuals. Describe generic characteristics instead: "professional businesswoman in office setting."</p>
+                    </div>
+                    <div className="quick-qa">
+                      <strong>Q: How do I get consistent character designs?</strong>
+                      <p>A: Use very detailed descriptions with specific features: "25-year-old woman, shoulder-length black hair, blue eyes, wearing red jacket." Save your exact prompt for future consistency.</p>
+                    </div>
+                    <div className="quick-qa">
+                      <strong>Q: What if I exceed my generation limits?</strong>
+                      <p>A: Free users get 30 images/month. Upgrade to CREATOR (400/month) or STUDIO (900/month) for higher limits and faster generation.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="integration-guide">
+                  <h3>Using Your AI Images in Popular Tools</h3>
+                  <div className="integration-cards">
+                    <div className="integration-card">
+                      <span className="integration-icon">🎨</span>
+                      <h4>Canva & Design Tools</h4>
+                      <p><strong>Canva, Adobe Express, Figma:</strong> Import PNG directly, layer with text/graphics, create social media posts and marketing materials.</p>
+                    </div>
+                    <div className="integration-card">
+                      <span className="integration-icon">📱</span>
+                      <h4>Social Media Platforms</h4>
+                      <p><strong>Instagram, Facebook, Twitter, LinkedIn:</strong> Upload as posts, stories, profile images—perfect dimensions for all platforms.</p>
+                    </div>
+                    <div className="integration-card">
+                      <span className="integration-icon">🎬</span>
+                      <h4>Video Editing Software</h4>
+                      <p><strong>Adobe Premiere, Final Cut Pro, DaVinci:</strong> Use as video backgrounds, thumbnails, B-roll imagery, scene transitions.</p>
+                    </div>
+                    <div className="integration-card">
+                      <span className="integration-icon">🌐</span>
+                      <h4>Websites & Blogs</h4>
+                      <p><strong>WordPress, Wix, Squarespace, Medium:</strong> Featured images, blog headers, portfolio pieces, product mockups.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
             <div className="trust-indicators">
               <span className="trust-item">✅ 100% Free</span>
               <span className="trust-item">🎨 8 Art Styles</span>
@@ -903,6 +1075,65 @@ const AIImageGeneratorClient: React.FC = () => {
         </motion.div>
       </section>
 
+      <section className="what-is-section" id="what-is-ai-image-generation" role="region" aria-labelledby="what-is-title">
+        <div className="container">
+          <h2 id="what-is-title">What is AI Image Generation? Understanding Text-to-Image Technology</h2>
+          <p className="section-description">
+            AI image generation uses advanced neural networks to create original images from text descriptions, revolutionizing visual content creation.
+          </p>
+          
+          <div className="content-deep-dive">
+            <div className="dive-section">
+              <h3>How Text-to-Image AI Works</h3>
+              <p>
+                Modern <strong>AI image generators</strong> use diffusion models and transformers trained on billions of images. The process involves multiple sophisticated steps:
+              </p>
+              <ol className="process-list">
+                <li><strong>Text Encoding:</strong> Your prompt is converted into mathematical representations that capture semantic meaning, identifying subjects, styles, colors, and composition.</li>
+                <li><strong>Latent Space Mapping:</strong> The AI translates text embeddings into a "latent space"—a compressed representation of visual concepts learned from millions of training images.</li>
+                <li><strong>Diffusion Process:</strong> Starting from random noise, the model iteratively refines the image through hundreds of denoising steps, gradually building coherent visual elements.</li>
+                <li><strong>Style Transfer:</strong> Artistic style presets guide the generation toward specific aesthetics—photorealistic, anime, digital art—by conditioning the diffusion process.</li>
+                <li><strong>Upsampling & Refinement:</strong> Final steps enhance resolution, sharpen details, and apply post-processing to deliver high-quality 1024x1024 PNG outputs.</li>
+              </ol>
+            </div>
+
+            <div className="dive-section">
+              <h3>Key Technologies Behind AI Image Creation</h3>
+              <div className="tech-cards">
+                <div className="tech-card">
+                  <h4>🧠 Diffusion Models</h4>
+                  <p>State-of-the-art architecture that generates images by reversing a noise-adding process. Stable Diffusion and DALL-E use this approach for photorealistic results.</p>
+                </div>
+                <div className="tech-card">
+                  <h4>🎯 CLIP (Contrastive Learning)</h4>
+                  <p>Neural network that understands relationships between images and text, enabling accurate interpretation of natural language prompts.</p>
+                </div>
+                <div className="tech-card">
+                  <h4>🎨 Style Transfer Networks</h4>
+                  <p>Specialized models that apply artistic styles (anime, oil painting, 3D render) by learning visual characteristics from style-specific datasets.</p>
+                </div>
+                <div className="tech-card">
+                  <h4>⚡ Latent Diffusion</h4>
+                  <p>Efficiency technique that operates in compressed latent space rather than pixel space, enabling fast generation without sacrificing quality.</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="dive-section">
+              <h3>Evolution of AI Image Generation</h3>
+              <p>
+                Text-to-image technology has advanced dramatically in just a few years:
+              </p>
+              <ul className="evolution-timeline">
+                <li><strong>2014-2018:</strong> Early GANs (Generative Adversarial Networks) produced low-resolution, often incoherent images with limited text understanding.</li>
+                <li><strong>2021:</strong> DALL-E demonstrated breakthrough text-image alignment, generating recognizable objects from descriptions but with artistic limitations.</li>
+                <li><strong>2022:</strong> Stable Diffusion democratized AI art with open-source models, enabling photorealistic generation and extensive style control.</li>
+                <li><strong>2023-Present:</strong> Modern systems achieve near-perfect photorealism, artistic versatility, and complex scene composition from natural language prompts.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
       {error && (
         <motion.div 
           className="error-message" 
@@ -972,6 +1203,71 @@ const AIImageGeneratorClient: React.FC = () => {
           <div className="cta-features">
             <span>⚡ Instant generation</span>
             <span>🔒 Secure & private</span>
+          </div>
+        </div>
+      </section>
+
+      <section className="competitors-comparison" role="region" aria-labelledby="vs-competitors">
+        <div className="container">
+          <h2 id="vs-competitors">AI Image Generator Comparison: Scenith vs Competitors</h2>
+          <div className="comparison-grid">
+            <div className="vs-card">
+              <h3>Scenith vs Midjourney</h3>
+              <ul>
+                <li>✅ <strong>Scenith:</strong> Free 30 images/month, web-based interface</li>
+                <li>❌ <strong>Midjourney:</strong> $10/month minimum, Discord-only access</li>
+                <li>✅ <strong>Scenith:</strong> One-click generation, no commands needed</li>
+                <li>⚠️ <strong>Midjourney:</strong> Complex slash commands required</li>
+              </ul>
+            </div>
+                  
+            <div className="vs-card">
+              <h3>Scenith vs DALL-E 3</h3>
+              <ul>
+                <li>✅ <strong>Scenith:</strong> Direct PNG download, immediate use</li>
+                <li>❌ <strong>DALL-E 3:</strong> ChatGPT Plus required ($20/month)</li>
+                <li>✅ <strong>Scenith:</strong> 8 style presets for instant variety</li>
+                <li>❌ <strong>DALL-E 3:</strong> Limited style control</li>
+              </ul>
+            </div>
+                  
+            <div className="vs-card">
+              <h3>Scenith vs Leonardo.ai</h3>
+              <ul>
+                <li>✅ <strong>Scenith:</strong> No signup required for basic use</li>
+                <li>❌ <strong>Leonardo.ai:</strong> Account required, limited free credits</li>
+                <li>✅ <strong>Scenith:</strong> Commercial use on free plan</li>
+                <li>⚠️ <strong>Leonardo.ai:</strong> Paid subscription for commercial rights</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <section className="people-also-ask" role="region" aria-labelledby="paa-title">
+        <div className="container">
+          <h2 id="paa-title">People Also Ask About AI Image Generators</h2>
+          <div className="paa-grid">
+            <div className="paa-item">
+              <h3>Can AI generate images from photos?</h3>
+              <p>Yes, but our tool specializes in text-to-image generation. For photo-based generation (img2img), use specialized tools like Stable Diffusion WebUI. Our AI creates entirely new images from written descriptions without requiring reference photos.</p>
+            </div>
+                  
+            <div className="paa-item">
+              <h3>Is AI-generated art copyrightable?</h3>
+              <p>Copyright law for AI art is evolving. Currently, US Copyright Office grants copyright only to human-authored works. However, you retain commercial use rights to images generated on Scenith and can use them freely in projects, products, and marketing.</p>
+            </div>
+                  
+            <div className="paa-item">
+              <h3>Which AI image generator is best for realistic photos?</h3>
+              <p>For photorealism, select our "Realistic Photo" style preset. This setting optimizes generation for lifelike imagery suitable for product mockups, stock photo replacements, and professional marketing materials.</p>
+            </div>
+                  
+            <div className="paa-item">
+              <h3>Can I sell AI-generated images?</h3>
+              <p>Yes! All images created with Scenith come with full commercial rights. You can sell them as prints, use them in products, include them in client work, or license them to others without restrictions or attribution requirements.</p>
+            </div>
           </div>
         </div>
       </section>

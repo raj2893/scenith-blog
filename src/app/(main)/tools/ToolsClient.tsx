@@ -49,7 +49,21 @@ const toolsData: Tool[] = [
     seoKeywords: ["auto subtitle generator", "video captions", "AI subtitles", "transcription"]
   },
   {
-    id: 3,
+  id: 3,
+  title: "AI Image Generation",
+  description: "Create stunning images from text descriptions using advanced AI. Generate professional visuals for social media, marketing, and creative projects instantly.",
+  category: "AI Tools",
+  icon: "🎨",
+  gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+  tags: ["ai", "image", "generation", "text-to-image", "art", "creative"],
+  featured: false,
+  url: "/tools/ai-image-generation",
+  difficulty: "Easy",
+  usageTime: "1 min",
+  seoKeywords: ["AI image generator", "text to image", "AI art", "image creation", "AI artwork"]
+},
+  {
+    id: 4,
     title: "Image Editor",
     description: "Free online image editor with layers, text, shapes, filters, and more. Perfect for social media graphics, thumbnails, and banners.",
     category: "Design Tools",
@@ -63,7 +77,7 @@ const toolsData: Tool[] = [
     seoKeywords: ["online image editor", "photo editor", "graphic design", "free editor"]
   },
   {
-    id: 4,
+    id: 5,
     title: "AI Background Removal",
     description: "Remove backgrounds from images instantly with AI precision. Get clean, professional cutouts in seconds.",
     category: "AI Tools",
@@ -77,7 +91,7 @@ const toolsData: Tool[] = [
     seoKeywords: ["remove background", "background remover", "transparent PNG", "cutout"]
   },
   {
-    id: 5,
+    id: 6,
     title: "Video Speed Modifier",
     description: "Adjust video playback speed seamlessly. Speed up or slow down your videos while maintaining quality.",
     category: "Video Editing",
@@ -91,7 +105,7 @@ const toolsData: Tool[] = [
     seoKeywords: ["change video speed", "slow motion", "fast forward", "video editor"]
   },
   {
-    id: 6,
+    id: 7,
     title: "Media Compression",
     description: "Compress images and videos without losing quality. Reduce file sizes for faster uploads and sharing.",
     category: "Optimization",
@@ -105,7 +119,7 @@ const toolsData: Tool[] = [
     seoKeywords: ["compress video", "reduce file size", "image compression", "optimize"]
   },
   {
-    id: 7,
+    id: 8,
     title: "Media Format Conversion",
     description: "Convert between different media formats effortlessly. Support for video, audio, and image formats.",
     category: "Conversion",

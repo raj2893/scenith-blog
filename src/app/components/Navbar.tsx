@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { FaBars, FaDollarSign, FaHome, FaTools, FaBlog, FaTimes, FaUser, FaFilePdf } from 'react-icons/fa';
+import { FaBars, FaDollarSign, FaHome, FaTools, FaBlog, FaTimes, FaUser, FaFilePdf , FaImage} from 'react-icons/fa';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { API_BASE_URL } from '../config';
@@ -307,9 +307,9 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
   const baseNavLinks: NavLink[] = [
     { label: 'Home', path: '/', icon: <FaHome /> },
     {
-      label: 'PDF Tools',
-      path: '/pdf-tools',
-      icon: <FaFilePdf />,
+      label: 'AI Image Generator',
+      path: '/tools/ai-image-generation',
+      icon: <FaImage />,
       isNew: true // Add this flag
     },
     {
@@ -319,6 +319,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
       dropdownItems: [
         { label: 'AI Voice Generator', href: '/tools/ai-voice-generation' },
         { label: 'PDF Tools', href: '/pdf-tools' },
+        { label: 'AI Image Generation', href: '/tools/ai-image-generation' },
         { label: 'AI Subtitle Generator', href: '/tools/add-subtitles-to-videos' },
         { label: 'Image Editing', href: '/tools/image-editing' },
         { label: 'Background Remover', href: '/tools/background-removal' },
