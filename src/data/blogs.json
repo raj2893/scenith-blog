@@ -2191,7 +2191,7 @@
       "Lock Unlock PDF",
       "Best Free PDF Editor"
     ],
-    "featured": true,
+    "featured": false,
     "slug": "pdf-tools-launch-guide-2026",
     "difficulty": "Beginner to Advanced"
   },
@@ -2535,5 +2535,31 @@
     "featured": false,
     "slug": "ai-background-removal-complete-guide-2026",
     "difficulty": "Beginner to Advanced"
-  }
+  },
+  {
+  "id": 157,
+  "title": "Free AI Image Generator: Create Stunning Images from Text (2026 Complete Guide)",
+  "excerpt": "Generate professional AI images completely free in 2026. Complete guide to text-to-image technology, 8 artistic styles, commercial rights, and creating stunning visuals for social media, marketing, and creative projects without design skills.",
+  "category": "AI Tools",
+  "readTime": "18 min",
+  "publishDate": "2026-02-01",
+  "author": "Scenith Team",
+  "image": "🎨✨",
+  "gradient": "linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%)",
+  "tags": [
+    "AI Image Generator",
+    "Free AI Art",
+    "Text to Image AI",
+    "AI Image Creation",
+    "Free Image Generator",
+    "AI Art Generator",
+    "Create Images from Text",
+    "Commercial AI Images",
+    "Digital Art AI",
+    "Free AI Tools"
+  ],
+  "featured": true,
+  "slug": "free-ai-image-generator-complete-guide-2026",
+  "difficulty": "Beginner"
+}
 ]

@@ -429,6 +429,8 @@ if (gateway === 'razorpay') {
             '45 Speed videos/month',
             '30 minutes per video',
             'Up to 1440p quality',
+            '400 AI Images/month (15/day)',
+            '2 images per request (896x1152)',
             'Elements & Templates (Coming Soon)',
             'Priority support',
             'Commercial use allowed'
@@ -449,6 +451,8 @@ if (gateway === 'razorpay') {
             'Unlimited Speed videos/month',
             'Unlimited video length',
             'Up to 4K quality',
+            '900 AI Images/month (30/day)',
+            '4 images per request (1024x1024)',
             'Elements & Templates (Coming Soon)',
             'Dedicated support',
             'Commercial use allowed'
@@ -506,6 +510,8 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
           '45 Speed videos/month',
           '30 minutes per video',
           'Up to 1440p quality',
+          '400 AI Images/month (15/day)',
+          '2 images per request (896x1152)',
           'Elements & Templates (Coming Soon)',
           'Priority support',
           'Commercial use allowed'
@@ -528,6 +534,8 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
           'Unlimited Speed videos/month',
           'Unlimited video length',
           'Up to 4K quality',
+          '900 AI Images/month (30/day)',
+          '4 images per request (1024x1024)',
           'Elements & Templates (Coming Soon)',
           'Dedicated support',
           'Commercial use allowed'
