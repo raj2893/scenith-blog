@@ -3609,6 +3609,301 @@
   box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
 }
 
+/* ============================================
+   UPGRADE POPUPS & BANNERS
+   ============================================ */
+
+/* Banner Styles (Popup 1 & 2) */
+.upgrade-banner {
+  position: fixed;
+  bottom: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.4);
+  z-index: 999;
+  max-width: 700px;
+  width: 90%;
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+.banner-close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  font-size: 24px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.banner-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+
+.banner-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.banner-icon {
+  font-size: 2.5rem;
+  flex-shrink: 0;
+  animation: bounce 1s ease-in-out infinite;
+}
+
+.banner-text {
+  flex: 1;
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+
+.banner-text strong {
+  display: block;
+  font-size: 1.2rem;
+  margin-bottom: 4px;
+}
+
+.banner-cta {
+  background: white;
+  color: #667eea;
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.banner-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* Limit Warning Modal (Popup 3) */
+.limit-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(8px);
+}
+
+.limit-warning-modal {
+  background: white;
+  padding: 50px 40px;
+  border-radius: 24px;
+  max-width: 550px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.modal-icon-warning {
+  font-size: 5rem;
+  margin-bottom: 20px;
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+.limit-warning-modal h2 {
+  font-size: 2rem;
+  color: #1E293B;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.modal-usage-text {
+  font-size: 1.15rem;
+  color: #475569;
+  margin-bottom: 10px;
+}
+
+.modal-usage-text strong {
+  color: #EF4444;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.modal-warning-subtext {
+  font-size: 1rem;
+  color: #64748B;
+  margin-bottom: 30px;
+}
+
+.modal-benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-bottom: 35px;
+  text-align: left;
+}
+
+.modal-benefit-item {
+  background: rgba(102, 126, 234, 0.08);
+  padding: 15px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  color: #1E293B;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.benefit-check {
+  color: #10B981;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.modal-cta-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.modal-upgrade-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 18px 40px;
+  border-radius: 12px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+}
+
+.modal-upgrade-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(102, 126, 234, 0.5);
+}
+
+.btn-icon {
+  font-size: 1.3rem;
+}
+
+.modal-dismiss-btn {
+  background: transparent;
+  border: 2px solid #E5E7EB;
+  color: #64748B;
+  padding: 14px 30px;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modal-dismiss-btn:hover {
+  border-color: #CBD5E1;
+  background: #F8FAFC;
+}
+
+/* Download Toast (Popup 4) */
+.download-toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: white;
+  padding: 20px 25px;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  max-width: 380px;
+  border: 2px solid #10B981;
+}
+
+.toast-close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: none;
+  border: none;
+  color: #94A3B8;
+  font-size: 24px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.toast-close:hover {
+  color: #64748B;
+}
+
+.toast-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.toast-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.toast-text strong {
+  display: block;
+  font-size: 1.1rem;
+  color: #1E293B;
+  margin-bottom: 4px;
+}
+
+.toast-text p {
+  font-size: 0.95rem;
+  color: #64748B;
+  margin: 0;
+}
+
+.toast-cta {
+  display: block;
+  background: linear-gradient(135deg, #10B981, #059669);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.toast-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .main-content {
@@ -3952,6 +4247,54 @@
   
   .promo-link {
     width: 100%;
+  }  
+
+  .upgrade-banner {
+    bottom: 20px;
+    padding: 16px 20px;
+  }
+
+  .banner-content {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+
+  .banner-icon {
+    font-size: 2rem;
+  }
+
+  .banner-text {
+    font-size: 0.95rem;
+  }
+
+  .banner-text strong {
+    font-size: 1.05rem;
+  }
+
+  .banner-cta {
+    width: 100%;
+    padding: 12px 20px;
+  }
+
+  .limit-warning-modal {
+    padding: 35px 25px;
+    max-width: 95%;
+  }
+
+  .limit-warning-modal h2 {
+    font-size: 1.6rem;
+  }
+
+  .modal-benefits-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .download-toast {
+    bottom: 20px;
+    right: 20px;
+    left: 20px;
+    max-width: none;
   }  
 }
 
