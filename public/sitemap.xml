@@ -1322,4 +1322,18 @@
     <changefreq>weekly</changefreq>
     <lastmod>2026-02-01</lastmod>
   </url>
+  </url>
+    <url>
+    <loc>https://scenith.in/blogs/creating-character-voices-with-emotional-ai</loc>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-02-01</lastmod>
+  </url>
+  </url>
+    <url>
+    <loc>https://scenith.in/blogs/merge-pdf-files-content-creation-workflow</loc>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-02-01</lastmod>
+  </url>
 </urlset>
