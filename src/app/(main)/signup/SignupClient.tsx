@@ -14,6 +14,7 @@ const SignupClient: React.FC = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showVerificationMessage, setShowVerificationMessage] = useState(false);
   const [serverError, setServerError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -80,33 +81,43 @@ const SignupClient: React.FC = () => {
   };
 
   const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setServerError("");
-    if (!validate()) return;
+  e.preventDefault();
+  setServerError("");
+  if (!validate()) return;
+  
+  if (isLoading) return; // Prevent multiple submissions
+  setIsLoading(true);
 
-    try {
-      const response = await axios.post(`${API_BASE_URL}/auth/register`, { email, password, name });
-      if (response.status === 200 && response.data.message) {
-        setShowVerificationMessage(true);
-        localStorage.setItem('email', email);
-      }
-    } catch (error: any) {
-      const msg = error.response?.data?.message || "Signup failed. Please try again.";
-      setServerError(msg);
-      setTimeout(() => setServerError(""), 8000);
+  try {
+    const response = await axios.post(`${API_BASE_URL}/auth/register`, { email, password, name });
+    if (response.status === 200 && response.data.message) {
+      setShowVerificationMessage(true);
+      localStorage.setItem('email', email);
     }
-  };
+  } catch (error: any) {
+    const msg = error.response?.data?.message || "Signup failed. Please try again.";
+    setServerError(msg);
+    setTimeout(() => setServerError(""), 8000);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const resendVerification = async () => {
-    try {
-      await axios.post(`${API_BASE_URL}/auth/resend-verification`, null, { params: { email } });
-      setServerError("Verification email resent successfully!");
-      setTimeout(() => setServerError(""), 5000);
-    } catch (error: any) {
-      setServerError(error.response?.data || "Failed to resend email.");
-      setTimeout(() => setServerError(""), 8000);
-    }
-  };
+  if (isLoading) return;
+  setIsLoading(true);
+  
+  try {
+    await axios.post(`${API_BASE_URL}/auth/resend-verification`, null, { params: { email } });
+    setServerError("Verification email resent successfully!");
+    setTimeout(() => setServerError(""), 5000);
+  } catch (error: any) {
+    setServerError(error.response?.data || "Failed to resend email.");
+    setTimeout(() => setServerError(""), 8000);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const handleGoogleSignup = useCallback(async (credentialResponse: any) => {
     try {
@@ -200,8 +211,8 @@ const SignupClient: React.FC = () => {
                 {serverError}
               </div>
             )}
-            <button onClick={resendVerification} className="auth-button">
-              Resend Verification Email
+            <button onClick={resendVerification} className="auth-button" disabled={isLoading}>
+              {isLoading ? "Sending..." : "Resend Verification Email"}
             </button>
             <p className="auth-link">
               Already verified? <a href="/login">Login</a>
@@ -244,7 +255,9 @@ const SignupClient: React.FC = () => {
                 <span>Password</span>
                 {errors.password && <div className="error-message">{errors.password}</div>}
               </div>
-              <button type="submit" className="auth-button">Sign Up</button>
+              <button type="submit" className="auth-button" disabled={isLoading}>
+                {isLoading ? "Creating Account..." : "Sign Up"}
+              </button>
             </form>
             <div className="divider">OR</div>
             <div id="googleSignUpButton" className="google-button"></div>
