@@ -194,6 +194,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
   const [showLimitModal, setShowLimitModal] = useState(false);
   const [showDownloadToast, setShowDownloadToast] = useState(false);
   const [generationCount, setGenerationCount] = useState(0);
+  const [show15SecPopup, setShow15SecPopup] = useState(false);
 
   useEffect(() => {
     if (!isLoggedIn || !ttsUsage || userProfile?.role !== 'BASIC') return;
@@ -284,6 +285,16 @@ const AIVoiceGeneratorClient: React.FC = () => {
       setIsLoggedIn(false);
     }
   }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!isLoggedIn || userProfile?.role === 'BASIC') {
+        setShow15SecPopup(true);
+      }
+    }, 15000); // 15 seconds
+
+    return () => clearTimeout(timer);
+  }, [isLoggedIn, userProfile]);  
 
   const handlePlayDemo = (voice: Voice, useEmotion: boolean = false) => {
     const voiceId = `${voice.voiceName}-${voice.voiceStyle || 'default'}`;
@@ -756,7 +767,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
           setShowDownloadToast(true);
           setTimeout(() => setShowDownloadToast(false), 13000);
         }        
-        setTimeout(() => setDownloadSuccess(false), 5000);
+        setTimeout(() => setDownloadSuccess(false), 15000);
       } catch (error) {
         console.error('Download failed:', error);
         // Fallback to opening in new tab if download fails
@@ -1168,7 +1179,7 @@ return (
                     {ttsUsage.role === 'BASIC' && (
                       <div className="inline-upgrade-cta">
                         <a href="/pricing" className="inline-upgrade-link">
-                          🔓 Need more? Upgrade to AI Voice PRO OR CREATOR for 10× higher limits
+                          🔓 Need more? Upgrade to <span className="highlight-pro">AI Voice PRO</span> OR <span className="highlight-creator">CREATOR</span> for 10× higher limits
                         </a>
                       </div>
                     )}
@@ -1204,7 +1215,44 @@ return (
                     </div>
                   </div>
                 )
-              )}              
+              )}     
+
+              {showLimitModal && (
+                <div className="inline-limit-warning">
+                  <div className="limit-warning-content">
+                    <div className="modal-icon-warning">⚠️</div>
+                    <h3>You're Running Low on Characters!</h3>
+                    <p className="modal-usage-text">
+                      You've used{' '}
+                      <strong>
+                        {ttsUsage?.daily?.limit && ttsUsage?.monthly?.limit
+                          ? Math.max(
+                              Math.round((ttsUsage.daily.used / ttsUsage.daily.limit) * 100),
+                              Math.round((ttsUsage.monthly.used / ttsUsage.monthly.limit) * 100)
+                            )
+                          : ttsUsage?.monthly?.limit
+                          ? Math.round((ttsUsage.monthly.used / ttsUsage.monthly.limit) * 100)
+                          : ttsUsage?.daily?.limit
+                          ? Math.round((ttsUsage.daily.used / ttsUsage.daily.limit) * 100)
+                          : 0}
+                        %
+                      </strong>{' '}
+                      of your free limit
+                    </p>
+                    <div className="inline-modal-actions">
+                      <a href="/pricing" className="inline-upgrade-btn">
+                        Upgrade Now
+                      </a>
+                      <button 
+                        className="inline-dismiss-btn"
+                        onClick={() => setShowLimitModal(false)}
+                      >
+                        Continue with Free
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}                       
 
               {isLimitsExceeded() ? (
                 <a
@@ -1345,31 +1393,71 @@ return (
               >
                 <h2 id="audio-output-title">Your Generated Audio</h2>
                 <CustomAudioPlayer src={generatedAudio} />
-                <button onClick={handleDownload} className="cta-button download-button" aria-label="Download generated audio as MP3">
+                <button onClick={handleDownload} className="cta-button download-button">
                   Download MP3
                 </button>
+          
+                {/* MOVE POPUPS HERE */}
+                {showFirstGenBanner && (
+                  <motion.div 
+                    className="inline-upgrade-banner first-gen-banner"
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                  >
+                    <div className="banner-content">
+                      <span className="banner-icon">⚡</span>
+                      <div className="banner-text">
+                        <strong>Like this voice?</strong> Upgrade to 17× more characters & premium features
+                      </div>
+                      <a href="/pricing" className="banner-cta">
+                        Upgrade Now
+                      </a>
+                    </div>
+                  </motion.div>
+                )}
+
+                {showRepeatGenBanner && (
+                  <motion.div 
+                    className="inline-upgrade-banner repeat-gen-banner"
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                  >
+                    <div className="banner-content">
+                      <span className="banner-icon">👀</span>
+                      <div className="banner-text">
+                        <strong>You're using Scenith a lot today!</strong> Creator gives 17× limits + longer scripts
+                      </div>
+                      <a href="/pricing" className="banner-cta">
+                        See Plans
+                      </a>
+                    </div>
+                  </motion.div>
+                )}
+
+                {downloadSuccess && userProfile.role === 'BASIC' && (
+                  <motion.div 
+                    className="inline-download-success"
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                  >
+                    <div className="success-content">
+                      <span className="success-icon">✅</span>
+                      <div className="success-text">
+                        <strong>Download successful!</strong>
+                        <p>Want to create more? Get 17× more characters with Creator or AI Voice Pro.</p>
+                      </div>
+                      <a href="/pricing" className="success-cta-btn">
+                        View Plans
+                      </a>
+                    </div>
+                  </motion.div>
+                )}
               </motion.div>
             </section>
-          )} 
-          {downloadSuccess && userProfile.role === 'BASIC' && (
-            <motion.div 
-              className="download-success-banner"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-            >
-              <div className="success-content">
-                <span className="success-icon">✅</span>
-                <div className="success-text">
-                  <strong>Download successful!</strong>
-                  <p>Want to create more? Get 17× more characters with Creator or AI Voice Pro.</p>
-                </div>
-                <a href="/pricing" className="success-cta-btn">
-                  View Plans
-                </a>
-              </div>
-            </motion.div>
-          )}             
+          )}         
           <div className="demo-video-section">
             <h3 className="demo-video-title">See AI Voice Generation in Action</h3>
             <div className="youtube-video-wrapper">
@@ -2958,153 +3046,38 @@ return (
           </button>
         </div>
       )}   
-      {showFirstGenBanner && (
-        <motion.div 
-          className="upgrade-banner first-gen-banner"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-        >
-          <button 
-            className="banner-close"
-            onClick={() => setShowFirstGenBanner(false)}
-            aria-label="Close banner"
-          >
-            ×
-          </button>
-          <div className="banner-content">
-            <span className="banner-icon">⚡</span>
-            <div className="banner-text">
-              <strong>Like this voice?</strong> Upgrade to 17× more characters & premium features
-            </div>
-            <a href="/pricing" className="banner-cta">
-              Upgrade Now
-            </a>
-          </div>
-        </motion.div>
-      )}
 
-      {/* POPUP 2: Repeat Generation Banner */}
-      {showRepeatGenBanner && (
-        <motion.div 
-          className="upgrade-banner repeat-gen-banner"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-        >
-          <button 
-            className="banner-close"
-            onClick={() => setShowRepeatGenBanner(false)}
-            aria-label="Close banner"
-          >
-            ×
-          </button>
-          <div className="banner-content">
-            <span className="banner-icon">👀</span>
-            <div className="banner-text">
-              <strong>You're using Scenith a lot today!</strong> Creator gives 17× limits + longer scripts
-            </div>
-            <a href="/pricing" className="banner-cta">
-              See Plans
-            </a>
-          </div>
-        </motion.div>
-      )}
-
-      {/* POPUP 3: 70% Limit Modal */}
-      {showLimitModal && (
-        <div className="modal-overlay limit-modal-overlay">
+      {show15SecPopup && (
+        <div className="modal-overlay">
           <motion.div
-            className="limit-warning-modal"
+            className="premium-popup"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3 }}
           >
-            <div className="modal-icon-warning">⚠️</div>
-            <h2>You're Running Low on Characters!</h2>
-            <p className="modal-usage-text">
-              You've used{' '}
-              <strong>
-                {ttsUsage?.daily?.limit && ttsUsage?.monthly?.limit
-                  ? Math.max(
-                      Math.round((ttsUsage.daily.used / ttsUsage.daily.limit) * 100),
-                      Math.round((ttsUsage.monthly.used / ttsUsage.monthly.limit) * 100)
-                    )
-                  : ttsUsage?.monthly?.limit
-                  ? Math.round((ttsUsage.monthly.used / ttsUsage.monthly.limit) * 100)
-                  : ttsUsage?.daily?.limit
-                  ? Math.round((ttsUsage.daily.used / ttsUsage.daily.limit) * 100)
-                  : 0}
-                %
-              </strong>{' '}
-              of your free limit
-            </p>
-            <p className="modal-warning-subtext">
-              Upgrade now to continue generating without interruption
-            </p>
-            
-            <div className="modal-benefits-grid">
-              <div className="modal-benefit-item">
-                <span className="benefit-check">✓</span>
-                17× more characters/month
-              </div>
-              <div className="modal-benefit-item">
-                <span className="benefit-check">✓</span>
-                15× daily limit increase
-              </div>
-              <div className="modal-benefit-item">
-                <span className="benefit-check">✓</span>
-                Longer scripts per request
-              </div>
-              <div className="modal-benefit-item">
-                <span className="benefit-check">✓</span>
-                Priority support
-              </div>
-            </div>
-
-            <div className="modal-cta-buttons">
-              <a href="/pricing" className="modal-upgrade-btn">
-                <span className="btn-icon">🚀</span>
-                Upgrade to Creator
+            <button
+              className="modal-close-button"
+              onClick={() => setShow15SecPopup(false)}
+            >
+              <FaTimes />
+            </button>
+            <div className="premium-popup-content">
+              <span className="premium-icon">🚀</span>
+              <h2>Unlock Premium Features</h2>
+              <p>Upgrade to Scenith Premium and get:</p>
+              <ul className="premium-features">
+                <li>✓ 17× more AI voice characters</li>
+                <li>✓ Unlimited video subtitle generation</li>
+                <li>✓ Advanced image editing tools</li>
+                <li>✓ Priority support</li>
+              </ul>
+              <a href="/pricing" className="premium-cta-btn">
+                View Premium Plans
               </a>
-              <button 
-                className="modal-dismiss-btn"
-                onClick={() => setShowLimitModal(false)}
-              >
-                Continue with Free
-              </button>
             </div>
           </motion.div>
         </div>
-      )}
-
-      {/* POPUP 4: Download Success Toast */}
-      {showDownloadToast && (
-        <motion.div
-          className="download-toast upgrade-toast"
-          initial={{ opacity: 0, x: 100 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: 100 }}
-        >
-          <button 
-            className="toast-close"
-            onClick={() => setShowDownloadToast(false)}
-            aria-label="Close notification"
-          >
-            ×
-          </button>
-          <div className="toast-content">
-            <div className="toast-icon">✅</div>
-            <div className="toast-text">
-              <strong>Downloaded successfully!</strong>
-              <p>Need more voices or longer scripts?</p>
-            </div>
-          </div>
-          <a href="/pricing" className="toast-cta">
-            Upgrade to Pro
-          </a>
-        </motion.div>
-      )}
+      )}      
     </div>
   );
 };

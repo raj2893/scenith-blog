@@ -135,7 +135,7 @@
 .generate-voice-button {
   padding: 16px 40px;
   background: #FFFFFF;
-  color: #3B82F6;
+  color: #1E293B;
   border: none;
   border-radius: 12px;
   font-size: 1.1rem;
@@ -148,14 +148,15 @@
 }
 
 .generate-voice-button:hover:not(:disabled) {
-  background: #F8FAFC;
+  background: #e9edf3;
+  color: #FFFFFF;
   transform: translateY(-3px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
 }
 
 .generate-voice-button:disabled {
   background: #E5E7EB;
   color: #6B7280;
+  border-color: #D1D5DB;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
@@ -167,6 +168,9 @@
   box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(59, 130, 246, 0.1);
   overflow: hidden;
+  max-height: 600px;
+  display: flex;
+  flex-direction: column;
 }
 
 .fixed-header {
@@ -222,6 +226,8 @@
   max-height: 500px;
   overflow-y: auto;
   padding: 20px;
+  flex: 1;
+  min-height: 0;
 }
 
 .voice-list {
@@ -683,8 +689,8 @@
 .download-button {
   padding: 16px 40px;
   background: #FFFFFF;
-  color: #3B82F6;
-  border: none;
+  color: #1E293B;
+  border: 2px solid #10B981;
   border-radius: 12px;
   font-size: 1.1rem;
   font-weight: 700;
@@ -696,9 +702,10 @@
 }
 
 .download-button:hover {
-  background: #F8FAFC;
+  background: #10B981;
+  color: #FFFFFF;
   transform: translateY(-3px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 30px rgba(16, 185, 129, 0.3);
 }
 
 .error-message {
@@ -785,7 +792,7 @@
 }
 
 .cta-button:hover:not(:disabled) {
-  background: linear-gradient(135deg, #EC4899 0%, #EF4444 50%, #F59E0B 100%);
+  background: linear-gradient(135deg, #0f0b45 0%, #474a74 50%, #0b1555 100%);
   transform: translateY(-3px);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
 }
@@ -3694,139 +3701,63 @@
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
 }
 
-/* Limit Warning Modal (Popup 3) */
-.limit-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.75);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  backdrop-filter: blur(8px);
+.inline-limit-warning {
+  margin: 20px 0;
+  padding: 30px;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(245, 158, 11, 0.1));
+  border-radius: 16px;
+  border: 2px solid rgba(239, 68, 68, 0.3);
+  animation: slideDown 0.5s ease-out;
 }
 
-.limit-warning-modal {
-  background: white;
-  padding: 50px 40px;
-  border-radius: 24px;
-  max-width: 550px;
-  width: 90%;
+.limit-warning-content {
   text-align: center;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  position: relative;
 }
 
-.modal-icon-warning {
-  font-size: 5rem;
-  margin-bottom: 20px;
-  animation: shake 0.5s ease-in-out;
-}
-
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-10px); }
-  75% { transform: translateX(10px); }
-}
-
-.limit-warning-modal h2 {
-  font-size: 2rem;
-  color: #1E293B;
+.limit-warning-content h3 {
+  font-size: 1.4rem;
+  color: #EF4444;
   margin-bottom: 15px;
   font-weight: 700;
 }
 
-.modal-usage-text {
-  font-size: 1.15rem;
-  color: #475569;
-  margin-bottom: 10px;
-}
-
-.modal-usage-text strong {
-  color: #EF4444;
-  font-size: 1.4rem;
-  font-weight: 700;
-}
-
-.modal-warning-subtext {
-  font-size: 1rem;
-  color: #64748B;
-  margin-bottom: 30px;
-}
-
-.modal-benefits-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+.inline-modal-actions {
+  display: flex;
   gap: 15px;
-  margin-bottom: 35px;
-  text-align: left;
+  justify-content: center;
+  margin-top: 25px;
 }
 
-.modal-benefit-item {
-  background: rgba(102, 126, 234, 0.08);
-  padding: 15px;
-  border-radius: 12px;
-  font-size: 0.95rem;
-  color: #1E293B;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.benefit-check {
-  color: #10B981;
-  font-size: 1.3rem;
-  font-weight: 700;
-}
-
-.modal-cta-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.modal-upgrade-btn {
+.inline-upgrade-btn {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  padding: 18px 40px;
+  padding: 14px 32px;
   border-radius: 12px;
-  font-size: 1.15rem;
+  font-size: 1.05rem;
   font-weight: 700;
   text-decoration: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
   transition: all 0.3s ease;
-  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
 }
 
-.modal-upgrade-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 32px rgba(102, 126, 234, 0.5);
+.inline-upgrade-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(102, 126, 234, 0.4);
 }
 
-.btn-icon {
-  font-size: 1.3rem;
-}
-
-.modal-dismiss-btn {
-  background: transparent;
+.inline-dismiss-btn {
+  background: white;
   border: 2px solid #E5E7EB;
   color: #64748B;
-  padding: 14px 30px;
+  padding: 12px 28px;
   border-radius: 12px;
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.modal-dismiss-btn:hover {
+.inline-dismiss-btn:hover {
   border-color: #CBD5E1;
   background: #F8FAFC;
 }
@@ -3904,41 +3835,190 @@
   box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
 }
 
+.highlight-pro {
+  color: #F59E0B;
+  font-weight: 700;
+}
+
+.highlight-creator {
+  color: #F59E0B;
+  font-weight: 700;
+}
+
+.inline-upgrade-banner,
+.inline-download-success {
+  margin: 25px 0;
+  padding: 20px 25px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 16px;
+  box-shadow: 0 6px 24px rgba(102, 126, 234, 0.3);
+  position: relative;
+  animation: slideDown 0.3s ease-out;
+}
+
+.inline-download-success {
+  background: linear-gradient(135deg, #10B981, #059669);
+  box-shadow: 0 6px 24px rgba(16, 185, 129, 0.3);
+}
+
+.inline-upgrade-banner .banner-close,
+.inline-download-success .banner-close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  font-size: 20px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.inline-upgrade-banner .banner-content,
+.inline-download-success .success-content {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.inline-upgrade-banner .banner-icon,
+.inline-download-success .success-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.inline-upgrade-banner .banner-text,
+.inline-download-success .success-text {
+  flex: 1;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.inline-upgrade-banner .banner-cta,
+.inline-download-success .success-cta-btn {
+  background: white;
+  color: #667eea;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+}
+
+.inline-download-success .success-cta-btn {
+  color: #10B981;
+}
+
+.premium-popup {
+  background: white;
+  padding: 45px 40px;
+  border-radius: 24px;
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.premium-icon {
+  font-size: 4rem;
+  display: block;
+  margin-bottom: 20px;
+  animation: bounce 1s ease-in-out infinite;
+}
+
+.premium-popup-content h2 {
+  font-size: 2rem;
+  color: #1E293B;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.premium-popup-content > p {
+  font-size: 1.1rem;
+  color: #64748B;
+  margin-bottom: 25px;
+}
+
+.premium-features {
+  list-style: none;
+  padding: 0;
+  margin: 25px 0;
+  text-align: left;
+}
+
+.premium-features li {
+  font-size: 1.05rem;
+  color: #475569;
+  padding: 12px 20px;
+  margin-bottom: 10px;
+  background: rgba(102, 126, 234, 0.08);
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.premium-cta-btn {
+  display: inline-block;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 16px 40px;
+  border-radius: 12px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+  margin-top: 10px;
+}
+
+.premium-cta-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(102, 126, 234, 0.5);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .main-content {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 15px;
   }
 
   .filter-section {
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
   }
 
   .filter-select {
-    width: 100%; /* Full width on mobile for better control */
+    width: 100%;
   }
 
   .hero-section {
-    padding: 30px 15px 40px;
+    padding: 20px 12px 30px;
   }
 
   .hero-content h1 {
-    font-size: 2.2rem;
+    font-size: 1.8rem;
+    margin-bottom: 15px;
   }
 
   .hero-description {
-    font-size: 1rem;
+    font-size: 0.95rem;
+    margin-bottom: 30px;
   }
 
   .trust-indicators {
-    gap: 15px;
+    gap: 12px;
   }
 
   .trust-item {
-    font-size: 0.8rem;
-    padding: 6px 12px;
+    font-size: 0.75rem;
+    padding: 5px 10px;
   }
 
   .steps-grid,
@@ -3947,6 +4027,7 @@
   .testimonials-grid,
   .faq-grid {
     grid-template-columns: 1fr;
+    gap: 20px;
   }
 
   .how-section,
@@ -3956,7 +4037,7 @@
   .faq-section,
   .audio-output-section,
   .cta-section {
-    padding: 60px 0;
+    padding: 50px 0;
   }
 
   .how-section h2,
@@ -3966,126 +4047,169 @@
   .faq-section h2,
   .audio-output-section h2,
   .cta-section h2 {
-    font-size: 2rem;
+    font-size: 1.75rem;
+  }
+
+  .section-description {
+    font-size: 1rem;
+    margin-bottom: 35px;
   }
 
   .cta-features {
-    gap: 15px;
+    gap: 12px;
   }
 
   .cta-features span {
-    font-size: 0.85rem;
-    padding: 8px 16px;
+    font-size: 0.8rem;
+    padding: 7px 14px;
   }
 
   .intro-content-grid {
     grid-template-columns: 1fr;
+    gap: 30px;
   }
   
   .intro-stats {
     grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  .stat-box {
+    padding: 20px 15px;
+  }
+
+  .stat-number {
+    font-size: 2rem;
+  }
+
+  .stat-label {
+    font-size: 0.85rem;
   }
   
   .match-row {
     grid-template-columns: 1fr;
+    padding: 20px;
   }
   
   .comparison-table {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
   
   .comparison-table th,
   .comparison-table td {
-    padding: 15px;
+    padding: 12px;
   }  
 
   .usage-info {
     padding: 12px;
+    margin: 12px 0;
   }
   
   .usage-section {
-    margin-bottom: 15px;
+    margin-bottom: 12px;
   }
   
   .usage-label {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
+    margin-bottom: 6px;
   }
   
   .usage-text {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
   }  
 
   .upgrade-button {
-    padding: 16px 30px;
-    font-size: 1rem;
+    padding: 14px 25px;
+    font-size: 0.95rem;
   }
   
   .upgrade-badge {
-    font-size: 0.6rem;
-    padding: 2px 8px;
+    font-size: 0.55rem;
+    padding: 2px 7px;
   }
   
   .limit-exceeded-message {
-    padding: 20px;
+    padding: 18px;
   }
   
   .limit-message-title {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
   
   .benefit-item {
-    font-size: 0.9rem;
-    padding: 10px 15px;
+    font-size: 0.85rem;
+    padding: 10px 14px;
   }
   
   .limit-message-cta {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }  
 
   .must-try-section {
-    padding: 40px 15px;
+    padding: 35px 12px;
   }
   
   .must-try-header h2 {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
+  }
+
+  .must-try-header p {
+    font-size: 1rem;
   }
   
   .must-try-grid {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 18px;
   }
   
   .must-try-card {
-    padding: 30px 25px;
-  }  
+    padding: 25px 20px;
+  }
+
+  .must-try-icon {
+    font-size: 3rem;
+  }
+
+  .must-try-title {
+    font-size: 1.3rem;
+  }
+
+  .must-try-description {
+    font-size: 0.95rem;
+  }
 
   .demo-video-title {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
   }
   
   .demo-video-section {
-    margin: 30px 0;
+    margin: 25px 0;
   }
   
   .demo-video-caption {
-    font-size: 0.95rem;
-    padding: 0 10px;
+    font-size: 0.9rem;
+    padding: 0 8px;
   }  
 
   .tutorial-step {
     grid-template-columns: 1fr;
-    gap: 20px;
-    padding: 30px 20px;
+    gap: 18px;
+    padding: 25px 18px;
   }
 
   .tutorial-step-number {
-    width: 80px;
-    height: 80px;
+    width: 70px;
+    height: 70px;
     margin: 0 auto;
+    font-size: 1rem;
   }
 
   .tutorial-step-content h3 {
-    font-size: 1.5rem;
+    font-size: 1.35rem;
+  }
+
+  .tutorial-step-content p {
+    font-size: 0.95rem;
   }
 
   .download-options {
@@ -4098,286 +4222,81 @@
   }
 
   .how-to-generate-section {
-    padding: 60px 0;
+    padding: 50px 0;
   }  
 
   .emotion-selector-wrapper {
     flex-direction: column;
     align-items: stretch;
+    padding: 12px;
   }
   
   .emotion-label-text {
     min-width: auto;
+    font-size: 0.9rem;
+  }
+
+  .emotion-dropdown {
+    padding: 10px 14px;
+    font-size: 0.9rem;
   }
   
   .emotion-preview-button {
     width: 100%;
     justify-content: center;
+    padding: 10px 18px;
+    font-size: 0.85rem;
   } 
   
   .emotions-feature-section {
-    padding: 60px 0;
+    padding: 50px 0;
   }
 
   .emotions-feature-section h2 {
-    font-size: 2rem;
+    font-size: 1.8rem;
   }
 
   .emotion-intro h3 {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
   }
 
   .emotion-intro p {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
 
   .emotion-benefits-grid {
     grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .emotion-benefit {
+    padding: 28px 22px;
   }
 
   .preset-cards {
     grid-template-columns: 1fr;
-  }
-
-  .emotion-best-practices {
-    padding: 40px 20px;
-  }
-
-  .practice-item {
-    grid-template-columns: 1fr;
-    gap: 20px;
-    padding: 25px 20px;
-  }
-
-  .practice-number {
-    width: 60px;
-    height: 60px;
-    font-size: 1.5rem;
-    margin: 0 auto;
-  }
-
-  .emotion-comparison {
-    padding: 40px 20px;
-  }
-
-  .comparison-text {
-    padding: 20px;
-  }
-
-  .sample-text {
-    font-size: 1rem;
-    padding: 15px;
-  }
-
-  .emotion-faq-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .emotion-cta {
-    padding: 40px 20px;
-  }
-
-  .emotion-cta h3 {
-    font-size: 1.8rem;
-  }
-
-  .emotion-cta p {
-    font-size: 1rem;
-  }
-
-  .emotion-cta-button {
-    padding: 16px 40px;
-    font-size: 1.1rem;
-  }
-
-  .emotion-cta-features {
-    flex-direction: column;
-    align-items: center;
-  }  
-
-  .upgrade-prompt-content {
-    flex-direction: column;
-    text-align: center;
-  }
-  
-  .upgrade-prompt-actions {
-    flex-direction: column;
-    width: 100%;
-  }
-  
-  .upgrade-prompt-btn {
-    width: 100%;
-  }  
-
-  .floating-upgrade-cta {
-    bottom: 20px;
-    right: 20px;
-    left: 20px;
-  }
-  
-  .floating-upgrade-btn {
-    width: 100%;
-    justify-content: center;
-    padding: 14px 20px;
-  }
-  
-  .float-text {
-    align-items: center;
-  }  
-
-  .download-success-banner {
-    top: 80px;
-  }
-  
-  .success-content {
-    flex-wrap: wrap;
-    justify-content: center;
-    text-align: center;
-  }
-  
-  .success-cta-btn {
-    width: 100%;
-  }  
-
-  .cross-tool-promo {
-    flex-direction: column;
-    text-align: center;
-    gap: 12px;
-  }
-  
-  .promo-link {
-    width: 100%;
-  }  
-
-  .upgrade-banner {
-    bottom: 20px;
-    padding: 16px 20px;
-  }
-
-  .banner-content {
-    flex-direction: column;
-    gap: 15px;
-    text-align: center;
-  }
-
-  .banner-icon {
-    font-size: 2rem;
-  }
-
-  .banner-text {
-    font-size: 0.95rem;
-  }
-
-  .banner-text strong {
-    font-size: 1.05rem;
-  }
-
-  .banner-cta {
-    width: 100%;
-    padding: 12px 20px;
-  }
-
-  .limit-warning-modal {
-    padding: 35px 25px;
-    max-width: 95%;
-  }
-
-  .limit-warning-modal h2 {
-    font-size: 1.6rem;
-  }
-
-  .modal-benefits-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .download-toast {
-    bottom: 20px;
-    right: 20px;
-    left: 20px;
-    max-width: none;
-  }  
-}
-
-@media (max-width: 480px) {
-  .hero-content h1 {
-    font-size: 1.9rem;
-  }
-
-  .hero-description {
-    font-size: 0.95rem;
-  }
-
-  .trust-indicators {
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .text-input-section,
-  .voice-list-section,
-  .step-card,
-  .feature-card,
-  .use-case-card,
-  .testimonial-card,
-  .faq-item {
-    padding: 25px 20px;
-  }
-
-  .cta-button,
-  .generate-voice-button,
-  .download-button,
-  .auth-button {
-    padding: 14px 30px;
-    font-size: 1rem;
-  }
-
-  .cta-section h2,
-  .audio-output-section h2 {
-    font-size: 1.8rem;
-  }
-
-  .cta-section p {
-    font-size: 1rem;
-  }
-
-  .cta-features {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .login-modal {
-    padding: 30px;
-  }
-
-  .auth-container h1 {
-    font-size: 1.8rem;
-  }
-
-  .upgrade-button {
-    padding: 14px 25px;
-    font-size: 0.95rem;
-    flex-direction: column;
-    gap: 5px;
-  }
-  
-  .upgrade-icon {
-    font-size: 1.2rem;
-  }
-  
-  .upgrade-badge {
-    display: none;
-  }  
-
-  .emotions-feature-section h2 {
-    font-size: 1.8rem;
-  }
-
-  .emotion-benefit {
-    padding: 25px 20px;
+    gap: 25px;
   }
 
   .preset-card {
     padding: 25px 20px;
+  }
+
+  .emotion-best-practices {
+    padding: 35px 18px;
+  }
+
+  .practice-item {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 22px 18px;
+  }
+
+  .practice-number {
+    width: 55px;
+    height: 55px;
+    font-size: 1.3rem;
+    margin: 0 auto;
   }
 
   .practice-content h4 {
@@ -4388,12 +4307,635 @@
     font-size: 0.95rem;
   }
 
+  .emotion-comparison {
+    padding: 35px 18px;
+  }
+
+  .comparison-text {
+    padding: 18px;
+  }
+
+  .sample-text {
+    font-size: 0.95rem;
+    padding: 14px;
+  }
+
+  .emotion-faq-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .emotion-cta {
+    padding: 35px 18px;
+  }
+
   .emotion-cta h3 {
-    font-size: 1.6rem;
+    font-size: 1.65rem;
+  }
+
+  .emotion-cta p {
+    font-size: 0.95rem;
   }
 
   .emotion-cta-button {
-    padding: 14px 30px;
+    padding: 14px 35px;
+    font-size: 1.05rem;
+  }
+
+  .emotion-cta-features {
+    flex-direction: column;
+    align-items: center;
+  }  
+
+  .upgrade-prompt-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
+
+  .upgrade-prompt-icon {
+    font-size: 2.5rem;
+  }
+
+  .upgrade-prompt-text h4 {
+    font-size: 1.1rem;
+  }
+
+  .upgrade-prompt-text p {
+    font-size: 0.85rem;
+  }
+  
+  .upgrade-prompt-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .upgrade-prompt-btn {
+    width: 100%;
+    padding: 10px 20px;
+    font-size: 0.85rem;
+  }  
+  
+  .inline-upgrade-banner,
+  .inline-download-success {
+    margin: 20px 0;
+    padding: 16px 20px;
+  }
+
+  .inline-upgrade-banner .banner-content,
+  .inline-download-success .success-content {
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .inline-upgrade-banner .banner-icon,
+  .inline-download-success .success-icon {
+    font-size: 1.8rem;
+  }
+
+  .inline-upgrade-banner .banner-text,
+  .inline-download-success .success-text {
+    font-size: 0.9rem;
+  }
+
+  .inline-upgrade-banner .banner-cta,
+  .inline-download-success .success-cta-btn {
+    width: 100%;
+    padding: 10px 20px;
+    font-size: 0.85rem;
+  }
+
+  .cross-tool-promo {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+    padding: 14px 20px;
+  }
+
+  .promo-text {
+    font-size: 0.85rem;
+  }
+  
+  .promo-link {
+    width: 100%;
+    padding: 8px 18px;
+    font-size: 0.85rem;
+  }  
+
+  .inline-limit-warning {
+    margin: 18px 0;
+    padding: 25px 20px;
+  }
+
+  .limit-warning-content h3 {
+    font-size: 1.25rem;
+  }
+
+  .modal-usage-text {
     font-size: 1rem;
+  }
+
+  .inline-modal-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .inline-upgrade-btn,
+  .inline-dismiss-btn {
+    width: 100%;
+    padding: 12px 24px;
+    font-size: 0.95rem;
+  }
+
+  .premium-popup {
+    padding: 35px 28px;
+    max-width: 95%;
+  }
+
+  .premium-icon {
+    font-size: 3.5rem;
+  }
+
+  .premium-popup-content h2 {
+    font-size: 1.7rem;
+  }
+
+  .premium-popup-content > p {
+    font-size: 1rem;
+  }
+
+  .premium-features li {
+    font-size: 0.95rem;
+    padding: 10px 16px;
+  }
+
+  .premium-cta-btn {
+    padding: 14px 35px;
+    font-size: 1.05rem;
+  }
+
+  .inline-upgrade-cta {
+    margin-top: 10px;
+    padding: 8px 12px;
+  }
+
+  .inline-upgrade-link {
+    font-size: 0.8rem;
+    gap: 4px;
+  }
+
+  .highlight-pro,
+  .highlight-creator {
+    font-size: 0.8rem;
+  }  
+
+  .floating-upgrade-cta {
+    bottom: 10px;
+    right: 10px;
+    left: 10px;
+  }
+  
+  .floating-upgrade-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 10px 14px;
+    font-size: 0.85rem;
+  }
+
+  .float-icon {
+    font-size: 1.2rem;
+  }
+
+  .float-text strong {
+    font-size: 0.85rem;
+  }
+
+  .float-text small {
+    font-size: 0.65rem;
+  }  
+
+  .inline-download-success {
+    margin: 15px 0;
+    padding: 14px 18px;
+  }
+
+  .inline-download-success .success-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+
+  .inline-download-success .success-icon {
+    font-size: 1.5rem;
+  }
+
+  .inline-download-success .success-text {
+    font-size: 0.85rem;
+  }
+
+  .inline-download-success .success-text strong {
+    font-size: 0.95rem;
+  }
+
+  .inline-download-success .success-text p {
+    font-size: 0.8rem;
+  }
+
+  .inline-download-success .success-cta-btn {
+    width: 100%;
+    padding: 8px 16px;
+    font-size: 0.8rem;
+  }  
+
+  .voice-list-section {
+    max-height: 450px;
+  }
+  
+  .scrollable-voices {
+    max-height: 350px;
+    padding: 12px;
+  }
+  
+  .voice-item {
+    padding: 10px;
+    margin-bottom: 8px;
+  }
+  
+  .voice-profile-image {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+  }
+  
+  .voice-title {
+    font-size: 0.95rem;
+  }
+  
+  .voice-info {
+    font-size: 0.8rem;
+  }
+  
+  .demo-button {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+  
+  .fixed-header {
+    padding: 18px;
+  }
+  
+  .fixed-header h3 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+  }  
+}
+
+@media (max-width: 480px) {
+  .hero-content h1 {
+    font-size: 1.5rem;
+    margin-bottom: 12px;
+  }
+
+  .hero-description {
+    font-size: 0.85rem;
+    margin-bottom: 25px;
+  }
+
+  .trust-indicators {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .trust-item {
+    font-size: 0.7rem;
+    padding: 4px 8px;
+  }
+
+  .text-input-section,
+  .voice-list-section {
+    padding: 25px 15px;
+  }
+
+  .ai-voice-textarea {
+    min-height: 140px;
+    padding: 12px;
+    font-size: 0.9rem;
+  }
+
+  .step-card,
+  .feature-card,
+  .use-case-card,
+  .testimonial-card,
+  .faq-item {
+    padding: 20px 16px;
+  }
+
+  .step-card h3,
+  .feature-card h3 {
+    font-size: 1.2rem;
+  }
+
+  .step-card p,
+  .feature-card p {
+    font-size: 0.9rem;
+  }
+
+  .cta-button,
+  .generate-voice-button,
+  .download-button,
+  .auth-button {
+    padding: 12px 25px;
+    font-size: 0.9rem;
+  }
+
+  .cta-section h2,
+  .audio-output-section h2 {
+    font-size: 1.6rem;
+  }
+
+  .cta-section p {
+    font-size: 0.95rem;
+  }
+
+  .cta-features {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cta-features span {
+    font-size: 0.75rem;
+    padding: 6px 12px;
+  }
+
+  .login-modal {
+    padding: 25px;
+  }
+
+  .auth-container h1 {
+    font-size: 1.65rem;
+  }
+
+  .auth-input {
+    padding: 10px 13px;
+    font-size: 0.9rem;
+  }
+
+  .upgrade-button {
+    padding: 12px 20px;
+    font-size: 0.85rem;
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .upgrade-icon {
+    font-size: 1.1rem;
+  }
+  
+  .upgrade-badge {
+    display: none;
+  }  
+
+  .section-subtitle {
+    font-size: 1.6rem;
+  }
+
+  .intro-paragraph {
+    font-size: 0.95rem;
+  }
+
+  .stat-number {
+    font-size: 1.8rem;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+  }
+
+  .emotions-feature-section h2 {
+    font-size: 1.6rem;
+  }
+
+  .emotion-intro h3 {
+    font-size: 1.3rem;
+  }
+
+  .emotion-benefit {
+    padding: 22px 18px;
+  }
+
+  .emotion-benefit h4 {
+    font-size: 1.15rem;
+  }
+
+  .emotion-benefit p {
+    font-size: 0.9rem;
+  }
+
+  .preset-card {
+    padding: 20px 16px;
+  }
+
+  .preset-title-group h4 {
+    font-size: 1.2rem;
+  }
+
+  .preset-badge {
+    font-size: 0.7rem;
+    padding: 3px 10px;
+  }
+
+  .practice-content h4 {
+    font-size: 1.1rem;
+  }
+
+  .practice-content p {
+    font-size: 0.9rem;
+  }
+
+  .emotion-cta h3 {
+    font-size: 1.5rem;
+  }
+
+  .emotion-cta-button {
+    padding: 12px 28px;
+    font-size: 0.95rem;
+  }  
+
+  .inline-upgrade-banner,
+  .inline-download-success {
+    padding: 14px 16px;
+  }
+
+  .inline-upgrade-banner .banner-icon,
+  .inline-download-success .success-icon {
+    font-size: 1.6rem;
+  }
+
+  .inline-upgrade-banner .banner-text,
+  .inline-download-success .success-text {
+    font-size: 0.85rem;
+  }
+
+  .inline-upgrade-banner .banner-text strong,
+  .inline-download-success .success-text strong {
+    font-size: 0.95rem;
+  }
+
+  .premium-popup {
+    padding: 30px 22px;
+  }
+
+  .premium-icon {
+    font-size: 3rem;
+  }
+
+  .premium-popup-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .premium-popup-content > p {
+    font-size: 0.95rem;
+  }
+
+  .premium-features li {
+    font-size: 0.9rem;
+    padding: 9px 14px;
+  }
+
+  .premium-cta-btn {
+    padding: 12px 30px;
+    font-size: 1rem;
+  }
+
+  .character-count {
+    font-size: 0.85rem;
+  }
+
+  .usage-label {
+    font-size: 0.7rem;
+  }
+
+  .usage-text {
+    font-size: 0.75rem;
+  }
+
+  .inline-limit-warning {
+    padding: 20px 16px;
+  }
+
+  .limit-warning-content h3 {
+    font-size: 1.1rem;
+  }
+
+  .modal-usage-text {
+    font-size: 0.95rem;
+  }
+
+  .inline-upgrade-btn,
+  .inline-dismiss-btn {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+
+  .inline-upgrade-cta {
+    padding: 6px 10px;
+  }
+
+  .inline-upgrade-link {
+    font-size: 0.75rem;
+    flex-wrap: wrap;
+    line-height: 1.4;
+  }
+
+  .highlight-pro,
+  .highlight-creator {
+    font-size: 0.75rem;
+  } 
+  
+  .floating-upgrade-btn {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+
+  .float-icon {
+    font-size: 1.1rem;
+  }
+
+  .float-text strong {
+    font-size: 0.8rem;
+  }
+
+  .float-text small {
+    font-size: 0.6rem;
+  } 
+  
+  .inline-download-success {
+    padding: 12px 14px;
+  }
+
+  .inline-download-success .success-icon {
+    font-size: 1.3rem;
+  }
+
+  .inline-download-success .success-text {
+    font-size: 0.8rem;
+  }
+
+  .inline-download-success .success-text strong {
+    font-size: 0.9rem;
+  }
+
+  .inline-download-success .success-text p {
+    font-size: 0.75rem;
+  }
+
+  .inline-download-success .success-cta-btn {
+    padding: 7px 14px;
+    font-size: 0.75rem;
+  }  
+
+  .voice-list-section {
+    max-height: 380px;
+  }
+  
+  .scrollable-voices {
+    max-height: 280px;
+    padding: 10px;
+  }
+  
+  .voice-item {
+    padding: 8px;
+  }
+  
+  .voice-profile-image {
+    width: 35px; 
+    height: 35px;
+    margin-right: 8px; 
+  }
+  
+  .voice-title {
+    font-size: 0.9rem;
+  }
+  
+  .voice-info {
+    font-size: 0.75rem;
+  }
+  
+  .demo-button {
+    width: 28px; 
+    height: 28px;
+    font-size: 12px;
+  }
+  
+  .fixed-header {
+    padding: 15px;
+  }
+  
+  .fixed-header h3 {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
   }  
 }
