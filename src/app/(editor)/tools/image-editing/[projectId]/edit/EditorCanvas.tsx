@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, JSX, useCallback } from "react";
+import React, { useState, useEffect, useRef, JSX, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import "../../../../../../../styles/tools/EditorCanvas.css";
@@ -24,6 +24,8 @@ import {
   FaTrashAlt,
   FaChevronRight,
   FaChevronLeft,
+  FaSearch,
+  FaTimes,
 } from "react-icons/fa";
 import { API_BASE_URL } from "@/app/config";
 
@@ -348,6 +350,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
   const [textStyles, setTextStyles] = useState<any[]>([]);
   const [selectedStyleCategory, setSelectedStyleCategory] = useState<string>('headings');
   const [styleCategories, setStyleCategories] = useState<any[]>([]);  
+  const [elementSearchQuery, setElementSearchQuery] = useState<string>("");
   
   useEffect(() => {
     const checkMobile = () => {
@@ -2761,6 +2764,16 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
     return textStyles.filter(style => style.category === selectedStyleCategory);
   };  
 
+  const filteredElements = useMemo(() => {
+    if (!elementSearchQuery.trim()) return elements;
+    
+    const query = elementSearchQuery.toLowerCase();
+    return elements.filter(element => 
+      element.name.toLowerCase().includes(query) ||
+      (element.tags && element.tags.toLowerCase().includes(query))
+    );
+  }, [elements, elementSearchQuery]);  
+
   return (
     <div className="editor-container">
       {/* Top Toolbar */}
@@ -3696,29 +3709,58 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
             {activeTab === 'elements' && (
               <div className="panel-section">
                 <h3>Elements</h3>
-                <div className="images-grid">
-                  {elements.map((element) => (
-                    <div
-                      key={element.id}
-                      className="image-thumbnail"
-                      onClick={() => addElementToCanvas(element)}
-                      title={element.name}
+
+                {/* Search Bar */}
+                <div className="element-search-container">
+                  <FaSearch className="element-search-icon" />
+                  <input
+                    type="text"
+                    placeholder="Search elements..."
+                    value={elementSearchQuery}
+                    onChange={(e) => setElementSearchQuery(e.target.value)}
+                    className="element-search-input"
+                  />
+                  {elementSearchQuery && (
+                    <button
+                      className="element-search-clear"
+                      onClick={() => setElementSearchQuery("")}
+                      aria-label="Clear search"
                     >
-                      <img src={element.cdnUrl} alt={element.name} />
-                    </div>
-                  ))}
-                  {elements.length === 0 && (
-                    <p style={{gridColumn: '1 / -1', textAlign: 'center', color: '#94a3b8', padding: '20px'}}>
-                      No elements available
+                      <FaTimes />
+                    </button>
+                  )}
+                </div>
+                
+                {/* Results Count */}
+                {elementSearchQuery && (
+                  <div className="element-search-results">
+                    {filteredElements.length} element{filteredElements.length !== 1 ? 's' : ''} found
+                  </div>
+                )}
+
+                {/* Elements Grid */}
+                <div className="images-grid">
+                  {filteredElements.length === 0 ? (
+                    <p style={{gridColumn: '1 / -1', textAlign: 'center', color: '#94a3b8', padding: '40px 20px'}}>
+                      {elementSearchQuery 
+                        ? `No elements found for "${elementSearchQuery}"`
+                        : "No elements available"
+                      }
                     </p>
+                  ) : (
+                    filteredElements.map((element) => (
+                      <div
+                        key={element.id}
+                        className="image-thumbnail"
+                        onClick={() => addElementToCanvas(element)}
+                        title={element.name}
+                      >
+                        <img src={element.cdnUrl} alt={element.name} />
+                      </div>
+                    ))
                   )}
                 </div>
               </div>
-              // <div className="panel-section coming-soon">
-              //   <div className="coming-soon-text">
-              //     <span>Coming soon…</span>
-              //   </div>
-              // </div>              
             )}
             {activeTab === 'filters' && (
               // <div className="panel-section">

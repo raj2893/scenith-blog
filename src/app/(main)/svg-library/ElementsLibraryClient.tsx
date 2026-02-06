@@ -47,6 +47,9 @@ const ElementsLibraryClient: React.FC = () => {
   const [downloadStats, setDownloadStats] = useState<Record<number, number>>({});
   const [loginError, setLoginError] = useState<string | null>(null);
   const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(20);  
+  const [navigatingToElement, setNavigatingToElement] = useState<number | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -116,6 +119,22 @@ const ElementsLibraryClient: React.FC = () => {
 
     setFilteredElements(filtered);
   }, [searchQuery, selectedCategory, elements]);
+
+  // Pagination
+  const totalPages = Math.ceil(filteredElements.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedElements = filteredElements.slice(startIndex, endIndex);
+
+  // Reset to page 1 when search/filter changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, selectedCategory]); 
+  
+  // Scroll to top when page changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentPage]);  
 
   const handleEditInEditor = async (element: ImageElement) => {
     if (!isLoggedIn) {
@@ -211,6 +230,7 @@ const ElementsLibraryClient: React.FC = () => {
   };
 
   const handleElementClick = (element: ImageElement) => {
+    setNavigatingToElement(element.id);
     const slug = element.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     router.push(`/svg-library/${slug}`);
   };
@@ -550,13 +570,35 @@ const ElementsLibraryClient: React.FC = () => {
             </div>
           ) : (
             <>
-              <div className="results-count">
-                <p>
-                  Showing {filteredElements.length} free {filteredElements.length === 1 ? "icon" : "icons"}
-                </p>
+              {/* Results Count & Items Per Page */}
+              <div className="results-header">
+                <div className="results-count">
+                  <p>
+                    Showing {startIndex + 1}-{Math.min(endIndex, filteredElements.length)} of {filteredElements.length} free {filteredElements.length === 1 ? "icon" : "icons"}
+                  </p>
+                </div>
+                <div className="items-per-page">
+                  <label htmlFor="items-per-page">Show:</label>
+                  <select
+                    id="items-per-page"
+                    value={itemsPerPage}
+                    onChange={(e) => {
+                      setItemsPerPage(Number(e.target.value));
+                      setCurrentPage(1);
+                    }}
+                  >
+                    <option value={12}>12</option>
+                    <option value={20}>20</option>
+                    <option value={36}>36</option>
+                    <option value={48}>48</option>
+                    <option value={60}>60</option>
+                  </select>
+                </div>
               </div>
+                  
+              {/* Elements Grid */}
               <div className="elements-grid">
-                {filteredElements.map((element, index) => (
+                {paginatedElements.map((element, index) => (
                   <motion.div
                     key={element.id}
                     className="element-card"
@@ -564,6 +606,11 @@ const ElementsLibraryClient: React.FC = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: index * 0.02 }}
                   >
+                    {navigatingToElement === element.id && (
+                      <div className="element-loading-overlay">
+                        <div className="element-loading-spinner"></div>
+                      </div>
+                    )}                    
                     <div
                       className="element-preview"
                       onClick={() => handleElementClick(element)}
@@ -617,6 +664,78 @@ const ElementsLibraryClient: React.FC = () => {
                   </motion.div>
                 ))}
               </div>
+              
+              {/* Pagination Controls */}
+              {totalPages > 1 && (
+                <div className="pagination-container">
+                  <button
+                    className="pagination-btn pagination-prev"
+                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                    disabled={currentPage === 1}
+                    aria-label="Previous page"
+                  >
+                    ← Previous
+                  </button>
+              
+                  <div className="pagination-numbers">
+                    {/* First page */}
+                    {currentPage > 3 && (
+                      <>
+                        <button
+                          className="pagination-number"
+                          onClick={() => setCurrentPage(1)}
+                        >
+                          1
+                        </button>
+                        {currentPage > 4 && <span className="pagination-ellipsis">...</span>}
+                      </>
+                    )}
+
+                    {/* Pages around current */}
+                    {Array.from({ length: totalPages }, (_, i) => i + 1)
+                      .filter(page => {
+                        return (
+                          page === currentPage ||
+                          page === currentPage - 1 ||
+                          page === currentPage - 2 ||
+                          page === currentPage + 1 ||
+                          page === currentPage + 2
+                        );
+                      })
+                      .map(page => (
+                        <button
+                          key={page}
+                          className={`pagination-number ${page === currentPage ? 'active' : ''}`}
+                          onClick={() => setCurrentPage(page)}
+                        >
+                          {page}
+                        </button>
+                      ))}
+
+                    {/* Last page */}
+                    {currentPage < totalPages - 2 && (
+                      <>
+                        {currentPage < totalPages - 3 && <span className="pagination-ellipsis">...</span>}
+                        <button
+                          className="pagination-number"
+                          onClick={() => setCurrentPage(totalPages)}
+                        >
+                          {totalPages}
+                        </button>
+                      </>
+                    )}
+                  </div>
+                  
+                  <button
+                    className="pagination-btn pagination-next"
+                    onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                    disabled={currentPage === totalPages}
+                    aria-label="Next page"
+                  >
+                    Next →
+                  </button>
+                </div>
+              )}
             </>
           )}
         </div>
