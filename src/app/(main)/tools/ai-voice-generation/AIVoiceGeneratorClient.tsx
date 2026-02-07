@@ -596,7 +596,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
     }
     if (aiVoiceText.length > getMaxCharsPerRequest()) {
       const roleBasedLimit = ttsUsage?.role === 'STUDIO' ? 5000 : 
-                            ttsUsage?.role === 'CREATOR' ? 2500 : 250;
+                            ttsUsage?.role === 'CREATOR' ? 2500 : 150;
       const limitType = ttsUsage?.daily.remaining !== -1 && 
                         (ttsUsage?.daily.remaining ?? 0) < (ttsUsage?.monthly.remaining ?? 0)
         ? 'daily' 
@@ -798,12 +798,12 @@ const AIVoiceGeneratorClient: React.FC = () => {
   };
 
   const getMaxCharsPerRequest = useCallback(() => {
-    if (!isLoggedIn || !ttsUsage) return 250;
+    if (!isLoggedIn || !ttsUsage) return 150;
 
     // Determine role-based limit
     const roleBasedLimit = ttsUsage.role === 'ADMIN' ? 10000 :
                           ttsUsage.role === 'STUDIO' ? 5000 : 
-                          ttsUsage.role === 'CREATOR' ? 2500 : 250;
+                          ttsUsage.role === 'CREATOR' ? 2500 : 150;
 
     const dailyRemaining = ttsUsage.daily.remaining;
     const monthlyRemaining = ttsUsage.monthly.remaining;
@@ -946,7 +946,7 @@ return (
                   name: 'Is AI voice generation free?',
                   acceptedAnswer: {
                     '@type': 'Answer',
-                    text: 'Yes! The free BASIC plan includes 3,500 characters per month with a daily limit of 500 characters. All generated audio can be used commercially with full rights, no watermarks, and instant MP3 downloads.'
+                    text: 'Yes! The free BASIC plan includes 2,000 characters per month with a daily limit of 200 characters. All generated audio can be used commercially with full rights, no watermarks, and instant MP3 downloads.'
                   }
                 },
                 {
@@ -1734,7 +1734,7 @@ return (
                 <li>Test multiple versions for A/B testing</li>
               </ul>
               <p>
-                Each regeneration uses your remaining character quota. <strong>Free users get 3,500 characters/month</strong> (500/day). Upgrade for unlimited generations and access to premium voices.
+                Each regeneration uses your remaining character quota. <strong>Free users get 2,000 characters/month</strong> (200/day). Upgrade for unlimited generations and access to premium voices.
               </p>
             </div>
           </article>
@@ -2692,7 +2692,7 @@ return (
           <article className="feature-card" role="listitem">
             <span className="feature-icon" aria-hidden="true">🆓</span>
             <h3>Unlimited Free Access</h3>
-            <p>3,500 characters monthly included free. No subscriptions, no watermarks, full commercial rights. Upgrade for unlimited generation and premium voices.</p>
+            <p>2,000 characters monthly included free. No subscriptions, no watermarks, full commercial rights. Upgrade for unlimited generation and premium voices.</p>
           </article>
           <article className="feature-card" role="listitem">
             <span className="feature-icon" aria-hidden="true">🌍</span>
@@ -2715,7 +2715,7 @@ return (
           <div className="vs-card">
             <h3>Scenith vs ElevenLabs</h3>
             <ul>
-              <li>✅ <strong>Scenith:</strong> Free 3,500 chars/month, no credit card required</li>
+              <li>✅ <strong>Scenith:</strong> Free 2,000 chars/month, no credit card required</li>
               <li>❌ <strong>ElevenLabs:</strong> 10,000 chars free but requires signup, $5+ paid</li>
               <li>✅ <strong>Scenith:</strong> Commercial use on free plan</li>
               <li>⚠️ <strong>ElevenLabs:</strong> Attribution required on free plan</li>
@@ -2933,7 +2933,7 @@ return (
           </article>
           <article className="faq-item" role="listitem">
             <h3>How many characters can I generate for free?</h3>
-            <p>The free BASIC plan includes 3,500 characters per month with a daily limit of 500 characters. CREATOR plan offers 50,000 characters/month with 5,000 characters/day. STUDIO plan provides 150,000 characters/month with no daily limits. Each request supports up to 5,000 characters.</p>
+            <p>The free BASIC plan includes 2,000 characters per month with a daily limit of 200 characters. CREATOR plan offers 50,000 characters/month with 5,000 characters/day. STUDIO plan provides 150,000 characters/month with no daily limits. Each request supports up to 5,000 characters.</p>
           </article>
           <article className="faq-item" role="listitem">
             <h3>Can I adjust voice speed, pitch, or tone?</h3>

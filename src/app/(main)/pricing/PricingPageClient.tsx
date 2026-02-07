@@ -399,11 +399,11 @@ if (gateway === 'razorpay') {
           role: 'BASIC',
           price: 0,
           currency: 'FREE',
-          ttsLimit: 3500,
+          ttsLimit: 2000,
           features: [
-            '3,500 Characters/month',
-            '500 Characters/day',
-            '250 Characters per request',
+            '2,000 Characters/month',
+            '200 Characters/day',
+            '150 Characters per request',
             '30+ AI Voices in multiple languages',
             '5 Subtitle videos/month',
             '5 Speed videos/month',
@@ -478,11 +478,11 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
         role: 'BASIC',
         price: 0,
         currency: 'FREE',
-        ttsLimit: 3500,
+        ttsLimit: 2000,
         features: [
-          '3,500 Characters/month',
-          '500 Characters/day',
-          '250 Characters per request',
+          '2,000 Characters/month',
+          '200 Characters/day',
+          '150 Characters per request',
           '30+ AI Voices in multiple languages',
           '5 Subtitle videos/month',
           '5 Speed videos/month',
@@ -1111,19 +1111,19 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
             <tbody>
               <tr>
                 <td>Monthly Characters (AI Voice)</td>
-                <td>3,500</td>
+                <td>2,000</td>
                 <td>60,000</td>
                 <td>200,000</td>
               </tr>
               <tr>
                 <td>Daily Character Limit (AI Voice)</td>
-                <td>500</td>
+                <td>200</td>
                 <td>15,000</td>
                 <td>Unlimited</td>
               </tr>
               <tr>
                 <td>Max Characters per Request</td>
-                <td>250</td>
+                <td>150</td>
                 <td>3,500</td>
                 <td>5,000</td>
               </tr>
