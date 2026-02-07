@@ -2737,8 +2737,8 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
       outlineColor: style.outlineColor || "#000000",
       backgroundOpacity: style.backgroundOpacity || 0,
       backgroundColor: style.backgroundColor || "#FFFFFF",
-      backgroundWidth: (style.backgroundOpacity || 0) > 0 ? defaultBackgroundWidth : undefined,
-      backgroundHeight: (style.backgroundOpacity || 0) > 0 ? defaultBackgroundHeight : undefined,
+      backgroundWidth: (style.backgroundOpacity || 0) > 0 ? defaultBackgroundWidth : defaultBackgroundWidth,
+      backgroundHeight: (style.backgroundOpacity || 0) > 0 ? defaultBackgroundHeight : defaultBackgroundHeight,
       backgroundBorder: style.backgroundBorder,
       backgroundBorderWidth: style.backgroundBorderWidth || 2,
       backgroundBorderRadius: style.backgroundBorderRadius || 8,
@@ -3266,10 +3266,8 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
 
                               updateLayer(selectedLayer.id, { 
                                 text: newText,
-                                ...(selectedLayer.backgroundWidth ? {
-                                  backgroundWidth: Math.max(estimatedTextWidth + 20, 50),
-                                  backgroundHeight: Math.max(estimatedTextHeight + 10, 30)
-                                } : {})
+                                backgroundWidth: Math.max(estimatedTextWidth + 20, 50),
+                                backgroundHeight: Math.max(estimatedTextHeight + 10, 30)
                               });
                             }}
                             rows={3}
@@ -3379,11 +3377,8 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
 
                               updateLayer(selectedLayer.id, { 
                                 fontSize: newFontSize,
-                                // Update background dimensions if they exist
-                                ...(selectedLayer.backgroundWidth ? {
-                                  backgroundWidth: Math.max(estimatedTextWidth + 20, 50),
-                                  backgroundHeight: Math.max(estimatedTextHeight + 10, 30)
-                                } : {})
+                                backgroundWidth: Math.max(estimatedTextWidth + 20, 50),
+                                backgroundHeight: Math.max(estimatedTextHeight + 10, 30)
                               });
                             }}
                           />
