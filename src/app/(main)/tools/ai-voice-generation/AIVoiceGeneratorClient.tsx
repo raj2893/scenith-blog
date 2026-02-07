@@ -195,6 +195,14 @@ const AIVoiceGeneratorClient: React.FC = () => {
   const [showDownloadToast, setShowDownloadToast] = useState(false);
   const [generationCount, setGenerationCount] = useState(0);
   const [show15SecPopup, setShow15SecPopup] = useState(false);
+  const [generationHistory, setGenerationHistory] = useState<Array<{
+    id: number;
+    audioPath: string;
+    createdAt: string;
+  }>>([]);
+  const [hasHistoryAccess, setHasHistoryAccess] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [historyLoading, setHistoryLoading] = useState(false);  
 
   useEffect(() => {
     if (!isLoggedIn || !ttsUsage || userProfile?.role !== 'BASIC') return;
@@ -585,6 +593,12 @@ const AIVoiceGeneratorClient: React.FC = () => {
     fetchFilteredVoices();
   }, [filterLanguage, filterGender]);
 
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchHistory();
+    }
+  }, [isLoggedIn]);  
+
   const handleGenerateAiAudio = async () => {
     if (!isLoggedIn) {
       setShowLoginModal(true);
@@ -687,6 +701,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
   
       const data = await response.json();
       setGeneratedAudio(`${CDN_URL}/${data.audioPath}`);
+      fetchHistory();
 
       const currentCount = generationCount + 1;
       setGenerationCount(currentCount);
@@ -775,6 +790,33 @@ const AIVoiceGeneratorClient: React.FC = () => {
       }
     }
   };
+
+  const fetchHistory = async () => {
+    if (!isLoggedIn) return;
+    
+    setHistoryLoading(true);
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/sole-tts/history`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        setGenerationHistory(data.history || []);
+        setHasHistoryAccess(data.hasAccess);
+      } else if (response.status === 403) {
+        const errorData = await response.json();
+        setHasHistoryAccess(false);
+        setGenerationHistory([]);
+      }
+    } catch (error) {
+      console.error('Error fetching history:', error);
+    } finally {
+      setHistoryLoading(false);
+    }
+  };  
 
   // Smooth scrolling for section links
   const scrollToSection = (sectionId: string) => {
@@ -1510,7 +1552,92 @@ return (
                 )}
               </motion.div>
             </section>
+          )}      
+          
+          {/* Past Generations History Section */}
+          {isLoggedIn && (
+            <section className="history-section" id="history" role="region" aria-labelledby="history-title">
+              <div className="container">
+                <div className="history-header">
+                  <h2 id="history-title">Your Generation History</h2>
+                  {!hasHistoryAccess && (
+                    <div className="history-locked-banner">
+                      <span className="lock-icon">🔒</span>
+                      <p>Upgrade to AI Voice PRO or a premium plan to access your generation history</p>
+                      <a href="/pricing" className="upgrade-history-btn">
+                        Unlock History
+                      </a>
+                    </div>
+                  )}
+                </div>
+                
+                {hasHistoryAccess && (
+                  <div className="history-content">
+                    <button
+                      className="toggle-history-btn"
+                      onClick={() => setShowHistory(!showHistory)}
+                      aria-expanded={showHistory}
+                    >
+                      {showHistory ? '▼' : '▶'} {showHistory ? 'Hide' : 'Show'} Past Generations ({generationHistory.length})
+                    </button>
+                
+                    {showHistory && (
+                      <div className="history-list">
+                        {historyLoading ? (
+                          <div className="history-loading">
+                            <div className="spinner" />
+                            <p>Loading your generations...</p>
+                          </div>
+                        ) : generationHistory.length === 0 ? (
+                          <div className="history-empty">
+                            <span className="empty-icon">🎤</span>
+                            <p>No generations yet. Create your first AI voice above!</p>
+                          </div>
+                        ) : (
+                          <div className="history-grid">
+                            {generationHistory.map((item) => (
+                              <div key={item.id} className="history-item">
+                                <div className="history-item-header">
+                                  <span className="history-date">
+                                    {new Date(item.createdAt).toLocaleDateString('en-US', {
+                                      month: 'short',
+                                      day: 'numeric',
+                                      year: 'numeric',
+                                      hour: '2-digit',
+                                      minute: '2-digit'
+                                    })}
+                                  </span>
+                                </div>
+                                <CustomAudioPlayer src={`${CDN_URL}/${item.audioPath}`} />
+                                <button
+                                  className="history-download-btn"
+                                  onClick={async () => {
+                                    const response = await fetch(`${CDN_URL}/${item.audioPath}`);
+                                    const blob = await response.blob();
+                                    const blobUrl = window.URL.createObjectURL(blob);
+                                    const link = document.createElement('a');
+                                    link.href = blobUrl;
+                                    link.download = `ai-voice-${item.id}.mp3`;
+                                    document.body.appendChild(link);
+                                    link.click();
+                                    document.body.removeChild(link);
+                                    window.URL.revokeObjectURL(blobUrl);
+                                  }}
+                                >
+                                  📥 Download
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </section>
           )}         
+              
           <div className="demo-video-section">
             <h3 className="demo-video-title">See AI Voice Generation in Action</h3>
             <div className="youtube-video-wrapper">
