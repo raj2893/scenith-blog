@@ -1026,29 +1026,79 @@ return (
         <div className="hero-cta-section">
           <div className="main-content">
             <div className="text-input-section">
-              <textarea
-                value={aiVoiceText}
-                onChange={(e) => {
-                  setAiVoiceText(e.target.value);
-                  setCharacterCount(e.target.value.length);
-                }}
-                placeholder="Enter your text here..."
-                className="ai-voice-textarea"
-                disabled={!isLoggedIn}
-                aria-label="Text input for AI voice generation"
-                maxLength={getMaxCharsPerRequest()}
-              />
-
-              {isLoggedIn && (
-                <div className="character-count-container">
-                  <p className="character-count">
-                    <span className={characterCount > getMaxCharsPerRequest() ? 'count-exceeded' : characterCount > getMaxCharsPerRequest() * 0.9 ? 'count-warning' : ''}>
-                      {characterCount.toLocaleString()}
-                    </span> / {getMaxCharsPerRequest().toLocaleString()} characters per request
-                  </p>
+              <div className="script-input-wrapper">
+                <div className="script-input-header">
+                  <div className="header-left">
+                    <span className="script-icon">✍️</span>
+                    <h3 className="script-title">Your AI Voice Script</h3>
+                  </div>
+                  <div className="header-right">
+                    {isLoggedIn && (
+                      <span className="live-char-badge">
+                        {characterCount.toLocaleString()} / {getMaxCharsPerRequest().toLocaleString()}
+                      </span>
+                    )}
+                  </div>
                 </div>
-              )}              
+                  
+                <div className="textarea-container">
+                  <textarea
+                    value={aiVoiceText}
+                    onChange={(e) => {
+                      setAiVoiceText(e.target.value);
+                      setCharacterCount(e.target.value.length);
+                    }}
+                    placeholder="✨ Type or paste your script here..."                  
+                    className="ai-voice-textarea"
+                    disabled={!isLoggedIn}
+                    aria-label="Text input for AI voice generation"
+                    maxLength={getMaxCharsPerRequest()}
+                  />
 
+                  {!isLoggedIn && (
+                    <div className="textarea-overlay">
+                      <div className="overlay-content">
+                        <span className="lock-icon">🔒</span>
+                        <h4>Login to Start Creating</h4>
+                        <p>Sign in to generate professional AI voices</p>
+                        <button 
+                          className="overlay-login-btn"
+                          onClick={() => setShowLoginModal(true)}
+                        >
+                          Login Now
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {isLoggedIn && aiVoiceText.length === 0 && (
+                    <div className="textarea-hint">
+                      <div className="hint-items">
+                        <div className="hint-item">💡 <strong>Quick tip:</strong> Add commas for natural pauses</div>
+                        <div className="hint-item">🎯 <strong>Best for:</strong> Clear, conversational text</div>
+                        <div className="hint-item">⚡ <strong>Max length:</strong> {getMaxCharsPerRequest().toLocaleString()} characters</div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="script-input-footer">
+                  <div className="footer-stats">
+                    <div className="stat-item">
+                      <span className="stat-icon">📝</span>
+                      <span className="stat-label">Words: <strong>{aiVoiceText.trim().split(/\s+/).filter(w => w.length > 0).length}</strong></span>
+                    </div>
+                    <div className="stat-item">
+                      <span className="stat-icon">⏱️</span>
+                      <span className="stat-label">~{Math.ceil(aiVoiceText.trim().split(/\s+/).filter(w => w.length > 0).length / 150)} min read</span>
+                    </div>
+                    <div className="stat-item">
+                      <span className="stat-icon">🎤</span>
+                      <span className="stat-label">Ready to generate</span>
+                    </div>
+                  </div>
+                </div>
+              </div>            
               
               <div className="emotion-control-section">
                 <div className="emotion-selector-wrapper">
@@ -1181,6 +1231,9 @@ return (
                         <a href="/pricing" className="inline-upgrade-link">
                           🔓 Need more? Upgrade to <span className="highlight-pro">AI Voice PRO</span> OR <span className="highlight-creator">CREATOR</span> for 10× higher limits
                         </a>
+                        <div className="creator-upgrade-hint">
+                          Creators usually upgrade after 2–3 generations.
+                        </div>                        
                       </div>
                     )}
 
@@ -3064,6 +3117,9 @@ return (
             <div className="premium-popup-content">
               <span className="premium-icon">🚀</span>
               <h2>Unlock Premium Features</h2>
+              <a href="/pricing" className="premium-cta-btn">
+                View Premium Plans
+              </a>              
               <p>Upgrade to Scenith Premium and get:</p>
               <ul className="premium-features">
                 <li>✓ 17× more AI voice characters</li>
@@ -3071,9 +3127,6 @@ return (
                 <li>✓ Advanced image editing tools</li>
                 <li>✓ Priority support</li>
               </ul>
-              <a href="/pricing" className="premium-cta-btn">
-                View Premium Plans
-              </a>
             </div>
           </motion.div>
         </div>
