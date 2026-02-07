@@ -402,7 +402,7 @@ if (gateway === 'razorpay') {
           ttsLimit: 3500,
           features: [
             '3,500 Characters/month',
-            '699 Characters/day',
+            '500 Characters/day',
             '250 Characters per request',
             '30+ AI Voices in multiple languages',
             '5 Subtitle videos/month',
@@ -481,7 +481,7 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
         ttsLimit: 3500,
         features: [
           '3,500 Characters/month',
-          '699 Characters/day',
+          '500 Characters/day',
           '250 Characters per request',
           '30+ AI Voices in multiple languages',
           '5 Subtitle videos/month',
@@ -1117,7 +1117,7 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
               </tr>
               <tr>
                 <td>Daily Character Limit (AI Voice)</td>
-                <td>699</td>
+                <td>500</td>
                 <td>15,000</td>
                 <td>Unlimited</td>
               </tr>

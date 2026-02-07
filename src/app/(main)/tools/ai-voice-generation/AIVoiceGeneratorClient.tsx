@@ -946,7 +946,7 @@ return (
                   name: 'Is AI voice generation free?',
                   acceptedAnswer: {
                     '@type': 'Answer',
-                    text: 'Yes! The free BASIC plan includes 3,500 characters per month with a daily limit of 699 characters. All generated audio can be used commercially with full rights, no watermarks, and instant MP3 downloads.'
+                    text: 'Yes! The free BASIC plan includes 3,500 characters per month with a daily limit of 500 characters. All generated audio can be used commercially with full rights, no watermarks, and instant MP3 downloads.'
                   }
                 },
                 {
@@ -1681,7 +1681,7 @@ return (
                 <li>Test multiple versions for A/B testing</li>
               </ul>
               <p>
-                Each regeneration uses your remaining character quota. <strong>Free users get 3,500 characters/month</strong> (699/day). Upgrade for unlimited generations and access to premium voices.
+                Each regeneration uses your remaining character quota. <strong>Free users get 3,500 characters/month</strong> (500/day). Upgrade for unlimited generations and access to premium voices.
               </p>
             </div>
           </article>
@@ -2880,7 +2880,7 @@ return (
           </article>
           <article className="faq-item" role="listitem">
             <h3>How many characters can I generate for free?</h3>
-            <p>The free BASIC plan includes 3,500 characters per month with a daily limit of 699 characters. CREATOR plan offers 50,000 characters/month with 5,000 characters/day. STUDIO plan provides 150,000 characters/month with no daily limits. Each request supports up to 5,000 characters.</p>
+            <p>The free BASIC plan includes 3,500 characters per month with a daily limit of 500 characters. CREATOR plan offers 50,000 characters/month with 5,000 characters/day. STUDIO plan provides 150,000 characters/month with no daily limits. Each request supports up to 5,000 characters.</p>
           </article>
           <article className="faq-item" role="listitem">
             <h3>Can I adjust voice speed, pitch, or tone?</h3>
