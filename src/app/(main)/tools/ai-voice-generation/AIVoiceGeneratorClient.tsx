@@ -140,6 +140,114 @@ const EMOTION_PRESETS = [
   { value: 'professional', label: 'Professional', icon: '📚', description: 'Business-like and neutral' },
 ];
 
+const SCRIPT_TEMPLATES = [
+  {
+    id: 1,
+    title: "YouTube Video Intro",
+    category: "Content Creation",
+    icon: "🎬",
+    script: "Hey everyone! Welcome back to the channel. If you're new here, don't forget to hit that subscribe button and turn on notifications so you never miss a video. Today, we're going to dive into something really exciting, so let's get started!"
+  },
+  {
+    id: 2,
+    title: "Podcast Introduction",
+    category: "Podcasting",
+    icon: "🎙️",
+    script: "Hello and welcome to another episode of [Your Podcast Name]. I'm your host [Your Name], and today we have an incredible conversation lined up for you. Before we dive in, a quick reminder to subscribe wherever you listen to podcasts and leave us a review if you're enjoying the show."
+  },
+  {
+    id: 3,
+    title: "Product Demo",
+    category: "Marketing",
+    icon: "📦",
+    script: "Introducing our latest innovation that's about to transform the way you work. This product combines cutting-edge technology with user-friendly design to deliver results you can see immediately. Let me show you exactly how it works and why thousands of customers are already making the switch."
+  },
+  {
+    id: 4,
+    title: "Educational Tutorial",
+    category: "Education",
+    icon: "📚",
+    script: "In this tutorial, we'll walk through the fundamentals step by step. Don't worry if you're a complete beginner - I'll explain everything in simple terms with practical examples. By the end of this lesson, you'll have a solid understanding of the key concepts and be ready to apply them yourself."
+  },
+  {
+    id: 5,
+    title: "Meditation Guide",
+    category: "Wellness",
+    icon: "🧘",
+    script: "Find a comfortable position and gently close your eyes. Take a deep breath in through your nose, filling your lungs completely. Hold for a moment. Now slowly exhale through your mouth, releasing any tension. Continue breathing naturally as you bring your awareness to the present moment."
+  },
+  {
+    id: 6,
+    title: "News Report",
+    category: "News",
+    icon: "📰",
+    script: "Good evening. Our top story tonight: Breaking developments continue to unfold as experts weigh in on the situation. We'll bring you the latest updates, expert analysis, and what this means for you. Stay tuned for comprehensive coverage throughout the hour."
+  },
+  {
+    id: 7,
+    title: "Motivational Speech",
+    category: "Inspiration",
+    icon: "💪",
+    script: "Every single one of you has the power to achieve greatness. It doesn't matter where you came from or what obstacles you've faced. What matters is the decision you make right now, in this moment, to take action. Your future self is counting on you to start today. So let's make it happen!"
+  },
+  {
+    id: 8,
+    title: "E-commerce Product Description",
+    category: "E-commerce",
+    icon: "🛍️",
+    script: "Discover the perfect blend of style and functionality with our premium collection. Crafted from high-quality materials and designed with attention to every detail, this product delivers exceptional value. Available in multiple colors and sizes. Order now and enjoy free shipping on orders over fifty dollars."
+  },
+  {
+    id: 9,
+    title: "Customer Service Message",
+    category: "Business",
+    icon: "💼",
+    script: "Thank you for contacting our support team. We appreciate your patience and value your business. Our team is working diligently to resolve your inquiry and will provide a solution within 24 hours. If you need immediate assistance, please don't hesitate to reach out to our priority support line."
+  },
+  {
+    id: 10,
+    title: "Bedtime Story Opening",
+    category: "Entertainment",
+    icon: "🌙",
+    script: "Once upon a time, in a magical land far, far away, there lived a curious little adventurer who was about to embark on the journey of a lifetime. As the stars began to twinkle in the evening sky, our story begins. So snuggle in, close your eyes, and let your imagination soar."
+  },
+  {
+    id: 11,
+    title: "App Tutorial",
+    category: "Technology",
+    icon: "📱",
+    script: "Welcome to the quick start guide. In just a few minutes, you'll learn how to navigate the main features and get the most out of this app. I'll show you the essential tools you need to know, along with some pro tips that will save you time. Let's jump right in."
+  },
+  {
+    id: 12,
+    title: "Event Announcement",
+    category: "Events",
+    icon: "🎉",
+    script: "Mark your calendars! We're thrilled to announce our upcoming event that you won't want to miss. Join us for an unforgettable experience featuring special guests, exclusive content, and exciting surprises. Limited spots available, so register early to secure your place. We can't wait to see you there!"
+  },
+  {
+    id: 13,
+    title: "Recipe Instructions",
+    category: "Cooking",
+    icon: "👨‍🍳",
+    script: "Today we're making a delicious dish that's both simple and impressive. Start by gathering all your ingredients - I'll wait. Now, preheat your oven to 350 degrees. In a large bowl, combine the dry ingredients and mix well. Set aside while we prepare the wet ingredients in a separate bowl."
+  },
+  {
+    id: 14,
+    title: "Workout Motivation",
+    category: "Fitness",
+    icon: "🏋️",
+    script: "Alright team, let's bring that energy! Remember why you started. Every rep, every set, every drop of sweat is bringing you closer to your goals. Push through the burn - that's where the magic happens. You're stronger than you think. Let's finish strong! Three, two, one - let's go!"
+  },
+  {
+    id: 15,
+    title: "Call-to-Action Outro",
+    category: "Marketing",
+    icon: "👆",
+    script: "If you found this valuable, make sure to like and share it with someone who needs to hear this. Don't forget to follow us for more content just like this. Have questions or suggestions? Drop them in the comments below - we read every single one. Thanks for watching, and we'll see you in the next one!"
+  }
+];
+
 const AIVoiceGeneratorClient: React.FC = () => {
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
@@ -202,7 +310,9 @@ const AIVoiceGeneratorClient: React.FC = () => {
   }>>([]);
   const [hasHistoryAccess, setHasHistoryAccess] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
-  const [historyLoading, setHistoryLoading] = useState(false);  
+  const [historyLoading, setHistoryLoading] = useState(false); 
+  const [showScriptTemplates, setShowScriptTemplates] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('All');   
 
   useEffect(() => {
     if (!isLoggedIn || !ttsUsage || userProfile?.role !== 'BASIC') return;
@@ -891,6 +1001,44 @@ const AIVoiceGeneratorClient: React.FC = () => {
     return false;
   }, [isLoggedIn, ttsUsage]);  
 
+  const handleScriptSelect = (script: string) => {
+    setAiVoiceText(script);
+    setCharacterCount(script.length);
+    setShowScriptTemplates(false);
+    
+    // Scroll to textarea
+    setTimeout(() => {
+      const textareaSection = document.querySelector('.text-input-section');
+      if (textareaSection) {
+        textareaSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 100);
+  };
+  
+  const getDisabledReason = useCallback((): string | null => {
+    if (!isLoggedIn) return null; // Show "Login to Generate" text instead
+    if (!aiVoiceText.trim()) return "Please enter some text to generate voice";
+    if (!selectedVoice) return "Please select a voice before generating";
+    if (isGenerating) return "Audio generation in progress...";
+    if (characterCount > getMaxCharsPerRequest()) {
+      const roleBasedLimit = ttsUsage?.role === 'STUDIO' ? 5000 : 
+                            ttsUsage?.role === 'CREATOR' ? 2500 : 150;
+      return `Text exceeds maximum limit of ${getMaxCharsPerRequest().toLocaleString()} characters`;
+    }
+    if (wouldExceedLimits(aiVoiceText.length)) {
+      const dailyWouldExceed = ttsUsage && ttsUsage.daily.limit > 0 && ttsUsage.daily.remaining < aiVoiceText.length;
+      const monthlyWouldExceed = ttsUsage && ttsUsage.monthly.limit > 0 && ttsUsage.monthly.remaining < aiVoiceText.length;
+      
+      if (dailyWouldExceed) {
+        return `Would exceed daily limit. You have ${ttsUsage.daily.remaining.toLocaleString()} characters remaining today`;
+      }
+      if (monthlyWouldExceed) {
+        return `Would exceed monthly limit. You have ${ttsUsage.monthly.remaining.toLocaleString()} characters remaining this month`;
+      }
+    }
+    return null;
+  }, [isLoggedIn, aiVoiceText, selectedVoice, isGenerating, characterCount, getMaxCharsPerRequest, wouldExceedLimits, ttsUsage]);  
+
 return (
   <div className="ai-voice-generator-page">
     <nav aria-label="Breadcrumb" className="breadcrumb-nav">
@@ -1076,9 +1224,21 @@ return (
                   </div>
                   <div className="header-right">
                     {isLoggedIn && (
-                      <span className="live-char-badge">
-                        {characterCount.toLocaleString()} / {getMaxCharsPerRequest().toLocaleString()}
-                      </span>
+                      <>
+                        <button
+                          className="browse-templates-btn"
+                          onClick={() => {
+                            scrollToSection('script-templates');
+                            setShowScriptTemplates(true);
+                          }}
+                          aria-label="Browse script templates"
+                        >
+                          📝 Browse Templates
+                        </button>
+                        <span className="live-char-badge">
+                          {characterCount.toLocaleString()} / {getMaxCharsPerRequest().toLocaleString()}
+                        </span>
+                      </>
                     )}
                   </div>
                 </div>
@@ -1360,23 +1520,30 @@ return (
                   <span className="upgrade-badge">Limited Time Offer</span>
                 </a>                
               ) : (
-                <button
-                  className="cta-button generate-voice-button"
-                  onClick={handleGenerateAiAudio}
-                  disabled={
-                    !isLoggedIn ? false : (
-                      !aiVoiceText.trim() || 
-                      !selectedVoice || 
-                      isGenerating || 
-                      characterCount > getMaxCharsPerRequest() ||
-                      wouldExceedLimits(aiVoiceText.length) ||
-                      undefined
-                    )
-                  }
-                  aria-label="Generate AI voice from text"
-                >
-                  {isGenerating ? 'Generating...' : isLoggedIn ? 'Generate AI Voice' : 'Login to Generate'}
-                </button>
+                <div className="button-wrapper-with-tooltip">
+                  <button
+                    className="cta-button generate-voice-button"
+                    onClick={handleGenerateAiAudio}
+                    disabled={
+                      !isLoggedIn ? false : (
+                        !aiVoiceText.trim() || 
+                        !selectedVoice || 
+                        isGenerating || 
+                        characterCount > getMaxCharsPerRequest() ||
+                        wouldExceedLimits(aiVoiceText.length) ||
+                        undefined
+                      )
+                    }
+                    aria-label="Generate AI voice from text"
+                  >
+                    {isGenerating ? 'Generating...' : isLoggedIn ? 'Generate AI Voice' : 'Login to Generate'}
+                  </button>
+                  {isLoggedIn && getDisabledReason() && (
+                    <div className="button-tooltip">
+                      {getDisabledReason()}
+                    </div>
+                  )}
+                </div>
               )}
               {isLimitsExceeded() && (
                 <div className="limit-exceeded-message">
@@ -1552,7 +1719,83 @@ return (
                 )}
               </motion.div>
             </section>
-          )}      
+          )}     
+
+          {/* Script Templates Section */}
+          {isLoggedIn && (
+            <section className="script-templates-section" id="script-templates" role="region" aria-labelledby="templates-title">
+              <div className="container">
+                <div className="script-templates-header">
+                  <h2 id="templates-title">Ready-to-Use Script Templates</h2>
+                  <p>Click any template to instantly use it in your AI voice generation</p>
+                </div>
+
+                <button
+                  className={`templates-toggle-btn ${showScriptTemplates ? 'active' : ''}`}
+                  onClick={() => setShowScriptTemplates(!showScriptTemplates)}
+                  aria-expanded={showScriptTemplates}
+                >
+                  <span className="templates-toggle-icon">
+                    {showScriptTemplates ? '▼' : '▶'}
+                  </span>
+                  {showScriptTemplates ? 'Hide Templates' : 'Browse 15 Script Templates'}
+                </button>
+          
+                {showScriptTemplates && (
+                  <div className="templates-content">
+                    <div className="category-filters">
+                      <button
+                        className={`category-filter-btn ${selectedCategory === 'All' ? 'active' : ''}`}
+                        onClick={() => setSelectedCategory('All')}
+                      >
+                        All Templates
+                      </button>
+                      {[...new Set(SCRIPT_TEMPLATES.map(t => t.category))].map(category => (
+                        <button
+                          key={category}
+                          className={`category-filter-btn ${selectedCategory === category ? 'active' : ''}`}
+                          onClick={() => setSelectedCategory(category)}
+                        >
+                          {category}
+                        </button>
+                      ))}
+                    </div>
+                    
+                    <div className="templates-grid">
+                      {SCRIPT_TEMPLATES
+                        .filter(template => selectedCategory === 'All' || template.category === selectedCategory)
+                        .map(template => (
+                          <div
+                            key={template.id}
+                            className="template-card"
+                            onClick={() => handleScriptSelect(template.script)}
+                          >
+                            <div className="template-header">
+                              <span className="template-icon">{template.icon}</span>
+                              <div className="template-title-group">
+                                <h3 className="template-title">{template.title}</h3>
+                                <span className="template-category">{template.category}</span>
+                              </div>
+                            </div>
+                            <p className="template-script">{template.script}</p>
+                            <button className="template-use-btn">
+                              ✨ Use This Script
+                            </button>
+                          </div>
+                        ))}
+                    </div>
+                      
+                    {SCRIPT_TEMPLATES.filter(template => selectedCategory === 'All' || template.category === selectedCategory).length === 0 && (
+                      <div className="templates-empty">
+                        <span className="templates-empty-icon">📝</span>
+                        <p>No templates found in this category</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </section>
+          )}
           
           {/* Past Generations History Section */}
           {isLoggedIn && (
