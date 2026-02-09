@@ -39,8 +39,15 @@ const BackgroundRemoval: React.FC = () => {
   const [loginSuccess, setLoginSuccess] = useState<string>('');
   const [loginLoading, setLoginLoading] = useState<boolean>(false);
   const [isCreatingProject, setIsCreatingProject] = useState<boolean>(false);
+  const [usageStats, setUsageStats] = useState<{
+    usedThisMonth: number;
+    monthlyLimit: number;
+    remaining: number;
+    maxQuality: string;
+    userRole: string;
+  } | null>(null);
+  const [loadingStats, setLoadingStats] = useState<boolean>(false);  
 
-  // Check authentication on mount
   useEffect(() => {
     const checkAuth = async () => {
       setCheckingAuth(true);
@@ -58,6 +65,9 @@ const BackgroundRemoval: React.FC = () => {
           setUserId(res.data.id);
           setIsLoggedIn(true);
           setCheckingAuth(false);
+          
+          // Fetch usage stats after authentication
+          await fetchUsageStats();
         } catch (error: any) {
           console.error('Auth check failed:', error);
           localStorage.removeItem('token');
@@ -251,11 +261,11 @@ const BackgroundRemoval: React.FC = () => {
       setErrorMessage('Please select an image first.');
       return;
     }
-
+  
     setStatus('uploading');
     const formData = new FormData();
     formData.append('image', selectedFile);
-
+  
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post<{ id: string }>(
@@ -268,11 +278,11 @@ const BackgroundRemoval: React.FC = () => {
           },
         }
       );
-
+  
       console.log('Upload response:', response.data);
       setImageId(response.data.id);
       setStatus('processing');
-
+  
       const pollStatus = async () => {
         try {
           const token = localStorage.getItem('token');
@@ -291,6 +301,9 @@ const BackgroundRemoval: React.FC = () => {
               );
               setProcessedImage(image);
               setStatus('success');
+              
+              // Refresh usage stats after successful processing
+              await fetchUsageStats();
             } else if (image.status === 'FAILED') {
               setStatus('error');
               setErrorMessage(image.errorMessage || 'Background removal failed.');
@@ -314,9 +327,15 @@ const BackgroundRemoval: React.FC = () => {
     } catch (error: any) {
       console.error('Upload error:', error);
       setStatus('error');
-      setErrorMessage(
-        'Failed to upload image: ' + (error.response?.data?.message || error.message)
-      );
+      
+      // Check if it's a limit error
+      if (error.response?.data?.message?.includes('limit reached')) {
+        setErrorMessage(error.response.data.message);
+      } else {
+        setErrorMessage(
+          'Failed to upload image: ' + (error.response?.data?.message || error.message)
+        );
+      }
     }
   };
 
@@ -457,6 +476,23 @@ const BackgroundRemoval: React.FC = () => {
       setIsCreatingProject(false);
       alert(error.response?.data?.message || "Failed to create project");
     }
+  };
+  
+  const fetchUsageStats = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+  
+    setLoadingStats(true);
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/standalone-images/usage-stats`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setUsageStats(response.data);
+    } catch (error: any) {
+      console.error('Failed to fetch usage stats:', error);
+    } finally {
+      setLoadingStats(false);
+    }
   };  
 
   return (
@@ -477,6 +513,42 @@ const BackgroundRemoval: React.FC = () => {
       >
         <h1>Remove Background from Your Image</h1>
         <p>Upload an image and remove its background with a single click. Perfect for creating clean, professional visuals.</p>
+        {isLoggedIn && usageStats && (
+          <div className="usage-stats-banner">
+            <div className="stats-content">
+              <div className="stat-item">
+                <span className="stat-label">Plan:</span>
+                <span className="stat-value">{usageStats.userRole}</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-label">Used This Month:</span>
+                <span className="stat-value">
+                  {usageStats.usedThisMonth} / {usageStats.monthlyLimit === -1 ? '∞' : usageStats.monthlyLimit}
+                </span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-label">Remaining:</span>
+                <span className="stat-value highlight">
+                  {usageStats.remaining === -1 ? 'Unlimited' : usageStats.remaining}
+                </span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-label">Max Quality:</span>
+                <span className="stat-value">{usageStats.maxQuality}</span>
+              </div>
+            </div>
+            {usageStats.monthlyLimit !== -1 && usageStats.remaining <= 5 && usageStats.remaining > 0 && (
+              <div className="usage-warning">
+                ⚠️ Only {usageStats.remaining} background removals remaining this month!
+              </div>
+            )}
+            {usageStats.monthlyLimit !== -1 && usageStats.remaining === 0 && (
+              <div className="usage-error">
+                🚫 Monthly limit reached. Please upgrade your plan to continue.
+              </div>
+            )}
+          </div>
+        )}        
         <div className="upload-container">
           <input
             type="file"
