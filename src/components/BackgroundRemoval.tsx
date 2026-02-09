@@ -380,7 +380,7 @@ const BackgroundRemoval: React.FC = () => {
     setImageId(null);
   };
 
-  const handleEditInEditor = async (imageUrl: string, imageName: string) => {
+  const handleEditInEditor = async (imageUrl: string, imageName: string, isOriginal: boolean = false) => {
     if (!isLoggedIn) {
       setShowLoginModal(true);
       return;
@@ -390,6 +390,18 @@ const BackgroundRemoval: React.FC = () => {
   
     try {
       const token = localStorage.getItem("token");
+      
+      // ✅ If it's the original image and not yet uploaded, upload it first
+      let finalImageUrl = imageUrl;
+      if (isOriginal && selectedFile) {
+        try {
+          finalImageUrl = await uploadOriginalImage(selectedFile);
+        } catch (uploadError: any) {
+          setIsCreatingProject(false);
+          alert(uploadError.message || "Failed to upload image");
+          return;
+        }
+      }
   
       // Create a new project
       const projectResponse = await axios.post(
@@ -428,7 +440,7 @@ const BackgroundRemoval: React.FC = () => {
           rotation: 0,
           visible: true,
           locked: false,
-          src: imageUrl,
+          src: finalImageUrl,
           cropTop: 0,
           cropRight: 0,
           cropBottom: 0,
@@ -470,7 +482,7 @@ const BackgroundRemoval: React.FC = () => {
         alert("Failed to load the image. Please try again.");
       };
   
-      img.src = imageUrl;
+      img.src = finalImageUrl;
     } catch (error: any) {
       console.error("Error creating project:", error);
       setIsCreatingProject(false);
@@ -492,6 +504,30 @@ const BackgroundRemoval: React.FC = () => {
       console.error('Failed to fetch usage stats:', error);
     } finally {
       setLoadingStats(false);
+    }
+  };  
+
+  const uploadOriginalImage = async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('assetType', 'IMAGE');
+  
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.post(
+        `${API_BASE_URL}/api/image-editor/assets/upload`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+      return response.data.cdnUrl; // Returns clean CDN URL
+    } catch (error: any) {
+      console.error('Upload error:', error);
+      throw new Error('Failed to upload image: ' + (error.response?.data?.message || error.message));
     }
   };  
 
@@ -597,7 +633,11 @@ const BackgroundRemoval: React.FC = () => {
                 <img src={previewUrl} alt="Original" className="preview-image" />
                 <button
                   className="edit-in-editor-btn"
-                  onClick={() => handleEditInEditor(previewUrl, selectedFile?.name || 'original-image')}
+                  onClick={() => handleEditInEditor(
+                    previewUrl, 
+                    selectedFile?.name || 'original-image',
+                    true
+                  )}
                   disabled={isCreatingProject}
                 >
                   {isCreatingProject ? (
@@ -629,8 +669,9 @@ const BackgroundRemoval: React.FC = () => {
                   <button
                     className="edit-in-editor-btn"
                     onClick={() => handleEditInEditor(
-                      processedImage.processedCdnUrl ?? '',
-                      processedImage.processedFileName || 'processed-image'
+                      processedImage.processedCdnUrl ?? processedImage.processedPresignedUrl ?? '',
+                      processedImage.processedFileName || 'processed-image',
+                      false
                     )}
                     disabled={isCreatingProject}
                   >
