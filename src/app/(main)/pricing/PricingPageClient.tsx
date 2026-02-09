@@ -31,7 +31,7 @@ interface UserProfile {
 
 interface IndividualPlan {
   name: string;
-  planType: 'AI_VOICE_PRO' | 'AI_SUBTITLE_PRO' | 'AI_SPEED_PRO';
+  planType: 'AI_VOICE_PRO' | 'AI_SUBTITLE_PRO' | 'AI_SPEED_PRO' | 'BG_REMOVAL_PRO';
   price: number;
   originalPrice?: number;
   currency: string;
@@ -588,7 +588,21 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
             '0.5x - 15x speed range',
             'Audio pitch correction'
           ]
-        }
+        },
+        {
+          name: 'Background Removal Pro',
+          planType: 'BG_REMOVAL_PRO',
+          price: 0,
+          currency: 'LOADING',
+          service: 'AI Background Removal',
+          features: [
+            '300 images/month',
+            'Up to 1080p quality',
+            'Batch processing',
+            'High-quality edge detection',
+            'Instant processing'
+          ]
+        }        
       ];
     }
   
@@ -599,11 +613,13 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
    const voicePrice = isIndianUser ? 199 : 5;
    const subtitlePrice = isIndianUser ? 199 : 5;
    const speedPrice = isIndianUser ? 199 : 5;
+   const bgRemovalPrice = isIndianUser ? 149 : 5;
 
    // Calculate original prices by adding 25% (original = price / 0.75)
    const voiceOriginal = Math.round(voicePrice / 0.75);
    const subtitleOriginal = Math.round(subtitlePrice / 0.75);
    const speedOriginal = Math.round(speedPrice / 0.75);
+   const bgRemovalOriginal = Math.round(bgRemovalPrice / 0.75);
 
     return [
       {
@@ -656,7 +672,24 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
           'Audio pitch correction',
           'Commercial use allowed'
         ]
-      }
+      },
+      {
+        name: 'Background Removal Pro',
+        planType: 'BG_REMOVAL_PRO',
+        price: bgRemovalPrice,
+        originalPrice: bgRemovalOriginal,
+        currency: currency,
+        symbol: symbol,
+        service: 'AI Background Removal',
+        features: [
+          '300 images/month',
+          'Up to 1080p quality',
+          'Batch processing',
+          'High-quality edge detection',
+          'Instant processing',
+          'Commercial use allowed'
+        ]
+      }      
     ];
   };  
 
