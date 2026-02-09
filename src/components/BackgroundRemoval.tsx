@@ -629,7 +629,7 @@ const BackgroundRemoval: React.FC = () => {
                   <button
                     className="edit-in-editor-btn"
                     onClick={() => handleEditInEditor(
-                      processedImage.processedPresignedUrl ?? processedImage.processedCdnUrl ?? '',
+                      processedImage.processedCdnUrl ?? '',
                       processedImage.processedFileName || 'processed-image'
                     )}
                     disabled={isCreatingProject}
