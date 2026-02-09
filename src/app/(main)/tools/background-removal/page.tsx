@@ -20,8 +20,24 @@ export const metadata: Metadata = {
     'background removal tool',
     'online background remover',
     'photo cutout maker',
-    'white background remover'
-  ],
+    'white background remover',
+    // ADD THESE NEW KEYWORDS:
+    'automatic background remover',
+    'AI background eraser',
+    'background removal API',
+    'bulk background removal',
+    'remove background from photo online',
+    'transparent PNG creator',
+    'product background remover',
+    'remove.bg alternative',
+    'free cutout tool',
+    'background removal software',
+    'image background changer',
+    'AI photo editor background',
+    'remove background without Photoshop',
+    'online PNG maker',
+    'automatic image cutout'
+  ],    
   openGraph: {
     title: 'AI Background Remover for E-commerce & Design - Remove BG in 5 Seconds',
     description: 'Remove backgrounds from photos instantly with AI. Free tool for creating transparent images from JPG/PNG. Perfect for product photos, social media & professional design.',
