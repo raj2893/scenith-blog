@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import axios from 'axios';
@@ -292,7 +292,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
     };
     role: string;
   } | null>(null);
-  const [characterCount, setCharacterCount] = useState(0);
+  const characterCount = useMemo(() => aiVoiceText.length, [aiVoiceText]);
   const [selectedEmotion, setSelectedEmotion] = useState<string>('default');
   const [isPlayingEmotionPreview, setIsPlayingEmotionPreview] = useState(false);
   const emotionPreviewAudioRef = useRef<HTMLAudioElement | null>(null);  
@@ -718,7 +718,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
       setError('Please enter text and select a voice.');
       return;
     }
-    if (aiVoiceText.length > getMaxCharsPerRequest()) {
+    if (aiVoiceText.length > maxCharsPerRequest) {
       const roleBasedLimit = ttsUsage?.role === 'STUDIO' ? 5000 : 
                             ttsUsage?.role === 'CREATOR' ? 2500 : 150;
       const limitType = ttsUsage?.daily.remaining !== -1 && 
@@ -729,7 +729,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
         ? (ttsUsage?.daily.remaining ?? 0) 
         : (ttsUsage?.monthly.remaining ?? 0);
       
-      setError(`Text exceeds the maximum limit of ${getMaxCharsPerRequest().toLocaleString()} characters per request for your ${ttsUsage?.role || 'BASIC'} plan (Role limit: ${roleBasedLimit.toLocaleString()} chars, ${remainingChars.toLocaleString()} left ${limitType}).`);
+      setError(`Text exceeds the maximum limit of ${maxCharsPerRequest.toLocaleString()} characters per request for your ${ttsUsage?.role || 'BASIC'} plan (Role limit: ${roleBasedLimit.toLocaleString()} chars, ${remainingChars.toLocaleString()} left ${limitType}).`);
       setTimeout(() => {
         const errorElement = document.querySelector('.error-message');
         if (errorElement) {
@@ -949,35 +949,6 @@ const AIVoiceGeneratorClient: React.FC = () => {
     });
   };
 
-  const getMaxCharsPerRequest = useCallback(() => {
-    if (!isLoggedIn || !ttsUsage) return 150;
-
-    // Determine role-based limit
-    const roleBasedLimit = ttsUsage.role === 'ADMIN' ? 10000 :
-                          ttsUsage.role === 'STUDIO' ? 5000 : 
-                          ttsUsage.role === 'CREATOR' ? 2500 : 150;
-
-    const dailyRemaining = ttsUsage.daily.remaining;
-    const monthlyRemaining = ttsUsage.monthly.remaining;
-
-    if (dailyRemaining === -1 && monthlyRemaining === -1) {
-      return roleBasedLimit;
-    }
-
-    if (dailyRemaining === -1) {
-      if (monthlyRemaining === -1) return roleBasedLimit;
-      return Math.min(roleBasedLimit, monthlyRemaining);
-    }
-
-    if (monthlyRemaining === -1) {
-      // Monthly unlimited, but daily has a limit
-      return Math.min(roleBasedLimit, dailyRemaining);
-    }
-
-    // Both have limits, use the most restrictive
-    return Math.min(roleBasedLimit, dailyRemaining, monthlyRemaining);
-  }, [isLoggedIn, ttsUsage]);
-
   const isLimitsExceeded = useCallback(() => {
     if (!isLoggedIn || !ttsUsage) return false;
 
@@ -985,47 +956,70 @@ const AIVoiceGeneratorClient: React.FC = () => {
     const dailyExceeded = ttsUsage.daily.limit > 0 && ttsUsage.daily.remaining <= 0;
 
     return monthlyExceeded || dailyExceeded;
+  }, [isLoggedIn, ttsUsage]); 
+
+  const maxCharsPerRequest = useMemo(() => {
+    if (!isLoggedIn || !ttsUsage) return 150;
+  
+    const roleBasedLimit = ttsUsage.role === 'ADMIN' ? 10000 :
+                          ttsUsage.role === 'STUDIO' ? 5000 : 
+                          ttsUsage.role === 'CREATOR' ? 2500 : 150;
+  
+    const dailyRemaining = ttsUsage.daily.remaining;
+    const monthlyRemaining = ttsUsage.monthly.remaining;
+  
+    if (dailyRemaining === -1 && monthlyRemaining === -1) {
+      return roleBasedLimit;
+    }
+  
+    if (dailyRemaining === -1) {
+      if (monthlyRemaining === -1) return roleBasedLimit;
+      return Math.min(roleBasedLimit, monthlyRemaining);
+    }
+  
+    if (monthlyRemaining === -1) {
+      return Math.min(roleBasedLimit, dailyRemaining);
+    }
+  
+    return Math.min(roleBasedLimit, dailyRemaining, monthlyRemaining);
+  }, [isLoggedIn, ttsUsage]);
+  
+  const limitsExceeded = useMemo(() => {
+    if (!isLoggedIn || !ttsUsage) return false;
+  
+    const monthlyExceeded = ttsUsage.monthly.limit > 0 && ttsUsage.monthly.remaining <= 0;
+    const dailyExceeded = ttsUsage.daily.limit > 0 && ttsUsage.daily.remaining <= 0;
+  
+    return monthlyExceeded || dailyExceeded;
   }, [isLoggedIn, ttsUsage]);
 
-  const wouldExceedLimits = useCallback((textLength: number) => {
+  const wouldExceedLimits = useMemo(() => {
     if (!isLoggedIn || !ttsUsage) return false;
-
+  
+    const textLength = aiVoiceText.length;
+  
     if (ttsUsage.monthly.limit > 0 && ttsUsage.monthly.remaining < textLength) {
       return true;
     }
-
+  
     if (ttsUsage.daily.limit > 0 && ttsUsage.daily.remaining < textLength) {
       return true;
     }
-
-    return false;
-  }, [isLoggedIn, ttsUsage]);  
-
-  const handleScriptSelect = (script: string) => {
-    setAiVoiceText(script);
-    setCharacterCount(script.length);
-    setShowScriptTemplates(false);
-    
-    // Scroll to textarea
-    setTimeout(() => {
-      const textareaSection = document.querySelector('.text-input-section');
-      if (textareaSection) {
-        textareaSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    }, 100);
-  };
   
-  const getDisabledReason = useCallback((): string | null => {
-    if (!isLoggedIn) return null; // Show "Login to Generate" text instead
+    return false;
+  }, [isLoggedIn, ttsUsage, aiVoiceText.length]);  
+
+  const disabledReason = useMemo((): string | null => {
+    if (!isLoggedIn) return null;
     if (!aiVoiceText.trim()) return "Please enter some text to generate voice";
     if (!selectedVoice) return "Please select a voice before generating";
     if (isGenerating) return "Audio generation in progress...";
-    if (characterCount > getMaxCharsPerRequest()) {
+    if (characterCount > maxCharsPerRequest) {
       const roleBasedLimit = ttsUsage?.role === 'STUDIO' ? 5000 : 
                             ttsUsage?.role === 'CREATOR' ? 2500 : 150;
-      return `Text exceeds maximum limit of ${getMaxCharsPerRequest().toLocaleString()} characters`;
+      return `Text exceeds maximum limit of ${maxCharsPerRequest.toLocaleString()} characters`;
     }
-    if (wouldExceedLimits(aiVoiceText.length)) {
+    if (wouldExceedLimits) {
       const dailyWouldExceed = ttsUsage && ttsUsage.daily.limit > 0 && ttsUsage.daily.remaining < aiVoiceText.length;
       const monthlyWouldExceed = ttsUsage && ttsUsage.monthly.limit > 0 && ttsUsage.monthly.remaining < aiVoiceText.length;
       
@@ -1037,7 +1031,39 @@ const AIVoiceGeneratorClient: React.FC = () => {
       }
     }
     return null;
-  }, [isLoggedIn, aiVoiceText, selectedVoice, isGenerating, characterCount, getMaxCharsPerRequest, wouldExceedLimits, ttsUsage]);  
+  }, [isLoggedIn, aiVoiceText, selectedVoice, isGenerating, characterCount, maxCharsPerRequest, wouldExceedLimits, ttsUsage]);   
+
+  const handleTextChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setAiVoiceText(e.target.value);
+  }, []);
+  
+  const handleEmotionChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedEmotion(e.target.value);
+  }, []);
+  
+  const handleVoiceSelect = useCallback((voice: Voice) => {
+    setSelectedVoice(voice);
+  }, []);
+  
+  const handleScriptSelect = useCallback((script: string) => {
+    setAiVoiceText(script);
+    setShowScriptTemplates(false);
+    
+    setTimeout(() => {
+      const textareaSection = document.querySelector('.text-input-section');
+      if (textareaSection) {
+        textareaSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 100);
+  }, []);
+  
+  const toggleScriptTemplates = useCallback(() => {
+    setShowScriptTemplates(prev => !prev);
+  }, []);
+  
+  const toggleHistory = useCallback(() => {
+    setShowHistory(prev => !prev);
+  }, []);
 
 return (
   <div className="ai-voice-generator-page">
@@ -1229,14 +1255,14 @@ return (
                           className="browse-templates-btn"
                           onClick={() => {
                             scrollToSection('script-templates');
-                            setShowScriptTemplates(true);
+                            toggleScriptTemplates();
                           }}
                           aria-label="Browse script templates"
                         >
                           📝 Browse Templates
                         </button>
-                        <span className={`live-char-badge ${characterCount > getMaxCharsPerRequest() ? 'exceeded' : ''}`}>
-                          {characterCount.toLocaleString()} / {getMaxCharsPerRequest().toLocaleString()}
+                        <span className={`live-char-badge ${characterCount > maxCharsPerRequest ? 'exceeded' : ''}`}>
+                          {characterCount.toLocaleString()} / {maxCharsPerRequest.toLocaleString()}
                         </span>
                       </>
                     )}
@@ -1246,12 +1272,9 @@ return (
                 <div className="textarea-container">
                   <textarea
                     value={aiVoiceText}
-                    onChange={(e) => {
-                      setAiVoiceText(e.target.value);
-                      setCharacterCount(e.target.value.length);
-                    }}
+                    onChange={handleTextChange}
                     placeholder="✨ Type or paste your script here..."                  
-                    className={`ai-voice-textarea ${characterCount > getMaxCharsPerRequest() ? 'limit-exceeded' : ''}`}
+                    className={`ai-voice-textarea ${characterCount > maxCharsPerRequest ? 'limit-exceeded' : ''}`}
                     disabled={!isLoggedIn}
                     aria-label="Text input for AI voice generation"
                   />
@@ -1277,15 +1300,15 @@ return (
                       <div className="hint-items">
                         <div className="hint-item">💡 <strong>Quick tip:</strong> Add commas for natural pauses</div>
                         <div className="hint-item">🎯 <strong>Best for:</strong> Clear, conversational text</div>
-                        <div className="hint-item">⚡ <strong>Max length:</strong> {getMaxCharsPerRequest().toLocaleString()} characters</div>
+                        <div className="hint-item">⚡ <strong>Max length:</strong> {maxCharsPerRequest.toLocaleString()} characters</div>
                       </div>
                     </div>
                   )}  
-                  {isLoggedIn && characterCount > getMaxCharsPerRequest() && (
+                  {isLoggedIn && characterCount > maxCharsPerRequest && (
                     <div className="character-limit-warning">
                       <span className="warning-icon">⚠️</span>
                       <strong>Character limit exceeded!</strong>
-                      <span>Please reduce your text by {(characterCount - getMaxCharsPerRequest()).toLocaleString()} characters to generate.</span>
+                      <span>Please reduce your text by {(characterCount - maxCharsPerRequest).toLocaleString()} characters to generate.</span>
                     </div>
                   )}                    
                 </div>                
@@ -1316,7 +1339,7 @@ return (
                   <select
                     id="emotion-select"
                     value={selectedEmotion}
-                    onChange={(e) => setSelectedEmotion(e.target.value)}
+                    onChange={handleEmotionChange}
                     className="emotion-dropdown"
                     aria-label="Select voice emotion"
                   >
@@ -1534,8 +1557,8 @@ return (
                         !aiVoiceText.trim() || 
                         !selectedVoice || 
                         isGenerating || 
-                        characterCount > getMaxCharsPerRequest() ||
-                        wouldExceedLimits(aiVoiceText.length) ||
+                        characterCount > maxCharsPerRequest ||
+                        wouldExceedLimits ||
                         undefined
                       )
                     }
@@ -1543,9 +1566,9 @@ return (
                   >
                     {isGenerating ? 'Generating...' : isLoggedIn ? 'Generate AI Voice' : 'Login to Generate'}
                   </button>
-                  {isLoggedIn && getDisabledReason() && (
+                  {isLoggedIn && disabledReason && (
                     <div className="button-tooltip">
-                      {getDisabledReason()}
+                      {disabledReason}
                     </div>
                   )}
                 </div>
@@ -1619,9 +1642,9 @@ return (
                           src={voice.profileUrl}
                           alt={`${voice.humanName || voice.voiceName} profile`}
                           className="voice-profile-image"
-                          onClick={() => setSelectedVoice(voice)}
+                          onClick={() => handleVoiceSelect(voice)}
                         />
-                        <div className="voice-details" onClick={() => setSelectedVoice(voice)}>
+                        <div className="voice-details" onClick={() => handleVoiceSelect(voice)}>
                           <div className="voice-title">
                             {voice.humanName || voice.voiceName}
                             {voice.voiceStyle && (
@@ -1823,7 +1846,7 @@ return (
                   <div className="history-content">
                     <button
                       className="toggle-history-btn"
-                      onClick={() => setShowHistory(!showHistory)}
+                      onClick={toggleHistory}
                       aria-expanded={showHistory}
                     >
                       {showHistory ? '▼' : '▶'} {showHistory ? 'Hide' : 'Show'} Past Generations ({generationHistory.length})
