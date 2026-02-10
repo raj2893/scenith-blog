@@ -36,25 +36,6 @@
   overflow: hidden;
 }
 
-.particle {
-  position: absolute;
-  background: rgba(59, 130, 246, 0.2);
-  border-radius: 50%;
-  animation: float 15s infinite ease-in-out;
-}
-
-.particle:nth-child(1) { width: 12px; height: 12px; top: 15%; left: 10%; animation-duration: 18s; }
-.particle:nth-child(2) { width: 18px; height: 18px; top: 45%; left: 25%; animation-duration: 22s; }
-.particle:nth-child(3) { width: 10px; height: 10px; top: 65%; left: 55%; animation-duration: 20s; }
-.particle:nth-child(4) { width: 15px; height: 15px; top: 25%; left: 75%; animation-duration: 19s; }
-.particle:nth-child(5) { width: 14px; height: 14px; top: 85%; left: 15%; animation-duration: 21s; }
-.particle:nth-child(6) { width: 16px; height: 16px; top: 35%; left: 65%; animation-duration: 23s; }
-
-@keyframes float {
-  0% { transform: translateY(0) scale(1); opacity: 0.3; }
-  50% { transform: translateY(-80px) scale(1.1); opacity: 0.5; }
-  100% { transform: translateY(0) scale(1); opacity: 0.3; }
-}
 
 /* Container */
 .container {
@@ -1886,11 +1867,6 @@
   animation: float 3s ease-in-out infinite;
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
 .must-try-badge {
   display: inline-block;
   background: linear-gradient(135deg, #F59E0B, #EF4444);
@@ -3460,15 +3436,6 @@
   animation: bounce 1s ease-in-out infinite;
 }
 
-@keyframes bounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-4px);
-  }
-}
-
 .float-text {
   display: flex;
   flex-direction: column;
@@ -4751,6 +4718,90 @@
   display: block;
 }
 
+.live-char-badge.exceeded {
+  background: linear-gradient(135deg, #EF4444, #DC2626);
+  animation: pulse-warning 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-warning {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(239, 68, 68, 0.6);
+  }
+}
+
+.ai-voice-textarea.limit-exceeded {
+  border: 2px solid #EF4444;
+  background: linear-gradient(to bottom, rgba(239, 68, 68, 0.05), white);
+}
+
+.ai-voice-textarea.limit-exceeded:focus {
+  border-color: #DC2626;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.character-limit-warning {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  right: 15px;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.95), rgba(220, 38, 38, 0.95));
+  color: white;
+  border-radius: 12px;
+  padding: 12px 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+  animation: slideUp 0.3s ease-out;
+  z-index: 5;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.character-limit-warning .warning-icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  animation: shake 0.5s ease-in-out infinite;
+}
+
+.character-limit-warning strong {
+  font-weight: 700;
+  margin-right: 4px;
+}
+
+.character-limit-warning span {
+  font-size: 0.85rem;
+  opacity: 0.95;
+}
+
+.script-input-wrapper::before,
+.preset-card::before,
+.template-card::before,
+.must-try-card::before {
+  will-change: transform;
+}
+
+.live-char-badge,
+.upgrade-button,
+.floating-upgrade-btn {
+  will-change: box-shadow;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .main-content {
@@ -5468,6 +5519,22 @@
   .button-tooltip::after {
     border-width: 6px;
   }  
+
+  .character-limit-warning {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 10px 12px;
+    font-size: 0.85rem;
+  }
+  
+  .character-limit-warning .warning-icon {
+    font-size: 1.1rem;
+  }
+  
+  .character-limit-warning span {
+    font-size: 0.8rem;
+  }  
 }
 
 @media (max-width: 480px) {
@@ -5903,5 +5970,22 @@
     font-size: 0.8rem;
     padding: 9px 12px;
     max-width: 80vw;
+  }  
+
+  .character-limit-warning {
+    padding: 9px 10px;
+    font-size: 0.8rem;
+  }
+  
+  .character-limit-warning .warning-icon {
+    font-size: 1rem;
+  }
+  
+  .character-limit-warning strong {
+    font-size: 0.85rem;
+  }
+  
+  .character-limit-warning span {
+    font-size: 0.75rem;
   }  
 }
