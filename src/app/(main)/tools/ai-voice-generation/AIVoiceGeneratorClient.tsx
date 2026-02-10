@@ -1235,7 +1235,7 @@ return (
                         >
                           📝 Browse Templates
                         </button>
-                        <span className="live-char-badge">
+                        <span className={`live-char-badge ${characterCount > getMaxCharsPerRequest() ? 'exceeded' : ''}`}>
                           {characterCount.toLocaleString()} / {getMaxCharsPerRequest().toLocaleString()}
                         </span>
                       </>
@@ -1251,10 +1251,9 @@ return (
                       setCharacterCount(e.target.value.length);
                     }}
                     placeholder="✨ Type or paste your script here..."                  
-                    className="ai-voice-textarea"
+                    className={`ai-voice-textarea ${characterCount > getMaxCharsPerRequest() ? 'limit-exceeded' : ''}`}
                     disabled={!isLoggedIn}
                     aria-label="Text input for AI voice generation"
-                    maxLength={getMaxCharsPerRequest()}
                   />
 
                   {!isLoggedIn && (
@@ -1281,9 +1280,15 @@ return (
                         <div className="hint-item">⚡ <strong>Max length:</strong> {getMaxCharsPerRequest().toLocaleString()} characters</div>
                       </div>
                     </div>
-                  )}
-                </div>
-                
+                  )}  
+                  {isLoggedIn && characterCount > getMaxCharsPerRequest() && (
+                    <div className="character-limit-warning">
+                      <span className="warning-icon">⚠️</span>
+                      <strong>Character limit exceeded!</strong>
+                      <span>Please reduce your text by {(characterCount - getMaxCharsPerRequest()).toLocaleString()} characters to generate.</span>
+                    </div>
+                  )}                    
+                </div>                
                 <div className="script-input-footer">
                   <div className="footer-stats">
                     <div className="stat-item">
