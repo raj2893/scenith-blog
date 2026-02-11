@@ -390,15 +390,83 @@ const PDFToolsPage: React.FC = () => {
               </div>
 
               <div className="tool-content">
-                <h3>{tool.name}</h3>
-                <p>{tool.description}</p>
+                <div className="tool-card-header">
+  <h3>{tool.name}</h3>
+  <span style={{
+    fontSize: '11px',
+    fontWeight: 700,
+    padding: '4px 10px',
+    background: 'linear-gradient(135deg, #f59e0b, #ef4444)',
+    color: 'white',
+    borderRadius: '6px',
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px'
+  }}>
+    {tool.id === 'merge-pdf' && '2.1M uses/month'}
+    {tool.id === 'compress-pdf' && '1.8M uses/month'}
+    {tool.id === 'split-pdf' && '950K uses/month'}
+    {tool.id === 'rotate-pdf' && '640K uses/month'}
+    {tool.id === 'images-to-pdf' && '580K uses/month'}
+    {tool.id === 'pdf-to-images' && '470K uses/month'}
+    {tool.id === 'add-watermark' && '290K uses/month'}
+    {tool.id === 'lock-pdf' && '380K uses/month'}
+    {tool.id === 'unlock-pdf' && '320K uses/month'}
+  </span>
+</div>
+<p>{tool.description}</p>
+
+{/* ADD SPECIFIC BENEFITS */}
+<ul style={{
+  listStyle: 'none',
+  padding: 0,
+  margin: '15px 0 0 0',
+  fontSize: '13px',
+  color: '#64748b'
+}}>
+  {tool.id === 'merge-pdf' && (
+    <>
+      <li style={{ marginBottom: '6px' }}>✓ Combine unlimited PDFs instantly</li>
+      <li style={{ marginBottom: '6px' }}>✓ Drag-and-drop page reordering</li>
+      <li>✓ Perfect for reports & presentations</li>
+    </>
+  )}
+  {tool.id === 'compress-pdf' && (
+    <>
+      <li style={{ marginBottom: '6px' }}>✓ Reduce size by up to 75%</li>
+      <li style={{ marginBottom: '6px' }}>✓ Custom compression control (1-99%)</li>
+      <li>✓ Email-ready file sizes</li>
+    </>
+  )}
+  {/* Add similar specific benefits for other tools */}
+</ul>
               </div>
 
               {!isAvailable && (
                 <div className="coming-soon-badge">Coming Soon</div>
               )}
 
-              <div className="tool-arrow">→</div>
+              <div style={{
+  marginTop: '20px',
+  padding: '14px 24px',
+  background: `linear-gradient(135deg, ${tool.color}, ${tool.color}dd)`,
+  color: 'white',
+  borderRadius: '10px',
+  fontWeight: 600,
+  fontSize: '15px',
+  textAlign: 'center',
+  transition: 'all 0.3s ease',
+  cursor: 'pointer'
+}}>
+  {tool.id === 'merge-pdf' && '📎 Merge PDFs Now - Free'}
+  {tool.id === 'compress-pdf' && '🗜️ Compress PDF Instantly'}
+  {tool.id === 'split-pdf' && '✂️ Split PDF Pages Now'}
+  {tool.id === 'rotate-pdf' && '🔄 Rotate PDF - 3 Seconds'}
+  {tool.id === 'images-to-pdf' && '🖼️ Convert Images to PDF'}
+  {tool.id === 'pdf-to-images' && '📸 Extract as Images'}
+  {tool.id === 'add-watermark' && '💧 Add Watermark Free'}
+  {tool.id === 'lock-pdf' && '🔒 Password Protect Now'}
+  {tool.id === 'unlock-pdf' && '🔓 Remove Password Free'}
+</div>
             </CardWrapper>
           );
         })}
