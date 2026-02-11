@@ -291,6 +291,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
       remaining: number;
     };
     role: string;
+    maxCharRequest: number;
   } | null>(null);
   const characterCount = useMemo(() => aiVoiceText.length, [aiVoiceText]);
   const [selectedEmotion, setSelectedEmotion] = useState<string>('default');
@@ -719,8 +720,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
       return;
     }
     if (aiVoiceText.length > maxCharsPerRequest) {
-      const roleBasedLimit = ttsUsage?.role === 'STUDIO' ? 5000 : 
-                            ttsUsage?.role === 'CREATOR' ? 2500 : 150;
+      const roleBasedLimit = ttsUsage?.maxCharRequest || 150;
       const limitType = ttsUsage?.daily.remaining !== -1 && 
                         (ttsUsage?.daily.remaining ?? 0) < (ttsUsage?.monthly.remaining ?? 0)
         ? 'daily' 
@@ -960,28 +960,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
 
   const maxCharsPerRequest = useMemo(() => {
     if (!isLoggedIn || !ttsUsage) return 150;
-  
-    const roleBasedLimit = ttsUsage.role === 'ADMIN' ? 10000 :
-                          ttsUsage.role === 'STUDIO' ? 5000 : 
-                          ttsUsage.role === 'CREATOR' ? 2500 : 150;
-  
-    const dailyRemaining = ttsUsage.daily.remaining;
-    const monthlyRemaining = ttsUsage.monthly.remaining;
-  
-    if (dailyRemaining === -1 && monthlyRemaining === -1) {
-      return roleBasedLimit;
-    }
-  
-    if (dailyRemaining === -1) {
-      if (monthlyRemaining === -1) return roleBasedLimit;
-      return Math.min(roleBasedLimit, monthlyRemaining);
-    }
-  
-    if (monthlyRemaining === -1) {
-      return Math.min(roleBasedLimit, dailyRemaining);
-    }
-  
-    return Math.min(roleBasedLimit, dailyRemaining, monthlyRemaining);
+    return ttsUsage.maxCharRequest || 150;
   }, [isLoggedIn, ttsUsage]);
   
   const limitsExceeded = useMemo(() => {
@@ -1015,8 +994,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
     if (!selectedVoice) return "Please select a voice before generating";
     if (isGenerating) return "Audio generation in progress...";
     if (characterCount > maxCharsPerRequest) {
-      const roleBasedLimit = ttsUsage?.role === 'STUDIO' ? 5000 : 
-                            ttsUsage?.role === 'CREATOR' ? 2500 : 150;
+      const roleBasedLimit = ttsUsage?.maxCharRequest || 150;
       return `Text exceeds maximum limit of ${maxCharsPerRequest.toLocaleString()} characters`;
     }
     if (wouldExceedLimits) {

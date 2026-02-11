@@ -83,7 +83,7 @@ export async function generateStaticParams() {
     const response = await axios.get(`${API_BASE_URL}/api/image-editor/elements`);
     const elements = response.data;
 
-    return elements.slice(0, 100).map((element: any) => ({
+    return elements.map((element: any) => ({
       slug: createSlug(element.name),
     }));
   } catch (error) {
