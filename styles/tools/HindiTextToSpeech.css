@@ -1,0 +1,1734 @@
+/* styles/tools/HindiTextToSpeech.css */
+
+/* ============================================
+   HINDI TEXT TO SPEECH PAGE STYLES
+   ============================================ */
+
+.hindi-tts-page {
+  font-family: 'Montserrat', sans-serif;
+  background: #FFFFFF;
+  min-height: 100vh;
+  color: #1E293B;
+  overflow-x: hidden;
+}
+
+/* Screen reader only content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ============================================
+   BREADCRUMB NAVIGATION
+   ============================================ */
+
+.breadcrumb-nav {
+  padding: 1rem 0;
+  background: linear-gradient(135deg, #FFF5E6 0%, #FFE8CC 100%);
+  border-bottom: 2px solid #FF9933;
+  margin-top: 80px;
+}
+
+.breadcrumb-nav ol {
+  display: flex;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0 2rem;
+  margin: 0;
+  flex-wrap: wrap;
+}
+
+.breadcrumb-nav li:not(:last-child)::after {
+  content: '›';
+  margin-left: 0.5rem;
+  color: #FF9933;
+  font-weight: 700;
+}
+
+.breadcrumb-nav a {
+  color: #FF6600;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.breadcrumb-nav a:hover {
+  color: #138808;
+  text-decoration: underline;
+}
+
+.breadcrumb-nav span {
+  color: #1E293B;
+  font-weight: 600;
+}
+
+/* ============================================
+   HERO SECTION
+   ============================================ */
+
+.hindi-hero-section {
+  padding: 80px 20px;
+  background: linear-gradient(135deg, #FFF5E6 0%, #FFE8CC 50%, #FFFFFF 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.hindi-hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="25" cy="25" r="2" fill="%23FF9933" opacity="0.1"/><circle cx="75" cy="75" r="2" fill="%23138808" opacity="0.1"/></svg>');
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.hindi-hero-section .container {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-flag-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #FF9933 0%, #FFFFFF 50%, #138808 100%);
+  border-radius: 50px;
+  box-shadow: 0 8px 24px rgba(255, 153, 51, 0.3);
+  margin-bottom: 30px;
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 8px 24px rgba(255, 153, 51, 0.3);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 12px 36px rgba(255, 153, 51, 0.5);
+    transform: scale(1.05);
+  }
+}
+
+.indian-flag {
+  font-size: 2rem;
+  animation: wave 2s ease-in-out infinite;
+}
+
+@keyframes wave {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(10deg); }
+  75% { transform: rotate(-10deg); }
+}
+
+.badge-text {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1E293B;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.hindi-hero-section h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #1E293B;
+  margin-bottom: 20px;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.hindi-subtitle {
+  display: block;
+  font-size: 1.6rem;
+  color: #FF6600;
+  margin-top: 15px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #FF9933, #FF6600);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-description {
+  font-size: 1.2rem;
+  color: #475569;
+  line-height: 1.8;
+  max-width: 900px;
+  margin: 0 auto 40px;
+  text-align: center;
+}
+
+.hero-description strong {
+  color: #FF6600;
+  font-weight: 700;
+}
+
+/* ============================================
+   CTA BUTTONS
+   ============================================ */
+
+.hindi-cta-primary {
+  margin: 50px auto;
+  max-width: 700px;
+}
+
+.main-cta-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 24px 32px;
+  background: linear-gradient(135deg, #FF9933 0%, #FF6600 50%, #138808 100%);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 12px 40px rgba(255, 153, 51, 0.4);
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.main-cta-button::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transform: rotate(45deg);
+  animation: shimmer 3s infinite;
+}
+
+.main-cta-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 50px rgba(255, 153, 51, 0.6);
+}
+
+.main-cta-button:active {
+  transform: translateY(-2px);
+}
+
+.cta-icon {
+  font-size: 2.5rem;
+  flex-shrink: 0;
+  animation: bounce 1s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.cta-text {
+  flex: 1;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.cta-text strong {
+  font-size: 1.3rem;
+  display: block;
+}
+
+.cta-text small {
+  font-size: 0.9rem;
+  opacity: 0.95;
+  font-weight: 500;
+}
+
+.cta-arrow {
+  font-size: 2rem;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.main-cta-button:hover .cta-arrow {
+  transform: translateX(8px);
+}
+
+/* ============================================
+   TRUST INDICATORS
+   ============================================ */
+
+.trust-indicators-hindi {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin: 40px 0;
+}
+
+.trust-item {
+  background: linear-gradient(135deg, rgba(255, 153, 51, 0.1), rgba(19, 136, 8, 0.1));
+  color: #FF6600;
+  padding: 12px 20px;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: 2px solid rgba(255, 153, 51, 0.3);
+  transition: all 0.3s ease;
+}
+
+.trust-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(255, 153, 51, 0.3);
+  border-color: #FF9933;
+}
+
+/* ============================================
+   HERO IMAGE
+   ============================================ */
+
+.hero-image-container {
+  margin: 50px auto 0;
+  max-width: 900px;
+  text-align: center;
+}
+
+.hero-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 12px 40px rgba(255, 153, 51, 0.3);
+  border: 4px solid #FF9933;
+  transition: transform 0.3s ease;
+}
+
+.hero-image:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 60px rgba(255, 153, 51, 0.4);
+}
+
+/* ============================================
+   QUICK DEFINITION SECTION
+   ============================================ */
+
+.quick-definition-section {
+  padding: 60px 0;
+  background: #F8FAFC;
+  border-top: 3px solid #FF9933;
+  border-bottom: 3px solid #138808;
+}
+
+.featured-snippet-target {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.hindi-definition {
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  border-left: 6px solid #FF6600;
+  box-shadow: 0 8px 30px rgba(255, 153, 51, 0.2);
+}
+
+.definition-text {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: #1E293B;
+  margin: 0;
+}
+
+.definition-text strong {
+  color: #FF6600;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+/* ============================================
+   WHY HINDI TTS SECTION
+   ============================================ */
+
+.why-hindi-tts-section {
+  padding: 80px 0;
+  background: linear-gradient(180deg, #FFFFFF 0%, #FFF5E6 100%);
+}
+
+.why-hindi-tts-section h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1E293B;
+  text-align: center;
+  margin-bottom: 20px;
+  line-height: 1.3;
+}
+
+.section-intro {
+  font-size: 1.15rem;
+  color: #64748B;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 50px;
+  line-height: 1.7;
+}
+
+.section-intro strong {
+  color: #FF6600;
+  font-weight: 700;
+}
+
+.benefits-grid-hindi {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+  margin-top: 50px;
+}
+
+.benefit-card {
+  background: white;
+  padding: 35px;
+  border-radius: 16px;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+  border-top: 5px solid #FF9933;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.benefit-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #FF9933, #138808);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.benefit-card:hover::before {
+  transform: scaleX(1);
+}
+
+.benefit-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(255, 153, 51, 0.2);
+}
+
+.benefit-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 20px;
+}
+
+.benefit-card h3 {
+  font-size: 1.5rem;
+  color: #1E293B;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.benefit-card p {
+  font-size: 1.05rem;
+  color: #475569;
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+.benefit-card strong {
+  color: #FF6600;
+  font-weight: 700;
+}
+
+.benefit-stats {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.benefit-stats li {
+  background: linear-gradient(135deg, rgba(255, 153, 51, 0.1), rgba(19, 136, 8, 0.1));
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: #1E293B;
+  font-weight: 600;
+  border-left: 3px solid #FF6600;
+}
+
+/* ============================================
+   HOW IT WORKS SECTION
+   ============================================ */
+
+.how-it-works-hindi {
+  padding: 80px 0;
+  background: white;
+  border-top: 2px solid #FFE8CC;
+}
+
+.how-it-works-hindi h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1E293B;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.steps-visual-hindi {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  margin-top: 50px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.step-item {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 30px;
+  padding: 35px;
+  background: linear-gradient(145deg, #FFFFFF, #FFF5E6);
+  border-radius: 16px;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+  border-left: 6px solid #FF6600;
+  transition: all 0.3s ease;
+}
+
+.step-item:hover {
+  transform: translateX(10px);
+  box-shadow: 0 10px 35px rgba(255, 153, 51, 0.2);
+}
+
+.step-number {
+  background: linear-gradient(135deg, #FF9933, #FF6600);
+  color: white;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+  box-shadow: 0 8px 24px rgba(255, 153, 51, 0.4);
+  flex-shrink: 0;
+}
+
+.step-content h3 {
+  font-size: 1.6rem;
+  color: #1E293B;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.step-content p {
+  font-size: 1.05rem;
+  color: #475569;
+  line-height: 1.8;
+  margin-bottom: 15px;
+}
+
+.step-content strong {
+  color: #FF6600;
+  font-weight: 700;
+}
+
+.step-example {
+  background: white;
+  padding: 15px 20px;
+  border-radius: 10px;
+  margin-top: 15px;
+  border-left: 4px solid #138808;
+  font-size: 1rem;
+  color: #1E293B;
+  line-height: 1.6;
+}
+
+.step-example strong {
+  color: #138808;
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* ============================================
+   SECONDARY CTA
+   ============================================ */
+
+.cta-secondary {
+  margin: 60px auto;
+  text-align: center;
+}
+
+.secondary-cta-button {
+  display: inline-block;
+  padding: 18px 40px;
+  background: linear-gradient(135deg, #138808, #0D6606);
+  color: white;
+  border-radius: 12px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(19, 136, 8, 0.3);
+}
+
+.secondary-cta-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 35px rgba(19, 136, 8, 0.4);
+}
+
+/* ============================================
+   USE CASES SECTION
+   ============================================ */
+
+.hindi-use-cases-section {
+  padding: 80px 0;
+  background: linear-gradient(180deg, #FFF5E6 0%, #FFFFFF 100%);
+}
+
+.hindi-use-cases-section h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1E293B;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.use-cases-grid-hindi {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+  margin-top: 50px;
+}
+
+.use-case-card {
+  background: white;
+  padding: 35px;
+  border-radius: 16px;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+  border-top: 5px solid #FF6600;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.use-case-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, #FF9933, #138808);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.use-case-card:hover::before {
+  transform: scaleX(1);
+}
+
+.use-case-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(255, 102, 0, 0.2);
+}
+
+.use-case-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 20px;
+}
+
+.use-case-card h3 {
+  font-size: 1.4rem;
+  color: #1E293B;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.use-case-card p {
+  font-size: 1.05rem;
+  color: #475569;
+  line-height: 1.8;
+  margin-bottom: 15px;
+}
+
+.use-case-card strong {
+  color: #FF6600;
+  font-weight: 700;
+}
+
+.use-case-examples {
+  background: rgba(255, 153, 51, 0.1);
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-top: 15px;
+  font-size: 0.95rem;
+  color: #1E293B;
+  line-height: 1.6;
+}
+
+.use-case-examples strong {
+  color: #138808;
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* ============================================
+   COMPARISON SECTION
+   ============================================ */
+
+.comparison-section-hindi {
+  padding: 80px 0;
+  background: white;
+  border-top: 2px solid #FFE8CC;
+}
+
+.comparison-section-hindi h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1E293B;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.comparison-table-wrapper {
+  overflow-x: auto;
+  margin: 50px 0;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.comparison-table thead {
+  background: linear-gradient(135deg, #FF9933, #FF6600);
+  color: white;
+}
+
+.comparison-table th {
+  padding: 20px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.comparison-table td {
+  padding: 20px;
+  border-bottom: 1px solid #E5E7EB;
+  font-size: 1rem;
+  line-height: 1.7;
+  vertical-align: top;
+}
+
+.comparison-table tbody tr:hover {
+  background: #FFF5E6;
+}
+
+.comparison-table .detail {
+  display: block;
+  font-size: 0.9rem;
+  color: #64748B;
+  margin-top: 5px;
+  font-style: italic;
+}
+
+.comparison-table strong {
+  color: #1E293B;
+  font-weight: 700;
+}
+
+/* ============================================
+   VOICES SHOWCASE SECTION
+   ============================================ */
+
+.hindi-voices-showcase {
+  padding: 80px 0;
+  background: linear-gradient(180deg, #FFF5E6 0%, #FFFFFF 100%);
+}
+
+.hindi-voices-showcase h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1E293B;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.voices-showcase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+  margin: 50px 0;
+}
+
+.voice-showcase-card {
+  background: white;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  border: 3px solid #FF9933;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.voice-showcase-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(255, 153, 51, 0.25);
+  border-color: #FF6600;
+}
+
+.voice-icon {
+  font-size: 4rem;
+  display: block;
+  margin-bottom: 20px;
+}
+
+.voice-showcase-card h3 {
+  font-size: 1.6rem;
+  color: #1E293B;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.voice-showcase-card p {
+  font-size: 1.05rem;
+  color: #475569;
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+.voice-showcase-card strong {
+  color: #FF6600;
+  font-weight: 700;
+}
+
+.voice-features {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+  text-align: left;
+}
+
+.voice-features li {
+  background: rgba(255, 153, 51, 0.1);
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+  color: #1E293B;
+  font-weight: 500;
+  border-left: 3px solid #138808;
+}
+
+.voice-quality-features {
+  margin-top: 60px;
+  background: white;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.voice-quality-features h3 {
+  font-size: 2rem;
+  color: #1E293B;
+  text-align: center;
+  margin-bottom: 40px;
+  font-weight: 700;
+}
+
+.quality-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+}
+
+.quality-item {
+  text-align: center;
+  padding: 25px;
+  background: linear-gradient(145deg, #FFF5E6, #FFFFFF);
+  border-radius: 12px;
+  border-top: 3px solid #FF6600;
+  transition: all 0.3s ease;
+}
+
+.quality-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(255, 102, 0, 0.15);
+}
+
+.quality-icon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 15px;
+}
+
+.quality-item strong {
+  display: block;
+  font-size: 1.2rem;
+  color: #1E293B;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.quality-item p {
+  font-size: 0.95rem;
+  color: #64748B;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ============================================
+   TERTIARY CTA
+   ============================================ */
+
+.cta-tertiary {
+  margin: 50px auto;
+  text-align: center;
+}
+
+.tertiary-cta-button {
+  display: inline-block;
+  padding: 18px 40px;
+  background: linear-gradient(135deg, #FF6600, #FF9933);
+  color: white;
+  border-radius: 12px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(255, 102, 0, 0.3);
+}
+
+.tertiary-cta-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 35px rgba(255, 102, 0, 0.4);
+}
+
+.tertiary-cta-button span {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ============================================
+   FAQ SECTION
+   ============================================ */
+
+.faq-section-hindi {
+  padding: 80px 0;
+  background: white;
+}
+
+.faq-section-hindi h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1E293B;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.faq-grid-hindi {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 25px;
+  margin-top: 50px;
+}
+
+.faq-item {
+  background: linear-gradient(145deg, #FFFFFF, #FFF5E6);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  border-left: 5px solid #FF6600;
+  transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(255, 153, 51, 0.15);
+}
+
+.faq-item h3 {
+  font-size: 1.25rem;
+  color: #1E293B;
+  margin-bottom: 15px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.faq-item p {
+  font-size: 1rem;
+  color: #475569;
+  line-height: 1.8;
+  margin: 0;
+}
+
+.faq-item strong {
+  color: #FF6600;
+  font-weight: 700;
+}
+
+/* ============================================
+   INDIA STATS SECTION
+   ============================================ */
+
+.india-stats-section {
+  padding: 80px 0;
+  background: linear-gradient(135deg, #FFF5E6 0%, #FFE8CC 100%);
+  border-top: 3px solid #FF9933;
+  border-bottom: 3px solid #138808;
+}
+
+.india-stats-section h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1E293B;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.stats-grid-india {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-top: 50px;
+}
+
+.stat-card {
+  background: white;
+  padding: 35px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 8px 30px rgba(255, 153, 51, 0.2);
+  border-top: 5px solid #FF6600;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 15px 45px rgba(255, 153, 51, 0.3);
+}
+
+.stat-number {
+  font-size: 3.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #FF9933, #FF6600);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 15px;
+  display: block;
+}
+
+.stat-label {
+  font-size: 1.2rem;
+  color: #1E293B;
+  font-weight: 700;
+  margin-bottom: 15px;
+  display: block;
+}
+
+.stat-detail {
+  font-size: 0.95rem;
+  color: #64748B;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.stats-insight {
+  margin-top: 60px;
+  background: white;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  border-left: 6px solid #138808;
+}
+
+.stats-insight h3 {
+  font-size: 1.8rem;
+  color: #1E293B;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.stats-insight p {
+  font-size: 1.1rem;
+  color: #475569;
+  line-height: 1.8;
+  margin: 0;
+}
+
+.stats-insight strong {
+  color: #FF6600;
+  font-weight: 700;
+}
+
+/* ============================================
+   REGIONAL HINDI SECTION
+   ============================================ */
+
+.regional-hindi-section {
+  padding: 80px 0;
+  background: white;
+}
+
+.regional-hindi-section h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1E293B;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.regional-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+  margin-top: 50px;
+}
+
+.regional-card {
+  background: linear-gradient(145deg, #FFFFFF, #FFF5E6);
+  padding: 35px;
+  border-radius: 16px;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+  border-top: 4px solid #FF6600;
+  transition: all 0.3s ease;
+}
+
+.regional-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 35px rgba(255, 102, 0, 0.15);
+}
+
+.regional-card h3 {
+  font-size: 1.5rem;
+  color: #1E293B;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.regional-card p {
+  font-size: 1rem;
+  color: #475569;
+  line-height: 1.8;
+  margin: 0;
+}
+
+.regional-card strong {
+  color: #FF6600;
+  font-weight: 700;
+}
+
+/* ============================================
+   FINAL CTA SECTION
+   ============================================ */
+
+.final-cta-section-hindi {
+  padding: 100px 20px;
+  background: linear-gradient(135deg, #FF9933 0%, #FF6600 50%, #138808 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.final-cta-section-hindi::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="25" cy="25" r="2" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="2" fill="white" opacity="0.1"/></svg>');
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.final-cta-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  color: white;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.cta-icon-large {
+  font-size: 5rem;
+  display: block;
+  margin-bottom: 30px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.9; }
+}
+
+.final-cta-content h2 {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.cta-description {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  margin-bottom: 40px;
+  opacity: 0.95;
+}
+
+.final-cta-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 28px 40px;
+  background: white;
+  color: #FF6600;
+  border-radius: 16px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+  max-width: 700px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.final-cta-button:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+.cta-text-large {
+  flex: 1;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cta-text-large strong {
+  font-size: 1.5rem;
+  color: #1E293B;
+  display: block;
+}
+
+.cta-text-large small {
+  font-size: 1rem;
+  color: #64748B;
+  font-weight: 500;
+}
+
+.cta-arrow-large {
+  font-size: 2.5rem;
+  color: #FF6600;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.final-cta-button:hover .cta-arrow-large {
+  transform: translateX(10px);
+}
+
+.final-trust-indicators {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.final-trust-indicators span {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.cta-footer-note {
+  margin-top: 40px;
+  font-size: 1rem;
+  opacity: 0.9;
+  line-height: 1.6;
+}
+
+.cta-footer-note strong {
+  font-weight: 700;
+}
+
+.inline-link {
+  color: white;
+  text-decoration: underline;
+  font-weight: 600;
+  transition: opacity 0.3s ease;
+}
+
+.inline-link:hover {
+  opacity: 0.8;
+}
+
+/* ============================================
+   PEOPLE ALSO ASK SECTION
+   ============================================ */
+
+.people-also-ask-hindi {
+  padding: 80px 0;
+  background: #F8FAFC;
+}
+
+.people-also-ask-hindi h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1E293B;
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.paa-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 25px;
+}
+
+.paa-item {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  border-left: 5px solid #FF6600;
+  transition: all 0.3s ease;
+}
+
+.paa-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(255, 153, 51, 0.15);
+}
+
+.paa-item h3 {
+  font-size: 1.2rem;
+  color: #1E293B;
+  margin-bottom: 15px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.paa-item p {
+  font-size: 1rem;
+  color: #475569;
+  line-height: 1.8;
+  margin: 0;
+}
+
+.paa-item strong {
+  color: #FF6600;
+  font-weight: 700;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+  .hindi-hero-section {
+    padding: 50px 15px;
+  }
+
+  .hindi-hero-section h1 {
+    font-size: 2rem;
+  }
+
+  .hindi-subtitle {
+    font-size: 1.2rem;
+  }
+
+  .hero-description {
+    font-size: 1rem;
+  }
+
+  .main-cta-button {
+    flex-direction: column;
+    padding: 20px 24px;
+  }
+
+  .cta-text {
+    text-align: center;
+  }
+
+  .cta-icon,
+  .cta-arrow {
+    font-size: 2rem;
+  }
+
+  .cta-text strong {
+    font-size: 1.15rem;
+  }
+
+  .cta-text small {
+    font-size: 0.85rem;
+  }
+
+  .trust-indicators-hindi {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .benefits-grid-hindi,
+  .use-cases-grid-hindi,
+  .voices-showcase-grid,
+  .stats-grid-india,
+  .regional-info-grid,
+  .faq-grid-hindi,
+  .paa-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .step-item {
+    grid-template-columns: 1fr;
+    padding: 25px;
+  }
+
+  .step-number {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+    margin: 0 auto 20px;
+  }
+
+  .comparison-table {
+    font-size: 0.9rem;
+  }
+
+  .comparison-table th,
+  .comparison-table td {
+    padding: 12px;
+  }
+
+  .quality-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .final-cta-content h2 {
+    font-size: 2rem;
+  }
+
+  .cta-description {
+    font-size: 1rem;
+  }
+
+  .final-cta-button {
+    flex-direction: column;
+    padding: 24px 28px;
+  }
+
+  .cta-text-large {
+    text-align: center;
+  }
+
+  .cta-text-large strong {
+    font-size: 1.25rem;
+  }
+
+  .cta-text-large small {
+    font-size: 0.9rem;
+  }
+
+  .final-trust-indicators {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .stat-number {
+    font-size: 2.5rem;
+  }
+
+  .stat-label {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .breadcrumb-nav ol {
+    padding: 0 1rem;
+  }
+
+  .hindi-hero-section h1 {
+    font-size: 1.6rem;
+  }
+
+  .hindi-subtitle {
+    font-size: 1rem;
+  }
+
+  .hero-description {
+    font-size: 0.9rem;
+  }
+
+  .hero-flag-badge {
+    padding: 10px 18px;
+  }
+
+  .indian-flag {
+    font-size: 1.5rem;
+  }
+
+  .badge-text {
+    font-size: 0.85rem;
+  }
+
+  .main-cta-button {
+    padding: 18px 20px;
+  }
+
+  .cta-text strong {
+    font-size: 1rem;
+  }
+
+  .cta-text small {
+    font-size: 0.8rem;
+  }
+
+  .trust-item {
+    font-size: 0.85rem;
+    padding: 8px 14px;
+  }
+
+  .section-intro {
+    font-size: 1rem;
+  }
+
+  .benefit-card,
+  .use-case-card,
+  .faq-item,
+  .regional-card {
+    padding: 25px 20px;
+  }
+
+  .benefit-icon,
+  .use-case-icon,
+  .voice-icon {
+    font-size: 2.5rem;
+  }
+
+  .step-number {
+    width: 50px;
+    height: 50px;
+    font-size: 1.25rem;
+  }
+
+  .step-content h3 {
+    font-size: 1.3rem;
+  }
+
+  .step-content p {
+    font-size: 0.95rem;
+  }
+
+  .comparison-table th,
+  .comparison-table td {
+    padding: 10px;
+    font-size: 0.85rem;
+  }
+
+  .voice-showcase-card {
+    padding: 28px 20px;
+  }
+
+  .quality-item {
+    padding: 20px;
+  }
+
+  .stat-number {
+    font-size: 2rem;
+  }
+
+  .stat-label {
+    font-size: 0.95rem;
+  }
+
+  .stats-insight {
+    padding: 28px 20px;
+  }
+
+  .final-cta-content h2 {
+    font-size: 1.6rem;
+  }
+
+  .cta-icon-large {
+    font-size: 3.5rem;
+  }
+
+  .cta-description {
+    font-size: 0.95rem;
+  }
+
+  .final-cta-button {
+    padding: 20px 22px;
+  }
+
+  .cta-text-large strong {
+    font-size: 1.1rem;
+  }
+
+  .cta-text-large small {
+    font-size: 0.85rem;
+  }
+
+  .cta-arrow-large {
+    font-size: 2rem;
+  }
+
+  .final-trust-indicators span {
+    font-size: 0.85rem;
+    padding: 10px 18px;
+  }
+
+  .cta-footer-note {
+    font-size: 0.9rem;
+  }
+}
+
+/* ============================================
+   ANIMATION KEYFRAMES
+   ============================================ */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY IMPROVEMENTS
+   ============================================ */
+
+.hindi-tts-page a:focus,
+.hindi-tts-page button:focus {
+  outline: 3px solid #FF9933;
+  outline-offset: 3px;
+}
+
+.hindi-tts-page *:focus-visible {
+  outline: 3px solid #FF6600;
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .benefit-card,
+  .use-case-card,
+  .faq-item {
+    border: 2px solid #1E293B;
+  }
+
+  .main-cta-button,
+  .final-cta-button {
+    border: 3px solid white;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Print styles */
+@media print {
+  .breadcrumb-nav,
+  .main-cta-button,
+  .secondary-cta-button,
+  .tertiary-cta-button,
+  .final-cta-section-hindi {
+    display: none;
+  }
+
+  .hindi-tts-page {
+    color: black;
+    background: white;
+  }
+
+  .benefit-card,
+  .use-case-card,
+  .faq-item {
+    page-break-inside: avoid;
+  }
+}
