@@ -4802,6 +4802,11 @@
   will-change: box-shadow;
 }
 
+.overlay-content a.overlay-login-btn {
+  display: inline-block;
+  text-decoration: none;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .main-content {

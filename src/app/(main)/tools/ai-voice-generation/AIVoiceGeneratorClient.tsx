@@ -1253,7 +1253,7 @@ return (
                     onChange={handleTextChange}
                     placeholder="✨ Type or paste your script here..."                  
                     className={`ai-voice-textarea ${characterCount > maxCharsPerRequest ? 'limit-exceeded' : ''}`}
-                    disabled={!isLoggedIn}
+                    disabled={!isLoggedIn || limitsExceeded}
                     aria-label="Text input for AI voice generation"
                   />
 
@@ -1273,7 +1273,23 @@ return (
                     </div>
                   )}
 
-                  {isLoggedIn && aiVoiceText.length === 0 && (
+                  {isLoggedIn && limitsExceeded && (
+                    <div className="textarea-overlay">
+                      <div className="overlay-content">
+                        <span className="lock-icon">⚠️</span>
+                        <h4>Character Limit Reached</h4>
+                        <p>You've used all your {userProfile.role} plan characters</p>
+                        <a 
+                          href="/pricing"
+                          className="overlay-login-btn"
+                        >
+                          Upgrade Now
+                        </a>
+                      </div>
+                    </div>
+                  )}
+
+                  {isLoggedIn && !limitsExceeded && aiVoiceText.length === 0 && (
                     <div className="textarea-hint">
                       <div className="hint-items">
                         <div className="hint-item">💡 <strong>Quick tip:</strong> Add commas for natural pauses</div>
