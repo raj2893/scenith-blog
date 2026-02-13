@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import AIImageGeneratorClient from './AIImageGenerationClient';
 
 export const metadata: Metadata = {
-  title: 'Free AI Image Generator: Create Stunning Visuals from Text (Social Media & Marketing) | Scenith',
-  description: 'Generate professional AI images from text instantly. 8+ artistic styles including realistic photos, anime, digital art. Perfect for social media, YouTube thumbnails, marketing—free with commercial rights!',
+  title: 'Free AI Image Generator: Create Stunning Images from Text in Seconds (YouTube Thumbnails & Marketing) | Scenith',
+  description: 'Generate professional AI images instantly—realistic photos, anime art, 3D renders & more. 30 free images/month, commercial rights, no watermarks. Perfect for YouTube thumbnails, social media posts & marketing visuals!',
   keywords: [
     'AI image generator',
     'free AI image generator',

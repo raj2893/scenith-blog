@@ -1053,6 +1053,151 @@ const AIImageGeneratorClient: React.FC = () => {
               </div>
             </section>
 
+            <section className="use-cases-showcase" role="region" aria-labelledby="use-cases-title">
+              <div className="container">
+                <h2 id="use-cases-title">What Can You Create with AI Image Generation?</h2>
+                      
+                <div className="use-case-detailed-grid">
+                  <article className="use-case-detailed">
+                    <span className="use-case-number">1</span>
+                    <h3>🎬 YouTube Thumbnails That Get Clicks</h3>
+                    <p>
+                      Create eye-catching thumbnails proven to increase CTR by 30-50%. Our Realistic Photo style works for tech reviews and tutorials, while Digital Art excels for entertainment and gaming channels.
+                    </p>
+                    <div className="use-case-prompts">
+                      <strong>Example Prompts:</strong>
+                      <ul>
+                        <li>"Epic tech gadget exploding with colorful particles, dramatic lighting, 4K quality"</li>
+                        <li>"Surprised reaction face, vibrant background, cinematic lighting, YouTube thumbnail style"</li>
+                        <li>"Before/after comparison, split screen, professional photography, clean design"</li>
+                      </ul>
+                    </div>
+                    <div className="use-case-stats">
+                      <span>✓ Perfect 1280x720px resolution</span>
+                      <span>✓ Optimized for mobile & desktop</span>
+                      <span>✓ Eye-catching compositions</span>
+                    </div>
+                  </article>
+                      
+                  <article className="use-case-detailed">
+                    <span className="use-case-number">2</span>
+                    <h3>📱 Instagram & Social Media Graphics</h3>
+                    <p>
+                      Generate scroll-stopping visuals for Instagram posts, Stories, Reels, and Pinterest pins. Anime and Digital Art styles perform exceptionally well for engagement on visual platforms.
+                    </p>
+                    <div className="use-case-prompts">
+                      <strong>Example Prompts:</strong>
+                      <ul>
+                        <li>"Aesthetic coffee shop interior, warm tones, golden hour lighting, Instagram worthy"</li>
+                        <li>"Minimalist quote card, pastel gradient background, modern typography space"</li>
+                        <li>"Product flat lay, marble surface, natural lighting, Pinterest aesthetic"</li>
+                      </ul>
+                    </div>
+                    <div className="use-case-stats">
+                      <span>✓ Square 1:1 for feed posts</span>
+                      <span>✓ Vertical 9:16 for Stories</span>
+                      <span>✓ Brand-consistent styles</span>
+                    </div>
+                  </article>
+                      
+                  <article className="use-case-detailed">
+                    <span className="use-case-number">3</span>
+                    <h3>🛍️ E-commerce Product Mockups</h3>
+                    <p>
+                      Create professional product images without expensive photoshoots. 3D Render and Realistic Photo styles generate studio-quality visuals for online stores, catalogs, and Amazon listings.
+                    </p>
+                    <div className="use-case-prompts">
+                      <strong>Example Prompts:</strong>
+                      <ul>
+                        <li>"Sleek smartphone on white background, studio lighting, commercial photography, 4K"</li>
+                        <li>"Luxury watch close-up, black background, dramatic side lighting, product photography"</li>
+                        <li>"Cosmetics product lineup, pastel pink surface, soft shadows, e-commerce style"</li>
+                      </ul>
+                    </div>
+                    <div className="use-case-stats">
+                      <span>✓ Clean white backgrounds</span>
+                      <span>✓ Professional studio lighting</span>
+                      <span>✓ High-resolution outputs</span>
+                    </div>
+                  </article>
+                      
+                  <article className="use-case-detailed">
+                    <span className="use-case-number">4</span>
+                    <h3>📰 Blog Headers & Article Images</h3>
+                    <p>
+                      Replace generic stock photos with custom visuals that match your exact article topic. Digital Art and Artistic styles create unique, branded imagery that improves content professionalism.
+                    </p>
+                    <div className="use-case-prompts">
+                      <strong>Example Prompts:</strong>
+                      <ul>
+                        <li>"Futuristic city skyline, neon lights, cyberpunk aesthetic, wide banner format"</li>
+                        <li>"Abstract representation of data analytics, geometric shapes, blue gradient"</li>
+                        <li>"Cozy home office setup, natural light, minimalist design, blog header style"</li>
+                      </ul>
+                    </div>
+                    <div className="use-case-stats">
+                      <span>✓ Custom topic alignment</span>
+                      <span>✓ Unique (not stock)</span>
+                      <span>✓ Brand personality</span>
+                    </div>
+                  </article>
+                      
+                  <article className="use-case-detailed">
+                    <span className="use-case-number">5</span>
+                    <h3>🎨 Character Design & Concept Art</h3>
+                    <p>
+                      Bring fictional characters and game concepts to life with Anime, Fantasy, and Digital Art styles. Perfect for indie game developers, authors, and content creators building visual worlds.
+                    </p>
+                    <div className="use-case-prompts">
+                      <strong>Example Prompts:</strong>
+                      <ul>
+                        <li>"Anime warrior character, silver armor, glowing sword, detailed face, full body"</li>
+                        <li>"Sci-fi spaceship design, sleek metallic surface, blue engine glow, concept art"</li>
+                        <li>"Fantasy dragon, emerald scales, majestic wings, mountain background, epic pose"</li>
+                      </ul>
+                    </div>
+                    <div className="use-case-stats">
+                      <span>✓ Consistent character features</span>
+                      <span>✓ Multiple pose variations</span>
+                      <span>✓ Style coherence</span>
+                    </div>
+                  </article>
+                      
+                  <article className="use-case-detailed">
+                    <span className="use-case-number">6</span>
+                    <h3>💼 Presentation Slides & Marketing Materials</h3>
+                    <p>
+                      Create custom visuals for PowerPoint presentations, pitch decks, and marketing collateral. Realistic Photo and 3D Render styles provide professional imagery for business contexts.
+                    </p>
+                    <div className="use-case-prompts">
+                      <strong>Example Prompts:</strong>
+                      <ul>
+                        <li>"Business team collaboration, modern office, diverse professionals, natural light"</li>
+                        <li>"Abstract technology network visualization, connected nodes, blue theme"</li>
+                        <li>"Growth chart visualization, upward trend, professional style, clean design"</li>
+                      </ul>
+                    </div>
+                    <div className="use-case-stats">
+                      <span>✓ Professional aesthetics</span>
+                      <span>✓ Clear visual hierarchy</span>
+                      <span>✓ Brand alignment</span>
+                    </div>
+                  </article>
+                </div>
+                      
+                <div className="use-case-cta">
+                  <h3>Ready to Create Your First AI Image?</h3>
+                  <p>Start with our proven prompt templates or describe your vision—generate professional images in seconds!</p>
+                  <button
+                    className="cta-button"
+                    onClick={() => scrollToSection('hero')}
+                  >
+                    Generate Images Now - Free!
+                  </button>
+                </div>
+              </div>
+            </section>            
+
             <div className="trust-indicators">
               <span className="trust-item">✅ 100% Free</span>
               <span className="trust-item">🎨 8 Art Styles</span>
