@@ -407,39 +407,12 @@ const SubtitleClient: React.FC = () => {
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [applyStyleToSingle, setApplyStyleToSingle] = useState(false);
-  const [availableQualities, setAvailableQualities] = useState<string[]>([]);
-  const [selectedQuality, setSelectedQuality] = useState<string>('720p');
+  const [selectedQuality] = useState<string>('720p');
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<{id: number; name: string; type: string} | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const prevSelectedAiStyleRef = useRef<AiStyle | null>(null);
-  const [planLimits, setPlanLimits] = useState<{
-    videosPerMonth: number;
-    videosUsed: number;
-    maxVideoLength: number;
-    maxQuality: string;
-  } | null>(null);  
-
-  useEffect(() => {
-    const fetchPlanLimits = async () => {
-      if (!isLoggedIn) {
-        setPlanLimits(null);
-        return;
-      }
-  
-      try {
-        const response = await axios.get(`${API_BASE_URL}/api/subtitles/plan-limits`, {
-          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-        });
-        setPlanLimits(response.data);
-      } catch (error) {
-        console.error('Error fetching plan limits:', error);
-      }
-    };
-  
-    fetchPlanLimits();
-  }, [isLoggedIn, userProfile.role]);  
 
   // Handle scroll for navbar
   useEffect(() => {
@@ -521,46 +494,6 @@ const SubtitleClient: React.FC = () => {
     fetchUploads();
   }, [isLoggedIn]);
 
-  useEffect(() => {
-    if (userProfile.role) {
-      setSelectedQuality(getDefaultQuality(userProfile.role));
-    }
-  }, [userProfile.role]);  
-
-  useEffect(() => {
-    if (userProfile.role) {
-      const qualities = getAvailableQualities(userProfile.role);
-      setAvailableQualities(qualities);
-    }
-  }, [userProfile.role]); 
-  
-  const getAvailableQualities = (role: string): string[] => {
-    switch (role) {
-      case 'BASIC':
-        return ['144p', '240p', '360p', '480p', '720p'];
-      case 'CREATOR':
-        return ['144p', '240p', '360p', '480p', '720p', '1080p', '1440p', '2k'];
-      case 'STUDIO':
-      case 'ADMIN':
-        return ['144p', '240p', '360p', '480p', '720p', '1080p', '1440p', '2k', '4k'];
-      default:
-        return ['720p'];
-    }
-  };
-  
-  const getDefaultQuality = (role: string): string => {
-    switch (role) {
-      case 'BASIC':
-        return '720p';
-      case 'CREATOR':
-        return '1080p';
-      case 'STUDIO':
-      case 'ADMIN':
-        return '1440p';
-      default:
-        return '720p';
-    }
-  };  
 
   const requireLogin = () => {
     if (!isLoggedIn) {
@@ -1497,133 +1430,7 @@ const handleDeleteConfirm = async () => {
                       </div>
                     </div>
                   )}
-                </div>
-                {selectedUpload && subtitles.length > 0 && (
-                  <div className="quality-selector-container">
-                    <label htmlFor="quality-select" className="quality-label">
-                      Output Quality:
-                      {(userProfile.role === 'BASIC' || userProfile.role === 'CREATOR') && (
-                        <span className="unlock-badge" onClick={() => window.location.href = '/pricing'}>
-                          🔓 Unlock {userProfile.role === 'BASIC' ? '4K' : '4K'}
-                        </span>
-                      )}
-                    </label>
-                    <select
-                      id="quality-select"
-                      value={selectedQuality}
-                      onChange={(e) => setSelectedQuality(e.target.value)}
-                      className="quality-select"
-                      disabled={isProcessing || isGenerating}
-                    >
-                      {availableQualities.map((quality) => (
-                        <option key={quality} value={quality}>
-                          {quality === '2k' ? '2K (1440p)' : quality === '4k' ? '4K (2160p)' : quality.toUpperCase()}
-                        </option>
-                      ))}
-                    </select>
-                    {userProfile.role === 'BASIC' && (
-                      <p className="quality-upgrade-hint">
-                        💡 Upgrade to <a href="/pricing">CREATOR</a> for up to 2K or <a href="/pricing">STUDIO</a> for 4K quality
-                      </p>
-                    )}
-                    {userProfile.role === 'CREATOR' && (
-                      <p className="quality-upgrade-hint">
-                        💡 Upgrade to <a href="/pricing">STUDIO</a> for 4K quality
-                      </p>
-                    )}
-                  </div>
-                )}        
-                {planLimits && (
-                  <div className="usage-info">
-                    <div className="usage-grid">
-                      {/* Main Usage Section */}
-                      <div className="usage-main">
-                        <div className="usage-header">
-                          <span className="usage-label">
-                            📅 {/* For VideoSpeed: "Speed Videos" | For Subtitles: "Subtitle Videos" */} This Month
-                          </span>
-                          {planLimits.videosPerMonth !== -1 && (
-                            <span className="usage-badge">
-                              {planLimits.videosUsed}/{planLimits.videosPerMonth}
-                            </span>
-                          )}
-                        </div>
-                
-                        {planLimits.videosPerMonth === -1 ? (
-                          <p className="usage-text">
-                            <strong>Unlimited</strong> - No monthly video limit
-                          </p>
-                        ) : (
-                          <>
-                            <div className="usage-bar-container">
-                              <div 
-                                className={`usage-bar-fill ${
-                                  (planLimits.videosUsed / planLimits.videosPerMonth) >= 0.95 ? 'critical' :
-                                  (planLimits.videosUsed / planLimits.videosPerMonth) >= 0.80 ? 'warning' : 'normal'
-                                }`}
-                                style={{ width: `${(planLimits.videosUsed / planLimits.videosPerMonth) * 100}%` }}
-                              />
-                            </div>
-                            <p className="usage-text">
-                              <strong>{planLimits.videosPerMonth - planLimits.videosUsed}</strong> videos remaining
-                            </p>
-                                
-                            {(planLimits.videosUsed / planLimits.videosPerMonth) >= 0.80 && 
-                             (planLimits.videosPerMonth - planLimits.videosUsed) > 0 && (
-                              <div className="usage-micro-warning">
-                                ⚠️ Almost out of videos - Upgrade to avoid interruption
-                              </div>
-                            )}
-                
-                            {userProfile.role === 'BASIC' && (
-                              <div className="inline-upgrade-cta">
-                                <a href="/pricing" className="inline-upgrade-link">
-                                  🔓 Upgrade to Creator for 9× more videos (45/month) →
-                                </a>
-                              </div>
-                            )}
-                          </>
-                        )}
-                      </div>
-                
-                      {/* Limits Sidebar */}
-                      <div className="limits-sidebar">
-                        <div className="limit-item">
-                          <span className="limit-icon">📏</span>
-                          <div className="limit-details">
-                            <div className="limit-label">Max Length</div>
-                            <div className="limit-value">
-                              {planLimits.maxVideoLength === -1 ? 'Unlimited' : `${planLimits.maxVideoLength} min`}
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <div className="limit-item">
-                          <span className="limit-icon">🎬</span>
-                          <div className="limit-details">
-                            <div className="limit-label">Max Quality</div>
-                            <div className="limit-value">{planLimits.maxQuality}</div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )} 
-                {planLimits && planLimits.videosPerMonth > 0 && (
-                  (planLimits.videosUsed / planLimits.videosPerMonth >= 0.6) && (
-                    <div className="upgrade-nudge-banner">
-                      <div className="nudge-icon">🎬</div>
-                      <div className="nudge-content">
-                        <h4>You're creating amazing content!</h4>
-                        <p>You've used {Math.round((planLimits.videosUsed / planLimits.videosPerMonth) * 100)}% of your subtitled videos. Unlock <strong>9× more videos</strong> with Creator or get focused power with AI Subtitle Pro.</p>
-                        <div className="nudge-actions">
-                          <a href="/pricing" className="nudge-btn primary">Upgrade Bundle</a>
-                          <a href="/pricing?tab=individual" className="nudge-btn secondary">AI Subtitle Pro</a>
-                        </div>
-                      </div>
-                    </div>
-                  )
-                )}                                       
+                </div>                                         
                 <div className="action-buttons">
                   {selectedUpload && (
                     <div className="button-wrapper">
@@ -1703,13 +1510,7 @@ const handleDeleteConfirm = async () => {
             />
             <figcaption className="sr-only">Example of AI subtitle generator with style selection and subtitle editing</figcaption>
           </figure>
-        </motion.div>
-        <div className="cross-tool-promo">
-          <p className="promo-text">
-            💡 <strong>Pro Tip:</strong> Get all 3 AI tools (Voice + Subtitles + Speed) with Creator plan for less than buying individually!
-          </p>
-          <a href="/pricing" className="promo-link">Compare Plans →</a>
-        </div>        
+        </motion.div>      
       </section>
 
       {error && (
@@ -2586,21 +2387,7 @@ const handleDeleteConfirm = async () => {
             </div>
           </motion.div>
         </div>
-      )}
-      {isLoggedIn && userProfile.role === 'BASIC' && (
-        <div className="floating-upgrade-cta">
-          <button 
-            className="floating-upgrade-btn"
-            onClick={() => window.location.href = '/pricing'}
-          >
-            <span className="float-icon">⚡</span>
-            <span className="float-text">
-              <strong>Upgrade for 9× More Videos</strong>
-              <small>Or get AI Subtitle Pro</small>
-            </span>
-          </button>
-        </div>
-      )}      
+      )}    
     </div>
   );
 };

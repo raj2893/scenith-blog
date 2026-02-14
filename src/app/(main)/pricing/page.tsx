@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'Scenith Pricing - Simple & Transparent Plans',
-    description: 'Choose the perfect plan: Free, Creator (₹499/$15), or Studio (₹1299/$25). Unlock more characters and premium AI voices.',
+    description: 'Choose the perfect plan: Free, Creator (₹349/$9), or Studio (₹749/$19). Unlock more AI voice characters, video tools, and premium features.',
     images: ['/images/og-pricing.jpg'],
   },
 };
