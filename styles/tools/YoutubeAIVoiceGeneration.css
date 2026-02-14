@@ -1,0 +1,1627 @@
+/* styles/tools/YouTubeTextToSpeech.css */
+
+/* ============================================
+   YOUTUBE TEXT TO SPEECH PAGE STYLES
+   ============================================ */
+
+.youtube-tts-page {
+  font-family: 'Montserrat', sans-serif;
+  background: #FFFFFF;
+  min-height: 100vh;
+  color: #1E293B;
+  overflow-x: hidden;
+}
+
+/* Screen reader only content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ============================================
+   BREADCRUMB NAVIGATION
+   ============================================ */
+
+.breadcrumb-nav {
+  padding: 1rem 0;
+  background: linear-gradient(135deg, #FFE8E8 0%, #FFCCCC 100%);
+  border-bottom: 2px solid #FF0000;
+  margin-top: 80px;
+}
+
+.breadcrumb-nav ol {
+  display: flex;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0 2rem;
+  margin: 0;
+  flex-wrap: wrap;
+}
+
+.breadcrumb-nav li:not(:last-child)::after {
+  content: '›';
+  margin-left: 0.5rem;
+  color: #FF0000;
+  font-weight: 700;
+}
+
+.breadcrumb-nav a {
+  color: #CC0000;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.breadcrumb-nav a:hover {
+  color: #000000;
+  text-decoration: underline;
+}
+
+.breadcrumb-nav span {
+  color: #1E293B;
+  font-weight: 600;
+}
+
+/* ============================================
+   HERO SECTION
+   ============================================ */
+
+.youtube-hero-section {
+  padding: 80px 20px;
+  background: linear-gradient(135deg, #FFE8E8 0%, #FFCCCC 50%, #FFFFFF 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.youtube-hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="25" cy="25" r="2" fill="%23FF0000" opacity="0.1"/><circle cx="75" cy="75" r="2" fill="%23000000" opacity="0.1"/></svg>');
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.youtube-hero-section .container {
+  position: relative;
+  z-index: 1;
+}
+
+.youtube-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #FF0000 0%, #CC0000 100%);
+  border-radius: 50px;
+  box-shadow: 0 8px 24px rgba(255, 0, 0, 0.3);
+  margin-bottom: 30px;
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 8px 24px rgba(255, 0, 0, 0.3);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 12px 36px rgba(255, 0, 0, 0.5);
+    transform: scale(1.05);
+  }
+}
+
+.youtube-icon {
+  font-size: 2rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.badge-text {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.youtube-hero-section h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #1E293B;
+  margin-bottom: 20px;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.hero-subtitle {
+  display: block;
+  font-size: 1.6rem;
+  color: #FF0000;
+  margin-top: 15px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #FF0000, #CC0000);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-description {
+  font-size: 1.2rem;
+  color: #475569;
+  line-height: 1.8;
+  max-width: 900px;
+  margin: 0 auto 40px;
+  text-align: center;
+}
+
+.hero-description strong {
+  color: #FF0000;
+  font-weight: 700;
+}
+
+/* ============================================
+   CTA BUTTONS
+   ============================================ */
+
+.youtube-cta-primary {
+  margin: 50px auto;
+  max-width: 700px;
+}
+
+.main-cta-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 24px 32px;
+  background: linear-gradient(135deg, #FF0000 0%, #CC0000 50%, #000000 100%);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 12px 40px rgba(255, 0, 0, 0.4);
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.main-cta-button::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transform: rotate(45deg);
+  animation: shimmer 3s infinite;
+}   
+
+.main-cta-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 50px rgba(255, 0, 0, 0.6);
+}
+
+.main-cta-button:active {
+  transform: translateY(-2px);
+}
+
+.cta-icon {
+  font-size: 2.5rem;
+  flex-shrink: 0;
+  animation: bounce 1s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.cta-text {
+  flex: 1;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.cta-text strong {
+  font-size: 1.3rem;
+  display: block;
+}
+
+.cta-text small {
+  font-size: 0.9rem;
+  opacity: 0.95;
+  font-weight: 500;
+}
+
+.cta-arrow {
+  font-size: 2rem;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.main-cta-button:hover .cta-arrow {
+  transform: translateX(8px);
+}
+
+/* ============================================
+   TRUST INDICATORS
+   ============================================ */
+
+.trust-indicators-youtube {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin: 40px 0;
+}
+
+.trust-item {
+  background: linear-gradient(135deg, rgba(255, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
+  color: #FF0000;
+  padding: 12px 20px;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: 2px solid rgba(255, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.trust-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(255, 0, 0, 0.3);
+  border-color: #FF0000;
+}
+
+/* ============================================
+   HERO IMAGE
+   ============================================ */
+
+.hero-image-container {
+  margin: 50px auto 0;
+  max-width: 900px;
+  text-align: center;
+}
+
+.hero-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 12px 40px rgba(255, 0, 0, 0.3);
+  border: 4px solid #FF0000;
+  transition: transform 0.3s ease;
+}
+
+.hero-image:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 60px rgba(255, 0, 0, 0.4);
+}
+
+/* ============================================
+   QUICK DEFINITION SECTION
+   ============================================ */
+
+.quick-definition-section {
+  padding: 60px 0;
+  background: #F8FAFC;
+  border-top: 3px solid #FF0000;
+  border-bottom: 3px solid #000000;
+}
+
+.featured-snippet-target {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.youtube-definition {
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  border-left: 6px solid #FF0000;
+  box-shadow: 0 8px 30px rgba(255, 0, 0, 0.2);
+}
+
+.definition-text {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: #1E293B;
+  margin: 0;
+}
+
+.definition-text strong {
+  color: #FF0000;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+/* ============================================
+   WHY YOUTUBE CREATORS USE TTS SECTION
+   ============================================ */
+
+.why-youtube-tts-section {
+  padding: 80px 0;
+  background: linear-gradient(180deg, #FFFFFF 0%, #FFF5F5 100%);
+}
+
+.why-youtube-tts-section h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1E293B;
+  text-align: center;
+  margin-bottom: 20px;
+  line-height: 1.3;
+}
+
+.section-intro {
+  font-size: 1.15rem;
+  color: #64748B;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 50px;
+  line-height: 1.7;
+}
+
+.section-intro strong {
+  color: #FF0000;
+  font-weight: 700;
+}
+
+.benefits-grid-youtube {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+  margin-top: 50px;
+}
+
+.benefit-card {
+  background: white;
+  padding: 35px;
+  border-radius: 16px;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+  border-top: 5px solid #FF0000;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.benefit-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #FF0000, #000000);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.benefit-card:hover::before {
+  transform: scaleX(1);
+}
+
+.benefit-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(255, 0, 0, 0.2);
+}
+
+.benefit-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 20px;
+}
+
+.benefit-card h3 {
+  font-size: 1.5rem;
+  color: #1E293B;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.benefit-card p {
+  font-size: 1.05rem;
+  color: #475569;
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+.benefit-card strong {
+  color: #FF0000;
+  font-weight: 700;
+}
+
+.benefit-stats {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.benefit-stats li {
+  background: linear-gradient(135deg, rgba(255, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: #1E293B;
+  font-weight: 600;
+  border-left: 3px solid #FF0000;
+}
+
+/* ============================================
+   YOUTUBE USE CASES SECTION
+   ============================================ */
+
+.youtube-use-cases-section {
+  padding: 80px 0;
+  background: linear-gradient(180deg, #FFF5F5 0%, #FFFFFF 100%);
+}
+
+.youtube-use-cases-section h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1E293B;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.use-cases-grid-youtube {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+  margin-top: 50px;
+}
+
+.use-case-card {
+  background: white;
+  padding: 35px;
+  border-radius: 16px;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+  border-top: 5px solid #FF0000;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.use-case-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, #FF0000, #000000);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.use-case-card:hover::before {
+  transform: scaleX(1);
+}
+
+.use-case-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(255, 0, 0, 0.2);
+}
+
+.use-case-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 20px;
+}
+
+.use-case-card h3 {
+  font-size: 1.4rem;
+  color: #1E293B;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.use-case-card p {
+  font-size: 1.05rem;
+  color: #475569;
+  line-height: 1.8;
+  margin-bottom: 15px;
+}
+
+.use-case-card strong {
+  color: #FF0000;
+  font-weight: 700;
+}
+
+.use-case-examples {
+  background: rgba(255, 0, 0, 0.1);
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-top: 15px;
+  font-size: 0.95rem;
+  color: #1E293B;
+  line-height: 1.6;
+}
+
+.use-case-examples strong {
+  color: #000000;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.monetization-note {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(22, 163, 74, 0.1));
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-top: 15px;
+  font-size: 0.9rem;
+  color: #1E293B;
+  border-left: 3px solid #22C55E;
+}
+
+.monetization-note strong {
+  color: #16A34A;
+}
+
+/* ============================================
+   YOUTUBE ALGORITHM SECTION
+   ============================================ */
+
+.youtube-algorithm-section {
+  padding: 80px 0;
+  background: white;
+  border-top: 2px solid #FFE8E8;
+}
+
+.youtube-algorithm-section h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1E293B;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.algorithm-benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-top: 50px;
+}
+
+.algorithm-benefit {
+  background: linear-gradient(145deg, #FFFFFF, #FFF5F5);
+  padding: 35px;
+  border-radius: 16px;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+  border-left: 5px solid #FF0000;
+  transition: all 0.3s ease;
+}
+
+.algorithm-benefit:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 35px rgba(255, 0, 0, 0.15);
+}
+
+.algorithm-benefit h3 {
+  font-size: 1.4rem;
+  color: #1E293B;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.algorithm-benefit p {
+  font-size: 1.05rem;
+  color: #475569;
+  line-height: 1.8;
+  margin-bottom: 15px;
+}
+
+.algorithm-benefit strong {
+  color: #FF0000;
+  font-weight: 700;
+}
+
+.metric-impact {
+  background: rgba(255, 0, 0, 0.1);
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-top: 15px;
+  font-size: 0.9rem;
+  border-left: 3px solid #FF0000;
+}
+
+.metric-impact strong {
+  color: #CC0000;
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* ============================================
+   YOUTUBE MONETIZATION SECTION
+   ============================================ */
+
+.youtube-monetization-section {
+  padding: 80px 0;
+  background: linear-gradient(135deg, #FFF5F5 0%, #FFE8E8 100%);
+  border-top: 3px solid #FF0000;
+}
+
+.youtube-monetization-section h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1E293B;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.monetization-content {
+  margin-top: 50px;
+}
+
+.monetization-requirements {
+  background: white;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
+  border-top: 5px solid #22C55E;
+}
+
+.monetization-requirements h3 {
+  font-size: 2rem;
+  color: #1E293B;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.monetization-requirements p {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: #475569;
+  margin-bottom: 20px;
+}
+
+.requirements-list {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+
+.requirements-list li {
+  background: rgba(34, 197, 94, 0.1);
+  padding: 15px 20px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  font-size: 1.05rem;
+  color: #1E293B;
+  border-left: 4px solid #22C55E;
+  line-height: 1.6;
+}
+
+.requirements-list strong {
+  color: #16A34A;
+  font-weight: 700;
+}
+
+.monetization-best-practices {
+  background: white;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
+}
+
+.monetization-best-practices h3 {
+  font-size: 2rem;
+  color: #1E293B;
+  margin-bottom: 30px;
+  font-weight: 700;
+}
+
+.best-practices-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+  margin-top: 30px;
+}
+
+.practice-item {
+  background: linear-gradient(145deg, #FFF5F5, #FFFFFF);
+  padding: 25px;
+  border-radius: 12px;
+  border-left: 4px solid #FF0000;
+  transition: all 0.3s ease;
+}
+
+.practice-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(255, 0, 0, 0.15);
+}
+
+.practice-item strong {
+  display: block;
+  font-size: 1.2rem;
+  color: #1E293B;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.practice-item p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #64748B;
+  margin: 0;
+}
+
+.monetization-earnings {
+  background: white;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  border-top: 5px solid #F59E0B;
+}
+
+.monetization-earnings h3 {
+  font-size: 2rem;
+  color: #1E293B;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.monetization-earnings > p {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: #475569;
+  margin-bottom: 30px;
+}
+
+.earnings-table {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 30px 0;
+}
+
+.earnings-row {
+  background: linear-gradient(145deg, #FFF5F5, #FFFFFF);
+  padding: 25px;
+  border-radius: 12px;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 20px;
+  align-items: center;
+  border-left: 5px solid #F59E0B;
+  transition: all 0.3s ease;
+}
+
+.earnings-row:hover {
+  transform: translateX(5px);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.2);
+}
+
+.earnings-niche strong {
+  font-size: 1.2rem;
+  color: #1E293B;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.niche-description {
+  font-size: 0.9rem;
+  color: #64748B;
+  font-style: italic;
+}
+
+.earnings-cpm strong {
+  font-size: 1.3rem;
+  color: #F59E0B;
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.earnings-amount {
+  font-size: 1rem;
+  color: #16A34A;
+  font-weight: 600;
+}
+
+.earnings-note {
+  background: rgba(245, 158, 11, 0.1);
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 30px;
+  border-left: 4px solid #F59E0B;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #1E293B;
+}
+
+.earnings-note strong {
+  color: #D97706;
+}
+
+/* ============================================
+   COMPARISON SECTION
+   ============================================ */
+
+.comparison-section-youtube {
+  padding: 80px 0;
+  background: white;
+  border-top: 2px solid #FFE8E8;
+}
+
+.comparison-section-youtube h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1E293B;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.comparison-table-wrapper {
+  overflow-x: auto;
+  margin: 50px 0;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #FFFFFF;
+}
+
+.comparison-table thead {
+  background: linear-gradient(135deg, #FF0000, #CC0000);
+  color: #FFFFFF;
+}
+
+.comparison-table th {
+  padding: 20px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.comparison-table td {
+  padding: 20px;
+  border-bottom: 1px solid #E5E7EB;
+  font-size: 1rem;
+  line-height: 1.7;
+  vertical-align: top;
+}
+
+.comparison-table tbody tr:hover {
+  background: #FFF5F5;
+}
+
+.comparison-table .detail {
+  display: block;
+  font-size: 0.9rem;
+  color: #64748B;
+  margin-top: 5px;
+  font-style: italic;
+}
+
+.comparison-table strong {
+  color: #1E293B;
+  font-weight: 700;
+}
+
+.comparison-verdict {
+  margin-top: 60px;
+}
+
+.comparison-verdict h3 {
+  font-size: 2rem;
+  color: #1E293B;
+  text-align: center;
+  margin-bottom: 40px;
+  font-weight: 700;
+}
+
+.verdict-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 40px;
+}
+
+.verdict-card {
+  background: linear-gradient(145deg, #FFFFFF, #FFF5F5);
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  border-top: 5px solid #FF0000;
+}
+
+.verdict-card h4 {
+  font-size: 1.5rem;
+  color: #1E293B;
+  margin-bottom: 25px;
+  font-weight: 700;
+}
+
+.verdict-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.verdict-card li {
+  padding: 12px 0;
+  font-size: 1.05rem;
+  color: #475569;
+  line-height: 1.6;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.verdict-card li:last-child {
+  border-bottom: none;
+}
+
+/* ============================================
+   FAQ SECTION
+   ============================================ */
+
+.faq-section-youtube {
+  padding: 80px 0;
+  background: linear-gradient(180deg, #FFF5F5 0%, #FFFFFF 100%);
+}
+
+.faq-section-youtube h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1E293B;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.faq-grid-youtube {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 25px;
+  margin-top: 50px;
+}
+
+.faq-item {
+  background: linear-gradient(145deg, #FFFFFF, #FFF5F5);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  border-left: 5px solid #FF0000;
+  transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(255, 0, 0, 0.15);
+}
+
+.faq-item h3 {
+  font-size: 1.25rem;
+  color: #1E293B;
+  margin-bottom: 15px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.faq-item p {
+  font-size: 1rem;
+  color: #475569;
+  line-height: 1.8;
+  margin: 0;
+}
+
+.faq-item strong {
+  color: #FF0000;
+  font-weight: 700;
+}
+
+/* ============================================
+   YOUTUBE GROWTH SECTION
+   ============================================ */
+
+.youtube-growth-section {
+  padding: 80px 0;
+  background: white;
+  border-top: 2px solid #FFE8E8;
+}
+
+.youtube-growth-section h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1E293B;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.growth-tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+  margin-top: 50px;
+}
+
+.growth-tip {
+  background: linear-gradient(145deg, #FFFFFF, #FFF5F5);
+  padding: 35px;
+  border-radius: 16px;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+  border-left: 5px solid #FF0000;
+  position: relative;
+  padding-top: 60px;
+  transition: all 0.3s ease;
+}
+
+.growth-tip:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 35px rgba(255, 0, 0, 0.15);
+}
+
+.tip-number {
+  position: absolute;
+  top: 20px;
+  left: 30px;
+  background: linear-gradient(135deg, #FF0000, #CC0000);
+  color: #FFFFFF;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
+}
+
+.growth-tip h3 {
+  font-size: 1.4rem;
+  color: #1E293B;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.growth-tip p {
+  font-size: 1.05rem;
+  color: #475569;
+  line-height: 1.8;
+  margin: 0;
+}
+
+.growth-tip strong {
+  color: #FF0000;
+  font-weight: 700;
+}
+
+/* ============================================
+   FINAL CTA SECTION
+   ============================================ */
+
+.final-cta-section-youtube {
+  padding: 100px 20px;
+  background: linear-gradient(135deg, #FF0000 0%, #CC0000 50%, #000000 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.final-cta-section-youtube::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="25" cy="25" r="2" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="2" fill="white" opacity="0.1"/></svg>');
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.final-cta-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  color: white;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.cta-icon-large {
+  font-size: 5rem;
+  display: block;
+  margin-bottom: 30px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.9; }
+}
+
+.final-cta-content h2 {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.cta-description {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  margin-bottom: 40px;
+  opacity: 0.95;
+}
+
+.final-cta-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 28px 40px;
+  background: white;
+  color: #FF0000;
+  border-radius: 16px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+  max-width: 700px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.final-cta-button:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+.cta-text-large {
+  flex: 1;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cta-text-large strong {
+  font-size: 1.5rem;
+  color: #1E293B;
+  display: block;
+}
+
+.cta-text-large small {
+  font-size: 1rem;
+  color: #64748B;
+  font-weight: 500;
+}
+
+.cta-arrow-large {
+  font-size: 2.5rem;
+  color: #FF0000;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.final-cta-button:hover .cta-arrow-large {
+  transform: translateX(10px);
+}
+
+.final-trust-indicators {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.final-trust-indicators span {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.cta-footer-note {
+  margin-top: 40px;
+  font-size: 1rem;
+  opacity: 0.9;
+  line-height: 1.6;
+}
+
+.cta-footer-note strong {
+  font-weight: 700;
+}
+
+.inline-link {
+  color: white;
+  text-decoration: underline;
+  font-weight: 600;
+  transition: opacity 0.3s ease;
+}
+
+.inline-link:hover {
+  opacity: 0.8;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+  .youtube-hero-section {
+    padding: 50px 15px;
+  }
+
+  .youtube-hero-section h1 {
+    font-size: 2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.2rem;
+  }
+
+  .hero-description {
+    font-size: 1rem;
+  }
+
+  .main-cta-button {
+    flex-direction: column;
+    padding: 20px 24px;
+  }
+
+  .cta-text {
+    text-align: center;
+  }
+
+  .cta-icon,
+  .cta-arrow {
+    font-size: 2rem;
+  }
+
+  .cta-text strong {
+    font-size: 1.15rem;
+  }
+
+  .cta-text small {
+    font-size: 0.85rem;
+  }
+
+  .trust-indicators-youtube {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .benefits-grid-youtube,
+  .use-cases-grid-youtube,
+  .algorithm-benefits-grid,
+  .faq-grid-youtube,
+  .growth-tips-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .why-youtube-tts-section h2,
+  .youtube-use-cases-section h2,
+  .youtube-algorithm-section h2,
+  .youtube-monetization-section h2,
+  .comparison-section-youtube h2,
+  .faq-section-youtube h2,
+  .youtube-growth-section h2 {
+    font-size: 2rem;
+  }
+
+  .section-intro {
+    font-size: 1rem;
+  }
+
+  .comparison-table {
+    font-size: 0.9rem;
+  }
+
+  .comparison-table th,
+  .comparison-table td {
+    padding: 12px;
+  }
+
+  .verdict-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .final-cta-content h2 {
+    font-size: 2rem;
+  }
+
+  .cta-description {
+    font-size: 1rem;
+  }
+
+  .final-cta-button {
+    flex-direction: column;
+    padding: 24px 28px;
+  }
+
+  .cta-text-large {
+    text-align: center;
+  }
+
+  .cta-text-large strong {
+    font-size: 1.25rem;
+  }
+
+  .cta-text-large small {
+    font-size: 0.9rem;
+  }
+
+  .final-trust-indicators {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .earnings-row {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .best-practices-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .growth-tip {
+    padding: 30px 20px;
+    padding-top: 55px;
+  }
+
+  .tip-number {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
+    left: 20px;
+    top: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .breadcrumb-nav ol {
+    padding: 0 1rem;
+  }
+
+  .youtube-hero-section h1 {
+    font-size: 1.6rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .hero-description {
+    font-size: 0.9rem;
+  }
+
+  .youtube-badge {
+    padding: 10px 18px;
+  }
+
+  .youtube-icon {
+    font-size: 1.5rem;
+  }
+
+  .badge-text {
+    font-size: 0.85rem;
+  }
+
+  .main-cta-button {
+    padding: 18px 20px;
+  }
+
+  .cta-text strong {
+    font-size: 1rem;
+  }
+
+  .cta-text small {
+    font-size: 0.8rem;
+  }
+
+  .trust-item {
+    font-size: 0.85rem;
+    padding: 8px 14px;
+  }
+
+  .section-intro {
+    font-size: 0.95rem;
+  }
+
+  .benefit-card,
+  .use-case-card,
+  .algorithm-benefit,
+  .faq-item,
+  .growth-tip {
+    padding: 25px 20px;
+  }
+
+  .benefit-icon,
+  .use-case-icon {
+    font-size: 2.5rem;
+  }
+
+  .comparison-table th,
+  .comparison-table td {
+    padding: 10px;
+    font-size: 0.85rem;
+  }
+
+  .final-cta-content h2 {
+    font-size: 1.6rem;
+  }
+
+  .cta-icon-large {
+    font-size: 3.5rem;
+  }
+
+  .cta-description {
+    font-size: 0.95rem;
+  }
+
+  .final-cta-button {
+    padding: 20px 22px;
+  }
+
+  .cta-text-large strong {
+    font-size: 1.1rem;
+  }
+
+  .cta-text-large small {
+    font-size: 0.85rem;
+  }
+
+  .cta-arrow-large {
+    font-size: 2rem;
+  }
+
+  .final-trust-indicators span {
+    font-size: 0.85rem;
+    padding: 10px 18px;
+  }
+
+  .cta-footer-note {
+    font-size: 0.9rem;
+  }
+}
+
+/* ============================================
+   ANIMATION KEYFRAMES
+   ============================================ */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY IMPROVEMENTS
+   ============================================ */
+
+.youtube-tts-page a:focus,
+.youtube-tts-page button:focus {
+  outline: 3px solid #FF0000;
+  outline-offset: 3px;
+}
+
+.youtube-tts-page *:focus-visible {
+  outline: 3px solid #FF0000;
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .benefit-card,
+  .use-case-card,
+  .faq-item,
+  .algorithm-benefit {
+    border: 2px solid #1E293B;
+  }
+
+  .main-cta-button,
+  .final-cta-button {
+    border: 3px solid white;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Print styles */
+@media print {
+  .breadcrumb-nav,
+  .main-cta-button,
+  .final-cta-section-youtube {
+    display: none;
+  }
+
+  .youtube-tts-page {
+    color: black;
+    background: white;
+  }
+
+  .benefit-card,
+  .use-case-card,
+  .faq-item {
+    page-break-inside: avoid;
+  }
+}
