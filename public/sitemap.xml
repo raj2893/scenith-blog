@@ -1367,4 +1367,10 @@
     <changefreq>weekly</changefreq>
     <lastmod>2026-02-03</lastmod>
   </url>
+  <url>
+    <loc>https://scenith.in/tools/remove-image-background</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-02-14</lastmod>
+  </url> 
 </urlset>

@@ -31,7 +31,7 @@ interface UserProfile {
 
 interface IndividualPlan {
   name: string;
-  planType: 'AI_VOICE_PRO' | 'AI_SUBTITLE_PRO' | 'AI_SPEED_PRO' | 'BG_REMOVAL_PRO';
+  planType: 'AI_VOICE_PRO' | 'AI_SPEED_PRO' | 'BG_REMOVAL_PRO';
   price: number;
   originalPrice?: number;
   currency: string;
@@ -405,7 +405,6 @@ if (gateway === 'razorpay') {
             '200 Characters/day',
             '150 Characters per request',
             '30+ AI Voices in multiple languages',
-            '5 Subtitle videos/month',
             '5 Speed videos/month',
             '5 minutes per video',
             'Up to 720p quality',
@@ -425,7 +424,6 @@ if (gateway === 'razorpay') {
             '15,000 Characters/day',
             '3,500 Characters per request',
             'All Premium AI Voices',
-            '45 Subtitle videos/month',
             '45 Speed videos/month',
             '30 minutes per video',
             'Up to 1440p quality',
@@ -447,7 +445,6 @@ if (gateway === 'razorpay') {
             'Unlimited daily usage',
             '5,000 Characters per request',
             'All Premium AI Voices',
-            'Unlimited Subtitle videos/month',
             'Unlimited Speed videos/month',
             'Unlimited video length',
             'Up to 4K quality',
@@ -484,7 +481,6 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
           '200 Characters/day',
           '150 Characters per request',
           '30+ AI Voices in multiple languages',
-          '5 Subtitle videos/month',
           '5 Speed videos/month',
           '5 minutes per video',
           'Up to 720p quality',
@@ -506,7 +502,6 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
           '15,000 Characters/day',
           '3,500 Characters per request',
           'All Premium AI Voices',
-          '45 Subtitle videos/month',
           '45 Speed videos/month',
           '30 minutes per video',
           'Up to 1440p quality',
@@ -530,7 +525,6 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
           'Unlimited daily usage',
           '5,000 Characters per request',
           'All Premium AI Voices',
-          'Unlimited Subtitle videos/month',
           'Unlimited Speed videos/month',
           'Unlimited video length',
           'Up to 4K quality',
@@ -559,20 +553,6 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
             '2,500 Characters per request',
             'All Premium AI Voices',
             'Priority support'
-          ]
-        },
-        {
-          name: 'AI Subtitle Pro',
-          planType: 'AI_SUBTITLE_PRO',
-          price: 0,
-          currency: 'LOADING',
-          service: 'AI Subtitle Generation',
-          features: [
-            '30 videos/month',
-            '20 minutes per video',
-            'Up to 1440p quality',
-            'Word-level timing',
-            'Custom styling'
           ]
         },
         {
@@ -611,13 +591,11 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
   
    // Final prices after 25% discount
    const voicePrice = isIndianUser ? 199 : 5;
-   const subtitlePrice = isIndianUser ? 199 : 5;
    const speedPrice = isIndianUser ? 199 : 5;
    const bgRemovalPrice = isIndianUser ? 149 : 5;
 
    // Calculate original prices by adding 25% (original = price / 0.75)
    const voiceOriginal = Math.round(voicePrice / 0.75);
-   const subtitleOriginal = Math.round(subtitlePrice / 0.75);
    const speedOriginal = Math.round(speedPrice / 0.75);
    const bgRemovalOriginal = Math.round(bgRemovalPrice / 0.75);
 
@@ -636,23 +614,6 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
           '2,500 Characters per request',
           'All Premium AI Voices',
           'Priority support',
-          'Commercial use allowed'
-        ]
-      },
-      {
-        name: 'AI Subtitle Pro',
-        planType: 'AI_SUBTITLE_PRO',
-        price: subtitlePrice,
-        originalPrice: subtitleOriginal,
-        currency: currency,
-        symbol: symbol,
-        service: 'AI Subtitle Generation',
-        features: [
-          '30 videos/month',
-          '20 minutes per video',
-          'Up to 1440p quality',
-          'Word-level timing',
-          'Custom styling',
           'Commercial use allowed'
         ]
       },
@@ -705,7 +666,7 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
       const orderResponse = await axios.post(
         `${API_BASE_URL}/api/payments/create-order`,
         {
-          planType: plan.planType, // AI_VOICE_PRO, AI_SUBTITLE_PRO, or AI_SPEED_PRO
+          planType: plan.planType, // AI_VOICE_PRO or AI_SPEED_PRO
           amount: plan.price,
           currency: plan.currency
         },
@@ -963,7 +924,6 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
               </div>
             
               <h2>{plan.name}</h2>
-              <div className="plan-subtitle">{plan.role} PLAN</div>
             
              <div className="price">
                {plan.currency === 'LOADING' ? (
@@ -1035,7 +995,6 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
             {activeSection === 'individual' && (
               <section className="individual-plans-section">
         <h2>Or Choose Individual Services</h2>
-        <p className="section-subtitle">Get exactly what you need without committing to a full bundle</p>
         
         <div className="individual-plans-grid">
           {getIndividualPlans().map((plan) => (
@@ -1159,18 +1118,6 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
                 <td>150</td>
                 <td>3,500</td>
                 <td>5,000</td>
-              </tr>
-              <tr>
-                <td>Subtitle Videos/Month</td>
-                <td>5 videos</td>
-                <td>45 videos</td>
-                <td>Unlimited</td>
-              </tr>
-              <tr>
-                <td>Max Video Length (Subtitle)</td>
-                <td>5 minutes</td>
-                <td>30 minutes</td>
-                <td>Unlimited</td>
               </tr>
               <tr>
                 <td>Speed Videos/Month</td>
