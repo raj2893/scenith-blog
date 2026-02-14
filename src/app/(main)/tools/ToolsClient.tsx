@@ -34,7 +34,7 @@ const toolsData: Tool[] = [
     usageTime: "2 min",
     seoKeywords: ["AI voice generator", "text to speech", "voice synthesis", "TTS"]
   },
-  {
+ /* {
     id: 2,
     title: "AI Subtitle Generation",
     description: "Automatically generate accurate subtitles for your videos using AI. Support for multiple languages and formats.",
@@ -47,7 +47,7 @@ const toolsData: Tool[] = [
     difficulty: "Easy",
     usageTime: "3 min",
     seoKeywords: ["auto subtitle generator", "video captions", "AI subtitles", "transcription"]
-  },
+  },*/
   {
   id: 3,
   title: "AI Image Generation",

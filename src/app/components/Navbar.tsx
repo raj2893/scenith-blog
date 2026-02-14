@@ -320,7 +320,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
         { label: 'AI Voice Generator', href: '/tools/ai-voice-generation' },
         { label: 'PDF Tools', href: '/pdf-tools' },
         { label: 'AI Image Generation', href: '/tools/ai-image-generation' },
-        { label: 'AI Subtitle Generator', href: '/tools/add-subtitles-to-videos' },
+  /*    { label: 'AI Subtitle Generator', href: '/tools/add-subtitles-to-videos' },   */
         { label: 'Image Editing', href: '/tools/image-editing' },
         { label: 'Background Remover', href: '/tools/background-removal' },
         { label: 'Video Speed Modifier', href: '/tools/video-speed-modifier' },
