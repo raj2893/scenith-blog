@@ -116,6 +116,8 @@ interface Layer {
   backgroundWidth?: number;
   backgroundHeight?: number;
   linethroughColor?: string;
+  shapeMask?: "none" | "circle" | "square" | "rounded-square" | "heart" | "star" | "hexagon" | "octagon";
+  maskRadius?: number;
 }
 
 interface Project {
@@ -2774,6 +2776,69 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
     );
   }, [elements, elementSearchQuery]);  
 
+  const getShapeMaskPath = (
+    shapeMask: Layer['shapeMask'], 
+    maskRadius: number = 20,
+    width: number,
+    height: number
+  ): string => {
+    if (!shapeMask || shapeMask === 'none') return 'none';
+    
+    const w = width;
+    const h = height;
+    const centerX = w / 2;
+    const centerY = h / 2;
+    const radius = Math.min(w, h) / 2;
+    
+    switch (shapeMask) {
+      case 'circle':
+        return `circle(50% at 50% 50%)`;
+      
+      case 'square':
+        return `polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)`;
+      
+      case 'rounded-square':
+        const r = Math.min(maskRadius, Math.min(w, h) / 2);
+        const rPct = (r / Math.min(w, h)) * 100;
+        // Approximate rounded corners with polygon
+        return `polygon(
+          ${rPct}% 0%, ${100 - rPct}% 0%,
+          100% ${rPct}%, 100% ${100 - rPct}%,
+          ${100 - rPct}% 100%, ${rPct}% 100%,
+          0% ${100 - rPct}%, 0% ${rPct}%
+        )`;
+      
+      case 'heart':
+        // Heart shape using polygon approximation
+        return `polygon(
+          50% 15%,
+          61% 0%, 75% 0%, 85% 10%, 90% 25%, 85% 40%,
+          50% 100%,
+          15% 40%, 10% 25%, 15% 10%, 25% 0%, 39% 0%
+        )`;
+      
+      case 'star':
+        // 5-point star
+        return `polygon(
+          50% 0%,
+          61% 35%, 98% 35%,
+          68% 57%, 79% 91%,
+          50% 70%,
+          21% 91%, 32% 57%,
+          2% 35%, 39% 35%
+        )`;
+      
+      case 'hexagon':
+        return `polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)`;
+      
+      case 'octagon':
+        return `polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)`;
+      
+      default:
+        return 'none';
+    }
+  };  
+
   return (
     <div className="editor-container">
       {/* Top Toolbar */}
@@ -3236,7 +3301,49 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
                           </button>
                         </div>                        
                       </>  
-                    )}                    
+                    )}     
+
+                    {/* Shape Mask Controls - ADD THIS SECTION */}
+                    {selectedLayer.type === "image" && (
+                      <div className="property-group">
+                        <label>Shape Mask</label>
+                        <select
+                          value={selectedLayer.shapeMask || "none"}
+                          onChange={(e) => {
+                            const newMask = e.target.value as Layer['shapeMask'];
+                            updateLayer(selectedLayer.id, { 
+                              shapeMask: newMask,
+                              // Set default radius for rounded square
+                              ...(newMask === 'rounded-square' && !selectedLayer.maskRadius ? { maskRadius: 20 } : {})
+                            });
+                          }}
+                        >
+                          <option value="none">No Mask (Rectangle)</option>
+                          <option value="circle">Circle</option>
+                          <option value="square">Square</option>
+                          <option value="rounded-square">Rounded Square</option>
+                          <option value="heart">Heart</option>
+                          <option value="star">Star (5-point)</option>
+                          <option value="hexagon">Hexagon</option>
+                          <option value="octagon">Octagon</option>
+                        </select>
+                        
+                        {/* Radius control for rounded square */}
+                        {selectedLayer.shapeMask === 'rounded-square' && (
+                          <>
+                            <label>Corner Radius: {selectedLayer.maskRadius || 20}px</label>
+                            <input
+                              type="range"
+                              min="0"
+                              max="100"
+                              step="1"
+                              value={selectedLayer.maskRadius || 20}
+                              onChange={(e) => updateLayer(selectedLayer.id, { maskRadius: parseInt(e.target.value) })}
+                            />
+                          </>
+                        )}
+                      </div>
+                    )}                                   
 
                     {/* Rotation */}
                     <div className="property-group">
@@ -4203,6 +4310,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
             <div
               key={layer.id}
               className={`canvas-layer ${selectedLayerIds.includes(layer.id) ? "selected-layer" : ""}`}
+              data-shape-mask={layer.shapeMask || "none"}
               style={{
                 position: "absolute",
                 left: layer.x,
@@ -4430,6 +4538,8 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
                         pointerEvents: "none",
                         position: "relative",
                         ...getFilterStyle(layer.filters),
+                        clipPath: getShapeMaskPath(layer.shapeMask, layer.maskRadius, layer.width, layer.height),
+                        WebkitClipPath: getShapeMaskPath(layer.shapeMask, layer.maskRadius, layer.width, layer.height),                        
                       }}
                     >
                       <img

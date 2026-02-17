@@ -1681,6 +1681,15 @@ body {
   border-left: 3px solid #3b82f6;
 }
 
+/* Add to EditorCanvas.css */
+.canvas-layer[data-shape-mask]:not([data-shape-mask="none"]) {
+  outline: 2px dashed rgba(139, 92, 246, 0.5) !important;
+}
+
+.canvas-layer[data-shape-mask="circle"] {
+  border-radius: 50%;
+}
+
 @media (max-width: 1400px) {
   .left-sidebar-new {
     width: 240px;
