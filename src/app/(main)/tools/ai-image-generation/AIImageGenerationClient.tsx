@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { API_BASE_URL, CDN_URL } from '../../../config';
@@ -89,6 +88,7 @@ const AIImageGeneratorClient: React.FC = () => {
   const [showHistory, setShowHistory] = useState(false);
   const [downloadSuccess, setDownloadSuccess] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState<string>('');
+  const [isCreatingProject, setIsCreatingProject] = useState<boolean>(false);
 
   // Handle scroll for navbar
   useEffect(() => {
@@ -445,6 +445,123 @@ const AIImageGeneratorClient: React.FC = () => {
     const dailyExceeded = imageUsage.daily.limit > 0 && imageUsage.daily.remaining <= 0;
     return monthlyExceeded || dailyExceeded;
   }, [isLoggedIn, imageUsage]);
+
+  const uploadOriginalImage = async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('assetType', 'IMAGE');
+  
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.post(
+        `${API_BASE_URL}/api/image-editor/assets/upload`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+      return response.data.cdnUrl;
+    } catch (error: any) {
+      console.error('Upload error:', error);
+      throw new Error('Failed to upload image: ' + (error.response?.data?.message || error.message));
+    }
+  };
+  
+  const handleEditInEditor = async (imageUrl: string, imageName: string) => {
+    if (!isLoggedIn) {
+      setShowLoginModal(true);
+      return;
+    }
+  
+    setIsCreatingProject(true);
+  
+    try {
+      const token = localStorage.getItem('token');
+  
+      const projectResponse = await axios.post(
+        `${API_BASE_URL}/api/image-editor/projects`,
+        {
+          projectName: `${imageName} Design`,
+          canvasWidth: 1080,
+          canvasHeight: 1080,
+          canvasBackgroundColor: '#FFFFFF',
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+  
+      const projectId = projectResponse.data.id;
+  
+      const img = new Image();
+      img.onload = async () => {
+        const scale = 1.0;
+        const displayWidth = img.naturalWidth * scale;
+        const displayHeight = img.naturalHeight * scale;
+  
+        const layer = {
+          id: `image-${Date.now()}`,
+          type: 'image',
+          zIndex: 0,
+          opacity: 1,
+          x: Math.round(540 - displayWidth / 2),
+          y: Math.round(540 - displayHeight / 2),
+          width: displayWidth,
+          height: displayHeight,
+          scale: scale,
+          rotation: 0,
+          visible: true,
+          locked: false,
+          src: imageUrl,
+          cropTop: 0,
+          cropRight: 0,
+          cropBottom: 0,
+          cropLeft: 0,
+        };
+  
+        const designJson = JSON.stringify({
+          version: '1.0',
+          pages: [
+            {
+              id: `page-${Date.now()}`,
+              canvas: {
+                width: 1080,
+                height: 1080,
+                backgroundColor: '#FFFFFF',
+              },
+              layers: [layer],
+            },
+          ],
+        });
+  
+        await axios.put(
+          `${API_BASE_URL}/api/image-editor/projects/${projectId}`,
+          { designJson },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+  
+        window.open(`/tools/image-editing/${projectId}/edit`, '_blank');
+        setIsCreatingProject(false);
+      };
+  
+      img.onerror = () => {
+        console.error('Failed to load image');
+        setIsCreatingProject(false);
+        alert('Failed to load the image. Please try again.');
+      };
+  
+      img.src = imageUrl;
+    } catch (error: any) {
+      console.error('Error creating project:', error);
+      setIsCreatingProject(false);
+      alert(error.response?.data?.message || 'Failed to create project');
+    }
+  };  
 
   return (
     <div className="ai-image-generator-page">
@@ -804,23 +921,35 @@ const AIImageGeneratorClient: React.FC = () => {
                   <h2 id="results-title">Your Generated Images</h2>
                   <div className="images-grid">
                     {generatedImages.map((image) => (
-                      <div key={image.id} className="image-result-card">
-                        <img
-                          src={image.imagePath}
-                          alt={image.prompt}
-                          className="generated-image"
-                        />
-                        <div className="image-actions">
-                          <button
-                            onClick={() => handleDownloadImage(image.imagePath, image.id)}
-                            className="download-image-btn"
-                            aria-label="Download image"
-                          >
-                            📥 Download PNG
-                          </button>
-                        </div>
-                        <p className="image-prompt">{image.prompt}</p>
+                    <div key={image.id} className="image-result-card">
+                      <img
+                        src={image.imagePath}
+                        alt={image.prompt}
+                        className="generated-image"
+                      />
+                      <div className="image-actions">
+                        <button
+                          onClick={() => handleDownloadImage(image.imagePath, image.id)}
+                          className="download-image-btn"
+                          aria-label="Download image"
+                        >
+                          📥 Download PNG
+                        </button>
+                        <button
+                          className="download-image-btn"
+                          style={{ background: 'linear-gradient(90deg, #8B5CF6, #EC4899)' }}
+                          onClick={() => handleEditInEditor(
+                            image.imagePath,
+                            `ai-image-${image.id}`
+                          )}
+                          disabled={isCreatingProject}
+                          aria-label="Edit image in editor"
+                        >
+                          {isCreatingProject ? '⏳ Creating Project...' : '✏️ Edit in Editor'}
+                        </button>
                       </div>
+                      <p className="image-prompt">{image.prompt}</p>
+                    </div>
                     ))}
                   </div>
                 </motion.div>
@@ -1207,13 +1336,12 @@ const AIImageGeneratorClient: React.FC = () => {
           </div>
 
           <figure className="hero-image-container">
-            <Image
+            <img
               src="/images/AIImageGenerationSS.png"
               alt="Free AI image generator interface showing text-to-image creation with multiple artistic styles"
               className="hero-image"
               width={800}
               height={400}
-              priority
             />
             <figcaption className="sr-only">Example of AI image generation showing style selection and visual output</figcaption>
           </figure>
