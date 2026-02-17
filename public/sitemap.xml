@@ -1384,4 +1384,10 @@
     <changefreq>weekly</changefreq>
     <lastmod>2026-02-16</lastmod>
   </url> 
+  <url>
+    <loc>https://scenith.in/pdf-tools/pdf-to-image</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-02-17</lastmod>
+  </url> 
 </urlset>
