@@ -286,6 +286,9 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
     height: number;
     mouseX: number;
     mouseY: number;
+    fontSize?: number;
+    backgroundWidth?: number;
+    backgroundHeight?: number;   
   } | null>(null);
   const [isRotatingLayer, setIsRotatingLayer] = useState(false);
   const [rotationStartState, setRotationStartState] = useState<{
@@ -793,6 +796,9 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
         y: layer.y,
         width: layer.fontSize || 32, // Store fontSize as width for text
         height: layer.fontSize || 32, // Store fontSize as height for text
+        fontSize: layer.fontSize || 32,
+        backgroundWidth: layer.backgroundWidth,
+        backgroundHeight: layer.backgroundHeight,
         mouseX: e.clientX,
         mouseY: e.clientY,
       });
@@ -1578,26 +1584,25 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
         const rotatedDeltaX = rotated.x;
         const rotatedDeltaY = rotated.y;
       
-        const startFontSize = resizeStartState.width;
+        // ✅ Use fontSize from snapshot, not resizeStartState.width
+        const startFontSize = resizeStartState.fontSize ?? resizeStartState.width;
         let fontSizeDelta = 0;
         let newX = layer.x;
         let newY = layer.y;
       
         if (isAltPressed) {
-          // Resize from center for text
           switch (resizeHandle) {
             case 'nw':
             case 'ne':
             case 'sw':
             case 'se':
               const maxDelta = Math.max(Math.abs(rotatedDeltaX), Math.abs(rotatedDeltaY));
-              fontSizeDelta = resizeHandle.includes('e') || resizeHandle.includes('s') 
-                ? maxDelta * 2 
+              fontSizeDelta = resizeHandle.includes('e') || resizeHandle.includes('s')
+                ? maxDelta * 2
                 : -maxDelta * 2;
               break;
           }
         } else {
-          // Normal resize behavior
           switch (resizeHandle) {
             case 'nw':
               fontSizeDelta = -Math.max(rotatedDeltaX, rotatedDeltaY);
@@ -1618,32 +1623,32 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
           }
         }
       
-      const newFontSize = Math.max(12, Math.round(startFontSize + fontSizeDelta * 0.5));
-    
-        // Calculate position for snapping
+        const newFontSize = Math.max(12, Math.round(startFontSize + fontSizeDelta * 0.5));
+      
         const testLayer = {
           ...layer,
           fontSize: newFontSize,
           x: isAltPressed ? resizeStartState.x : newX,
           y: isAltPressed ? resizeStartState.y : newY
         };
-    
+      
         const detectedGuides = detectAlignmentGuides(testLayer, layers);
         setGuides(detectedGuides);
-    
-        const text = layer.text || "";
-        const estimatedTextWidth = text.length * newFontSize * 0.6;
-        const estimatedTextHeight = newFontSize * 1.5;
-    
+      
+        // ✅ Use snapshot backgroundWidth/Height, NOT live layer values
+        const startBgWidth = resizeStartState.backgroundWidth;
+        const startBgHeight = resizeStartState.backgroundHeight;
+        const scaleFactor = startFontSize > 0 ? newFontSize / startFontSize : 1;
+      
         updateLayer(selectedLayerIds[0], {
           fontSize: newFontSize,
           x: isAltPressed ? resizeStartState.x : newX,
           y: isAltPressed ? resizeStartState.y : newY,
-          // Update background dimensions if they exist
-          ...(layer.backgroundWidth ? {
-            backgroundWidth: Math.max(estimatedTextWidth + 20, 50),
-            backgroundHeight: Math.max(estimatedTextHeight + 10, 30)
-          } : {})
+          // ✅ Only scale background if it was set at drag-start
+          ...(startBgWidth != null && startBgHeight != null ? {
+            backgroundWidth: Math.max(startBgWidth * scaleFactor, 50),
+            backgroundHeight: Math.max(startBgHeight * scaleFactor, 30),
+          } : {}),
         });
         return;
       }
@@ -1841,21 +1846,25 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
       const minWidth = Math.max(text.length * fontSize * 0.6, 50);
       const minHeight = Math.max(fontSize * 1.5, 30);
     
-      let newBackgroundWidth = resizeStartState.width;
-      let newBackgroundHeight = resizeStartState.height;
+      // Use backgroundWidth/Height from resizeStartState, NOT width/height
+      const startBgWidth = resizeStartState.backgroundWidth ?? resizeStartState.width;
+      const startBgHeight = resizeStartState.backgroundHeight ?? resizeStartState.height;
+    
+      let newBackgroundWidth = startBgWidth;
+      let newBackgroundHeight = startBgHeight;
     
       switch (backgroundResizeHandle) {
         case 'bg-n':
-          newBackgroundHeight = Math.max(minHeight, resizeStartState.height - deltaY);
+          newBackgroundHeight = Math.max(minHeight, startBgHeight - deltaY);
           break;
         case 'bg-s':
-          newBackgroundHeight = Math.max(minHeight, resizeStartState.height + deltaY);
+          newBackgroundHeight = Math.max(minHeight, startBgHeight + deltaY);
           break;
         case 'bg-e':
-          newBackgroundWidth = Math.max(minWidth, resizeStartState.width + deltaX);
+          newBackgroundWidth = Math.max(minWidth, startBgWidth + deltaX);
           break;
         case 'bg-w':
-          newBackgroundWidth = Math.max(minWidth, resizeStartState.width - deltaX);
+          newBackgroundWidth = Math.max(minWidth, startBgWidth - deltaX);
           break;
       }
     
@@ -2194,6 +2203,8 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
       y: layer.y,
       width: layer.backgroundWidth || minWidth,
       height: layer.backgroundHeight || minHeight,
+      backgroundWidth: layer.backgroundWidth || minWidth,
+      backgroundHeight: layer.backgroundHeight || minHeight,
       mouseX: e.clientX,
       mouseY: e.clientY,
     });
