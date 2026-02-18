@@ -230,7 +230,19 @@ if (gateway === 'razorpay') {
   // @ts-ignore - Razorpay type not available
   const rzp = new window.Razorpay(options);
   rzp.open();
-  } else if (gateway === 'paypal') {
+  }  else if (gateway === 'paypal') {
+          // Load PayPal SDK if not already loaded
+          if (!document.getElementById('paypal-sdk')) {
+            await new Promise<void>((resolve, reject) => {
+              const script = document.createElement('script');
+              script.src = 'https://www.paypal.com/sdk/js?client-id=AcxQJG7b-ZyAXBRp2P3GFJs-Unh0tvJHz2nlTrOaNi8vSnoy2POnyaH1ajhHXp4K8a5LJ6EIHfS3Yc3T&currency=USD';
+              script.id = 'paypal-sdk';
+              script.onload = () => resolve();
+              script.onerror = () => reject(new Error('PayPal SDK failed to load'));
+              document.body.appendChild(script);
+            });
+          }
+
           // Create a container for PayPal buttons if not already present
           let paypalContainer = document.getElementById('paypal-button-container');
           if (!paypalContainer) {
