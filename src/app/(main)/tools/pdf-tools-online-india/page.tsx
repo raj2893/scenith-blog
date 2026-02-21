@@ -1,7 +1,7 @@
 // app/pdf-tools-online-india/page.tsx
 import type { Metadata } from "next";
 import Link from "next/link";
-import '../../../../styles/PDF/PDFToolsIndia.css';
+import '../../../../../styles/PDF/PDFToolsIndia.css';
 
 export const metadata: Metadata = {
   title: "Free PDF Tools Online India – Merge, Split, Compress PDF in Hindi & English | Scenith",
