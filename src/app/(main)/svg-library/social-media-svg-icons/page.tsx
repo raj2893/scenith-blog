@@ -1043,7 +1043,7 @@ const SocialMediaIconsPage = () => {
               Download Free Social Media Icons Now
             </h2>
             <p className="smi-final-cta-desc">
-              Join 25,000+ designers using Scenith's SVG library. 500+ social media icons across all platforms.
+              Join 1500+ designers using Scenith's SVG library. 500+ social media icons across all platforms.
               Commercial use, no attribution, instant download. Completely free — forever.
             </p>
             <div className="smi-final-cta-actions">

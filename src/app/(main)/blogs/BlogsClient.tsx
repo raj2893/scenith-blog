@@ -289,7 +289,7 @@ export default function BlogIndex() {
                 <button className={styles.newsletterBtn}>Subscribe</button>
               </div>
               <p className={styles.newsletterDisclaimer}>
-                Join 25,000+ creators • No spam • Unsubscribe anytime
+                Join 1500+ creators • No spam • Unsubscribe anytime
               </p>
             </div>
           </div>

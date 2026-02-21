@@ -1348,7 +1348,7 @@ const HindiFemaleVoicePage = () => {
             <span className="hfv-final-icon">🎙️</span>
             <h2>Ready to Create Natural Hindi Female Voices?</h2>
             <p className="hfv-final-desc">
-              Join 25,000+ creators, educators, and businesses using Scenith to generate professional
+              Join 1500+ creators, educators, and businesses using Scenith to generate professional
               Hindi female audio for YouTube, e-learning, audiobooks, devotional content, and marketing.
               Start completely free — no credit card, no account required for first use!
             </p>

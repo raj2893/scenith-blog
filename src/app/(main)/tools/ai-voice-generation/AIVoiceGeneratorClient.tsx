@@ -3282,7 +3282,7 @@ return (
     {/* ORIGINAL Testimonials Section */}
     <section className="testimonials-section" id="testimonials" role="region" aria-labelledby="testimonials-title">
       <div className="container">
-        <h2 id="testimonials-title">Trusted by Over 25,000+ Creators Worldwide</h2>
+        <h2 id="testimonials-title">Trusted by Over 1500+ Creators Worldwide</h2>
         <p className="section-description">
           Join thousands of satisfied users who rely on our AI voice generator for their professional audio projects.
         </p>
@@ -3378,7 +3378,7 @@ return (
     <section className="cta-section" id="get-started" role="region" aria-labelledby="cta-title">
       <div className="container">
         <h2 id="cta-title">Ready to Create Stunning Audio?</h2>
-        <p>Join over 25,000+ creators who trust our AI voice generator. Start producing professional voiceovers for your videos, podcasts, and projects today - completely free!</p>
+        <p>Join over 1500+ creators who trust our AI voice generator. Start producing professional voiceovers for your videos, podcasts, and projects today - completely free!</p>
         <button
           className="cta-button"
           onClick={() => {

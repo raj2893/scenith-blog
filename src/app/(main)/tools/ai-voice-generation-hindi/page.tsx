@@ -913,7 +913,7 @@ const HindiTextToSpeechPage = () => {
             <span className="cta-icon-large">🇮🇳</span>
             <h2>Ready to Create Natural Hindi Voices?</h2>
             <p className="cta-description">
-              Join 25,000+ creators using Scenith to generate professional Hindi audio for YouTube, education, devotional content, 
+              Join 1500+ creators using Scenith to generate professional Hindi audio for YouTube, education, devotional content, 
               and marketing. Start absolutely free – no credit card, no signup required for first use!
             </p>
             

@@ -322,7 +322,7 @@ export default function AutoAddSubtitles() {
               <strong>Solution:</strong> Added auto-generated subtitles to every Reel using Scenith's one-click tool.
             </p>
             <p>
-              <strong>Results:</strong> Average views jumped to 15,000 per Reel (650% increase). Engagement rate doubled from 3% to 6%. Gained 25,000 followers in 3 months. Now earns $5,000/month from brand deals.
+              <strong>Results:</strong> Average views jumped to 15,000 per Reel (650% increase). Engagement rate doubled from 3% to 6%. Gained 1500 followers in 3 months. Now earns $5,000/month from brand deals.
             </p>
 
             <h3>Case Study 2: Educational YouTuber</h3>

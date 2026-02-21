@@ -99,7 +99,7 @@ export default function FreeAIVoiceGenerator() {
           </div>
 
           <p>
-            Professional voiceovers can increase video engagement by up to 40%, but hiring voice actors or recording studios can cost hundreds of dollars. With <strong>over 25,000 creators</strong> using Scenith’s free AI voice generator daily, you can create high-quality, natural-sounding audio for videos, podcasts, and presentations without breaking the bank.
+            Professional voiceovers can increase video engagement by up to 40%, but hiring voice actors or recording studios can cost hundreds of dollars. With <strong>over 1500 creators</strong> using Scenith’s free AI voice generator daily, you can create high-quality, natural-sounding audio for videos, podcasts, and presentations without breaking the bank.
           </p>
 
           <p>
@@ -190,7 +190,7 @@ export default function FreeAIVoiceGenerator() {
             </div>
 
             <p>
-              Scenith’s AI Voice Generator creates lifelike voices in over 20 languages with 98% natural sound accuracy. With a 4.7/5 user rating from over 25,000 creators, it’s perfect for YouTube videos, podcasts, e-learning, and more. Plus, it’s completely free with no watermarks and full commercial rights.
+              Scenith’s AI Voice Generator creates lifelike voices in over 20 languages with 98% natural sound accuracy. With a 4.7/5 user rating from over 1500 creators, it’s perfect for YouTube videos, podcasts, e-learning, and more. Plus, it’s completely free with no watermarks and full commercial rights.
             </p>
 
             <h3>How to Generate AI Voices in Scenith:</h3>
@@ -393,7 +393,7 @@ export default function FreeAIVoiceGenerator() {
             <Link href="https://scenith.in/tools/ai-voice-generation" className={styles.ctaButton}>
               Start Generating Voices Free →
             </Link>
-            <p>Join 25,000+ creators crafting professional audio with Scenith!</p>
+            <p>Join 1500+ creators crafting professional audio with Scenith!</p>
           </div>
         </section>
       </article>

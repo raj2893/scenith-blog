@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'YouTube Text to Speech – AI Voice Generator for Video Creators (100% Free)',
-    description: 'Create professional YouTube voiceovers in seconds. Free AI text-to-speech tool trusted by 25,000+ creators. Perfect for YouTube videos, Shorts, and monetized channels.',
+    description: 'Create professional YouTube voiceovers in seconds. Free AI text-to-speech tool trusted by 1500+ creators. Perfect for YouTube videos, Shorts, and monetized channels.',
     type: 'website',
     url: 'https://scenith.in/tools/youtube-ai-voice-generation',
     images: [
@@ -222,7 +222,7 @@ const YouTubeTextToSpeechPage = () => {
           <p className="hero-description">
             Generate <strong>natural-sounding AI voices</strong> specifically optimized for <strong>YouTube videos</strong>. 
             Perfect for <strong>faceless YouTube channels</strong>, YouTube Shorts, educational content, news commentary, 
-            and monetized videos. Trusted by <strong>25,000+ YouTube creators</strong> for professional narration 
+            and monetized videos. Trusted by <strong>1500+ YouTube creators</strong> for professional narration 
             without expensive voice actors or recording equipment.
           </p>
 
@@ -281,7 +281,7 @@ const YouTubeTextToSpeechPage = () => {
       {/* Why YouTube Creators Use TTS */}
       <section className="why-youtube-tts-section">
         <div className="container">
-          <h2>Why 25,000+ YouTube Creators Choose AI Text to Speech</h2>
+          <h2>Why 1500+ YouTube Creators Choose AI Text to Speech</h2>
           <p className="section-intro">
             YouTube's algorithm favors <strong>consistent upload schedules and engaging narration</strong>. 
             AI voice generation helps creators produce high-quality videos faster, cheaper, and without camera shyness or recording hassles.
@@ -1040,7 +1040,7 @@ const YouTubeTextToSpeechPage = () => {
             <span className="cta-icon-large">▶️</span>
             <h2>Ready to Scale Your YouTube Channel with AI Voices?</h2>
             <p className="cta-description">
-              Join 25,000+ successful YouTube creators using our AI text-to-speech tool to produce professional voiceovers in seconds. 
+              Join 1500+ successful YouTube creators using our AI text-to-speech tool to produce professional voiceovers in seconds. 
               Start creating monetizable content today — no recording equipment, no voice actors, no expensive software required.
             </p>
             
