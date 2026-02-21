@@ -720,7 +720,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
       return;
     }
     if (aiVoiceText.length > maxCharsPerRequest) {
-      const roleBasedLimit = ttsUsage?.maxCharRequest || 150;
+      const roleBasedLimit = ttsUsage?.maxCharRequest || 200;
       const limitType = ttsUsage?.daily.remaining !== -1 && 
                         (ttsUsage?.daily.remaining ?? 0) < (ttsUsage?.monthly.remaining ?? 0)
         ? 'daily' 
@@ -959,8 +959,8 @@ const AIVoiceGeneratorClient: React.FC = () => {
   }, [isLoggedIn, ttsUsage]); 
 
   const maxCharsPerRequest = useMemo(() => {
-    if (!isLoggedIn || !ttsUsage) return 150;
-    return ttsUsage.maxCharRequest || 150;
+    if (!isLoggedIn || !ttsUsage) return 200;
+    return ttsUsage.maxCharRequest || 200;
   }, [isLoggedIn, ttsUsage]);
   
   const limitsExceeded = useMemo(() => {
@@ -994,7 +994,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
     if (!selectedVoice) return "Please select a voice before generating";
     if (isGenerating) return "Audio generation in progress...";
     if (characterCount > maxCharsPerRequest) {
-      const roleBasedLimit = ttsUsage?.maxCharRequest || 150;
+      const roleBasedLimit = ttsUsage?.maxCharRequest || 200;
       return `Text exceeds maximum limit of ${maxCharsPerRequest.toLocaleString()} characters`;
     }
     if (wouldExceedLimits) {
@@ -1140,7 +1140,7 @@ return (
                   name: 'Is AI voice generation free?',
                   acceptedAnswer: {
                     '@type': 'Answer',
-                    text: 'Yes! The free BASIC plan includes 2,000 characters per month with a daily limit of 200 characters. All generated audio can be used commercially with full rights, no watermarks, and instant MP3 downloads.'
+                    text: 'Yes! The free BASIC plan includes 2,000 characters per month with a daily limit of 700 characters. All generated audio can be used commercially with full rights, no watermarks, and instant MP3 downloads.'
                   }
                 },
                 {
@@ -1314,7 +1314,7 @@ return (
                     </div>
                     <div className="stat-item">
                       <span className="stat-icon">⏱️</span>
-                      <span className="stat-label">~{Math.ceil(aiVoiceText.trim().split(/\s+/).filter(w => w.length > 0).length / 150)} min read</span>
+                      <span className="stat-label">~{Math.ceil(aiVoiceText.trim().split(/\s+/).filter(w => w.length > 0).length / 200)} min read</span>
                     </div>
                     <div className="stat-item">
                       <span className="stat-icon">🎤</span>
@@ -2126,7 +2126,7 @@ return (
                 <li>Test multiple versions for A/B testing</li>
               </ul>
               <p>
-                Each regeneration uses your remaining character quota. <strong>Free users get 2,000 characters/month</strong> (200/day). Upgrade for unlimited generations and access to premium voices.
+                Each regeneration uses your remaining character quota. <strong>Free users get 2,000 characters/month</strong> (700/day). Upgrade for unlimited generations and access to premium voices.
               </p>
             </div>
           </article>
@@ -3325,7 +3325,7 @@ return (
           </article>
           <article className="faq-item" role="listitem">
             <h3>How many characters can I generate for free?</h3>
-            <p>The free BASIC plan includes 2,000 characters per month with a daily limit of 200 characters. CREATOR plan offers 50,000 characters/month with 5,000 characters/day. STUDIO plan provides 150,000 characters/month with no daily limits. Each request supports up to 5,000 characters.</p>
+            <p>The free BASIC plan includes 2,000 characters per month with a daily limit of 700 characters. CREATOR plan offers 50,000 characters/month with 5,000 characters/day. STUDIO plan provides 150,000 characters/month with no daily limits. Each request supports up to 5,000 characters.</p>
           </article>
           <article className="faq-item" role="listitem">
             <h3>Can I adjust voice speed, pitch, or tone?</h3>
