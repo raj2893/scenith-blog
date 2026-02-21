@@ -736,7 +736,7 @@ export default function PhotoToPdfPage() {
                 <ol className="photo-pdf-mobile-card__steps">
                   <li>
                     Open Chrome on your Android phone and go to{" "}
-                    <strong>scenith.in/pdf-tools/images-to-pdf</strong>
+                    <strong>scenith.in/tools/pdf-tools/images-to-pdf</strong>
                   </li>
                   <li>
                     Tap <strong>Choose Files</strong> — your phone will show your gallery or
@@ -771,7 +771,7 @@ export default function PhotoToPdfPage() {
                 <ol className="photo-pdf-mobile-card__steps">
                   <li>
                     Open Safari on your iPhone and go to{" "}
-                    <strong>scenith.in/pdf-tools/images-to-pdf</strong>
+                    <strong>scenith.in/tools/pdf-tools/images-to-pdf</strong>
                   </li>
                   <li>
                     Tap <strong>Choose Files</strong> — select <strong>Photo Library</strong>{" "}
