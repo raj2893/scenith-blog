@@ -15,6 +15,7 @@ interface DownloadModalProps {
   selectedColor?: string;
   fileFormat?: string;
   isLoggedIn?: boolean;
+  onLimitReached?: (message?: string) => void;
 }
 
 interface DownloadLimits {
@@ -55,6 +56,7 @@ const DownloadModal: React.FC<DownloadModalProps> = ({
   selectedColor = "#000000",
   fileFormat = "SVG",
   isLoggedIn = false,
+  onLimitReached,
 }) => {
   const [selectedFormat, setSelectedFormat] = useState("PNG");
   const [selectedResolution, setSelectedResolution] = useState("512x512");
@@ -198,8 +200,12 @@ const DownloadModal: React.FC<DownloadModalProps> = ({
         onClose();
         setDownloadSuccess(false);
       }, 1800);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Download failed:", error);
+      if (error?.response?.status === 429) {
+        onLimitReached?.(error?.response?.data?.message || "You've reached your download limit.");
+        return;
+      }
       alert("Download failed. Please try again.");
     } finally {
       setIsDownloading(false);
