@@ -356,6 +356,14 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
   const [selectedStyleCategory, setSelectedStyleCategory] = useState<string>('headings');
   const [styleCategories, setStyleCategories] = useState<any[]>([]);  
   const [elementSearchQuery, setElementSearchQuery] = useState<string>("");
+  const [isEraserActive, setIsEraserActive] = useState(false);
+  const [eraserSize, setEraserSize] = useState(20);
+  const [isErasing, setIsErasing] = useState(false);
+  const [isSavingErase, setIsSavingErase] = useState(false);
+  const [hasUnsavedErase, setHasUnsavedErase] = useState(false);
+  const eraserOffscreenRef = useRef<HTMLCanvasElement | null>(null);
+  const eraserLayerIdRef = useRef<string | null>(null);
+  const eraserDisplayCanvasRef = useRef<HTMLCanvasElement | null>(null);  
   
   useEffect(() => {
     const checkMobile = () => {
@@ -465,6 +473,17 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
     });
     setHistoryIndex(prev => prev + 1);
   }, [historyIndex]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasUnsavedErase) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [hasUnsavedErase]);  
   
   const addElementToCanvas = (element: any) => {
     const img = new Image();
@@ -1458,6 +1477,15 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
     } else {
       // Clicked on canvas background - clear selection
       if (!isShiftPressed) {
+        if (hasUnsavedErase) {
+          const confirmed = window.confirm(
+            'You have unapplied eraser changes. Deselecting will lose them. Continue?'
+          );
+          if (!confirmed) return;
+          cancelErase();
+        } else {
+          cancelErase();
+        }
         setSelectedLayerIds([]);
       }
     }
@@ -2850,13 +2878,188 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
     }
   };  
 
+  const initEraserCanvas = (layer: Layer) => {
+    if (!layer.src) return;
+
+    // If switching to a different layer, cancel previous
+    if (eraserLayerIdRef.current && eraserLayerIdRef.current !== layer.id) {
+      cancelErase();
+    }
+
+    eraserLayerIdRef.current = layer.id;
+
+    const offscreen = document.createElement('canvas');
+    offscreen.width = Math.round(layer.width);
+    offscreen.height = Math.round(layer.height);
+
+    const ctx = offscreen.getContext('2d');
+    if (!ctx) return;
+
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0, offscreen.width, offscreen.height);
+      eraserOffscreenRef.current = offscreen;
+      setIsEraserActive(true);
+      // Trigger re-render so canvas appears
+      setLayers(prev => [...prev]);
+    };
+    img.onerror = () => {
+      // If CORS fails, try without crossOrigin
+      const img2 = new Image();
+      img2.onload = () => {
+        ctx.drawImage(img2, 0, 0, offscreen.width, offscreen.height);
+        eraserOffscreenRef.current = offscreen;
+        setIsEraserActive(true);
+        setLayers(prev => [...prev]);
+      };
+      img2.src = layer.src!;
+    };
+    img.src = layer.src;
+  };
+
+  const getLocalCoords = (e: React.MouseEvent, layer: Layer) => {
+    const target = (e.currentTarget as HTMLElement);
+    const rect = target.getBoundingClientRect();
+    const x = (e.clientX - rect.left) * (layer.width / rect.width);
+    const y = (e.clientY - rect.top) * (layer.height / rect.height);
+    return { x, y };
+  };
+
+  const getLocalCoordsFromTouch = (e: React.TouchEvent, layer: Layer) => {
+    const touch = e.touches[0] || e.changedTouches[0];
+    const target = e.currentTarget as HTMLElement;
+    const rect = target.getBoundingClientRect();
+    const x = (touch.clientX - rect.left) * (layer.width / rect.width);
+    const y = (touch.clientY - rect.top) * (layer.height / rect.height);
+    return { x, y };
+  };  
+
+  const drawOnEraserCanvas = (x: number, y: number) => {
+    const offscreen = eraserOffscreenRef.current;
+    if (!offscreen) return;
+    const ctx = offscreen.getContext('2d');
+    if (!ctx) return;
+
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.beginPath();
+    ctx.arc(x, y, eraserSize / 2, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Also draw on the visible display canvas for instant feedback
+    const displayCanvas = eraserDisplayCanvasRef.current;
+    if (displayCanvas) {
+      const dCtx = displayCanvas.getContext('2d');
+      if (dCtx) {
+        dCtx.clearRect(0, 0, displayCanvas.width, displayCanvas.height);
+        dCtx.drawImage(offscreen, 0, 0);
+      }
+    }
+  };
+
+  const handleEraserMouseDown = (e: React.MouseEvent, layerId: string) => {
+    if (!isEraserActive || eraserLayerIdRef.current !== layerId) return;
+    e.stopPropagation();
+    setIsErasing(true);
+    setHasUnsavedErase(true);
+    const layer = layers.find(l => l.id === layerId);
+    if (!layer) return;
+    const coords = getLocalCoords(e, layer);
+    if (coords) drawOnEraserCanvas(coords.x, coords.y);
+  };
+
+  const handleEraserMouseMove = (e: React.MouseEvent, layerId: string) => {
+    if (!isEraserActive || !isErasing || eraserLayerIdRef.current !== layerId) return;
+    const layer = layers.find(l => l.id === layerId);
+    if (!layer) return;
+    const coords = getLocalCoords(e, layer);
+    if (coords) drawOnEraserCanvas(coords.x, coords.y);
+  };
+
+  const handleEraserMouseUp = () => {
+    setIsErasing(false);
+  };
+
+  const applyErase = async () => {
+    const offscreen = eraserOffscreenRef.current;
+    const layerId = eraserLayerIdRef.current;
+    if (!offscreen || !layerId) return;
+
+    setIsSavingErase(true);
+
+    offscreen.toBlob(async (blob) => {
+      if (!blob) {
+        setIsSavingErase(false);
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('file', blob, 'erased_image.png');
+      formData.append('assetType', 'IMAGE');
+
+      try {
+        const response = await axios.post(
+          `${API_BASE_URL}/api/image-editor/assets/upload`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        );
+
+        const updatedLayers = layers.map(l =>
+          l.id === layerId ? { ...l, src: response.data.cdnUrl } : l
+        );
+        setLayers(updatedLayers);
+        saveToHistory(updatedLayers);
+        setUploadedImages(prev => [...prev, response.data.cdnUrl]);
+
+        // Clean up
+        eraserOffscreenRef.current = null;
+        eraserLayerIdRef.current = null;
+        eraserDisplayCanvasRef.current = null;
+        setIsEraserActive(false);
+        setHasUnsavedErase(false);
+        setSuccess('Eraser applied!');
+        setTimeout(() => setSuccess(null), 2000);
+      } catch (err) {
+        setError('Failed to apply erase. Please try again.');
+      } finally {
+        setIsSavingErase(false);
+      }
+    }, 'image/png');
+  };
+
+  const cancelErase = () => {
+    eraserOffscreenRef.current = null;
+    eraserLayerIdRef.current = null;
+    eraserDisplayCanvasRef.current = null;
+    setIsEraserActive(false);
+    setIsErasing(false);
+    setHasUnsavedErase(false);
+  };  
+
   return (
     <div className="editor-container">
       {/* Top Toolbar */}
       <div className="editor-toolbar">
-        <button className="toolbar-btn back-btn" onClick={() => router.push("/tools/image-editing")}>
-          <FaArrowLeft /> Back
-        </button>
+      <button
+        className="toolbar-btn back-btn"
+        onClick={() => {
+          if (hasUnsavedErase) {
+            const confirmed = window.confirm(
+              'You have unapplied eraser changes. If you leave, they will be lost. Leave anyway?'
+            );
+            if (!confirmed) return;
+            cancelErase();
+          }
+          router.push("/tools/image-editing");
+        }}
+      >
+        <FaArrowLeft /> Back
+      </button>
         <h2>{project?.projectName || "Editor"}</h2>
         <div className="toolbar-actions">      
           <button className="toolbar-btn" onClick={handleUndo} disabled={historyIndex <= 0}>
@@ -3313,6 +3516,77 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
                         </div>                        
                       </>  
                     )}     
+
+                    {selectedLayer.type === "image" && (
+                      <div className="property-group">
+                        <label>Eraser Tool</label>
+                    
+                        {!isEraserActive ? (
+                          <button
+                            className="tool-btn"
+                            onClick={() => initEraserCanvas(selectedLayer)}
+                            style={{ background: 'linear-gradient(90deg, #8b5cf6, #7c3aed)' }}
+                          >
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <path d="M20 20H7L3 16l10-10 7 7-2.5 2.5"/>
+                              <path d="M6.5 17.5l-4-4"/>
+                            </svg>
+                            <span>Eraser</span>
+                          </button>
+                        ) : (
+                          <>
+                            <label>Eraser Size: {eraserSize}px</label>
+                            <input
+                              type="range"
+                              min="5"
+                              max="100"
+                              step="1"
+                              value={eraserSize}
+                              onChange={(e) => setEraserSize(parseInt(e.target.value))}
+                            />
+                            <small style={{ color: '#64748b', fontSize: '0.8rem' }}>
+                              Paint over the image to erase. Apply to save permanently.
+                            </small>
+                            <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
+                              <button
+                                className="tool-btn"
+                                onClick={applyErase}
+                                disabled={isSavingErase}
+                                style={{
+                                  background: 'linear-gradient(90deg, #10b981, #059669)',
+                                  flex: 1,
+                                  opacity: isSavingErase ? 0.7 : 1,
+                                }}
+                              >
+                                {isSavingErase ? (
+                                  <>
+                                    <div className="spinner" style={{ width: '16px', height: '16px', borderWidth: '2px' }} />
+                                    <span>Saving...</span>
+                                  </>
+                                ) : (
+                                  <span>✓ Apply</span>
+                                )}
+                              </button>
+                              <button
+                                className="tool-btn"
+                                onClick={() => {
+                                  if (hasUnsavedErase) {
+                                    const confirmed = window.confirm(
+                                      'Cancel erasing? All unsaved erase strokes will be lost.'
+                                    );
+                                    if (!confirmed) return;
+                                  }
+                                  cancelErase();
+                                }}
+                                style={{ background: 'linear-gradient(90deg, #ef4444, #dc2626)', flex: 1 }}
+                              >
+                                <span>✕ Cancel</span>
+                              </button>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    )}                    
 
                     {/* Shape Mask Controls - ADD THIS SECTION */}
                     {selectedLayer.type === "image" && (
@@ -4540,33 +4814,88 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
                       )}
                     </>
                   )}
-                  {layer.type === "image" && layer.src && (
-                    <div
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        overflow: "hidden",
-                        pointerEvents: "none",
-                        position: "relative",
-                        ...getFilterStyle(layer.filters),
-                        clipPath: getShapeMaskPath(layer.shapeMask, layer.maskRadius, layer.width, layer.height),
-                        WebkitClipPath: getShapeMaskPath(layer.shapeMask, layer.maskRadius, layer.width, layer.height),                        
-                      }}
-                    >
-                      <img
-                        src={layer.src}
-                        alt=""
+                  {layer.type === "image" && layer.src && (() => {
+                    const isActiveEraserLayer = isEraserActive && eraserLayerIdRef.current === layer.id;
+                  
+                    return (
+                      <div
                         style={{
-                          position: "absolute",
-                          width: `${100 / ((100 - (layer.cropLeft ?? 0) - (layer.cropRight ?? 0)) / 100)}%`,
-                          height: `${100 / ((100 - (layer.cropTop ?? 0) - (layer.cropBottom ?? 0)) / 100)}%`,
-                          objectFit: "fill",
-                          top: `${-(layer.cropTop ?? 0) / (100 - (layer.cropTop ?? 0) - (layer.cropBottom ?? 0)) * 100}%`,
-                          left: `${-(layer.cropLeft ?? 0) / (100 - (layer.cropLeft ?? 0) - (layer.cropRight ?? 0)) * 100}%`,
+                          width: "100%",
+                          height: "100%",
+                          overflow: "hidden",
+                          pointerEvents: isActiveEraserLayer ? "auto" : "none",
+                          position: "relative",
+                          ...getFilterStyle(layer.filters),
+                          clipPath: getShapeMaskPath(layer.shapeMask, layer.maskRadius, layer.width, layer.height),
+                          WebkitClipPath: getShapeMaskPath(layer.shapeMask, layer.maskRadius, layer.width, layer.height),
+                          cursor: isActiveEraserLayer ? 'crosshair' : 'inherit',
                         }}
-                      />
-                    </div>
-                  )}
+                        onMouseDown={(e) => handleEraserMouseDown(e, layer.id)}
+                        onMouseMove={(e) => handleEraserMouseMove(e, layer.id)}
+                        onMouseUp={handleEraserMouseUp}
+                        onMouseLeave={handleEraserMouseUp}
+                        onTouchStart={(e) => {
+                          if (!isActiveEraserLayer) return;
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setIsErasing(true);
+                          setHasUnsavedErase(true);
+                          const coords = getLocalCoordsFromTouch(e, layer);
+                          drawOnEraserCanvas(coords.x, coords.y);
+                        }}
+                        onTouchMove={(e) => {
+                          if (!isActiveEraserLayer || !isErasing) return;
+                          e.preventDefault();
+                          e.stopPropagation();
+                          const coords = getLocalCoordsFromTouch(e, layer);
+                          drawOnEraserCanvas(coords.x, coords.y);
+                        }}
+                        onTouchEnd={(e) => {
+                          if (!isActiveEraserLayer) return;
+                          e.preventDefault();
+                          setIsErasing(false);
+                        }}                        
+                      >
+                        {isActiveEraserLayer && eraserOffscreenRef.current ? (
+                          // Show the live eraser canvas
+                          <canvas
+                            ref={(el) => {
+                              if (!el) return;
+                              eraserDisplayCanvasRef.current = el;
+                              el.width = layer.width;
+                              el.height = layer.height;
+                              const ctx = el.getContext('2d');
+                              if (ctx && eraserOffscreenRef.current) {
+                                ctx.clearRect(0, 0, el.width, el.height);
+                                ctx.drawImage(eraserOffscreenRef.current, 0, 0);
+                              }
+                            }}
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              position: 'absolute',
+                              top: 0,
+                              left: 0,
+                            }}
+                          />
+                        ) : (
+                          // Normal image display
+                          <img
+                            src={layer.src}
+                            alt=""
+                            style={{
+                              position: "absolute",
+                              width: `${100 / ((100 - (layer.cropLeft ?? 0) - (layer.cropRight ?? 0)) / 100)}%`,
+                              height: `${100 / ((100 - (layer.cropTop ?? 0) - (layer.cropBottom ?? 0)) / 100)}%`,
+                              objectFit: "fill",
+                              top: `${-(layer.cropTop ?? 0) / (100 - (layer.cropTop ?? 0) - (layer.cropBottom ?? 0)) * 100}%`,
+                              left: `${-(layer.cropLeft ?? 0) / (100 - (layer.cropLeft ?? 0) - (layer.cropRight ?? 0)) * 100}%`,
+                            }}
+                          />
+                        )}
+                      </div>
+                    );
+                  })()}
                   {layer.type === "shape" && (
                     <svg width="100%" height="100%" style={{ overflow: "visible", pointerEvents: "none" }}>
                       {layer.shape === "rectangle" && (
