@@ -115,8 +115,8 @@ export default function PDFToolsLaunchGuide2026() {
 
           <p>
             The foundation of this entire ecosystem is <strong>Scenith's Free PDF Tools Suite</strong>, available directly at
-            <a href="https://scenith.in/pdf-tools?utm_source=blog&utm_medium=intro&utm_campaign=pdf_tools_launch_2026" target="_blank" rel="noopener noreferrer">
-              https://scenith.in/pdf-tools
+            <a href="https://scenith.in/tools/pdf-tools?utm_source=blog&utm_medium=intro&utm_campaign=pdf_tools_launch_2026" target="_blank" rel="noopener noreferrer">
+              https://scenith.in/tools/pdf-tools
             </a>. From merging multiple documents with precise page control to compressing oversized files for email, rotating scanned documents, converting images to professional PDFs, extracting pages as images, adding protective watermarks, and securely locking/unlocking files — everything is now available in one place, completely free, with no restrictions on usage.
           </p>
 
@@ -749,7 +749,7 @@ export default function PDFToolsLaunchGuide2026() {
             </p>
             <p style={{fontSize: '1.8rem', fontWeight: 900, margin: '3rem 0'}}>
               <a
-                href="https://scenith.in/pdf-tools?utm_source=blog&utm_medium=final_cta&utm_campaign=pdf_tools_launch_2026"
+                href="https://scenith.in/tools/pdf-tools?utm_source=blog&utm_medium=final_cta&utm_campaign=pdf_tools_launch_2026"
                 style={{ color: '#ffffff', textDecoration: 'none' }}
                 target="_blank"
                 rel="noopener noreferrer"

@@ -135,7 +135,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
   };
 
   const navigate = (path: string) => {
-    if (path.startsWith('/blogs') || path.startsWith('/background-removal') || path.startsWith('/pricing') || path.startsWith('/pdf-tools')) {
+    if (path.startsWith('/blogs') || path.startsWith('/background-removal') || path.startsWith('/pricing')) {
       router.push(path);
     } else {
       window.location.href = `https://scenith.in${path}`;
@@ -318,7 +318,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
       icon: <FaTools />,
       dropdownItems: [
         { label: 'AI Voice Generator', href: '/tools/ai-voice-generation' },
-        { label: 'PDF Tools', href: '/pdf-tools' },
+        { label: 'PDF Tools', href: '/tools/pdf-tools' },
         { label: 'AI Image Generation', href: '/tools/ai-image-generation' },
         { label: 'SVG Library', href: '/svg-library' },
   /*    { label: 'AI Subtitle Generator', href: '/tools/add-subtitles-to-videos' },   */

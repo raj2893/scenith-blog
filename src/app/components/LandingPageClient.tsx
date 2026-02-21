@@ -142,7 +142,7 @@ const homepageStructuredData = {
           "item": {
             "@type": "SoftwareApplication",
             "name": "PDF Tools Suite",
-            "url": "https://scenith.in/pdf-tools",
+            "url": "https://scenith.in/tools/pdf-tools",
             "applicationCategory": "UtilitiesApplication",
             "offers": {
               "@type": "Offer",
@@ -479,7 +479,7 @@ const toolsShowcase: ToolShowcase[] = [
     title: 'PDF Tools Suite',
     icon: FaFilePdf,
     description: 'Merge, split, compress, convert PDFs. 9 professional tools in one place.',
-    link: '/pdf-tools',
+    link: '/tools/pdf-tools',
     color: '#E74C3C',
     badge: null,
     rank: 3 

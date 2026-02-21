@@ -17,6 +17,7 @@
   flex-direction: column;
   position: relative;
   overflow-x: hidden;
+  margin-top: 60px;
 }
 
 /* Extra safety for mobile/small screens */

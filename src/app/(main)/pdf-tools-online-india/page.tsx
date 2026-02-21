@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     description:
       "Merge, split, compress, rotate & convert PDFs free online. Built for Indian students, professionals & businesses. Works on Jio, BSNL, Airtel – any connection speed.",
     type: "website",
-    url: "https://scenith.in/pdf-tools-online-india",
+    url: "https://scenith.in/tools/pdf-tools-online-india",
     locale: "en_IN",
     images: [
       {
@@ -55,28 +55,28 @@ export const metadata: Metadata = {
   },
   robots: { index: true, follow: true },
   alternates: {
-    canonical: "https://scenith.in/pdf-tools-online-india",
+    canonical: "https://scenith.in/tools/pdf-tools-online-india",
     languages: {
-      "en-IN": "https://scenith.in/pdf-tools-online-india",
+      "en-IN": "https://scenith.in/tools/pdf-tools-online-india",
     },
   },
   themeColor: "#3B82F6",
 };
 
 const mainCTAUrl =
-  "https://scenith.in/pdf-tools?utm_source=pdf-tools-india-page&utm_medium=cta-button&utm_campaign=india-pdf-traffic";
+  "https://scenith.in/tools/pdf-tools?utm_source=pdf-tools-india-page&utm_medium=cta-button&utm_campaign=india-pdf-traffic";
 
 const structuredData = {
   "@context": "https://schema.org",
   "@graph": [
     {
       "@type": "WebApplication",
-      "@id": "https://scenith.in/pdf-tools-online-india#webapp",
+      "@id": "https://scenith.in/tools/pdf-tools-online-india#webapp",
       name: "Scenith PDF Tools – India",
       alternateName: "Free PDF Tools Online India",
       description:
         "Complete free PDF toolkit for Indian users. Merge, split, compress, rotate, convert, watermark, lock and unlock PDF files online without any software installation.",
-      url: "https://scenith.in/pdf-tools-online-india",
+      url: "https://scenith.in/tools/pdf-tools-online-india",
       applicationCategory: "UtilitiesApplication",
       operatingSystem: "Web Browser, Android, iOS",
       inLanguage: ["en-IN", "hi-IN"],
@@ -114,7 +114,7 @@ const structuredData = {
     },
     {
       "@type": "BreadcrumbList",
-      "@id": "https://scenith.in/pdf-tools-online-india#breadcrumb",
+      "@id": "https://scenith.in/tools/pdf-tools-online-india#breadcrumb",
       itemListElement: [
         { "@type": "ListItem", position: 1, name: "Home", item: "https://scenith.in" },
         { "@type": "ListItem", position: 2, name: "Tools", item: "https://scenith.in/tools" },
@@ -122,13 +122,13 @@ const structuredData = {
           "@type": "ListItem",
           position: 3,
           name: "PDF Tools India",
-          item: "https://scenith.in/pdf-tools-online-india",
+          item: "https://scenith.in/tools/pdf-tools-online-india",
         },
       ],
     },
     {
       "@type": "FAQPage",
-      "@id": "https://scenith.in/pdf-tools-online-india#faq",
+      "@id": "https://scenith.in/tools/pdf-tools-online-india#faq",
       mainEntity: [
         {
           "@type": "Question",
@@ -182,7 +182,7 @@ const structuredData = {
     },
     {
       "@type": "HowTo",
-      "@id": "https://scenith.in/pdf-tools-online-india#howto",
+      "@id": "https://scenith.in/tools/pdf-tools-online-india#howto",
       name: "How to Use Free PDF Tools Online in India",
       description: "Step-by-step guide to merging, compressing, or splitting a PDF online in India – no installation needed",
       totalTime: "PT2M",
