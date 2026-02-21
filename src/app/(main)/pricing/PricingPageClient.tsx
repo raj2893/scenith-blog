@@ -31,7 +31,7 @@ interface UserProfile {
 
 interface IndividualPlan {
   name: string;
-  planType: 'AI_VOICE_PRO' | 'AI_SPEED_PRO' | 'BG_REMOVAL_PRO';
+  planType: 'AI_VOICE_PRO' | 'AI_SPEED_PRO' | 'BG_REMOVAL_PRO' | 'SVG_PRO';
   price: number;
   originalPrice?: number;
   currency: string;
@@ -591,9 +591,23 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
             'High-quality edge detection',
             'Instant processing'
           ]
-        }        
-      ];
-    }
+        } ,
+        {
+        name: 'SVG Library Pro',
+        planType: 'SVG_PRO',
+        price: 0,
+        currency: 'LOADING',
+        service: 'SVG Icons Library',
+        features: [
+          'Unlimited SVG downloads',
+          'Up to 2048x2048 resolution',
+          'Unlimited daily downloads',
+          'SVG format access',
+          'PNG & JPG export'
+        ]
+      }
+    ];
+  }
   
     const currency = isIndianUser ? 'INR' : 'USD';
     const symbol = isIndianUser ? '₹' : '$';
@@ -602,11 +616,13 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
    const voicePrice = isIndianUser ? 199 : 5;
    const speedPrice = isIndianUser ? 199 : 5;
    const bgRemovalPrice = isIndianUser ? 149 : 5;
+   const svgPrice = isIndianUser ? 149 : 5;
 
    // Calculate original prices by adding 25% (original = price / 0.75)
    const voiceOriginal = Math.round(voicePrice / 0.75);
    const speedOriginal = Math.round(speedPrice / 0.75);
    const bgRemovalOriginal = Math.round(bgRemovalPrice / 0.75);
+   const svgOriginal = Math.round(svgPrice / 0.75);
 
     return [
       {
@@ -659,7 +675,24 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
           'Instant processing',
           'Commercial use allowed'
         ]
-      }      
+      },
+      {
+        name: 'SVG Library Pro',
+        planType: 'SVG_PRO',
+        price: svgPrice,
+        originalPrice: svgOriginal,
+        currency: currency,
+        symbol: symbol,
+        service: 'SVG Icons Library',
+        features: [
+          'Unlimited SVG downloads',
+          'Up to 2048x2048 resolution',
+          'Unlimited daily downloads',
+          'SVG format access',
+          'PNG & JPG export',
+          'Commercial use allowed'
+        ]
+      }
     ];
   };  
 
