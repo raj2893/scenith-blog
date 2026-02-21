@@ -19,6 +19,7 @@ const Footer = () => {
     { label: 'AI Voice Generator', path: '/tools/ai-voice-generation' },
     { label: 'AI Image Generator', path: '/tools/ai-image-generation' },
     { label: 'PDF Tools', path: '/pdf-tools' },
+    { label: 'SVG Library', path: '/svg-library' },
   /*  { label: 'AI Subtitle Generator', path: '/tools/add-subtitles-to-videos' },  */
     { label: 'AI Background Remover', path: '/tools/background-removal' },
     { label: 'Media Conversion', path: '/tools/media-conversion-tool' },
