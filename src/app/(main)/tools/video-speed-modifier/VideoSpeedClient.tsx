@@ -139,6 +139,152 @@ const CustomVideoPlayer = ({ src, userId, speed }: { src: string; userId: number
   );
 };
 
+function UpgradePopup({ onClose }: { onClose: () => void }) {
+  return (
+    <div
+      style={{
+        position: 'fixed', inset: 0, zIndex: 9999,
+        background: 'rgba(8, 6, 24, 0.82)',
+        backdropFilter: 'blur(8px)',
+        WebkitBackdropFilter: 'blur(8px)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: '16px',
+        animation: 'vsPopFadeOverlay 0.3s ease forwards',
+      }}
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Upgrade to unlock more video speed exports"
+    >
+      <div
+        style={{
+          background: 'linear-gradient(145deg, #0f0c29 0%, #1e1a45 60%, #0d0b22 100%)',
+          borderRadius: '24px',
+          padding: '36px 32px 28px',
+          maxWidth: '440px',
+          width: '100%',
+          position: 'relative',
+          border: '1px solid rgba(102, 126, 234, 0.28)',
+          boxShadow: '0 0 0 1px rgba(118,75,162,0.12), 0 32px 80px rgba(0,0,0,0.65), 0 0 60px rgba(102,126,234,0.10)',
+          animation: 'vsPopSlideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards',
+        }}
+      >
+        {/* Ambient glow */}
+        <div style={{
+          position: 'absolute', top: '-40px', right: '-40px',
+          width: '160px', height: '160px',
+          background: 'radial-gradient(circle, rgba(118,75,162,0.2) 0%, transparent 70%)',
+          pointerEvents: 'none', borderRadius: '50%',
+        }} />
+
+        {/* Close */}
+        <button
+          onClick={onClose}
+          aria-label="Close"
+          style={{
+            position: 'absolute', top: '14px', right: '14px',
+            background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
+            borderRadius: '50%', width: '30px', height: '30px',
+            color: 'rgba(255,255,255,0.5)', fontSize: '16px', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            transition: 'all 0.2s', lineHeight: 1,
+          }}
+          onMouseOver={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.14)'; (e.currentTarget as HTMLButtonElement).style.color = 'white'; }}
+          onMouseOut={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.06)'; (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.5)'; }}
+        >×</button>
+
+        {/* Urgency pill */}
+        <div style={{
+          display: 'inline-flex', alignItems: 'center', gap: '6px',
+          background: 'rgba(255,107,107,0.12)', border: '1px solid rgba(255,107,107,0.3)',
+          borderRadius: '100px', padding: '4px 12px', marginBottom: '16px',
+        }}>
+          <span style={{
+            width: '5px', height: '5px', borderRadius: '50%', background: '#ff6b6b',
+            display: 'inline-block', boxShadow: '0 0 5px #ff6b6b',
+            animation: 'vsPopPulse 1.8s infinite',
+          }} />
+          <span style={{ fontSize: '0.68rem', fontWeight: 800, color: '#ff8a8a', letterSpacing: '1.5px', textTransform: 'uppercase' }}>
+            ⚡ Limited Offer — 25% OFF
+          </span>
+        </div>
+
+        {/* Headline */}
+        <h2 style={{
+          fontSize: 'clamp(1.2rem, 4vw, 1.6rem)', fontWeight: 900, color: 'white',
+          margin: '0 0 8px', lineHeight: 1.2, letterSpacing: '-0.02em',
+        }}>
+          Unlock Unlimited{' '}
+          <span style={{
+            background: 'linear-gradient(90deg, #667eea, #a78bfa, #f093fb)',
+            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+          }}>
+            Video Exports
+          </span>
+        </h2>
+
+        {/* Sub-copy */}
+        <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem', margin: '0 0 5px', lineHeight: 1.6 }}>
+          Free plan limits your speed videos to{' '}
+          <span style={{ color: '#ff8a8a', fontWeight: 700 }}>5/month</span>.
+          Upgrade and never stop creating.
+        </p>
+
+        <p style={{
+          color: 'rgba(255,255,255,0.75)', fontSize: '0.82rem', margin: '0 0 22px',
+          fontWeight: 600, letterSpacing: '0.01em',
+        }}>
+          More videos. Higher quality. Zero wait.
+        </p>
+
+        {/* Value pills */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '22px' }}>
+          {[
+            { icon: '⚡', text: '45 Speed Videos/mo' },
+            { icon: '🎬', text: 'Up to 2K Quality' },
+            { icon: '📏', text: 'Longer Video Length' },
+            { icon: '🚀', text: 'Priority Processing' },
+          ].map((item) => (
+            <div key={item.text} style={{
+              display: 'flex', alignItems: 'center', gap: '7px',
+              background: 'rgba(102,126,234,0.08)', border: '1px solid rgba(102,126,234,0.15)',
+              borderRadius: '10px', padding: '8px 10px',
+            }}>
+              <span style={{ fontSize: '0.85rem' }}>{item.icon}</span>
+              <span style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.72)', fontWeight: 600 }}>{item.text}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* CTA */}
+        
+        <a  href="/pricing"
+          onClick={onClose}
+          style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+            width: '100%', padding: '13px 24px',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            color: 'white', borderRadius: '12px',
+            fontSize: '0.95rem', fontWeight: 800, textDecoration: 'none',
+            boxShadow: '0 4px 24px rgba(102,126,234,0.4)',
+            transition: 'transform 0.2s, box-shadow 0.2s',
+            letterSpacing: '-0.01em',
+          }}
+          onMouseOver={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.transform = 'scale(1.03)'; el.style.boxShadow = '0 8px 32px rgba(102,126,234,0.55)'; }}
+          onMouseOut={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.transform = 'scale(1)'; el.style.boxShadow = '0 4px 24px rgba(102,126,234,0.4)'; }}
+        >
+          🚀 Claim 25% OFF — View Plans
+        </a>
+        <style>{`
+          @keyframes vsPopFadeOverlay { from { opacity:0; } to { opacity:1; } }
+          @keyframes vsPopSlideUp { from { opacity:0; transform:translateY(40px) scale(0.96); } to { opacity:1; transform:translateY(0) scale(1); } }
+          @keyframes vsPopPulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.45; transform:scale(1.35); } }
+        `}</style>
+      </div>
+    </div>
+  );
+}
+
 const VideoSpeedClient: React.FC = () => {
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
@@ -171,12 +317,20 @@ const VideoSpeedClient: React.FC = () => {
   const [activePreset, setActivePreset] = useState<number | null>(1.0);
   const [showUpgradeModal, setShowUpgradeModal] = useState<boolean>(false);
   const [upgradeModalMessage, setUpgradeModalMessage] = useState<string>('');
+  const [showUpgradePopup, setShowUpgradePopup] = useState<boolean>(false);
   const [planLimits, setPlanLimits] = useState<{
     videosPerMonth: number;
     videosUsed: number;
     maxVideoLength: number;
     maxQuality: string;
   } | null>(null);  
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowUpgradePopup(true);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, []);
+
 
   useEffect(() => {
     const fetchPlanLimits = async () => {
@@ -1847,6 +2001,8 @@ const VideoSpeedClient: React.FC = () => {
         itemName={itemToDelete?.name || ''}
         isDeleting={isDeleting}
       />
+       {showUpgradePopup && <UpgradePopup onClose={() => setShowUpgradePopup(false)} />}
+
       {showLoginModal && (
         <div className="modal-overlay">
           <motion.div
