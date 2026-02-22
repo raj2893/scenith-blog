@@ -364,6 +364,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
   const eraserOffscreenRef = useRef<HTMLCanvasElement | null>(null);
   const eraserLayerIdRef = useRef<string | null>(null);
   const eraserDisplayCanvasRef = useRef<HTMLCanvasElement | null>(null);  
+  const [showExportDropdown, setShowExportDropdown] = useState(false);
   
   useEffect(() => {
     const checkMobile = () => {
@@ -415,6 +416,17 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
       document.removeEventListener('touchend', handleTouchEndGlobal);
     };
   }, [resizeHandle, isRotatingLayer, cropHandle, isResizingBackground]);  
+
+  useEffect(() => {
+  const handleClickOutside = (e: MouseEvent) => {
+    const target = e.target as HTMLElement;
+    if (!target.closest('.dropdown')) {
+      setShowExportDropdown(false);
+    }
+  };
+  document.addEventListener('mousedown', handleClickOutside);
+  return () => document.removeEventListener('mousedown', handleClickOutside);
+}, []);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -3083,15 +3095,24 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
           >
             <FaSave /> {isSaving ? "Saving..." : "Save"}
           </button>
-          <div className="dropdown">
-            <button className="toolbar-btn export-btn" disabled={isExporting}>
-              {isExporting ? "Exporting..." : "Export"}
+          <div className="dropdown" style={{ position: 'relative' }}>
+            <button
+              className="toolbar-btn export-btn"
+              disabled={isExporting}
+              onClick={() => setShowExportDropdown(prev => !prev)}
+            >
+              {isExporting ? "Exporting..." : "Export"} <FaChevronDown size={10} style={{ marginLeft: 4 }} />
             </button>
-            <div className="dropdown-content">
-              <button onClick={() => handleExport("PNG")}>Export as PNG</button>
-              <button onClick={() => handleExport("JPG")}>Export as JPG</button>
-              <button onClick={() => handleExport("PDF")}>Export as PDF</button>
-            </div>
+            {showExportDropdown && (
+              <div
+                className="dropdown-content"
+                style={{ display: 'block', position: 'absolute', zIndex: 9999, top: '100%', right: 0 }}
+              >
+                <button onClick={() => { handleExport("PNG"); setShowExportDropdown(false); }}>Export as PNG</button>
+                <button onClick={() => { handleExport("JPG"); setShowExportDropdown(false); }}>Export as JPG</button>
+                <button onClick={() => { handleExport("PDF"); setShowExportDropdown(false); }}>Export as PDF</button>
+              </div>
+            )}
           </div>
         </div>
       </div>
