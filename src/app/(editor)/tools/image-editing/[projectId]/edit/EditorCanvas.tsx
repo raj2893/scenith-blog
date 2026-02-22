@@ -4692,17 +4692,19 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
                       ) : (
                         // Display mode
                         <div
+                          onDoubleClick={(e) => {
+                            e.stopPropagation();
+                            setEditingLayerId(layer.id);
+                            setSelectedLayerIds([layer.id]);
+                            setTimeout(() => {
+                              if (textInputRef.current) {
+                                textInputRef.current.focus();
+                                textInputRef.current.select();
+                              }
+                            }, 0);
+                          }}
                           onClick={(e) => {
-                            if (selectedLayerIds.includes(layer.id) && selectedLayerIds.length === 1) {
-                              e.stopPropagation();
-                              setEditingLayerId(layer.id);
-                              setTimeout(() => {
-                                if (textInputRef.current) {
-                                  textInputRef.current.focus();
-                                  textInputRef.current.select();
-                                }
-                              }, 0);
-                            }
+                            e.stopPropagation();
                           }}
                           onMouseDown={(e) => {
                             if (editingLayerId === layer.id) {
