@@ -518,16 +518,23 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
     
     // Helper function to get bounding box of rotated element
     const getRotatedBounds = (layer: Layer) => {
-      const centerX = layer.x + layer.width / 2;
-      const centerY = layer.y + layer.height / 2;
+      const effectiveWidth = layer.type === 'text' 
+        ? (layer.backgroundWidth || layer.width || 0) 
+        : layer.width;
+      const effectiveHeight = layer.type === 'text' 
+        ? (layer.backgroundHeight || layer.height || 0) 
+        : layer.height;
+    
+      const centerX = layer.x + effectiveWidth / 2;
+      const centerY = layer.y + effectiveHeight / 2;
       const rotation = (layer.rotation || 0) * Math.PI / 180;
       
       // Four corners of the unrotated rectangle
       const corners = [
         { x: layer.x, y: layer.y },
-        { x: layer.x + layer.width, y: layer.y },
-        { x: layer.x + layer.width, y: layer.y + layer.height },
-        { x: layer.x, y: layer.y + layer.height }
+        { x: layer.x + effectiveWidth, y: layer.y },
+        { x: layer.x + effectiveWidth, y: layer.y + effectiveHeight },
+        { x: layer.x, y: layer.y + effectiveHeight }
       ];
       
       // Rotate each corner around center
