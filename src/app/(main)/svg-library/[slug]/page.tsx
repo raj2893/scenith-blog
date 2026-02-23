@@ -109,7 +109,8 @@ export default async function SingleElementPage({ params }: PageProps) {
 export async function generateStaticParams() {
   try {
     const elements = await getAllElements();
-    return elements?.map((element: any) => ({
+    if (!elements) return [];
+    return elements.map((element: any) => ({
       slug: createSlug(element.name),
     }));
   } catch (error) {
