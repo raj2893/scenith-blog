@@ -1455,4 +1455,10 @@
     <changefreq>weekly</changefreq>
     <lastmod>2026-02-22</lastmod>
   </url> 
+     <url>
+    <loc>https://scenith.in/tools/pdf-tools/rearrange-pdf-pages</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-02-23</lastmod>
+  </url> 
 </urlset>
