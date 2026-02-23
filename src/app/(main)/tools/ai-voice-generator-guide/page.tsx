@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: '/blog/ai-voice-generator-guide-2025', // Recommended URL structure – adjust if needed
+    canonical: 'https://scenith.in/tools/ai-voice-generator-guide', // Recommended URL structure – adjust if needed
   },
 };
 
