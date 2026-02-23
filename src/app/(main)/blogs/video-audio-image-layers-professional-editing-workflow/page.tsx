@@ -202,7 +202,7 @@ export default function VideoAudioImageLayers() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Build layered workflows with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Build layered workflows with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Editing Free →
               </Link>
@@ -333,7 +333,7 @@ export default function VideoAudioImageLayers() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready for Pro Layered Edits?</h3>
-            <p>Create dynamic workflows with Scenith’s free plan – no signup required.</p>
+            <p>Create dynamic workflows with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Editing Free →
             </Link>

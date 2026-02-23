@@ -215,7 +215,7 @@ export default function HowToRemoveBackgroundFromImage() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Remove backgrounds from images in seconds with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Remove backgrounds from images in seconds with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Removing Free →
               </Link>
@@ -331,7 +331,7 @@ export default function HowToRemoveBackgroundFromImage() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Create Stunning Visuals in Seconds?</h3>
-            <p>Remove backgrounds with Scenith’s free plan – no signup required.</p>
+            <p>Remove backgrounds with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Removing Free →
             </Link>

@@ -203,7 +203,7 @@ export default function GlobalSubtitleChanges() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Apply global subtitle changes with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Apply global subtitle changes with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Editing Free →
               </Link>
@@ -341,7 +341,7 @@ export default function GlobalSubtitleChanges() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready for Professional Subtitles?</h3>
-            <p>Apply global changes with Scenith’s free plan – no signup required.</p>
+            <p>Apply global changes with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Editing Free →
             </Link>

@@ -185,7 +185,7 @@ export default function ExposureLockTechniques() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Create perfectly lit Reels with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Create perfectly lit Reels with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Editing Free →
               </Link>
@@ -294,7 +294,7 @@ export default function ExposureLockTechniques() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready for Perfectly Lit Reels?</h3>
-            <p>Create stunning Reels with Scenith’s free plan – no signup required.</p>
+            <p>Create stunning Reels with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Editing Free →
             </Link>

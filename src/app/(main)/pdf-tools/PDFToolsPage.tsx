@@ -495,7 +495,7 @@ const PDFToolsPage: React.FC = () => {
           <div className="feature-item">
             <div className="feature-icon">💯</div>
             <h4>Completely Free</h4>
-            <p>All PDF tools are free to use with unlimited conversions. No hidden fees, no file size limits, no signup required.</p>
+            <p>All PDF tools are free to use with unlimited conversions. No hidden fees, no file size limits, .</p>
           </div>
         </div>
       </div>
@@ -519,7 +519,7 @@ const PDFToolsPage: React.FC = () => {
           <div className="vs-card" style={{ background: 'white', padding: '30px', borderRadius: '12px', boxShadow: '0 4px 15px rgba(0,0,0,0.08)' }}>
             <h3 style={{ color: '#3b82f6', marginBottom: '15px', fontSize: '1.3rem' }}>SCENITH vs iLovePDF</h3>
             <ul style={{ listStyle: 'none', padding: 0 }}>
-              <li style={{ padding: '8px 0', borderBottom: '1px solid #e0e0e0' }}>✅ <strong>SCENITH:</strong> No signup required, instant use</li>
+              <li style={{ padding: '8px 0', borderBottom: '1px solid #e0e0e0' }}>✅ <strong>SCENITH:</strong> , instant use</li>
               <li style={{ padding: '8px 0', borderBottom: '1px solid #e0e0e0' }}>❌ <strong>iLovePDF:</strong> Account required for most tools</li>
               <li style={{ padding: '8px 0', borderBottom: '1px solid #e0e0e0' }}>✅ <strong>SCENITH:</strong> Unlimited batch processing</li>
               <li style={{ padding: '8px 0' }}>⚠️ <strong>iLovePDF:</strong> Limited files per operation</li>

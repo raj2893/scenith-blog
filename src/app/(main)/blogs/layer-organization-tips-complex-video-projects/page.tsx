@@ -199,7 +199,7 @@ export default function LayerOrganizationTips() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Organize complex layers with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Organize complex layers with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Editing Free →
               </Link>
@@ -331,7 +331,7 @@ export default function LayerOrganizationTips() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Organize Your Layers?</h3>
-            <p>Streamline complex projects with Scenith’s free plan – no signup required.</p>
+            <p>Streamline complex projects with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Editing Free →
             </Link>

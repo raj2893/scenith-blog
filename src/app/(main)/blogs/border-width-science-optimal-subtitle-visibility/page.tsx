@@ -202,7 +202,7 @@ export default function BorderWidthScience() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Optimize border widths with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Optimize border widths with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Editing Free →
               </Link>
@@ -340,7 +340,7 @@ export default function BorderWidthScience() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Optimize Subtitle Visibility?</h3>
-            <p>Apply perfect border widths with Scenith’s free plan – no signup required.</p>
+            <p>Apply perfect border widths with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Editing Free →
             </Link>

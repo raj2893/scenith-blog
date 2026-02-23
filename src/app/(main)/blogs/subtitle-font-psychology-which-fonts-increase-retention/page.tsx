@@ -202,7 +202,7 @@ export default function SubtitleFontPsychology() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Choose fonts to boost retention with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Choose fonts to boost retention with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Editing Free →
               </Link>
@@ -340,7 +340,7 @@ export default function SubtitleFontPsychology() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Boost Retention with Fonts?</h3>
-            <p>Select optimal fonts with Scenith’s free plan – no signup required.</p>
+            <p>Select optimal fonts with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Editing Free →
             </Link>

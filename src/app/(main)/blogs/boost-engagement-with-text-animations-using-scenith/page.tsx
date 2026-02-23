@@ -210,7 +210,7 @@ export default function TextAnimations() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Start adding text animations to your videos with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Start adding text animations to your videos with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Editing Free →
               </Link>
@@ -328,7 +328,7 @@ export default function TextAnimations() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Boost Video Engagement?</h3>
-            <p>Start adding text animations with Scenith’s free plan – no signup required.</p>
+            <p>Start adding text animations with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Editing Free →
             </Link>

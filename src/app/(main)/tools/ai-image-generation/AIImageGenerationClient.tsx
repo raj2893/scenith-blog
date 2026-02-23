@@ -1507,7 +1507,7 @@ const AIImageGeneratorClient: React.FC = () => {
             <div className="vs-card">
               <h3>Scenith vs Leonardo.ai</h3>
               <ul>
-                <li>✅ <strong>Scenith:</strong> No signup required for basic use</li>
+                <li>✅ <strong>Scenith:</strong>  for basic use</li>
                 <li>❌ <strong>Leonardo.ai:</strong> Account required, limited free credits</li>
                 <li>✅ <strong>Scenith:</strong> Commercial use on free plan</li>
                 <li>⚠️ <strong>Leonardo.ai:</strong> Paid subscription for commercial rights</li>

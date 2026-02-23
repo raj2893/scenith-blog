@@ -224,7 +224,7 @@ export default function HowToUploadAndOrganizeMedia() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Upload and organize your media with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Upload and organize your media with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Uploading Free →
               </Link>
@@ -341,7 +341,7 @@ export default function HowToUploadAndOrganizeMedia() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Streamline Your Video Workflow?</h3>
-            <p>Upload and organize your media with Scenith’s free plan – no signup required.</p>
+            <p>Upload and organize your media with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Uploading Free →
             </Link>

@@ -169,7 +169,7 @@ export default function AspectRatioGuide() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Optimize your videos for any platform with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Optimize your videos for any platform with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Editing Free →
               </Link>
@@ -285,7 +285,7 @@ export default function AspectRatioGuide() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Optimize Your Videos?</h3>
-            <p>Create platform-ready videos with Scenith’s free plan – no signup required.</p>
+            <p>Create platform-ready videos with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Editing Free →
             </Link>

@@ -209,7 +209,7 @@ export default function HowToCreateVideoEditingProject() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Create your first video project with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Create your first video project with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Creating Free →
               </Link>
@@ -326,7 +326,7 @@ export default function HowToCreateVideoEditingProject() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Start Your Video Project?</h3>
-            <p>Create your first project with Scenith’s free plan – no signup required.</p>
+            <p>Create your first project with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Creating Free →
             </Link>

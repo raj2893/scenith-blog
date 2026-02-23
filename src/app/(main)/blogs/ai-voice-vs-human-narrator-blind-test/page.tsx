@@ -182,7 +182,7 @@ export default function AIVoiceVsHumanNarrator() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Start adding AI voiceovers with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Start adding AI voiceovers with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Editing Free →
               </Link>
@@ -291,7 +291,7 @@ export default function AIVoiceVsHumanNarrator() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready for Pro Voiceovers?</h3>
-            <p>Start adding AI voices with Scenith’s free plan – no signup required.</p>
+            <p>Start adding AI voices with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Editing Free →
             </Link>

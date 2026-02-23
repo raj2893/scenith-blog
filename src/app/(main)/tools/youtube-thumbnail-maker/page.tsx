@@ -8,7 +8,7 @@ const CTA_URL =
 export const metadata: Metadata = {
   title: "Free YouTube Thumbnail Maker – Create Click-Worthy Thumbnails Online | Scenith",
   description:
-    "Create stunning YouTube thumbnails for free. Layer-based editor with 50+ fonts, custom text, shapes & image filters. 1920×1080 preset. No download, no watermarks, no signup required. Get more clicks on every video.",
+    "Create stunning YouTube thumbnails for free. Layer-based editor with 50+ fonts, custom text, shapes & image filters. 1920×1080 preset. No download, no watermarks, . Get more clicks on every video.",
   keywords: [
     "youtube thumbnail maker",
     "free youtube thumbnail maker",
@@ -134,7 +134,7 @@ export default function YouTubeThumbnailMakerPage() {
                     name: "What is the best free YouTube thumbnail maker?",
                     acceptedAnswer: {
                       "@type": "Answer",
-                      text: "Scenith is one of the best free YouTube thumbnail makers online. It offers true layer-based editing, 50+ fonts, custom shapes, image filters, and exports high-quality PNG or JPG at the correct 1920×1080 resolution — all for free with no watermarks and no signup required to start.",
+                      text: "Scenith is one of the best free YouTube thumbnail makers online. It offers true layer-based editing, 50+ fonts, custom shapes, image filters, and exports high-quality PNG or JPG at the correct 1920×1080 resolution — all for free with no watermarks and  to start.",
                     },
                   },
                   {
@@ -742,7 +742,7 @@ export default function YouTubeThumbnailMakerPage() {
                   ["Custom Image Upload", "✅", "✅", "✅", "✅"],
                   ["Advanced Image Filters", "✅", "⚠️ Basic", "⚠️ Basic", "⚠️ Basic"],
                   ["PNG Export (No Watermark)", "✅", "⚠️ Pro Only", "✅", "❌"],
-                  ["No Signup Required to Start", "✅", "❌", "❌", "❌"],
+                  [" to Start", "✅", "❌", "❌", "❌"],
                   ["Unlimited Projects Free", "✅", "⚠️ Limited", "⚠️ Limited", "⚠️ Limited"],
                   ["Text Outline Controls", "✅", "⚠️ Limited", "⚠️ Limited", "❌"],
                   ["Per-Layer Filter Control", "✅", "❌", "❌", "❌"],
@@ -1018,7 +1018,7 @@ export default function YouTubeThumbnailMakerPage() {
 
             <div className="yt-final-trust-strip">
               <span>✅ No Credit Card</span>
-              <span>✅ No Signup Required to Start</span>
+              <span>✅  to Start</span>
               <span>✅ No Watermarks Ever</span>
               <span>✅ Commercial Use Included</span>
             </div>

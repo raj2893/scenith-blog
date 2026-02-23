@@ -213,7 +213,7 @@ export default function ThreeVideoEditingHacks() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Apply these hacks to create viral videos in seconds with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Apply these hacks to create viral videos in seconds with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Editing Free →
               </Link>
@@ -328,7 +328,7 @@ export default function ThreeVideoEditingHacks() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Make Your Videos Go Viral?</h3>
-            <p>Apply these hacks with Scenith’s free plan – no signup required.</p>
+            <p>Apply these hacks with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Editing Free →
             </Link>

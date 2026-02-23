@@ -215,7 +215,7 @@ export default function HowToReach4000HoursWatchTime() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Add subtitles to your first video with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Add subtitles to your first video with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Adding Subtitles Free →
               </Link>
@@ -345,7 +345,7 @@ export default function HowToReach4000HoursWatchTime() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Hit 4000 Hours Faster?</h3>
-            <p>Add subtitles with Scenith’s free tool – no signup required.</p>
+            <p>Add subtitles with Scenith’s free tool – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Adding Subtitles Free →
             </Link>

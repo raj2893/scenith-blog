@@ -217,7 +217,7 @@ export default function HowToGenerateAIVoices() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Generate professional voiceovers in seconds with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Generate professional voiceovers in seconds with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Generating Free →
               </Link>
@@ -334,7 +334,7 @@ export default function HowToGenerateAIVoices() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Add Professional Voiceovers in Seconds?</h3>
-            <p>Generate voiceovers with Scenith’s free plan – no signup required.</p>
+            <p>Generate voiceovers with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Generating Free →
             </Link>

@@ -202,7 +202,7 @@ export default function BatchSubtitleFormatting() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Format subtitles for multiple videos with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Format subtitles for multiple videos with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Editing Free →
               </Link>
@@ -340,7 +340,7 @@ export default function BatchSubtitleFormatting() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Save Hours on Subtitles?</h3>
-            <p>Batch format captions with Scenith’s free plan – no signup required.</p>
+            <p>Batch format captions with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Editing Free →
             </Link>

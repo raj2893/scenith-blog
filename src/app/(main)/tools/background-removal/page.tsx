@@ -4,7 +4,7 @@ import RemoveBackgroundClient from './RemoveBackgroundClient';
 
 export const metadata: Metadata = {
   title: 'Free AI Background Remover – Remove Photo Backgrounds Online (5 Seconds) | Scenith',
-  description: 'Remove backgrounds from images instantly with AI for free. Convert JPG/PNG to transparent backgrounds in 5 seconds. Perfect for e-commerce, social media & design - no signup required!',
+  description: 'Remove backgrounds from images instantly with AI for free. Convert JPG/PNG to transparent backgrounds in 5 seconds. Perfect for e-commerce, social media & design - !',
   keywords: [
     'AI background remover',
     'free background removal',

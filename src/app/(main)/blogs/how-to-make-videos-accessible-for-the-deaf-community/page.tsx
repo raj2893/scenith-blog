@@ -183,7 +183,7 @@ export default function AccessibleVideosDeafCommunity() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Start creating accessible videos with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Start creating accessible videos with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Editing Free →
               </Link>
@@ -300,7 +300,7 @@ export default function AccessibleVideosDeafCommunity() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Make Inclusive Videos?</h3>
-            <p>Start adding accessible captions with Scenith’s free plan – no signup required.</p>
+            <p>Start adding accessible captions with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Editing Free →
             </Link>

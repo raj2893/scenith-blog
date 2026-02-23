@@ -199,7 +199,7 @@ export default function PictureInPictureEffects() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Create PIP effects with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Create PIP effects with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Editing Free →
               </Link>
@@ -331,7 +331,7 @@ export default function PictureInPictureEffects() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready for PIP Effects?</h3>
-            <p>Create layers with Scenith’s free plan – no signup required.</p>
+            <p>Create layers with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Editing Free →
             </Link>

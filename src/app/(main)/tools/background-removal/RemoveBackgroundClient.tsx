@@ -298,7 +298,7 @@ const RemoveBackgroundClient: React.FC = () => {
         >
           <h1>Free AI Background Remover - Remove Photo Backgrounds Online in 5 Seconds</h1>
           <p className="hero-description">
-            Transform your images instantly with our advanced AI background remover. Upload any JPG or PNG photo and get a professional transparent background in under 5 seconds. Perfect for e-commerce product photos, social media graphics, marketing materials, and professional designs. Completely free, no watermarks, no signup required!
+            Transform your images instantly with our advanced AI background remover. Upload any JPG or PNG photo and get a professional transparent background in under 5 seconds. Perfect for e-commerce product photos, social media graphics, marketing materials, and professional designs. Completely free, no watermarks, !
           </p>
           <div className="hero-cta-section">
             <BackgroundRemoval />
@@ -994,7 +994,7 @@ const RemoveBackgroundClient: React.FC = () => {
           viewport={{ once: true }}
         >
           <h2 id="cta-title">Ready to Create Professional Images?</h2>
-          <p>Join over 50,000+ users who trust our AI background remover. Start creating stunning visuals for your e-commerce, social media, and design projects today - completely free, no signup required!</p>
+          <p>Join over 50,000+ users who trust our AI background remover. Start creating stunning visuals for your e-commerce, social media, and design projects today - completely free, !</p>
           <button
             className="cta-button"
             onClick={() => scrollToSection('hero')}

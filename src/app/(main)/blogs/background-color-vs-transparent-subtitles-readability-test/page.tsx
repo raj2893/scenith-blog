@@ -202,7 +202,7 @@ export default function BackgroundVsTransparentSubtitles() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Test subtitle backgrounds with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Test subtitle backgrounds with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Editing Free →
               </Link>
@@ -340,7 +340,7 @@ export default function BackgroundVsTransparentSubtitles() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Optimize Subtitle Readability?</h3>
-            <p>Test backgrounds with Scenith’s free plan – no signup required.</p>
+            <p>Test backgrounds with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Editing Free →
             </Link>

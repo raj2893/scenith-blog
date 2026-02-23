@@ -180,7 +180,7 @@ export default function LaptopVsPhoneEditing() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Start editing on your laptop with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Start editing on your laptop with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Editing Free →
               </Link>
@@ -297,7 +297,7 @@ export default function LaptopVsPhoneEditing() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready for Pro-Level Editing?</h3>
-            <p>Start editing on your laptop with Scenith’s free plan – no signup required.</p>
+            <p>Start editing on your laptop with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Editing Free →
             </Link>

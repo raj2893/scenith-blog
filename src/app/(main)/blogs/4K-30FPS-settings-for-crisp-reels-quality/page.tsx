@@ -185,7 +185,7 @@ export default function FourK30FPSSettings() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Create crisp 4K Reels with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Create crisp 4K Reels with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Editing Free →
               </Link>
@@ -301,7 +301,7 @@ export default function FourK30FPSSettings() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready for Stunning Reels?</h3>
-            <p>Create 4K Reels with Scenith’s free plan – no signup required.</p>
+            <p>Create 4K Reels with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Editing Free →
             </Link>

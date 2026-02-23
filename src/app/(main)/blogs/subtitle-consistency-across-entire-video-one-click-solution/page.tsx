@@ -202,7 +202,7 @@ export default function SubtitleConsistencyOneClick() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Achieve consistent subtitles with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Achieve consistent subtitles with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Editing Free →
               </Link>
@@ -340,7 +340,7 @@ export default function SubtitleConsistencyOneClick() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready for Polished Subtitles?</h3>
-            <p>Achieve consistent captions with Scenith’s free plan – no signup required.</p>
+            <p>Achieve consistent captions with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Editing Free →
             </Link>

@@ -179,7 +179,7 @@ export default function KeyboardShortcutsVideoEditing() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Start using shortcuts with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Start using shortcuts with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Editing Free →
               </Link>
@@ -295,7 +295,7 @@ export default function KeyboardShortcutsVideoEditing() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Edit Faster?</h3>
-            <p>Start using shortcuts with Scenith’s free plan – no signup required.</p>
+            <p>Start using shortcuts with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Editing Free →
             </Link>

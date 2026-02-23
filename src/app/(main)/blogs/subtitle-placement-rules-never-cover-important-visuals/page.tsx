@@ -202,7 +202,7 @@ export default function SubtitlePlacementRules() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Optimize subtitle placement with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Optimize subtitle placement with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Editing Free →
               </Link>
@@ -340,7 +340,7 @@ export default function SubtitlePlacementRules() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Perfect Subtitle Placement?</h3>
-            <p>Optimize placement with Scenith’s free plan – no signup required.</p>
+            <p>Optimize placement with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Editing Free →
             </Link>

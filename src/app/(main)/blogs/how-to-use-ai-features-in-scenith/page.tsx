@@ -270,7 +270,7 @@ export default function ScenithAI() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Experiment with all three AI tools on your next project—no signup required for basics.</p>
+              <p><strong>Try Scenith for free:</strong> Experiment with all three AI tools on your next project— for basics.</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start AI Editing Free →
               </Link>
@@ -440,7 +440,7 @@ export default function ScenithAI() {
 
           <div className={styles.finalCta}>
             <h3>Ready to Supercharge Your Editing with AI?</h3>
-            <p>Unlock Scenith's full AI toolkit with the free plan—no signup required. Start with background removal, subtitles, or voiceovers right now.</p>
+            <p>Unlock Scenith's full AI toolkit with the free plan—. Start with background removal, subtitles, or voiceovers right now.</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start AI Editing Free →
             </Link>

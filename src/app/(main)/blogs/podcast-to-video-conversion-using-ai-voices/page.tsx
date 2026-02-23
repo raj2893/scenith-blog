@@ -183,7 +183,7 @@ export default function PodcastToVideoAIVoices() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Start converting podcasts to videos with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Start converting podcasts to videos with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Editing Free →
               </Link>
@@ -292,7 +292,7 @@ export default function PodcastToVideoAIVoices() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Create Vodcasts?</h3>
-            <p>Start converting podcasts with Scenith’s free plan – no signup required.</p>
+            <p>Start converting podcasts with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Editing Free →
             </Link>

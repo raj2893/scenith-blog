@@ -4,7 +4,7 @@ import CompressPdfOnlineClient from './CompressPdfOnlineClient';
 export const metadata: Metadata = {
   title: "Compress PDF Online Free - Reduce PDF File Size Instantly (2024)",
   description:
-    "Compress PDF files online for free. Reduce PDF size by up to 90% while maintaining quality. No signup required. Works on any device. Instant download after compression.",
+    "Compress PDF files online for free. Reduce PDF size by up to 90% while maintaining quality. . Works on any device. Instant download after compression.",
   keywords: [
     "compress pdf online",
     "compress pdf online free",

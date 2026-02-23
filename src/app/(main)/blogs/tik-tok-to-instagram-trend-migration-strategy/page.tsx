@@ -171,7 +171,7 @@ export default function TikTokToInstagramTrends() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Adapt TikTok trends for Reels with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Adapt TikTok trends for Reels with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Editing Free →
               </Link>
@@ -280,7 +280,7 @@ export default function TikTokToInstagramTrends() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Go Viral on Instagram?</h3>
-            <p>Adapt TikTok trends with Scenith’s free plan – no signup required.</p>
+            <p>Adapt TikTok trends with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Editing Free →
             </Link>

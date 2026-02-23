@@ -204,7 +204,7 @@ export default function AISubtitlesVsManual() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Start adding accurate AI subtitles with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Start adding accurate AI subtitles with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Editing Free →
               </Link>
@@ -314,7 +314,7 @@ export default function AISubtitlesVsManual() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready for Accurate Subtitles?</h3>
-            <p>Start adding AI subtitles with Scenith’s free plan – no signup required.</p>
+            <p>Start adding AI subtitles with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Editing Free →
             </Link>

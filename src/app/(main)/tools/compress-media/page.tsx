@@ -3,7 +3,7 @@ import MediaCompressionWorkspace from "./MediaCompressionWorkspace";
 
 export const metadata: Metadata = {
   title: "Free Media Compressor - Images & Videos Online | SCENITH",
-  description: "Compress images (JPEG, PNG, HEIC) and videos to your desired size instantly for free. Optimize your media for web, social media, and more with high-quality results. No signup required to explore!",
+  description: "Compress images (JPEG, PNG, HEIC) and videos to your desired size instantly for free. Optimize your media for web, social media, and more with high-quality results.  to explore!",
   keywords: [
     "media compressor",
     "image compressor",

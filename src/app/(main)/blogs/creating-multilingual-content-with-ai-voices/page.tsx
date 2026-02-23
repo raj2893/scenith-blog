@@ -183,7 +183,7 @@ export default function MultilingualContentAIVoices() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Start creating multilingual content with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Start creating multilingual content with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Editing Free →
               </Link>
@@ -292,7 +292,7 @@ export default function MultilingualContentAIVoices() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Go Global?</h3>
-            <p>Start creating multilingual content with Scenith’s free plan – no signup required.</p>
+            <p>Start creating multilingual content with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Editing Free →
             </Link>

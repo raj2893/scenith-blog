@@ -181,7 +181,7 @@ export default function TimelineEditingTricks() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Start using timeline tricks with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Start using timeline tricks with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Editing Free →
               </Link>
@@ -297,7 +297,7 @@ export default function TimelineEditingTricks() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready for Pro Timeline Editing?</h3>
-            <p>Start using timeline tricks with Scenith’s free plan – no signup required.</p>
+            <p>Start using timeline tricks with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Editing Free →
             </Link>

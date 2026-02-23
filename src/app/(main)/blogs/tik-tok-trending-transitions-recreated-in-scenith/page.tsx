@@ -185,7 +185,7 @@ export default function TikTokTrendingTransitions() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Recreate TikTok’s trending transitions with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Recreate TikTok’s trending transitions with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Editing Free →
               </Link>
@@ -301,7 +301,7 @@ export default function TikTokTrendingTransitions() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Go Viral on TikTok?</h3>
-            <p>Create trending transitions with Scenith’s free plan – no signup required.</p>
+            <p>Create trending transitions with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Editing Free →
             </Link>

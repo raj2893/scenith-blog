@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "800+ Free Business & Analytics Icons – Professional Data Visualization SVG Library | Scenith",
     description:
-      "Premium collection of business analytics, charts, graphs, KPIs, dashboards and reporting icons. Fully customizable, scalable SVG format. Perfect for BI platforms, analytics tools, SaaS dashboards and enterprise applications. Download instantly, no signup required.",
+      "Premium collection of business analytics, charts, graphs, KPIs, dashboards and reporting icons. Fully customizable, scalable SVG format. Perfect for BI platforms, analytics tools, SaaS dashboards and enterprise applications. Download instantly, .",
     type: "website",
     url: "https://scenith.com/svg-library/business-analytics",
     siteName: "Scenith",

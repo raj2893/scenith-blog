@@ -208,7 +208,7 @@ export default function HowToUseLayersInVideoEditing() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Start using layers to create professional videos with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Start using layers to create professional videos with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Layering Free →
               </Link>
@@ -325,7 +325,7 @@ export default function HowToUseLayersInVideoEditing() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Create Pro-Level Videos?</h3>
-            <p>Start using layers with Scenith’s free plan – no signup required.</p>
+            <p>Start using layers with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Layering Free →
             </Link>

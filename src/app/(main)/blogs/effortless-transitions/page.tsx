@@ -210,7 +210,7 @@ export default function EffortlessTransitions() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Start adding cinematic transitions to your videos with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Start adding cinematic transitions to your videos with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Editing Free →
               </Link>
@@ -328,7 +328,7 @@ export default function EffortlessTransitions() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Create Cinematic Videos?</h3>
-            <p>Start adding transitions with Scenith’s free plan – no signup required.</p>
+            <p>Start adding transitions with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Editing Free →
             </Link>

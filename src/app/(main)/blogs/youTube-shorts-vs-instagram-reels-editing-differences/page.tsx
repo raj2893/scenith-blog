@@ -186,7 +186,7 @@ export default function YouTubeShortsVsInstagramReels() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Create YouTube Shorts that hook viewers instantly with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Create YouTube Shorts that hook viewers instantly with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Editing Free →
               </Link>

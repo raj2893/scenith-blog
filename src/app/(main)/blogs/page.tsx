@@ -4,7 +4,7 @@ import BlogIndex from './BlogsClient';
 export const metadata: Metadata = {
   title: 'Scenith Blogs | AI-Powered Video & Media Tools - Free Online Suite',
   description:
-    'Discover 6+ powerful AI tools for video editing, voice generation, subtitle creation, background removal, and more. Free online tools trusted by 50,000+ creators. No signup required.',
+    'Discover 6+ powerful AI tools for video editing, voice generation, subtitle creation, background removal, and more. Free online tools trusted by 50,000+ creators. .',
   keywords: [
     'AI voice generator',
     'free text to speech',

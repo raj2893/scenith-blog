@@ -183,7 +183,7 @@ export default function VoiceoverMistakesBeginners() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Start creating professional voiceovers with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Start creating professional voiceovers with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Editing Free →
               </Link>
@@ -292,7 +292,7 @@ export default function VoiceoverMistakesBeginners() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready for Professional Voiceovers?</h3>
-            <p>Start avoiding mistakes with Scenith’s free plan – no signup required.</p>
+            <p>Start avoiding mistakes with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Editing Free →
             </Link>

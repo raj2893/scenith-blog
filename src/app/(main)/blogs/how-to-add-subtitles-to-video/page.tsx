@@ -246,7 +246,7 @@ export default function HowToAddSubtitlesToVideo() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Generate your first set of AI subtitles with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Generate your first set of AI subtitles with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Generate AI Subtitles Free →
               </Link>
@@ -543,7 +543,7 @@ export default function HowToAddSubtitlesToVideo() {
 
           <div className={styles.finalCta}>
             <h3>Ready to Add Subtitles in 30 Seconds?</h3>
-            <p>Try Scenith's AI subtitle generation free – no signup required for your first video.</p>
+            <p>Try Scenith's AI subtitle generation free –  for your first video.</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Creating Subtitles Free →
             </Link>

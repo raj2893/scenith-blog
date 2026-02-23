@@ -3,7 +3,7 @@ import AIVoiceGeneratorClient from './AIVoiceGeneratorClient';
 
 export const metadata: Metadata = {
   title: 'Free AI Voice Generator – Text to Speech Online (40+ Natural Voices) | Scenith',
-  description: 'Generate realistic AI voices from text instantly for free. Convert text to speech in 100+ languages with natural-sounding voices. Perfect for videos, podcasts, and more - no signup required!',
+  description: 'Generate realistic AI voices from text instantly for free. Convert text to speech in 100+ languages with natural-sounding voices. Perfect for videos, podcasts, and more - !',
   keywords: [
     'AI voice generator',
     'free text to speech',

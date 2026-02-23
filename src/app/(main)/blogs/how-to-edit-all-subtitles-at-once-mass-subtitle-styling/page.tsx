@@ -198,7 +198,7 @@ export default function MassSubtitleStyling() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Try Scenith for free:</strong> Style all your subtitles at once with no signup required.</p>
+              <p><strong>Try Scenith for free:</strong> Style all your subtitles at once with .</p>
               <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
                 Start Editing Free →
               </Link>
@@ -336,7 +336,7 @@ export default function MassSubtitleStyling() {
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Style Subtitles Like a Pro?</h3>
-            <p>Edit all subtitles at once with Scenith’s free plan – no signup required.</p>
+            <p>Edit all subtitles at once with Scenith’s free plan – .</p>
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Editing Free →
             </Link>

@@ -198,7 +198,7 @@ export default function ToolsIndex() {
         />
         <meta
           name="description"
-          content="Discover 7+ free AI-powered tools for content creation: AI voice generator, automatic subtitle creation, image editor, background remover, video tools, and more. No signup required. Trusted by 50,000+ creators worldwide."
+          content="Discover 7+ free AI-powered tools for content creation: AI voice generator, automatic subtitle creation, image editor, background remover, video tools, and more. . Trusted by 50,000+ creators worldwide."
         />
         <meta
           name="keywords"
@@ -214,7 +214,7 @@ export default function ToolsIndex() {
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://scenith.in/tools" />
         <meta property="og:title" content="Free AI Tools for Creators | Voice Generation, Video Editing & Image Design" />
-        <meta property="og:description" content="Discover 7+ powerful AI tools for video editing, voice generation, subtitle creation, and more. Free online tools trusted by 50,000+ creators. No signup required." />
+        <meta property="og:description" content="Discover 7+ powerful AI tools for video editing, voice generation, subtitle creation, and more. Free online tools trusted by 50,000+ creators. ." />
         <meta property="og:image" content="https://scenith.in/images/tools-og-image.jpg" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
@@ -398,7 +398,7 @@ export default function ToolsIndex() {
                 Free AI Tools for <span className={styles.gradientText}>Content Creators</span>
               </h1>
               <p className={styles.heroDescription}>
-                Professional-grade AI tools for voice generation, video editing, image design, and more. Completely free, no signup required. Trusted by 50,000+ creators worldwide to streamline their content creation workflow.
+                Professional-grade AI tools for voice generation, video editing, image design, and more. Completely free, . Trusted by 50,000+ creators worldwide to streamline their content creation workflow.
               </p>
             </div>
             
@@ -834,7 +834,7 @@ export default function ToolsIndex() {
             </div>
 
             <div className={styles.contentBlock}>
-              <h3>Getting Started: No Signup Required for Most Tools</h3>
+              <h3>Getting Started:  for Most Tools</h3>
               <p>Most Scenith tools work immediately without creating an account. Simply visit the tool page, upload your file or enter your text, and get results instantly. Creating a free account unlocks additional benefits: cloud storage for projects, higher usage limits, and the ability to access your work from any device.</p>
               <p>Account creation takes 30 seconds with email or instant Google sign-in. No credit card required, no free trial that converts to paid—genuinely free access forever.</p>
             </div>
@@ -897,7 +897,7 @@ export default function ToolsIndex() {
               <span className={styles.ctaIcon}>💡</span>
               <h2 id="cta-title" className={styles.ctaTitle}>Ready to Transform Your Content Creation?</h2>
               <p className={styles.ctaText}>
-                Join 50,000+ creators using Scenith's free AI tools • No signup required for most tools • 100% free forever • Full commercial rights
+                Join 50,000+ creators using Scenith's free AI tools •  for most tools • 100% free forever • Full commercial rights
               </p>
               <button 
                 className={styles.ctaBtn}
