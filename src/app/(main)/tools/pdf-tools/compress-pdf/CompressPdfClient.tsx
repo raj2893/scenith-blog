@@ -6,14 +6,37 @@ import PDFToolsWorkspace from "../PDFToolsWorkspace";
 export default function CompressPdfClient() {
   return (
     <>
+      <nav aria-label="Breadcrumb" className="breadcrumb-nav">
+        <ol itemScope itemType="https://schema.org/BreadcrumbList">
+          <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+            <a href="/" itemProp="item"><span itemProp="name">Home</span></a>
+            <meta itemProp="position" content="1" />
+          </li>
+          <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+            <a href="/tools" itemProp="item"><span itemProp="name">Tools</span></a>
+            <meta itemProp="position" content="2" />
+          </li>
+          <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+            <a href="/tools/pdf-tools" itemProp="item"><span itemProp="name">PDF Tools</span></a>
+            <meta itemProp="position" content="3" />
+          </li>
+          <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+            <span itemProp="name">Compress PDF</span>
+            <meta itemProp="position" content="4" />
+          </li>
+        </ol>
+      </nav>
+
       <PDFToolsWorkspace operation="compress-pdf" />
 
       {/* SEO Content Section */}
       <div className="seo-content-section" style={{ maxWidth: '1200px', margin: '80px auto 60px', padding: '0 20px', lineHeight: '1.7' }}>
         <article>
           <h1 style={{ fontSize: '32px', marginBottom: '25px', color: '#1e293b', fontWeight: 800, lineHeight: '1.3' }}>
-            Compress PDF Online Free - Reduce File Size While Maintaining Quality (2024)
+            Compress PDF Online Free – Reduce PDF File Size Up to 90% (No Limits)
           </h1>
+          {' '}Need to combine files first? Use our{' '}
+          <a href="/tools/pdf-tools/merge-pdf-online" style={{ color: '#3b82f6' }}>free PDF merger</a>.          
           <section style={{ marginBottom: '40px' }}>
             <p style={{ fontSize: '18px', lineHeight: '1.8', color: '#334155', marginBottom: '25px', fontWeight: 500 }}>
               <strong>SCENITH's PDF compressor</strong> reduces file sizes by up to <strong>90%</strong> while maintaining excellent visual quality. Whether you need to email large documents, upload files to websites with size limits, save storage space, or optimize PDFs for web use, our intelligent compression algorithm delivers perfect balance between file size reduction and quality preservation.

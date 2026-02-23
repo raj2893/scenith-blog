@@ -164,7 +164,31 @@ const pdfToolsStructuredData = {
             "@type": "Answer",
             "text": "Use our Lock PDF tool: (1) Upload your PDF file, (2) Enter a strong password (8+ characters recommended), (3) Click 'Process' to encrypt the file, (4) Download the password-protected PDF. The password will be required every time someone tries to open the file. Store your password securely - encrypted PDFs cannot be recovered without the correct password."
           }
-        }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I compress a PDF for free without losing quality?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Use SCENITH's free Compress PDF tool. Upload your PDF, choose from Low (75%), Medium (50%), or High (25%) compression, or set a custom percentage. The tool reduces file size while maintaining readability. Text-heavy PDFs can be compressed 50-75% with minimal quality loss."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the best free alternative to Smallpdf?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "SCENITH is the best free Smallpdf alternative. Unlike Smallpdf which limits free users to 2 files per day and adds watermarks, SCENITH offers unlimited PDF processing with no watermarks, no file size limits, and no signup required."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I merge PDF files without signing up?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! SCENITH's Merge PDF tool requires no account or signup. Simply upload your PDF files, arrange them in order, and click Merge PDFs. Your combined PDF downloads instantly."
+          }
+        }        
       ]
     },
     {
@@ -312,7 +336,7 @@ const PDFToolsPage: React.FC = () => {
     }),
   }}
 />  
-    <main role="main" className="pdf-tools-container">
+    <main role="main" className="pdf-tools-container">  
       {/* Header */}
       <div className="pdf-tools-header">
         <nav aria-label="Breadcrumb" className="breadcrumb-nav">
@@ -340,8 +364,8 @@ const PDFToolsPage: React.FC = () => {
           <div className="header-icon">
             <FaFilePdf size={48} />
           </div>
-            <h1>Free PDF Tools Online: Merge, Split, Compress PDFs (No Limits)</h1>
-          <p>All-in-one PDF toolkit for merging, splitting, compressing, and converting PDFs. Fast, secure, and completely free.</p>
+            <h1>Free PDF Tools Online: Merge, Split, Compress PDF Files (No Limits, No Watermarks)</h1>
+          <p>All-in-one PDF toolkit for merging, splitting, compressing, and converting PDFs. Fast, secure, and completely free. Pair with our <a href="/tools/ai-voice-generation" style={{color: '#3b82f6'}}>AI Voice Generator</a> for complete content creation.</p>
         </div>
       </div>
 
@@ -352,7 +376,7 @@ const PDFToolsPage: React.FC = () => {
             <h2 id="quick-definition" className="visually-hidden">What Are PDF Tools?</h2>
             <div className="definition-box" style={{ background: 'white', padding: '24px', borderRadius: '12px', border: '2px solid #e2e8f0', borderLeft: '4px solid #3b82f6' }}>
               <p className="definition-text" style={{ fontSize: '1.05rem', lineHeight: '1.8', color: '#1e293b', margin: 0 }}>
-                <strong>PDF tools</strong> are online applications that allow you to manipulate PDF documents without installing software. Common operations include merging multiple PDFs into one file, splitting large PDFs into smaller documents, compressing file sizes, rotating pages, converting images to PDF format, adding watermarks, and password-protecting sensitive documents. SCENITH offers all these tools completely free with no watermarks, no file size limits, and instant processing.
+                <strong>Free PDF tools online</strong> are browser-based applications that let you merge, split, compress, rotate, and convert PDF documents without installing software. Common operations include merging multiple PDFs into one file, splitting large PDFs into smaller documents, compressing file sizes, rotating pages, converting images to PDF format, adding watermarks, and password-protecting sensitive documents. SCENITH offers all these tools completely free with no watermarks, no file size limits, and instant processing.
               </p>
             </div>
           </div>
@@ -360,8 +384,9 @@ const PDFToolsPage: React.FC = () => {
       </section>      
 
       {/* Tools Grid */}
-    <div className="tools-grid-wrapper">
-      <div className="tools-grid">
+      <section className="tools-grid-wrapper" aria-labelledby="tools-grid-title">
+        <h2 id="tools-grid-title" className="visually-hidden">Available PDF Tools</h2>
+        <div className="tools-grid">
         {tools.map((tool) => {
           const isAvailable = tool.available;
           const CardWrapper = isAvailable ? 'a' : 'div';
@@ -391,7 +416,7 @@ const PDFToolsPage: React.FC = () => {
 
               <div className="tool-content">
                 <div className="tool-card-header">
-  <h3>{tool.name}</h3>
+                  <h3>{tool.name}</h3>
   
 </div>
 <p>{tool.description}</p>
@@ -438,7 +463,7 @@ const PDFToolsPage: React.FC = () => {
           );
         })}
       </div>
-    </div>
+    </section>
 
       {/* Features Section */}
       <div className="features-section">
@@ -576,7 +601,7 @@ const PDFToolsPage: React.FC = () => {
         </p>
 
         <h3 style={{ fontSize: '22px', marginTop: '30px', marginBottom: '15px', color: '#1e293b' }}>
-          Why Online PDF Tools Are Essential in 2024
+          Why Online PDF Tools Are Essential for Modern Workflows
         </h3>
 
         <p style={{ fontSize: '16px', lineHeight: '1.8', color: '#475569', marginBottom: '20px' }}>
