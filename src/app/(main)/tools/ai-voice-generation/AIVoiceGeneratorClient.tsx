@@ -313,7 +313,8 @@ const AIVoiceGeneratorClient: React.FC = () => {
   const [showHistory, setShowHistory] = useState(false);
   const [historyLoading, setHistoryLoading] = useState(false); 
   const [showScriptTemplates, setShowScriptTemplates] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState('All');   
+  const [selectedCategory, setSelectedCategory] = useState('All'); 
+  const [showEmotionUpgradePopup, setShowEmotionUpgradePopup] = useState(false);  
 
   useEffect(() => {
     if (!isLoggedIn || !ttsUsage || userProfile?.role !== 'BASIC') return;
@@ -407,7 +408,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (!isLoggedIn || userProfile?.role === 'BASIC') {
+      if (isLoggedIn && userProfile?.role === 'BASIC') {
         setShow15SecPopup(true);
       }
     }, 15000); // 15 seconds
@@ -1048,6 +1049,10 @@ const AIVoiceGeneratorClient: React.FC = () => {
     return ttsUsage.monthly.limit > 2000 || ttsUsage.monthly.limit === -1;
   }, [isLoggedIn, ttsUsage]);  
 
+  const isEmotionBlocked = useMemo(() => {
+    return !hasEmotionAccess && selectedVoice !== null && selectedEmotion !== 'default';
+  }, [hasEmotionAccess, selectedVoice, selectedEmotion]);  
+
 return (
   <div className="ai-voice-generator-page">
     <nav aria-label="Breadcrumb" className="breadcrumb-nav">
@@ -1334,65 +1339,54 @@ return (
                   <label className="emotion-label-text" htmlFor="emotion-select">
                     🎭 Voice Emotion:
                   </label>
-
-                  {hasEmotionAccess ? (
-                    <>
-                      <select
-                        id="emotion-select"
-                        value={selectedEmotion}
-                        onChange={handleEmotionChange}
-                        className="emotion-dropdown"
-                        aria-label="Select voice emotion"
-                      >
-                        {EMOTION_PRESETS.map((emotion) => (
-                          <option key={emotion.value} value={emotion.value}>
-                            {emotion.label}
-                          </option>
-                        ))}
-                      </select>
-                      
-                      <button
-                        type="button"
-                        className={`emotion-preview-button ${isPlayingEmotionPreview ? 'playing' : ''}`}
-                        onClick={() => {
-                          if (!selectedVoice) {
-                            setError('Please select a voice first');
-                            setTimeout(() => setError(null), 3000);
-                            return;
-                          }
-                          handlePlayDemo(selectedVoice, true);
-                        }}
-                        disabled={!selectedVoice || isGenerating}
-                        aria-label="Preview selected emotion"
-                      >
-                        {isPlayingEmotionPreview ? '⏸️ Playing...' : '▶️ Preview Emotion'}
-                      </button>
-                      {selectedEmotion !== 'default' && (
-                        <div className="emotion-preview-disclaimer" style={{
-                          fontSize: '0.75rem',
-                          color: '#666',
-                          marginTop: '0.25rem',
-                          fontStyle: 'italic'
-                        }}>
-                          ⚠️ Preview shows speed only. Final audio will be much better.
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    <div className="emotion-upgrade-prompt">
-                      <span className="emotion-locked-badge">🔒 Emotions locked</span>
-                      <p className="emotion-locked-text">
-                        Voice emotions are available on <strong>Creator</strong>, <strong>Studio</strong>, and <strong>AI Voice Pro</strong> plans.
-                      </p>
-                      <a href="/pricing" className="emotion-upgrade-link">Unlock Emotions →</a>
-                    </div>
-                  )}
+                              
+                  <select
+                    id="emotion-select"
+                    value={selectedEmotion}
+                    onChange={handleEmotionChange}
+                    className="emotion-dropdown"
+                    aria-label="Select voice emotion"
+                  >
+                    {EMOTION_PRESETS.map((emotion) => (
+                      <option key={emotion.value} value={emotion.value}>
+                        {emotion.label}
+                      </option>
+                    ))}
+                  </select>
+                  
+                  <button
+                    type="button"
+                    className={`emotion-preview-button ${isPlayingEmotionPreview ? 'playing' : ''}`}
+                    onClick={() => {
+                      if (!selectedVoice) {
+                        setError('Please select a voice first');
+                        setTimeout(() => setError(null), 3000);
+                        return;
+                      }
+                      handlePlayDemo(selectedVoice, true);
+                    }}
+                    disabled={!selectedVoice || isGenerating}
+                    aria-label="Preview selected emotion"
+                  >
+                    {isPlayingEmotionPreview ? '⏸️ Playing...' : '▶️ Preview Emotion'}
+                  </button>
                 </div>
-                
-                {hasEmotionAccess && selectedEmotion !== 'default' && (
+                  
+                {selectedEmotion !== 'default' && (
                   <div className="emotion-info-tooltip">
                     <strong>{EMOTION_PRESETS.find(e => e.value === selectedEmotion)?.label}:</strong>{' '}
                     {EMOTION_PRESETS.find(e => e.value === selectedEmotion)?.description}
+                  </div>
+                )}
+              
+                {!hasEmotionAccess && (
+                  <div className="emotion-upgrade-prompt">
+                    <span className="emotion-locked-badge">🔒 Premium feature</span>
+                    <p className="emotion-locked-text">
+                      You can preview emotions freely, but <strong>generating</strong> with emotions requires{' '}
+                      <strong>Creator</strong>, <strong>Studio</strong> or <strong>AI Voice Pro</strong>
+                    </p>
+                    <a href="/pricing" className="emotion-upgrade-link">Upgrade →</a>
                   </div>
                 )}
               </div>
@@ -1562,12 +1556,18 @@ return (
                 <div className="button-wrapper-with-tooltip">
                   <button
                     className="cta-button generate-voice-button"
-                    onClick={handleGenerateAiAudio}
+                    onClick={() => {
+                      if (isEmotionBlocked) {
+                        setShowEmotionUpgradePopup(true);
+                        return;
+                      }
+                      handleGenerateAiAudio();
+                    }}
                     disabled={
                       !isLoggedIn ? false : (
-                        !aiVoiceText.trim() || 
-                        !selectedVoice || 
-                        isGenerating || 
+                        !aiVoiceText.trim() ||
+                        !selectedVoice ||
+                        isGenerating ||
                         characterCount > maxCharsPerRequest ||
                         wouldExceedLimits ||
                         undefined
@@ -3539,7 +3539,75 @@ return (
             </div>
           </motion.div>
         </div>
-      )}      
+      )}  
+      {showEmotionUpgradePopup && (
+        <div className="modal-overlay">
+          <motion.div
+            className="emotion-upgrade-popup"
+            initial={{ opacity: 0, scale: 0.85, y: 30 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.35, ease: 'easeOut' }}
+          >
+            <button
+              className="modal-close-button"
+              onClick={() => setShowEmotionUpgradePopup(false)}
+              aria-label="Close"
+            >
+              <FaTimes />
+            </button>
+      
+            <div className="emotion-popup-header">
+              <span className="emotion-popup-glow">🎭</span>
+              <h2>Unlock Voice Emotions</h2>
+              <p className="emotion-popup-subtitle">
+                You've selected a <strong>{EMOTION_PRESETS.find(e => e.value === selectedEmotion)?.label}</strong> emotion,
+                but generating with emotions requires a premium plan.
+              </p>
+            </div>
+      
+            <div className="emotion-popup-plans">
+              <a href="/pricing" className="emotion-popup-plan-card creator">
+                <span className="plan-emoji">⭐</span>
+                <div>
+                  <strong>Creator</strong>
+                  <p>60,000 chars/month + Emotions</p>
+                </div>
+                <span className="plan-arrow">→</span>
+              </a>
+              <a href="/pricing" className="emotion-popup-plan-card studio">
+                <span className="plan-emoji">🏆</span>
+                <div>
+                  <strong>Studio</strong>
+                  <p>200,000 chars/month + Emotions</p>
+                </div>
+                <span className="plan-arrow">→</span>
+              </a>
+              <a href="/pricing" className="emotion-popup-plan-card voicepro">
+                <span className="plan-emoji">🎙️</span>
+                <div>
+                  <strong>AI Voice Pro</strong>
+                  <p>50,000 chars/month + Emotions</p>
+                </div>
+                <span className="plan-arrow">→</span>
+              </a>
+            </div>
+      
+            <a href="/pricing" className="emotion-popup-cta-btn">
+              View Plans & Upgrade →
+            </a>
+      
+            <button
+              className="emotion-popup-dismiss"
+              onClick={() => {
+                setSelectedEmotion('default');
+                setShowEmotionUpgradePopup(false);
+              }}
+            >
+              Continue with Default emotion instead
+            </button>
+          </motion.div>
+        </div>
+      )}          
     </div>
   );
 };
