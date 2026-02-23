@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import "@/styles/tools/ImageToPdf.css";
+import '../../../../../styles/tools/CommonPdfToolForMargin.css';
 
 const TOOL_URL =
   "https://scenith.in/tools/pdf-tools/images-to-pdf?utm_source=photo-to-pdf-page&utm_medium=cta&utm_campaign=photo_to_pdf_organic";

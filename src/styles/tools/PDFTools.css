@@ -12,12 +12,11 @@
   background: #FFFFFF;
   min-height: 100vh;
   color: #1E293B;
-  padding-top: 80px;
   display: flex;
   flex-direction: column;
   position: relative;
   overflow-x: hidden;
-  margin-top: 60px;
+  margin-top: 0px;
 }
 
 /* Extra safety for mobile/small screens */
@@ -59,7 +58,7 @@
 /* ===== HEADER SECTION ===== */
 .workspace-header,
 .pdf-tools-header {
-  padding: 40px 20px 60px;
+  padding: 10px 5px 10px;
   background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%);
   text-align: center;
   border-bottom: 1px solid rgba(59, 130, 246, 0.08);
@@ -74,13 +73,13 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 20px;
+  padding: 5px 10px;
   background: #FFFFFF;
   border: 1px solid rgba(59, 130, 246, 0.15);
-  border-radius: 12px;
+  border-radius: 6px;
   color: #3B82F6;
-  font-weight: 600;
-  font-size: 0.95rem;
+  font-weight: 550;
+  font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 2px 10px rgba(0,0,0,0.06);

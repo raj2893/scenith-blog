@@ -2,6 +2,7 @@
 
 import React from "react";
 import PDFToolsWorkspace from "../PDFToolsWorkspace";
+import '../../../../../styles/tools/CommonPdfToolForMargin.css';
 
 export default function UnlockPdfClient() {
   return (
