@@ -779,7 +779,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
         text: aiVoiceText,
         voiceName: selectedVoice.voiceName,
         languageCode: selectedVoice.languageCode,
-        emotion: selectedEmotion,  // Always send the selected emotion
+        emotion: hasEmotionAccess ? selectedEmotion : 'default',
       };
       
       // REMOVED: Do NOT send ssmlConfig anymore - let backend handle it via emotion
@@ -1042,6 +1042,11 @@ const AIVoiceGeneratorClient: React.FC = () => {
   const toggleHistory = useCallback(() => {
     setShowHistory(prev => !prev);
   }, []);
+
+  const hasEmotionAccess = useMemo(() => {
+    if (!isLoggedIn || !ttsUsage) return false;
+    return ttsUsage.monthly.limit > 2000 || ttsUsage.monthly.limit === -1;
+  }, [isLoggedIn, ttsUsage]);  
 
 return (
   <div className="ai-voice-generator-page">
@@ -1329,50 +1334,62 @@ return (
                   <label className="emotion-label-text" htmlFor="emotion-select">
                     🎭 Voice Emotion:
                   </label>
-                  
-                  <select
-                    id="emotion-select"
-                    value={selectedEmotion}
-                    onChange={handleEmotionChange}
-                    className="emotion-dropdown"
-                    aria-label="Select voice emotion"
-                  >
-                    {EMOTION_PRESETS.map((emotion) => (
-                      <option key={emotion.value} value={emotion.value}>
-                        {emotion.label}
-                      </option>
-                    ))}
-                  </select>
-                  
-                  <button
-                    type="button"
-                    className={`emotion-preview-button ${isPlayingEmotionPreview ? 'playing' : ''}`}
-                    onClick={() => {
-                      if (!selectedVoice) {
-                        setError('Please select a voice first');
-                        setTimeout(() => setError(null), 3000);
-                        return;
-                      }
-                      handlePlayDemo(selectedVoice, true);
-                    }}
-                    disabled={!selectedVoice || isGenerating}
-                    aria-label="Preview selected emotion"
-                  >
-                    {isPlayingEmotionPreview ? '⏸️ Playing...' : '▶️ Preview Emotion'}
-                  </button>
-                  {selectedEmotion !== 'default' && (
-                    <div className="emotion-preview-disclaimer" style={{
-                      fontSize: '0.75rem',
-                      color: '#666',
-                      marginTop: '0.25rem',
-                      fontStyle: 'italic'
-                    }}>
-                      ⚠️ Preview shows speed only. Final audio will be much better.
+
+                  {hasEmotionAccess ? (
+                    <>
+                      <select
+                        id="emotion-select"
+                        value={selectedEmotion}
+                        onChange={handleEmotionChange}
+                        className="emotion-dropdown"
+                        aria-label="Select voice emotion"
+                      >
+                        {EMOTION_PRESETS.map((emotion) => (
+                          <option key={emotion.value} value={emotion.value}>
+                            {emotion.label}
+                          </option>
+                        ))}
+                      </select>
+                      
+                      <button
+                        type="button"
+                        className={`emotion-preview-button ${isPlayingEmotionPreview ? 'playing' : ''}`}
+                        onClick={() => {
+                          if (!selectedVoice) {
+                            setError('Please select a voice first');
+                            setTimeout(() => setError(null), 3000);
+                            return;
+                          }
+                          handlePlayDemo(selectedVoice, true);
+                        }}
+                        disabled={!selectedVoice || isGenerating}
+                        aria-label="Preview selected emotion"
+                      >
+                        {isPlayingEmotionPreview ? '⏸️ Playing...' : '▶️ Preview Emotion'}
+                      </button>
+                      {selectedEmotion !== 'default' && (
+                        <div className="emotion-preview-disclaimer" style={{
+                          fontSize: '0.75rem',
+                          color: '#666',
+                          marginTop: '0.25rem',
+                          fontStyle: 'italic'
+                        }}>
+                          ⚠️ Preview shows speed only. Final audio will be much better.
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div className="emotion-upgrade-prompt">
+                      <span className="emotion-locked-badge">🔒 Emotions locked</span>
+                      <p className="emotion-locked-text">
+                        Voice emotions are available on <strong>Creator</strong>, <strong>Studio</strong>, and <strong>AI Voice Pro</strong> plans.
+                      </p>
+                      <a href="/pricing" className="emotion-upgrade-link">Unlock Emotions →</a>
                     </div>
-                  )}                  
+                  )}
                 </div>
                 
-                {selectedEmotion !== 'default' && (
+                {hasEmotionAccess && selectedEmotion !== 'default' && (
                   <div className="emotion-info-tooltip">
                     <strong>{EMOTION_PRESETS.find(e => e.value === selectedEmotion)?.label}:</strong>{' '}
                     {EMOTION_PRESETS.find(e => e.value === selectedEmotion)?.description}

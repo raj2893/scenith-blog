@@ -413,6 +413,7 @@ if (gateway === 'razorpay') {
             '2,000 Characters/month',
             '700 Characters/day',
             '200 Characters per request',
+            'Voice Emotions: Not available',
             '30+ AI Voices in multiple languages',
             '5 Speed videos/month',
             '5 minutes per video',
@@ -432,13 +433,14 @@ if (gateway === 'razorpay') {
             '60,000 Characters/month',
             '15,000 Characters/day',
             '3,500 Characters per request',
+            '🎭 Voice Emotions (9 presets)',
             'All Premium AI Voices',
             '45 Speed videos/month',
             '30 minutes per video',
             'Up to 1440p quality',
             '400 AI Images/month (15/day)',
             '2 images per request (896x1152)',
-            'Elements & Templates (Coming Soon)',
+            'Elements & Templates',
             'Priority support',
             'Commercial use allowed'
           ]
@@ -453,6 +455,7 @@ if (gateway === 'razorpay') {
             '200,000 Characters/month',
             'Unlimited daily usage',
             '5,000 Characters per request',
+            '🎭 Voice Emotions (9 presets)',
             'All Premium AI Voices',
             'Unlimited Speed videos/month',
             'Unlimited video length',
@@ -489,6 +492,7 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
           '2,000 Characters/month',
           '700 Characters/day',
           '200 Characters per request',
+          'Voice Emotions: Not available',
           '30+ AI Voices in multiple languages',
           '5 Speed videos/month',
           '5 minutes per video',
@@ -510,6 +514,7 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
           '60,000 Characters/month',
           '15,000 Characters/day',
           '3,500 Characters per request',
+          '🎭 Voice Emotions (9 presets)',
           'All Premium AI Voices',
           '45 Speed videos/month',
           '30 minutes per video',
@@ -533,6 +538,7 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
           '200,000 Characters/month',
           'Unlimited daily usage',
           '5,000 Characters per request',
+          '🎭 Voice Emotions (9 presets)',
           'All Premium AI Voices',
           'Unlimited Speed videos/month',
           'Unlimited video length',
@@ -560,6 +566,7 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
             '50,000 Characters/month',
             '10,000 Characters/day',
             '2,500 Characters per request',
+            '🎭 Voice Emotions (9 presets)',
             'All Premium AI Voices',
             'Priority support'
           ]
@@ -1161,6 +1168,12 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
                 <td>3,500</td>
                 <td>5,000</td>
               </tr>
+              <tr>
+                <td>Voice Emotions</td>
+                <td>✗ Not available</td>
+                <td>✓ 9 Emotion Presets</td>
+                <td>✓ 9 Emotion Presets</td>
+              </tr>              
               <tr>
                 <td>Speed Videos/Month</td>
                 <td>5 videos</td>

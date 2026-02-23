@@ -4807,6 +4807,52 @@
   text-decoration: none;
 }
 
+.emotion-upgrade-prompt {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.emotion-locked-badge {
+  background: #E5E7EB;
+  color: #6B7280;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.emotion-locked-text {
+  font-size: 0.9rem;
+  color: #64748B;
+  margin: 0;
+  flex: 1;
+}
+
+.emotion-locked-text strong {
+  color: #3B82F6;
+}
+
+.emotion-upgrade-link {
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+  color: white;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+}
+
+.emotion-upgrade-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .main-content {
