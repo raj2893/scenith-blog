@@ -24,6 +24,7 @@ const RemoveBackgroundClient: React.FC = () => {
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [showPricingPopup, setShowPricingPopup] = useState<boolean>(false);
   const [userProfile, setUserProfile] = useState<UserProfile>({
     email: '',
     firstName: '',
@@ -42,6 +43,14 @@ const RemoveBackgroundClient: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+   // Show pricing popup after 5 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowPricingPopup(true);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, []);
+  
   // Fetch user profile if token exists
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -101,8 +110,163 @@ const RemoveBackgroundClient: React.FC = () => {
 
   const currentYear = new Date().getFullYear();
 
-  return (
+ return (
     <div className="remove-background-page">
+      {showPricingPopup && (
+        <div
+          style={{
+            position: 'fixed', inset: 0, zIndex: 9999,
+            background: 'rgba(8, 6, 24, 0.82)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            padding: '16px',
+            animation: 'bgPopFadeOverlay 0.3s ease forwards',
+          }}
+          onClick={() => setShowPricingPopup(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Upgrade to remove more backgrounds"
+        >
+          <div
+            style={{
+              background: 'linear-gradient(145deg, #0f0c29 0%, #1e1a45 60%, #0d0b22 100%)',
+              borderRadius: '24px',
+              padding: '36px 32px 28px',
+              maxWidth: '460px',
+              width: '100%',
+              position: 'relative',
+              border: '1px solid rgba(102, 126, 234, 0.28)',
+              boxShadow: '0 0 0 1px rgba(118,75,162,0.12), 0 32px 80px rgba(0,0,0,0.65), 0 0 60px rgba(102,126,234,0.10)',
+              animation: 'bgPopSlideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Ambient glow */}
+            <div style={{
+              position: 'absolute', top: '-40px', right: '-40px',
+              width: '160px', height: '160px',
+              background: 'radial-gradient(circle, rgba(118,75,162,0.2) 0%, transparent 70%)',
+              pointerEvents: 'none', borderRadius: '50%',
+            }} />
+
+            {/* Close */}
+            <button
+              onClick={() => setShowPricingPopup(false)}
+              aria-label="Close"
+              style={{
+                position: 'absolute', top: '14px', right: '14px',
+                background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: '50%', width: '30px', height: '30px',
+                color: 'rgba(255,255,255,0.5)', fontSize: '16px', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                transition: 'all 0.2s', lineHeight: 1,
+              }}
+            >×</button>
+
+            {/* Urgency pill */}
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: '6px',
+              background: 'rgba(255,107,107,0.12)', border: '1px solid rgba(255,107,107,0.3)',
+              borderRadius: '100px', padding: '4px 12px', marginBottom: '16px',
+            }}>
+              <span style={{
+                width: '5px', height: '5px', borderRadius: '50%', background: '#ff6b6b',
+                display: 'inline-block', boxShadow: '0 0 5px #ff6b6b',
+                animation: 'bgPopPulse 1.8s infinite',
+              }} />
+              <span style={{ fontSize: '0.68rem', fontWeight: 800, color: '#ff8a8a', letterSpacing: '1.5px', textTransform: 'uppercase' as const }}>
+                🔥 Limited Offer — 25% OFF Today
+              </span>
+            </div>
+
+            {/* Headline */}
+            <h2 style={{
+              fontSize: 'clamp(1.3rem, 4vw, 1.7rem)', fontWeight: 900, color: 'white',
+              margin: '0 0 8px', lineHeight: 1.2, letterSpacing: '-0.02em',
+            }}>
+              Remove Backgrounds{' '}
+              <span style={{
+                background: 'linear-gradient(90deg, #667eea, #a78bfa, #f093fb)',
+                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+              }}>
+                Without Limits.
+              </span>
+            </h2>
+
+            {/* Sub-copy */}
+            <p style={{
+              color: 'rgba(255,255,255,0.5)', fontSize: '0.88rem', margin: '0 0 6px', lineHeight: 1.6,
+            }}>
+              You're on the free plan — 10 removals/month.{' '}
+              <span style={{ color: '#a78bfa', fontWeight: 700 }}>Upgrade from ₹349/mo · $9/mo</span>
+            </p>
+
+            <p style={{
+              color: 'rgba(255,255,255,0.75)', fontSize: '0.82rem',
+              margin: '0 0 22px', fontWeight: 600, letterSpacing: '0.01em',
+            }}>
+              Bulk product shots. Client work. Zero interruptions.
+            </p>
+
+            {/* Value pills */}
+            <div style={{
+              display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '22px',
+            }}>
+              {[
+                { icon: '🖼️', text: '500 Removals/mo' },
+                { icon: '🎯', text: '4K Ultra HD Quality' },
+                { icon: '⚡', text: 'Instant Processing' },
+                { icon: '💼', text: 'Full Commercial Use' },
+              ].map((item) => (
+                <div key={item.text} style={{
+                  display: 'flex', alignItems: 'center', gap: '7px',
+                  background: 'rgba(102,126,234,0.08)', border: '1px solid rgba(102,126,234,0.15)',
+                  borderRadius: '10px', padding: '8px 10px',
+                }}>
+                  <span style={{ fontSize: '0.85rem' }}>{item.icon}</span>
+                  <span style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.72)', fontWeight: 600 }}>{item.text}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* CTA */}
+            
+             <a href="/pricing"
+              onClick={() => setShowPricingPopup(false)}
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                width: '100%', padding: '13px 24px',
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                color: 'white', borderRadius: '12px',
+                fontSize: '0.95rem', fontWeight: 800, textDecoration: 'none',
+                boxShadow: '0 4px 24px rgba(102,126,234,0.4)',
+                letterSpacing: '-0.01em',
+              }}
+            >
+              🚀 Claim 25% OFF — Upgrade Now →
+            </a>
+
+            <button
+              onClick={() => setShowPricingPopup(false)}
+              style={{
+                width: '100%', marginTop: '10px', padding: '10px',
+                background: 'transparent', border: 'none',
+                color: 'rgba(255,255,255,0.35)', fontSize: '0.8rem',
+                cursor: 'pointer', transition: 'color 0.2s',
+              }}
+            >
+              No thanks, I'll stay limited
+            </button>
+
+            <style>{`
+              @keyframes bgPopFadeOverlay { from { opacity:0; } to { opacity:1; } }
+              @keyframes bgPopSlideUp { from { opacity:0; transform:translateY(40px) scale(0.96); } to { opacity:1; transform:translateY(0) scale(1); } }
+              @keyframes bgPopPulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.45; transform:scale(1.35); } }
+            `}</style>
+          </div>
+        </div>
+      )}
       <nav aria-label="Breadcrumb" className="breadcrumb-nav">
         <ol itemScope itemType="https://schema.org/BreadcrumbList">
           <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">

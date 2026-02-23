@@ -115,8 +115,8 @@ export default function ScenithFreePDFToolsSuiteGuide2026() {
 
           <p>
             Access the full power of the suite at <strong>Scenith Free PDF Tools</strong>:
-            <a href="https://scenith.in/pdf-tools?utm_source=blog&utm_medium=intro&utm_campaign=pdf_tools_suite_guide_2026" target="_blank" rel="noopener noreferrer">
-              https://scenith.in/pdf-tools
+            <a href="https://scenith.in/tools/pdf-tools?utm_source=blog&utm_medium=intro&utm_campaign=pdf_tools_suite_guide_2026" target="_blank" rel="noopener noreferrer">
+              https://scenith.in/tools/pdf-tools
             </a>. From merging reports with drag-and-drop page control to compressing files for faster sharing, rotating scanned documents to correct orientation, converting photos into professional PDFs, extracting pages as images for social media, adding custom watermarks for branding, and securing files with password protection — every tool is ready to use immediately, completely free, with no restrictions on file size, number of operations, or usage frequency.
           </p>
 
@@ -741,7 +741,7 @@ export default function ScenithFreePDFToolsSuiteGuide2026() {
             </p>
             <p style={{fontSize: '1.8rem', fontWeight: 900, margin: '3rem 0'}}>
               <a
-                href="https://scenith.in/pdf-tools?utm_source=blog&utm_medium=final_cta&utm_campaign=pdf_tools_suite_guide_2026"
+                href="https://scenith.in/tools/pdf-tools?utm_source=blog&utm_medium=final_cta&utm_campaign=pdf_tools_suite_guide_2026"
                 style={{ color: '#ffffff', textDecoration: 'none' }}
                 target="_blank"
                 rel="noopener noreferrer"

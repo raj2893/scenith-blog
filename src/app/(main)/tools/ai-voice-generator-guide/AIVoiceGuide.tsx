@@ -716,7 +716,7 @@ const AIVoiceGuide = () => {
             Ready to Transform Your Content with AI Voices?
           </h2>
           <p className="text-xl mb-8 text-white/90">
-            Join 25,000+ creators producing professional voiceovers in seconds. Start generating broadcast-quality audio today—completely free!
+            Join 1500+ creators producing professional voiceovers in seconds. Start generating broadcast-quality audio today—completely free!
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
             <a

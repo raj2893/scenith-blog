@@ -254,7 +254,7 @@ const UsageAlertPopup: React.FC<UsageAlertPopupProps> = ({
                 <div style={{marginTop: '18px', padding: '12px', background: 'rgba(255,255,255,0.7)', borderRadius: '10px', border: '1px solid rgba(0,0,0,0.08)'}}>
                   <p style={{fontSize: '12px', color: '#64748B', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px'}}>
                     <FaAward style={{ color: '#FBBF24', fontSize: '16px' }} />
-                    Join 25,000+ creators who upgraded
+                    Join 1500+ creators who upgraded
                   </p>
                 </div>
               )}

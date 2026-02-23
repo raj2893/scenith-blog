@@ -742,18 +742,77 @@ const AIImageGeneratorClient: React.FC = () => {
           <div className="hero-cta-section">
             <div className="main-content">
               <div className="input-section">
-                <textarea
-                  value={prompt}
-                  onChange={(e) => {
-                    setPrompt(e.target.value);
-                    setPromptCharCount(e.target.value.length);
-                  }}
-                  placeholder="Describe your image... (e.g., 'A serene mountain landscape at sunset with vibrant orange sky')"
-                  className="prompt-textarea"
-                  disabled={!isLoggedIn}
-                  aria-label="Image description prompt"
-                  maxLength={2000}
-                />
+                <div className="script-input-wrapper">
+                  <div className="script-input-header">
+                    <div className="header-left">
+                      <span className="script-icon">🎨</span>
+                      <h3 className="script-title">Describe Your Image</h3>
+                    </div>
+                    <div className="header-right">
+                      {isLoggedIn && (
+                        <span className={`live-char-badge ${promptCharCount > 1800 ? 'exceeded' : ''}`}>
+                          {promptCharCount.toLocaleString()} / 2,000
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                    
+                  <div className="textarea-container">
+                    <textarea
+                      value={prompt}
+                      onChange={(e) => {
+                        setPrompt(e.target.value);
+                        setPromptCharCount(e.target.value.length);
+                      }}
+                      placeholder="✨ Describe your image..."
+                      className={`ai-voice-textarea ${promptCharCount > 1800 ? 'limit-exceeded' : ''}`}
+                      disabled={!isLoggedIn}
+                      aria-label="Image description prompt"
+                      maxLength={2000}
+                    />
+
+                    {!isLoggedIn && (
+                      <div className="textarea-overlay">
+                        <div className="overlay-content">
+                          <span className="lock-icon">🔒</span>
+                          <h4>Login to Start Creating</h4>
+                          <p>Sign in to generate stunning AI images</p>
+                          <button
+                            className="overlay-login-btn"
+                            onClick={() => setShowLoginModal(true)}
+                          >
+                            Login Now
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {isLoggedIn && promptCharCount > 1800 && (
+                      <div className="character-limit-warning">
+                        <span className="warning-icon">⚠️</span>
+                        <strong>Approaching limit!</strong>
+                        <span>{2000 - promptCharCount} characters remaining.</span>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="script-input-footer">
+                    <div className="footer-stats">
+                      <div className="stat-item">
+                        <span className="stat-icon">📝</span>
+                        <span className="stat-label">Words: <strong>{prompt.trim().split(/\s+/).filter(w => w.length > 0).length || 0}</strong></span>
+                      </div>
+                      <div className="stat-item">
+                        <span className="stat-icon">🎨</span>
+                        <span className="stat-label">Style: <strong>{STYLE_PRESETS.find(s => s.value === selectedStyle)?.label || 'Realistic'}</strong></span>
+                      </div>
+                      <div className="stat-item">
+                        <span className="stat-icon">✨</span>
+                        <span className="stat-label">Ready to generate</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
                 {isLoggedIn && (
                   <div className="character-count-container">

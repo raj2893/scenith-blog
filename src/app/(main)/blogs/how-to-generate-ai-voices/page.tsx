@@ -330,7 +330,7 @@ export default function HowToGenerateAIVoices() {
             Generating AI voiceovers with Scenith is fast, intuitive, and delivers professional results in seconds. With 50+ languages and 95% human-like quality, it’s the best choice for creators looking to boost engagement by 30%.
           </p>
           <p>
-            Traditional methods like self-recording or hiring voice actors are slow and costly. Start using Scenith’s AI voice tool today and join over 25,000 creators making stunning voiceovers effortlessly.
+            Traditional methods like self-recording or hiring voice actors are slow and costly. Start using Scenith’s AI voice tool today and join over 1500 creators making stunning voiceovers effortlessly.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Add Professional Voiceovers in Seconds?</h3>
@@ -338,7 +338,7 @@ export default function HowToGenerateAIVoices() {
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Generating Free →
             </Link>
-            <p>Join 25,000+ creators who add professional voiceovers in seconds!</p>
+            <p>Join 1500+ creators who add professional voiceovers in seconds!</p>
           </div>
         </section>
       </article>

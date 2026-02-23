@@ -131,6 +131,34 @@ const toolsData: Tool[] = [
     difficulty: "Easy",
     usageTime: "3 min",
     seoKeywords: ["format converter", "video converter", "file conversion", "media converter"]
+  },
+  {
+    id: 9,
+    title: "PDF Tools",
+    description: "Merge, split, compress, and convert PDF files with ease. A complete suite of PDF utilities for managing your documents online.",
+    category: "Document Tools",
+    icon: "📄",
+    gradient: "linear-gradient(135deg, #f7971e 0%, #ffd200 100%)",
+    tags: ["pdf", "merge", "split", "compress", "convert", "document"],
+    featured: false,
+    url: "/pdf-tools",
+    difficulty: "Easy",
+    usageTime: "2 min",
+    seoKeywords: ["PDF tools", "merge PDF", "split PDF", "compress PDF", "PDF converter"]
+  },
+  {
+    id: 10,
+    title: "SVG Library",
+    description: "Browse and download thousands of free SVG icons and illustrations for your projects. Fully customizable, scalable vector graphics ready to use.",
+    category: "Design Tools",
+    icon: "🖌️",
+    gradient: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
+    tags: ["svg", "icons", "illustrations", "vector", "graphics", "design"],
+    featured: false,
+    url: "/svg-library",
+    difficulty: "Easy",
+    usageTime: "1 min",
+    seoKeywords: ["SVG library", "free SVG icons", "vector graphics", "SVG illustrations", "free icons"]
   }
 ];
 

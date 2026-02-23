@@ -1,0 +1,1663 @@
+/* ============================================================
+   PDF TOOLS INDIA – PDFToolsIndia.css
+   Aesthetic: Trusted Utility × Indian Energy
+   Typefaces: Sora (headings) + DM Sans (body)
+   Color System: Deep Navy base, Saffron accent, Emerald CTA
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
+
+/* ── CSS VARIABLES ─────────────────────────────────────────── */
+:root {
+  --navy:        #0D1B2A;
+  --navy-mid:    #1A2E44;
+  --navy-soft:   #243B55;
+  --saffron:     #FF6B1A;
+  --saffron-lt:  #FF8C42;
+  --saffron-pale:#FFF0E8;
+  --emerald:     #0D9E6E;
+  --emerald-dk:  #097A54;
+  --emerald-pale:#E8F9F3;
+  --slate:       #64748B;
+  --slate-lt:    #94A3B8;
+  --border:      #E4EAF1;
+  --surface:     #F7F9FC;
+  --white:       #FFFFFF;
+  --text-main:   #0D1B2A;
+  --text-body:   #374151;
+  --text-muted:  #64748B;
+
+  --radius-sm:   8px;
+  --radius-md:   14px;
+  --radius-lg:   22px;
+  --radius-xl:   32px;
+
+  --shadow-xs:   0 1px 4px rgba(13,27,42,0.06);
+  --shadow-sm:   0 4px 14px rgba(13,27,42,0.08);
+  --shadow-md:   0 8px 30px rgba(13,27,42,0.10);
+  --shadow-lg:   0 16px 56px rgba(13,27,42,0.13);
+  --shadow-saffron: 0 8px 32px rgba(255,107,26,0.25);
+  --shadow-emerald: 0 8px 32px rgba(13,158,110,0.25);
+
+  --transition: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring: 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ── BASE RESET ────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.india-pdf-page {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--white);
+  color: var(--text-main);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── UTILITY ───────────────────────────────────────────────── */
+.india-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.india-container {
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ── BREADCRUMB ────────────────────────────────────────────── */
+.india-breadcrumb {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 0;
+  margin-top: 80px;
+}
+
+.india-breadcrumb ol {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 0 24px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.india-breadcrumb li:not(:last-child)::after {
+  content: '›';
+  margin-left: 8px;
+  color: var(--slate-lt);
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.india-breadcrumb a {
+  color: var(--saffron);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color var(--transition);
+}
+
+.india-breadcrumb a:hover {
+  color: var(--saffron-lt);
+  text-decoration: underline;
+}
+
+.india-breadcrumb li:last-child span {
+  color: var(--navy);
+  font-weight: 600;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   HERO
+══════════════════════════════════════════════════════════════ */
+.india-hero {
+  position: relative;
+  padding: 88px 0 96px;
+  background: var(--navy);
+  overflow: hidden;
+  text-align: center;
+}
+
+/* geometric background texture */
+.india-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 15% 50%, rgba(255,107,26,0.12) 0%, transparent 50%),
+    radial-gradient(circle at 85% 20%, rgba(13,158,110,0.10) 0%, transparent 45%),
+    radial-gradient(circle at 60% 80%, rgba(255,107,26,0.07) 0%, transparent 40%);
+  pointer-events: none;
+}
+
+/* subtle grid lines */
+.india-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
+.india-hero .india-container {
+  position: relative;
+  z-index: 2;
+}
+
+/* Badge */
+.india-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  backdrop-filter: blur(12px);
+  border-radius: 50px;
+  padding: 10px 22px;
+  margin-bottom: 36px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.88);
+  letter-spacing: 0.02em;
+  animation: fadeSlideDown 0.6s ease both;
+}
+
+.india-flag {
+  font-size: 1.4rem;
+  line-height: 1;
+  animation: gentleWave 3s ease-in-out infinite;
+}
+
+@keyframes gentleWave {
+  0%, 100% { transform: rotate(0deg); }
+  30%       { transform: rotate(8deg); }
+  60%       { transform: rotate(-5deg); }
+}
+
+/* H1 */
+.india-hero h1 {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--white);
+  margin-bottom: 10px;
+  letter-spacing: -0.02em;
+  animation: fadeSlideDown 0.6s 0.1s ease both;
+}
+
+.india-h1-sub {
+  display: block;
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(1.05rem, 2.5vw, 1.35rem);
+  font-weight: 400;
+  color: var(--saffron-lt);
+  margin-top: 12px;
+  letter-spacing: 0.01em;
+  font-style: italic;
+}
+
+/* Hero description */
+.india-hero-desc {
+  font-size: clamp(1rem, 1.8vw, 1.12rem);
+  line-height: 1.75;
+  color: rgba(255,255,255,0.72);
+  max-width: 720px;
+  margin: 26px auto 0;
+  animation: fadeSlideDown 0.6s 0.2s ease both;
+}
+
+.india-hero-desc strong {
+  color: var(--white);
+  font-weight: 600;
+}
+
+/* ── MAIN CTA BUTTON ───────────────────────────────────────── */
+.india-main-cta-wrapper {
+  margin: 44px auto 0;
+  max-width: 640px;
+  animation: fadeSlideDown 0.6s 0.3s ease both;
+}
+
+.india-main-cta {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background: linear-gradient(135deg, var(--saffron) 0%, #E85C10 100%);
+  border-radius: var(--radius-lg);
+  padding: 22px 30px;
+  text-decoration: none;
+  color: var(--white);
+  box-shadow: var(--shadow-saffron), 0 2px 0 rgba(0,0,0,0.2) inset;
+  transition: transform var(--transition-spring), box-shadow var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.india-main-cta::before {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: -30%;
+  width: 60%;
+  height: 220%;
+  background: linear-gradient(105deg, transparent, rgba(255,255,255,0.22), transparent);
+  transform: skewX(-20deg);
+  animation: shimmerPass 3.5s 1.2s ease-in-out infinite;
+}
+
+@keyframes shimmerPass {
+  0%   { left: -60%; opacity: 0; }
+  20%  { opacity: 1; }
+  60%  { opacity: 1; }
+  80%  { left: 120%; opacity: 0; }
+  100% { left: 120%; opacity: 0; }
+}
+
+.india-main-cta:hover {
+  transform: translateY(-4px) scale(1.012);
+  box-shadow: 0 18px 48px rgba(255,107,26,0.4), 0 4px 16px rgba(0,0,0,0.12);
+}
+
+.india-main-cta:active {
+  transform: translateY(-1px) scale(1.005);
+}
+
+.india-cta-icon {
+  font-size: 2.2rem;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+.india-cta-body {
+  flex: 1;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.india-cta-body strong {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.18rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.india-cta-body small {
+  font-size: 0.85rem;
+  opacity: 0.88;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+.india-cta-arrow {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+  transition: transform var(--transition-spring);
+  font-weight: 300;
+}
+
+.india-main-cta:hover .india-cta-arrow {
+  transform: translateX(6px);
+}
+
+/* Trust Row */
+.india-trust-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  margin-top: 28px;
+  animation: fadeSlideDown 0.6s 0.4s ease both;
+}
+
+.india-trust-row span {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.65);
+  letter-spacing: 0.01em;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   DEFINITION SECTION
+══════════════════════════════════════════════════════════════ */
+.india-definition-section {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 48px 0;
+}
+
+.india-definition-box {
+  background: var(--white);
+  border-left: 5px solid var(--saffron);
+  border-radius: var(--radius-md);
+  padding: 28px 32px;
+  box-shadow: var(--shadow-sm);
+}
+
+.india-definition-box p {
+  font-size: 1.05rem;
+  line-height: 1.82;
+  color: var(--text-body);
+}
+
+.india-definition-box strong {
+  color: var(--saffron);
+  font-weight: 700;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SHARED SECTION ATOMS
+══════════════════════════════════════════════════════════════ */
+.india-why-section,
+.india-tools-section,
+.india-workflows-section,
+.india-users-section,
+.india-mobile-section,
+.india-privacy-section,
+.india-compare-section,
+.india-paa-section,
+.india-faq-section {
+  padding: 88px 0;
+}
+
+.india-why-section    { background: var(--white); }
+.india-tools-section  { background: var(--surface); }
+.india-workflows-section { background: var(--white); }
+.india-users-section  { background: var(--surface); }
+.india-mobile-section {
+  background: var(--navy);
+  color: var(--white);
+}
+.india-privacy-section  { background: var(--white); }
+.india-compare-section  { background: var(--surface); }
+.india-paa-section      { background: var(--white); }
+.india-faq-section      { background: var(--surface); }
+
+/* Section headings */
+.india-why-section h2,
+.india-tools-section h2,
+.india-workflows-section h2,
+.india-users-section h2,
+.india-privacy-section h2,
+.india-compare-section h2,
+.india-paa-section h2,
+.india-faq-section h2 {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(1.7rem, 3.5vw, 2.5rem);
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+}
+
+.india-mobile-section h2 {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(1.7rem, 3.5vw, 2.5rem);
+  font-weight: 800;
+  color: var(--white);
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+}
+
+.india-section-intro {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: var(--text-muted);
+  max-width: 780px;
+  margin-bottom: 56px;
+}
+
+.india-mobile-section .india-section-intro {
+  color: rgba(255,255,255,0.65);
+}
+
+.india-section-intro strong {
+  color: var(--navy);
+  font-weight: 600;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   WHY INDIA NEEDS THIS – REALITY CARDS
+══════════════════════════════════════════════════════════════ */
+.india-reality-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.india-reality-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px 28px 28px;
+  box-shadow: var(--shadow-xs);
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.india-reality-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--saffron), var(--saffron-lt));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--transition);
+}
+
+.india-reality-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(255,107,26,0.25);
+}
+
+.india-reality-card:hover::before {
+  transform: scaleX(1);
+}
+
+.india-reality-icon {
+  font-size: 2.4rem;
+  margin-bottom: 18px;
+  display: block;
+  line-height: 1;
+}
+
+.india-reality-card h3 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 14px;
+  line-height: 1.3;
+}
+
+.india-reality-card p {
+  font-size: 0.97rem;
+  line-height: 1.78;
+  color: var(--text-body);
+}
+
+.india-reality-card p strong {
+  color: var(--saffron);
+  font-weight: 600;
+}
+
+.india-reality-stat {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 8px 14px;
+  background: var(--saffron-pale);
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--saffron);
+  letter-spacing: 0.01em;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TOOLS LIST – ALTERNATING ROWS
+══════════════════════════════════════════════════════════════ */
+.india-tools-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.india-tool-row {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 0;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  transition: background var(--transition);
+}
+
+.india-tool-row:last-child {
+  border-bottom: none;
+}
+
+.india-tool-row--alt {
+  background: var(--surface);
+}
+
+.india-tool-row:hover {
+  background: #FFFBF8;
+}
+
+.india-tool-row--alt:hover {
+  background: #FFF6F1;
+}
+
+.india-tool-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 36px 28px 36px 36px;
+  border-right: 1px solid var(--border);
+  position: relative;
+}
+
+.india-tool-meta::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0; left: 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--saffron), var(--emerald));
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.india-tool-row:hover .india-tool-meta::after {
+  opacity: 1;
+}
+
+.india-tool-emoji {
+  font-size: 2.4rem;
+  line-height: 1;
+  display: block;
+  transition: transform var(--transition-spring);
+}
+
+.india-tool-row:hover .india-tool-emoji {
+  transform: scale(1.2) rotate(6deg);
+}
+
+.india-tool-meta h3 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.2;
+}
+
+.india-tool-usage {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--slate-lt);
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.india-tool-desc {
+  padding: 32px 36px;
+}
+
+.india-tool-desc p {
+  font-size: 0.97rem;
+  line-height: 1.78;
+  color: var(--text-body);
+  margin-bottom: 14px;
+}
+
+.india-tool-desc p:last-of-type {
+  margin-bottom: 18px;
+}
+
+.india-tool-desc p strong {
+  color: var(--navy);
+  font-weight: 600;
+}
+
+.india-tool-bullets {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.india-tool-bullets li {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  padding-left: 20px;
+  position: relative;
+  line-height: 1.5;
+}
+
+.india-tool-bullets li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: var(--saffron);
+  font-size: 0.75rem;
+  top: 2px;
+}
+
+/* Secondary CTA */
+.india-secondary-cta-wrapper {
+  margin-top: 48px;
+  text-align: center;
+}
+
+.india-secondary-cta {
+  display: inline-block;
+  padding: 17px 40px;
+  background: transparent;
+  border: 2px solid var(--saffron);
+  border-radius: var(--radius-md);
+  color: var(--saffron);
+  font-family: 'Sora', sans-serif;
+  font-size: 1.02rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background var(--transition), color var(--transition), transform var(--transition), box-shadow var(--transition);
+  letter-spacing: 0.01em;
+}
+
+.india-secondary-cta:hover {
+  background: var(--saffron);
+  color: var(--white);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-saffron);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   WORKFLOWS
+══════════════════════════════════════════════════════════════ */
+.india-workflow-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
+  gap: 28px;
+}
+
+.india-workflow-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 36px 32px;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.india-workflow-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.india-workflow-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  margin-bottom: 16px;
+}
+
+.india-workflow-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, var(--saffron), #E85C10);
+  border-radius: 12px;
+  font-family: 'Sora', sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--white);
+  box-shadow: 0 4px 12px rgba(255,107,26,0.3);
+}
+
+.india-workflow-header h3 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.12rem;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.3;
+  padding-top: 8px;
+}
+
+.india-workflow-context {
+  font-size: 0.9rem;
+  color: var(--slate);
+  line-height: 1.6;
+  margin-bottom: 18px;
+  font-style: italic;
+}
+
+.india-workflow-steps {
+  list-style: none;
+  padding: 0;
+  counter-reset: step-counter;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.india-workflow-steps li {
+  counter-increment: step-counter;
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  gap: 12px;
+  font-size: 0.93rem;
+  line-height: 1.6;
+  color: var(--text-body);
+  align-items: baseline;
+}
+
+.india-workflow-steps li::before {
+  content: counter(step-counter);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: var(--emerald-pale);
+  color: var(--emerald-dk);
+  border-radius: 50%;
+  font-size: 0.72rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.india-workflow-steps li strong {
+  color: var(--saffron);
+  font-weight: 600;
+}
+
+.india-workflow-tip {
+  background: linear-gradient(135deg, var(--saffron-pale), #FFF8F2);
+  border-left: 3px solid var(--saffron);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  font-size: 0.87rem;
+  line-height: 1.6;
+  color: var(--text-body);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   WHO USES THIS
+══════════════════════════════════════════════════════════════ */
+.india-users-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 24px;
+}
+
+.india-user-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px 26px 26px;
+  box-shadow: var(--shadow-xs);
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+}
+
+.india-user-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(13,158,110,0.3);
+}
+
+.india-user-icon {
+  font-size: 2.6rem;
+  line-height: 1;
+  display: block;
+  margin-bottom: 18px;
+}
+
+.india-user-card h3 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+
+.india-user-card p {
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: var(--text-body);
+  margin-bottom: 18px;
+}
+
+.india-user-card p strong {
+  color: var(--navy);
+  font-weight: 600;
+}
+
+.india-user-detail {
+  display: inline-block;
+  padding: 7px 13px;
+  background: var(--emerald-pale);
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--emerald-dk);
+  letter-spacing: 0.01em;
+}
+
+/* Tertiary CTA */
+.india-tertiary-cta-wrapper {
+  margin-top: 52px;
+  text-align: center;
+}
+
+.india-tertiary-cta {
+  display: inline-block;
+  padding: 17px 38px;
+  background: linear-gradient(135deg, var(--emerald), var(--emerald-dk));
+  border-radius: var(--radius-md);
+  color: var(--white);
+  font-family: 'Sora', sans-serif;
+  font-size: 1.02rem;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: var(--shadow-emerald);
+  transition: transform var(--transition-spring), box-shadow var(--transition);
+  letter-spacing: 0.01em;
+}
+
+.india-tertiary-cta:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 16px 44px rgba(13,158,110,0.35);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MOBILE SECTION (dark)
+══════════════════════════════════════════════════════════════ */
+.india-mobile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 20px;
+}
+
+.india-mobile-card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  transition: background var(--transition), border-color var(--transition), transform var(--transition);
+}
+
+.india-mobile-card:hover {
+  background: rgba(255,255,255,0.10);
+  border-color: rgba(255,107,26,0.4);
+  transform: translateY(-4px);
+}
+
+.india-mobile-icon {
+  font-size: 2.2rem;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.india-mobile-card h3 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 10px;
+}
+
+.india-mobile-card p {
+  font-size: 0.92rem;
+  line-height: 1.72;
+  color: rgba(255,255,255,0.62);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PRIVACY SECTION
+══════════════════════════════════════════════════════════════ */
+.india-privacy-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.india-privacy-card {
+  border-radius: var(--radius-lg);
+  padding: 32px 28px;
+  border: 1px solid transparent;
+}
+
+.india-privacy-card--safe {
+  background: var(--emerald-pale);
+  border-color: rgba(13,158,110,0.2);
+}
+
+.india-privacy-card--caution {
+  background: #FFF8EC;
+  border-color: rgba(245,158,11,0.25);
+}
+
+.india-privacy-card h3 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.08rem;
+  font-weight: 700;
+  margin-bottom: 18px;
+  color: var(--navy);
+}
+
+.india-privacy-card ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.india-privacy-card ul li {
+  font-size: 0.93rem;
+  line-height: 1.55;
+  color: var(--text-body);
+  padding-left: 18px;
+  position: relative;
+}
+
+.india-privacy-card--safe ul li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--emerald);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.india-privacy-card--caution ul li::before {
+  content: '!';
+  position: absolute;
+  left: 0;
+  color: #D97706;
+  font-weight: 900;
+  font-size: 0.75rem;
+  top: 1px;
+}
+
+.india-privacy-explanation {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 36px 32px;
+}
+
+.india-privacy-explanation h3 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 16px;
+}
+
+.india-privacy-explanation p {
+  font-size: 0.97rem;
+  line-height: 1.8;
+  color: var(--text-body);
+  margin-bottom: 14px;
+}
+
+.india-privacy-explanation p:last-child {
+  margin-bottom: 0;
+}
+
+.india-privacy-explanation strong {
+  color: var(--navy);
+  font-weight: 600;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   COMPARISON TABLE
+══════════════════════════════════════════════════════════════ */
+.india-compare-table-wrapper {
+  overflow-x: auto;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border);
+  margin-bottom: 28px;
+}
+
+.india-compare-table-wrapper::-webkit-scrollbar {
+  height: 6px;
+}
+
+.india-compare-table-wrapper::-webkit-scrollbar-track {
+  background: var(--surface);
+}
+
+.india-compare-table-wrapper::-webkit-scrollbar-thumb {
+  background: var(--saffron);
+  border-radius: 3px;
+}
+
+.india-compare-table {
+  width: 100%;
+  min-width: 620px;
+  border-collapse: collapse;
+  background: var(--white);
+  font-size: 0.93rem;
+}
+
+.india-compare-table thead tr {
+  background: var(--navy);
+}
+
+.india-compare-table th {
+  padding: 18px 20px;
+  text-align: left;
+  font-family: 'Sora', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.92);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.india-compare-table th:first-child {
+  border-radius: var(--radius-xl) 0 0 0;
+}
+
+.india-compare-table th:last-child {
+  border-radius: 0 var(--radius-xl) 0 0;
+}
+
+.india-compare-table td {
+  padding: 16px 20px;
+  color: var(--text-body);
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+  line-height: 1.55;
+}
+
+.india-compare-table td:first-child {
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.india-table-alt td {
+  background: var(--surface);
+}
+
+.india-compare-table tbody tr:hover td {
+  background: var(--saffron-pale);
+}
+
+.india-table-best {
+  color: var(--emerald-dk) !important;
+  font-weight: 700 !important;
+}
+
+.india-compare-callout {
+  background: linear-gradient(135deg, var(--navy), var(--navy-mid));
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  color: rgba(255,255,255,0.85);
+  font-size: 0.97rem;
+  line-height: 1.7;
+}
+
+.india-compare-callout strong {
+  color: var(--saffron-lt);
+  font-weight: 700;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PAA – People Also Ask
+══════════════════════════════════════════════════════════════ */
+.india-paa-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  gap: 20px;
+}
+
+.india-paa-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--saffron);
+  border-radius: var(--radius-md);
+  padding: 24px 24px 24px 26px;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.india-paa-item:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-sm);
+}
+
+.india-paa-item h3 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.india-paa-item p {
+  font-size: 0.93rem;
+  line-height: 1.75;
+  color: var(--text-body);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   FAQ
+══════════════════════════════════════════════════════════════ */
+.india-faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.india-faq-item {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 28px 32px;
+  box-shadow: var(--shadow-xs);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.india-faq-item:hover {
+  border-color: rgba(255,107,26,0.3);
+  box-shadow: var(--shadow-sm);
+}
+
+.india-faq-item h3 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.india-faq-item p {
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: var(--text-body);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   FINAL CTA SECTION
+══════════════════════════════════════════════════════════════ */
+.india-final-cta-section {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, #0D3B2A 100%);
+  padding: 100px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.india-final-cta-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(ellipse at 20% 60%, rgba(255,107,26,0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 30%, rgba(13,158,110,0.13) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.india-final-cta-section::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+}
+
+.india-final-cta-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.india-final-icon {
+  font-size: 4.5rem;
+  display: block;
+  margin-bottom: 28px;
+  animation: finalIconPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes finalIconPulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.08); }
+}
+
+.india-final-cta-content h2 {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(1.9rem, 4vw, 3rem);
+  font-weight: 800;
+  color: var(--white);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+}
+
+.india-final-cta-content > p {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.68);
+  max-width: 680px;
+  margin: 0 auto 44px;
+}
+
+/* Final CTA Button */
+.india-final-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 24px;
+  background: linear-gradient(135deg, var(--saffron) 0%, #E05510 100%);
+  border-radius: var(--radius-xl);
+  padding: 24px 36px;
+  text-decoration: none;
+  color: var(--white);
+  box-shadow: 0 20px 60px rgba(255,107,26,0.45);
+  transition: transform var(--transition-spring), box-shadow var(--transition);
+  max-width: 580px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.india-final-cta-btn::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -40%;
+  width: 50%;
+  height: 200%;
+  background: linear-gradient(105deg, transparent, rgba(255,255,255,0.18), transparent);
+  transform: skewX(-20deg);
+  animation: shimmerPass 4s 2s ease-in-out infinite;
+}
+
+.india-final-cta-btn:hover {
+  transform: translateY(-5px) scale(1.015);
+  box-shadow: 0 28px 72px rgba(255,107,26,0.55);
+}
+
+.india-final-cta-left {
+  flex: 1;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.india-final-cta-left strong {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 800;
+  display: block;
+}
+
+.india-final-cta-left small {
+  font-size: 0.87rem;
+  opacity: 0.88;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+.india-final-arrow {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+  font-weight: 300;
+  transition: transform var(--transition-spring);
+}
+
+.india-final-cta-btn:hover .india-final-arrow {
+  transform: translateX(7px);
+}
+
+/* Final trust indicators */
+.india-final-trust {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin-top: 32px;
+}
+
+.india-final-trust span {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   KEYFRAME ANIMATIONS
+══════════════════════════════════════════════════════════════ */
+@keyframes fadeSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ACCESSIBILITY
+══════════════════════════════════════════════════════════════ */
+*:focus-visible {
+  outline: 2px solid var(--saffron);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-contrast: high) {
+  .india-reality-card,
+  .india-tool-row,
+  .india-workflow-card,
+  .india-user-card,
+  .india-paa-item,
+  .india-faq-item {
+    border: 2px solid var(--navy);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE – TABLET (≤900px)
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .india-why-section,
+  .india-tools-section,
+  .india-workflows-section,
+  .india-users-section,
+  .india-mobile-section,
+  .india-privacy-section,
+  .india-compare-section,
+  .india-paa-section,
+  .india-faq-section,
+  .india-final-cta-section {
+    padding: 64px 0;
+  }
+
+  .india-tool-row {
+    grid-template-columns: 1fr;
+  }
+
+  .india-tool-meta {
+    flex-direction: row;
+    align-items: center;
+    padding: 24px 24px 16px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    gap: 16px;
+  }
+
+  .india-tool-meta::after {
+    top: 0; left: 0; right: 0; bottom: auto;
+    width: auto;
+    height: 3px;
+  }
+
+  .india-tool-emoji {
+    font-size: 2rem;
+  }
+
+  .india-tool-meta > div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .india-tool-desc {
+    padding: 20px 24px 28px;
+  }
+
+  .india-privacy-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .india-workflow-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .india-paa-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .india-reality-grid {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+
+  .india-hero {
+    padding: 64px 0 72px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE – MOBILE (≤600px)
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 600px) {
+  .india-container {
+    padding: 0 16px;
+  }
+
+  .india-breadcrumb ol {
+    padding: 0 16px;
+    font-size: 0.8rem;
+  }
+
+  .india-badge {
+    font-size: 0.8rem;
+    padding: 8px 16px;
+    margin-bottom: 24px;
+  }
+
+  .india-hero {
+    padding: 52px 0 60px;
+  }
+
+  .india-main-cta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 22px 22px;
+  }
+
+  .india-cta-body {
+    width: 100%;
+  }
+
+  .india-cta-body strong {
+    font-size: 1.05rem;
+  }
+
+  .india-cta-arrow {
+    display: none;
+  }
+
+  .india-trust-row {
+    gap: 8px 14px;
+  }
+
+  .india-trust-row span {
+    font-size: 0.8rem;
+  }
+
+  .india-definition-box {
+    padding: 22px 20px;
+  }
+
+  .india-definition-box p {
+    font-size: 0.97rem;
+  }
+
+  .india-section-intro {
+    font-size: 0.97rem;
+    margin-bottom: 40px;
+  }
+
+  .india-reality-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .india-reality-card {
+    padding: 26px 22px 22px;
+  }
+
+  .india-tools-list {
+    border-radius: var(--radius-lg);
+  }
+
+  .india-tool-meta {
+    padding: 20px 18px 14px;
+  }
+
+  .india-tool-desc {
+    padding: 16px 18px 22px;
+  }
+
+  .india-workflow-card {
+    padding: 26px 20px;
+  }
+
+  .india-workflow-header {
+    gap: 14px;
+  }
+
+  .india-workflow-number {
+    width: 38px;
+    height: 38px;
+    font-size: 0.88rem;
+    border-radius: 10px;
+  }
+
+  .india-users-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .india-user-card {
+    padding: 26px 22px 22px;
+  }
+
+  .india-mobile-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .india-mobile-card {
+    padding: 22px 20px;
+  }
+
+  .india-privacy-explanation {
+    padding: 26px 20px;
+  }
+
+  .india-compare-table th,
+  .india-compare-table td {
+    padding: 13px 14px;
+    font-size: 0.85rem;
+  }
+
+  .india-faq-item {
+    padding: 22px 20px;
+  }
+
+  .india-final-cta-section {
+    padding: 72px 0;
+  }
+
+  .india-final-icon {
+    font-size: 3.2rem;
+    margin-bottom: 20px;
+  }
+
+  .india-final-cta-btn {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 22px 22px;
+  }
+
+  .india-final-cta-left strong {
+    font-size: 1.1rem;
+  }
+
+  .india-final-arrow {
+    display: none;
+  }
+
+  .india-final-trust {
+    gap: 10px 16px;
+  }
+
+  .india-final-trust span {
+    font-size: 0.82rem;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PRINT
+══════════════════════════════════════════════════════════════ */
+@media print {
+  .india-hero,
+  .india-main-cta-wrapper,
+  .india-secondary-cta-wrapper,
+  .india-tertiary-cta-wrapper,
+  .india-final-cta-section {
+    display: none;
+  }
+
+  .india-pdf-page {
+    color: #000;
+    background: #fff;
+  }
+
+  .india-reality-card,
+  .india-workflow-card,
+  .india-user-card,
+  .india-faq-item {
+    page-break-inside: avoid;
+    border: 1px solid #ccc;
+  }
+}

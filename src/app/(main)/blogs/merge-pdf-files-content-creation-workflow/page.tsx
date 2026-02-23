@@ -93,7 +93,7 @@ export default function MergePDFWorkflowGuide() {
           </p>
 
           <p>
-            This exhaustive 2026 guide explores the full PDF merge lifecycle in content creation: strategic importance, technical mechanics, massive benefits, pro-level best practices, industry-specific applications, tool comparisons, optimization for digital products, and a detailed step-by-step using <strong>Scenith's free PDF merger</strong> at <a href="https://scenith.in/pdf-tools/merge-pdf?utm_source=blog&utm_medium=intro&utm_campaign=pdf_workflow" target="_blank" rel="noopener noreferrer">https://scenith.in/pdf-tools/merge-pdf</a> — unlimited merges, intuitive page-level reordering, secure cloud processing, no account required, no watermarks ever.
+            This exhaustive 2026 guide explores the full PDF merge lifecycle in content creation: strategic importance, technical mechanics, massive benefits, pro-level best practices, industry-specific applications, tool comparisons, optimization for digital products, and a detailed step-by-step using <strong>Scenith's free PDF merger</strong> at <a href="https://scenith.in/tools/pdf-tools/merge-pdf?utm_source=blog&utm_medium=intro&utm_campaign=pdf_workflow" target="_blank" rel="noopener noreferrer">https://scenith.in/tools/pdf-tools/merge-pdf</a> — unlimited merges, intuitive page-level reordering, secure cloud processing, no account required, no watermarks ever.
           </p>
 
           <div className={styles.warningBox}>
@@ -349,7 +349,7 @@ export default function MergePDFWorkflowGuide() {
             <ol className={styles.stepList}>
               <li><strong>Collect & Organize:</strong> Gather all PDFs; rename sequentially (01-cover, 02-intro…); place in one folder.</li>
               <li><strong>Quick Audit:</strong> Open each → verify content, orientation, no corruption.</li>
-              <li><strong>Launch Scenith:</strong> Visit <a href="https://scenith.in/pdf-tools/merge-pdf?utm_source=blog&utm_medium=step-launch&utm_campaign=pdf_workflow" target="_blank" rel="noopener noreferrer">Scenith Merge PDF</a>.</li>
+              <li><strong>Launch Scenith:</strong> Visit <a href="https://scenith.in/tools/pdf-tools/merge-pdf?utm_source=blog&utm_medium=step-launch&utm_campaign=pdf_workflow" target="_blank" rel="noopener noreferrer">Scenith Merge PDF</a>.</li>
               <li><strong>Upload Batch:</strong> Drag-drop or select multiple files (up to 50+ supported).</li>
               <li><strong>Fine-Tune Order:</strong> Drag files/pages; rotate/delete if needed; preview layout.</li>
               <li><strong>Execute Merge:</strong> Click Merge — server processes in seconds.</li>
@@ -442,7 +442,7 @@ export default function MergePDFWorkflowGuide() {
           <div className={styles.finalCta}>
             <h3>Your Next Launch-Ready PDF is Waiting</h3>
             <p>
-              Jump straight to professional, unlimited PDF merging at <a href="https://scenith.in/pdf-tools/merge-pdf?utm_source=blog&utm_medium=conclusion&utm_campaign=pdf_workflow" target="_blank" rel="noopener noreferrer" style={{color: 'white', textDecoration: 'underline', fontWeight: 'bold'}}>Scenith Merge PDF Tool</a>.
+              Jump straight to professional, unlimited PDF merging at <a href="https://scenith.in/tools/pdf-tools/merge-pdf?utm_source=blog&utm_medium=conclusion&utm_campaign=pdf_workflow" target="_blank" rel="noopener noreferrer" style={{color: 'white', textDecoration: 'underline', fontWeight: 'bold'}}>Scenith Merge PDF Tool</a>.
             </p>
             <p>
               Drag → drop → reorder pages → merge instantly → download perfect, secure, watermark-free file. Built for creators who ship fast and look pro — no subscriptions, no limits, no excuses.

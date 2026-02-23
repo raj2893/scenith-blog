@@ -50,6 +50,8 @@ const ElementsLibraryClient: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage, setItemsPerPage] = useState<number>(20);  
   const [navigatingToElement, setNavigatingToElement] = useState<number | null>(null);
+  const [showUpgradeModal, setShowUpgradeModal] = useState<boolean>(false);
+  const [upgradeModalMessage, setUpgradeModalMessage] = useState<string>('');
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -636,6 +638,7 @@ const ElementsLibraryClient: React.FC = () => {
                           }}
                           title="Download SVG"
                           aria-label="Download icon"
+                          data-element-id={element.id}
                         >
                           <FaDownload />
                         </button>
@@ -1254,7 +1257,66 @@ const ElementsLibraryClient: React.FC = () => {
           }}
           elementId={selectedElementForDownload.id}
           elementName={selectedElementForDownload.name}
+          onLimitReached={(message?: string) => {
+            setDownloadModalOpen(false);
+            setSelectedElementForDownload(null);
+            setUpgradeModalMessage(message || "You've reached your daily or monthly download limit.");
+            setShowUpgradeModal(true);
+          }}
         />
+      )}
+
+      {showUpgradeModal && (
+        <div className="upgrade-modal-overlay" onClick={() => setShowUpgradeModal(false)}>
+          <div className="upgrade-modal-card" onClick={(e) => e.stopPropagation()}>
+            <button
+              className="upgrade-modal-close"
+              onClick={() => setShowUpgradeModal(false)}
+              aria-label="Close"
+            >
+              ✕
+            </button>
+
+            <span className="upgrade-modal-icon">🚀</span>
+
+            <h2 className="upgrade-modal-title">Download Limit Reached</h2>
+            <p className="upgrade-modal-subtitle">
+              You've used all your free downloads.<br />
+              <strong>Upgrade your plan</strong> to keep downloading without limits.
+            </p>
+
+            <div className="upgrade-modal-perks">
+              <div className="upgrade-perk-row">
+                <span>⚡</span>
+                <span>Creator — Unlimited downloads + SVG format</span>
+              </div>
+              <div className="upgrade-perk-row">
+                <span>🎨</span>
+                <span>Studio — Max resolution + all formats</span>
+              </div>
+              <div className="upgrade-perk-row">
+                <span>📐</span>
+                <span>Higher resolution exports up to 2048px</span>
+              </div>
+              <div className="upgrade-perk-row">
+                <span>🔒</span>
+                <span>Full commercial use — no restrictions</span>
+              </div>
+            </div>
+
+            <div className="upgrade-modal-actions">
+              <a href="/pricing" className="upgrade-modal-btn-primary">
+                🔓 View Plans & Upgrade →
+              </a>
+              <button
+                className="upgrade-modal-btn-secondary"
+                onClick={() => setShowUpgradeModal(false)}
+              >
+                Maybe later
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

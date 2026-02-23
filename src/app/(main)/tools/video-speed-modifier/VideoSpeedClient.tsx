@@ -139,6 +139,152 @@ const CustomVideoPlayer = ({ src, userId, speed }: { src: string; userId: number
   );
 };
 
+function UpgradePopup({ onClose }: { onClose: () => void }) {
+  return (
+    <div
+      style={{
+        position: 'fixed', inset: 0, zIndex: 9999,
+        background: 'rgba(8, 6, 24, 0.82)',
+        backdropFilter: 'blur(8px)',
+        WebkitBackdropFilter: 'blur(8px)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: '16px',
+        animation: 'vsPopFadeOverlay 0.3s ease forwards',
+      }}
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Upgrade to unlock more video speed exports"
+    >
+      <div
+        style={{
+          background: 'linear-gradient(145deg, #0f0c29 0%, #1e1a45 60%, #0d0b22 100%)',
+          borderRadius: '24px',
+          padding: '36px 32px 28px',
+          maxWidth: '440px',
+          width: '100%',
+          position: 'relative',
+          border: '1px solid rgba(102, 126, 234, 0.28)',
+          boxShadow: '0 0 0 1px rgba(118,75,162,0.12), 0 32px 80px rgba(0,0,0,0.65), 0 0 60px rgba(102,126,234,0.10)',
+          animation: 'vsPopSlideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards',
+        }}
+      >
+        {/* Ambient glow */}
+        <div style={{
+          position: 'absolute', top: '-40px', right: '-40px',
+          width: '160px', height: '160px',
+          background: 'radial-gradient(circle, rgba(118,75,162,0.2) 0%, transparent 70%)',
+          pointerEvents: 'none', borderRadius: '50%',
+        }} />
+
+        {/* Close */}
+        <button
+          onClick={onClose}
+          aria-label="Close"
+          style={{
+            position: 'absolute', top: '14px', right: '14px',
+            background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
+            borderRadius: '50%', width: '30px', height: '30px',
+            color: 'rgba(255,255,255,0.5)', fontSize: '16px', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            transition: 'all 0.2s', lineHeight: 1,
+          }}
+          onMouseOver={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.14)'; (e.currentTarget as HTMLButtonElement).style.color = 'white'; }}
+          onMouseOut={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.06)'; (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.5)'; }}
+        >×</button>
+
+        {/* Urgency pill */}
+        <div style={{
+          display: 'inline-flex', alignItems: 'center', gap: '6px',
+          background: 'rgba(255,107,107,0.12)', border: '1px solid rgba(255,107,107,0.3)',
+          borderRadius: '100px', padding: '4px 12px', marginBottom: '16px',
+        }}>
+          <span style={{
+            width: '5px', height: '5px', borderRadius: '50%', background: '#ff6b6b',
+            display: 'inline-block', boxShadow: '0 0 5px #ff6b6b',
+            animation: 'vsPopPulse 1.8s infinite',
+          }} />
+          <span style={{ fontSize: '0.68rem', fontWeight: 800, color: '#ff8a8a', letterSpacing: '1.5px', textTransform: 'uppercase' }}>
+            ⚡ Limited Offer — 25% OFF
+          </span>
+        </div>
+
+        {/* Headline */}
+        <h2 style={{
+          fontSize: 'clamp(1.2rem, 4vw, 1.6rem)', fontWeight: 900, color: 'white',
+          margin: '0 0 8px', lineHeight: 1.2, letterSpacing: '-0.02em',
+        }}>
+          Unlock Unlimited{' '}
+          <span style={{
+            background: 'linear-gradient(90deg, #667eea, #a78bfa, #f093fb)',
+            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+          }}>
+            Video Exports
+          </span>
+        </h2>
+
+        {/* Sub-copy */}
+        <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem', margin: '0 0 5px', lineHeight: 1.6 }}>
+          Free plan limits your speed videos to{' '}
+          <span style={{ color: '#ff8a8a', fontWeight: 700 }}>5/month</span>.
+          Upgrade and never stop creating.
+        </p>
+
+        <p style={{
+          color: 'rgba(255,255,255,0.75)', fontSize: '0.82rem', margin: '0 0 22px',
+          fontWeight: 600, letterSpacing: '0.01em',
+        }}>
+          More videos. Higher quality. Zero wait.
+        </p>
+
+        {/* Value pills */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '22px' }}>
+          {[
+            { icon: '⚡', text: '45 Speed Videos/mo' },
+            { icon: '🎬', text: 'Up to 2K Quality' },
+            { icon: '📏', text: 'Longer Video Length' },
+            { icon: '🚀', text: 'Priority Processing' },
+          ].map((item) => (
+            <div key={item.text} style={{
+              display: 'flex', alignItems: 'center', gap: '7px',
+              background: 'rgba(102,126,234,0.08)', border: '1px solid rgba(102,126,234,0.15)',
+              borderRadius: '10px', padding: '8px 10px',
+            }}>
+              <span style={{ fontSize: '0.85rem' }}>{item.icon}</span>
+              <span style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.72)', fontWeight: 600 }}>{item.text}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* CTA */}
+        
+        <a  href="/pricing"
+          onClick={onClose}
+          style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+            width: '100%', padding: '13px 24px',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            color: 'white', borderRadius: '12px',
+            fontSize: '0.95rem', fontWeight: 800, textDecoration: 'none',
+            boxShadow: '0 4px 24px rgba(102,126,234,0.4)',
+            transition: 'transform 0.2s, box-shadow 0.2s',
+            letterSpacing: '-0.01em',
+          }}
+          onMouseOver={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.transform = 'scale(1.03)'; el.style.boxShadow = '0 8px 32px rgba(102,126,234,0.55)'; }}
+          onMouseOut={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.transform = 'scale(1)'; el.style.boxShadow = '0 4px 24px rgba(102,126,234,0.4)'; }}
+        >
+          🚀 Claim 25% OFF — View Plans
+        </a>
+        <style>{`
+          @keyframes vsPopFadeOverlay { from { opacity:0; } to { opacity:1; } }
+          @keyframes vsPopSlideUp { from { opacity:0; transform:translateY(40px) scale(0.96); } to { opacity:1; transform:translateY(0) scale(1); } }
+          @keyframes vsPopPulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.45; transform:scale(1.35); } }
+        `}</style>
+      </div>
+    </div>
+  );
+}
+
 const VideoSpeedClient: React.FC = () => {
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
@@ -167,12 +313,24 @@ const VideoSpeedClient: React.FC = () => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<{id: number; name: string; type: string} | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [useCustomSpeed, setUseCustomSpeed] = useState<boolean>(false);
+  const [activePreset, setActivePreset] = useState<number | null>(1.0);
+  const [showUpgradeModal, setShowUpgradeModal] = useState<boolean>(false);
+  const [upgradeModalMessage, setUpgradeModalMessage] = useState<string>('');
+  const [showUpgradePopup, setShowUpgradePopup] = useState<boolean>(false);
   const [planLimits, setPlanLimits] = useState<{
     videosPerMonth: number;
     videosUsed: number;
     maxVideoLength: number;
     maxQuality: string;
   } | null>(null);  
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowUpgradePopup(true);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, []);
+
 
   useEffect(() => {
     const fetchPlanLimits = async () => {
@@ -394,6 +552,21 @@ const VideoSpeedClient: React.FC = () => {
     }
   };
 
+  const handlePresetSelect = async (presetValue: number) => {
+    setActivePreset(presetValue);
+    setUseCustomSpeed(false);
+    setSpeed(presetValue); // Always update local speed immediately
+    if (selectedUpload && isLoggedIn) {
+      await handleSpeedChange(presetValue);
+    }
+    // If no video selected, speed is stored and will apply on next upload/select
+  };
+
+  const handleCustomSpeedToggle = () => {
+    setUseCustomSpeed(true);
+    setActivePreset(null);
+  };
+
   useEffect(() => {
     const initializeGoogleSignIn = () => {
       if (window.google && window.google.accounts) {
@@ -459,6 +632,16 @@ const VideoSpeedClient: React.FC = () => {
   const SUPPORTED_VIDEO_EXTENSIONS = ['.mp4', '.mov', '.avi', '.mkv', '.webm', '.mpeg', '.mpg', '.flv'];
 
   const MAX_FILE_SIZE = 500 * 1024 * 1024; // 500MB
+  const SPEED_PRESETS = [
+  { emoji: '🐌', label: 'Dramatic Slow', value: 0.5 },
+  { emoji: '🎥', label: 'Cinematic', value: 0.75 },
+  { emoji: '🙂', label: 'Natural', value: 1.0 },
+  { emoji: '⚡', label: 'Social Fast', value: 1.25 },
+  { emoji: '🔥', label: 'Reels Speed', value: 1.5 },
+  { emoji: '🎓', label: 'Learning Mode', value: 2.0 },
+  { emoji: '🚀', label: 'Timelapse', value: 4.0 },
+  { emoji: '💨', label: 'Extreme Timelapse', value: 8.0 },
+];
 
   // Add this validation function
   const validateVideoFile = (file: File): { valid: boolean; error?: string } => {
@@ -568,35 +751,26 @@ const VideoSpeedClient: React.FC = () => {
         null,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-          params: { quality: selectedQuality } 
+          params: { quality: selectedQuality }
         }
       );
       setSelectedUpload(response.data);
 
-      // Poll job status
       const pollJobStatus = async () => {
         const interval = setInterval(async () => {
           try {
             const statusResponse = await axios.get(
               `${API_BASE_URL}/api/video-speed/status/${selectedUpload.id}`,
-              {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-              }
+              { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
             );
             setSelectedUpload(statusResponse.data);
             if (statusResponse.data.status === 'COMPLETED') {
               clearInterval(interval);
               setIsProcessing(false);
-              setTimeout(() => {
-                const outputSection = document.querySelector('.video-output-section');
-                if (outputSection) {
-                  outputSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-              }, 100);
             } else if (statusResponse.data.status === 'FAILED') {
               clearInterval(interval);
               setIsProcessing(false);
-              setError('Video processing failed.');
+              setError('Video processing failed. Please try again.');
             }
           } catch (error) {
             clearInterval(interval);
@@ -607,20 +781,22 @@ const VideoSpeedClient: React.FC = () => {
       };
       pollJobStatus();
     } catch (err: any) {
-      const errorMessage = err.response?.data?.error || 'Failed to process video.';
-      setError(errorMessage);
-      
-      setTimeout(() => {
-        const errorElement = document.querySelector('.error-message');
-        if (errorElement) {
-          errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-      }, 100);
-      
       setIsProcessing(false);
+      const errorMsg: string = err.response?.data?.error || '';
+      const isLimitError =
+        errorMsg.toLowerCase().includes('monthly') ||
+        errorMsg.toLowerCase().includes('limit reached') ||
+        errorMsg.toLowerCase().includes('upgrade') ||
+        err.response?.status === 400;
+
+      if (isLimitError && errorMsg) {
+        setUpgradeModalMessage(errorMsg);
+        setShowUpgradeModal(true);
+      } else {
+        setError(errorMsg || 'Failed to process video.');
+      }
     }
   };
-
   // Handle download
   const handleDownload = async () => {
     if (selectedUpload?.cdnUrl && userProfile.id) {
@@ -739,12 +915,71 @@ const VideoSpeedClient: React.FC = () => {
           <div className="hero-cta-section">
             <div className="main-content">
               <div className="video-input-section">
-                {isUploading && (
-                  <div className="upload-loading-overlay">
-                    <div className="upload-spinner"></div>
-                    <p>Uploading your video...</p>
+                {(isUploading || isProcessing) && (
+                  <div className={isProcessing ? 'processing-overlay' : 'upload-loading-overlay'}>
+                    {isUploading ? (
+                      <>
+                        <div className="upload-spinner"></div>
+                        <p>Uploading your video...</p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="processing-headline">
+                          🎥 Rendering your cinematic magic 🎬
+                          <span>Your video is being speed-adjusted with precision</span>
+                        </p>
+
+                        <div className="processing-progress-wrap">
+                          <div className="processing-bar-track">
+                            <div
+                              className="processing-bar-fill"
+                              style={{ width: `${selectedUpload?.progress ?? 20}%` }}
+                            />
+                          </div>
+                          <div className="processing-bar-labels">
+                            <span className="processing-percent">
+                              {Math.round(selectedUpload?.progress ?? 20)}%
+                            </span>
+                            <span className="processing-status-text">
+                              {(selectedUpload?.progress ?? 0) < 30
+                                ? 'Downloading source video…'
+                                : (selectedUpload?.progress ?? 0) < 50
+                                ? 'Analyzing frames…'
+                                : (selectedUpload?.progress ?? 0) < 80
+                                ? 'Applying speed adjustment…'
+                                : (selectedUpload?.progress ?? 0) < 90
+                                ? 'Encoding output…'
+                                : 'Finalizing & uploading…'}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="processing-steps">
+                          {[
+                            { label: 'Download', threshold: 30 },
+                            { label: 'Analyze', threshold: 50 },
+                            { label: 'Process', threshold: 80 },
+                            { label: 'Encode',  threshold: 90 },
+                            { label: 'Upload',  threshold: 100 },
+                          ].map((step) => {
+                            const prog = selectedUpload?.progress ?? 0;
+                            const isDone   = prog >= step.threshold;
+                            const isActive = !isDone && prog >= step.threshold - 30;
+                            return (
+                              <div
+                                key={step.label}
+                                className={`processing-step ${isDone ? 'done' : isActive ? 'active' : ''}`}
+                              >
+                                <span className="processing-step-dot" />
+                                {isDone ? '✓ ' : ''}{step.label}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </>
+                    )}
                   </div>
-                )}    
+                )}   
 
                 <div className="upload-section-container" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                   <label className="custom-file-upload">
@@ -804,20 +1039,102 @@ const VideoSpeedClient: React.FC = () => {
                   )}
                   <div className="filter-controls">
                     <h3>Adjust Speed</h3>
-                    <div className="filter-slider">
-                      <label>Speed (0.5x - 15x)</label>
-                      <input
-                        type="range"
-                        min={0.5}
-                        max={15}
-                        step={0.1}
-                        value={speed}
-                        onChange={(e) => handleSpeedChange(Number(e.target.value))}
-                        disabled={!isLoggedIn || !selectedUpload}
-                        aria-label="Adjust video speed"
-                      />
-                      <span>{speed.toFixed(1)}x</span>
+
+                    {/* Presets Grid — always interactive */}
+                    <div className="speed-presets-grid">
+                      {SPEED_PRESETS.map((preset) => (
+                        <button
+                          key={preset.value}
+                          className={`speed-preset-btn ${activePreset === preset.value && !useCustomSpeed ? 'active' : ''}`}
+                          onClick={() => handlePresetSelect(preset.value)}
+                          disabled={isProcessing}
+                          title={`${preset.label} — ${preset.value}x speed`}
+                          aria-pressed={activePreset === preset.value && !useCustomSpeed}
+                        >
+                          <span className="preset-emoji">{preset.emoji}</span>
+                          <span className="preset-label">{preset.label}</span>
+                          <span className="preset-value">{preset.value}x</span>
+                        </button>
+                      ))}
+
+                      {/* Custom Speed Button */}
+                      <button
+                        className={`speed-preset-btn custom-speed-btn ${useCustomSpeed ? 'active' : ''}`}
+                        onClick={handleCustomSpeedToggle}
+                        disabled={isProcessing}
+                        title="Set a custom speed between 0.5x and 15x"
+                        aria-pressed={useCustomSpeed}
+                      >
+                        <span className="preset-emoji">🎛️</span>
+                        <span className="preset-label">Custom</span>
+                        <span className="preset-value">{useCustomSpeed ? `${speed.toFixed(1)}x` : 'Any'}</span>
+                      </button>
                     </div>
+
+                    {/* Hint when no video is loaded yet */}
+                    {!selectedUpload && (
+                      <p className="presets-hint">
+                        ✨ Pick a preset now — it applies when you upload a video
+                      </p>
+                    )}
+
+                    {/* Current Speed Display */}
+                    <div className="current-speed-display">
+                      <span className="speed-label-text">Selected Speed:</span>
+                      <span className="speed-badge">{speed.toFixed(2)}x</span>
+                      {activePreset !== null && !useCustomSpeed && (
+                        <span className="preset-name-badge">
+                          {SPEED_PRESETS.find(p => p.value === activePreset)?.emoji}{' '}
+                          {SPEED_PRESETS.find(p => p.value === activePreset)?.label}
+                        </span>
+                      )}
+                      {useCustomSpeed && (
+                        <span className="preset-name-badge" style={{ borderColor: '#f9a8d4', background: '#fdf2f8', color: '#9d174d' }}>
+                          🎛️ Custom
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Custom Speed Controls — shown only when Custom is active */}
+                    {useCustomSpeed && (
+                      <div className="custom-speed-slider">
+                        <div className="filter-slider">
+                          <label>Custom Speed (0.5x – 15x)</label>
+                          <input
+                            type="range"
+                            min={0.5}
+                            max={15}
+                            step={0.1}
+                            value={speed}
+                            onChange={(e) => {
+                              const val = Number(e.target.value);
+                              setSpeed(val);
+                              if (selectedUpload && isLoggedIn) handleSpeedChange(val);
+                            }}
+                            disabled={isProcessing}
+                            aria-label="Adjust video speed"
+                          />
+                          <div className="slider-value-row">
+                            <span>0.5x</span>
+                            <input
+                              type="number"
+                              min={0.5}
+                              max={15}
+                              step={0.1}
+                              value={speed}
+                              onChange={(e) => {
+                                const val = Math.min(15, Math.max(0.5, Number(e.target.value) || 0.5));
+                                setSpeed(val);
+                                if (selectedUpload && isLoggedIn) handleSpeedChange(val);
+                              }}
+                              className="speed-number-input"
+                              aria-label="Speed value input"
+                            />
+                            <span>15x</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
                 {planLimits && (
@@ -1618,16 +1935,74 @@ const VideoSpeedClient: React.FC = () => {
           </div>
         </motion.div>
       </section>
-<DeleteConfirmModal
-  isOpen={deleteModalOpen}
-  onClose={() => {
-    setDeleteModalOpen(false);
-    setItemToDelete(null);
-  }}
-  onConfirm={handleDeleteConfirm}
-  itemName={itemToDelete?.name || ''}
-  isDeleting={isDeleting}
-/>
+      {showUpgradeModal && (
+        <div className="upgrade-modal-overlay" onClick={() => setShowUpgradeModal(false)}>
+          <div className="upgrade-modal-card" onClick={(e) => e.stopPropagation()}>
+            <button
+              className="upgrade-modal-close"
+              onClick={() => setShowUpgradeModal(false)}
+              aria-label="Close"
+            >
+              ✕
+            </button>
+
+            <span className="upgrade-modal-icon">🚀</span>
+
+            <h2 className="upgrade-modal-title">Monthly Limit Reached</h2>
+            <p className="upgrade-modal-subtitle">
+              You've used all your video exports this month.<br />
+              <strong>Upgrade your plan</strong> to keep creating without interruption.
+            </p>
+
+            <div className="upgrade-modal-perks">
+              <div className="upgrade-perk-row">
+                <span>⚡</span>
+                <span>Creator — 45 videos/month + up to 2K quality</span>
+              </div>
+              <div className="upgrade-perk-row">
+                <span>🎬</span>
+                <span>Studio — Unlimited videos + 4K quality</span>
+              </div>
+              <div className="upgrade-perk-row">
+                <span>📏</span>
+                <span>Longer video length limits on higher plans</span>
+              </div>
+              <div className="upgrade-perk-row">
+                <span>🔒</span>
+                <span>Priority processing — skip the queue</span>
+              </div>
+            </div>
+
+            <div className="upgrade-modal-actions">
+              <a href="/pricing" className="upgrade-modal-btn-primary">
+                🔓 View Plans & Upgrade →
+              </a>
+              <button
+                className="upgrade-modal-btn-secondary"
+                onClick={() => setShowUpgradeModal(false)}
+              >
+                Maybe later — I'll wait until next month
+              </button>
+            </div>
+
+            <p className="upgrade-modal-reset-note">
+              🗓️ Your free quota resets on the 1st of every month
+            </p>
+          </div>
+        </div>
+      )}
+      <DeleteConfirmModal
+        isOpen={deleteModalOpen}
+        onClose={() => {
+          setDeleteModalOpen(false);
+          setItemToDelete(null);
+        }}
+        onConfirm={handleDeleteConfirm}
+        itemName={itemToDelete?.name || ''}
+        isDeleting={isDeleting}
+      />
+       {showUpgradePopup && <UpgradePopup onClose={() => setShowUpgradePopup(false)} />}
+
       {showLoginModal && (
         <div className="modal-overlay">
           <motion.div

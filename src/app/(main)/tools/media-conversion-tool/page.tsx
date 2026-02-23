@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: '/tools/convert-media',
+    canonical: 'https://scenith.in/tools/media-conversion-tool',
   },
 };
 
