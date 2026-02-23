@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 
 const CTA_URL =
-  "https://scenith.in/pdf-tools/mergepdfs?utm_source=rearrange_pdf_page&utm_medium=cta_button&utm_campaign=pdf_tools_cross_linking";
+  "https://scenith.in/tools/pdf-tools/merge-pdf?utm_source=rearrange_pdf_page&utm_medium=cta_button&utm_campaign=pdf_tools_cross_linking";
 
 export default function RearrangePdfClient() {
   return (
@@ -19,11 +19,11 @@ export default function RearrangePdfClient() {
               {
                 "@type": "WebApplication",
                 "@id":
-                  "https://scenith.in/pdf-tools/rearrange-pdf-pages#webapp",
+                  "https://scenith.in/tools/pdf-tools/rearrange-pdf-pages#webapp",
                 name: "Scenith Rearrange PDF Pages",
                 description:
                   "Free online tool to rearrange, reorder, and reorganize PDF pages using drag and drop. No watermarks, instant download.",
-                url: "https://scenith.in/pdf-tools/rearrange-pdf-pages",
+                url: "https://scenith.in/tools/pdf-tools/rearrange-pdf-pages",
                 applicationCategory: "UtilitiesApplication",
                 operatingSystem: "Web Browser",
                 offers: {
@@ -49,7 +49,7 @@ export default function RearrangePdfClient() {
               {
                 "@type": "BreadcrumbList",
                 "@id":
-                  "https://scenith.in/pdf-tools/rearrange-pdf-pages#breadcrumb",
+                  "https://scenith.in/tools/pdf-tools/rearrange-pdf-pages#breadcrumb",
                 itemListElement: [
                   {
                     "@type": "ListItem",
@@ -67,14 +67,14 @@ export default function RearrangePdfClient() {
                     "@type": "ListItem",
                     position: 3,
                     name: "Rearrange PDF Pages",
-                    item: "https://scenith.in/pdf-tools/rearrange-pdf-pages",
+                    item: "https://scenith.in/tools/pdf-tools/rearrange-pdf-pages",
                   },
                 ],
               },
               {
                 "@type": "FAQPage",
                 "@id":
-                  "https://scenith.in/pdf-tools/rearrange-pdf-pages#faq",
+                  "https://scenith.in/tools/pdf-tools/rearrange-pdf-pages#faq",
                 mainEntity: [
                   {
                     "@type": "Question",
@@ -113,7 +113,7 @@ export default function RearrangePdfClient() {
               {
                 "@type": "HowTo",
                 "@id":
-                  "https://scenith.in/pdf-tools/rearrange-pdf-pages#howto",
+                  "https://scenith.in/tools/pdf-tools/rearrange-pdf-pages#howto",
                 name: "How to Rearrange PDF Pages Online",
                 description:
                   "Step-by-step guide to reordering pages in a PDF using Scenith's free online tool.",
@@ -638,7 +638,7 @@ export default function RearrangePdfClient() {
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "20px" }}>
             {[
-              { icon: "🔀", title: "Merge PDF Files", desc: "Combine multiple PDFs into one document with full control over file order.", href: "https://scenith.in/pdf-tools/mergepdfs" },
+              { icon: "🔀", title: "Merge PDF Files", desc: "Combine multiple PDFs into one document with full control over file order.", href: "https://scenith.in/tools/pdf-tools/merge-pdf" },
               { icon: "✂️", title: "Split PDF", desc: "Divide a large PDF into smaller files by page range, size, or bookmarks.", href: "/pdf-tools/split-pdf" },
               { icon: "🗜️", title: "Compress PDF", desc: "Reduce PDF file size without visible quality loss for easy sharing.", href: "/pdf-tools/compress-pdf" },
               { icon: "🔄", title: "Rotate PDF Pages", desc: "Fix sideways or upside-down pages in any PDF with a single click.", href: "/pdf-tools/rotate-pdf" },
