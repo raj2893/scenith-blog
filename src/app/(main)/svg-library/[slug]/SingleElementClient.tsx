@@ -26,11 +26,12 @@ interface ImageElement {
 
 interface SingleElementClientProps {
   elementSlug: string;
+  initialElement?: ImageElement | null;
 }
 
-const SingleElementClient: React.FC<SingleElementClientProps> = ({ elementSlug }) => {
+const SingleElementClient: React.FC<SingleElementClientProps> = ({ elementSlug, initialElement }) => {
+  const [element, setElement] = useState<ImageElement | null>(initialElement || null);
   const router = useRouter();
-  const [element, setElement] = useState<ImageElement | null>(null);
   const [relatedElements, setRelatedElements] = useState<ImageElement[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -168,18 +169,13 @@ const SingleElementClient: React.FC<SingleElementClientProps> = ({ elementSlug }
       try {
         const response = await axios.get(`${API_BASE_URL}/api/image-editor/elements`);
         const allElements = response.data;
-
-        const currentElement = allElements.find((el: ImageElement) => 
+        const currentElement = initialElement || allElements.find((el: ImageElement) => 
           createSlug(el.name) === elementSlug
         );
-
         if (currentElement) {
           setElement(currentElement);
           const related = allElements
-            .filter(
-              (el: ImageElement) =>
-                el.category === currentElement.category && el.id !== currentElement.id
-            )
+            .filter((el: ImageElement) => el.category === currentElement.category && el.id !== currentElement.id)
             .slice(0, 8);
           setRelatedElements(related);
         }
@@ -189,7 +185,6 @@ const SingleElementClient: React.FC<SingleElementClientProps> = ({ elementSlug }
         setIsLoading(false);
       }
     };
-
     fetchElementData();
   }, [elementSlug]);
 
@@ -319,24 +314,74 @@ const SingleElementClient: React.FC<SingleElementClientProps> = ({ elementSlug }
 
   return (
     <div className="single-element-page">
+      {/* Breadcrumb */}
+      {element && (
+        <nav aria-label="Breadcrumb" style={{padding: '1rem 2rem', background: '#f8f9fa', marginTop: '100px'}}>
+          <ol itemScope itemType="https://schema.org/BreadcrumbList" 
+              style={{display: 'flex', gap: '0.5rem', listStyle: 'none', padding: 0, margin: 0, flexWrap: 'wrap'}}>
+            <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+              <a href="/" itemProp="item" style={{color: '#1a73e8', textDecoration: 'none'}}>
+                <span itemProp="name">Home</span>
+              </a>
+              <meta itemProp="position" content="1" />
+              <span style={{margin: '0 0.5rem', color: '#666'}}>›</span>
+            </li>
+            <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+              <a href="/svg-library" itemProp="item" style={{color: '#1a73e8', textDecoration: 'none'}}>
+                <span itemProp="name">SVG Icons Library</span>
+              </a>
+              <meta itemProp="position" content="2" />
+              <span style={{margin: '0 0.5rem', color: '#666'}}>›</span>
+            </li>
+            <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+              <span itemProp="name">{element.name}</span>
+              <meta itemProp="position" content="3" />
+            </li>
+          </ol>
+        </nav>
+      )}      
       {/* SEO Content */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "ImageObject",
-            name: element.name,
-            contentUrl: element.cdnUrl,
-            encodingFormat: element.fileFormat,
-            width: element.width,
-            height: element.height,
-            description: `Free ${element.name} icon in ${element.category} category. Edit and customize this SVG icon in our free online image editor.`,
-            author: {
-              "@type": "Organization",
-              name: "Scenith",
-            },
-            license: "https://scenith.com/license",
+            "@graph": [
+              {
+                "@type": "ImageObject",
+                "@id": `https://scenith.in/svg-library/${elementSlug}#image`,
+                name: `${element.name} SVG Icon`,
+                contentUrl: element.cdnUrl,
+                encodingFormat: "image/svg+xml",
+                width: element.width || 800,
+                height: element.height || 800,
+                description: `Free ${element.name} SVG icon from the ${element.category} collection. Download for personal and commercial use. No attribution required.`,
+                license: "https://scenith.in/license",
+                acquireLicensePage: `https://scenith.in/svg-library/${elementSlug}`,
+                creditText: "Scenith",
+                creator: {
+                  "@type": "Organization",
+                  name: "Scenith",
+                  url: "https://scenith.in"
+                }
+              },
+              {
+                "@type": "BreadcrumbList",
+                itemListElement: [
+                  { "@type": "ListItem", position: 1, name: "Home", item: "https://scenith.in" },
+                  { "@type": "ListItem", position: 2, name: "SVG Icons Library", item: "https://scenith.in/svg-library" },
+                  { "@type": "ListItem", position: 3, name: element.name, item: `https://scenith.in/svg-library/${elementSlug}` }
+                ]
+              },
+              {
+                "@type": "SoftwareApplication",
+                name: "Scenith SVG Icon Editor",
+                applicationCategory: "DesignApplication",
+                operatingSystem: "Web Browser",
+                offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+                url: "https://scenith.in/svg-library"
+              }
+            ]
           }),
         }}
       />
@@ -558,63 +603,91 @@ const SingleElementClient: React.FC<SingleElementClientProps> = ({ elementSlug }
             <h2>About {element.name} Icon</h2>
 
             <div className="content-block">
-              <h3>Free {element.name} SVG Icon</h3>
+              <h3>Free {element.name} SVG Icon — Download Instantly</h3>
               <p>
-                Download and customize this professional {element.name} icon from our free SVG library. This 
-                high-quality vector graphic is perfect for web design, app development, presentations, and 
-                marketing materials. Use our online image editor to change colors, resize, and add effects 
-                without any design software.
+                The <strong>{element.name}</strong> icon is part of our <strong>{element.category}</strong> collection — 
+                one of {relatedElements.length + 1}+ icons in this category alone. This vector graphic is built for 
+                modern design workflows: pixel-perfect at any scale, CSS-styleable, and ready to drop into HTML, 
+                React, Vue, Figma, or any design tool without conversion. Use the color picker above to preview 
+                your brand color before downloading — no editor needed for simple color changes.
               </p>
             </div>
 
             <div className="content-block">
-              <h3>Customize This Icon</h3>
+              <h3>When to Use the {element.name} Icon</h3>
               <p>
-                Click "Edit in Image Editor" to open this icon in our free online editor. Change the color 
-                to match your brand, resize it to any dimension, add text labels, combine it with other icons, 
-                or apply filters and effects. All customization is done in your browser - no downloads or 
-                software installation required.
+                The <strong>{element.name}</strong> icon communicates clearly across contexts — website navigation, 
+                mobile app UI, dashboard interfaces, email templates, and print materials. Because it's delivered as 
+                SVG, it stays sharp on retina displays, 4K monitors, and tiny mobile screens without any extra work 
+                on your end. Use it at 16px for tight UI or scale it to 512px+ for hero sections — the same file 
+                handles both.
               </p>
+              {element.tags && (
+                <p style={{marginTop: '12px'}}>
+                  Common use cases for this icon include: <em>{element.tags.split(',').map((t: string) => t.trim()).join(', ')}</em>.
+                </p>
+              )}
             </div>
-
+            
             <div className="content-block">
-              <h3>Where to Use {element.name} Icon</h3>
+              <h3>Implementing This Icon in Your Project</h3>
               <p>
-                This {element.category} icon is versatile and can be used in websites, mobile applications, 
-                desktop software, presentations, infographics, marketing materials, social media posts, 
-                email newsletters, printed materials, and product packaging. The SVG format ensures it looks 
-                crisp at any size, from small mobile icons to large billboard graphics.
+                For web projects, paste the SVG code inline in your HTML for full CSS control (color, hover, animation). 
+                Use it as an <code>&lt;img&gt;</code> tag if you need a quick static embed, or as a CSS 
+                <code>background-image</code> for decorative use. In React, import the downloaded SVG as a component 
+                using SVGR. In Figma or Sketch, drag and drop the SVG file directly — it imports as editable vectors, 
+                not a flat image.
               </p>
             </div>
-
+            
             <div className="content-block">
-              <h3>Vector Format Benefits</h3>
+              <h3>Advanced Customization</h3>
               <p>
-                As an SVG (Scalable Vector Graphic), this icon maintains perfect quality at any size. Unlike 
-                raster images (PNG, JPG) that become pixelated when enlarged, vector graphics scale infinitely 
-                without quality loss. This makes them ideal for responsive web design where icons need to look 
-                good on both tiny smartphone screens and large desktop displays.
+                Click <strong>"Edit in Image Editor"</strong> to go beyond simple color changes. In the editor you can 
+                combine this {element.name} icon with text for a logo lockup, layer it with other {element.category} icons 
+                for an infographic, apply drop shadows or gradients, and export at custom resolutions up to 2048px. 
+                All processing happens in-browser — your files never leave your device until you choose to download.
               </p>
             </div>
-
+            
             <div className="content-block">
-              <h3>Free Commercial Use License</h3>
+              <h3>License: Free for Personal & Commercial Use</h3>
               <p>
-                All icons in our library, including this {element.name} icon, are free for both personal and 
-                commercial use. You can use them in client projects, products you sell, websites, applications, 
-                and marketing materials without attribution or licensing fees. We believe in making professional 
-                design resources accessible to everyone.
+                This {element.name} icon carries a <strong>no-attribution commercial license</strong>. Use it in 
+                client work, SaaS products, mobile apps, print campaigns, merchandise, or any commercial project 
+                without crediting Scenith. The only restriction: you cannot resell or redistribute this icon as a 
+                standalone asset in a competing icon library. Using it as part of a larger design, template, or 
+                product is fully permitted.
               </p>
             </div>
-
+            
             <div className="content-block">
-              <h3>Browse More {element.category} Icons</h3>
+              <h3>More {element.category} Icons</h3>
               <p>
-                Looking for more {element.category} icons? Visit our {element.category} category page to 
-                discover hundreds of related icons. All icons are fully customizable in our free online editor. 
-                Mix and match icons to create unique designs for your projects.
+                This icon is part of the <strong>{element.category}</strong> collection on Scenith. Browse the full 
+                set to find complementary icons for your project — all in the same visual style, all free. 
+                Consistent icon sets are critical for professional UI; mixing styles creates visual noise that 
+                undermines trust with users. Stick to one category family for cohesive results.
+              </p>
+              <p style={{marginTop: '12px'}}>
+                <a href={`/svg-library?category=${element.category}`} className="inline-link">
+                  Browse all {element.category} icons →
+                </a>
               </p>
             </div>
+            
+            {element.width && element.height && (
+              <div className="content-block">
+                <h3>Technical Specifications</h3>
+                <p>
+                  Native dimensions: <strong>{element.width} × {element.height}px</strong>. 
+                  File format: <strong>{element.fileFormat}</strong>. 
+                  As a vector file, these are reference dimensions only — you can export at any resolution 
+                  without quality loss. For web use, 24px–48px covers most UI needs. For print at 300 DPI, 
+                  export at 1200px or larger.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </section>
