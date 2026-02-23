@@ -52,7 +52,7 @@ export default function PricingPageClient() {
   const [isIndianUser, setIsIndianUser] = useState<boolean | null>(null);
   const [isPricingReady, setIsPricingReady] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-    const [activeSection, setActiveSection] = useState<'individual' | 'bundle'>('individual');
+  const [activeSection, setActiveSection] = useState<'individual' | 'bundle'>('bundle');
   const [isPaymentInProgress, setIsPaymentInProgress] = useState(false);
 
   useEffect(() => {
@@ -884,18 +884,18 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
                 {/* Section Tabs */}
                 <div className="section-tabs" style={{ marginTop: '30px' }}>
                   <button
+                    className={`section-tab ${activeSection === 'bundle' ? 'active' : ''}`}
+                    onClick={() => setActiveSection('bundle')}
+                  >
+                    <span className="tab-icon">📦</span>
+                    Bundled Plans
+                  </button>
+                  <button
                     className={`section-tab ${activeSection === 'individual' ? 'active' : ''}`}
                     onClick={() => setActiveSection('individual')}
                   >
                     <span className="tab-icon">💎</span>
                     Individual Plans
-                  </button>
-                  <button
-                    className={`section-tab ${activeSection === 'bundle' ? 'active' : ''}`}
-                    onClick={() => setActiveSection('bundle')}
-                  >
-                    <span className="tab-icon">📦</span>
-                    Bundle Plans
                   </button>
                 </div>
               </section>
