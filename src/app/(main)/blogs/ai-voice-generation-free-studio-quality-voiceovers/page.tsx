@@ -234,7 +234,7 @@ export default function AIVoiceGenerationFree() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Start creating professional voiceovers for free:</strong> Join 50,000+ creators using Scenith's AI voice tool.</p>
+              <p><strong>Start creating professional voiceovers for free:</strong> Join 1500+ creators using Scenith's AI voice tool.</p>
               <Link href="https://scenith.in/tools/ai-voice-generation" className={styles.ctaButton}>
                 Generate AI Voice Free →
               </Link>
@@ -444,7 +444,7 @@ export default function AIVoiceGenerationFree() {
             <Link href="https://scenith.in/tools/ai-voice-generation" className={styles.ctaButton}>
               Start Generating Free AI Voices →
             </Link>
-            <p>Join 50,000+ creators who've already made the switch. Your first voiceover is 60 seconds away.</p>
+            <p>Join 1500+ creators who've already made the switch. Your first voiceover is 60 seconds away.</p>
           </div>
         </section>
       </article>

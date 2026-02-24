@@ -1231,7 +1231,7 @@ const DashboardPageClient: React.FC = () => {
               lineHeight: '1.8',
               color: '#64748B'
             }}>
-              Join <strong style={{ color: '#1E293B' }}>10,000+ creators</strong> using Scenith to produce professional videos for YouTube,
+              Join <strong style={{ color: '#1E293B' }}>1500+ creators</strong> using Scenith to produce professional videos for YouTube,
               TikTok, Instagram, and beyond. Start with <strong style={{ color: '#1E293B' }}>15 free projects</strong> – no credit card required.
             </p>
 

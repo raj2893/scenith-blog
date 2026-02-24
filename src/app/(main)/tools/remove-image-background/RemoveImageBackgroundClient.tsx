@@ -213,7 +213,7 @@ const RemoveImageBackgroundClient: React.FC = () => {
               <span className="rib-cta-badge"> No Watermark</span>
             </motion.a>
             <p className="rib-cta-sub">
-              Trusted by 50,000+ creators, designers &amp; e-commerce sellers worldwide
+              Trusted by 1500+ creators, designers &amp; e-commerce sellers worldwide
             </p>
           </div>
 
@@ -867,7 +867,7 @@ const RemoveImageBackgroundClient: React.FC = () => {
             Ready to Remove Your Image Background? It's Free—Always.
           </h2>
           <p>
-            Join 50,000+ creators, e-commerce sellers, designers, and marketers who trust Scenith to cut out their image backgrounds in seconds. No subscription. No watermark. Full commercial rights on every PNG you download.
+            Join 1500+ creators, e-commerce sellers, designers, and marketers who trust Scenith to cut out their image backgrounds in seconds. No subscription. No watermark. Full commercial rights on every PNG you download.
           </p>
 
           <motion.a

@@ -3,7 +3,7 @@ import LandingPageClient from "../components/LandingPageClient";
 
 export const metadata: Metadata = {
   title: "Scenith - Free AI Voice Generator & Content Creation Platform | 9 Professional Tools",
-  description: "Create professional content with Scenith's all-in-one platform. AI Voice Generator (40+ voices), Image Editor, Subtitles, PDF Tools, 10K+ SVG Icons. Free forever, no watermarks. Join 10,000+ creators saving $600+ yearly vs Adobe/Canva.",
+  description: "Create professional content with Scenith's all-in-one platform. AI Voice Generator (40+ voices), Image Editor, Subtitles, PDF Tools, 10K+ SVG Icons. Free forever, no watermarks. Join 1500+ creators saving $600+ yearly vs Adobe/Canva.",
   keywords: [
     // Primary keywords
     "AI content creation platform",

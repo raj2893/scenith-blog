@@ -926,7 +926,7 @@ const AspectRatioClient: React.FC = () => {
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <h2 id="testimonials-title">Trusted by Over 50,000+ Creators Worldwide</h2>
+          <h2 id="testimonials-title">Trusted by Over 1500+ creators Worldwide</h2>
           <p className="section-description">
             Join thousands of satisfied users who rely on our aspect ratio tool for their video projects.
           </p>
@@ -989,7 +989,7 @@ const AspectRatioClient: React.FC = () => {
           viewport={{ once: true }}
         >
           <h2 id="cta-title">Ready to Adjust Your Videos?</h2>
-          <p>Join over 50,000+ creators who trust our AI aspect ratio tool. Start optimizing your videos today - completely free!</p>
+          <p>Join over 1500+ creators who trust our AI aspect ratio tool. Start optimizing your videos today - completely free!</p>
           <button
             className="cta-button"
             onClick={() => {

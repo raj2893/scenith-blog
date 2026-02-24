@@ -741,7 +741,7 @@ const AIVoiceGuide = () => {
               <div className="text-white/80">Generation Time</div>
             </div>
             <div>
-              <div className="text-3xl font-bold mb-2">25K+</div>
+              <div className="text-3xl font-bold mb-2">1.5K+</div>
               <div className="text-white/80">Happy Creators</div>
             </div>
           </div>

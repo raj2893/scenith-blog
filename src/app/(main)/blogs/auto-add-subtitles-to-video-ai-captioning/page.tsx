@@ -252,7 +252,7 @@ export default function AutoAddSubtitles() {
             </div>
 
             <div className={styles.cta}>
-              <p><strong>Add subtitles to your first video free:</strong> Join 100,000+ creators who've automated their captioning.</p>
+              <p><strong>Add subtitles to your first video free:</strong> Join 1500+ creators who've automated their captioning.</p>
               <Link href="https://scenith.in/tools/add-subtitles-to-videos" className={styles.ctaButton}>
                 Auto-Generate Subtitles Free →
               </Link>

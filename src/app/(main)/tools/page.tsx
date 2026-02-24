@@ -4,7 +4,7 @@ import ToolsIndex from './ToolsClient';
 export const metadata: Metadata = {
   title: 'Scenith Tools | AI-Powered Video & Media Tools - Free Online Suite',
   description:
-    'Discover 6+ powerful AI tools for video editing, voice generation, subtitle creation, background removal, and more. Free online tools trusted by 50,000+ creators. .',
+    'Discover 6+ powerful AI tools for video editing, voice generation, subtitle creation, background removal, and more. Free online tools trusted by 1500+ creators. .',
   keywords: [
     'scenith login',
     'video editor login',

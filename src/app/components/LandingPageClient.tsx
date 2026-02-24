@@ -567,7 +567,7 @@ useEffect(() => {
         <title>Scenith - Free AI Voice Generator & Content Creation Tools | Premium SVG Icons</title>
         <meta
           name="description"
-          content="Create professional content FREE with Scenith's AI-powered tools. #1 AI Voice Generator with 40+ voices, Image Editor, Auto Subtitles, Background Remover, SVG Library & more. No watermark. Join 10,000+ creators!"
+          content="Create professional content FREE with Scenith's AI-powered tools. #1 AI Voice Generator with 40+ voices, Image Editor, Auto Subtitles, Background Remover, SVG Library & more. No watermark. Join 1500+ creators!"
         />
         <meta
           name="keywords"
@@ -850,7 +850,7 @@ useEffect(() => {
           >
             <div className="hero-badge">
               <FaStar className="star-icon" />
-              <span>Trusted by 10,000+ Creators</span>
+              <span>Trusted by 1500+ creators</span>
             </div>
             
             <h1>
@@ -1216,7 +1216,7 @@ useEffect(() => {
             <span className="section-label">Direct Comparison</span>
             <h2>Scenith vs Leading Content Creation Platforms</h2>
             <p className="section-subtitle">
-              See why 10,000+ creators switched to Scenith's all-in-one platform
+              See why 1500+ creators switched to Scenith's all-in-one platform
             </p>
           </div>
 

@@ -496,7 +496,7 @@ export default function FreeImageEditorLaunch() {
 
           <div className={styles.finalCta}>
             <h3>Ready to Create Your First Design?</h3>
-            <p>Join 100,000+ creators already using Scenith’s tools.</p>
+            <p>Join 1500+ creators already using Scenith’s tools.</p>
             <Link href="https://scenith.in/tools/image-editing" className={styles.ctaButton}>
               Open Free Image Editor Now
             </Link>

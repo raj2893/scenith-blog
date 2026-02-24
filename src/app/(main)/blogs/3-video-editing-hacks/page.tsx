@@ -332,7 +332,7 @@ export default function ThreeVideoEditingHacks() {
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Editing Free →
             </Link>
-            <p>Join 50,000+ creators who make viral videos in seconds!</p>
+            <p>Join 1500+ creators who make viral videos in seconds!</p>
           </div>
         </section>
       </article>

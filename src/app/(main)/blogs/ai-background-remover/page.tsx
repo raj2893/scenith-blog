@@ -335,7 +335,7 @@ export default function HowToRemoveBackgroundFromImage() {
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Removing Free →
             </Link>
-            <p>Join 30,000+ creators who create stunning visuals in seconds!</p>
+            <p>Join 1500+ creators who create stunning visuals in seconds!</p>
           </div>
         </section>
       </article>

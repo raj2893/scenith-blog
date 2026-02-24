@@ -341,7 +341,7 @@ export default function HowToReach4000HoursWatchTime() {
             Reaching 4000 hours of YouTube watch time is easier with AI-powered subtitles. Scenith’s 30-second subtitle tool boosts retention by up to 2x, helping you hit monetization goals faster.
           </p>
           <p>
-            While thumbnails, titles, and playlists help, subtitles are the most effective way to keep viewers watching. Start with Scenith today and join 50,000+ creators growing their channels.
+            While thumbnails, titles, and playlists help, subtitles are the most effective way to keep viewers watching. Start with Scenith today and join 1500+ creators growing their channels.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Hit 4000 Hours Faster?</h3>

@@ -440,7 +440,7 @@ export default function CompressVideoQuality() {
             <Link href="https://scenith.in/tools/compress-media" className={styles.ctaButton}>
               Compress Your First Video Free →
             </Link>
-            <p>Join 200,000+ creators saving storage and time. Your smaller, faster videos are 2 minutes away.</p>
+            <p>Join 1500+ creators saving storage and time. Your smaller, faster videos are 2 minutes away.</p>
           </div>
         </section>
       </article>

@@ -16,7 +16,7 @@ export async function GET() {
     <loc>https://scenith.in/svg-library/${createSlug(element.name)}</loc>
     <lastmod>${new Date(element.createdAt).toISOString().split('T')[0]}</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.9</priority>
   </url>`).join('');
 
     const xml = `<?xml version="1.0" encoding="UTF-8"?>

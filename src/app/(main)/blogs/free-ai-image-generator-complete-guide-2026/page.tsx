@@ -959,7 +959,7 @@ export default function AIImageGeneratorGuide() {
               </a>. 8 artistic styles, 30 images monthly (free tier), high-resolution downloads, full commercial rights, no watermarks, instant generation—free forever. No credit card, no trials, no limitations on creativity.
             </p>
             <p>
-              Create your first professional AI image in 3 minutes. Join 50,000+ creators who discovered that stunning visuals don't require expensive designers or stock subscriptions—just imagination and modern AI.
+              Create your first professional AI image in 3 minutes. Join 1500+ creators who discovered that stunning visuals don't require expensive designers or stock subscriptions—just imagination and modern AI.
             </p>
             <p style={{marginTop: '2rem', fontSize: '0.9rem', opacity: '0.9'}}>
               The images are free. The only cost is not starting today.

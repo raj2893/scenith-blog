@@ -1247,7 +1247,7 @@ const handleDeleteConfirm = async () => {
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <h2 id="testimonials-title">Trusted by Over 30,000+ Creators Worldwide</h2>
+          <h2 id="testimonials-title">Trusted by Over 1500+ creators Worldwide</h2>
           <p className="section-description">
             Join thousands of users who rely on our media compressor for their content creation needs.
           </p>
@@ -1355,7 +1355,7 @@ const handleDeleteConfirm = async () => {
           viewport={{ once: true }}
         >
           <h2 id="cta-title">Ready to Optimize Your Media?</h2>
-          <p>Join over 30,000+ creators who trust our media compressor. Start optimizing your images and videos today—completely free!</p>
+          <p>Join over 1500+ creators who trust our media compressor. Start optimizing your images and videos today—completely free!</p>
           <button
             className="cta-button"
             onClick={() => {

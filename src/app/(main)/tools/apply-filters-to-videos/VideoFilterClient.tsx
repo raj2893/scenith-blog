@@ -1086,7 +1086,7 @@ const VideoFilterClient: React.FC = () => {
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <h2 id="testimonials-title">Trusted by Over 30,000+ Creators Worldwide</h2>
+          <h2 id="testimonials-title">Trusted by Over 1500+ creators Worldwide</h2>
           <p className="section-description">
             Join thousands of satisfied users who rely on our video filter tool for their creative projects.
           </p>
@@ -1149,7 +1149,7 @@ const VideoFilterClient: React.FC = () => {
           viewport={{ once: true }}
         >
           <h2 id="cta-title">Ready to Transform Your Videos?</h2>
-          <p>Join over 30,000+ creators who trust our video filter tool. Start enhancing your videos with professional filters today - completely free!</p>
+          <p>Join over 1500+ creators who trust our video filter tool. Start enhancing your videos with professional filters today - completely free!</p>
           <button
             className="cta-button"
             onClick={() => {

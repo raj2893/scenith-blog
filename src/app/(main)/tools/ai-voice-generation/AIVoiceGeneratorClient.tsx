@@ -2664,7 +2664,7 @@ return (
               <div className="stat-label">Supported Languages</div>
             </div>
             <div className="stat-box">
-              <div className="stat-number">25K+</div>
+              <div className="stat-number">1.5K+</div>
               <div className="stat-label">Active Creators</div>
             </div>
             <div className="stat-box">

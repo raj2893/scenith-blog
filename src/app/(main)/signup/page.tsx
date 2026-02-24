@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'Sign Up for Scenith - Free AI Content Creation Platform',
-    description: 'Join 10,000+ creators using AI Voice Generator, Image Editor, Auto Subtitles & more. Zero watermarks. Free forever plan available.',
+    description: 'Join 1500+ creators using AI Voice Generator, Image Editor, Auto Subtitles & more. Zero watermarks. Free forever plan available.',
     url: 'https://scenith.in/signup',
     type: 'website',
     siteName: 'Scenith',

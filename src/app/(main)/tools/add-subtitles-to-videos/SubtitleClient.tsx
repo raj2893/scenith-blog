@@ -1647,7 +1647,7 @@ const handleDeleteConfirm = async () => {
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <h2 id="testimonials-title">Trusted by Over 50,000+ Creators Worldwide</h2>
+          <h2 id="testimonials-title">Trusted by Over 1500+ creators Worldwide</h2>
           <p className="section-description">
             Join thousands of satisfied users who rely on our AI subtitle tool for their video projects.
           </p>
@@ -2283,7 +2283,7 @@ const handleDeleteConfirm = async () => {
           viewport={{ once: true }}
         >
           <h2 id="cta-title">Ready to Add Subtitles to Your Videos?</h2>
-          <p>Join over 50,000+ creators who trust our AI subtitle tool. Start adding professional subtitles today - completely free!</p>
+          <p>Join over 1500+ creators who trust our AI subtitle tool. Start adding professional subtitles today - completely free!</p>
           <button
             className="cta-button"
             onClick={() => {

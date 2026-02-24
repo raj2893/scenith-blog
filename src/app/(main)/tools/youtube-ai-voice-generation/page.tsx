@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'YouTube Text to Speech – Free AI Voice Generator for Creators',
-    description: 'Generate natural YouTube voiceovers instantly. Trusted by 25K+ creators for videos, Shorts & faceless channels. Download MP3 free!',
+    description: 'Generate natural YouTube voiceovers instantly. Trusted by 1.5K+ creators for videos, Shorts & faceless channels. Download MP3 free!',
     images: ['/images/twitter-youtube-tts.jpg'],
     creator: '@scenith_1902',
   },
@@ -240,7 +240,7 @@ const YouTubeTextToSpeechPage = () => {
           <div className="trust-indicators-youtube">
             <span className="trust-item">✅ YouTube Monetization Approved</span>
             <span className="trust-item">▶️ Perfect for Faceless Channels</span>
-            <span className="trust-item">🎬 Used by 25K+ Creators</span>
+            <span className="trust-item">🎬 Used by 1.5K+ Creators</span>
             <span className="trust-item">📥 Instant MP3 Download</span>
           </div>
 

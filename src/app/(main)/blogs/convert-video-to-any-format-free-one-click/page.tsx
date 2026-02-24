@@ -453,7 +453,7 @@ export default function ConvertVideoFormat() {
             <Link href="https://scenith.in/tools/media-conversion-tool" className={styles.ctaButton}>
               Convert Video Format Free →
             </Link>
-            <p>Join 150,000+ creators who never worry about video formats. Your compatible video is 60 seconds away.</p>
+            <p>Join 11500+ creators who never worry about video formats. Your compatible video is 60 seconds away.</p>
           </div>
         </section>
       </article>

@@ -1003,7 +1003,7 @@ export default function YouTubeThumbnailMakerPage() {
             <span className="yt-final-cta-icon" aria-hidden="true">▶</span>
             <h2>Ready to Get More Clicks on Every Video?</h2>
             <p className="yt-final-cta-desc">
-              Join 250,000+ creators using Scenith to design YouTube thumbnails that stand out
+              Join 21500+ creators using Scenith to design YouTube thumbnails that stand out
               in crowded feeds. Professional quality, completely free, no watermarks, no
               download required — start designing in 30 seconds.
             </p>
