@@ -84,7 +84,7 @@ const homepageStructuredData = {
       "featureList": [
         "AI Voice Generation (40+ voices, 20+ languages)",
         "Professional Image Editor",
-        "AI Subtitle Generator",
+        "AI Image Generator (text-to-image)",
         "Background Remover",
         "Video Speed Modifier",
         "Media Compression & Conversion",
@@ -162,7 +162,7 @@ const homepageStructuredData = {
           "name": "What is Scenith and what tools does it offer?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Scenith is a free AI-powered content creation platform offering 9 professional tools: (1) AI Voice Generator with 40+ natural voices in 20+ languages, (2) Professional Image Editor for social media graphics, (3) AI Subtitle Generator for video captions, (4) Background Remover using AI precision, (5) Video Speed Modifier, (6) Media Compression, (7) Media Format Conversion, (8) PDF Tools Suite (merge, split, compress, convert), and (9) 10,000+ Premium SVG Icons Library. All tools are browser-based with no downloads required and include a free forever plan with zero watermarks."
+            "text": "Scenith is a free AI-powered content creation platform offering 9 professional tools: (1) AI Voice Generator with 40+ natural voices in 20+ languages, (2) Professional Image Editor for social media graphics, (3) AI Image Generator for amazing visuals, (4) Background Remover using AI precision, (5) Video Speed Modifier, (6) Media Compression, (7) Media Format Conversion, (8) PDF Tools Suite (merge, split, compress, convert), and (9) 10,000+ Premium SVG Icons Library. All tools are browser-based with no downloads required and include a free forever plan with zero watermarks."
           }
         },
         {
@@ -203,14 +203,6 @@ const homepageStructuredData = {
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "Scenith supports all professional formats: AI Voices export as MP3 (web/podcast quality) or WAV (studio quality). Images export as JPG, PNG, WebP, or SVG. Subtitles export as SRT, VTT, or hardcoded video. PDFs export as PDF (obviously), images from PDFs as JPG/PNG. Media conversion supports 20+ formats including MP4, AVI, MOV, MP3, WAV, FLAC. SVG icons download as SVG (vector), PNG (raster), or JPG. All exports maintain professional quality suitable for YouTube, Instagram, TikTok, websites, presentations, and print."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How accurate is Scenith's AI subtitle generator?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Scenith's AI transcription achieves 92-96% accuracy for clear audio in supported languages (English, Spanish, French, German, Hindi, Mandarin, Portuguese, Japanese, Italian, Russian, Korean, Dutch). Accuracy improves with: (1) Good audio quality (no background noise), (2) Clear speech at normal pace, (3) Standard accents, (4) Proper microphone use. You can easily edit any transcript before adding to video. Customize font styles, colors, positions, animations, and timing. Generates subtitles 10x faster than manual typing (5 minutes vs 50 minutes for a 10-minute video)."
           }
         },
         {
@@ -268,16 +260,9 @@ const homepageStructuredData = {
         },
         {
           "@type": "HowToStep",
-          "name": "Add Subtitles to Video",
-          "text": "Upload your video to AI Subtitle Generator. Auto-transcribe audio to text in 90+ languages. Customize style, position, and animations. Export with hardcoded captions or SRT file.",
-          "position": 4,
-          "url": "https://scenith.in/tools/add-subtitles-to-videos"
-        },
-        {
-          "@type": "HowToStep",
           "name": "Optimize and Export",
           "text": "Compress media files to reduce upload times. Convert formats for platform compatibility. Create PDF documentation if needed. All tools maintain professional quality while optimizing file sizes.",
-          "position": 5
+          "position": 4
         }
       ]
     }
@@ -465,6 +450,16 @@ const toolsShowcase: ToolShowcase[] = [
     rank: 1
   },
   {
+    id: 'ai-image',
+    title: 'AI Image Generator',
+    icon: FaPlay,
+    description: 'Generate stunning images from text descriptions using advanced AI instantly.',
+    link: '/tools/ai-image-generation',
+    color: '#9B59B6',
+    badge: 'New',
+    rank: 2
+  },  
+  {
     id: 'image-editing',
     title: 'Image Editor',
     icon: FaPaintBrush,
@@ -472,8 +467,18 @@ const toolsShowcase: ToolShowcase[] = [
     link: '/tools/image-editing',
     color: '#5e59ae',
     badge: 'Hot',
-    rank: 2
+    rank: 3
   },
+  {
+    id: 'svg-library',
+    title: 'SVG Library',
+    icon: FaShapes,
+    description: 'Download premium SVG icons and graphics.',
+    link: '/svg-library',
+    color: '#E17055',
+    badge: 'New',
+    rank: 4
+  },  
   {
     id: 'pdf-tools',
     title: 'PDF Tools Suite',
@@ -482,16 +487,6 @@ const toolsShowcase: ToolShowcase[] = [
     link: '/tools/pdf-tools',
     color: '#E74C3C',
     badge: null,
-    rank: 3 
-  },  
-  {
-    id: 'ai-subtitle',
-    title: 'AI Subtitle Generator',
-    icon: FaClosedCaptioning,
-    description: 'Auto-generate accurate subtitles with AI transcription technology.',
-    link: '/tools/add-subtitles-to-videos',
-    color: '#0b8a82',
-    badge: 'Trending',
     rank: 5
   },
   {
@@ -533,16 +528,6 @@ const toolsShowcase: ToolShowcase[] = [
     color: '#45B7D1',
     badge: null,
     rank: 9
-  },
-  {
-    id: 'svg-library',
-    title: 'SVG Library',
-    icon: FaShapes,
-    description: 'Download premium SVG icons and graphics.',
-    link: '/svg-library',
-    color: '#E17055',
-    badge: 'New',
-    rank: 4
   }
 ];
 
@@ -709,7 +694,7 @@ useEffect(() => {
               "featureList": [
                 "AI Voice Generation (40+ voices)",
                 "Image Editor",
-                "AI Subtitle Generator",
+                "AI Image Generator (text-to-image)",
                 "Background Remover",
                 "Video Speed Modifier",
                 "Media Compression",
@@ -827,12 +812,12 @@ useEffect(() => {
 
         {/* Featured Snippet Optimization */}
         <section className="quick-definition-section" style={{ maxWidth: '1000px', margin: '60px auto', padding: '0 20px' }}>
-          <div className="featured-snippet-box" style={{ background: 'rgba(255, 255, 255, 0.95)', padding: '40px', borderRadius: '24px', border: '2px solid rgba(102, 126, 234, 0.2)', boxShadow: '0 8px 32px rgba(0,0,0,0.08)' }}>
+          <div className="featured-snippet-box" style={{ background: 'rgba(255, 255, 255, 0.95)', padding: '40px', borderRadius: '24px', border: '2px solid rgba(102, 126, 234, 0.2)', boxShadow: '0 8px 32px rgba(0,0,0,0.08)', textAlign: 'center' }}>
             <h2 style={{ fontSize: '2rem', color: '#1a202c', marginBottom: '20px', fontWeight: 700 }}>
               What is Scenith? The Complete AI Content Creation Platform
             </h2>
-            <p style={{ fontSize: '1.1rem', lineHeight: '1.8', color: '#4a5568', marginBottom: '20px' }}>
-              <strong>Scenith is a free, all-in-one AI-powered content creation platform</strong> that combines 9 professional tools in one browser-based interface. Unlike competitors requiring multiple subscriptions, Scenith provides everything content creators need: AI Voice Generation (40+ realistic voices in 20+ languages), Professional Image Editor, AI Subtitle Generator, Background Remover, Video Speed Modifier, Media Compression & Conversion, PDF Tools Suite (merge, split, compress), and 10,000+ Premium SVG Icons—all accessible without downloads.
+            <p style={{ fontSize: '1.1rem', lineHeight: '1.8', color: '#4a5568', marginBottom: '20px', textAlign: 'center' }}>
+              <strong>Scenith is a free, all-in-one AI-powered content creation platform</strong> that combines 9 professional tools in one browser-based interface. Unlike competitors requiring multiple subscriptions, Scenith provides everything content creators need: AI Voice Generation (40+ realistic voices in 20+ languages), Professional Image Editor, AI Image Generator, Background Remover, Video Speed Modifier, Media Compression & Conversion, PDF Tools Suite (merge, split, compress), and 10,000+ Premium SVG Icons—all accessible without downloads.
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px', marginTop: '30px' }}>
               <div style={{ padding: '15px', background: 'rgba(102, 126, 234, 0.1)', borderRadius: '12px', borderLeft: '4px solid #667eea' }}>
@@ -884,11 +869,11 @@ useEffect(() => {
               </div>
               <div className="hero-feature-item">
                 <FaCheckCircle className="check-icon" />
-                <span>20+ Languages</span>
+                <span>AI Image Generation</span>
               </div>
               <div className="hero-feature-item">
                 <FaCheckCircle className="check-icon" />
-                <span>SVG Icons</span>
+                <span>SVG Icons Library</span>
               </div>
               <div className="hero-feature-item">
                 <FaCheckCircle className="check-icon" />
@@ -916,7 +901,7 @@ useEffect(() => {
           <div className="section-header">
             <span className="section-label">Most Popular</span>
             <h2>9 Professional AI Tools in One Platform</h2>
-            <p className="section-subtitle">Everything you need to create professional content—completely free to start</p>
+            <p className="section-subtitle">Voice generation, image creation & editing, PDF tools, SVG icons, video tools—completely free to start</p>
           </div>
 
           <motion.div
@@ -1063,17 +1048,17 @@ useEffect(() => {
               },
               {
                 step: 3,
-                title: "Add Subtitles to Your Video",
-                description: "Upload your video to AI Subtitle Generator. Our AI automatically transcribes audio with 92-96% accuracy across 20+ languages. Customize subtitle style—font, color, position, animations. Export with hardcoded captions or download SRT file for YouTube, TikTok, Instagram.",
-                tools: ["AI Subtitle Generator"],
-                time: "4 minutes",
-                link: "/tools/add-subtitles-to-videos"
+                title: "Generate AI Images & Remove Backgrounds",
+                description: "Create stunning visuals from text prompts using AI Image Generation—perfect for social media graphics, product mockups, and creative assets. Then use Background Remover to isolate subjects with AI precision in seconds, creating clean transparent PNGs ready for any design.",
+                tools: ["AI Image Generator", "Background Remover"],
+                time: "3 minutes",
+                link: "/tools/ai-image-generation"
               },
               {
                 step: 4,
                 title: "Optimize & Publish",
                 description: "Compress media files to meet platform requirements (25MB for email, fast YouTube uploads). Convert formats for compatibility. Create PDF documentation or marketing materials using our PDF suite. Adjust video speed if needed. Download everything ready for publishing.",
-                tools: ["Media Compression", "Video Speed Modifier", "PDF Tools"],
+                tools: ["Media Compression", "Video Speed Modifier", "Media Conversion", "PDF Tools"],
                 time: "3 minutes",
                 link: "/tools/compress-media"
               }
@@ -1270,11 +1255,11 @@ useEffect(() => {
                     individual: "❌ Photoshop needed ($20.99)"
                   },
                   {
-                    feature: "Subtitle Generator",
-                    scenith: "✅ AI-powered, 90+ languages",
-                    adobe: "⚠️ Premiere Pro (manual)",
-                    canva: "❌ Not included",
-                    individual: "❌ Separate tool needed"
+                    feature: "AI Image Generator",
+                    scenith: "✅ Text-to-image included",
+                    adobe: "⚠️ Firefly (limited free)",
+                    canva: "⚠️ Limited on Pro",
+                    individual: "❌ Midjourney ($10/mo)"
                   },
                   {
                     feature: "PDF Tools Suite",
@@ -1464,8 +1449,8 @@ useEffect(() => {
                 industry: "E-Learning Platforms",
                 icon: "👨‍🏫",
                 challenge: "Need multilingual course narration but hiring voice actors for 20 languages = $50K+",
-                solution: "Generate course narration in 20+ languages using same script. Update courses instantly when content changes. Add subtitles for accessibility compliance.",
-                results: "97% cost reduction on voice talent • 10x faster localization • WCAG compliant",
+                solution: "Generate course narration in 20+ languages using same script. Update courses instantly when content changes. Create visual course assets with AI Image Generation.",
+                results: "97% cost reduction on voice talent • 10x faster localization • Full asset creation",
                 cta: "Explore Education Use",
                 link: "/tools/add-subtitles-to-videos"
               },
@@ -1719,8 +1704,8 @@ useEffect(() => {
                 a: 'AI-generated voices can be downloaded as MP3 (smaller file size, great for podcasts and web) or WAV (uncompressed, studio quality for professional projects). Choose based on your needs. Both formats maintain the natural sound quality of our AI voices.'
               },
               {
-                q: 'How accurate is the AI subtitle generator?',
-                a: 'Our AI transcription achieves 90-95% accuracy for clear audio in supported languages. Accuracy improves with good audio quality, minimal background noise, and clear speech. You can easily edit any transcript before adding it to your video. Customize font styles, colors, positions, and animations to match your brand.'
+                q: 'What can I create with the AI Image Generator?',
+                a: 'Scenith\'s AI Image Generator transforms text descriptions into stunning visuals instantly. Create social media graphics, product mockups, blog illustrations, marketing banners, concept art, and any creative imagery you need. Simply describe what you want and our AI delivers professional-quality images in seconds—no design skills required. Perfect for content creators, marketers, and small businesses needing custom visuals without stock photo subscriptions.'
               },
               {
                 q: 'Can I use multiple tools together in one project?',
