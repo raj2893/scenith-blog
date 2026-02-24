@@ -620,10 +620,10 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
     const symbol = isIndianUser ? '₹' : '$';
   
    // Final prices after 25% discount
-   const voicePrice = isIndianUser ? 199 : 5;
-   const speedPrice = isIndianUser ? 199 : 5;
+   const voicePrice = isIndianUser ? 125 : 5;
+   const speedPrice = isIndianUser ? 99 : 5;
    const bgRemovalPrice = isIndianUser ? 149 : 5;
-   const svgPrice = isIndianUser ? 149 : 5;
+   const svgPrice = isIndianUser ? 99 : 3;
 
    // Calculate original prices by adding 25% (original = price / 0.75)
    const voiceOriginal = Math.round(voicePrice / 0.75);
