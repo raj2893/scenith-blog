@@ -1,0 +1,1166 @@
+/* ============================================================
+   styles/tools/AIWallpaperGenerator.css
+   Scenith AI Wallpaper Generator — matches brand token system
+   ============================================================ */
+
+/* ── Root Page Shell ── */
+.ai-wallpaper-page {
+  font-family: 'Montserrat', sans-serif;
+  background: #FFFFFF;
+  min-height: 100vh;
+  color: #1E293B;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+  overflow-x: hidden;
+  /* contain prevents ANY child pseudo-element escaping to navbar */
+  contain: layout style;
+}
+
+/* ── Screen-reader only (SEO/a11y) ── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Shared Container ── */
+.wallpaper-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ── Particle Background ── */
+.particle-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  background: rgba(109, 40, 217, 0.18);
+  border-radius: 50%;
+  animation: wallpaper-float 15s infinite ease-in-out;
+}
+
+.particle:nth-child(1) { width: 12px; height: 12px; top: 15%; left: 10%; animation-duration: 18s; }
+.particle:nth-child(2) { width: 18px; height: 18px; top: 45%; left: 25%; animation-duration: 22s; animation-delay: 2s; }
+.particle:nth-child(3) { width: 10px; height: 10px; top: 65%; left: 55%; animation-duration: 20s; animation-delay: 1s; }
+.particle:nth-child(4) { width: 15px; height: 15px; top: 25%; left: 75%; animation-duration: 19s; animation-delay: 3s; }
+.particle:nth-child(5) { width: 14px; height: 14px; top: 85%; left: 15%; animation-duration: 21s; animation-delay: 0.5s; }
+.particle:nth-child(6) { width: 16px; height: 16px; top: 35%; left: 65%; animation-duration: 23s; animation-delay: 4s; }
+
+@keyframes wallpaper-float {
+  0%   { transform: translateY(0) scale(1);    opacity: 0.3; }
+  50%  { transform: translateY(-80px) scale(1.1); opacity: 0.5; }
+  100% { transform: translateY(0) scale(1);    opacity: 0.3; }
+}
+
+/* ── Breadcrumb ── */
+.breadcrumb-nav {
+  padding: 1rem 0;
+  background: #f8f9fa;
+  margin-top: 100px;
+}
+
+.breadcrumb-nav ol {
+  display: flex;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0 2rem;
+  margin: 0;
+  flex-wrap: wrap;
+}
+
+.breadcrumb-nav li:not(:last-child)::after {
+  content: '›';
+  margin-left: 0.5rem;
+  color: #666;
+}
+
+.breadcrumb-nav a {
+  color: #1a73e8;
+  text-decoration: none;
+}
+
+.breadcrumb-nav a:hover {
+  text-decoration: underline;
+}
+
+/* ── Inline Link ── */
+.wallpaper-inline-link {
+  color: #6D28D9;
+  text-decoration: underline;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.wallpaper-inline-link:hover {
+  color: #5B21B6;
+}
+
+/* ============================================================
+   HERO SECTION
+   ============================================================ */
+.wallpaper-hero-section {
+  padding: 60px 20px 80px;
+  text-align: center;
+  background: linear-gradient(180deg, #F5F3FF 0%, #FFFFFF 100%);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.wallpaper-hero-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 0%,  rgba(109, 40, 217, 0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 100%, rgba(236, 72, 153, 0.06) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.wallpaper-hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.wallpaper-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(109, 40, 217, 0.08);
+  border: 1px solid rgba(109, 40, 217, 0.2);
+  border-radius: 50px;
+  padding: 8px 22px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #6D28D9;
+  margin-bottom: 28px;
+  letter-spacing: 0.3px;
+}
+
+.badge-separator { opacity: 0.4; }
+
+.wallpaper-hero-h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1.18;
+  color: #1E293B;
+  margin-bottom: 24px;
+}
+
+.wallpaper-hero-gradient {
+  background: linear-gradient(135deg, #6D28D9, #EC4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.wallpaper-hero-description {
+  font-size: 1.15rem;
+  color: #64748B;
+  line-height: 1.7;
+  max-width: 780px;
+  margin: 0 auto 44px;
+}
+
+.wallpaper-hero-description strong {
+  color: #1E293B;
+  font-weight: 600;
+}
+
+/* ── Primary CTA Button ──
+   THE ROOT CAUSE FIX:
+   The original ::before shimmer used rotate(45deg) on a 200%×200% element.
+   Without strict containment it leaked outside the button and painted diagonally
+   across the page — creating the "SCENITH watermark" effect in your navbar.
+
+   Solution: remove the ::before entirely. Use background-position animation
+   instead — same gradient shift feel, zero escape risk.
+   ── */
+.wallpaper-primary-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 18px 44px;
+  background: linear-gradient(135deg, #6D28D9 0%, #EC4899 50%, #7C3AED 100%);
+  background-size: 200% 200%;
+  background-position: 0% 50%;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 14px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-position 0.5s ease, box-shadow 0.3s ease;
+  box-shadow: 0 6px 24px rgba(109, 40, 217, 0.35);
+  letter-spacing: 0.2px;
+  /* No ::before, no position:relative, no overflow needed — nothing can escape */
+}
+
+.wallpaper-primary-cta:hover {
+  background-position: 100% 50%;
+  box-shadow: 0 10px 36px rgba(109, 40, 217, 0.5);
+  color: #FFFFFF;
+  text-decoration: none;
+}
+
+.wallpaper-cta-icon { font-size: 1.3rem; }
+
+.wallpaper-cta-arrow {
+  font-size: 1.2rem;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.wallpaper-primary-cta:hover .wallpaper-cta-arrow {
+  transform: translateX(5px);
+}
+
+.wallpaper-cta-large {
+  padding: 22px 56px;
+  font-size: 1.25rem;
+  border-radius: 16px;
+}
+
+.wallpaper-cta-subtext {
+  margin: 14px 0 0;
+  font-size: 0.9rem;
+  color: #94A3B8;
+  font-weight: 500;
+}
+
+.wallpaper-cta-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 44px;
+}
+
+.wallpaper-trust-strip {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.wallpaper-trust-strip span {
+  background: rgba(109, 40, 217, 0.07);
+  color: #6D28D9;
+  padding: 7px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid rgba(109, 40, 217, 0.15);
+}
+
+.wallpaper-trust-center {
+  justify-content: center;
+  margin-top: 28px;
+}
+
+.wallpaper-style-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 36px;
+}
+
+.wallpaper-style-chip {
+  background: #FFFFFF;
+  border: 2px solid rgba(109, 40, 217, 0.15);
+  color: #475569;
+  padding: 8px 18px;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
+  cursor: default;
+}
+
+.wallpaper-style-chip:hover {
+  border-color: #6D28D9;
+  color: #6D28D9;
+  background: rgba(109, 40, 217, 0.05);
+}
+
+/* ============================================================
+   SHARED SECTION TYPOGRAPHY
+   ============================================================ */
+.wallpaper-section-desc {
+  font-size: 1.1rem;
+  color: #64748B;
+  line-height: 1.75;
+  max-width: 780px;
+  margin: 0 auto 50px;
+  text-align: center;
+}
+
+.wallpaper-mid-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: 56px;
+}
+
+/* ============================================================
+   WHAT IS / HOW IT WORKS SECTION
+   ============================================================ */
+.wallpaper-what-section {
+  padding: 80px 0;
+  background: #F8FAFC;
+  border-top: 1px solid rgba(109, 40, 217, 0.08);
+}
+
+.wallpaper-what-section h2 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #1E293B;
+  text-align: center;
+  margin-bottom: 20px;
+  line-height: 1.3;
+}
+
+.wallpaper-how-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin-top: 50px;
+}
+
+.wallpaper-step-card {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 30px;
+  padding: 36px 40px;
+  background: #FFFFFF;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  border-left: 5px solid #6D28D9;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  align-items: start;
+}
+
+.wallpaper-step-card:hover {
+  box-shadow: 0 8px 32px rgba(109, 40, 217, 0.12);
+  transform: translateX(6px);
+}
+
+.wallpaper-step-num {
+  background: linear-gradient(135deg, #6D28D9, #EC4899);
+  color: #FFFFFF;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 800;
+  box-shadow: 0 4px 20px rgba(109, 40, 217, 0.3);
+  flex-shrink: 0;
+}
+
+.wallpaper-step-body h3 {
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: #1E293B;
+  margin: 0 0 14px;
+}
+
+.wallpaper-step-body p {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: #475569;
+  margin: 0 0 16px;
+}
+
+.wallpaper-step-tip {
+  background: linear-gradient(135deg, rgba(109, 40, 217, 0.08), rgba(236, 72, 153, 0.06));
+  border-left: 4px solid #6D28D9;
+  border-radius: 10px;
+  padding: 16px 20px;
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: #1E293B;
+}
+
+/* ============================================================
+   USE CASES SECTION
+   ============================================================ */
+.wallpaper-usecases-section {
+  padding: 80px 0;
+  background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
+  border-top: 1px solid rgba(109, 40, 217, 0.08);
+}
+
+.wallpaper-usecases-section h2 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #1E293B;
+  text-align: center;
+  margin-bottom: 20px;
+  line-height: 1.3;
+}
+
+.wallpaper-usecase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
+  gap: 36px;
+  margin-top: 50px;
+}
+
+.wallpaper-usecase-card {
+  background: #FFFFFF;
+  border-radius: 20px;
+  padding: 38px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+  border: 2px solid rgba(109, 40, 217, 0.1);
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+/* Height-based reveal — safe, no translateX bleed outside card */
+.wallpaper-usecase-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 0;
+  background: linear-gradient(90deg, #6D28D9, #EC4899);
+  transition: height 0.3s ease;
+}
+
+.wallpaper-usecase-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 44px rgba(109, 40, 217, 0.18);
+  border-color: #6D28D9;
+}
+
+.wallpaper-usecase-card:hover::before { height: 4px; }
+
+.wallpaper-usecase-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.wallpaper-usecase-icon { font-size: 2.8rem; }
+
+.wallpaper-usecase-num {
+  background: linear-gradient(135deg, #6D28D9, #EC4899);
+  color: #FFFFFF;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(109, 40, 217, 0.3);
+  flex-shrink: 0;
+}
+
+.wallpaper-usecase-card h3 {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: #1E293B;
+  margin: 0 0 14px;
+}
+
+.wallpaper-usecase-card > p {
+  font-size: 1rem;
+  line-height: 1.78;
+  color: #475569;
+  margin-bottom: 22px;
+}
+
+.wallpaper-usecase-prompts {
+  background: rgba(109, 40, 217, 0.05);
+  border-left: 4px solid #6D28D9;
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-bottom: 20px;
+}
+
+.wallpaper-usecase-prompts strong {
+  display: block;
+  font-size: 0.95rem;
+  color: #6D28D9;
+  font-weight: 700;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.wallpaper-usecase-prompts ul { list-style: none; padding: 0; margin: 0; }
+
+.wallpaper-usecase-prompts li {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #475569;
+  margin-bottom: 10px;
+  padding-left: 22px;
+  position: relative;
+  font-style: italic;
+}
+
+.wallpaper-usecase-prompts li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: #6D28D9;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.wallpaper-usecase-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.wallpaper-usecase-tags span {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10B981;
+  padding: 7px 14px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+/* ============================================================
+   PROMPT GUIDE SECTION
+   ============================================================ */
+.wallpaper-prompt-section {
+  padding: 80px 0;
+  background: #F8FAFC;
+  border-top: 1px solid rgba(109, 40, 217, 0.08);
+}
+
+.wallpaper-prompt-section h2 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #1E293B;
+  text-align: center;
+  margin-bottom: 20px;
+  line-height: 1.3;
+}
+
+.wallpaper-prompt-anatomy {
+  background: #FFFFFF;
+  border-radius: 18px;
+  padding: 40px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+  border: 2px solid rgba(109, 40, 217, 0.1);
+  margin-bottom: 60px;
+}
+
+.wallpaper-prompt-anatomy h3 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1E293B;
+  margin-bottom: 28px;
+  text-align: center;
+}
+
+.wallpaper-prompt-formula {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.pf-block {
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #FFFFFF;
+}
+
+.pf-block.subject  { background: linear-gradient(135deg, #6D28D9, #7C3AED); }
+.pf-block.setting  { background: linear-gradient(135deg, #3B82F6, #2563EB); }
+.pf-block.mood     { background: linear-gradient(135deg, #EC4899, #DB2777); }
+.pf-block.style    { background: linear-gradient(135deg, #10B981, #059669); }
+.pf-block.quality  { background: linear-gradient(135deg, #F59E0B, #D97706); }
+
+.pf-plus {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #94A3B8;
+}
+
+.wallpaper-prompt-example {
+  background: rgba(109, 40, 217, 0.06);
+  border-left: 4px solid #6D28D9;
+  border-radius: 10px;
+  padding: 18px 22px;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #475569;
+}
+
+.wallpaper-prompt-example strong { color: #6D28D9; }
+.wallpaper-prompt-example em { color: #1E293B; font-style: normal; font-weight: 500; }
+
+.wallpaper-prompt-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  margin-bottom: 60px;
+}
+
+.wallpaper-prompt-cat h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1E293B;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid rgba(109, 40, 217, 0.15);
+}
+
+.wallpaper-prompt-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.wallpaper-prompt-card {
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(109, 40, 217, 0.1);
+  border-top: 3px solid #6D28D9;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.wallpaper-prompt-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 28px rgba(109, 40, 217, 0.14);
+}
+
+.wallpaper-prompt-card strong {
+  display: block;
+  font-size: 1rem;
+  color: #1E293B;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.wallpaper-prompt-text {
+  font-size: 0.93rem;
+  line-height: 1.7;
+  color: #64748B;
+  font-style: italic;
+  margin: 0;
+}
+
+.wallpaper-prompt-tips { margin-top: 20px; }
+
+.wallpaper-prompt-tips h3 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1E293B;
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.wallpaper-tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.wallpaper-tip-card {
+  background: #FFFFFF;
+  border-radius: 14px;
+  padding: 28px;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.06);
+  border-left: 4px solid #6D28D9;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.wallpaper-tip-card:hover {
+  transform: translateX(6px);
+  box-shadow: 0 6px 22px rgba(109, 40, 217, 0.12);
+}
+
+.wallpaper-tip-icon { font-size: 2rem; display: block; margin-bottom: 14px; }
+
+.wallpaper-tip-card h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1E293B;
+  margin: 0 0 10px;
+}
+
+.wallpaper-tip-card p {
+  font-size: 0.97rem;
+  line-height: 1.7;
+  color: #64748B;
+  margin: 0;
+}
+
+/* ============================================================
+   COMPARISON SECTION
+   ============================================================ */
+.wallpaper-comparison-section {
+  padding: 80px 0;
+  background: #FFFFFF;
+  border-top: 1px solid rgba(109, 40, 217, 0.08);
+}
+
+.wallpaper-comparison-section h2 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #1E293B;
+  text-align: center;
+  margin-bottom: 50px;
+  line-height: 1.3;
+}
+
+.wallpaper-comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 28px;
+}
+
+.wallpaper-vs-card {
+  background: #FFFFFF;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 2px solid rgba(109, 40, 217, 0.12);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.wallpaper-vs-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 36px rgba(109, 40, 217, 0.16);
+  border-color: #6D28D9;
+}
+
+.wallpaper-vs-card h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #6D28D9;
+  margin-bottom: 22px;
+  padding-bottom: 14px;
+  border-bottom: 2px solid rgba(109, 40, 217, 0.12);
+}
+
+.wallpaper-vs-card ul { list-style: none; padding: 0; margin: 0; }
+
+.wallpaper-vs-card li {
+  padding: 10px 0;
+  font-size: 0.97rem;
+  line-height: 1.6;
+  color: #475569;
+  border-bottom: 1px solid #F1F5F9;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.wallpaper-vs-card li:last-child { border-bottom: none; }
+.wallpaper-vs-card li span:first-child { flex-shrink: 0; }
+
+/* ============================================================
+   CROSS-TOOL PROMOTION SECTION
+   ============================================================ */
+.wallpaper-tools-section {
+  padding: 80px 0;
+  background: linear-gradient(135deg, rgba(109, 40, 217, 0.04) 0%, rgba(236, 72, 153, 0.04) 100%);
+  border-top: 1px solid rgba(109, 40, 217, 0.08);
+  border-bottom: 1px solid rgba(109, 40, 217, 0.08);
+}
+
+.wallpaper-tools-section h2 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #1E293B;
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.wallpaper-tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.wallpaper-tool-card {
+  background: #FFFFFF;
+  border-radius: 20px;
+  padding: 36px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 2px solid rgba(109, 40, 217, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  text-decoration: none;
+  display: block;
+  position: relative;
+  color: inherit;
+}
+
+/* Height-based top bar — safe, stays inside card bounds */
+.wallpaper-tool-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 0;
+  background: linear-gradient(90deg, #6D28D9, #EC4899);
+  transition: height 0.3s ease;
+}
+
+.wallpaper-tool-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 14px 44px rgba(109, 40, 217, 0.2);
+  border-color: #6D28D9;
+  text-decoration: none;
+  color: inherit;
+}
+
+.wallpaper-tool-card:hover::before { height: 4px; }
+
+.wallpaper-tool-icon {
+  font-size: 3.2rem;
+  display: block;
+  margin-bottom: 18px;
+  animation: wallpaper-float 3.5s ease-in-out infinite;
+}
+
+.wallpaper-tool-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #F59E0B, #EF4444);
+  color: #FFFFFF;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 14px;
+}
+
+.wallpaper-tool-card h3 {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: #1E293B;
+  margin-bottom: 12px;
+}
+
+.wallpaper-tool-card p {
+  font-size: 1rem;
+  color: #64748B;
+  line-height: 1.65;
+  margin-bottom: 20px;
+}
+
+.wallpaper-tool-features {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.wallpaper-tool-features span {
+  font-size: 0.93rem;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.wallpaper-tool-features span::before {
+  content: '✓';
+  color: #6D28D9;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.wallpaper-tool-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 26px;
+  background: linear-gradient(135deg, #6D28D9, #EC4899);
+  color: #FFFFFF;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.97rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 14px rgba(109, 40, 217, 0.28);
+}
+
+.wallpaper-tool-card:hover .wallpaper-tool-cta {
+  transform: translateX(5px);
+  box-shadow: 0 6px 20px rgba(109, 40, 217, 0.38);
+}
+
+/* ============================================================
+   FAQ SECTION
+   ============================================================ */
+.wallpaper-faq-section {
+  padding: 80px 0;
+  background: #F8FAFC;
+  border-top: 1px solid rgba(109, 40, 217, 0.08);
+}
+
+.wallpaper-faq-section h2 {
+  font-size: 2.3rem;
+  font-weight: 700;
+  color: #1E293B;
+  text-align: center;
+  margin-bottom: 50px;
+  line-height: 1.3;
+}
+
+.wallpaper-faq-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+  gap: 24px;
+}
+
+.wallpaper-faq-item {
+  background: #FFFFFF;
+  border-radius: 14px;
+  padding: 28px 30px;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.06);
+  border-left: 4px solid #6D28D9;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.wallpaper-faq-item:hover {
+  transform: translateX(5px);
+  box-shadow: 0 6px 24px rgba(109, 40, 217, 0.1);
+}
+
+.wallpaper-faq-item h3 {
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: #1E293B;
+  margin: 0 0 12px;
+  line-height: 1.5;
+}
+
+.wallpaper-faq-item p {
+  font-size: 0.98rem;
+  line-height: 1.75;
+  color: #64748B;
+  margin: 0;
+}
+
+/* ============================================================
+   FINAL CTA SECTION
+   ============================================================ */
+.wallpaper-final-cta-section {
+  padding: 90px 0;
+  background: linear-gradient(135deg, #6D28D9 0%, #8B5CF6 50%, #EC4899 100%);
+  color: #FFFFFF;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.wallpaper-final-cta-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cdefs%3E%3Cpattern id='wdots' patternUnits='userSpaceOnUse' width='40' height='40'%3E%3Ccircle cx='20' cy='20' r='1.5' fill='white' opacity='0.08'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='200' height='200' fill='url(%23wdots)'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+.wallpaper-final-cta-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.wallpaper-final-cta-section h2 {
+  font-size: 2.6rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  line-height: 1.25;
+}
+
+.wallpaper-final-cta-section p {
+  font-size: 1.18rem;
+  max-width: 680px;
+  margin: 0 auto 44px;
+  opacity: 0.95;
+  line-height: 1.7;
+}
+
+/* Override CTA colours inside the gradient section */
+.wallpaper-final-cta-section .wallpaper-primary-cta {
+  background: #FFFFFF;
+  background-size: unset;
+  color: #6D28D9;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.2);
+}
+
+.wallpaper-final-cta-section .wallpaper-primary-cta:hover {
+  background: #F3E8FF;
+  color: #5B21B6;
+  box-shadow: 0 12px 36px rgba(0,0,0,0.28);
+}
+
+.wallpaper-final-cta-section .wallpaper-trust-strip span {
+  background: rgba(255,255,255,0.15);
+  color: #FFFFFF;
+  border-color: rgba(255,255,255,0.2);
+  backdrop-filter: blur(8px);
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   RESPONSIVE — TABLET (max-width: 900px)
+   ============================================================ */
+@media (max-width: 900px) {
+  .wallpaper-usecase-grid { grid-template-columns: 1fr; }
+  .wallpaper-faq-grid { grid-template-columns: 1fr; }
+  .wallpaper-prompt-formula { gap: 8px; }
+}
+
+/* ============================================================
+   RESPONSIVE — MOBILE (max-width: 768px)
+   ============================================================ */
+@media (max-width: 768px) {
+  .wallpaper-hero-section    { padding: 40px 15px 60px; }
+  .wallpaper-hero-h1         { font-size: 2.1rem; }
+  .wallpaper-hero-description { font-size: 1rem; }
+
+  .wallpaper-primary-cta {
+    padding: 16px 32px;
+    font-size: 1.05rem;
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .wallpaper-cta-large    { padding: 18px 36px; font-size: 1.1rem; }
+  .wallpaper-trust-strip  { gap: 10px; }
+
+  .wallpaper-step-card {
+    grid-template-columns: 1fr;
+    padding: 28px 22px;
+    gap: 20px;
+  }
+
+  .wallpaper-step-num {
+    width: 72px;
+    height: 72px;
+    font-size: 1.6rem;
+    margin: 0 auto;
+  }
+
+  .wallpaper-step-body      { text-align: center; }
+  .wallpaper-step-body h3   { font-size: 1.3rem; }
+  .wallpaper-usecase-card   { padding: 28px 22px; }
+
+  .wallpaper-what-section,
+  .wallpaper-usecases-section,
+  .wallpaper-prompt-section,
+  .wallpaper-comparison-section,
+  .wallpaper-tools-section,
+  .wallpaper-faq-section,
+  .wallpaper-final-cta-section { padding: 60px 0; }
+
+  .wallpaper-what-section h2,
+  .wallpaper-usecases-section h2,
+  .wallpaper-prompt-section h2,
+  .wallpaper-comparison-section h2,
+  .wallpaper-faq-section h2 { font-size: 1.9rem; }
+
+  .wallpaper-final-cta-section h2 { font-size: 2rem; }
+  .wallpaper-final-cta-section p  { font-size: 1.05rem; }
+
+  .wallpaper-tools-grid      { grid-template-columns: 1fr; }
+  .wallpaper-comparison-grid { grid-template-columns: 1fr; }
+
+  .wallpaper-prompt-formula  { flex-direction: column; align-items: center; }
+  .pf-plus                   { transform: rotate(90deg); }
+  .wallpaper-prompt-cards    { grid-template-columns: 1fr; }
+  .wallpaper-tips-grid       { grid-template-columns: 1fr; }
+
+  .wallpaper-faq-item        { padding: 22px 20px; }
+  .wallpaper-style-chips     { gap: 8px; }
+  .wallpaper-style-chip      { font-size: 0.82rem; padding: 7px 14px; }
+  .wallpaper-badge           { font-size: 0.78rem; padding: 7px 16px; }
+}
+
+/* ============================================================
+   RESPONSIVE — SMALL MOBILE (max-width: 480px)
+   ============================================================ */
+@media (max-width: 480px) {
+  .wallpaper-hero-h1          { font-size: 1.75rem; }
+  .wallpaper-hero-description { font-size: 0.95rem; }
+
+  .wallpaper-primary-cta {
+    padding: 15px 26px;
+    font-size: 1rem;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .wallpaper-cta-large        { padding: 16px 28px; font-size: 1.05rem; }
+  .wallpaper-usecase-card     { padding: 24px 18px; }
+  .wallpaper-usecase-card h3  { font-size: 1.25rem; }
+  .wallpaper-prompt-anatomy   { padding: 28px 20px; }
+  .wallpaper-prompt-anatomy h3 { font-size: 1.3rem; }
+  .wallpaper-tool-card        { padding: 28px 20px; }
+  .wallpaper-final-cta-section h2 { font-size: 1.7rem; }
+  .wallpaper-final-cta-section p  { font-size: 0.97rem; }
+  .wallpaper-step-body h3     { font-size: 1.2rem; }
+  .wallpaper-section-desc     { font-size: 1rem; }
+  .wallpaper-vs-card          { padding: 24px 18px; }
+}
