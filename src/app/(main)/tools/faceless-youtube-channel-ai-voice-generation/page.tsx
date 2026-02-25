@@ -290,35 +290,7 @@ const FacelessYouTubeVoicePage = () => {
                   lowPrice: '0',
                   highPrice: '999',
                   priceCurrency: 'INR'
-                },
-                review: [
-                  {
-                    '@type': 'Review',
-                    reviewRating: {
-                      '@type': 'Rating',
-                      ratingValue: '5',
-                      bestRating: '5'
-                    },
-                    author: {
-                      '@type': 'Person',
-                      name: 'Rahul Sharma'
-                    },
-                    reviewBody: 'This tool transformed my faceless YouTube channel. I went from struggling with voice recording to publishing 3 videos daily. The voices sound incredibly natural!'
-                  },
-                  {
-                    '@type': 'Review',
-                    reviewRating: {
-                      '@type': 'Rating',
-                      ratingValue: '5',
-                      bestRating: '5'
-                    },
-                    author: {
-                      '@type': 'Person',
-                      name: 'Priya Patel'
-                    },
-                    reviewBody: 'Best AI voice generator for YouTube automation. I use it for my finance channel and the professional voice options are perfect for building authority.'
-                  }
-                ]
+                }                
               }
             ],
           }),

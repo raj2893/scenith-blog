@@ -31,7 +31,7 @@ interface UserProfile {
 
 interface IndividualPlan {
   name: string;
-  planType: 'AI_VOICE_PRO' | 'AI_SPEED_PRO' | 'BG_REMOVAL_PRO' | 'SVG_PRO';
+  planType: 'AI_VOICE_PRO' | 'AI_SPEED_PRO' | 'BG_REMOVAL_PRO' | 'SVG_PRO' | 'VIDEO_GEN_STARTER' | 'VIDEO_GEN_PRO' | 'VIDEO_GEN_ELITE';
   price: number;
   originalPrice?: number;
   currency: string;
@@ -612,7 +612,46 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
           'SVG format access',
           'PNG & JPG export'
         ]
-      }
+      },
+      {
+        name: 'Video Gen Starter',
+        planType: 'VIDEO_GEN_STARTER',
+        price: 0,
+        currency: 'LOADING',
+        service: 'AI Video Generation',
+        features: [
+          '10 credits/month',
+          '2 credits/day',
+          'Max 5 seconds per video',
+          'Wan 2.5 model access'
+        ]
+      },
+      {
+        name: 'Video Gen Pro',
+        planType: 'VIDEO_GEN_PRO',
+        price: 0,
+        currency: 'LOADING',
+        service: 'AI Video Generation',
+        features: [
+          '40 credits/month',
+          '8 credits/day',
+          'Max 10 seconds per video',
+          'Wan 2.5 + Kling 2.5/2.6 Pro'
+        ]
+      },
+      {
+        name: 'Video Gen Elite',
+        planType: 'VIDEO_GEN_ELITE',
+        price: 0,
+        currency: 'LOADING',
+        service: 'AI Video Generation',
+        features: [
+          '100 credits/month',
+          '20 credits/day',
+          'Max 10 seconds per video',
+          'All models incl. Google Veo 3'
+        ]
+      }      
     ];
   }
   
@@ -624,12 +663,18 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
    const speedPrice = isIndianUser ? 99 : 5;
    const bgRemovalPrice = isIndianUser ? 149 : 5;
    const svgPrice = isIndianUser ? 99 : 3;
+   const videoStarterPrice = isIndianUser ? 249 : 10;
+   const videoProPrice = isIndianUser ? 599 : 15;
+   const videoElitePrice = isIndianUser ? 1199 : 25;
 
    // Calculate original prices by adding 25% (original = price / 0.75)
    const voiceOriginal = Math.round(voicePrice / 0.75);
    const speedOriginal = Math.round(speedPrice / 0.75);
    const bgRemovalOriginal = Math.round(bgRemovalPrice / 0.75);
    const svgOriginal = Math.round(svgPrice / 0.75);
+   const videoStarterOriginal = Math.round(videoStarterPrice / 0.75);
+   const videoProOriginal = Math.round(videoProPrice / 0.75);
+   const videoEliteOriginal = Math.round(videoElitePrice / 0.75);      
 
     return [
       {
@@ -699,7 +744,55 @@ const originalStudioPrice = Math.round(studioPrice / 0.75);
           'PNG & JPG export',
           'Commercial use allowed'
         ]
-      }
+      },
+      {
+        name: 'Video Gen Starter',
+        planType: 'VIDEO_GEN_STARTER',
+        price: videoStarterPrice,
+        originalPrice: videoStarterOriginal,
+        currency,
+        symbol,
+        service: 'AI Video Generation',
+        features: [
+          '10 credits/month',
+          '2 credits/day',
+          'Max 5 seconds per video',
+          'Wan 2.5 model access',
+          'Commercial use allowed'
+        ]
+      },
+      {
+        name: 'Video Gen Pro',
+        planType: 'VIDEO_GEN_PRO',
+        price: videoProPrice,
+        originalPrice: videoProOriginal,
+        currency,
+        symbol,
+        service: 'AI Video Generation',
+        features: [
+          '40 credits/month',
+          '8 credits/day',
+          'Max 10 seconds per video',
+          'Wan 2.5 + Kling 2.5/2.6 Pro',
+          'Commercial use allowed'
+        ]
+      },
+      {
+        name: 'Video Gen Elite',
+        planType: 'VIDEO_GEN_ELITE',
+        price: videoElitePrice,
+        originalPrice: videoEliteOriginal,
+        currency,
+        symbol,
+        service: 'AI Video Generation',
+        features: [
+          '100 credits/month',
+          '20 credits/day',
+          'Max 10 seconds per video',
+          'All models incl. Google Veo 3',
+          'Commercial use allowed'
+        ]
+      }      
     ];
   };  
 
