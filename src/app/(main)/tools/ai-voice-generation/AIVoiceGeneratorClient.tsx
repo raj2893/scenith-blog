@@ -406,16 +406,6 @@ const AIVoiceGeneratorClient: React.FC = () => {
     }
   }, []);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (isLoggedIn && userProfile?.role === 'BASIC') {
-        setShow15SecPopup(true);
-      }
-    }, 15000); // 15 seconds
-
-    return () => clearTimeout(timer);
-  }, [isLoggedIn, userProfile]);  
-
   const handlePlayDemo = (voice: Voice, useEmotion: boolean = false) => {
     const voiceId = `${voice.voiceName}-${voice.voiceStyle || 'default'}`;
     
