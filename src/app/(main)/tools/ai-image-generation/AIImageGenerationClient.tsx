@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { API_BASE_URL, CDN_URL } from '../../../config';
 import { FaTimes } from 'react-icons/fa';
 import '../../../../../styles/tools/AIImageGeneration.css';
+import AIImageUpgradePopup from "@/app/components/AIImageUpgradePopup";
 
 // TypeScript interfaces
 interface UserProfile {
@@ -89,6 +90,7 @@ const AIImageGeneratorClient: React.FC = () => {
   const [downloadSuccess, setDownloadSuccess] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState<string>('');
   const [isCreatingProject, setIsCreatingProject] = useState<boolean>(false);
+  const [showImageUpgradePopup, setShowImageUpgradePopup] = useState<boolean>(false);
 
   // Handle scroll for navbar
   useEffect(() => {
@@ -263,6 +265,11 @@ const AIImageGeneratorClient: React.FC = () => {
       initializeGoogleSignIn();
     }
   }, [showLoginModal, handleGoogleLogin]);
+
+  useEffect(() => {
+    const t = setTimeout(() => setShowImageUpgradePopup(true), 5000);
+    return () => clearTimeout(t);
+  }, []);
 
   const handleGenerateImage = async () => {
     if (!isLoggedIn) {
@@ -1682,7 +1689,9 @@ const AIImageGeneratorClient: React.FC = () => {
           </motion.div>
         </div>
       )}
-
+      {showImageUpgradePopup && (
+        <AIImageUpgradePopup onClose={() => setShowImageUpgradePopup(false)} />
+      )}
       {isLoggedIn && userProfile.role === 'BASIC' && (
         <div className="floating-upgrade-cta">
           <button 

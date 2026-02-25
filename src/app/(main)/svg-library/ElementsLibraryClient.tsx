@@ -8,6 +8,7 @@ import { FaSearch, FaEdit, FaTimes, FaDownload, FaCheck } from "react-icons/fa";
 import { API_BASE_URL } from "@/app/config";
 import "../../../../styles/svg-library/ElementsLibrary.css";
 import DownloadModal from "@/app/components/DownloadModal";
+import SvgLibraryUpgradePopup from "@/app/components/SvgLibraryUpgradePopup";
 
 interface ImageElement {
   id: number;
@@ -52,6 +53,7 @@ const ElementsLibraryClient: React.FC = () => {
   const [navigatingToElement, setNavigatingToElement] = useState<number | null>(null);
   const [showUpgradeModal, setShowUpgradeModal] = useState<boolean>(false);
   const [upgradeModalMessage, setUpgradeModalMessage] = useState<string>('');
+  const [showSvgUpgradePopup, setShowSvgUpgradePopup] = useState<boolean>(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -101,7 +103,10 @@ const ElementsLibraryClient: React.FC = () => {
 
     fetchElements();
   }, []);
-
+    useEffect(() => {
+      const timer = setTimeout(() => setShowSvgUpgradePopup(true), 5000);
+      return () => clearTimeout(timer);
+    }, []);
   useEffect(() => {
     let filtered = elements;
 
@@ -1264,6 +1269,9 @@ const ElementsLibraryClient: React.FC = () => {
             setShowUpgradeModal(true);
           }}
         />
+      )}
+      {showSvgUpgradePopup && (
+        <SvgLibraryUpgradePopup onClose={() => setShowSvgUpgradePopup(false)} />
       )}
 
       {showUpgradeModal && (
