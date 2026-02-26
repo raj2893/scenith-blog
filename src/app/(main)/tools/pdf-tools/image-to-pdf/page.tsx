@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     locale: "en_IN",
   },
   alternates: {
-    canonical: "/pdf-tools/photo-to-pdf",
+    canonical: "/tools/pdf-tools/photo-to-pdf",
   },
   other: {
     "geo.region": "IN",
@@ -228,7 +228,7 @@ export default function PhotoToPdfPage() {
               itemScope
               itemType="https://schema.org/ListItem"
             >
-              <a href="/pdf-tools" itemProp="item">
+              <a href="/tools/pdf-tools" itemProp="item">
                 <span itemProp="name">PDF Tools</span>
               </a>
               <meta itemProp="position" content="2" />
@@ -1089,28 +1089,28 @@ export default function PhotoToPdfPage() {
             <div className="photo-pdf-related__grid">
               {[
                 {
-                  href: "/pdf-tools/images-to-pdf",
+                  href: "/tools/pdf-tools/images-to-pdf",
                   icon: "🖼️",
                   title: "Images to PDF Converter",
                   desc: "Combine multiple image formats into a single PDF with full control over order, quality, and page size.",
                   badge: "Most Popular",
                 },
                 {
-                  href: "/pdf-tools/compress-pdf",
+                  href: "/tools/pdf-tools/compress-pdf",
                   icon: "📦",
                   title: "Compress PDF",
                   desc: "Reduce PDF file size for easy sharing on WhatsApp, email, and government portals without losing readability.",
                   badge: null,
                 },
                 {
-                  href: "/pdf-tools/merge-pdf",
+                  href: "/tools/pdf-tools/merge-pdf",
                   icon: "🔗",
                   title: "Merge PDF Files",
                   desc: "Combine multiple PDF documents into one. Perfect for combining separately scanned document pages.",
                   badge: null,
                 },
                 {
-                  href: "/pdf-tools/pdf-to-jpg",
+                  href: "/tools/pdf-tools/pdf-to-jpg",
                   icon: "🔄",
                   title: "PDF to JPG Converter",
                   desc: "Extract pages from a PDF as high-quality JPG images. Reverse of the photo-to-PDF process.",

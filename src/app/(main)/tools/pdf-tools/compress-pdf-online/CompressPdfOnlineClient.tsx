@@ -205,7 +205,7 @@ export default function CompressPdfOnlineClient() {
               itemType="https://schema.org/ListItem"
             >
               
-            <a    href="/pdf-tools"
+            <a    href="/tools/pdf-tools"
                 itemProp="item"
                 style={{ color: "#10b981", textDecoration: "none" }}
               >
@@ -1892,25 +1892,25 @@ export default function CompressPdfOnlineClient() {
               }}
             >
               {[
-                { href: "/pdf-tools", icon: "✂️", label: "Split PDF" },
+                { href: "/tools/pdf-tools", icon: "✂️", label: "Split PDF" },
                 {
-                  href: "/pdf-tools",
+                  href: "/tools/pdf-tools",
                   icon: "🔗",
                   label: "Merge PDF",
                 },
                 {
-                  href: "/pdf-tools",
+                  href: "/tools/pdf-tools",
                   icon: "🔄",
                   label: "PDF to Word",
                 },
-                { href: "/pdf-tools", icon: "🔐", label: "Protect PDF" },
+                { href: "/tools/pdf-tools", icon: "🔐", label: "Protect PDF" },
                 {
-                  href: "/pdf-tools",
+                  href: "/tools/pdf-tools",
                   icon: "🖼️",
                   label: "PDF to Image",
                 },
                 {
-                  href: "/pdf-tools",
+                  href: "/tools/pdf-tools",
                   icon: "✍️",
                   label: "Sign PDF",
                 },

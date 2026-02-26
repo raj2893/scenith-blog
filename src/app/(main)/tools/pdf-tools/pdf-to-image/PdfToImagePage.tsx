@@ -379,7 +379,7 @@ export default function PdfToImagePage() {
           </li>
           <span style={s.breadcrumbSep}>›</span>
           <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
-            <a href="/pdf-tools" style={s.breadcrumbLink} itemProp="item">
+            <a href="/tools/pdf-tools" style={s.breadcrumbLink} itemProp="item">
               <span itemProp="name">PDF Tools</span>
             </a>
             <meta itemProp="position" content="2" />
@@ -542,7 +542,7 @@ export default function PdfToImagePage() {
                   instantly detects the total page count so you know exactly how many images
                   you'll receive.{" "}
                   <strong>Password-protected PDFs?</strong> Unlock them first with our{" "}
-                  <a href="/pdf-tools/unlock-pdf" style={s.link}>Unlock PDF tool</a>, then
+                  <a href="/tools/pdf-tools/unlock-pdf" style={s.link}>Unlock PDF tool</a>, then
                   convert freely.
                 </>
               ),
@@ -903,12 +903,12 @@ export default function PdfToImagePage() {
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 20 }}>
             {[
-              { icon: "🔓", label: "Unlock PDF", href: "/pdf-tools/unlock-pdf", desc: "Remove password protection before conversion" },
-              { icon: "✂️", label: "Split PDF", href: "/pdf-tools/split-pdf", desc: "Extract specific pages before converting to images" },
-              { icon: "🔀", label: "Merge PDF", href: "/pdf-tools/merge-pdf", desc: "Combine PDFs, then extract as an image sequence" },
-              { icon: "🗜️", label: "Compress PDF", href: "/pdf-tools/compress-pdf", desc: "Reduce PDF size before sharing or archiving" },
-              { icon: "↔️", label: "Word to PDF", href: "/pdf-tools/word-to-pdf", desc: "Convert DOCX to PDF, then to images in one workflow" },
-              { icon: "📝", label: "Edit PDF", href: "/pdf-tools/edit-pdf", desc: "Annotate pages before extracting as images" },
+              { icon: "🔓", label: "Unlock PDF", href: "/tools/pdf-tools/unlock-pdf", desc: "Remove password protection before conversion" },
+              { icon: "✂️", label: "Split PDF", href: "/tools/pdf-tools/split-pdf", desc: "Extract specific pages before converting to images" },
+              { icon: "🔀", label: "Merge PDF", href: "/tools/pdf-tools/merge-pdf", desc: "Combine PDFs, then extract as an image sequence" },
+              { icon: "🗜️", label: "Compress PDF", href: "/tools/pdf-tools/compress-pdf", desc: "Reduce PDF size before sharing or archiving" },
+              { icon: "↔️", label: "Word to PDF", href: "/tools/pdf-tools/word-to-pdf", desc: "Convert DOCX to PDF, then to images in one workflow" },
+              { icon: "📝", label: "Edit PDF", href: "/tools/pdf-tools/edit-pdf", desc: "Annotate pages before extracting as images" },
             ].map(({ icon, label, href, desc }) => (
               <a
                 key={label}

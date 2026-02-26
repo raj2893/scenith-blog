@@ -153,7 +153,7 @@ export default function RotatePdfPagesPage() {
             </li>
             <span aria-hidden="true"> › </span>
             <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
-              <a href="/pdf-tools" itemProp="item"><span itemProp="name">PDF Tools</span></a>
+              <a href="/tools/pdf-tools" itemProp="item"><span itemProp="name">PDF Tools</span></a>
               <meta itemProp="position" content="2" />
             </li>
             <span aria-hidden="true"> › </span>
@@ -866,22 +866,22 @@ export default function RotatePdfPagesPage() {
             <p className="rpp-section-lead">Once your pages are correctly oriented, here are the other tools most commonly used alongside PDF rotation.</p>
 
             <div className="rpp-related-grid">
-              <a href="/pdf-tools/merge-pdf" className="rpp-related-card">
+              <a href="/tools/pdf-tools/merge-pdf" className="rpp-related-card">
                 <span className="rpp-related-icon">🔗</span>
                 <h3>Merge PDF</h3>
                 <p>Combine multiple PDFs into a single document. Perfect after rotating individual files before final assembly.</p>
               </a>
-              <a href="/pdf-tools/split-pdf" className="rpp-related-card">
+              <a href="/tools/pdf-tools/split-pdf" className="rpp-related-card">
                 <span className="rpp-related-icon">✂️</span>
                 <h3>Split PDF</h3>
                 <p>Separate a large PDF into individual pages or sections. Useful for isolating pages before targeted rotation.</p>
               </a>
-              <a href="/pdf-tools/compress-pdf" className="rpp-related-card">
+              <a href="/tools/pdf-tools/compress-pdf" className="rpp-related-card">
                 <span className="rpp-related-icon">🗜️</span>
                 <h3>Compress PDF</h3>
                 <p>Reduce file size without visible quality loss. Run after rotation to optimize your corrected document for sharing.</p>
               </a>
-              <a href="/pdf-tools/rotate-pdf" className="rpp-related-card rpp-related-primary">
+              <a href="/tools/pdf-tools/rotate-pdf" className="rpp-related-card rpp-related-primary">
                 <span className="rpp-related-icon">🔄</span>
                 <h3>Rotate PDF Tool</h3>
                 <p>Ready to fix your document? Open the full rotation tool with all page selection and direction options.</p>

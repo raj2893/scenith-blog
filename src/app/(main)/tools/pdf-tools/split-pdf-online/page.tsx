@@ -168,7 +168,7 @@ export default function SplitPdfOnlinePage() {
           </li>
           <li aria-hidden="true" className="spo-breadcrumb-sep">›</li>
           <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
-            <a href="/pdf-tools" itemProp="item"><span itemProp="name">PDF Tools</span></a>
+            <a href="/tools/pdf-tools" itemProp="item"><span itemProp="name">PDF Tools</span></a>
             <meta itemProp="position" content="2" />
           </li>
           <li aria-hidden="true" className="spo-breadcrumb-sep">›</li>

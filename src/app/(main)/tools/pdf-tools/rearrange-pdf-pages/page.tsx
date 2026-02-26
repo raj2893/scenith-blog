@@ -159,7 +159,7 @@ export default function RearrangePdfClient() {
             <span style={{ margin: "0 4px" }}>›</span>
           </li>
           <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
-            <a href="/pdf-tools" itemProp="item" style={{ color: "#3b82f6", textDecoration: "none" }}>
+            <a href="/tools/pdf-tools" itemProp="item" style={{ color: "#3b82f6", textDecoration: "none" }}>
               <span itemProp="name">PDF Tools</span>
             </a>
             <meta itemProp="position" content="2" />
@@ -639,9 +639,9 @@ export default function RearrangePdfClient() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "20px" }}>
             {[
               { icon: "🔀", title: "Merge PDF Files", desc: "Combine multiple PDFs into one document with full control over file order.", href: "https://scenith.in/tools/pdf-tools/merge-pdf" },
-              { icon: "✂️", title: "Split PDF", desc: "Divide a large PDF into smaller files by page range, size, or bookmarks.", href: "/pdf-tools/split-pdf" },
-              { icon: "🗜️", title: "Compress PDF", desc: "Reduce PDF file size without visible quality loss for easy sharing.", href: "/pdf-tools/compress-pdf" },
-              { icon: "🔄", title: "Rotate PDF Pages", desc: "Fix sideways or upside-down pages in any PDF with a single click.", href: "/pdf-tools/rotate-pdf" },
+              { icon: "✂️", title: "Split PDF", desc: "Divide a large PDF into smaller files by page range, size, or bookmarks.", href: "/tools/pdf-tools/split-pdf" },
+              { icon: "🗜️", title: "Compress PDF", desc: "Reduce PDF file size without visible quality loss for easy sharing.", href: "/tools/pdf-tools/compress-pdf" },
+              { icon: "🔄", title: "Rotate PDF Pages", desc: "Fix sideways or upside-down pages in any PDF with a single click.", href: "/tools/pdf-tools/rotate-pdf" },
             ].map((tool) => (
               <a key={tool.title} href={tool.href} style={{ display: "block", padding: "24px", background: "#ffffff", borderRadius: "14px", border: "1px solid #e2e8f0", textDecoration: "none", transition: "box-shadow 0.2s", boxShadow: "0 1px 6px rgba(0,0,0,0.04)" }}>
                 <div style={{ fontSize: "28px", marginBottom: "10px" }}>{tool.icon}</div>

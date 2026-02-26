@@ -39,7 +39,7 @@ export const metadata: Metadata = {
       "Compress PDF files online in seconds. Choose Low, Medium, or High compression. Free, secure, and works on any device.",
   },
   alternates: {
-    canonical: "/pdf-tools/compress-pdf-online",
+    canonical: "/tools/pdf-tools/compress-pdf-online",
   },
   robots: {
     index: true,

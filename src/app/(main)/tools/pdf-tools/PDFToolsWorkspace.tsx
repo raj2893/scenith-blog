@@ -3416,7 +3416,7 @@ const handleInsertPdfAtPosition = async (files: FileList | null, insertIndex: nu
                   <span>Download File</span>
                 </button>
 
-                <button className="reset-btn" onClick={() => router.push("/pdf-tools")}>
+                <button className="reset-btn" onClick={() => router.push("/tools/pdf-tools")}>
                   <FaArrowLeft size={20} />
                   <span>Back to PDF Tools</span>
                 </button>

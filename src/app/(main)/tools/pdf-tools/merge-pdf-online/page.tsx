@@ -206,7 +206,7 @@ export default function MergePdfOnlinePage() {
             itemScope
             itemType="https://schema.org/ListItem"
           >
-            <a href="/pdf-tools" itemProp="item">
+            <a href="/tools/pdf-tools" itemProp="item">
               <span itemProp="name">PDF Tools</span>
             </a>
             <meta itemProp="position" content="2" />

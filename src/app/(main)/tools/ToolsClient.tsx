@@ -141,7 +141,7 @@ const toolsData: Tool[] = [
     gradient: "linear-gradient(135deg, #f7971e 0%, #ffd200 100%)",
     tags: ["pdf", "merge", "split", "compress", "convert", "document"],
     featured: false,
-    url: "/pdf-tools",
+    url: "/tools/pdf-tools",
     difficulty: "Easy",
     usageTime: "2 min",
     seoKeywords: ["PDF tools", "merge PDF", "split PDF", "compress PDF", "PDF converter"]
