@@ -554,7 +554,12 @@ const BackgroundRemoval: React.FC = () => {
             <div className="stats-content">
               <div className="stat-item">
                 <span className="stat-label">Plan:</span>
-                <span className="stat-value">{usageStats.userRole}</span>
+                <span className="stat-value">
+                  {usageStats.userRole === 'ADMIN' ? 'Admin' :
+                  usageStats.userRole === 'STUDIO' ? 'Creator Odyssey' :
+                  usageStats.userRole === 'CREATOR' ? 'Creator Spark' :
+                  'Free'}
+                </span>
               </div>
               <div className="stat-item">
                 <span className="stat-label">Used This Month:</span>
