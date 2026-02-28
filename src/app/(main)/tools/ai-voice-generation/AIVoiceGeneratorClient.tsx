@@ -1835,7 +1835,7 @@ return (
                   {!hasHistoryAccess && (
                     <div className="history-locked-banner">
                       <span className="lock-icon">🔒</span>
-                      <p>Upgrade to AI Voice PRO or a premium plan to access your generation history</p>
+                      <p>Upgrade to Creator Spark or Creator Odyssey to access your generation history</p>
                       <a href="/pricing" className="upgrade-history-btn">
                         Unlock History
                       </a>
@@ -3493,7 +3493,7 @@ return (
             <span className="float-icon">⚡</span>
             <span className="float-text">
               <strong>Upgrade for 17× More Characters</strong>
-              <small>Creator or AI Voice Pro</small>
+              <small>Creator Odyssey</small>
             </span>
           </button>
         </div>
@@ -3575,8 +3575,8 @@ return (
               <a href="/pricing" className="emotion-popup-plan-card voicepro">
                 <span className="plan-emoji">🎙️</span>
                 <div>
-                  <strong>AI Voice Pro</strong>
-                  <p>50,000 chars/month + Emotions</p>
+                  <strong>Creator Spark or Odyssey</strong>
+                  <p>Bundled plan + Emotions included</p>
                 </div>
                 <span className="plan-arrow">→</span>
               </a>
