@@ -6,6 +6,7 @@ import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { API_BASE_URL } from '../../config';
 import { FaTimes } from 'react-icons/fa';
+import React from 'react';
 
 /* ─────────────────────────────────────────────────────────────────────
    INTERFACES  — unchanged from original
@@ -996,7 +997,7 @@ export default function PricingPageClient() {
   /* ─────────────────────────────────────────────────────────────────
      SVG ICONS
   ───────────────────────────────────────────────────────────────── */
-  const planIcons: Record<string, JSX.Element> = {
+  const planIcons: Record<string, React.ReactElement> = {
     BASIC: (
       <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="32" cy="32" r="26" stroke="url(#gi1)" strokeWidth="3" fill="none"/>
