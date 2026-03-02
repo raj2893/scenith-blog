@@ -1540,4 +1540,10 @@
     <changefreq>weekly</changefreq>
     <lastmod>2026-02-26</lastmod>
   </url> 
+  <url>
+    <loc>https://scenith.in/tools/add-text-to-image</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-02-26</lastmod>
+  </url> 
 </urlset>
