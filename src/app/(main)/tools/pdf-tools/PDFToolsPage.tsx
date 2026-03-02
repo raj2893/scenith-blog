@@ -48,13 +48,6 @@ const pdfToolsStructuredData = {
         "@type": "Organization",
         "@id": "https://scenith.in/#organization",
         "name": "SCENITH"
-      },
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.8",
-        "ratingCount": "8500",
-        "bestRating": "5",
-        "worstRating": "1"
       }
     },
     {
@@ -364,7 +357,7 @@ const PDFToolsPage: React.FC = () => {
           <div className="header-icon">
             <FaFilePdf size={48} />
           </div>
-            <h1>Free PDF Tools Online: Merge, Split, Compress PDF Files (No Limits, No Watermarks)</h1>
+            <h1>Free PDF Tools Online: Merge, Split, Compress & Convert PDFs Instantly</h1>
           <p>All-in-one PDF toolkit for merging, splitting, compressing, and converting PDFs. Fast, secure, and completely free. Pair with our <a href="/tools/ai-voice-generation" style={{color: '#3b82f6'}}>AI Voice Generator</a> for complete content creation.</p>
         </div>
       </div>

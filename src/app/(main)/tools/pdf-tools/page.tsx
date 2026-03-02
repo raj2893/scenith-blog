@@ -3,7 +3,7 @@ import PDFToolsPage from "./PDFToolsPage";
 
 export const metadata: Metadata = {
   title: 'Free PDF Tools Online: Merge, Split, Compress PDF (No Limits, No Watermarks)',
-  description: 'Free online PDF tools to merge, split, compress, rotate, convert, watermark and password-protect PDFs. No file size limits, no watermarks, no signup required. Processes in seconds.',
+  description: 'Free online PDF toolkit — merge, split, compress, rotate & convert PDFs in seconds. No watermarks, no signup, no file size limits. Better than Smallpdf & iLovePDF, completely free forever.',
   keywords: [
     'free PDF tools online',
     'merge PDF',
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
   },
   other: {
     'article:published_time': '2025-01-01T00:00:00Z',
-    'article:modified_time': '2025-02-08T00:00:00Z',
+    'article:modified_time': new Date().toISOString(),
   },
   viewport: 'width=device-width, initial-scale=1',
   themeColor: '#3b82f6',

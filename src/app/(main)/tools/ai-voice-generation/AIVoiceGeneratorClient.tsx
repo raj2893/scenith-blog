@@ -1215,7 +1215,8 @@ return (
           <a href="/tools/add-subtitles-to-videos" className="inline-link">videos with subtitles</a>,{' '}
           podcasts, presentations, and content creation. Combine with our{' '}
           <a href="/tools/image-editing" className="inline-link">free image editor</a>{' '}
-          for complete multimedia projects. Completely free with MP3 downloads!
+          for complete multimedia projects. Completely free with MP3 downloads! Manage your documents with our{' '}
+          <a href="/tools/pdf-tools" className="inline-link">free PDF tools</a>.
         </p>
         <div className="hero-cta-section">
           <div className="main-content">
