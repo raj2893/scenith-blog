@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Creating Character Voices with Emotional AI (2026 Complete Guide)",
     description: "Bring characters to life with emotionally intelligent AI voices. Free tools, advanced prompt techniques, emotion control, voice cloning tips — perfect for creators in games, animation, storytelling.",
-    url: "https://scenith.in/blogs/creating-character-voices-with-emotional-ai-2026",
+    url: "https://scenith.in/blogs/creating-character-voices-with-emotional-ai",
     type: "article",
   },
   twitter: {
@@ -57,7 +57,7 @@ export default function EmotionalCharacterVoicesGuide() {
             },
             datePublished: '2026-02-05T10:00:00Z',
             dateModified: '2026-02-05T10:00:00Z',
-            mainEntityOfPage: { '@type': 'WebPage', '@id': 'https://scenith.in/blogs/creating-character-voices-with-emotional-ai-2026' },
+            mainEntityOfPage: { '@type': 'WebPage', '@id': 'https://scenith.in/blogs/creating-character-voices-with-emotional-ai' },
             articleSection: 'AI Tools',
             inLanguage: 'en-US',
           }),

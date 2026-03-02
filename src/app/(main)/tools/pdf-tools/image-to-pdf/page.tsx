@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     locale: "en_IN",
   },
   alternates: {
-    canonical: "/tools/pdf-tools/photo-to-pdf",
+    canonical: "https://scenith.in/tools/pdf-tools/image-to-pdf",
   },
   other: {
     "geo.region": "IN",
@@ -53,8 +53,8 @@ export default function PhotoToPdfPage() {
     "@graph": [
       {
         "@type": "WebPage",
-        "@id": "https://scenith.in/tools/pdf-tools/photo-to-pdf#webpage",
-        url: "https://scenith.in/tools/pdf-tools/photo-to-pdf",
+        "@id": "https://scenith.in/tools/pdf-tools/image-to-pdf#webpage",
+        url: "https://scenith.in/tools/pdf-tools/image-to-pdf",
         name: "Photo to PDF Converter Free Online | SCENITH",
         description:
           "Convert mobile photos, camera scans, and screenshots to PDF instantly. Free, no watermark, works on Android and iPhone.",
@@ -63,12 +63,12 @@ export default function PhotoToPdfPage() {
           "@id": "https://scenith.in/#website",
         },
         breadcrumb: {
-          "@id": "https://scenith.in/tools/pdf-tools/photo-to-pdf#breadcrumb",
+          "@id": "https://scenith.in/tools/pdf-tools/image-to-pdf#breadcrumb",
         },
       },
       {
         "@type": "BreadcrumbList",
-        "@id": "https://scenith.in/tools/pdf-tools/photo-to-pdf#breadcrumb",
+        "@id": "https://scenith.in/tools/pdf-tools/image-to-pdf#breadcrumb",
         itemListElement: [
           {
             "@type": "ListItem",
@@ -86,13 +86,13 @@ export default function PhotoToPdfPage() {
             "@type": "ListItem",
             position: 3,
             name: "Photo to PDF Converter",
-            item: "https://scenith.in/tools/pdf-tools/photo-to-pdf",
+            item: "https://scenith.in/tools/pdf-tools/image-to-pdf",
           },
         ],
       },
       {
         "@type": "SoftwareApplication",
-        "@id": "https://scenith.in/tools/pdf-tools/photo-to-pdf#app",
+        "@id": "https://scenith.in/tools/pdf-tools/image-to-pdf#app",
         name: "SCENITH Photo to PDF Converter",
         applicationCategory: "UtilitiesApplication",
         operatingSystem: "Web Browser, Android, iOS, Windows, macOS",
@@ -118,7 +118,7 @@ export default function PhotoToPdfPage() {
       },
       {
         "@type": "FAQPage",
-        "@id": "https://scenith.in/tools/pdf-tools/photo-to-pdf#faq",
+        "@id": "https://scenith.in/tools/pdf-tools/image-to-pdf#faq",
         mainEntity: [
           {
             "@type": "Question",
@@ -172,7 +172,7 @@ export default function PhotoToPdfPage() {
       },
       {
         "@type": "HowTo",
-        "@id": "https://scenith.in/tools/pdf-tools/photo-to-pdf#howto",
+        "@id": "https://scenith.in/tools/pdf-tools/image-to-pdf#howto",
         name: "How to Convert Photos to PDF Online Free",
         description:
           "Step-by-step guide to converting mobile photos, camera images, and screenshots into a PDF document using SCENITH",
