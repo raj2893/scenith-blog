@@ -13,7 +13,7 @@ import React from 'react';
 ───────────────────────────────────────────────────────────────────── */
 interface PricingPlan {
   name: string;
-  role: 'BASIC' | 'CREATOR' | 'STUDIO';
+  role: 'BASIC' | 'CREATOR_LITE' | 'CREATOR' | 'STUDIO';
   price: number;
   originalPrice?: number;
   currency: string;
@@ -538,6 +538,7 @@ const injectStyles = () => {
 ───────────────────────────────────────────────────────────────────── */
 const HL: Record<string, number[]> = {
   BASIC: [],
+  CREATOR_LITE: [0, 1],
   CREATOR: [0, 1, 2],
   STUDIO: [0, 1, 2],
 };
@@ -559,7 +560,7 @@ const FAQ = [
 ───────────────────────────────────────────────────────────────────── */
 export default function PricingPageClient() {
   const router = useRouter();
-  const [currentPlan, setCurrentPlan] = useState<'BASIC' | 'CREATOR' | 'STUDIO' | 'ADMIN'>('BASIC');
+  const [currentPlan, setCurrentPlan] = useState<'BASIC' | 'CREATOR_LITE' | 'CREATOR' | 'STUDIO' | 'ADMIN'>('BASIC');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState<string | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -592,10 +593,11 @@ export default function PricingPageClient() {
         const activePlans: string[] = plansRes.data.map((p: any) => p.planType);
 
         // Determine displayed plan tier from user_plans table
-        if (activePlans.includes('STUDIO'))       setCurrentPlan('STUDIO');
-        else if (activePlans.includes('CREATOR')) setCurrentPlan('CREATOR');
-        else if (res.data.role === 'ADMIN')       setCurrentPlan('ADMIN');
-        else                                       setCurrentPlan('BASIC');
+        if (activePlans.includes('STUDIO'))            setCurrentPlan('STUDIO');
+        else if (activePlans.includes('CREATOR'))      setCurrentPlan('CREATOR');
+        else if (activePlans.includes('CREATOR_LITE')) setCurrentPlan('CREATOR_LITE');
+        else if (res.data.role === 'ADMIN')            setCurrentPlan('ADMIN');
+        else                                            setCurrentPlan('BASIC');
 
         setIsLoggedIn(true);
       } catch (error) {
@@ -800,27 +802,32 @@ export default function PricingPageClient() {
 
   /* ── getPlans ── */
   const getPlans = (): PricingPlan[] => {
-    const basicFeats   = ['2,000 voice chars/mo · 720p export', '5 speed videos + 5 BG removals', '10 SVG downloads', 'Community support', 'Commercial use'];
-    const creatorFeats = ['75,000 voice chars/mo · 1440p export', '🎭 Voice emotions — 9 presets', '60 videos(video speed) · 500 BG removals · Unlimited SVGs · 400 AI images/month'];
-    const odysseyFeats = ['250,000 voice chars/mo · 4K export', '🎭 Voice emotions + all premium voices', 'Unlimited videos, removals & 900 AI images'];
+    const basicFeats       = ['2,000 voice chars/mo · 720p export', '5 speed videos + 5 BG removals', '10 SVG downloads', 'Community support', 'Commercial use'];
+    const creatorLiteFeats = ['10,000 voice chars/mo · 1080p export', '🎭 Voice emotions — 9 presets', '30 videos · 100 BG removals · Unlimited SVGs · 50 AI images/month'];
+    const creatorFeats     = ['75,000 voice chars/mo · 1440p export', '🎭 Voice emotions — 9 presets', '60 videos · 500 BG removals · Unlimited SVGs · 400 AI images/month'];
+    const odysseyFeats     = ['250,000 voice chars/mo · 4K export', '🎭 Voice emotions + all premium voices', 'Unlimited videos, removals & 900 AI images'];
 
     if (isIndianUser === null) {
       return [
-        { name: 'Starter Forge',   role: 'BASIC',   price: 0, currency: 'FREE',    ttsLimit: 2000,   features: basicFeats },
-        { name: 'Creator Spark',   role: 'CREATOR',  price: 0, currency: 'LOADING', ttsLimit: 75000,  popular: true, features: creatorFeats },
-        { name: 'Creator Odyssey', role: 'STUDIO',   price: 0, currency: 'LOADING', ttsLimit: 250000, features: odysseyFeats },
+        { name: 'Starter Forge',   role: 'BASIC',        price: 0, currency: 'FREE',    ttsLimit: 500,    features: basicFeats },
+        { name: 'Creator Lite',    role: 'CREATOR_LITE',  price: 0, currency: 'LOADING', ttsLimit: 10000,  features: creatorLiteFeats },
+        { name: 'Creator Spark',   role: 'CREATOR',       price: 0, currency: 'LOADING', ttsLimit: 75000,  popular: true, features: creatorFeats },
+        { name: 'Creator Odyssey', role: 'STUDIO',        price: 0, currency: 'LOADING', ttsLimit: 250000, features: odysseyFeats },
       ];
     }
-    const creatorPrice = isIndianUser ? 499 : 12;
-    const studioPrice  = isIndianUser ? 999 : 24;
-    const originalCreatorPrice = Math.round(creatorPrice / 0.75);
-    const originalStudioPrice  = Math.round(studioPrice  / 0.75);
+    const creatorLitePrice = isIndianUser ? 99  : 3;
+    const creatorPrice     = isIndianUser ? 499 : 12;
+    const studioPrice      = isIndianUser ? 999 : 24;
+    const originalCreatorLitePrice = Math.round(creatorLitePrice / 0.75);
+    const originalCreatorPrice     = Math.round(creatorPrice / 0.75);
+    const originalStudioPrice      = Math.round(studioPrice  / 0.75);
     const currency = isIndianUser ? 'INR' : 'USD';
     const symbol   = isIndianUser ? '₹'   : '$';
     return [
-      { name: 'Starter Forge',   role: 'BASIC',   price: 0,            currency: 'FREE', ttsLimit: 2000,   features: basicFeats },
-      { name: 'Creator Spark',   role: 'CREATOR',  price: creatorPrice, originalPrice: originalCreatorPrice, currency, symbol, ttsLimit: 75000,  popular: true, features: creatorFeats },
-      { name: 'Creator Odyssey', role: 'STUDIO',   price: studioPrice,  originalPrice: originalStudioPrice,  currency, symbol, ttsLimit: 250000, features: odysseyFeats },
+      { name: 'Starter Forge',   role: 'BASIC',        price: 0,               currency: 'FREE',    ttsLimit: 2000,   features: basicFeats },
+      { name: 'Creator Lite',    role: 'CREATOR_LITE',  price: creatorLitePrice, originalPrice: originalCreatorLitePrice, currency, symbol, ttsLimit: 10000,  features: creatorLiteFeats },
+      { name: 'Creator Spark',   role: 'CREATOR',       price: creatorPrice,    originalPrice: originalCreatorPrice,     currency, symbol, ttsLimit: 75000,  popular: true, features: creatorFeats },
+      { name: 'Creator Odyssey', role: 'STUDIO',        price: studioPrice,     originalPrice: originalStudioPrice,      currency, symbol, ttsLimit: 250000, features: odysseyFeats },
     ];
   };
   
@@ -998,6 +1005,12 @@ export default function PricingPageClient() {
      SVG ICONS
   ───────────────────────────────────────────────────────────────── */
   const planIcons: Record<string, React.ReactElement> = {
+    CREATOR_LITE: (
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M32 12 L38 26 L54 28 L43 39 L46 55 L32 47 L18 55 L21 39 L10 28 L26 26 Z" stroke="url(#gi0)" strokeWidth="2.5" fill="none" strokeLinejoin="round"/>
+        <defs><linearGradient id="gi0" x1="0" y1="0" x2="64" y2="64"><stop offset="0%" stopColor="#818cf8"/><stop offset="100%" stopColor="#a78bfa"/></linearGradient></defs>
+      </svg>
+    ),
     BASIC: (
       <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="32" cy="32" r="26" stroke="url(#gi1)" strokeWidth="3" fill="none"/>
@@ -1098,7 +1111,9 @@ export default function PricingPageClient() {
                 const isPopular = plan.role === 'CREATOR';
                 const isStudio = plan.role === 'STUDIO';
                 const isCurrent = currentPlan === plan.role;
-                const isDowngradeBlocked = currentPlan === 'STUDIO' && plan.role === 'CREATOR';
+                const isDowngradeBlocked =
+                  (currentPlan === 'STUDIO' && (plan.role === 'CREATOR' || plan.role === 'CREATOR_LITE')) ||
+                  (currentPlan === 'CREATOR' && plan.role === 'CREATOR_LITE');
                 const highlights = HL[plan.role] || [];
 
                 const btnClass = () => {
@@ -1113,6 +1128,7 @@ export default function PricingPageClient() {
                   if (isCurrent) return '✓ Current Plan';
                   if (isDowngradeBlocked) return 'Downgrade Not Allowed';
                   if (isFree) return 'Free Forever';
+                  if (plan.role === 'CREATOR_LITE') return 'Get Creator Lite →';
                   if (isPopular) return 'Get Creator Spark →';
                   if (isStudio) return 'Get Creator Odyssey →';
                   return 'Upgrade Now';
@@ -1140,11 +1156,11 @@ export default function PricingPageClient() {
                     {/* icon */}
                     <div className="sc-plan-icon">{planIcons[plan.role]}</div>
 
-                    {/* tagline — preserved from original JSX */}
                     <p className="sc-plan-tagline">
-                      {plan.role === 'BASIC' && 'Build your first AI creations — free forever.'}
-                      {plan.role === 'CREATOR' && 'Spark your creativity with powerful AI tools.'}
-                      {plan.role === 'STUDIO' && 'Master your creative journey with limitless power.'}
+                      {plan.role === 'BASIC'        && 'Build your first AI creations — free forever.'}
+                      {plan.role === 'CREATOR_LITE'  && 'Dip your toes in — AI tools at ₹99/mo.'}
+                      {plan.role === 'CREATOR'       && 'Spark your creativity with powerful AI tools.'}
+                      {plan.role === 'STUDIO'        && 'Master your creative journey with limitless power.'}
                     </p>
 
                     <h2 className="sc-plan-name">{plan.name}</h2>
@@ -1218,28 +1234,30 @@ export default function PricingPageClient() {
                     <tr>
                       <th>Feature</th>
                       <th>Starter Forge</th>
+                      <th>Creator Lite</th>
                       <th className="sc-th-hl">Creator Spark ⭐</th>
                       <th>Creator Odyssey</th>
                     </tr>
                   </thead>
                   <tbody>
                     {[
-                      ['Monthly Voice Characters', '2,000', '75,000', '250,000'],
-                      ['Daily Character Limit', '200', '20,000', 'Unlimited'],
-                      ['Max Chars per Request', '150', '4,000', '6,000'],
-                      ['Voice Emotions', '✗', '✓ 9 Presets', '✓ 9 Presets'],
-                      ['Speed Videos/Month', '5', '60', 'Unlimited'],
-                      ['Max Video Length', '5 min', '30 min', 'Unlimited'],
-                      ['Background Removals/mo', '5', '500', '1,500'],
-                      ['SVG Downloads', '10/month', 'Unlimited', 'Unlimited'],
-                      ['AI Images/Month', '✗', '400', '900'],
-                      ['Max Export Quality', '720p', '1440p', '4K'],
-                      ['Commercial Use', '✓', '✓', '✓'],
-                      ['Priority Support', '✗', '✓', '✓ Dedicated'],
-                    ].map(([feat, basic, creator, studio], i) => (
+                      ['Monthly Voice Characters', '2,000',    '10,000',       '75,000',       '250,000'],
+                      ['Daily Character Limit',    '200',      '2,500',        '20,000',       'Unlimited'],
+                      ['Max Chars per Request',    '150',      '700',          '4,000',        '6,000'],
+                      ['Voice Emotions',           '✗',        '✓ 9 Presets',  '✓ 9 Presets',  '✓ 9 Presets'],
+                      ['Speed Videos/Month',       '5',        '30',           '60',           'Unlimited'],
+                      ['Max Video Length',         '5 min',    '10 min',       '30 min',       'Unlimited'],
+                      ['Background Removals/mo',   '5',        '100',          '500',          '1,500'],
+                      ['SVG Downloads',            '10/month', 'Unlimited',    'Unlimited',    'Unlimited'],
+                      ['AI Images/Month',          '✗',        '50',           '400',          '900'],
+                      ['Max Export Quality',       '720p',     '1080p',        '1440p',        '4K'],
+                      ['Commercial Use',           '✓',        '✓',            '✓',            '✓'],
+                      ['Priority Support',         '✗',        '✗',            '✓',            '✓ Dedicated'],
+                    ].map(([feat, basic, lite, creator, studio], i) => (
                       <tr key={i}>
                         <td>{feat}</td>
                         <td className={basic === '✓' ? 'sc-yes' : basic === '✗' ? 'sc-no' : ''}>{basic}</td>
+                        <td className={lite === '✓' ? 'sc-yes' : lite === '✗' ? 'sc-no' : ''}>{lite}</td>
                         <td className={`sc-td-hl${creator === '✓' ? ' sc-yes' : creator === '✗' ? ' sc-no' : ''}`}>{creator}</td>
                         <td className={studio === '✓' ? 'sc-yes' : studio === '✗' ? 'sc-no' : ''}>{studio}</td>
                       </tr>
