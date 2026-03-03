@@ -538,7 +538,7 @@ const injectStyles = () => {
 ───────────────────────────────────────────────────────────────────── */
 const HL: Record<string, number[]> = {
   BASIC: [],
-  CREATOR_LITE: [0, 1],
+  CREATOR_LITE: [0, 1, 2],
   CREATOR: [0, 1, 2],
   STUDIO: [0, 1, 2],
 };
