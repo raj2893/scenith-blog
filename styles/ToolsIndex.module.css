@@ -28,6 +28,7 @@
   line-height: 1.6;
   color: var(--text-primary);
   background: linear-gradient(180deg, #f7fafc 0%, #ffffff 100%);
+  padding-top: 100px;
 }
 
 /* Hero Section */
@@ -1233,6 +1234,73 @@
   box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
 }
 
+/* Hero Breadcrumb - Integrated with hero section */
+.heroBreadcrumb {
+  position: relative;
+  z-index: 10;
+  padding: 16px 20px 0;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.breadcrumbWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.breadcrumbLink {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  position: relative;
+}
+
+.breadcrumbLink:hover {
+  color: white;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: rgba(255, 255, 255, 0.5);
+}
+
+.breadcrumbSeparator {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 16px;
+  line-height: 1;
+  font-weight: 400;
+}
+
+.breadcrumbCurrent {
+  color: white;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 4px 12px;
+  border-radius: 30px;
+  font-size: 13px;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Adjust hero section padding since breadcrumb is inside */
+.heroSection {
+  background: var(--primary-gradient);
+  padding: 20px 20px 80px;  /* Reduced top padding from calc(var(--navbar-height) + 60px) to 20px */
+  position: relative;
+  overflow: hidden;
+}
+
+/* Ensure hero content is properly positioned */
+.heroContent {
+  max-width: 1000px;
+  margin: 40px auto 0;  /* Added top margin to create space after breadcrumb */
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
 @media (max-width: 1024px) {
   .educationalGrid {
     grid-template-columns: 1fr;
@@ -1358,6 +1426,27 @@
   .ctaSection {
     padding: 80px 15px;
   }  
+
+  .heroSection {
+    padding: 10px 15px 60px;
+  }
+  
+  .heroBreadcrumb {
+    padding: 12px 15px 0;
+  }
+  
+  .breadcrumbWrapper {
+    font-size: 12px;
+  }
+  
+  .breadcrumbCurrent {
+    padding: 3px 10px;
+    font-size: 12px;
+  }
+  
+  .heroContent {
+    margin-top: 30px;
+  }  
 }
 
 @media (max-width: 480px) {
@@ -1417,5 +1506,14 @@
   .useCaseCard,
   .faqItem {
     padding: 24px;
+  } 
+  
+  .breadcrumbWrapper {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .heroContent {
+    margin-top: 20px;
   }  
 }

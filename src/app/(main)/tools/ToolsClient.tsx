@@ -22,13 +22,27 @@ interface Tool {
 const toolsData: Tool[] = [
   {
     id: 1,
+    title: "AI Video Generation",
+    description: "Create stunning AI-generated videos from text descriptions or images. Cinematic quality, multiple aspect ratios, and native audio support for social media, marketing, and creative projects.",
+    category: "AI Tools",
+    icon: "🎬",
+    gradient: "linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%)",
+    tags: ["video", "ai", "generation", "text-to-video", "image-to-video", "cinematic"],
+    featured: true,
+    url: "/tools/ai-video-generation",
+    difficulty: "Easy",
+    usageTime: "2 min",
+    seoKeywords: ["AI video generator", "text to video", "AI video creation", "video generation", "AI film maker"]
+  },  
+  {
+    id: 2,
     title: "AI Voice Generation",
     description: "Transform text into natural-sounding speech with advanced AI voice synthesis. Perfect for voiceovers, audiobooks, and content creation.",
     category: "AI Tools",
     icon: "🎙️",
     gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
     tags: ["voice", "ai", "audio", "text-to-speech"],
-    featured: true,
+    featured: false,
     url: "/tools/ai-voice-generation",
     difficulty: "Easy",
     usageTime: "2 min",
@@ -171,7 +185,7 @@ export default function ToolsIndex() {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, selectedCategory]);
+  }, [searchTerm, selectedCategory]);  
 
   const categories = ['all', ...Array.from(new Set(tools.map(tool => tool.category)))];
 
@@ -274,6 +288,16 @@ export default function ToolsIndex() {
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Scenith Tools" />
         <meta name="mobile-web-app-capable" content="yes" />
+
+        <link rel="sitemap" type="application/xml" href="https://scenith.in/sitemap.xml" />
+        <link rel="alternate" href="https://scenith.in/tools"/>
+        <link rel="alternate" href="https://scenith.in/tools"/>  
+        <meta httpEquiv="Cache-Control" content="public, max-age=31536000" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+        <link rel="manifest" href="/manifest.json" />              
         
         {/* Schema.org Structured Data */}
         <script
@@ -415,11 +439,81 @@ export default function ToolsIndex() {
             })
           }}
         />
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": toolsData.flatMap(tool => [
+                {
+                  "@type": "Question",
+                  "name": `Is ${tool.title} really free?`,
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": `Yes, ${tool.title} is completely free with no hidden costs, watermarks, or usage limits. You get full access to all features without any payment required.`
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": `How to use ${tool.title}?`,
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": `Using ${tool.title} is simple: 1) Visit the tool page, 2) Upload your file or enter your requirements, 3) Click generate/process, 4) Download your result. No signup required for basic use.`
+                  }
+                }
+              ]).slice(0, 10) // Limit to 10 FAQs to avoid overloading
+            })
+          }}
+        />
+
+        {/* Individual Tool Schema for SEO Depth */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": toolsData.map(tool => ({
+                "@type": "SoftwareApplication",
+                "name": tool.title,
+                "description": tool.description,
+                "applicationCategory": "MultimediaApplication",
+                "operatingSystem": "Web Browser",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "0",
+                  "priceCurrency": "USD",
+                  "availability": "https://schema.org/InStock"
+                },
+                "featureList": tool.tags.join(", "),
+                "screenshot": `https://scenith.in/images/tools/${tool.id}-preview.jpg`,
+                "softwareVersion": "1.0",
+                "releaseNotes": "Free forever with regular updates",
+                "url": `https://scenith.in${tool.url}`,
+                "sameAs": [
+                  `https://twitter.com/search?q=${encodeURIComponent(tool.title)}`,
+                  `https://www.youtube.com/results?search_query=${encodeURIComponent(tool.title)}`
+                ]
+              }))
+            })
+          }}
+        />        
       </Head>
 
       <div className={styles.toolsContainer}>
-        {/* Hero Section */}
+        {/* Hero Section */}                
         <div className={styles.heroSection}>
+          {/* Breadcrumb Navigation */}        
+          <nav className={styles.breadcrumbNav} aria-label="Breadcrumb">
+            <div className={styles.breadcrumbWrapper}>
+              <a href="/" className={styles.breadcrumbLink}>Home</a>
+              <span className={styles.breadcrumbSeparator}>›</span>
+              <a href="/tools" className={styles.breadcrumbLink}>Tools</a>
+              <span className={styles.breadcrumbSeparator}>›</span>
+              <span className={styles.breadcrumbCurrent}>AI Content Creation Suite</span>
+            </div>
+          </nav>          
           <div className={styles.heroContent}>
             <div className={styles.heroTop}>
               <h1 className={styles.heroTitle}>
@@ -459,6 +553,26 @@ export default function ToolsIndex() {
             </div>
           </div>
         </div>
+
+        {/* Internal Links for SEO */}
+        <div className={styles.internalLinks} style={{ display: 'none' }}>
+          {toolsData.map(tool => (
+            <link key={tool.id} rel="prerender" href={tool.url} />
+          ))}
+        </div>
+        
+        {/* Visible internal navigation for crawlers */}
+        <nav className={styles.seoNav} aria-label="Tool Categories">
+          <ul style={{ display: 'none' }}>
+            <li><a href="/tools/ai-video-generation">AI Video Generator</a></li>
+            <li><a href="/tools/ai-voice-generation">AI Voice Generator</a></li>
+            <li><a href="/tools/ai-image-generation">AI Image Generator</a></li>
+            <li><a href="/tools/background-removal">Background Remover</a></li>
+            <li><a href="/tools/image-editing">Image Editor</a></li>
+            <li><a href="/svg-library">SVG Library</a></li>
+            <li><a href="/tools/pdf-tools">PDF Tools</a></li>
+          </ul>
+        </nav>        
 
         <div className={styles.contentWrapper}>
           {/* Featured Tool */}
@@ -527,12 +641,27 @@ export default function ToolsIndex() {
                       onClick={() => openToolInNewTab(tool.url)}
                       role="button"
                       tabIndex={0}
-                      onKeyPress={(e) => e.key === 'Enter' && openToolInNewTab(tool.url)}
+                      itemScope
+                      itemType="https://schema.org/SoftwareApplication"
                       style={{ cursor: 'pointer' }}
                     >
+                      <meta itemProp="name" content={tool.title} />
+                      <meta itemProp="description" content={tool.description} />
+                      <meta itemProp="applicationCategory" content="MultimediaApplication" />
+                      <meta itemProp="operatingSystem" content="Web Browser" />
+                      <meta itemProp="offers" content="0" />
+                      <meta itemProp="price" content="0" />
+                      <meta itemProp="priceCurrency" content="USD" />
                       <article className={styles.toolCard}>
                         <div className={styles.toolImage} style={{ background: tool.gradient }}>
-                          <span className={styles.toolIcon}>{tool.icon}</span>
+                          <span 
+                            className={styles.toolIcon} 
+                            role="img" 
+                            aria-label={`${tool.title} icon`}
+                            title={tool.title}
+                          >
+                            {tool.icon}
+                          </span>
                         </div>
                         <div className={styles.toolContent}>
                           <div className={styles.toolMeta}>
@@ -739,6 +868,22 @@ export default function ToolsIndex() {
               </article>
             </div>
           </section>
+
+          {/* Category-specific SEO content */}
+          <div className={styles.categorySeo} itemScope itemType="https://schema.org/ItemList">
+            <meta itemProp="name" content="Free AI Tools for Content Creation" />
+            <meta itemProp="description" content="Complete collection of AI-powered tools for video, audio, image, and document processing" />
+            <meta itemProp="numberOfItems" content={toolsData.length.toString()} />
+
+            <div style={{ display: 'none' }} itemProp="itemListElement">
+              {toolsData.map((tool, index) => (
+                <div key={tool.id} itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+                  <meta itemProp="position" content={(index + 1).toString()} />
+                  <meta itemProp="url" content={`https://scenith.in${tool.url}`} />
+                </div>
+              ))}
+            </div>
+          </div>          
 
           {/* Benefits Section */}
           <section className={styles.benefitsSection} role="region" aria-labelledby="benefits-title">
