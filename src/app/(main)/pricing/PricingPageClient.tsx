@@ -1080,7 +1080,7 @@ export default function PricingPageClient() {
               className={`sc-tab${activeSection === 'bundle' ? ' active' : ''}`}
               onClick={() => setActiveSection('bundle')}
             >
-              <span>📦</span> Bundled Plans
+              <span>✨</span> Creator Suites
             </button>
             <button
               className={`sc-tab${activeSection === 'individual' ? ' active' : ''}`}
@@ -1119,6 +1119,7 @@ export default function PricingPageClient() {
                 const btnClass = () => {
                   if (isCurrent) return 'sc-btn sc-btn-current';
                   if (isFree) return 'sc-btn sc-btn-ghost';
+                  if (plan.role === 'CREATOR_LITE') return 'sc-btn sc-btn-primary';
                   if (isStudio) return 'sc-btn sc-btn-gold';
                   if (isPopular) return 'sc-btn sc-btn-primary';
                   return 'sc-btn sc-btn-ghost';
