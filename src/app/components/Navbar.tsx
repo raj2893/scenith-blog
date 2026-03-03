@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { FaBars, FaDollarSign, FaHome, FaTools, FaBlog, FaTimes, FaUser, FaFilePdf , FaImage} from 'react-icons/fa';
+import { FaBars, FaDollarSign, FaHome, FaTools, FaBlog, FaTimes, FaUser, FaFilePdf , FaImage, FaVideo} from 'react-icons/fa';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { API_BASE_URL } from '../config';
@@ -305,13 +305,24 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
   }, [showLoginModal, navbarLoginTriggered]);
 
   const baseNavLinks: NavLink[] = [
-    { label: 'Home', path: '/', icon: <FaHome /> },
-    {
-      label: 'AI Image Generator',
-      path: '/tools/ai-image-generation',
-      icon: <FaImage />,
-      isNew: true // Add this flag
-    },
+  { label: 'Home', path: '/', icon: <FaHome /> },
+  {
+    label: 'AI Image Generator',
+    path: '/tools/ai-image-generation',
+    icon: <FaImage />,
+    isNew: true
+  },
+  {
+    label: 'AI Video Generator',
+    path: '/tools/ai-voice-generation',
+    icon: <FaVideo />,
+    isNew: true
+  },
+  {
+    label: 'PDF Tools',
+    path: '/tools/pdf-tools',
+    icon: <FaFilePdf />,
+  },
     {
       label: 'Tools',
       isDropdown: true,
