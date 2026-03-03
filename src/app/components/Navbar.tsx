@@ -314,7 +314,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
   },
   {
     label: 'AI Video Generator',
-    path: '/tools/ai-voice-generation',
+    path: '/tools/ai-video-generation',
     icon: <FaVideo />,
     isNew: true
   },
