@@ -327,7 +327,10 @@ const AIVoiceGeneratorClient: React.FC = () => {
   const [showEmotionUpgradePopup, setShowEmotionUpgradePopup] = useState(false); 
   const [selectedProvider, setSelectedProvider] = useState<'GOOGLE' | 'OPENAI' | 'AZURE'>('GOOGLE');
   const [externalVoices, setExternalVoices] = useState<(Voice & { voiceId?: string })[]>([]);
-  const [externalVoicesLoading, setExternalVoicesLoading] = useState(false);   
+  const [externalVoicesLoading, setExternalVoicesLoading] = useState(false); 
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [upgradeModalType, setUpgradeModalType] = useState<'first_gen' | 'repeat_gen' | 'download' | 'limit_warning'>('first_gen');  
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);  
 
   useEffect(() => {
     if (!isLoggedIn || !ttsUsage || userProfile?.role !== 'BASIC') return;
@@ -727,6 +730,13 @@ const AIVoiceGeneratorClient: React.FC = () => {
       .finally(() => setExternalVoicesLoading(false));
   }, [selectedProvider]);  
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowWelcomeModal(true);
+    }, 6000); // show after 6 seconds
+    return () => clearTimeout(timer);
+  }, []);  
+
   const handleGenerateAiAudio = async () => {
     if (!isLoggedIn) {
       setShowLoginModal(true);
@@ -842,13 +852,27 @@ const AIVoiceGeneratorClient: React.FC = () => {
       const currentCount = generationCount + 1;
       setGenerationCount(currentCount);
 
-      if (currentCount === 1 && userProfile?.role === 'BASIC') {
-        setShowFirstGenBanner(true);
-        setTimeout(() => setShowFirstGenBanner(false), 20000);
-      } else if (currentCount >= 2 && userProfile?.role === 'BASIC') {
-        setShowRepeatGenBanner(true);
-        setTimeout(() => setShowRepeatGenBanner(false), 20000);
-      }      
+      if (userProfile?.role === 'BASIC') {
+        if (currentCount === 1) {
+          setTimeout(() => {
+            setUpgradeModalType('first_gen');
+            setShowUpgradeModal(true);
+          }, 4000); // 4s delay — let them hear the audio first, THEN hit them
+        } else if (currentCount === 2) {
+          setTimeout(() => {
+            setUpgradeModalType('repeat_gen');
+            setShowUpgradeModal(true);
+          }, 3000);
+        } else if (currentCount >= 3) {
+          // Every 3rd gen after that
+          if (currentCount % 2 === 1) {
+            setTimeout(() => {
+              setUpgradeModalType('repeat_gen');
+              setShowUpgradeModal(true);
+            }, 2000);
+          }
+        }
+      }   
   
       const usageResponse = await fetch(`${API_BASE_URL}/api/sole-tts/usage`, {
         headers: {
@@ -915,9 +939,11 @@ const AIVoiceGeneratorClient: React.FC = () => {
         window.URL.revokeObjectURL(blobUrl);
         setDownloadSuccess(true);
         if (userProfile?.role === 'BASIC') {
-          setShowDownloadToast(true);
-          setTimeout(() => setShowDownloadToast(false), 13000);
-        }        
+          setTimeout(() => {
+            setUpgradeModalType('download');
+            setShowUpgradeModal(true);
+          }, 1200); // Short delay so download starts first
+        }
         setTimeout(() => setDownloadSuccess(false), 15000);
       } catch (error) {
         console.error('Download failed:', error);
@@ -1780,65 +1806,6 @@ return (
                 <button onClick={handleDownload} className="cta-button download-button">
                   Download MP3
                 </button>
-          
-                {/* MOVE POPUPS HERE */}
-                {showFirstGenBanner && (
-                  <motion.div 
-                    className="inline-upgrade-banner first-gen-banner"
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                  >
-                    <div className="banner-content">
-                      <span className="banner-icon">⚡</span>
-                      <div className="banner-text">
-                        <strong>Like this voice?</strong> Upgrade to 17× more characters & premium features
-                      </div>
-                      <a href="/pricing" className="banner-cta">
-                        Upgrade Now
-                      </a>
-                    </div>
-                  </motion.div>
-                )}
-
-                {showRepeatGenBanner && (
-                  <motion.div 
-                    className="inline-upgrade-banner repeat-gen-banner"
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                  >
-                    <div className="banner-content">
-                      <span className="banner-icon">👀</span>
-                      <div className="banner-text">
-                        <strong>You're using Scenith a lot today!</strong> Creator gives 17× limits + longer scripts
-                      </div>
-                      <a href="/pricing" className="banner-cta">
-                        See Plans
-                      </a>
-                    </div>
-                  </motion.div>
-                )}
-
-                {downloadSuccess && userProfile.role === 'BASIC' && (
-                  <motion.div 
-                    className="inline-download-success"
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                  >
-                    <div className="success-content">
-                      <span className="success-icon">✅</span>
-                      <div className="success-text">
-                        <strong>Download successful!</strong>
-                        <p>Want to create more? Get 17× more characters with Creator or AI Voice Pro.</p>
-                      </div>
-                      <a href="/pricing" className="success-cta-btn">
-                        View Plans
-                      </a>
-                    </div>
-                  </motion.div>
-                )}
               </motion.div>
             </section>
           )}     
@@ -3577,6 +3544,357 @@ return (
         </div>
       )}
 
+      {showUpgradeModal && (
+        <div
+          className="modal-overlay"
+          onClick={(e) => { if (e.target === e.currentTarget) setShowUpgradeModal(false); }}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.85, y: 40 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.85, y: 40 }}
+            transition={{ type: 'spring', stiffness: 340, damping: 28 }}
+            style={{
+              background: '#0d0d1c',
+              borderRadius: '24px',
+              padding: '0',
+              maxWidth: '480px',
+              width: '94%',
+              maxHeight: '82vh',
+              overflowY: 'auto',
+              position: 'relative',
+              border: '1px solid rgba(99,85,220,0.35)',
+              boxShadow: '0 40px 120px rgba(0,0,0,0.75)',
+            }}
+          >
+            {/* Dismiss */}
+            <button
+              onClick={() => setShowUpgradeModal(false)}
+              style={{
+                position: 'absolute', top: 14, right: 14, zIndex: 10,
+                background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: '8px', width: 32, height: 32, cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: '#6a6a8a', fontSize: '16px',
+              }}
+              aria-label="Close"
+            >
+              <FaTimes size={11} />
+            </button>
+            
+            {/* Top gradient bar */}
+            <div style={{
+              height: '5px', borderRadius: '24px 24px 0 0',
+              background: upgradeModalType === 'download'
+                ? 'linear-gradient(90deg, #10b981, #059669)'
+                : upgradeModalType === 'limit_warning'
+                ? 'linear-gradient(90deg, #f59e0b, #f97316)'
+                : 'linear-gradient(90deg, #6355dc, #8b5cf6, #f06cbe)',
+            }} />
+
+            <div style={{ padding: '28px 28px 24px' }}>
+          
+              {/* Icon + headline */}
+              <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+                <div style={{ fontSize: '44px', marginBottom: '10px', lineHeight: 1 }}>
+                  {upgradeModalType === 'first_gen' && '🎉'}
+                  {upgradeModalType === 'repeat_gen' && '🚀'}
+                  {upgradeModalType === 'download' && '✅'}
+                  {upgradeModalType === 'limit_warning' && '⚠️'}
+                </div>
+                <h2 style={{
+                  fontFamily: "'Cabinet Grotesk', sans-serif",
+                  fontSize: '21px', fontWeight: 900, letterSpacing: '-0.025em',
+                  color: '#e2e2ef', marginBottom: '8px',
+                }}>
+                  {upgradeModalType === 'first_gen' && 'Your First AI Voice is Ready! 🔥'}
+                  {upgradeModalType === 'repeat_gen' && "You're on a Roll — Unlock More!"}
+                  {upgradeModalType === 'download' && 'Downloaded! Ready for More?'}
+                  {upgradeModalType === 'limit_warning' && 'Almost Out of Characters'}
+                </h2>
+                <p style={{ fontSize: '13px', color: '#6a6a8a', lineHeight: 1.55, maxWidth: '340px', margin: '0 auto' }}>
+                  {upgradeModalType === 'first_gen' && (<>You just heard what professional AI voice sounds like. <strong style={{ color: '#a899f5' }}>Creator Lite gives you 5× more</strong> — enough for videos, reels & campaigns.</>)}
+                  {upgradeModalType === 'repeat_gen' && (<>You keep coming back because it works. <strong style={{ color: '#a899f5' }}>Stop hitting free limits</strong> — Creator Lite unlocks 10,000 chars/mo + emotions.</>)}
+                  {upgradeModalType === 'download' && (<>Great content deserves great tools. <strong style={{ color: '#34d399' }}>Upgrade now</strong> and get 5× more characters plus speed videos, BG removal & AI images.</>)}
+                  {upgradeModalType === 'limit_warning' && (<>You're running low. <strong style={{ color: '#f59e0b' }}>Don't lose momentum</strong> — upgrade and keep creating without interruption.</>)}
+                </p>
+              </div>
+              
+              {/* Side-by-side comparison */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '18px' }}>
+                {/* Free column */}
+                <div style={{
+                  background: 'rgba(255,255,255,0.03)',
+                  border: '1px solid rgba(255,255,255,0.07)',
+                  borderRadius: '12px', padding: '14px 12px',
+                }}>
+                  <div style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', color: '#3a3a52', textTransform: 'uppercase', marginBottom: '10px' }}>
+                    Free Plan
+                  </div>
+                  {[
+                    { icon: '🎤', text: '2,000 chars/mo' },
+                    { icon: '📅', text: '200 chars/day' },
+                    { icon: '📝', text: '150 chars/request' },
+                    { icon: '🎬', text: '5 speed videos' },
+                    { icon: '🖼️', text: '5 BG removals' },
+                    { icon: '🤖', text: 'No AI images' },
+                    { icon: '🎭', text: 'No emotions' },
+                  ].map((item, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '7px', marginBottom: i < 6 ? '7px' : 0 }}>
+                      <span style={{ fontSize: '13px', flexShrink: 0 }}>{item.icon}</span>
+                      <span style={{ fontSize: '11.5px', color: '#44445e' }}>{item.text}</span>
+                    </div>
+                  ))}
+                </div>
+                
+                {/* Creator Lite column */}
+                <div style={{
+                  background: 'rgba(99,85,220,0.08)',
+                  border: '1px solid rgba(99,85,220,0.28)',
+                  borderRadius: '12px', padding: '14px 12px',
+                  position: 'relative',
+                }}>
+                  <div style={{
+                    position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)',
+                    background: 'linear-gradient(135deg, #6355dc, #8b5cf6)',
+                    color: '#fff', fontSize: '9px', fontWeight: 800, letterSpacing: '0.08em',
+                    padding: '3px 10px', borderRadius: '999px', whiteSpace: 'nowrap',
+                  }}>⭐ BEST VALUE</div>
+                  <div style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', color: '#6355dc', textTransform: 'uppercase', marginBottom: '10px' }}>
+                    Creator Lite
+                  </div>
+                  {[
+                    { icon: '🎤', text: '10,000 chars/mo' },
+                    { icon: '📅', text: '2,500 chars/day' },
+                    { icon: '📝', text: '700 chars/request' },
+                    { icon: '🎬', text: '30 speed videos' },
+                    { icon: '🖼️', text: '100 BG removals' },
+                    { icon: '🤖', text: '50 AI images/mo' },
+                    { icon: '🎭', text: '9 emotion presets' },
+                  ].map((item, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '7px', marginBottom: i < 6 ? '7px' : 0 }}>
+                      <span style={{ fontSize: '13px', flexShrink: 0 }}>{item.icon}</span>
+                      <span style={{ fontSize: '11.5px', color: '#b0b0cc', fontWeight: 500 }}>{item.text}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+                
+              {/* Price + CTA */}
+              <div style={{ textAlign: 'center', marginBottom: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: '6px', marginBottom: '2px' }}>
+                  <span style={{ fontSize: '13px', color: '#3a3a52', textDecoration: 'line-through' }}>₹132 / $7</span>
+                  <span style={{
+                    fontFamily: "'Cabinet Grotesk', sans-serif",
+                    fontSize: '36px', fontWeight: 900, color: '#e2e2ef', letterSpacing: '-0.03em',
+                  }}>₹99 / $5</span>
+                  <span style={{ fontSize: '13px', color: '#55557a' }}>/mo</span>
+                  <span style={{
+                    background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.28)',
+                    color: '#34d399', fontSize: '10px', fontWeight: 700,
+                    padding: '3px 8px', borderRadius: '999px',
+                  }}>25% OFF</span>
+                </div>
+                <p style={{ fontSize: '11px', color: '#3a3a52', marginBottom: '14px' }}>Cancel anytime · No contracts</p>
+                
+                
+                <a  href="/pricing"
+                  onClick={() => setShowUpgradeModal(false)}
+                  style={{
+                    display: 'block', width: '100%', padding: '13px 24px',
+                    background: 'linear-gradient(135deg, #6355dc 0%, #8b5cf6 100%)',
+                    color: '#fff', borderRadius: '12px', textDecoration: 'none',
+                    fontSize: '14px', fontWeight: 700, letterSpacing: '0.01em',
+                    boxShadow: '0 8px 32px rgba(99,85,220,0.45)', textAlign: 'center',
+                  }}
+                >
+                  Upgrade to Creator Lite →
+                </a>
+              </div>
+                
+              {/* Social proof + dismiss */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span style={{ fontSize: '11px', color: '#3a3a52' }}>⭐⭐⭐⭐⭐ Trusted by 1,500+ creators</span>
+                <button
+                  onClick={() => setShowUpgradeModal(false)}
+                  style={{ background: 'none', border: 'none', color: '#3a3a52', fontSize: '11px', cursor: 'pointer', textDecoration: 'underline' }}
+                >
+                  Maybe later
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )} 
+
+      {showWelcomeModal && (
+        <div
+          className="modal-overlay"
+          onClick={(e) => { if (e.target === e.currentTarget) setShowWelcomeModal(false); }}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.88, y: 32 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.88, y: 32 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 28 }}
+            style={{
+              background: '#0d0d1c',
+              borderRadius: '24px',
+              padding: '0',
+              maxWidth: '560px',
+              width: '96%',
+              maxHeight: '85vh',
+              overflowY: 'auto',
+              position: 'relative',
+              border: '1px solid rgba(99,85,220,0.3)',
+              boxShadow: '0 40px 120px rgba(0,0,0,0.75)',
+            }}
+          >
+            <button
+              onClick={() => setShowWelcomeModal(false)}
+              style={{
+                position: 'absolute', top: 14, right: 14, zIndex: 10,
+                background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: '8px', width: 32, height: 32, cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: '#6a6a8a',
+              }}
+              aria-label="Close"
+            >
+              <FaTimes size={11} />
+            </button>
+            
+            {/* Top bar */}
+            <div style={{
+              height: '5px', borderRadius: '24px 24px 0 0',
+              background: 'linear-gradient(90deg, #6355dc, #8b5cf6, #f06cbe)',
+            }} />
+
+            <div style={{ padding: '28px 28px 24px' }}>
+          
+              {/* Header */}
+              <div style={{ textAlign: 'center', marginBottom: '22px' }}>
+                <div style={{ fontSize: '40px', marginBottom: '10px' }}>👋</div>
+                <h2 style={{
+                  fontFamily: "'Cabinet Grotesk', sans-serif",
+                  fontSize: '20px', fontWeight: 900, letterSpacing: '-0.025em',
+                  color: '#e2e2ef', marginBottom: '6px',
+                }}>
+                  Welcome to Scenith AI Voice
+                </h2>
+                <p style={{ fontSize: '13px', color: '#6a6a8a', maxWidth: '380px', margin: '0 auto', lineHeight: 1.55 }}>
+                  You're on the <strong style={{ color: '#a899f5' }}>Free Plan</strong>. Here's what you get — and what you unlock with <strong style={{ color: '#a899f5' }}>Creator Lite</strong> for just ₹99 / $5/mo.
+                </p>
+              </div>
+              
+              {/* Side-by-side */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '20px' }}>
+                {/* Free */}
+                <div style={{
+                  background: 'rgba(255,255,255,0.03)',
+                  border: '1px solid rgba(255,255,255,0.07)',
+                  borderRadius: '14px', padding: '16px 14px',
+                }}>
+                  <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', color: '#44445e', textTransform: 'uppercase', marginBottom: '12px' }}>
+                    🆓 Free Plan
+                  </div>
+                  {[
+                    { icon: '🎤', label: 'Voice chars', val: '2,000 /mo' },
+                    { icon: '📅', label: 'Daily limit', val: '200 /day' },
+                    { icon: '📝', label: 'Per request', val: '150 chars' },
+                    { icon: '🎬', label: 'Speed videos', val: '5 /mo' },
+                    { icon: '🖼️', label: 'BG removals', val: '5 /mo' },
+                    { icon: '🤖', label: 'AI images', val: '✗ None' },
+                    { icon: '🎭', label: 'Emotions', val: '✗ Locked' },
+                    { icon: '📤', label: 'Export', val: '720p' },
+                  ].map((item, i) => (
+                    <div key={i} style={{ marginBottom: i < 7 ? '8px' : 0 }}>
+                      <div style={{ fontSize: '10px', color: '#3a3a52', marginBottom: '1px' }}>{item.icon} {item.label}</div>
+                      <div style={{ fontSize: '12px', color: '#55557a', fontWeight: 600 }}>{item.val}</div>
+                    </div>
+                  ))}
+                </div>
+                
+                {/* Creator Lite */}
+                <div style={{
+                  background: 'rgba(99,85,220,0.08)',
+                  border: '1px solid rgba(99,85,220,0.3)',
+                  borderRadius: '14px', padding: '16px 14px',
+                  position: 'relative',
+                }}>
+                  <div style={{
+                    position: 'absolute', top: -11, left: '50%', transform: 'translateX(-50%)',
+                    background: 'linear-gradient(135deg, #6355dc, #8b5cf6)',
+                    color: '#fff', fontSize: '9px', fontWeight: 800, letterSpacing: '0.08em',
+                    padding: '3px 12px', borderRadius: '999px', whiteSpace: 'nowrap',
+                  }}>⭐ UPGRADE</div>
+                  <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', color: '#6355dc', textTransform: 'uppercase', marginBottom: '12px' }}>
+                    Creator Lite
+                  </div>
+                  {[
+                    { icon: '🎤', label: 'Voice chars', val: '10,000 /mo', hl: true },
+                    { icon: '📅', label: 'Daily limit', val: '2,500 /day', hl: true },
+                    { icon: '📝', label: 'Per request', val: '700 chars', hl: true },
+                    { icon: '🎬', label: 'Speed videos', val: '30 /mo', hl: true },
+                    { icon: '🖼️', label: 'BG removals', val: '100 /mo', hl: true },
+                    { icon: '🤖', label: 'AI images', val: '50 /mo', hl: true },
+                    { icon: '🎭', label: 'Emotions', val: '9 presets ✓', hl: true },
+                    { icon: '📤', label: 'Export', val: '1080p', hl: true },
+                  ].map((item, i) => (
+                    <div key={i} style={{ marginBottom: i < 7 ? '8px' : 0 }}>
+                      <div style={{ fontSize: '10px', color: '#6355dc', marginBottom: '1px' }}>{item.icon} {item.label}</div>
+                      <div style={{ fontSize: '12px', color: '#a899f5', fontWeight: 700 }}>{item.val}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+                
+              {/* Price */}
+              <div style={{ textAlign: 'center', marginBottom: '14px' }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: '6px', marginBottom: '2px' }}>
+                  <span style={{ fontSize: '12px', color: '#3a3a52', textDecoration: 'line-through' }}>₹132 / $7</span>
+                  <span style={{
+                    fontFamily: "'Cabinet Grotesk', sans-serif",
+                    fontSize: '34px', fontWeight: 900, color: '#e2e2ef', letterSpacing: '-0.03em',
+                  }}>₹99 / $5</span>
+                  <span style={{ fontSize: '12px', color: '#55557a' }}>/mo</span>
+                  <span style={{
+                    background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.28)',
+                    color: '#34d399', fontSize: '10px', fontWeight: 700,
+                    padding: '3px 8px', borderRadius: '999px',
+                  }}>25% OFF</span>
+                </div>
+                <p style={{ fontSize: '11px', color: '#3a3a52', marginBottom: '14px' }}>Cancel anytime · No hidden fees</p>
+                
+                
+                <a  href="/pricing"
+                  onClick={() => setShowWelcomeModal(false)}
+                  style={{
+                    display: 'block', width: '100%', padding: '13px 24px',
+                    background: 'linear-gradient(135deg, #6355dc 0%, #8b5cf6 100%)',
+                    color: '#fff', borderRadius: '12px', textDecoration: 'none',
+                    fontSize: '14px', fontWeight: 700,
+                    boxShadow: '0 8px 32px rgba(99,85,220,0.45)', textAlign: 'center',
+                  }}
+                >
+                  Upgrade to Creator Lite — ₹99 / $5/mo →
+                </a>
+              </div>
+                
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span style={{ fontSize: '11px', color: '#3a3a52' }}>⭐⭐⭐⭐⭐ 1,500+ creators trust Scenith</span>
+                <button
+                  onClick={() => setShowWelcomeModal(false)}
+                  style={{ background: 'none', border: 'none', color: '#3a3a52', fontSize: '11px', cursor: 'pointer', textDecoration: 'underline' }}
+                >
+                  Continue free
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}          
+
       {isLoggedIn && userProfile.role === 'BASIC' && (
         <div className="floating-upgrade-cta">
           <button 
@@ -3592,37 +3910,6 @@ return (
         </div>
       )}   
 
-      {show15SecPopup && (
-        <div className="modal-overlay">
-          <motion.div
-            className="premium-popup"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3 }}
-          >
-            <button
-              className="modal-close-button"
-              onClick={() => setShow15SecPopup(false)}
-            >
-              <FaTimes />
-            </button>
-            <div className="premium-popup-content">
-              <span className="premium-icon">🚀</span>
-              <h2>Unlock Premium Features</h2>
-              <a href="/pricing" className="premium-cta-btn">
-                View Premium Plans
-              </a>              
-              <p>Upgrade to Scenith Premium and get:</p>
-              <ul className="premium-features">
-                <li>✓ 17× more AI voice characters</li>
-                <li>✓ Unlimited video subtitle generation</li>
-                <li>✓ Advanced image editing tools</li>
-                <li>✓ Priority support</li>
-              </ul>
-            </div>
-          </motion.div>
-        </div>
-      )}  
       {showEmotionUpgradePopup && (
         <div className="modal-overlay">
           <motion.div
