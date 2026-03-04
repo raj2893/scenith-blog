@@ -1436,7 +1436,7 @@ return (
                     <span className="emotion-locked-badge">🔒 Premium feature</span>
                     <p className="emotion-locked-text">
                       You can preview emotions freely, but <strong>generating</strong> with emotions requires{' '}
-                      <strong>Creator</strong>, <strong>Studio</strong> or <strong>AI Voice Pro</strong>
+                       <strong>Creator Odyssey </strong> or <strong>Creator Spark</strong>
                     </p>
                     <a href="/pricing" className="emotion-upgrade-link">Upgrade →</a>
                   </div>
@@ -1516,7 +1516,7 @@ return (
                     {ttsUsage.role === 'BASIC' && (
                       <div className="inline-upgrade-cta">
                         <a href="/pricing" className="inline-upgrade-link">
-                          🔓 Need more? Upgrade to <span className="highlight-pro">AI Voice PRO</span> OR <span className="highlight-creator">CREATOR</span> for 10× higher limits
+                          🔓 Need more? Upgrade to <span className="highlight-pro">Creator Spark</span> OR <span className="highlight-creator">Creator Odyssey </span> for 10× higher limits
                         </a>
                         <div className="creator-upgrade-hint">
                           Creators usually upgrade after 2–3 generations.
@@ -1527,10 +1527,10 @@ return (
                     {ttsUsage.role === 'CREATOR' && (
                       <div className="inline-upgrade-cta">
                         <a href="/pricing" className="inline-upgrade-link">
-                          🔓 Need more? Upgrade to STUDIO for 10× higher limits
+                          🔓 Need more? Upgrade to Creator Odyssey for 3× higher limits (250,000 chars/mo)
                         </a>
                       </div>
-                    )}                    
+                    )}                   
                   </div>
                 </div>
               )}
@@ -1542,7 +1542,7 @@ return (
                       <span className="upgrade-prompt-icon">⚡</span>
                       <div className="upgrade-prompt-text">
                         <h4>Running low on characters?</h4>
-                        <p>Upgrade to Creator for <strong>17× more characters</strong> (60,000/month) or get individual AI Voice Pro for focused power.</p>
+                        <p>Upgrade to Creator Spark for <strong>37× more characters</strong> (75,000/month) or Creator Odyssey for 125× more (250,000/month).</p>
                       </div>
                       <div className="upgrade-prompt-actions">
                         <a href="/pricing" className="upgrade-prompt-btn primary">
@@ -1640,8 +1640,8 @@ return (
                 <div className="limit-exceeded-message">
                   <p className="limit-message-title">⚡ You've used all your {userProfile.role} plan characters!</p>
                   <div className="limit-benefits">
-                    <div className="benefit-item">✓ CREATOR: 50,000 chars/month + 5,000/day</div>
-                    <div className="benefit-item">✓ STUDIO: 150,000 chars/month + No daily limit</div>
+                    <div className="benefit-item">✓ Creator Spark: 75,000 chars/month + 20,000/day</div>
+                    <div className="benefit-item">✓ Creator Odyssey: 250,000 chars/month + Unlimited/day</div>
                     <div className="benefit-item">✓ Unlimited voice generations</div>
                   </div>
                   <p className="limit-message-cta">Upgrade now and continue creating! 🎯</p>
@@ -1806,6 +1806,65 @@ return (
                 <button onClick={handleDownload} className="cta-button download-button">
                   Download MP3
                 </button>
+          
+                {/* MOVE POPUPS HERE */}
+                {showFirstGenBanner && (
+                  <motion.div 
+                    className="inline-upgrade-banner first-gen-banner"
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                  >
+                    <div className="banner-content">
+                      <span className="banner-icon">⚡</span>
+                      <div className="banner-text">
+                       <strong>Like this voice?</strong> Upgrade to 37× more characters & voice emotions
+                      </div>
+                      <a href="/pricing" className="banner-cta">
+                        Upgrade Now
+                      </a>
+                    </div>
+                  </motion.div>
+                )}
+
+                {showRepeatGenBanner && (
+                  <motion.div 
+                    className="inline-upgrade-banner repeat-gen-banner"
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                  >
+                    <div className="banner-content">
+                      <span className="banner-icon">👀</span>
+                      <div className="banner-text">
+                        <strong>You're using Scenith a lot today!</strong> Creator Spark gives 37× limits + longer scripts
+                      </div>
+                      <a href="/pricing" className="banner-cta">
+                        See Plans
+                      </a>
+                    </div>
+                  </motion.div>
+                )}
+
+                {downloadSuccess && userProfile.role === 'BASIC' && (
+                  <motion.div 
+                    className="inline-download-success"
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                  >
+                    <div className="success-content">
+                      <span className="success-icon">✅</span>
+                      <div className="success-text">
+                        <strong>Download successful!</strong>
+                        <p>Want to create more? Get 17× more characters with Creator or AI Voice Pro.</p>
+                      </div>
+                      <a href="/pricing" className="success-cta-btn">
+                        View Plans
+                      </a>
+                    </div>
+                  </motion.div>
+                )}
               </motion.div>
             </section>
           )}     
@@ -3903,8 +3962,8 @@ return (
           >
             <span className="float-icon">⚡</span>
             <span className="float-text">
-              <strong>Upgrade for 17× More Characters</strong>
-              <small>Creator Odyssey</small>
+              <strong>Upgrade for 37× More Characters</strong>
+              <small>Creator Spark from ₹499/mo</small>
             </span>
           </button>
         </div>
@@ -3939,16 +3998,16 @@ return (
               <a href="/pricing" className="emotion-popup-plan-card creator">
                 <span className="plan-emoji">⭐</span>
                 <div>
-                  <strong>Creator</strong>
-                  <p>60,000 chars/month + Emotions</p>
+                  <strong>Creator Spark</strong>
+                  <p>75,000 chars/month + Emotions</p>
                 </div>
                 <span className="plan-arrow">→</span>
               </a>
               <a href="/pricing" className="emotion-popup-plan-card studio">
                 <span className="plan-emoji">🏆</span>
                 <div>
-                  <strong>Studio</strong>
-                  <p>200,000 chars/month + Emotions</p>
+                  <strong>Creator Odyssey</strong>
+                  <p>250,000 chars/month + Emotions</p>
                 </div>
                 <span className="plan-arrow">→</span>
               </a>

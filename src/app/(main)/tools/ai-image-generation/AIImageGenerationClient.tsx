@@ -8,6 +8,7 @@ import { API_BASE_URL, CDN_URL } from '../../../config';
 import { FaTimes } from 'react-icons/fa';
 import '../../../../../styles/tools/AIImageGeneration.css';
 import AIImageUpgradePopup from "@/app/components/AIImageUpgradePopup";
+import { div } from 'framer-motion/client';
 
 // TypeScript interfaces
 interface UserProfile {
@@ -40,8 +41,11 @@ interface ImageUsage {
     remaining: number;
   };
   role: string;
-  imagesPerRequest: number;
-  resolution: string;
+  availableModels: {
+    id: string;
+    displayName: string;
+    creditsPerImage: number;
+  }[];
 }
 
 interface LoginFormData {
@@ -86,6 +90,7 @@ const AIImageGeneratorClient: React.FC = () => {
   const [imageUsage, setImageUsage] = useState<ImageUsage | null>(null);
   const [promptCharCount, setPromptCharCount] = useState(0);
   const [imageHistory, setImageHistory] = useState<GeneratedImage[]>([]);
+  const [selectedModel, setSelectedModel] = useState<string>('');
   const [showHistory, setShowHistory] = useState(false);
   const [downloadSuccess, setDownloadSuccess] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState<string>('');
@@ -100,6 +105,29 @@ const AIImageGeneratorClient: React.FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Fetch actual active plan (mirrors pricing page logic)
+  const [activePlanRole, setActivePlanRole] = useState<string>('BASIC');
+
+  useEffect(() => {
+    const fetchActivePlan = async () => {
+      if (!isLoggedIn) return;
+      try {
+        const token = localStorage.getItem('token');
+        const plansRes = await axios.get(`${API_BASE_URL}/api/payments/active-plans`, {
+          headers: { Authorization: `Bearer ${token}` },
+        }).catch(() => ({ data: [] }));
+        const activePlans: string[] = plansRes.data.map((p: any) => p.planType);
+        if (activePlans.includes('STUDIO'))            setActivePlanRole('STUDIO');
+        else if (activePlans.includes('CREATOR'))      setActivePlanRole('CREATOR');
+        else if (activePlans.includes('CREATOR_LITE')) setActivePlanRole('CREATOR_LITE');
+        else                                            setActivePlanRole('BASIC');
+      } catch (e) {
+        console.error('Failed to fetch active plans', e);
+      }
+    };
+    fetchActivePlan();
+  }, [isLoggedIn]);
 
   // Fetch image usage when user logs in
   useEffect(() => {
@@ -119,6 +147,9 @@ const AIImageGeneratorClient: React.FC = () => {
         if (response.ok) {
           const data = await response.json();
           setImageUsage(data);
+          if (data.availableModels?.length > 0 && !selectedModel) {
+            setSelectedModel(data.availableModels[0].id);
+          }
         }
       } catch (error) {
         console.error('Error fetching image usage:', error);
@@ -282,19 +313,27 @@ const AIImageGeneratorClient: React.FC = () => {
       return;
     }
 
-    // Check usage limits
+    // Check model selected
+    if (!selectedModel) {
+      setError('Please select an AI model to generate with.');
+      return;
+    }
+
+    // Check usage limits (credit-based)
     if (imageUsage) {
-      const monthlyExceeded = imageUsage.monthly.limit > 0 && imageUsage.monthly.remaining <= 0;
-      const dailyExceeded = imageUsage.daily.limit > 0 && imageUsage.daily.remaining <= 0;
+      const selectedModelData = imageUsage.availableModels?.find(m => m.id === selectedModel);
+      const creditCost = selectedModelData?.creditsPerImage ?? 1;
+      const monthlyExceeded = imageUsage.monthly.limit > 0 && imageUsage.monthly.remaining < creditCost;
+      const dailyExceeded = imageUsage.daily.limit > 0 && imageUsage.daily.remaining < creditCost;
 
       if (monthlyExceeded) {
-        setError(`Monthly image generation limit exceeded for ${imageUsage.role} plan. Upgrade to generate more images.`);
+        setError(`Not enough monthly credits. This model costs ${creditCost} credits (${imageUsage.monthly.remaining} remaining). Upgrade to generate more.`);
         setTimeout(() => setError(null), 10000);
         return;
       }
 
       if (dailyExceeded) {
-        setError(`Daily image generation limit exceeded for ${imageUsage.role} plan. Try again tomorrow or upgrade for higher limits.`);
+        setError(`Not enough daily credits. This model costs ${creditCost} credits (${imageUsage.daily.remaining} remaining today). Try tomorrow or upgrade.`);
         setTimeout(() => setError(null), 10000);
         return;
       }
@@ -321,23 +360,28 @@ const AIImageGeneratorClient: React.FC = () => {
         body: JSON.stringify({
           prompt: enhancedPrompt,
           negativePrompt: negativePrompt.trim() || 'blurry, low quality, distorted',
+          model: selectedModel,
         }),
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
-        throw new Error(errorData?.message || `HTTP error! status: ${response.status}`);
+        const errorText = await response.text().catch(() => 'Unknown error');
+        throw new Error(errorText || `HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.json();
-      const images: GeneratedImage[] = data.images.map((img: any) => ({
+            const img = await response.json();
+      const rawPath = img.imagePath as string;
+      const fullImagePath = rawPath.startsWith('http')
+        ? rawPath
+        : `${CDN_URL}/${rawPath}`;
+      const images: GeneratedImage[] = [{
         id: img.id,
-        imagePath: `${CDN_URL}/${img.imagePath}`,
+        imagePath: fullImagePath,
         prompt: img.prompt,
         negativePrompt: img.negativePrompt,
-        resolution: img.resolution,
+        resolution: img.resolution || '1024x1024',
         createdAt: img.createdAt,
-      }));
+      }];
 
       setGeneratedImages(images);
 
@@ -448,10 +492,12 @@ const AIImageGeneratorClient: React.FC = () => {
 
   const isLimitsExceeded = useCallback(() => {
     if (!isLoggedIn || !imageUsage) return false;
-    const monthlyExceeded = imageUsage.monthly.limit > 0 && imageUsage.monthly.remaining <= 0;
-    const dailyExceeded = imageUsage.daily.limit > 0 && imageUsage.daily.remaining <= 0;
+    const selectedModelData = imageUsage.availableModels?.find(m => m.id === selectedModel);
+    const creditCost = selectedModelData?.creditsPerImage ?? 1;
+    const monthlyExceeded = imageUsage.monthly.limit > 0 && imageUsage.monthly.remaining < creditCost;
+    const dailyExceeded = imageUsage.daily.limit > 0 && imageUsage.daily.remaining < creditCost;
     return monthlyExceeded || dailyExceeded;
-  }, [isLoggedIn, imageUsage]);
+  }, [isLoggedIn, imageUsage, selectedModel]);
 
   const uploadOriginalImage = async (file: File): Promise<string> => {
     const formData = new FormData();
@@ -835,7 +881,6 @@ const AIImageGeneratorClient: React.FC = () => {
                   <label className="style-label-text" htmlFor="style-select">
                     🎨 Art Style:
                   </label>
-                  
                   <select
                     id="style-select"
                     value={selectedStyle}
@@ -850,6 +895,67 @@ const AIImageGeneratorClient: React.FC = () => {
                     ))}
                   </select>
                 </div>
+
+                {isLoggedIn && imageUsage && imageUsage.availableModels?.length > 0 && (
+                  <div className="style-selector-section" style={{ marginTop: 12 }}>
+                    <label className="style-label-text">
+                      🤖 AI Model:
+                    </label>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 8 }}>
+                      {imageUsage.availableModels.map((model) => (
+                        <div
+                          key={model.id}
+                          onClick={() => setSelectedModel(model.id)}
+                          style={{
+                            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                            padding: '14px 16px', borderRadius: 12, cursor: 'pointer',
+                            border: `2px solid ${selectedModel === model.id ? '#7c6ef5' : 'rgba(255,255,255,0.25)'}`,
+                            background: selectedModel === model.id ? 'rgba(99,85,220,0.25)' : 'rgba(255,255,255,0.11)',
+                            transition: 'all 0.18s',
+                          }}
+                        >
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                            <div style={{
+                              width: 16, height: 16, borderRadius: '50%', flexShrink: 0,
+                              border: `2px solid ${selectedModel === model.id ? '#a899f5' : 'rgba(255,255,255,0.5)'}`,
+                              background: selectedModel === model.id ? '#7c6ef5' : 'transparent',
+                              transition: 'all 0.18s',
+                            }} />
+                            <span style={{
+                              fontSize: 15,
+                              color: selectedModel === model.id ? '#ffffff' : '#d8d8f0',
+                              fontWeight: selectedModel === model.id ? 700 : 500,
+                              letterSpacing: '0.01em',
+                            }}>
+                              {model.displayName}
+                            </span>
+                          </div>
+                          <span style={{
+                            fontSize: 12, fontWeight: 700, padding: '4px 12px', borderRadius: 999,
+                            background: selectedModel === model.id ? 'rgba(99,85,220,0.4)' : 'rgba(255,255,255,0.12)',
+                            border: `1px solid ${selectedModel === model.id ? '#a899f5' : 'rgba(255,255,255,0.3)'}`,
+                            color: selectedModel === model.id ? '#e0d8ff' : '#c8c8e8',
+                          }}>
+                            {model.creditsPerImage} cr/img
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {isLoggedIn && !imageUsage && (
+                  <div style={{ marginTop: 12, padding: '10px 14px', borderRadius: 10, background: 'rgba(99,85,220,0.07)', border: '1px solid rgba(99,85,220,0.2)', fontSize: 13, color: '#55557a' }}>
+                    Loading available models...
+                  </div>
+                )}
+
+                {isLoggedIn && imageUsage && imageUsage.availableModels?.length === 0 && (
+                  <div style={{ marginTop: 12, padding: '12px 14px', borderRadius: 10, background: 'rgba(239,68,68,0.07)', border: '1px solid rgba(239,68,68,0.2)', fontSize: 13, color: '#f87171' }}>
+                    ⚠️ No image models available on your plan.{' '}
+                    <a href="/pricing" style={{ color: '#a899f5', fontWeight: 700 }}>Upgrade here →</a>
+                  </div>
+                )}
 
                 {selectedStyle !== 'realistic' && (
                   <div className="style-info-tooltip">
@@ -873,13 +979,13 @@ const AIImageGeneratorClient: React.FC = () => {
 
                 {isLoggedIn && imageUsage && (
                   <div className="usage-info">
-                    {imageUsage.daily.limit > 0 && 
+                    {imageUsage.daily.limit > 0 &&
                      imageUsage.monthly.limit > 0 &&
                      imageUsage.daily.remaining < imageUsage.monthly.remaining && (
                       <div className="usage-section">
-                        <p className="usage-label today">⚠️ Today's Limit</p>
+                        <p className="usage-label today">⚠️ Today's Credits</p>
                         <div className="usage-bar-container">
-                          <div 
+                          <div
                             className={`usage-bar-fill ${
                               (imageUsage.daily.used / imageUsage.daily.limit) >= 0.95 ? 'critical' :
                               (imageUsage.daily.used / imageUsage.daily.limit) >= 0.80 ? 'warning' : 'normal'
@@ -888,57 +994,50 @@ const AIImageGeneratorClient: React.FC = () => {
                           />
                         </div>
                         <p className="usage-text">
-                          <strong>{imageUsage.daily.remaining.toLocaleString()}</strong> images remaining today
-                          ({imageUsage.daily.used.toLocaleString()} / {imageUsage.daily.limit.toLocaleString()} used)
+                          <strong>{imageUsage.daily.remaining}</strong> credits remaining today
+                          ({imageUsage.daily.used} / {imageUsage.daily.limit} used)
                         </p>
                       </div>
                     )}
 
                     <div className="usage-section">
-                      <p className={`usage-label ${
-                        imageUsage.monthly.limit === -1 ? '' :
-                        imageUsage.daily.limit > 0 && 
-                        imageUsage.monthly.remaining > 0 && 
-                        imageUsage.daily.remaining >= imageUsage.monthly.remaining
-                          ? 'month'
-                          : ''
-                      }`}>
-                        📅 {imageUsage.monthly.limit === -1 ? 'This Month (Unlimited)' : 'This Month\'s Limit'}
+                      <p className="usage-label month">📅 Monthly Credits</p>
+                      <div className="usage-bar-container">
+                        <div
+                          className={`usage-bar-fill ${
+                            (imageUsage.monthly.used / imageUsage.monthly.limit) >= 0.95 ? 'critical' :
+                            (imageUsage.monthly.used / imageUsage.monthly.limit) >= 0.80 ? 'warning' : 'normal'
+                          }`}
+                          style={{ width: `${Math.min(100, (imageUsage.monthly.used / Math.max(imageUsage.monthly.limit, 1)) * 100)}%` }}
+                        />
+                      </div>
+                      <p className="usage-text">
+                        <strong>{imageUsage.monthly.remaining}</strong> credits remaining this month
+                        ({imageUsage.monthly.used} / {imageUsage.monthly.limit} used)
                       </p>
-                      {imageUsage.monthly.limit === -1 ? (
-                        <p className="usage-text">
-                          <strong>Unlimited</strong> - No monthly generation limit
-                        </p>
-                      ) : (
-                        <>
-                          <div className="usage-bar-container">
-                            <div 
-                              className={`usage-bar-fill ${
-                                (imageUsage.monthly.used / imageUsage.monthly.limit) >= 0.95 ? 'critical' :
-                                (imageUsage.monthly.used / imageUsage.monthly.limit) >= 0.80 ? 'warning' : 'normal'
-                              }`}
-                              style={{ width: `${(imageUsage.monthly.used / imageUsage.monthly.limit) * 100}%` }}
-                            />
-                          </div>
-                          <p className="usage-text">
-                            <strong>{imageUsage.monthly.remaining.toLocaleString()}</strong> images remaining this month
-                            ({imageUsage.monthly.used.toLocaleString()} / {imageUsage.monthly.limit.toLocaleString()} used)
-                          </p>
-                        </>
-                      )}
 
-                      {imageUsage.role === 'BASIC' && (
+                      {selectedModel && imageUsage.availableModels?.length > 0 && (() => {
+                        const m = imageUsage.availableModels.find(x => x.id === selectedModel);
+                        return m ? (
+                          <p className="usage-text" style={{ marginTop: 4, color: '#a899f5' }}>
+                            ✦ <strong>{m.displayName}</strong> costs <strong>{m.creditsPerImage} credit{m.creditsPerImage !== 1 ? 's' : ''}</strong> per image
+                            → ~<strong>{Math.floor(imageUsage.monthly.remaining / m.creditsPerImage)}</strong> images remaining
+                          </p>
+                        ) : null;
+                      })()}
+
+                      {imageUsage.availableModels?.length === 0 && (
                         <div className="inline-upgrade-cta">
                           <a href="/pricing" className="inline-upgrade-link">
-                            🔓 Need more? Upgrade to CREATOR for 13× more images (400/month)
+                            🔓 Upgrade to Creator Spark or Odyssey to unlock AI image generation
                           </a>
                         </div>
                       )}
 
-                      {imageUsage.role === 'CREATOR' && (
+                      {imageUsage.availableModels?.length > 0 && imageUsage.monthly.remaining <= 0 && (
                         <div className="inline-upgrade-cta">
                           <a href="/pricing" className="inline-upgrade-link">
-                            🔓 Need more? Upgrade to STUDIO for 2× more images (900/month)
+                            🔓 Out of credits — Upgrade for more
                           </a>
                         </div>
                       )}
@@ -1215,7 +1314,7 @@ const AIImageGeneratorClient: React.FC = () => {
                     </div>
                     <div className="quick-qa">
                       <strong>Q: What if I exceed my generation limits?</strong>
-                      <p>A: Free users get 30 images/month. Upgrade to CREATOR (400/month) or STUDIO (900/month) for higher limits and faster generation.</p>
+                      <p>A: Free plan has no image credits. Upgrade to Creator Lite (100 cr/mo), Creator Spark (250 cr/mo), or Creator Odyssey (500 cr/mo) to start generating images.</p>
                     </div>
                   </div>
                 </div>
@@ -1553,7 +1652,7 @@ const AIImageGeneratorClient: React.FC = () => {
             <div className="vs-card">
               <h3>Scenith vs Midjourney</h3>
               <ul>
-                <li>✅ <strong>Scenith:</strong> Free 30 images/month, web-based interface</li>
+                <li>✅ <strong>Scenith:</strong> Credit-based plans from ₹99/mo, web-based interface</li>
                 <li>❌ <strong>Midjourney:</strong> $10/month minimum, Discord-only access</li>
                 <li>✅ <strong>Scenith:</strong> One-click generation, no commands needed</li>
                 <li>⚠️ <strong>Midjourney:</strong> Complex slash commands required</li>
@@ -1692,20 +1791,29 @@ const AIImageGeneratorClient: React.FC = () => {
       {showImageUpgradePopup && (
         <AIImageUpgradePopup onClose={() => setShowImageUpgradePopup(false)} />
       )}
-      {isLoggedIn && userProfile.role === 'BASIC' && (
-        <div className="floating-upgrade-cta">
-          <button 
-            className="floating-upgrade-btn"
-            onClick={() => window.location.href = '/pricing'}
-          >
-            <span className="float-icon">⚡</span>
-            <span className="float-text">
-              <strong>Upgrade for 13× More Images</strong>
-              <small>CREATOR Plan</small>
-            </span>
-          </button>
-        </div>
-      )}
+      {isLoggedIn && activePlanRole !== 'STUDIO' && activePlanRole !== 'ADMIN' && (() => {
+        const upgradeMap: Record<string, { icon: string; title: string; sub: string }> = {
+          BASIC:        { icon: '🎨', title: 'Unlock AI Image Generation', sub: 'Creator Lite from ₹99/mo' },
+          CREATOR_LITE: { icon: '⚡', title: 'Get More Image Credits',     sub: 'Creator Spark — 250 cr/mo' },
+          CREATOR:      { icon: '👑', title: 'Unlock 500 Credits/Month',   sub: 'Creator Odyssey — ₹999/mo' },
+        };
+        const upgrade = upgradeMap[activePlanRole];
+        if (!upgrade) return null;
+        return (
+          <div className="floating-upgrade-cta">
+            <button
+              className="floating-upgrade-btn"
+              onClick={() => window.location.href = '/pricing'}
+            >
+              <span className="float-icon">{upgrade.icon}</span>
+              <span className="float-text">
+                <strong>{upgrade.title}</strong>
+                <small>{upgrade.sub}</small>
+              </span>
+            </button>
+          </div>
+        );
+      })()}
     </div>
   );
 };

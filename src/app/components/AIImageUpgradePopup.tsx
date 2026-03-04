@@ -169,18 +169,13 @@ export default function AIImageUpgradePopup({ onClose }: Props) {
             margin: "0 0 8px", lineHeight: 1.2,
             letterSpacing: "-0.025em",
           }}>
-            You're on{" "}
-            <span style={{
-              background: "linear-gradient(90deg, #ff6b6b, #feca57)",
-              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}>30 images/month.</span>
-            <br />
+            Unlock{" "}
             <span style={{
               background: "linear-gradient(90deg, #667eea, #a78bfa, #f093fb)",
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
               backgroundClip: "text",
-            }}>Upgrade for 13×</span>{" "}more.
+            }}>AI Image Generation</span>
+            <br />with Creator plans.
           </h2>
 
           {/* Sub-copy */}
@@ -188,53 +183,43 @@ export default function AIImageUpgradePopup({ onClose }: Props) {
             color: "rgba(255,255,255,0.48)", fontSize: "0.84rem",
             margin: "0 0 20px", lineHeight: 1.6,
           }}>
-            CREATOR plan unlocks{" "}
-            <strong style={{ color: "rgba(255,255,255,0.78)" }}>400 AI images/month</strong>,
-            all 8 styles, higher resolution &amp; full commercial rights.
+            Free plan has no image credits.{" "}
+            <strong style={{ color: "rgba(255,255,255,0.78)" }}>Creator Lite</strong> starts at 100 credits/mo,{" "}
+            <strong style={{ color: "rgba(255,255,255,0.78)" }}>Creator Spark</strong> gives 250 credits/mo, and{" "}
+            <strong style={{ color: "rgba(255,255,255,0.78)" }}>Creator Odyssey</strong> gives 500 credits/mo — all 7 models included.
           </p>
 
-          {/* Stats comparison row */}
+          {/* Stats comparison row — 3 plans */}
           <div style={{
-            display: "grid", gridTemplateColumns: "1fr auto 1fr",
+            display: "grid", gridTemplateColumns: "1fr 1fr 1fr",
             gap: "8px", alignItems: "center", marginBottom: "18px",
           }}>
-            {/* Free */}
-            <div
-              className="img-pop-stat"
-              style={{
-                background: "rgba(255,107,107,0.07)",
-                border: "1px solid rgba(255,107,107,0.18)",
-                borderRadius: "12px", padding: "12px 10px",
-                textAlign: "center", transition: "all 0.2s",
-              }}
-            >
-              <div style={{ fontSize: "1.5rem", fontWeight: 900, color: "#ff6b6b", letterSpacing: "-0.03em" }}>30</div>
-              <div style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.4)", fontWeight: 600, marginTop: "2px" }}>images/month<br />(Free)</div>
+            <div className="img-pop-stat" style={{
+              background: "rgba(102,126,234,0.07)", border: "1px solid rgba(102,126,234,0.2)",
+              borderRadius: "12px", padding: "12px 8px", textAlign: "center", transition: "all 0.2s",
+            }}>
+              <div style={{ fontSize: "1.3rem", fontWeight: 900, color: "#818cf8", letterSpacing: "-0.03em" }}>100</div>
+              <div style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.4)", fontWeight: 600, marginTop: "2px" }}>cr/mo<br />Lite</div>
             </div>
 
-            {/* Arrow */}
-            <div style={{
-              fontSize: "1.3rem", color: "rgba(255,255,255,0.25)",
-              textAlign: "center", userSelect: "none",
-            }}>→</div>
-
-            {/* Creator */}
-            <div
-              className="img-pop-stat"
-              style={{
-                background: "rgba(102,126,234,0.1)",
-                border: "1px solid rgba(102,126,234,0.3)",
-                borderRadius: "12px", padding: "12px 10px",
-                textAlign: "center", transition: "all 0.2s",
-              }}
-            >
+            <div className="img-pop-stat" style={{
+              background: "rgba(102,126,234,0.12)", border: "1px solid rgba(102,126,234,0.35)",
+              borderRadius: "12px", padding: "12px 8px", textAlign: "center", transition: "all 0.2s",
+            }}>
               <div style={{
-                fontSize: "1.5rem", fontWeight: 900, letterSpacing: "-0.03em",
+                fontSize: "1.3rem", fontWeight: 900, letterSpacing: "-0.03em",
                 background: "linear-gradient(90deg, #667eea, #a78bfa)",
-                WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}>400</div>
-              <div style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.5)", fontWeight: 600, marginTop: "2px" }}>images/month<br />(Creator)</div>
+                WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+              }}>250</div>
+              <div style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.5)", fontWeight: 600, marginTop: "2px" }}>cr/mo<br />Spark ⭐</div>
+            </div>
+
+            <div className="img-pop-stat" style={{
+              background: "rgba(240,147,251,0.07)", border: "1px solid rgba(240,147,251,0.2)",
+              borderRadius: "12px", padding: "12px 8px", textAlign: "center", transition: "all 0.2s",
+            }}>
+              <div style={{ fontSize: "1.3rem", fontWeight: 900, color: "#f093fb", letterSpacing: "-0.03em" }}>500</div>
+              <div style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.4)", fontWeight: 600, marginTop: "2px" }}>cr/mo<br />Odyssey</div>
             </div>
           </div>
 
@@ -244,10 +229,10 @@ export default function AIImageUpgradePopup({ onClose }: Props) {
             gap: "7px", marginBottom: "20px",
           }}>
             {[
-              { icon: "🖼️", label: "Higher resolution (896×1152)" },
+              { icon: "🤖", label: "All 7 AI models unlocked" },
               { icon: "✏️", label: "Edit in image editor" },
-              { icon: "🎭", label: "8 art styles unlocked" },
-              { icon: "⚡", label: "15 images per day" },
+              { icon: "🎨", label: "8 art styles included" },
+              { icon: "⚡", label: "Daily credit caps per plan" },
             ].map((p) => (
               <div key={p.label} style={{
                 display: "flex", alignItems: "flex-start", gap: "7px",
@@ -275,15 +260,18 @@ export default function AIImageUpgradePopup({ onClose }: Props) {
             <div>
               <span style={{
                 fontSize: "0.7rem", color: "rgba(255,255,255,0.35)",
-                textDecoration: "line-through", display: "block", lineHeight: 1,
-              }}>₹465 / $12</span>
+                display: "block", lineHeight: 1, marginBottom: 2,
+              }}>Starts at</span>
               <span style={{
                 fontSize: "1.35rem", fontWeight: 900, color: "#a5b4fc",
                 letterSpacing: "-0.03em",
               }}>
-                ₹349<span style={{ fontSize: "0.72rem", fontWeight: 600 }}>/mo</span>
+                ₹99<span style={{ fontSize: "0.72rem", fontWeight: 600 }}>/mo</span>
                 {" "}·{" "}
-                $9<span style={{ fontSize: "0.72rem", fontWeight: 600 }}>/mo</span>
+                $3<span style={{ fontSize: "0.72rem", fontWeight: 600 }}>/mo</span>
+              </span>
+              <span style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.3)", display: "block", marginTop: 2 }}>
+                Creator Lite · Spark ₹499 · Odyssey ₹999
               </span>
             </div>
             <span style={{ marginLeft: "auto", flexShrink: 0,
@@ -296,8 +284,7 @@ export default function AIImageUpgradePopup({ onClose }: Props) {
           </div>
 
           {/* CTA primary — shimmer button */}
-          <a
-            href="/pricing"
+          <a href="/pricing"
             className="img-pop-cta-primary"
             onClick={onClose}
             style={{
@@ -315,7 +302,7 @@ export default function AIImageUpgradePopup({ onClose }: Props) {
               letterSpacing: "-0.01em",
             }}
           >
-            🚀 Upgrade to Creator — 25% OFF
+            🚀 See Creator Plans — 25% OFF
           </a>
 
           {/* Secondary dismiss */}
@@ -331,7 +318,7 @@ export default function AIImageUpgradePopup({ onClose }: Props) {
               cursor: "pointer", transition: "all 0.2s", fontWeight: 500,
             }}
           >
-            Continue with 30 images/month
+            Continue without image generation
           </button>
         </div>
       </div>

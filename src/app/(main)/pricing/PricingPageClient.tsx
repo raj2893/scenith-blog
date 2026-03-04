@@ -538,9 +538,9 @@ const injectStyles = () => {
 ───────────────────────────────────────────────────────────────────── */
 const HL: Record<string, number[]> = {
   BASIC: [],
-  CREATOR_LITE: [0, 1, 2],
-  CREATOR: [0, 1, 2],
-  STUDIO: [0, 1, 2],
+  CREATOR_LITE: [0, 1, 2,3],
+  CREATOR: [0, 1, 2,3],
+  STUDIO: [0, 1, 2,3],
 };
 
 /* ─────────────────────────────────────────────────────────────────────
@@ -803,10 +803,27 @@ export default function PricingPageClient() {
   /* ── getPlans ── */
   const getPlans = (): PricingPlan[] => {
     const basicFeats       = ['2,000 voice chars/mo · 720p export', '5 speed videos + 5 BG removals', '10 SVG downloads', 'Community support', 'Commercial use'];
-    const creatorLiteFeats = ['10,000 voice chars/mo · 1080p export', '🎭 Voice emotions — 9 presets', '30 videos · 100 BG removals · Unlimited SVGs · 50 AI images/month'];
-    const creatorFeats     = ['75,000 voice chars/mo · 1440p export', '🎭 Voice emotions — 9 presets', '60 videos · 500 BG removals · Unlimited SVGs · 400 AI images/month'];
-    const odysseyFeats     = ['250,000 voice chars/mo · 4K export', '🎭 Voice emotions + all premium voices', 'Unlimited videos, removals & 900 AI images'];
+    const creatorLiteFeats = [
+  '10,000 voice chars/mo · 1080p export',
+  '🎭 Voice emotions — 9 presets',
+  '30 videos · 100 BG removals · Unlimited SVGs',
+  '🎨 100 image credits/mo · All 7 models included'
+];
 
+const creatorFeats = [
+  '75,000 voice chars/mo · 1440p export',
+  '🎭 Voice emotions — 9 presets',
+  '60 videos · 500 BG removals · Unlimited SVGs',
+  '🎨 250 image credits/mo · All 7 models included'
+];
+
+const odysseyFeats = [
+  '250,000 voice chars/mo · 4K export',
+  '🎭 Voice emotions + all premium voices',
+  'Unlimited videos, removals & SVGs',
+  '🎨 500 image credits/mo · All 7 models included'
+];
+    
     if (isIndianUser === null) {
       return [
         { name: 'Starter Forge',   role: 'BASIC',        price: 0, currency: 'FREE',    ttsLimit: 500,    features: basicFeats },
@@ -1159,7 +1176,7 @@ export default function PricingPageClient() {
 
                     <p className="sc-plan-tagline">
                       {plan.role === 'BASIC'        && 'Build your first AI creations — free forever.'}
-                      {plan.role === 'CREATOR_LITE'  && 'Dip your toes in — AI tools at ₹99/mo.'}
+                      {plan.role === 'CREATOR_LITE' && 'Start creating — voice, images & more at ₹99/mo.'}
                       {plan.role === 'CREATOR'       && 'Spark your creativity with powerful AI tools.'}
                       {plan.role === 'STUDIO'        && 'Master your creative journey with limitless power.'}
                     </p>
@@ -1250,7 +1267,9 @@ export default function PricingPageClient() {
                       ['Max Video Length',         '5 min',    '10 min',       '30 min',       'Unlimited'],
                       ['Background Removals/mo',   '5',        '100',          '500',          '1,500'],
                       ['SVG Downloads',            '10/month', 'Unlimited',    'Unlimited',    'Unlimited'],
-                      ['AI Images/Month',          '✗',        '50',           '400',          '900'],
+                      ['AI Image Credits/Month',   '✗',       '100 cr',         '250 cr',          '500 cr'],
+                      ['Daily Image Credit Cap',   '✗',       '15 cr/day',      '30 cr/day',       '60 cr/day'],
+                      ['Image Models Available', '✗', 'All 7 models', 'All 7 models', 'All 7 models'],
                       ['Max Export Quality',       '720p',     '1080p',        '1440p',        '4K'],
                       ['Commercial Use',           '✓',        '✓',            '✓',            '✓'],
                       ['Priority Support',         '✗',        '✗',            '✓',            '✓ Dedicated'],
