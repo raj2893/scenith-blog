@@ -27,6 +27,9 @@ interface Voice {
   profileUrl: string;
   languageCode: string;
   voiceStyle?: string;
+  voiceId?: string;
+  provider?: string;
+  description?: string;
   ssmlConfig?: {
     rate?: string;
     pitch?: string;
@@ -292,6 +295,13 @@ const AIVoiceGeneratorClient: React.FC = () => {
     };
     role: string;
     maxCharRequest: number;
+    externalProviders?: {
+      hasAccess: boolean;
+      usage: Record<string, {
+        monthly: { used: number; limit: number; remaining: number };
+        daily: { used: number; limit: number; remaining: number };
+      }>;
+    };
   } | null>(null);
   const characterCount = useMemo(() => aiVoiceText.length, [aiVoiceText]);
   const [selectedEmotion, setSelectedEmotion] = useState<string>('default');
@@ -314,7 +324,10 @@ const AIVoiceGeneratorClient: React.FC = () => {
   const [historyLoading, setHistoryLoading] = useState(false); 
   const [showScriptTemplates, setShowScriptTemplates] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('All'); 
-  const [showEmotionUpgradePopup, setShowEmotionUpgradePopup] = useState(false);  
+  const [showEmotionUpgradePopup, setShowEmotionUpgradePopup] = useState(false); 
+  const [selectedProvider, setSelectedProvider] = useState<'GOOGLE' | 'OPENAI' | 'AZURE'>('GOOGLE');
+  const [externalVoices, setExternalVoices] = useState<(Voice & { voiceId?: string })[]>([]);
+  const [externalVoicesLoading, setExternalVoicesLoading] = useState(false);   
 
   useEffect(() => {
     if (!isLoggedIn || !ttsUsage || userProfile?.role !== 'BASIC') return;
@@ -701,6 +714,19 @@ const AIVoiceGeneratorClient: React.FC = () => {
     }
   }, [isLoggedIn]);  
 
+  useEffect(() => {
+    if (selectedProvider === 'GOOGLE') return;
+    setExternalVoicesLoading(true);
+    const token = localStorage.getItem('token');
+    fetch(`${API_BASE_URL}/api/ai-voices/external-voices?provider=${selectedProvider}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    })
+      .then(r => r.json())
+      .then(data => setExternalVoices(data || []))
+      .catch(() => setExternalVoices([]))
+      .finally(() => setExternalVoicesLoading(false));
+  }, [selectedProvider]);  
+
   const handleGenerateAiAudio = async () => {
     if (!isLoggedIn) {
       setShowLoginModal(true);
@@ -766,17 +792,26 @@ const AIVoiceGeneratorClient: React.FC = () => {
     setIsGenerating(true);
     setError(null);
     try {
-      const requestBody: any = {
-        text: aiVoiceText,
-        voiceName: selectedVoice.voiceName,
-        languageCode: selectedVoice.languageCode,
-        emotion: hasEmotionAccess ? selectedEmotion : 'default',
-      };
-      
-      // REMOVED: Do NOT send ssmlConfig anymore - let backend handle it via emotion
-      // The emotion parameter will control all SSML settings on the backend
-      
-      const response = await fetch(`${API_BASE_URL}/api/sole-tts/generate`, {
+      const isExternalProvider = selectedProvider !== 'GOOGLE';
+          
+      const requestBody: any = isExternalProvider
+        ? {
+            text: aiVoiceText,
+            voiceId: selectedVoice.voiceId || selectedVoice.voiceName,
+            provider: selectedProvider,
+          }
+        : {
+            text: aiVoiceText,
+            voiceName: selectedVoice.voiceName,
+            languageCode: selectedVoice.languageCode,
+            emotion: hasEmotionAccess ? selectedEmotion : 'default',
+          };
+        
+      const endpoint = isExternalProvider
+        ? `${API_BASE_URL}/api/sole-tts/generate-external`
+        : `${API_BASE_URL}/api/sole-tts/generate`;
+        
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1591,84 +1626,141 @@ return (
             <div className="voice-list-section">
               <div className="fixed-header">
                 <h3>Select a Voice</h3>
-                <div className="filter-section">
-                  <select
-                    value={filterLanguage}
-                    onChange={(e) => setFilterLanguage(e.target.value)}
-                    className="filter-select"
-                    aria-label="Filter voices by language"
-                  >
-                    <option value="">All Languages</option>
-                    {uniqueLanguages.map((lang) => (
-                      <option key={lang} value={lang}>
-                        {lang}
-                      </option>
-                    ))}
-                  </select>
 
-                  <select
-                    value={filterGender}
-                    onChange={(e) => setFilterGender(e.target.value)}
-                    className="filter-select"
-                    aria-label="Filter voices by gender"
-                  >
-                    <option value="">All Genders</option>
-                    {uniqueGenders.map((gen) => (
-                      <option key={gen} value={gen}>
-                        {gen}
-                      </option>
-                    ))}
-                  </select>
+                {/* Provider Tabs */}
+                <div className="provider-tabs">
+                  {(['GOOGLE', 'OPENAI', 'AZURE'] as const).map(p => (
+                    <button
+                      key={p}
+                      className={`provider-tab ${selectedProvider === p ? 'active' : ''} ${
+                        p !== 'GOOGLE' && !ttsUsage?.externalProviders?.hasAccess ? 'locked' : ''
+                      }`}
+                      onClick={() => {
+                        if (p !== 'GOOGLE' && !ttsUsage?.externalProviders?.hasAccess) {
+                          window.location.href = '/pricing';
+                          return;
+                        }
+                        setSelectedProvider(p);
+                        setSelectedVoice(null);
+                      }}
+                      title={p !== 'GOOGLE' && !ttsUsage?.externalProviders?.hasAccess ? 'Requires paid plan' : ''}
+                    >
+                      {p === 'GOOGLE' && '🔵 '}
+                      {p === 'OPENAI' && '🟢 '}
+                      {p === 'AZURE' && '🔷 '}
+                      {p.charAt(0) + p.slice(1).toLowerCase()}
+                      {p !== 'GOOGLE' && !ttsUsage?.externalProviders?.hasAccess && (
+                        <span className="tab-lock">🔒</span>
+                      )}
+                    </button>
+                  ))}
                 </div>
+                
+                {selectedProvider === 'GOOGLE' && (
+                  <div className="filter-section">
+                    <select
+                      value={filterLanguage}
+                      onChange={(e) => setFilterLanguage(e.target.value)}
+                      className="filter-select"
+                      aria-label="Filter voices by language"
+                    >
+                      <option value="">All Languages</option>
+                      {uniqueLanguages.map((lang) => (
+                        <option key={lang} value={lang}>{lang}</option>
+                      ))}
+                    </select>
+                    <select
+                      value={filterGender}
+                      onChange={(e) => setFilterGender(e.target.value)}
+                      className="filter-select"
+                      aria-label="Filter voices by gender"
+                    >
+                      <option value="">All Genders</option>
+                      {uniqueGenders.map((gen) => (
+                        <option key={gen} value={gen}>{gen}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
               </div>
-
+              
               <div className="scrollable-voices">
-                {voices.length === 0 ? (
-                  <div className="empty-state">
-                    Loading voices...
-                  </div>
-                ) : (
-                  <div className="voice-list">
-                    {voices.map((voice) => (
-                      <div
-                        key={`${voice.voiceName}-${voice.voiceStyle || 'default'}`}
-                        className={`voice-item ${
-                          selectedVoice?.voiceName === voice.voiceName && 
-                          selectedVoice?.voiceStyle === voice.voiceStyle ? 'selected' : ''
-                        }`}
-                        role="button"
-                        tabIndex={0}
-                        aria-label={`Select voice ${voice.humanName || voice.voiceName}`}
-                      >
-                        <img
-                          src={voice.profileUrl}
-                          alt={`${voice.humanName || voice.voiceName} profile`}
-                          className="voice-profile-image"
-                          onClick={() => handleVoiceSelect(voice)}
-                        />
-                        <div className="voice-details" onClick={() => handleVoiceSelect(voice)}>
-                          <div className="voice-title">
-                            {voice.humanName || voice.voiceName}
-                            {voice.voiceStyle && (
-                              <span className="voice-style-badge">{voice.voiceStyle}</span>
-                            )}
-                          </div>
-                          <div className="voice-info">{`${voice.language} (${voice.gender})`}</div>
-                        </div>
-                        <button
-                          className="demo-button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handlePlayDemo(voice);
-                          }}
-                          aria-label={`Play demo for ${voice.humanName || voice.voiceName}`}
-                          title="Play demo"
+                {selectedProvider === 'GOOGLE' ? (
+                  voices.length === 0 ? (
+                    <div className="empty-state">Loading voices...</div>
+                  ) : (
+                    <div className="voice-list">
+                      {voices.map((voice) => (
+                        <div
+                          key={`${voice.voiceName}-${voice.voiceStyle || 'default'}`}
+                          className={`voice-item ${
+                            selectedVoice?.voiceName === voice.voiceName &&
+                            selectedVoice?.voiceStyle === voice.voiceStyle ? 'selected' : ''
+                          }`}
+                          role="button"
+                          tabIndex={0}
+                          aria-label={`Select voice ${voice.humanName || voice.voiceName}`}
                         >
-                          {playingDemo === voice.voiceName ? '⏸️' : '▶️'}
-                        </button>
-                      </div>
-                    ))}
-                  </div>
+                          <img
+                            src={voice.profileUrl}
+                            alt={`${voice.humanName || voice.voiceName} profile`}
+                            className="voice-profile-image"
+                            onClick={() => handleVoiceSelect(voice)}
+                          />
+                          <div className="voice-details" onClick={() => handleVoiceSelect(voice)}>
+                            <div className="voice-title">
+                              {voice.humanName || voice.voiceName}
+                              {voice.voiceStyle && (
+                                <span className="voice-style-badge">{voice.voiceStyle}</span>
+                              )}
+                            </div>
+                            <div className="voice-info">{`${voice.language} (${voice.gender})`}</div>
+                          </div>
+                          <button
+                            className="demo-button"
+                            onClick={(e) => { e.stopPropagation(); handlePlayDemo(voice); }}
+                            aria-label={`Play demo for ${voice.humanName || voice.voiceName}`}
+                          >
+                            {playingDemo === voice.voiceName ? '⏸️' : '▶️'}
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )
+                ) : (
+                  externalVoicesLoading ? (
+                    <div className="empty-state">Loading voices...</div>
+                  ) : externalVoices.length === 0 ? (
+                    <div className="empty-state">No voices found.</div>
+                  ) : (
+                    <div className="voice-list">
+                      {externalVoices.map((voice) => (
+                        <div
+                          key={`${voice.provider}-${voice.voiceId}`}
+                          className={`voice-item ${
+                            selectedVoice?.voiceId === voice.voiceId ? 'selected' : ''
+                          }`}
+                          role="button"
+                          tabIndex={0}
+                          onClick={() => handleVoiceSelect(voice as Voice)}
+                          aria-label={`Select voice ${voice.humanName}`}
+                        >
+                          <div className="voice-avatar-placeholder">
+                            {voice.gender === 'Female' ? '👩' : voice.gender === 'Male' ? '👨' : '🧑'}
+                          </div>
+                          <div className="voice-details">
+                            <div className="voice-title">{voice.humanName}</div>
+                            <div className="voice-info">
+                              {voice.language} · {voice.gender}
+                              {(voice as any).description && (
+                                <span className="voice-description"> · {(voice as any).description}</span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )
                 )}
               </div>
             </div>
