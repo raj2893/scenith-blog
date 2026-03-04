@@ -832,7 +832,7 @@ const odysseyFeats = [
         { name: 'Creator Odyssey', role: 'STUDIO',        price: 0, currency: 'LOADING', ttsLimit: 250000, features: odysseyFeats },
       ];
     }
-    const creatorLitePrice = isIndianUser ? 99  : 3;
+    const creatorLitePrice = isIndianUser ? 99  : 5;
     const creatorPrice     = isIndianUser ? 499 : 12;
     const studioPrice      = isIndianUser ? 999 : 24;
     const originalCreatorLitePrice = Math.round(creatorLitePrice / 0.75);
@@ -898,34 +898,34 @@ const odysseyFeats = [
     ];
   };
 
-  /* ── getAddonPlans — original, untouched ── */
-  const getAddonPlans = () => {
-    const currency = isIndianUser ? 'INR' : 'USD';
-    const symbol = isIndianUser ? '₹' : '$';
-    const voicePrice = isIndianUser ? 125 : 5;
-    const speedPrice = isIndianUser ? 99 : 5;
-    const bgRemovalPrice = isIndianUser ? 149 : 5;
-    const svgPrice = isIndianUser ? 99 : 3;
-    const videoStarterPrice = isIndianUser ? 249 : 10;
-    const videoProPrice = isIndianUser ? 599 : 15;
-    const videoElitePrice = isIndianUser ? 1199 : 25;
-    const voiceOriginal = Math.round(voicePrice / 0.75);
-    const speedOriginal = Math.round(speedPrice / 0.75);
-    const bgRemovalOriginal = Math.round(bgRemovalPrice / 0.75);
-    const svgOriginal = Math.round(svgPrice / 0.75);
-    const videoStarterOriginal = Math.round(videoStarterPrice / 0.75);
-    const videoProOriginal = Math.round(videoProPrice / 0.75);
-    const videoEliteOriginal = Math.round(videoElitePrice / 0.75);
-    return [
-      { name: 'AI Voice Pro', planType: 'AI_VOICE_PRO', price: voicePrice, originalPrice: voiceOriginal, currency, symbol, service: 'AI Voice Generation', features: ['50,000 Characters/month','10,000 Characters/day','2,500 Characters per request','All Premium AI Voices','Commercial use allowed'] },
-      { name: 'AI Speed Pro', planType: 'AI_SPEED_PRO', price: speedPrice, originalPrice: speedOriginal, currency, symbol, service: 'Video Speed Control', features: ['30 videos/month','20 minutes per video','Up to 1440p quality','0.5x - 15x speed range','Audio pitch correction','Commercial use allowed'] },
-      { name: 'Background Removal Pro', planType: 'BG_REMOVAL_PRO', price: bgRemovalPrice, originalPrice: bgRemovalOriginal, currency, symbol, service: 'AI Background Removal', features: ['300 images/month','Up to 1080p quality','Batch processing','High-quality edge detection','Instant processing','Commercial use allowed'] },
-      { name: 'SVG Library Pro', planType: 'SVG_PRO', price: svgPrice, originalPrice: svgOriginal, currency, symbol, service: 'SVG Icons Library', features: ['Unlimited SVG downloads','Up to 2048x2048 resolution','Unlimited daily downloads','SVG format access','PNG & JPG export','Commercial use allowed'] },
-      { name: 'Video Gen Starter', planType: 'VIDEO_GEN_STARTER', price: videoStarterPrice, originalPrice: videoStarterOriginal, currency, symbol, service: 'AI Video Generation', features: ['10 credits/month','2 credits/day','Max 5 seconds per video','Wan 2.5 model access','Commercial use allowed'] },
-      { name: 'Video Gen Pro', planType: 'VIDEO_GEN_PRO', price: videoProPrice, originalPrice: videoProOriginal, currency, symbol, service: 'AI Video Generation', features: ['40 credits/month','8 credits/day','Max 10 seconds per video','Wan 2.5 + Kling 2.5/2.6 Pro','Commercial use allowed'] },
-      { name: 'Video Gen Elite', planType: 'VIDEO_GEN_ELITE', price: videoElitePrice, originalPrice: videoEliteOriginal, currency, symbol, service: 'AI Video Generation', features: ['100 credits/month','20 credits/day','Max 10 seconds per video','All models incl. Google Veo 3','Commercial use allowed'] },
-    ];
-  };
+  // /* ── getAddonPlans — original, untouched ── */
+  // const getAddonPlans = () => {
+  //   const currency = isIndianUser ? 'INR' : 'USD';
+  //   const symbol = isIndianUser ? '₹' : '$';
+  //   const voicePrice = isIndianUser ? 125 : 5;
+  //   const speedPrice = isIndianUser ? 99 : 5;
+  //   const bgRemovalPrice = isIndianUser ? 149 : 5;
+  //   const svgPrice = isIndianUser ? 99 : 3;
+  //   const videoStarterPrice = isIndianUser ? 249 : 10;
+  //   const videoProPrice = isIndianUser ? 599 : 15;
+  //   const videoElitePrice = isIndianUser ? 1199 : 25;
+  //   const voiceOriginal = Math.round(voicePrice / 0.75);
+  //   const speedOriginal = Math.round(speedPrice / 0.75);
+  //   const bgRemovalOriginal = Math.round(bgRemovalPrice / 0.75);
+  //   const svgOriginal = Math.round(svgPrice / 0.75);
+  //   const videoStarterOriginal = Math.round(videoStarterPrice / 0.75);
+  //   const videoProOriginal = Math.round(videoProPrice / 0.75);
+  //   const videoEliteOriginal = Math.round(videoElitePrice / 0.75);
+  //   return [
+  //     { name: 'AI Voice Pro', planType: 'AI_VOICE_PRO', price: voicePrice, originalPrice: voiceOriginal, currency, symbol, service: 'AI Voice Generation', features: ['50,000 Characters/month','10,000 Characters/day','2,500 Characters per request','All Premium AI Voices','Commercial use allowed'] },
+  //     { name: 'AI Speed Pro', planType: 'AI_SPEED_PRO', price: speedPrice, originalPrice: speedOriginal, currency, symbol, service: 'Video Speed Control', features: ['30 videos/month','20 minutes per video','Up to 1440p quality','0.5x - 15x speed range','Audio pitch correction','Commercial use allowed'] },
+  //     { name: 'Background Removal Pro', planType: 'BG_REMOVAL_PRO', price: bgRemovalPrice, originalPrice: bgRemovalOriginal, currency, symbol, service: 'AI Background Removal', features: ['300 images/month','Up to 1080p quality','Batch processing','High-quality edge detection','Instant processing','Commercial use allowed'] },
+  //     { name: 'SVG Library Pro', planType: 'SVG_PRO', price: svgPrice, originalPrice: svgOriginal, currency, symbol, service: 'SVG Icons Library', features: ['Unlimited SVG downloads','Up to 2048x2048 resolution','Unlimited daily downloads','SVG format access','PNG & JPG export','Commercial use allowed'] },
+  //     { name: 'Video Gen Starter', planType: 'VIDEO_GEN_STARTER', price: videoStarterPrice, originalPrice: videoStarterOriginal, currency, symbol, service: 'AI Video Generation', features: ['10 credits/month','2 credits/day','Max 5 seconds per video','Wan 2.5 model access','Commercial use allowed'] },
+  //     { name: 'Video Gen Pro', planType: 'VIDEO_GEN_PRO', price: videoProPrice, originalPrice: videoProOriginal, currency, symbol, service: 'AI Video Generation', features: ['40 credits/month','8 credits/day','Max 10 seconds per video','Wan 2.5 + Kling 2.5/2.6 Pro','Commercial use allowed'] },
+  //     { name: 'Video Gen Elite', planType: 'VIDEO_GEN_ELITE', price: videoElitePrice, originalPrice: videoEliteOriginal, currency, symbol, service: 'AI Video Generation', features: ['100 credits/month','20 credits/day','Max 10 seconds per video','All models incl. Google Veo 3','Commercial use allowed'] },
+  //   ];
+  // };
 
   /* ── handleIndividualPlanUpgrade — original, untouched ── */
   const handleIndividualPlanUpgrade = async (plan: IndividualPlan) => {
