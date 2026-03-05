@@ -1192,7 +1192,7 @@ useEffect(() => {
             transition={{ duration: 0.5 }}
           >
             <div className="stat-card">
-              <div className="stat-value">10k+</div>
+              <div className="stat-value">2k+</div>
               <div className="stat-label">Active Creators</div>
             </div>
             <div className="stat-card">

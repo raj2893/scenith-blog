@@ -707,7 +707,7 @@ export default function ToolsIndex() {
                 </div>
                 <div className={styles.educationalStats}>
                   <div className={styles.statBox}>
-                    <div className={styles.statNumber}>50K+</div>
+                    <div className={styles.statNumber}>2K+</div>
                     <div className={styles.statLabel}>Active Users</div>
                   </div>
                   <div className={styles.statBox}>

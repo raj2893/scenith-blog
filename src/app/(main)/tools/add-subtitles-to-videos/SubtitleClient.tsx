@@ -1822,7 +1822,7 @@ const handleDeleteConfirm = async () => {
                 <div className="stat-label">Supported Languages</div>
               </div>
               <div className="stat-box">
-                <div className="stat-number">50K+</div>
+                <div className="stat-number">2K+</div>
                 <div className="stat-label">Active Users</div>
               </div>
               <div className="stat-box">

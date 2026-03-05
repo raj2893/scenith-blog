@@ -742,6 +742,12 @@ const AIVoiceGeneratorClient: React.FC = () => {
       setShowLoginModal(true);
       return;
     }
+
+    if (selectedProvider !== 'GOOGLE' && !ttsUsage?.externalProviders?.hasAccess) {
+      window.location.href = '/pricing';
+      return;
+    }    
+
     if (!aiVoiceText.trim() || !selectedVoice) {
       setError('Please enter text and select a voice.');
       return;
@@ -1662,10 +1668,6 @@ return (
                         p !== 'GOOGLE' && !ttsUsage?.externalProviders?.hasAccess ? 'locked' : ''
                       }`}
                       onClick={() => {
-                        if (p !== 'GOOGLE' && !ttsUsage?.externalProviders?.hasAccess) {
-                          window.location.href = '/pricing';
-                          return;
-                        }
                         setSelectedProvider(p);
                         setSelectedVoice(null);
                       }}
@@ -1676,7 +1678,7 @@ return (
                       {p === 'AZURE' && '🔷 '}
                       {p.charAt(0) + p.slice(1).toLowerCase()}
                       {p !== 'GOOGLE' && !ttsUsage?.externalProviders?.hasAccess && (
-                        <span className="tab-lock">🔒</span>
+                        <span className="tab-lock">👑</span>
                       )}
                     </button>
                   ))}
@@ -2053,48 +2055,48 @@ return (
             </div>
             <div className="must-try-grid">
               <a 
-                href="https://scenith.in/tools/add-subtitles-to-videos?utm_source=ai_voice_page&utm_medium=must_try_section&utm_campaign=cross_tool_promotion" 
+                href="https://scenith.in/tools/ai-video-generation?utm_source=ai_voice_page&utm_medium=must_try_section&utm_campaign=cross_tool_promotion" 
                 className="must-try-card"
-                aria-label="Try AI Subtitle Generator"
+                aria-label="Try AI Video Generator"
                 target="_blank"
                 rel="noopener noreferrer"                
               >
-                <span className="must-try-icon">💬</span>
+                <span className="must-try-icon">🎬</span>
                 <span className="must-try-badge">🔥 Popular</span>
-                <h3 className="must-try-title">AI Subtitle Generator</h3>
+                <h3 className="must-try-title">AI Video Generator</h3>
                 <p className="must-try-description">
-                  Automatically generate accurate subtitles for your videos in seconds. Boost engagement by 80% with professional captions.
+                  Turn your ideas into cinematic AI videos in seconds. Type a prompt, pick a style, and watch your vision come to life.
                 </p>
                 <div className="must-try-features">
-                  <span className="must-try-feature">Auto speech-to-text transcription</span>
-                  <span className="must-try-feature">25+ Default Text Styles</span>
-                  <span className="must-try-feature">Custom styling & animations</span>
+                  <span className="must-try-feature">Text & image to video</span>
+                  <span className="must-try-feature">Multiple AI models</span>
+                  <span className="must-try-feature">MP4 download</span>
                 </div>
                 <span className="must-try-cta">
-                  Try Subtitle Generator →
+                  Try Video Generator →
                 </span>
               </a>
 
               <a 
-                href="https://scenith.in/tools/image-editing?utm_source=ai_voice_page&utm_medium=must_try_section&utm_campaign=cross_tool_promotion" 
+                href="https://scenith.in/tools/ai-image-generation?utm_source=ai_voice_page&utm_medium=must_try_section&utm_campaign=cross_tool_promotion" 
                 className="must-try-card"
-                aria-label="Try Free Image Editor"
+                aria-label="Try AI Image Generator"
                 target="_blank"
                 rel="noopener noreferrer"                
               >
                 <span className="must-try-icon">🖼️</span>
                 <span className="must-try-badge">✨ New</span>
-                <h3 className="must-try-title">Free Image Editor</h3>
+                <h3 className="must-try-title">AI Image Generator</h3>
                 <p className="must-try-description">
-                  Create stunning graphics, thumbnails, and social media posts with our powerful online image editor.
+                  Create stunning visuals from text descriptions instantly. Perfect for thumbnails, social media, and marketing materials.
                 </p>
                 <div className="must-try-features">
-                  <span className="must-try-feature">Elements, Templates, Text, & Filters</span>
-                  <span className="must-try-feature">Perfect for YouTube thumbnails</span>
-                  <span className="must-try-feature">No watermarks, instant export</span>
+                  <span className="must-try-feature">8 artistic styles</span>
+                  <span className="must-try-feature">High-res PNG output</span>
+                  <span className="must-try-feature">Commercial use allowed</span>
                 </div>
                 <span className="must-try-cta">
-                  Try Image Editor →
+                  Try Image Generator →
                 </span>
               </a>
             </div>
