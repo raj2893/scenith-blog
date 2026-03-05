@@ -202,6 +202,13 @@ const DownloadModal: React.FC<DownloadModalProps> = ({
       }, 1800);
     } catch (error: any) {
       console.error("Download failed:", error);
+      console.error("Response status:", error?.response?.status);
+      console.error("Response headers:", error?.response?.headers);
+      console.error("Request:", error?.request);
+      // Is error.request set but error.response undefined? = CORS/network block
+      if (error?.request && !error?.response) {
+        console.error("REQUEST WAS MADE BUT NO RESPONSE RECEIVED - likely CORS");
+      }      
       if (error?.response?.status === 429) {
         onLimitReached?.(error?.response?.data?.message || "You've reached your download limit.");
         return;
