@@ -29,6 +29,7 @@ const Footer = () => {
 
     // Required static pages (kept as requested)
     { label: 'Pricing', path: '/pricing' },
+    { label: 'My Dashboard', path: '/user-dashboard' },
     { label: 'About Us', path: '/about-us' },
     { label: 'Contact', path: '/contact-us' },
     { label: 'Privacy Policy', path: '/terms-and-conditions' },

@@ -1,17 +1,10 @@
 import type { Metadata } from "next";
 import UsageDashboard from "./UsageDashboard";
 
-/* ─────────────────────────────────────────────────────────────────
-   SEO — Usage Dashboard
-   This page is authenticated-only. We mark it noindex to prevent
-   Google from crawling personal dashboard pages, while still
-   providing structured metadata for in-app link unfurling and
-   social previews (Slack, Teams, etc.).
-───────────────────────────────────────────────────────────────── */
 export const metadata: Metadata = {
-  title: "Usage Dashboard | Scenith — Track Your AI Tool Usage",
+  title: "AI Tool Usage Dashboard – Track Voice, Image & Video Credits | Scenith",
   description:
-    "Monitor your Scenith plan usage in real time. Track AI voice characters, image credits, background removals, video speed limits, and more — all in one dashboard.",
+    "Monitor your Scenith AI tool usage in real time. Track AI voice characters, image generation credits, background removals, video speed limits, and plan details — all in one dashboard.",
   keywords: [
     "scenith usage dashboard",
     "ai tool usage tracker",
@@ -20,16 +13,12 @@ export const metadata: Metadata = {
     "background removal usage",
     "scenith account dashboard",
     "scenith plan limits",
+    "ai credits tracker",
+    "tts usage monitor",
+    "scenith tools",
   ],
-  robots: {
-    // Personal dashboards must not be indexed
-    index: false,
-    follow: false,
-    noarchive: true,
-    nosnippet: true,
-  },
   openGraph: {
-    title: "Scenith Usage Dashboard",
+    title: "AI Tool Usage Dashboard | Scenith",
     description:
       "See exactly how much of your Scenith plan you've used this month — voice chars, image credits, speed videos and more.",
     url: "https://scenith.io/dashboard",
@@ -46,13 +35,27 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Scenith Usage Dashboard",
-    description: "Track your AI tool usage limits and plan details in one clean interface.",
+    title: "AI Tool Usage Dashboard | Scenith",
+    description:
+      "Track your AI tool usage limits and plan details in one clean interface.",
     images: ["/images/og-dashboard.jpg"],
+    creator: "@scenith_1902",
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
   alternates: {
     canonical: "https://scenith.io/dashboard",
   },
+  viewport: "width=device-width, initial-scale=1",
+  themeColor: "#6355dc",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Scenith Dashboard",
+  },
+  manifest: "/manifest.json",
 };
 
 export default function UsageDashboardPage() {

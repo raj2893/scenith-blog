@@ -341,6 +341,11 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
       ],
     },
     { label: 'Pricing', path: '/pricing', icon: <FaDollarSign /> },
+    {
+    label: 'Dashboard',
+    path: '/user-dashboard',
+    icon: <FaUser />,
+  },
     { label: 'Blogs', path: '/blogs', icon: <FaBlog /> },
   ];
 
