@@ -2644,72 +2644,113 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({
       setError("Please select an image layer");
       return;
     }
-  
-    // Extract asset ID from the image URL
-    const assetMatch = layer.src.match(/\/assets\/([^\/]+)$/);
-    if (!assetMatch) {
-      setError("Cannot identify image asset");
-      return;
-    }
-  
-    // Find the asset ID from uploadedImages
+
     try {
       setIsRemovingBg(true);
       setBgRemovalProgress('Processing...');
-      
-      // Get all assets to find the ID
+
       const token = localStorage.getItem("token");
+
+      // Get all registered assets
       const assetsResponse = await axios.get(`${API_BASE_URL}/api/image-editor/assets?type=IMAGE`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      
-      const matchingAsset = assetsResponse.data.find((asset: any) => asset.cdnUrl === layer.src);
+
+      let matchingAsset = assetsResponse.data.find((asset: any) => asset.cdnUrl === layer.src);
+
+      // If not found in assets, upload it first (handles generated/external images)
       if (!matchingAsset) {
-        throw new Error("Asset not found");
+        setBgRemovalProgress('Registering image...');
+        try {
+          const imageBlob = await new Promise<Blob>((resolve, reject) => {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            
+            img.onload = () => {
+              const canvas = document.createElement('canvas');
+              canvas.width = img.naturalWidth;
+              canvas.height = img.naturalHeight;
+              const ctx = canvas.getContext('2d');
+              if (!ctx) { reject(new Error('Canvas context failed')); return; }
+              ctx.drawImage(img, 0, 0);
+              canvas.toBlob((blob) => {
+                if (blob) resolve(blob);
+                else reject(new Error('Canvas toBlob failed'));
+              }, 'image/png');
+            };
+
+            img.onerror = () => {
+              // canvas crossOrigin failed, fall back to corsproxy
+              reject(new Error('crossOrigin load failed'));
+            };
+
+            // Add cache-busting to sometimes bypass CORS cache
+            img.src = layer.src! + (layer.src!.includes('?') ? '&' : '?') + '_cb=' + Date.now();
+          }).catch(async () => {
+            // Fallback: use corsproxy.io
+            const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(layer.src!)}`;
+            const response = await fetch(proxyUrl);
+            if (!response.ok) throw new Error('Proxy fetch failed');
+            return response.blob();
+          });
+
+          const ext = imageBlob.type.includes('png') ? 'png' : 'jpg';
+          const uploadForm = new FormData();
+          uploadForm.append('file', imageBlob, `image.${ext}`);
+          uploadForm.append('assetType', 'IMAGE');
+
+          const uploadResponse = await axios.post(
+            `${API_BASE_URL}/api/image-editor/assets/upload`,
+            uploadForm,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data',
+              },
+            }
+          );
+          matchingAsset = uploadResponse.data;
+          setUploadedImages(prev => [...prev, matchingAsset.cdnUrl]);
+        } catch (uploadErr) {
+          console.error('Registration error:', uploadErr);
+          setError("Failed to register image for processing");
+          return;
+        }
       }
-  
+
       setBgRemovalProgress('Removing background...');
-      
-      // Call remove background API
+
       const response = await axios.post(
         `${API_BASE_URL}/api/image-editor/assets/${matchingAsset.id}/remove-background`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-  
+
       const newAsset = response.data;
-      
-      // Load the new image to get dimensions
+
       const img = new Image();
       img.onload = () => {
-        // Remove old layer
         const updatedLayers = layers.filter(l => l.id !== layerId);
-        
-        // Add new layer with removed background - maintaining the OLD layer's dimensions
+
         const newLayer = createImageLayer(newAsset.cdnUrl, img.naturalWidth, img.naturalHeight);
         newLayer.x = layer.x;
         newLayer.y = layer.y;
-        // Copy the display dimensions from the old layer
         newLayer.width = layer.width;
         newLayer.height = layer.height;
         newLayer.scale = layer.scale;
-        // Also copy crop values if any
         newLayer.cropTop = layer.cropTop;
         newLayer.cropRight = layer.cropRight;
         newLayer.cropBottom = layer.cropBottom;
         newLayer.cropLeft = layer.cropLeft;
-        // Copy rotation and opacity
         newLayer.rotation = layer.rotation;
         newLayer.opacity = layer.opacity;
-        
+
         const finalLayers = [...updatedLayers, newLayer];
         setLayers(finalLayers);
         setSelectedLayerId(newLayer.id);
         saveToHistory(finalLayers);
-        
-        // Add to uploaded images
+
         setUploadedImages(prev => [...prev, newAsset.cdnUrl]);
-        
         setSuccess("Background removed successfully!");
         setTimeout(() => setSuccess(null), 2000);
       };

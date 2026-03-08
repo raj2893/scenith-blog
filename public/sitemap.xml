@@ -1626,18 +1626,28 @@
     <changefreq>weekly</changefreq>
     <lastmod>2026-03-07</lastmod>
   </url>
-
   <url>
     <loc>https://scenith.in/tools/text-to-image-ai</loc>
     <priority>0.9</priority>
     <changefreq>weekly</changefreq>
     <lastmod>2026-03-07</lastmod>
   </url>
-
+  <url>
+    <loc>https://scenith.in/tools/free-online-image-background-remover</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-03-07</lastmod>
+  </url>
   <url>
     <loc>https://scenith.in/tools/viral-content-creation</loc>
     <priority>0.9</priority>
     <changefreq>weekly</changefreq>
     <lastmod>2026-03-07</lastmod>
   </url>    
+  <url>
+    <loc>https://scenith.in/tools/change-image-background-for-free</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-03-07</lastmod>
+  </url>
 </urlset>
