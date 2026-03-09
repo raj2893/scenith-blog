@@ -764,7 +764,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
       return;
     }
     if (aiVoiceText.length > maxCharsPerRequest) {
-      const roleBasedLimit = ttsUsage?.maxCharRequest || 200;
+      const roleBasedLimit = ttsUsage?.maxCharRequest || 80;
       const limitType = ttsUsage?.daily.remaining !== -1 && 
                         (ttsUsage?.daily.remaining ?? 0) < (ttsUsage?.monthly.remaining ?? 0)
         ? 'daily' 
@@ -1028,8 +1028,8 @@ const AIVoiceGeneratorClient: React.FC = () => {
   }, [isLoggedIn, ttsUsage]); 
 
   const maxCharsPerRequest = useMemo(() => {
-    if (!isLoggedIn || !ttsUsage) return 200;
-    return ttsUsage.maxCharRequest || 200;
+    if (!isLoggedIn || !ttsUsage) return 80;
+    return ttsUsage.maxCharRequest || 80;
   }, [isLoggedIn, ttsUsage]);
   
   const limitsExceeded = useMemo(() => {
@@ -1063,7 +1063,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
     if (!selectedVoice) return "Please select a voice before generating";
     if (isGenerating) return "Audio generation in progress...";
     if (characterCount > maxCharsPerRequest) {
-      const roleBasedLimit = ttsUsage?.maxCharRequest || 200;
+      const roleBasedLimit = ttsUsage?.maxCharRequest || 80;
       return `Text exceeds maximum limit of ${maxCharsPerRequest.toLocaleString()} characters`;
     }
     if (wouldExceedLimits) {
@@ -1218,7 +1218,7 @@ return (
                   name: 'Is AI voice generation free?',
                   acceptedAnswer: {
                     '@type': 'Answer',
-                    text: 'Yes! The free BASIC plan includes 2,000 characters per month with a daily limit of 700 characters. All generated audio can be used commercially with full rights, no watermarks, and instant MP3 downloads.'
+                    text: 'Yes! The free BASIC plan includes 600 characters per month with a daily limit of 150 characters. All generated audio can be used commercially with full rights, no watermarks, and instant MP3 downloads.'
                   }
                 },
                 {
@@ -3883,9 +3883,9 @@ return (
                     🆓 Free Plan
                   </div>
                   {[
-                    { icon: '🎤', label: 'Voice chars', val: '2,000 /mo' },
-                    { icon: '📅', label: 'Daily limit', val: '200 /day' },
-                    { icon: '📝', label: 'Per request', val: '150 chars' },
+                    { icon: '🎤', label: 'Voice chars', val: '600 /mo' },
+                    { icon: '📅', label: 'Daily limit', val: '150 /day' },
+                    { icon: '📝', label: 'Per request', val: '80 chars' },
                     { icon: '🎬', label: 'Speed videos', val: '5 /mo' },
                     { icon: '🖼️', label: 'BG removals', val: '5 /mo' },
                     { icon: '🤖', label: 'AI images', val: '✗ None' },

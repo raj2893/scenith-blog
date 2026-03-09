@@ -802,7 +802,7 @@ export default function PricingPageClient() {
 
   /* ── getPlans ── */
   const getPlans = (): PricingPlan[] => {
-    const basicFeats = ['2,000 voice chars/mo · 720p export · 500/day', '5 speed videos + 5 BG removals', '10 SVG downloads', 'Community support', 'Commercial use'];
+    const basicFeats = ['600 voice chars/mo · 720p export · 500/day', '5 speed videos + 5 BG removals', '10 SVG downloads', 'Community support', 'Commercial use'];
     const creatorLiteFeats = [
   '10,000 voice chars/mo · 1080p export',
   '🎭 Voice emotions — 9 presets',
@@ -1260,8 +1260,8 @@ const odysseyFeats = [
                   <tbody>
                     {[
                       ['Monthly Voice Characters', '2,000',    '10,000',       '75,000',       '250,000'],
-                      ['Daily Character Limit',    '500',      '2,500',        '20,000',       'Unlimited'],
-                      ['Max Chars per Request',    '200',      '700',          '4,000',        '6,000'],
+                      ['Daily Character Limit',    '150',      '2,500',        '20,000',       'Unlimited'],
+                      ['Max Chars per Request',    '80',      '700',          '4,000',        '6,000'],
                       ['Voice Emotions',           '✗',        '✓ 9 Presets',  '✓ 9 Presets',  '✓ 9 Presets'],
                       ['Speed Videos/Month',       '5',        '30',           '60',           'Unlimited'],
                       ['Max Video Length',         '5 min',    '10 min',       '30 min',       'Unlimited'],
