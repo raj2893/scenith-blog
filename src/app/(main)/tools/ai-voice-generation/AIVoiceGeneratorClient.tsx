@@ -443,20 +443,31 @@ const AIVoiceGeneratorClient: React.FC = () => {
       return;
     }
   
-    // Construct demo URL based on voice properties
-    const genderFolder = voice.gender.toUpperCase();
-    const languageFolder = voice.language.replace(/\s*\(.*?\)\s*/g, '').trim().replace(/\s+/g, '%20');
-    
-    let demoFileName;
-    if (voice.voiceStyle) {
-      const styleCapitalized = voice.voiceStyle.charAt(0).toUpperCase() + voice.voiceStyle.slice(1);
-      const baseName = voice.humanName?.split('-')[0] || voice.voiceName;
-      demoFileName = `${baseName}-${styleCapitalized}.mp3`;
+    // Construct demo URL based on provider
+    let demoUrl: string;
+
+    if (voice.provider === 'OPENAI') {
+      const genderFolder = voice.gender.toUpperCase(); // NEUTRAL, MALE, FEMALE
+      const demoFileName = `${voice.humanName}.mp3`;
+      demoUrl = `${CDN_URL}/AiVoicesDemo/OpenAI/${genderFolder}/${demoFileName}`;
+    } else if (voice.provider === 'AZURE') {
+      const genderFolder = voice.gender.toUpperCase();
+      const demoFileName = `${voice.humanName}.mp3`;
+      demoUrl = `${CDN_URL}/AiVoicesDemo/Azure/${genderFolder}/${demoFileName}`;
     } else {
-      demoFileName = `${voice.humanName || voice.voiceName}.mp3`;
+      // Google voices (existing logic)
+      const genderFolder = voice.gender.toUpperCase();
+      const languageFolder = voice.language.replace(/\s*\(.*?\)\s*/g, '').trim().replace(/\s+/g, '%20');
+      let demoFileName;
+      if (voice.voiceStyle) {
+        const styleCapitalized = voice.voiceStyle.charAt(0).toUpperCase() + voice.voiceStyle.slice(1);
+        const baseName = voice.humanName?.split('-')[0] || voice.voiceName;
+        demoFileName = `${baseName}-${styleCapitalized}.mp3`;
+      } else {
+        demoFileName = `${voice.humanName || voice.voiceName}.mp3`;
+      }
+      demoUrl = `${CDN_URL}/AiVoicesDemo/${languageFolder}/${genderFolder}/${demoFileName}`;
     }
-    
-    const demoUrl = `${CDN_URL}/AiVoicesDemo/${languageFolder}/${genderFolder}/${demoFileName}`;
     
     console.log('🎵 Playing demo:', demoUrl);
   
@@ -1770,13 +1781,15 @@ return (
                           }`}
                           role="button"
                           tabIndex={0}
-                          onClick={() => handleVoiceSelect(voice as Voice)}
                           aria-label={`Select voice ${voice.humanName}`}
                         >
-                          <div className="voice-avatar-placeholder">
+                          <div
+                            className="voice-avatar-placeholder"
+                            onClick={() => handleVoiceSelect(voice as Voice)}
+                          >
                             {voice.gender === 'Female' ? '👩' : voice.gender === 'Male' ? '👨' : '🧑'}
                           </div>
-                          <div className="voice-details">
+                          <div className="voice-details" onClick={() => handleVoiceSelect(voice as Voice)}>
                             <div className="voice-title">{voice.humanName}</div>
                             <div className="voice-info">
                               {voice.language} · {voice.gender}
@@ -1785,6 +1798,16 @@ return (
                               )}
                             </div>
                           </div>
+                          <button
+                            className="demo-button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handlePlayDemo(voice as Voice);
+                            }}
+                            aria-label={`Play demo for ${voice.humanName}`}
+                          >
+                            {playingDemo === `${voice.voiceName}-${voice.voiceStyle || 'default'}` ? '⏸️' : '▶️'}
+                          </button>
                         </div>
                       ))}
                     </div>
