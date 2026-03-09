@@ -1259,7 +1259,7 @@ const odysseyFeats = [
                   </thead>
                   <tbody>
                     {[
-                      ['Monthly Voice Characters', '2,000',    '10,000',       '75,000',       '250,000'],
+                      ['Monthly Voice Characters', '600',    '10,000',       '75,000',       '250,000'],
                       ['Daily Character Limit',    '150',      '2,500',        '20,000',       'Unlimited'],
                       ['Max Chars per Request',    '80',      '700',          '4,000',        '6,000'],
                       ['Voice Emotions',           '✗',        '✓ 9 Presets',  '✓ 9 Presets',  '✓ 9 Presets'],
