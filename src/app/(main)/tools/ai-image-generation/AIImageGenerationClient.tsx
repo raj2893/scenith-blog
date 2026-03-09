@@ -7,7 +7,6 @@ import { motion } from 'framer-motion';
 import { API_BASE_URL, CDN_URL } from '../../../config';
 import { FaTimes } from 'react-icons/fa';
 import '../../../../../styles/tools/AIImageGeneration.css';
-import AIImageUpgradePopup from "@/app/components/AIImageUpgradePopup";
 import { div } from 'framer-motion/client';
 
 // TypeScript interfaces
@@ -795,281 +794,393 @@ const AIImageGeneratorClient: React.FC = () => {
           <div className="hero-cta-section">
             <div className="main-content">
               <div className="input-section">
-                <div className="script-input-wrapper">
-                  <div className="script-input-header">
-                    <div className="header-left">
-                      <span className="script-icon">🎨</span>
-                      <h3 className="script-title">Describe Your Image</h3>
-                    </div>
-                    <div className="header-right">
-                      {isLoggedIn && (
-                        <span className={`live-char-badge ${promptCharCount > 1800 ? 'exceeded' : ''}`}>
-                          {promptCharCount.toLocaleString()} / 2,000
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                    
-                  <div className="textarea-container">
-                    <textarea
-                      value={prompt}
-                      onChange={(e) => {
-                        setPrompt(e.target.value);
-                        setPromptCharCount(e.target.value.length);
-                      }}
-                      placeholder="✨ Describe your image..."
-                      className={`ai-voice-textarea ${promptCharCount > 1800 ? 'limit-exceeded' : ''}`}
-                      disabled={!isLoggedIn}
-                      aria-label="Image description prompt"
-                      maxLength={2000}
-                    />
+                {isLoggedIn && imageUsage && imageUsage.availableModels?.length === 0 ? (
+                  /* ── PREMIUM GATE: shown to logged-in basic users ── */
+                 <div style={{
+                    background: 'linear-gradient(135deg, #0a1628 0%, #0d1f3c 100%)',
+                    border: '1.5px solid #1e3a5f',
+                    borderRadius: 24,
+                    padding: '48px 32px',
+                    textAlign: 'center',
+                    width: '100%',
+                  }}>
+                    {/* lock icon */}
+                    <div style={{
+                      width: 76, height: 76, borderRadius: '50%',
+                      background: 'linear-gradient(135deg, rgba(99,85,220,0.18), rgba(236,72,153,0.12))',
+                      border: '2px solid rgba(99,85,220,0.35)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      margin: '0 auto 22px', fontSize: 34,
+                    }}>🔒</div>
 
-                    {!isLoggedIn && (
-                      <div className="textarea-overlay">
-                        <div className="overlay-content">
-                          <span className="lock-icon">🔒</span>
-                          <h4>Login to Start Creating</h4>
-                          <p>Sign in to generate stunning AI images</p>
-                          <button
-                            className="overlay-login-btn"
-                            onClick={() => setShowLoginModal(true)}
-                          >
-                            Login Now
-                          </button>
-                        </div>
-                      </div>
-                    )}
+                    <h3 style={{
+                      fontSize: 22, fontWeight: 800, color: '#4d9fff',
+                      marginBottom: 10, letterSpacing: '-0.02em',
+                    }}>
+                      AI Image Generation is a Premium Feature
+                    </h3>
 
-                    {isLoggedIn && promptCharCount > 1800 && (
-                      <div className="character-limit-warning">
-                        <span className="warning-icon">⚠️</span>
-                        <strong>Approaching limit!</strong>
-                        <span>{2000 - promptCharCount} characters remaining.</span>
-                      </div>
-                    )}
-                  </div>
-                  
-                  <div className="script-input-footer">
-                    <div className="footer-stats">
-                      <div className="stat-item">
-                        <span className="stat-icon">📝</span>
-                        <span className="stat-label">Words: <strong>{prompt.trim().split(/\s+/).filter(w => w.length > 0).length || 0}</strong></span>
-                      </div>
-                      <div className="stat-item">
-                        <span className="stat-icon">🎨</span>
-                        <span className="stat-label">Style: <strong>{STYLE_PRESETS.find(s => s.value === selectedStyle)?.label || 'Realistic'}</strong></span>
-                      </div>
-                      <div className="stat-item">
-                        <span className="stat-icon">✨</span>
-                        <span className="stat-label">Ready to generate</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {isLoggedIn && (
-                  <div className="character-count-container">
-                    <p className="character-count">
-                      <span className={promptCharCount > 1800 ? 'count-warning' : ''}>
-                        {promptCharCount.toLocaleString()}
-                      </span> / 2,000 characters
+                    <p style={{ fontSize: 14, color: '#ffffff', lineHeight: 1.75, marginBottom: 6 }}>
+                      Your current <strong style={{ color: '#60a5fa' }}>Starter Forge (Free)</strong> plan doesn't include image generation credits.
                     </p>
-                  </div>
-                )}
+                    <p style={{ fontSize: 14, color: '#ffffff', lineHeight: 1.75, marginBottom: 30 }}>
+                      Upgrade to unlock access to <strong style={{ color: '#60a5fa' }}>7 powerful AI models</strong> and start generating stunning visuals instantly.
+                    </p>
 
-                <div className="style-selector-section">
-                  <label className="style-label-text" htmlFor="style-select">
-                    🎨 Art Style:
-                  </label>
-                  <select
-                    id="style-select"
-                    value={selectedStyle}
-                    onChange={(e) => setSelectedStyle(e.target.value)}
-                    className="style-dropdown"
-                    aria-label="Select art style"
-                  >
-                    {STYLE_PRESETS.map((style) => (
-                      <option key={style.value} value={style.value}>
-                        {style.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {isLoggedIn && imageUsage && imageUsage.availableModels?.length > 0 && (
-                  <div className="style-selector-section" style={{ marginTop: 12 }}>
-                    <label className="style-label-text">
-                      🤖 AI Model:
-                    </label>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 8 }}>
-                      {imageUsage.availableModels.map((model) => (
-                        <div
-                          key={model.id}
-                          onClick={() => setSelectedModel(model.id)}
-                          style={{
-                            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                            padding: '14px 16px', borderRadius: 12, cursor: 'pointer',
-                            border: `2px solid ${selectedModel === model.id ? '#7c6ef5' : 'rgba(255,255,255,0.25)'}`,
-                            background: selectedModel === model.id ? 'rgba(99,85,220,0.25)' : 'rgba(255,255,255,0.11)',
-                            transition: 'all 0.18s',
-                          }}
-                        >
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    {/* plan tier cards */}
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(3, 1fr)',
+                      gap: 12, marginBottom: 30,
+                    }}>
+                      {[
+                        { name: 'Creator Lite',    price: '₹99',  usd: '$5',  credits: '100 cr/mo',  color: '#4d9fff', popular: false },
+                        { name: 'Creator Spark',   price: '₹499', usd: '$12', credits: '250 cr/mo',  color: '#4d9fff', popular: true  },
+                        { name: 'Creator Odyssey', price: '₹999', usd: '$24', credits: '500 cr/mo',  color: '#4d9fff', popular: false },
+                      ].map((tier) => (
+                        <div key={tier.name} style={{
+                          background: tier.popular ? '#0d2344' : '#0a1628',
+                          border: `1.5px solid ${tier.popular ? '#2563eb' : '#1e3a5f'}`,
+                          borderRadius: 14, padding: '16px 10px',
+                          position: 'relative',
+                        }}>
+                          {tier.popular && (
                             <div style={{
-                              width: 16, height: 16, borderRadius: '50%', flexShrink: 0,
-                              border: `2px solid ${selectedModel === model.id ? '#a899f5' : 'rgba(255,255,255,0.5)'}`,
-                              background: selectedModel === model.id ? '#7c6ef5' : 'transparent',
-                              transition: 'all 0.18s',
-                            }} />
-                            <span style={{
-                              fontSize: 15,
-                              color: selectedModel === model.id ? '#ffffff' : '#d8d8f0',
-                              fontWeight: selectedModel === model.id ? 700 : 500,
-                              letterSpacing: '0.01em',
-                            }}>
-                              {model.displayName}
-                            </span>
+                              position: 'absolute', top: -11, left: '50%', transform: 'translateX(-50%)',
+                              background: 'linear-gradient(135deg, #6355dc, #8b5cf6)',
+                              color: '#fff', fontSize: 9, fontWeight: 800,
+                              padding: '3px 10px', borderRadius: 999,
+                              whiteSpace: 'nowrap', letterSpacing: '0.08em',
+                            }}>⭐ POPULAR</div>
+                          )}
+                          <div style={{ fontSize: 11, color: '#60a5fa', fontWeight: 700, marginBottom: 6 }}>
+                            {tier.name}
                           </div>
-                          <span style={{
-                            fontSize: 12, fontWeight: 700, padding: '4px 12px', borderRadius: 999,
-                            background: selectedModel === model.id ? 'rgba(99,85,220,0.4)' : 'rgba(255,255,255,0.12)',
-                            border: `1px solid ${selectedModel === model.id ? '#a899f5' : 'rgba(255,255,255,0.3)'}`,
-                            color: selectedModel === model.id ? '#e0d8ff' : '#c8c8e8',
+                          <div style={{ fontSize: 20, fontWeight: 900, color: '#ffffff', lineHeight: 1 }}>
+                            {tier.price}
+                          </div>
+                          <div style={{ fontSize: 10, color: '#cbd5e1', marginBottom: 8 }}>
+                            /mo · {tier.usd}
+                          </div>
+                          <div style={{
+                            fontSize: 10, fontWeight: 700,
+                            color: '#ffffff',
+                            background: 'rgba(96,165,250,0.25)',
+                            borderRadius: 6, padding: '3px 8px',
+                            display: 'inline-block',
                           }}>
-                            {model.creditsPerImage} cr/img
-                          </span>
+                            {tier.credits}
+                          </div>
                         </div>
                       ))}
                     </div>
-                  </div>
-                )}
 
-                {isLoggedIn && !imageUsage && (
-                  <div style={{ marginTop: 12, padding: '10px 14px', borderRadius: 10, background: 'rgba(99,85,220,0.07)', border: '1px solid rgba(99,85,220,0.2)', fontSize: 13, color: '#55557a' }}>
-                    Loading available models...
-                  </div>
-                )}
-
-                {isLoggedIn && imageUsage && imageUsage.availableModels?.length === 0 && (
-                  <div style={{ marginTop: 12, padding: '12px 14px', borderRadius: 10, background: 'rgba(239,68,68,0.07)', border: '1px solid rgba(239,68,68,0.2)', fontSize: 13, color: '#f87171' }}>
-                    ⚠️ No image models available on your plan.{' '}
-                    <a href="/pricing" style={{ color: '#a899f5', fontWeight: 700 }}>Upgrade here →</a>
-                  </div>
-                )}
-
-                {selectedStyle !== 'realistic' && (
-                  <div className="style-info-tooltip">
-                    <strong>{STYLE_PRESETS.find(s => s.value === selectedStyle)?.label}:</strong>{' '}
-                    {STYLE_PRESETS.find(s => s.value === selectedStyle)?.description}
-                  </div>
-                )}
-
-                <details className="advanced-options">
-                  <summary>Advanced Options (Optional)</summary>
-                  <textarea
-                    value={negativePrompt}
-                    onChange={(e) => setNegativePrompt(e.target.value)}
-                    placeholder="What to avoid... (e.g., 'blurry, distorted, low quality')"
-                    className="negative-prompt-textarea"
-                    aria-label="Negative prompt"
-                    maxLength={500}
-                  />
-                  <p className="help-text">Specify what you DON'T want in the image</p>
-                </details>
-
-                {isLoggedIn && imageUsage && (
-                  <div className="usage-info">
-                    {imageUsage.daily.limit > 0 &&
-                     imageUsage.monthly.limit > 0 &&
-                     imageUsage.daily.remaining < imageUsage.monthly.remaining && (
-                      <div className="usage-section">
-                        <p className="usage-label today">⚠️ Today's Credits</p>
-                        <div className="usage-bar-container">
-                          <div
-                            className={`usage-bar-fill ${
-                              (imageUsage.daily.used / imageUsage.daily.limit) >= 0.95 ? 'critical' :
-                              (imageUsage.daily.used / imageUsage.daily.limit) >= 0.80 ? 'warning' : 'normal'
-                            }`}
-                            style={{ width: `${(imageUsage.daily.used / imageUsage.daily.limit) * 100}%` }}
-                          />
+                    {/* what's included checklist */}
+                    <div style={{
+                      background: '#0a1628',
+                      border: '1px solid #1e3a5f',
+                      borderRadius: 14, padding: '16px 20px',
+                      marginBottom: 28, textAlign: 'left',
+                      display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 16px',
+                    }}>
+                      {[
+                        '7 powerful AI image models',
+                        'Realistic, Anime, 3D & more styles',
+                        'High-res 1024×1024 PNG downloads',
+                        'Commercial use rights included',
+                        'No watermarks on any image',
+                      ].map((item) => (
+                        <div key={item} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#ffffff' }}>
+                          <span style={{ color: '#34d399', fontWeight: 700, flexShrink: 0 }}>✓</span>
+                          {item}
                         </div>
-                        <p className="usage-text">
-                          <strong>{imageUsage.daily.remaining}</strong> credits remaining today
-                          ({imageUsage.daily.used} / {imageUsage.daily.limit} used)
+                      ))}
+                    </div>
+
+                    {/* CTA buttons */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                      
+                      <a  href="/pricing"
+                        style={{
+                          display: 'block', padding: '15px 24px',
+                          borderRadius: 12, textDecoration: 'none',
+                          background: 'linear-gradient(135deg, #6355dc 0%, #8b5cf6 100%)',
+                          color: '#fff', fontWeight: 800, fontSize: 15,
+                          boxShadow: '0 8px 28px rgba(99,85,220,0.45)',
+                        }}
+                      >
+                        🚀 Upgrade Now — Unlock Image Generation
+                      </a>
+                      <p style={{ fontSize: 12, color: '#a8c8ff', margin: 0 }}>
+                        Plans from ₹99/mo · Commercial use included 
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  /* ── NORMAL FLOW: not logged in, loading, or premium user ── */
+                  <>
+                    <div className="script-input-wrapper">
+                      <div className="script-input-header">
+                        <div className="header-left">
+                          <span className="script-icon">🎨</span>
+                          <h3 className="script-title">Describe Your Image</h3>
+                        </div>
+                        <div className="header-right">
+                          {isLoggedIn && (
+                            <span className={`live-char-badge ${promptCharCount > 1800 ? 'exceeded' : ''}`}>
+                              {promptCharCount.toLocaleString()} / 2,000
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="textarea-container">
+                        <textarea
+                          value={prompt}
+                          onChange={(e) => {
+                            setPrompt(e.target.value);
+                            setPromptCharCount(e.target.value.length);
+                          }}
+                          placeholder="✨ Describe your image..."
+                          className={`ai-voice-textarea ${promptCharCount > 1800 ? 'limit-exceeded' : ''}`}
+                          disabled={!isLoggedIn}
+                          aria-label="Image description prompt"
+                          maxLength={2000}
+                        />
+
+                        {!isLoggedIn && (
+                          <div className="textarea-overlay">
+                            <div className="overlay-content">
+                              <span className="lock-icon">🔒</span>
+                              <h4>Login to Start Creating</h4>
+                              <p>Sign in to generate stunning AI images</p>
+                              <button
+                                className="overlay-login-btn"
+                                onClick={() => setShowLoginModal(true)}
+                              >
+                                Login Now
+                              </button>
+                            </div>
+                          </div>
+                        )}
+
+                        {isLoggedIn && promptCharCount > 1800 && (
+                          <div className="character-limit-warning">
+                            <span className="warning-icon">⚠️</span>
+                            <strong>Approaching limit!</strong>
+                            <span>{2000 - promptCharCount} characters remaining.</span>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="script-input-footer">
+                        <div className="footer-stats">
+                          <div className="stat-item">
+                            <span className="stat-icon">📝</span>
+                            <span className="stat-label">Words: <strong>{prompt.trim().split(/\s+/).filter(w => w.length > 0).length || 0}</strong></span>
+                          </div>
+                          <div className="stat-item">
+                            <span className="stat-icon">🎨</span>
+                            <span className="stat-label">Style: <strong>{STYLE_PRESETS.find(s => s.value === selectedStyle)?.label || 'Realistic'}</strong></span>
+                          </div>
+                          <div className="stat-item">
+                            <span className="stat-icon">✨</span>
+                            <span className="stat-label">Ready to generate</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {isLoggedIn && (
+                      <div className="character-count-container">
+                        <p className="character-count">
+                          <span className={promptCharCount > 1800 ? 'count-warning' : ''}>
+                            {promptCharCount.toLocaleString()}
+                          </span> / 2,000 characters
                         </p>
                       </div>
                     )}
 
-                    <div className="usage-section">
-                      <p className="usage-label month">📅 Monthly Credits</p>
-                      <div className="usage-bar-container">
-                        <div
-                          className={`usage-bar-fill ${
-                            (imageUsage.monthly.used / imageUsage.monthly.limit) >= 0.95 ? 'critical' :
-                            (imageUsage.monthly.used / imageUsage.monthly.limit) >= 0.80 ? 'warning' : 'normal'
-                          }`}
-                          style={{ width: `${Math.min(100, (imageUsage.monthly.used / Math.max(imageUsage.monthly.limit, 1)) * 100)}%` }}
-                        />
-                      </div>
-                      <p className="usage-text">
-                        <strong>{imageUsage.monthly.remaining}</strong> credits remaining this month
-                        ({imageUsage.monthly.used} / {imageUsage.monthly.limit} used)
-                      </p>
-
-                      {selectedModel && imageUsage.availableModels?.length > 0 && (() => {
-                        const m = imageUsage.availableModels.find(x => x.id === selectedModel);
-                        return m ? (
-                          <p className="usage-text" style={{ marginTop: 4, color: '#a899f5' }}>
-                            ✦ <strong>{m.displayName}</strong> costs <strong>{m.creditsPerImage} credit{m.creditsPerImage !== 1 ? 's' : ''}</strong> per image
-                            → ~<strong>{Math.floor(imageUsage.monthly.remaining / m.creditsPerImage)}</strong> images remaining
-                          </p>
-                        ) : null;
-                      })()}
-
-                      {imageUsage.availableModels?.length === 0 && (
-                        <div className="inline-upgrade-cta">
-                          <a href="/pricing" className="inline-upgrade-link">
-                            🔓 Upgrade to Creator Spark or Odyssey to unlock AI image generation
-                          </a>
-                        </div>
-                      )}
-
-                      {imageUsage.availableModels?.length > 0 && imageUsage.monthly.remaining <= 0 && (
-                        <div className="inline-upgrade-cta">
-                          <a href="/pricing" className="inline-upgrade-link">
-                            🔓 Out of credits — Upgrade for more
-                          </a>
-                        </div>
-                      )}
+                    <div className="style-selector-section">
+                      <label className="style-label-text" htmlFor="style-select">
+                        🎨 Art Style:
+                      </label>
+                      <select
+                        id="style-select"
+                        value={selectedStyle}
+                        onChange={(e) => setSelectedStyle(e.target.value)}
+                        className="style-dropdown"
+                        aria-label="Select art style"
+                      >
+                        {STYLE_PRESETS.map((style) => (
+                          <option key={style.value} value={style.value}>
+                            {style.label}
+                          </option>
+                        ))}
+                      </select>
                     </div>
-                  </div>
-                )}
 
-                {isLimitsExceeded() ? (
-                  <a
-                    href="https://scenith.in/pricing"
-                    className="cta-button upgrade-button"
-                    aria-label="Upgrade to unlock more image generations"
-                  >
-                    <span className="upgrade-icon">🚀</span>
-                    Upgrade to Pro - Generate More Images
-                    <span className="upgrade-badge">Limited Time</span>
-                  </a>
-                ) : (
-                  <button
-                    className="cta-button generate-button"
-                    onClick={handleGenerateImage}
-                    disabled={
-                      !isLoggedIn ? false : (
-                        !prompt.trim() || 
-                        isGenerating ||
-                        undefined
-                      )
-                    }
-                    aria-label="Generate AI image from description"
-                  >
-                    {isGenerating ? 'Creating Your Image...' : isLoggedIn ? 'Generate Image' : 'Login to Generate'}
-                  </button>
+                    {isLoggedIn && imageUsage && imageUsage.availableModels?.length > 0 && (
+                      <div className="style-selector-section" style={{ marginTop: 12 }}>
+                        <label className="style-label-text">
+                          🤖 AI Model:
+                        </label>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 8 }}>
+                          {imageUsage.availableModels.map((model) => (
+                            <div
+                              key={model.id}
+                              onClick={() => setSelectedModel(model.id)}
+                              style={{
+                                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                                padding: '14px 16px', borderRadius: 12, cursor: 'pointer',
+                                border: `2px solid ${selectedModel === model.id ? '#7c6ef5' : 'rgba(255,255,255,0.25)'}`,
+                                background: selectedModel === model.id ? 'rgba(99,85,220,0.25)' : 'rgba(255,255,255,0.11)',
+                                transition: 'all 0.18s',
+                              }}
+                            >
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                <div style={{
+                                  width: 16, height: 16, borderRadius: '50%', flexShrink: 0,
+                                  border: `2px solid ${selectedModel === model.id ? '#a899f5' : 'rgba(255,255,255,0.5)'}`,
+                                  background: selectedModel === model.id ? '#7c6ef5' : 'transparent',
+                                  transition: 'all 0.18s',
+                                }} />
+                                <span style={{
+                                  fontSize: 15,
+                                  color: selectedModel === model.id ? '#ffffff' : '#d8d8f0',
+                                  fontWeight: selectedModel === model.id ? 700 : 500,
+                                  letterSpacing: '0.01em',
+                                }}>
+                                  {model.displayName}
+                                </span>
+                              </div>
+                              <span style={{
+                                fontSize: 12, fontWeight: 700, padding: '4px 12px', borderRadius: 999,
+                                background: selectedModel === model.id ? 'rgba(99,85,220,0.4)' : 'rgba(255,255,255,0.12)',
+                                border: `1px solid ${selectedModel === model.id ? '#a899f5' : 'rgba(255,255,255,0.3)'}`,
+                                color: selectedModel === model.id ? '#e0d8ff' : '#c8c8e8',
+                              }}>
+                                {model.creditsPerImage} cr/img
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {isLoggedIn && !imageUsage && (
+                      <div style={{ marginTop: 12, padding: '10px 14px', borderRadius: 10, background: 'rgba(99,85,220,0.07)', border: '1px solid rgba(99,85,220,0.2)', fontSize: 13, color: '#55557a' }}>
+                        Loading available models...
+                      </div>
+                    )}
+
+                    {selectedStyle !== 'realistic' && (
+                      <div className="style-info-tooltip">
+                        <strong>{STYLE_PRESETS.find(s => s.value === selectedStyle)?.label}:</strong>{' '}
+                        {STYLE_PRESETS.find(s => s.value === selectedStyle)?.description}
+                      </div>
+                    )}
+
+                    <details className="advanced-options">
+                      <summary>Advanced Options (Optional)</summary>
+                      <textarea
+                        value={negativePrompt}
+                        onChange={(e) => setNegativePrompt(e.target.value)}
+                        placeholder="What to avoid... (e.g., 'blurry, distorted, low quality')"
+                        className="negative-prompt-textarea"
+                        aria-label="Negative prompt"
+                        maxLength={500}
+                      />
+                      <p className="help-text">Specify what you DON'T want in the image</p>
+                    </details>
+
+                    {isLoggedIn && imageUsage && (
+                      <div className="usage-info">
+                        {imageUsage.daily.limit > 0 &&
+                         imageUsage.monthly.limit > 0 &&
+                         imageUsage.daily.remaining < imageUsage.monthly.remaining && (
+                          <div className="usage-section">
+                            <p className="usage-label today">⚠️ Today's Credits</p>
+                            <div className="usage-bar-container">
+                              <div
+                                className={`usage-bar-fill ${
+                                  (imageUsage.daily.used / imageUsage.daily.limit) >= 0.95 ? 'critical' :
+                                  (imageUsage.daily.used / imageUsage.daily.limit) >= 0.80 ? 'warning' : 'normal'
+                                }`}
+                                style={{ width: `${(imageUsage.daily.used / imageUsage.daily.limit) * 100}%` }}
+                              />
+                            </div>
+                            <p className="usage-text">
+                              <strong>{imageUsage.daily.remaining}</strong> credits remaining today
+                              ({imageUsage.daily.used} / {imageUsage.daily.limit} used)
+                            </p>
+                          </div>
+                        )}
+
+                        <div className="usage-section">
+                          <p className="usage-label month">📅 Monthly Credits</p>
+                          <div className="usage-bar-container">
+                            <div
+                              className={`usage-bar-fill ${
+                                (imageUsage.monthly.used / imageUsage.monthly.limit) >= 0.95 ? 'critical' :
+                                (imageUsage.monthly.used / imageUsage.monthly.limit) >= 0.80 ? 'warning' : 'normal'
+                              }`}
+                              style={{ width: `${Math.min(100, (imageUsage.monthly.used / Math.max(imageUsage.monthly.limit, 1)) * 100)}%` }}
+                            />
+                          </div>
+                          <p className="usage-text">
+                            <strong>{imageUsage.monthly.remaining}</strong> credits remaining this month
+                            ({imageUsage.monthly.used} / {imageUsage.monthly.limit} used)
+                          </p>
+
+                          {selectedModel && imageUsage.availableModels?.length > 0 && (() => {
+                            const m = imageUsage.availableModels.find(x => x.id === selectedModel);
+                            return m ? (
+                              <p className="usage-text" style={{ marginTop: 4, color: '#a899f5' }}>
+                                ✦ <strong>{m.displayName}</strong> costs <strong>{m.creditsPerImage} credit{m.creditsPerImage !== 1 ? 's' : ''}</strong> per image
+                                → ~<strong>{Math.floor(imageUsage.monthly.remaining / m.creditsPerImage)}</strong> images remaining
+                              </p>
+                            ) : null;
+                          })()}
+
+                          {imageUsage.availableModels?.length > 0 && imageUsage.monthly.remaining <= 0 && (
+                            <div className="inline-upgrade-cta">
+                              <a href="/pricing" className="inline-upgrade-link">
+                                🔓 Out of credits — Upgrade for more
+                              </a>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {isLimitsExceeded() ? (
+                      
+                      <a  href="https://scenith.in/pricing"
+                        className="cta-button upgrade-button"
+                        aria-label="Upgrade to unlock more image generations"
+                      >
+                        <span className="upgrade-icon">🚀</span>
+                        Upgrade to Pro - Generate More Images
+                        <span className="upgrade-badge">Limited Time</span>
+                      </a>
+                    ) : (
+                      <button
+                        className="cta-button generate-button"
+                        onClick={handleGenerateImage}
+                        disabled={
+                          !isLoggedIn ? false : (
+                            !prompt.trim() ||
+                            isGenerating ||
+                            undefined
+                          )
+                        }
+                        aria-label="Generate AI image from description"
+                      >
+                        {isGenerating ? 'Creating Your Image...' : isLoggedIn ? 'Generate Image' : 'Login to Generate'}
+                      </button>
+                    )}
+                  </>
                 )}
               </div>
             </div>
@@ -1120,6 +1231,98 @@ const AIImageGeneratorClient: React.FC = () => {
                 </motion.div>
               </section>
             )}
+            {/* ── DEMO IMAGE MARQUEE ── */}
+            <section className="demo-marquee-section" aria-label="Example AI generated images">
+              <div className="demo-marquee-header">
+                <h2>Images Created by Our Users</h2>
+                <p>Real examples generated with Scenith AI — your imagination is the only limit</p>
+              </div>
+
+              {(() => {
+                const DEMO_IMAGES = [
+                  "https://cdn.scenith.in/images/sole_image_gen/7/92c16acb-0f22-44e4-9a87-32314e3d4b5a.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1001/72fafd61-493e-46f9-be5c-f6eed674662f.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1032/172e0d0f-c194-4ac7-bb93-9aaf6e3e21d8.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1032/562b0ac3-fc69-4ac7-b4b3-3f05e7b5638c.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1139/ed2d9f3e-5d95-4da1-88e4-95971941730e.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1139/f0d70db9-6388-446b-ac27-8ffa0bb162aa.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1139/be641c98-d248-4c77-b82a-e704fa4c7b2a.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1162/3a656bf0-af3e-466d-a65f-b9a9fd85c39f.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1162/cc4b271c-4941-4a2d-97e5-070afb8a0c09.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1162/f53619ce-8fe5-446e-b38f-d6069469db6f.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1204/aefc2c01-dbfb-49c8-89fe-957d313c207f.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1202/788ab6df-fe3d-4a44-b6aa-fc51a8e8c97d.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1259/31bdd81a-6a9a-44d7-816e-b4053269e8ef.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1391/93c6fb3d-bd1e-4782-8444-07761d6fba66.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/2/16743040-1fb6-4b2e-80c4-e4079c4c3287.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1580/176a73c0-c0a8-4a51-a356-31962b94d51a.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1667/4c6deab8-94ac-49f8-ae53-1a44be77e95b.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1700/ba57cabf-9fe4-4eda-ac98-6d472327da47.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1709/b03a06ef-6280-4afe-aae7-8f9f376d1ea0.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1765/c4a3e1d6-11bc-4775-9019-729d558e3ba0.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1776/9ca25bbd-0000-4fdf-ad32-546a792a661f.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1/2d838ce9-d09c-455f-8707-8a2f92291194.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1/7efc1cf0-10ac-4c12-91e5-a4bd3c0c64b9.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1/c63facda-9d8c-47cc-9060-a52feba700ae.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1904/4b47742f-d24f-4fef-9af3-7d311f4860c1.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1/e7140527-8d4e-4193-8082-b8abfda06493.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1/67d9a045-433f-43d3-acb7-ba514695b570.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1/ad90483e-1772-4567-b885-8b9e17488f4f.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1/528def5a-4ce9-4cdf-94bf-77ec6e275d18.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1/374b0170-4f85-499e-a1f7-c886b1179902.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1962/f219c323-0938-4123-ab00-4e6e88a23435.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1964/27c15170-239b-44f6-9f02-d4869ef1c436.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1/65560682-5fd5-4ebc-a322-9b49aab26dfd.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1/558ce17b-c3ab-4a99-804a-2b15d4c73a8f.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1/2dad4f37-76ff-43c6-bc23-bfc5210bb220.png",
+                  "https://cdn.scenith.in/images/sole_image_gen/1/995e4d62-2900-4460-b59b-4b16bc965c5c.png",
+                ];
+
+                // Split into two rows, offset for visual interest
+                const row1 = DEMO_IMAGES.slice(0, Math.ceil(DEMO_IMAGES.length / 2));
+                const row2 = DEMO_IMAGES.slice(Math.ceil(DEMO_IMAGES.length / 2));
+
+                return (
+                  <div className="demo-marquee-wrapper">
+                    {/* Row 1 — scrolls left */}
+                    <div className="demo-marquee-track" aria-hidden="true">
+                      <div className="demo-marquee-inner demo-scroll-left">
+                        {[...row1, ...row1].map((src, i) => (
+                          <div key={`r1-${i}`} className="demo-marquee-card">
+                            <img
+                              src={src}
+                              alt="AI generated image example"
+                              loading="lazy"
+                              decoding="async"
+                              width={220}
+                              height={220}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Row 2 — scrolls right (opposite direction) */}
+                    <div className="demo-marquee-track" aria-hidden="true">
+                      <div className="demo-marquee-inner demo-scroll-right">
+                        {[...row2, ...row2].map((src, i) => (
+                          <div key={`r2-${i}`} className="demo-marquee-card">
+                            <img
+                              src={src}
+                              alt="AI generated image example"
+                              loading="lazy"
+                              decoding="async"
+                              width={220}
+                              height={220}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+            </section>
 
             <section className="must-try-section" role="region" aria-labelledby="must-try-title">
               <div className="must-try-header">
@@ -1787,9 +1990,6 @@ const AIImageGeneratorClient: React.FC = () => {
             </div>
           </motion.div>
         </div>
-      )}
-      {showImageUpgradePopup && (
-        <AIImageUpgradePopup onClose={() => setShowImageUpgradePopup(false)} />
       )}
       {isLoggedIn && activePlanRole !== 'STUDIO' && activePlanRole !== 'ADMIN' && (() => {
         const upgradeMap: Record<string, { icon: string; title: string; sub: string }> = {
