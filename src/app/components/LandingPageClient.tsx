@@ -162,7 +162,7 @@ const homepageStructuredData = {
           "name": "What is Scenith and what tools does it offer?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Scenith is a free AI-powered content creation platform offering 9 professional tools: (1) AI Voice Generator with 40+ natural voices in 20+ languages, (2) Professional Image Editor for social media graphics, (3) AI Image Generator for amazing visuals, (4) Background Remover using AI precision, (5) Video Speed Modifier, (6) Media Compression, (7) Media Format Conversion, (8) PDF Tools Suite (merge, split, compress, convert), and (9) 10,000+ Premium SVG Icons Library. All tools are browser-based with no downloads required and include a free forever plan with zero watermarks."
+            "text": "Scenith is a free AI-powered content creation platform offering 10 professional tools: (1) AI Voice Generator with 40+ natural voices in 20+ languages, (2) Professional Image Editor for social media graphics, (3) AI Image Generator for amazing visuals, (4) Background Remover using AI precision, (5) Video Speed Modifier, (6) Media Compression, (7) Media Format Conversion, (8) PDF Tools Suite (merge, split, compress, convert), and (9) 10,000+ Premium SVG Icons Library. All tools are browser-based with no downloads required and include a free forever plan with zero watermarks."
           }
         },
         {
@@ -178,7 +178,7 @@ const homepageStructuredData = {
           "name": "How does Scenith compare to other AI content creation platforms?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Scenith combines 9 professional tools in one platform vs competitors offering single-purpose tools. Unlike Adobe Creative Cloud ($54.99/month), Canva Pro ($12.99/month for limited features), or ElevenLabs ($22/month voice only), Scenith offers comprehensive creation tools starting free. Key advantages: (1) No watermarks on free plan, (2) Browser-based - works on any device, (3) All tools integrated seamlessly, (4) 40+ AI voices vs competitors' 10-20, (5) PDF tools included free vs $239/year for Adobe Acrobat, (6) 10,000+ SVG icons vs $16/month for separate icon subscriptions."
+            "text": "Scenith combines 10 professional tools in one platform vs competitors offering single-purpose tools. Unlike Adobe Creative Cloud ($54.99/month), Canva Pro ($12.99/month for limited features), or ElevenLabs ($22/month voice only), Scenith offers comprehensive creation tools starting free. Key advantages: (1) No watermarks on free plan, (2) Browser-based - works on any device, (3) All tools integrated seamlessly, (4) 40+ AI voices vs competitors' 10-20, (5) PDF tools included free vs $239/year for Adobe Acrobat, (6) 10,000+ SVG icons vs $16/month for separate icon subscriptions."
           }
         },
         {
@@ -350,7 +350,7 @@ function PricingPopup({ onClose }: { onClose: () => void }) {
             background: 'linear-gradient(90deg, #667eea, #a78bfa, #f093fb)',
             WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
           }}>
-            9 AI Tools.
+            10 AI Tools.
           </span>
         </h2>
 
@@ -817,8 +817,31 @@ useEffect(() => {
               What is Scenith? The Complete AI Content Creation Platform
             </h2>
             <p style={{ fontSize: '1.1rem', lineHeight: '1.8', color: '#4a5568', marginBottom: '20px', textAlign: 'center' }}>
-              <strong>Scenith is a free, all-in-one AI-powered content creation platform</strong> that combines 9 professional tools in one browser-based interface. Unlike competitors requiring multiple subscriptions, Scenith provides everything content creators need: AI Voice Generation (40+ realistic voices in 20+ languages), Professional Image Editor, AI Image Generator, Background Remover, Video Speed Modifier, Media Compression & Conversion, PDF Tools Suite (merge, split, compress), and 10,000+ Premium SVG Icons—all accessible without downloads.
+              <strong>Scenith is a free, all-in-one AI-powered content creation platform</strong> that combines 10 professional tools in one browser-based interface. Unlike competitors requiring multiple subscriptions, Scenith provides everything content creators need: AI Voice Generation (40+ realistic voices in 20+ languages), Professional Image Editor, AI Image Generator, Background Remover, Video Speed Modifier, Media Compression & Conversion, PDF Tools Suite (merge, split, compress), and 10,000+ Premium SVG Icons—all accessible without downloads.
             </p>
+            <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '32px' }}>
+              <Link href="/tools/ai-voice-generation" style={{
+                display: 'inline-flex', alignItems: 'center', gap: '10px',
+                padding: '14px 28px',
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                color: 'white', borderRadius: '14px',
+                fontSize: '1rem', fontWeight: 700, textDecoration: 'none',
+                boxShadow: '0 4px 20px rgba(102, 126, 234, 0.4)',
+                transition: 'all 0.3s'
+              }}>
+                🚀 Start for Free
+              </Link>
+              <Link href="/tools" style={{
+                display: 'inline-flex', alignItems: 'center', gap: '10px',
+                padding: '14px 28px',
+                background: 'transparent', color: '#667eea',
+                border: '2px solid #667eea', borderRadius: '14px',
+                fontSize: '1rem', fontWeight: 700, textDecoration: 'none',
+                transition: 'all 0.3s'
+              }}>
+                🛠️ Browse All 10 Tools
+              </Link>
+            </div>            
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px', marginTop: '30px' }}>
               <div style={{ padding: '15px', background: 'rgba(102, 126, 234, 0.1)', borderRadius: '12px', borderLeft: '4px solid #667eea' }}>
                 <strong style={{ color: '#667eea', fontSize: '0.9rem', display: 'block', marginBottom: '8px' }}>COST</strong>
@@ -826,7 +849,7 @@ useEffect(() => {
               </div>
               <div style={{ padding: '15px', background: 'rgba(102, 126, 234, 0.1)', borderRadius: '12px', borderLeft: '4px solid #764ba2' }}>
                 <strong style={{ color: '#764ba2', fontSize: '0.9rem', display: 'block', marginBottom: '8px' }}>TOOLS</strong>
-                <span style={{ fontSize: '1.05rem', color: '#1a202c' }}>9 AI-powered applications</span>
+                <span style={{ fontSize: '1.05rem', color: '#1a202c' }}>10 AI-powered applications</span>
               </div>
               <div style={{ padding: '15px', background: 'rgba(102, 126, 234, 0.1)', borderRadius: '12px', borderLeft: '4px solid #f093fb' }}>
                 <strong style={{ color: '#f093fb', fontSize: '0.9rem', display: 'block', marginBottom: '8px' }}>PLATFORM</strong>
@@ -836,7 +859,7 @@ useEffect(() => {
                 <strong style={{ color: '#48bb78', fontSize: '0.9rem', display: 'block', marginBottom: '8px' }}>WATERMARKS</strong>
                 <span style={{ fontSize: '1.05rem', color: '#1a202c' }}>Zero, even on free plan</span>
               </div>
-            </div>
+            </div>            
           </div>
         </section>
 
@@ -890,6 +913,10 @@ useEffect(() => {
                 <FaPaintBrush className="cta-icon" />
                 Explore Image Editor
               </Link>
+              <Link href="/tools" className="cta-button cta-tools">
+                <FaShapes className="cta-icon" />
+                Browse All 10 Tools
+              </Link>              
             </div>
 
             <p className="hero-no-credit">No credit card required • Free forever plan available</p>
@@ -900,7 +927,7 @@ useEffect(() => {
         <section className="featured-tools-section">
           <div className="section-header">
             <span className="section-label">Most Popular</span>
-            <h2>9 Professional AI Tools in One Platform</h2>
+            <h2>10 Professional AI Tools in One Platform</h2>
             <p className="section-subtitle">Voice generation, image creation & editing, PDF tools, SVG icons, video tools—completely free to start</p>
           </div>
 
