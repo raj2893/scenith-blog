@@ -113,7 +113,7 @@ const DownloadModal: React.FC<DownloadModalProps> = ({
 
   // Derived limit values
   const canSvg = downloadLimits?.canDownloadSvg ?? false;
-  const maxRes = 256;
+  const maxRes = downloadLimits?.maxResolution ?? 256;
   const dailyLimit = downloadLimits?.dailyLimit ?? 2;
   const monthlyLimit = downloadLimits?.monthlyLimit ?? 10;
   const plan = downloadLimits?.plan ?? "GUEST";
