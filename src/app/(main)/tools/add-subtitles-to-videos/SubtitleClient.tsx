@@ -407,13 +407,45 @@ const SubtitleClient: React.FC = () => {
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [applyStyleToSingle, setApplyStyleToSingle] = useState(false);
-  const [selectedQuality] = useState<string>('720p');
+  const [availableQualities, setAvailableQualities] = useState<string[]>([]);
+  const [selectedQuality, setSelectedQuality] = useState<string>('720p');
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<{id: number; name: string; type: string} | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deletedSubtitlesStack, setDeletedSubtitlesStack] = useState<{ subtitle: SubtitleDTO; index: number }[]>([]);
 
   const prevSelectedAiStyleRef = useRef<AiStyle | null>(null);
+  const getAvailableQualities = (role: string): string[] => {
+  switch (role) {
+    case 'BASIC':
+      return ['144p', '240p', '360p', '480p', '720p'];
+    case 'CREATOR_LITE':
+      return ['144p', '240p', '360p', '480p', '720p', '1080p'];
+    case 'CREATOR':
+      return ['144p', '240p', '360p', '480p', '720p', '1080p', '1440p', '2k'];
+    case 'STUDIO':
+    case 'ADMIN':
+      return ['144p', '240p', '360p', '480p', '720p', '1080p', '1440p', '2k', '4k'];
+    default:
+      return ['720p'];
+  }
+};
+
+const getDefaultQuality = (role: string): string => {
+  switch (role) {
+    case 'BASIC':
+      return '720p';
+    case 'CREATOR_LITE':
+      return '1080p';
+    case 'CREATOR':
+      return '1440p';
+    case 'STUDIO':
+    case 'ADMIN':
+      return '1440p';
+    default:
+      return '720p';
+  }
+};
 
   // Handle scroll for navbar
   useEffect(() => {
@@ -494,6 +526,12 @@ const SubtitleClient: React.FC = () => {
     };
     fetchUploads();
   }, [isLoggedIn]);
+  useEffect(() => {
+  if (userProfile.role) {
+    setSelectedQuality(getDefaultQuality(userProfile.role));
+    setAvailableQualities(getAvailableQualities(userProfile.role));
+  }
+}, [userProfile.role]);
 
 
   const requireLogin = () => {
@@ -631,7 +669,23 @@ const handleDeleteConfirm = async () => {
     if (!requireLogin()) return;
     const file = e.target.files?.[0];
     if (!file) return;
-    
+        // Validate duration before uploading
+    const videoDuration = await new Promise<number>((resolve, reject) => {
+      const videoEl = document.createElement('video');
+      videoEl.preload = 'metadata';
+      videoEl.onloadedmetadata = () => {
+        window.URL.revokeObjectURL(videoEl.src);
+        resolve(videoEl.duration);
+      };
+      videoEl.onerror = () => reject(new Error('Could not read video metadata'));
+      videoEl.src = URL.createObjectURL(file);
+    });
+
+    if (videoDuration > 60) {
+      setError(`Video is ${Math.floor(videoDuration)}s long. Only videos under 1 minute are allowed.`);
+      e.target.value = '';
+      return;
+    }
     setIsUploading(true);
     const formData = new FormData();
     formData.append('file', file);
@@ -693,6 +747,7 @@ const handleDeleteConfirm = async () => {
       }
       setIsGenerating(true);
       setError(null);
+      setSelectedUpload(prev => prev ? { ...prev, processedCdnUrl: null } : prev);
       
       try {
           // Queue the generation task
@@ -722,14 +777,16 @@ const handleDeleteConfirm = async () => {
                       setSelectedUpload(updatedMedia);
                       
                       if (updatedMedia.status === 'SUCCESS' && updatedMedia.subtitlesJson) {
-                          // Generation complete
-                          clearInterval(pollInterval);
-                          setIsGenerating(false);
-                          setSubtitles(JSON.parse(updatedMedia.subtitlesJson));
+                        // Generation complete
+                        clearInterval(pollInterval);
+                        setIsGenerating(false);
+                        setSubtitles(JSON.parse(updatedMedia.subtitlesJson));
 
-                          setUploads(prev => prev.map(u => 
-                              u.id === updatedMedia.id ? updatedMedia : u
-                          ));                          
+                        const resetProcessedUrl = { ...updatedMedia, processedCdnUrl: null };
+                        setSelectedUpload(resetProcessedUrl);
+                        setUploads(prev => prev.map(u => 
+                            u.id === updatedMedia.id ? resetProcessedUrl : u
+                        ));                         
                           
                           // Scroll to subtitles list
                           const subtitlesList = document.querySelector('.subtitles-list-container');
@@ -1498,7 +1555,47 @@ const handleDeleteConfirm = async () => {
                       </div>
                     </div>
                   )}
-                </div>                                         
+                </div>
+                {selectedUpload && subtitles.length > 0 && (
+                  <div className="quality-selector-container">
+                    <label htmlFor="quality-select" className="quality-label">
+                      Output Quality:
+                      {(userProfile.role === 'BASIC' || userProfile.role === 'CREATOR_LITE' || userProfile.role === 'CREATOR') && (
+                        <span className="unlock-badge" onClick={() => window.location.href = '/pricing'}>
+                          🔓 Unlock {userProfile.role === 'BASIC' ? '4K' : userProfile.role === 'CREATOR_LITE' ? '4K' : '4K'}
+                        </span>
+                      )}
+                    </label>
+                    <select
+                      id="quality-select"
+                      value={selectedQuality}
+                      onChange={(e) => setSelectedQuality(e.target.value)}
+                      className="quality-select"
+                      disabled={isProcessing || isGenerating}
+                    >
+                      {availableQualities.map((quality) => (
+                        <option key={quality} value={quality}>
+                          {quality === '2k' ? '2K (1440p)' : quality === '4k' ? '4K (2160p)' : quality.toUpperCase()}
+                        </option>
+                      ))}
+                    </select>
+                    {userProfile.role === 'BASIC' && (
+                      <p className="quality-upgrade-hint">
+                        💡 Upgrade to <a href="/pricing">Creator Lite</a> for 1080p or <a href="/pricing">Creator Spark</a> for 2K quality
+                      </p>
+                    )}
+                    {userProfile.role === 'CREATOR_LITE' && (
+                      <p className="quality-upgrade-hint">
+                        💡 Upgrade to <a href="/pricing">Creator Spark</a> for 2K quality
+                      </p>
+                    )}
+                    {userProfile.role === 'BASIC' && (
+                      <p className="quality-upgrade-hint" style={{color: '#f87171'}}>
+                        ⚠️ Free plan: watermark will be added to exported video
+                      </p>
+                    )}
+                  </div>
+                )}
                 <div className="action-buttons">
                   {selectedUpload && (
                     <div className="button-wrapper">
