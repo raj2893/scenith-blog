@@ -460,7 +460,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
               ) : (
                 <button
                   type="button"
-                  className="nav-link nav-link-with-icon auth-button"
+                  className="nav-link nav-link-with-icon navbar-auth-button"
                   onClick={handleNavbarLoginClick}
                 >
                   <span className="nav-link-icon"><FaUser /></span>

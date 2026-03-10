@@ -322,19 +322,22 @@ const AIImageGeneratorClient: React.FC = () => {
     if (imageUsage) {
       const selectedModelData = imageUsage.availableModels?.find(m => m.id === selectedModel);
       const creditCost = selectedModelData?.creditsPerImage ?? 1;
-      const monthlyExceeded = imageUsage.monthly.limit > 0 && imageUsage.monthly.remaining < creditCost;
-      const dailyExceeded = imageUsage.daily.limit > 0 && imageUsage.daily.remaining < creditCost;
-
-      if (monthlyExceeded) {
-        setError(`Not enough monthly credits. This model costs ${creditCost} credits (${imageUsage.monthly.remaining} remaining). Upgrade to generate more.`);
-        setTimeout(() => setError(null), 10000);
-        return;
-      }
-
-      if (dailyExceeded) {
-        setError(`Not enough daily credits. This model costs ${creditCost} credits (${imageUsage.daily.remaining} remaining today). Try tomorrow or upgrade.`);
-        setTimeout(() => setError(null), 10000);
-        return;
+      
+      if (creditCost !== -1) {
+        const monthlyExceeded = imageUsage.monthly.limit > 0 && imageUsage.monthly.remaining < creditCost;
+        const dailyExceeded = imageUsage.daily.limit > 0 && imageUsage.daily.remaining < creditCost;
+  
+        if (monthlyExceeded) {
+          setError(`Not enough monthly credits. This model costs ${creditCost} credits (${imageUsage.monthly.remaining} remaining). Upgrade to generate more.`);
+          setTimeout(() => setError(null), 10000);
+          return;
+        }
+  
+        if (dailyExceeded) {
+          setError(`Not enough daily credits. This model costs ${creditCost} credits (${imageUsage.daily.remaining} remaining today). Try tomorrow or upgrade.`);
+          setTimeout(() => setError(null), 10000);
+          return;
+        }
       }
     }
 
@@ -493,6 +496,7 @@ const AIImageGeneratorClient: React.FC = () => {
     if (!isLoggedIn || !imageUsage) return false;
     const selectedModelData = imageUsage.availableModels?.find(m => m.id === selectedModel);
     const creditCost = selectedModelData?.creditsPerImage ?? 1;
+    if (creditCost === -1) return false; // unlimited model
     const monthlyExceeded = imageUsage.monthly.limit > 0 && imageUsage.monthly.remaining < creditCost;
     const dailyExceeded = imageUsage.daily.limit > 0 && imageUsage.daily.remaining < creditCost;
     return monthlyExceeded || dailyExceeded;
@@ -897,6 +901,45 @@ const AIImageGeneratorClient: React.FC = () => {
                       ))}
                     </div>
 
+                    {/* Colorful model showcase */}
+                    <div style={{ marginBottom: 24 }}>
+                      <p style={{ fontSize: 13, color: '#a8c8ff', fontWeight: 600, marginBottom: 10 }}>
+                        🎨 Models you'll unlock:
+                      </p>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center' }}>
+                        {[
+                          { displayName: 'Stability AI Core',    creditsPerImage: 2,  bg: 'linear-gradient(135deg,#0c2d4a,#0e3a5e)', borderColor: '#38bdf8', color: '#7dd3fc', badgeBg: 'rgba(56,189,248,0.2)',  badgeColor: '#38bdf8' },
+                          { displayName: 'GPT Image 1 Mini',     creditsPerImage: 3,  bg: 'linear-gradient(135deg,#052e16,#064e25)', borderColor: '#4ade80', color: '#86efac', badgeBg: 'rgba(74,222,128,0.2)',  badgeColor: '#4ade80' },
+                          { displayName: 'Imagen 4 Fast',        creditsPerImage: 5,  bg: 'linear-gradient(135deg,#2d1a00,#3d2400)', borderColor: '#fbbf24', color: '#fcd34d', badgeBg: 'rgba(251,191,36,0.2)',  badgeColor: '#fbbf24' },
+                          { displayName: 'FLUX 1.1 Pro',         creditsPerImage: 7,  bg: 'linear-gradient(135deg,#1e0a3c,#2d1256)', borderColor: '#a78bfa', color: '#c4b5fd', badgeBg: 'rgba(167,139,250,0.2)', badgeColor: '#a78bfa' },
+                          { displayName: 'Imagen 4 Standard',    creditsPerImage: 8,  bg: 'linear-gradient(135deg,#3b0a28,#4a0f33)', borderColor: '#f472b6', color: '#f9a8d4', badgeBg: 'rgba(244,114,182,0.2)', badgeColor: '#f472b6' },
+                          { displayName: 'GPT Image 1 (Medium)', creditsPerImage: 10, bg: 'linear-gradient(135deg,#2d1500,#3d1e00)', borderColor: '#fb923c', color: '#fdba74', badgeBg: 'rgba(251,146,60,0.2)',  badgeColor: '#fb923c' },
+                          { displayName: 'Grok Aurora',          creditsPerImage: 12, bg: 'linear-gradient(135deg,#0f0c29,#1a1650)', borderColor: '#818cf8', color: '#a5b4fc', badgeBg: 'rgba(129,140,248,0.25)', badgeColor: '#818cf8' },
+                        ].map((model) => (
+                          <div
+                            key={model.displayName}
+                            style={{
+                              display: 'flex', alignItems: 'center', gap: 6,
+                              padding: '7px 14px', borderRadius: 999,
+                              border: `2px solid ${model.borderColor}`,
+                              background: model.bg,
+                              color: model.color,
+                              fontSize: 13, fontWeight: 600,
+                            }}
+                          >
+                            <span>🔒</span>
+                            <span>{model.displayName}</span>
+                            <span style={{
+                              fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 999,
+                              background: model.badgeBg, color: model.badgeColor,
+                            }}>
+                              {model.creditsPerImage}cr
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>                    
+
                     {/* CTA buttons */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                       
@@ -917,8 +960,27 @@ const AIImageGeneratorClient: React.FC = () => {
                     </div>
                   </div>
                 ) : (
-                  /* ── NORMAL FLOW: not logged in, loading, or premium user ── */
                   <>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }}>
+                      <button
+                        onClick={() => {
+                          const el = document.querySelector('.demo-marquee-section');
+                          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }}
+                        style={{
+                          display: 'inline-flex', alignItems: 'center', gap: 6,
+                          padding: '7px 16px', borderRadius: 999, cursor: 'pointer',
+                          border: '1.5px solid rgba(99,85,220,0.3)',
+                          background: 'rgba(99,85,220,0.07)',
+                          color: '#6355dc', fontWeight: 600, fontSize: 13,
+                          transition: 'all 0.2s',
+                        }}
+                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(99,85,220,0.15)'}
+                        onMouseLeave={e => e.currentTarget.style.background = 'rgba(99,85,220,0.07)'}
+                      >
+                        🖼️ See examples by our users ↓
+                      </button>
+                    </div>                  
                     <div className="script-input-wrapper">
                       <div className="script-input-header">
                         <div className="header-left">
@@ -1020,49 +1082,82 @@ const AIImageGeneratorClient: React.FC = () => {
                       </select>
                     </div>
 
+                    {!isLoggedIn && (
+                      <div className="style-selector-section" style={{ marginTop: 12 }}>
+                        <label className="style-label-text">🤖 AI Model:</label>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 8 }}>
+                          {[
+                            { id: 'stability-core',    displayName: 'Stability AI Core',    creditsPerImage: 2,  bg: 'linear-gradient(135deg,#e0f2fe,#bae6fd)', borderColor: '#38bdf8', color: '#0369a1', badgeBg: 'rgba(3,105,161,0.15)',  badgeColor: '#0369a1' },
+                            { id: 'gpt-image-1-mini',  displayName: 'GPT Image 1 Mini',     creditsPerImage: 3,  bg: 'linear-gradient(135deg,#dcfce7,#bbf7d0)', borderColor: '#4ade80', color: '#15803d', badgeBg: 'rgba(21,128,61,0.15)',  badgeColor: '#15803d' },
+                            { id: 'imagen-4-fast',     displayName: 'Imagen 4 Fast',        creditsPerImage: 5,  bg: 'linear-gradient(135deg,#fef9c3,#fde68a)', borderColor: '#fbbf24', color: '#92400e', badgeBg: 'rgba(146,64,14,0.15)',  badgeColor: '#b45309' },
+                            { id: 'flux-1-1-pro',      displayName: 'FLUX 1.1 Pro',         creditsPerImage: 7,  bg: 'linear-gradient(135deg,#ede9fe,#ddd6fe)', borderColor: '#a78bfa', color: '#5b21b6', badgeBg: 'rgba(91,33,182,0.15)',  badgeColor: '#6d28d9' },
+                            { id: 'imagen-4-standard', displayName: 'Imagen 4 Standard',    creditsPerImage: 8,  bg: 'linear-gradient(135deg,#fce7f3,#fbcfe8)', borderColor: '#f472b6', color: '#9d174d', badgeBg: 'rgba(157,23,77,0.15)',  badgeColor: '#be185d' },
+                            { id: 'gpt-image-1-medium',displayName: 'GPT Image 1 (Medium)', creditsPerImage: 10, bg: 'linear-gradient(135deg,#ffedd5,#fed7aa)', borderColor: '#fb923c', color: '#9a3412', badgeBg: 'rgba(154,52,18,0.15)',  badgeColor: '#c2410c' },
+                            { id: 'grok-aurora',       displayName: 'Grok Aurora',          creditsPerImage: 12, bg: 'linear-gradient(135deg,#1e1b4b,#312e81)', borderColor: '#6366f1', color: '#e0e7ff', badgeBg: 'rgba(99,102,241,0.3)',  badgeColor: '#a5b4fc' },
+                          ].map((model) => (
+                            <div
+                              key={model.id}
+                              style={{
+                                display: 'flex', alignItems: 'center', gap: 6,
+                                padding: '7px 14px', borderRadius: 999,
+                                border: `2px solid ${model.borderColor}`,
+                                background: model.bg,
+                                color: model.color,
+                                fontSize: 13,
+                                cursor: 'default',
+                                fontWeight: 600,
+                                filter: 'brightness(0.88)',
+                              }}
+                            >
+                              <span>{model.displayName}</span>
+                              <span style={{
+                                fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 999,
+                                background: model.badgeBg,
+                                color: model.badgeColor,
+                              }}>
+                                {model.creditsPerImage}cr
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                        <p style={{ fontSize: 12, color: '#6355dc', marginTop: 10, fontWeight: 600 }}>
+                          🔒 Login & upgrade to unlock these models →{' '}
+                          <a href="/pricing" style={{ color: '#6355dc', textDecoration: 'underline' }}>View Plans</a>
+                        </p>
+                      </div>
+                    )}                    
+
                     {isLoggedIn && imageUsage && imageUsage.availableModels?.length > 0 && (
                       <div className="style-selector-section" style={{ marginTop: 12 }}>
-                        <label className="style-label-text">
-                          🤖 AI Model:
-                        </label>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 8 }}>
+                        <label className="style-label-text">🤖 AI Model:</label>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 8 }}>
                           {imageUsage.availableModels.map((model) => (
-                            <div
+                            <button
                               key={model.id}
                               onClick={() => setSelectedModel(model.id)}
                               style={{
-                                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                                padding: '14px 16px', borderRadius: 12, cursor: 'pointer',
-                                border: `2px solid ${selectedModel === model.id ? '#7c6ef5' : 'rgba(255,255,255,0.25)'}`,
-                                background: selectedModel === model.id ? 'rgba(99,85,220,0.25)' : 'rgba(255,255,255,0.11)',
+                                display: 'flex', alignItems: 'center', gap: 6,
+                                padding: '7px 14px', borderRadius: 999, cursor: 'pointer',
+                                border: `2px solid ${selectedModel === model.id ? '#7c6ef5' : 'rgba(0,0,0,0.12)'}`,
+                                background: selectedModel === model.id
+                                  ? 'linear-gradient(135deg, #6355dc, #8b5cf6)'
+                                  : '#f4f4f8',
+                                color: selectedModel === model.id ? '#fff' : '#444',
+                                fontWeight: selectedModel === model.id ? 700 : 500,
+                                fontSize: 13,
                                 transition: 'all 0.18s',
+                                boxShadow: selectedModel === model.id ? '0 2px 10px rgba(99,85,220,0.3)' : 'none',
                               }}
                             >
-                              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                                <div style={{
-                                  width: 16, height: 16, borderRadius: '50%', flexShrink: 0,
-                                  border: `2px solid ${selectedModel === model.id ? '#a899f5' : 'rgba(255,255,255,0.5)'}`,
-                                  background: selectedModel === model.id ? '#7c6ef5' : 'transparent',
-                                  transition: 'all 0.18s',
-                                }} />
-                                <span style={{
-                                  fontSize: 15,
-                                  color: selectedModel === model.id ? '#ffffff' : '#d8d8f0',
-                                  fontWeight: selectedModel === model.id ? 700 : 500,
-                                  letterSpacing: '0.01em',
-                                }}>
-                                  {model.displayName}
-                                </span>
-                              </div>
+                              <span>{model.displayName}</span>
                               <span style={{
-                                fontSize: 12, fontWeight: 700, padding: '4px 12px', borderRadius: 999,
-                                background: selectedModel === model.id ? 'rgba(99,85,220,0.4)' : 'rgba(255,255,255,0.12)',
-                                border: `1px solid ${selectedModel === model.id ? '#a899f5' : 'rgba(255,255,255,0.3)'}`,
-                                color: selectedModel === model.id ? '#e0d8ff' : '#c8c8e8',
+                                fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 999,
+                                background: selectedModel === model.id ? 'rgba(255,255,255,0.22)' : 'rgba(99,85,220,0.1)',
+                                color: selectedModel === model.id ? '#fff' : '#6355dc',
                               }}>
-                                {model.creditsPerImage} cr/img
+                                {model.creditsPerImage === -1 ? '∞' : `${model.creditsPerImage}cr`}
                               </span>
-                            </div>
+                            </button>
                           ))}
                         </div>
                       </div>
@@ -1122,28 +1217,36 @@ const AIImageGeneratorClient: React.FC = () => {
                           <div className="usage-bar-container">
                             <div
                               className={`usage-bar-fill ${
+                                imageUsage.monthly.limit === -1 ? 'normal' :
                                 (imageUsage.monthly.used / imageUsage.monthly.limit) >= 0.95 ? 'critical' :
                                 (imageUsage.monthly.used / imageUsage.monthly.limit) >= 0.80 ? 'warning' : 'normal'
                               }`}
-                              style={{ width: `${Math.min(100, (imageUsage.monthly.used / Math.max(imageUsage.monthly.limit, 1)) * 100)}%` }}
+                              style={{ width: imageUsage.monthly.limit === -1 ? '100%' : `${Math.min(100, (imageUsage.monthly.used / Math.max(imageUsage.monthly.limit, 1)) * 100)}%` }}
                             />
                           </div>
                           <p className="usage-text">
-                            <strong>{imageUsage.monthly.remaining}</strong> credits remaining this month
-                            ({imageUsage.monthly.used} / {imageUsage.monthly.limit} used)
+                            {imageUsage.monthly.limit === -1 ? (
+                              <><span style={{ color: '#34d399', fontWeight: 700 }}>∞ Unlimited</span> credits this month</>
+                            ) : (
+                              <><strong>{imageUsage.monthly.remaining}</strong> credits remaining this month
+                              ({imageUsage.monthly.used} / {imageUsage.monthly.limit} used)</>
+                            )}
                           </p>
 
                           {selectedModel && imageUsage.availableModels?.length > 0 && (() => {
                             const m = imageUsage.availableModels.find(x => x.id === selectedModel);
                             return m ? (
                               <p className="usage-text" style={{ marginTop: 4, color: '#a899f5' }}>
-                                ✦ <strong>{m.displayName}</strong> costs <strong>{m.creditsPerImage} credit{m.creditsPerImage !== 1 ? 's' : ''}</strong> per image
-                                → ~<strong>{Math.floor(imageUsage.monthly.remaining / m.creditsPerImage)}</strong> images remaining
+                                ✦ <strong>{m.displayName}</strong> costs{' '}
+                                <strong>{m.creditsPerImage === -1 ? '∞ unlimited' : `${m.creditsPerImage} credit${m.creditsPerImage !== 1 ? 's' : ''}`}</strong> per image
+                                {imageUsage.monthly.limit !== -1 && m.creditsPerImage !== -1 && (
+                                  <> → ~<strong>{Math.floor(imageUsage.monthly.remaining / m.creditsPerImage)}</strong> images remaining</>
+                                )}
                               </p>
                             ) : null;
                           })()}
 
-                          {imageUsage.availableModels?.length > 0 && imageUsage.monthly.remaining <= 0 && (
+                          {imageUsage.availableModels?.length > 0 && imageUsage.monthly.limit !== -1 && imageUsage.monthly.remaining <= 0 && (
                             <div className="inline-upgrade-cta">
                               <a href="/pricing" className="inline-upgrade-link">
                                 🔓 Out of credits — Upgrade for more

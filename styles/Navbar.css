@@ -243,8 +243,22 @@
   flex-shrink: 0;
 }
 
-.auth-button {
+.nav-bar .navbar-auth-button {
   font-weight: 700 !important;
+  padding: 6px 9px !important;
+  background: var(--gradient) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  font-size: 0.72rem !important;
+  border: none !important;
+  box-shadow: none !important;
+  width: auto !important;
+  min-width: unset !important;
+  border-radius: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
 }
 
 .profile-dropdown {
