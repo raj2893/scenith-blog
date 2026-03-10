@@ -12,8 +12,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     return response.data.map((element: any) => ({
       url: `https://scenith.in/svg-library/${createSlug(element.name)}`,
       lastModified: new Date(element.createdAt),
-      changeFrequency: 'monthly' as const,
-      priority: 0.7,
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
     }));
   } catch (error) {
     return [];
