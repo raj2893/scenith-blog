@@ -331,6 +331,8 @@ const AIVoiceGeneratorClient: React.FC = () => {
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [upgradeModalType, setUpgradeModalType] = useState<'first_gen' | 'repeat_gen' | 'download' | 'limit_warning'>('first_gen');  
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);  
+  const [activePlans, setActivePlans] = useState<string[]>([]);
+  const isPaidUser = activePlans.length > 0;
 
   useEffect(() => {
     if (!isLoggedIn || !ttsUsage || userProfile?.role !== 'BASIC') return;
@@ -348,6 +350,27 @@ const AIVoiceGeneratorClient: React.FC = () => {
       setShowLimitModal(true);
     }
   }, [ttsUsage, isLoggedIn, userProfile]);  
+
+  useEffect(() => {
+  const fetchActivePlans = async () => {
+    if (!isLoggedIn) {
+      setActivePlans([]);
+      return;
+    }
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/payments/active-plans`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setActivePlans(data.map((p: any) => p.planType));
+      }
+    } catch (error) {
+      console.error('Error fetching active plans:', error);
+    }
+  };
+  fetchActivePlans();
+}, [isLoggedIn]);
 
   // Handle scroll for navbar styling
   useEffect(() => {
@@ -741,12 +764,13 @@ const AIVoiceGeneratorClient: React.FC = () => {
       .finally(() => setExternalVoicesLoading(false));
   }, [selectedProvider]);  
 
-  useEffect(() => {
+ useEffect(() => {
+    if (isPaidUser) return;
     const timer = setTimeout(() => {
       setShowWelcomeModal(true);
-    }, 6000); // show after 6 seconds
+    }, 6000);
     return () => clearTimeout(timer);
-  }, []);  
+  }, [isPaidUser]);
 
   const handleGenerateAiAudio = async () => {
     if (!isLoggedIn) {
@@ -955,11 +979,11 @@ const AIVoiceGeneratorClient: React.FC = () => {
         // Clean up the blob URL
         window.URL.revokeObjectURL(blobUrl);
         setDownloadSuccess(true);
-        if (userProfile?.role === 'BASIC') {
+        if (!isPaidUser) {
           setTimeout(() => {
             setUpgradeModalType('download');
             setShowUpgradeModal(true);
-          }, 1200); // Short delay so download starts first
+          }, 1200);
         }
         setTimeout(() => setDownloadSuccess(false), 15000);
       } catch (error) {

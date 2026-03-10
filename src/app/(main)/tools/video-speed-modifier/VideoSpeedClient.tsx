@@ -767,6 +767,21 @@ const VideoSpeedClient: React.FC = () => {
             if (statusResponse.data.status === 'COMPLETED') {
               clearInterval(interval);
               setIsProcessing(false);
+              // Refresh plan limits so remaining video count updates immediately
+              try {
+                const limitsResponse = await axios.get(`${API_BASE_URL}/api/video-speed/plan-limits`, {
+                  headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+                });
+                setPlanLimits(limitsResponse.data);
+              } catch (e) {
+                console.error('Failed to refresh plan limits:', e);
+              }
+              setTimeout(() => {
+                const downloadSection = document.getElementById('download-title');
+                if (downloadSection) {
+                  downloadSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+              }, 300);
             } else if (statusResponse.data.status === 'FAILED') {
               clearInterval(interval);
               setIsProcessing(false);
@@ -1243,24 +1258,70 @@ const VideoSpeedClient: React.FC = () => {
                     )}
                   </div>
                 )}                
-                <button
-                  className="cta-button process-video-button"
-                  onClick={handleStartProcessing}
-                  disabled={isLoggedIn && (!selectedUpload || isProcessing)}
-                  aria-label="Start video processing"
-                >
-                  {isProcessing ? 'Processing...' : isLoggedIn ? 'Start Processing' : 'Login to Process'}
-                </button>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <button
+                    className="cta-button process-video-button"
+                    onClick={handleStartProcessing}
+                    disabled={isLoggedIn && (!selectedUpload || isProcessing)}
+                    aria-label="Start video processing"
+                    style={{ flex: '1', margin: 0, padding: '10px 16px', fontSize: '0.875rem' }}
+                  >
+                    {isProcessing ? 'Processing...' : isLoggedIn ? 'Start Processing' : 'Login to Process'}
+                  </button>
+                  {isLoggedIn && userProfile.role === 'BASIC' && (
+                    <a href="/pricing"
+                      style={{
+                        flex: '1', display: 'inline-flex', alignItems: 'center',
+                        justifyContent: 'center', gap: '5px', whiteSpace: 'nowrap',
+                        background: 'rgba(102, 126, 234, 0.12)',
+                        border: '1px solid rgba(102, 126, 234, 0.45)',
+                        color: '#a78bfa',
+                        textDecoration: 'none', margin: 0,
+                        padding: '10px 16px', fontSize: '0.875rem', fontWeight: 600,
+                        borderRadius: '8px', letterSpacing: '0.01em',
+                        transition: 'all 0.2s',
+                      }}
+                      onMouseOver={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.background = 'rgba(102,126,234,0.22)'; el.style.borderColor = 'rgba(102,126,234,0.7)'; }}
+                      onMouseOut={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.background = 'rgba(102,126,234,0.12)'; el.style.borderColor = 'rgba(102,126,234,0.45)'; }}
+                      aria-label="Remove watermark by upgrading"
+                    >
+                      ⚡ Remove Watermark
+                    </a>
+                  )}
+                </div>
                 {selectedUpload?.status === 'COMPLETED' && selectedUpload.cdnUrl && (
                   <div className="download-section" role="region" aria-labelledby="download-title">
                     <h3 id="download-title">Download Your Speed-Adjusted Video</h3>
-                    <button
-                      onClick={handleDownload}
-                      className="cta-button download-button"
-                      aria-label="Download speed-adjusted video as MP4"
-                    >
-                      Download MP4
-                    </button>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <button
+                        onClick={handleDownload}
+                        className="cta-button download-button"
+                        style={{ flex: '1', margin: 0, padding: '10px 16px', fontSize: '0.875rem' }}
+                        aria-label="Download speed-adjusted video as MP4"
+                      >
+                        Download MP4
+                      </button>
+                      {userProfile.role === 'BASIC' && (
+                        <a href="/pricing"
+                          style={{
+                            flex: '1', display: 'inline-flex', alignItems: 'center',
+                            justifyContent: 'center', gap: '5px', whiteSpace: 'nowrap',
+                            background: 'rgba(102, 126, 234, 0.12)',
+                            border: '1px solid rgba(102, 126, 234, 0.45)',
+                            color: '#a78bfa',
+                            textDecoration: 'none', margin: 0,
+                            padding: '10px 16px', fontSize: '0.875rem', fontWeight: 600,
+                            borderRadius: '8px', letterSpacing: '0.01em',
+                            transition: 'all 0.2s',
+                          }}
+                          onMouseOver={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.background = 'rgba(102,126,234,0.22)'; el.style.borderColor = 'rgba(102,126,234,0.7)'; }}
+                          onMouseOut={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.background = 'rgba(102,126,234,0.12)'; el.style.borderColor = 'rgba(102,126,234,0.45)'; }}
+                          aria-label="Remove watermark by upgrading"
+                        >
+                          ⚡ Remove Watermark
+                        </a>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>
