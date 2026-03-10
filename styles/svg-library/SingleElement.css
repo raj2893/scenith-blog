@@ -792,6 +792,56 @@
   font-style: italic;
 }
 
+.watermarked-preview {
+  position: relative;
+  overflow: hidden;
+}
+
+.watermark-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px;
+  pointer-events: none;
+  user-select: none;
+  z-index: 2;
+  /* Diagonal tiling effect */
+  transform: rotate(-25deg) scale(1.5);
+}
+
+.watermark-text {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(100, 116, 139, 0.35);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  font-family: sans-serif;
+}
+
+/* Slightly more visible on single element large preview */
+.element-preview-large .watermark-overlay .watermark-text,
+.preview-container .watermark-text {
+  font-size: 14px;
+  color: rgba(100, 116, 139, 0.3);
+}
+
+/* Prevent image drag/save on all previews */
+.element-preview img,
+.related-preview img,
+.preview-container img {
+  -webkit-user-drag: none;
+  user-select: none;
+  pointer-events: none;
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
   .showcase-grid {

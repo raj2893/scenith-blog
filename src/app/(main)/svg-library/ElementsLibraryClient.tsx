@@ -619,11 +619,22 @@ const ElementsLibraryClient: React.FC = () => {
                       </div>
                     )}                    
                     <div
-                      className="element-preview"
+                      className="element-preview watermarked-preview"
                       onClick={() => handleElementClick(element)}
                       style={{ cursor: "pointer" }}
                     >
-                      <img src={element.cdnUrl} alt={`${element.name} - Free SVG Icon`} loading="lazy" />
+                      <img
+                        src={element.cdnUrl}
+                        alt={`${element.name} - Free SVG Icon`}
+                        loading="lazy"
+                        onContextMenu={(e) => e.preventDefault()}
+                        draggable={false}
+                      />
+                      <div className="watermark-overlay">
+                        {Array.from({ length: 6 }).map((_, i) => (
+                          <span key={i} className="watermark-text">SCENITH</span>
+                        ))}
+                      </div>
                     </div>
                     <div className="element-info">
                       <h3 className="element-name" title={element.name}>

@@ -394,8 +394,18 @@ const SingleElementClient: React.FC<SingleElementClientProps> = ({ elementSlug, 
         <div className="container">
           <div className="showcase-grid">
             <div className="element-preview-large">
-              <div className="preview-container">
-                <img src={previewImageUrl || element.cdnUrl} alt={element.name} />
+              <div className="preview-container watermarked-preview">
+                <img
+                  src={previewImageUrl || element.cdnUrl}
+                  alt={element.name}
+                  onContextMenu={(e) => e.preventDefault()}
+                  draggable={false}
+                />
+                <div className="watermark-overlay">
+                  {Array.from({ length: 12 }).map((_, i) => (
+                    <span key={i} className="watermark-text">SCENITH</span>
+                  ))}
+                </div>
               </div>
             </div>
 
