@@ -1264,6 +1264,7 @@ const odysseyFeats = [
                       ['Max Chars per Request',    '80',      '700',          '4,000',        '6,000'],
                       ['Voice Emotions',           '✗',        '✓ 9 Presets',  '✓ 9 Presets',  '✓ 9 Presets'],
                       ['Speed Videos/Month',       '5',        '30',           '60',           'Unlimited'],
+                      ['Video Watermark',          '✓ Added',  '✗ None',       '✗ None',       '✗ None'],
                       ['Max Video Length',         '5 min',    '10 min',       '30 min',       'Unlimited'],
                       ['Background Removals/mo',   '5',        '100',          '500',          '1,500'],
                       ['SVG Downloads',            '10/month', 'Unlimited',    'Unlimited',    'Unlimited'],
