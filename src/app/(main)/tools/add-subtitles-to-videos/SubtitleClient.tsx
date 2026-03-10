@@ -411,6 +411,7 @@ const SubtitleClient: React.FC = () => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<{id: number; name: string; type: string} | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [deletedSubtitlesStack, setDeletedSubtitlesStack] = useState<{ subtitle: SubtitleDTO; index: number }[]>([]);
 
   const prevSelectedAiStyleRef = useRef<AiStyle | null>(null);
 
@@ -1037,6 +1038,65 @@ const handleDeleteConfirm = async () => {
     window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
   };
 
+  const handleDeleteSubtitle = async (subtitleId: string) => {
+    if (!selectedUpload) return;
+
+    const index = subtitles.findIndex(s => s.id === subtitleId);
+    const subtitle = subtitles[index];
+
+    // Remove from UI
+    setSubtitles(prev => prev.filter(s => s.id !== subtitleId));
+    if (editingSubtitle?.id === subtitleId) {
+      setEditingSubtitle(null);
+      setOriginalSubtitle(null);
+    }
+
+    // Push to undo stack
+    setDeletedSubtitlesStack(prev => [...prev, { subtitle, index }]);
+
+    // Delete on backend immediately
+    try {
+      await axios.delete(
+        `${API_BASE_URL}/api/subtitles/delete-subtitle/${selectedUpload.id}/${subtitleId}`,
+        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+      );
+    } catch (error) {
+      // Rollback UI and stack if backend fails
+      setSubtitles(prev => {
+        const updated = [...prev];
+        updated.splice(index, 0, subtitle);
+        return updated;
+      });
+      setDeletedSubtitlesStack(prev => prev.filter((_, i) => i !== prev.length - 1));
+      setError('Failed to delete subtitle.');
+    }
+  };
+
+  const handleUndoDelete = async () => {
+    if (!selectedUpload || deletedSubtitlesStack.length === 0) return;
+  
+    const last = deletedSubtitlesStack[deletedSubtitlesStack.length - 1];
+    setDeletedSubtitlesStack(prev => prev.slice(0, -1));
+  
+    // Build restored list from current subtitles state
+    const restoredList = [...subtitles];
+    restoredList.splice(last.index, 0, last.subtitle);
+  
+    // Update UI
+    setSubtitles(restoredList);
+  
+    // Re-add on backend
+    try {
+      await axios.put(
+        `${API_BASE_URL}/api/subtitles/replace-all/${selectedUpload.id}`,
+        restoredList,
+        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+      );
+    } catch (error) {
+      setError('Failed to undo deletion.');
+    }
+  };
+
   return (
     <div className="video-filter-page">
       <nav aria-label="Breadcrumb" className="breadcrumb-nav">
@@ -1311,18 +1371,26 @@ const handleDeleteConfirm = async () => {
                                 <div className="subtitles-scroll-container">
                                     {subtitles.map((subtitle) => (
                                         <div
-                                            key={subtitle.id}
-                                            className={`subtitle-item ${editingSubtitle?.id === subtitle.id ? 'editing' : ''}`}
-                                            onClick={() => {
-                                                setEditingSubtitle(subtitle);
-                                                setOriginalSubtitle(JSON.parse(JSON.stringify(subtitle)));
-                                                setCurrentTime(subtitle.timelineEndTime);
-                                            }}
+                                          key={subtitle.id}
+                                          className={`subtitle-item ${editingSubtitle?.id === subtitle.id ? 'editing' : ''}`}
+                                          onClick={() => {
+                                            setEditingSubtitle(subtitle);
+                                            setOriginalSubtitle(JSON.parse(JSON.stringify(subtitle)));
+                                            setCurrentTime(subtitle.timelineEndTime);
+                                          }}
                                         >
-                                            <div className="subtitle-time">
-                                                {formatTime(subtitle.timelineStartTime)} - {formatTime(subtitle.timelineEndTime)}
-                                            </div>
-                                            <div className="subtitle-text">{subtitle.text}</div>
+                                          <div className="subtitle-time">
+                                            {formatTime(subtitle.timelineStartTime)} - {formatTime(subtitle.timelineEndTime)}
+                                          </div>
+                                          <div className="subtitle-text">{subtitle.text}</div>
+                                          {/* ADD THIS */}
+                                          <button
+                                            className="subtitle-delete-btn"
+                                            onClick={(e) => { e.stopPropagation(); handleDeleteSubtitle(subtitle.id); }}
+                                            title="Delete subtitle"
+                                          >
+                                            ✕
+                                          </button>
                                         </div>
                                     ))}
                                 </div>
@@ -1473,6 +1541,12 @@ const handleDeleteConfirm = async () => {
                     </button>
                   </div>
                 )}
+                {deletedSubtitlesStack.length > 0 && (
+                  <div className="undo-toast">
+                    <span>{deletedSubtitlesStack.length} subtitle{deletedSubtitlesStack.length > 1 ? 's' : ''} deleted</span>
+                    <button onClick={handleUndoDelete}>Undo</button>
+                  </div>
+                )}             
               </div>
             </div>
             <div className="demo-video-section">

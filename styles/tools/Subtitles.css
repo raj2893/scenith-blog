@@ -2618,6 +2618,63 @@
   gap: 8px;
 }
 
+.subtitle-item {
+  /* add to existing rule */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.subtitle-delete-btn {
+  margin-left: auto;
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 4px 6px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.subtitle-delete-btn:hover {
+  background: #fee2e2;
+  color: #ef4444;
+}
+
+.undo-toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e293b;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  z-index: 9999;
+  font-size: 0.95rem;
+}
+
+.undo-toast button {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.undo-toast button:hover {
+  background: #2563eb;
+}
+
 @media (max-width: 1024px) {
   .video-filter-container {
     flex-direction: column;
