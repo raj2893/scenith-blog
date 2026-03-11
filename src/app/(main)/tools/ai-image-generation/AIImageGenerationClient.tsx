@@ -798,167 +798,188 @@ const AIImageGeneratorClient: React.FC = () => {
           <div className="hero-cta-section">
             <div className="main-content">
               <div className="input-section">
-                {isLoggedIn && imageUsage && imageUsage.availableModels?.length === 0 ? (
-                  /* ── PREMIUM GATE: shown to logged-in basic users ── */
-                 <div style={{
-                    background: 'linear-gradient(135deg, #0a1628 0%, #0d1f3c 100%)',
-                    border: '1.5px solid #1e3a5f',
-                    borderRadius: 24,
-                    padding: '48px 32px',
-                    textAlign: 'center',
-                    width: '100%',
-                  }}>
-                    {/* lock icon */}
-                    <div style={{
-                      width: 76, height: 76, borderRadius: '50%',
-                      background: 'linear-gradient(135deg, rgba(99,85,220,0.18), rgba(236,72,153,0.12))',
-                      border: '2px solid rgba(99,85,220,0.35)',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      margin: '0 auto 22px', fontSize: 34,
-                    }}>🔒</div>
-
-                    <h3 style={{
-                      fontSize: 22, fontWeight: 800, color: '#4d9fff',
-                      marginBottom: 10, letterSpacing: '-0.02em',
-                    }}>
-                      AI Image Generation is a Premium Feature
-                    </h3>
-
-                    <p style={{ fontSize: 14, color: '#ffffff', lineHeight: 1.75, marginBottom: 6 }}>
-                      Your current <strong style={{ color: '#60a5fa' }}>Starter Forge (Free)</strong> plan doesn't include image generation credits.
-                    </p>
-                    <p style={{ fontSize: 14, color: '#ffffff', lineHeight: 1.75, marginBottom: 30 }}>
-                      Upgrade to unlock access to <strong style={{ color: '#60a5fa' }}>7 powerful AI models</strong> and start generating stunning visuals instantly.
-                    </p>
-
-                    {/* plan tier cards */}
-                    <div style={{
-                      display: 'grid',
-                      gridTemplateColumns: 'repeat(3, 1fr)',
-                      gap: 12, marginBottom: 30,
-                    }}>
-                      {[
-                        { name: 'Creator Lite',    price: '₹99',  usd: '$5',  credits: '100 cr/mo',  color: '#4d9fff', popular: false },
-                        { name: 'Creator Spark',   price: '₹499', usd: '$12', credits: '250 cr/mo',  color: '#4d9fff', popular: true  },
-                        { name: 'Creator Odyssey', price: '₹999', usd: '$24', credits: '500 cr/mo',  color: '#4d9fff', popular: false },
-                      ].map((tier) => (
-                        <div key={tier.name} style={{
-                          background: tier.popular ? '#0d2344' : '#0a1628',
-                          border: `1.5px solid ${tier.popular ? '#2563eb' : '#1e3a5f'}`,
-                          borderRadius: 14, padding: '16px 10px',
-                          position: 'relative',
-                        }}>
-                          {tier.popular && (
-                            <div style={{
-                              position: 'absolute', top: -11, left: '50%', transform: 'translateX(-50%)',
-                              background: 'linear-gradient(135deg, #6355dc, #8b5cf6)',
-                              color: '#fff', fontSize: 9, fontWeight: 800,
-                              padding: '3px 10px', borderRadius: 999,
-                              whiteSpace: 'nowrap', letterSpacing: '0.08em',
-                            }}>⭐ POPULAR</div>
-                          )}
-                          <div style={{ fontSize: 11, color: '#60a5fa', fontWeight: 700, marginBottom: 6 }}>
-                            {tier.name}
-                          </div>
-                          <div style={{ fontSize: 20, fontWeight: 900, color: '#ffffff', lineHeight: 1 }}>
-                            {tier.price}
-                          </div>
-                          <div style={{ fontSize: 10, color: '#cbd5e1', marginBottom: 8 }}>
-                            /mo · {tier.usd}
-                          </div>
-                          <div style={{
-                            fontSize: 10, fontWeight: 700,
-                            color: '#ffffff',
-                            background: 'rgba(96,165,250,0.25)',
-                            borderRadius: 6, padding: '3px 8px',
-                            display: 'inline-block',
-                          }}>
-                            {tier.credits}
-                          </div>
-                        </div>
-                      ))}
+                {(isLoggedIn && imageUsage && imageUsage.availableModels?.length === 0) || !isLoggedIn ? (
+                  <>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }}>
+                      <button
+                        onClick={() => {
+                          const el = document.querySelector('.demo-marquee-section');
+                          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }}
+                        style={{
+                          display: 'inline-flex', alignItems: 'center', gap: 6,
+                          padding: '7px 16px', borderRadius: 999, cursor: 'pointer',
+                          border: '1.5px solid rgba(99,85,220,0.3)',
+                          background: 'rgba(99,85,220,0.07)',
+                          color: '#6355dc', fontWeight: 600, fontSize: 13,
+                          transition: 'all 0.2s',
+                        }}
+                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(99,85,220,0.15)'}
+                        onMouseLeave={e => e.currentTarget.style.background = 'rgba(99,85,220,0.07)'}
+                      >
+                        🖼️ See examples by our users ↓
+                      </button>
                     </div>
-
-                    {/* what's included checklist */}
                     <div style={{
-                      background: '#0a1628',
-                      border: '1px solid #1e3a5f',
-                      borderRadius: 14, padding: '16px 20px',
-                      marginBottom: 28, textAlign: 'left',
-                      display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 16px',
+                     background: 'linear-gradient(135deg, #0a1628 0%, #0d1f3c 100%)',
+                     border: '1.5px solid #1e3a5f',
+                     borderRadius: 24,
+                     padding: '48px 32px',
+                     textAlign: 'center',
+                     width: '100%',
                     }}>
-                      {[
-                        '7 powerful AI image models',
-                        'Realistic, Anime, 3D & more styles',
-                        'High-res 1024×1024 PNG downloads',
-                        'Commercial use rights included',
-                        'No watermarks on any image',
-                      ].map((item) => (
-                        <div key={item} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#ffffff' }}>
-                          <span style={{ color: '#34d399', fontWeight: 700, flexShrink: 0 }}>✓</span>
-                          {item}
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Colorful model showcase */}
-                    <div style={{ marginBottom: 24 }}>
-                      <p style={{ fontSize: 13, color: '#a8c8ff', fontWeight: 600, marginBottom: 10 }}>
-                        🎨 Models you'll unlock:
+                      {/* lock icon */}
+                      <div style={{
+                        width: 76, height: 76, borderRadius: '50%',
+                        background: 'linear-gradient(135deg, rgba(99,85,220,0.18), rgba(236,72,153,0.12))',
+                        border: '2px solid rgba(99,85,220,0.35)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        margin: '0 auto 22px', fontSize: 34,
+                      }}>🔒</div>
+  
+                      <h3 style={{
+                        fontSize: 22, fontWeight: 800, color: '#4d9fff',
+                        marginBottom: 10, letterSpacing: '-0.02em',
+                      }}>
+                        AI Image Generation is a Premium Feature
+                      </h3>
+  
+                      <p style={{ fontSize: 14, color: '#ffffff', lineHeight: 1.75, marginBottom: 6 }}>
+                        Your current <strong style={{ color: '#60a5fa' }}>Starter Forge (Free)</strong> plan doesn't include image generation credits.
                       </p>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center' }}>
+                      <p style={{ fontSize: 14, color: '#ffffff', lineHeight: 1.75, marginBottom: 30 }}>
+                        Upgrade to unlock access to <strong style={{ color: '#60a5fa' }}>7 powerful AI models</strong> and start generating stunning visuals instantly.
+                      </p>
+  
+                      {/* plan tier cards */}
+                      <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(3, 1fr)',
+                        gap: 12, marginBottom: 30,
+                      }}>
                         {[
-                          { displayName: 'Stability AI Core',    creditsPerImage: 2,  bg: 'linear-gradient(135deg,#0c2d4a,#0e3a5e)', borderColor: '#38bdf8', color: '#7dd3fc', badgeBg: 'rgba(56,189,248,0.2)',  badgeColor: '#38bdf8' },
-                          { displayName: 'GPT Image 1 Mini',     creditsPerImage: 3,  bg: 'linear-gradient(135deg,#052e16,#064e25)', borderColor: '#4ade80', color: '#86efac', badgeBg: 'rgba(74,222,128,0.2)',  badgeColor: '#4ade80' },
-                          { displayName: 'Imagen 4 Fast',        creditsPerImage: 5,  bg: 'linear-gradient(135deg,#2d1a00,#3d2400)', borderColor: '#fbbf24', color: '#fcd34d', badgeBg: 'rgba(251,191,36,0.2)',  badgeColor: '#fbbf24' },
-                          { displayName: 'FLUX 1.1 Pro',         creditsPerImage: 7,  bg: 'linear-gradient(135deg,#1e0a3c,#2d1256)', borderColor: '#a78bfa', color: '#c4b5fd', badgeBg: 'rgba(167,139,250,0.2)', badgeColor: '#a78bfa' },
-                          { displayName: 'Imagen 4 Standard',    creditsPerImage: 8,  bg: 'linear-gradient(135deg,#3b0a28,#4a0f33)', borderColor: '#f472b6', color: '#f9a8d4', badgeBg: 'rgba(244,114,182,0.2)', badgeColor: '#f472b6' },
-                          { displayName: 'GPT Image 1 (Medium)', creditsPerImage: 10, bg: 'linear-gradient(135deg,#2d1500,#3d1e00)', borderColor: '#fb923c', color: '#fdba74', badgeBg: 'rgba(251,146,60,0.2)',  badgeColor: '#fb923c' },
-                          { displayName: 'Grok Aurora',          creditsPerImage: 12, bg: 'linear-gradient(135deg,#0f0c29,#1a1650)', borderColor: '#818cf8', color: '#a5b4fc', badgeBg: 'rgba(129,140,248,0.25)', badgeColor: '#818cf8' },
-                        ].map((model) => (
-                          <div
-                            key={model.displayName}
-                            style={{
-                              display: 'flex', alignItems: 'center', gap: 6,
-                              padding: '7px 14px', borderRadius: 999,
-                              border: `2px solid ${model.borderColor}`,
-                              background: model.bg,
-                              color: model.color,
-                              fontSize: 13, fontWeight: 600,
-                            }}
-                          >
-                            <span>🔒</span>
-                            <span>{model.displayName}</span>
-                            <span style={{
-                              fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 999,
-                              background: model.badgeBg, color: model.badgeColor,
+                          { name: 'Creator Lite',    price: '₹99',  usd: '$5',  credits: '100 cr/mo',  color: '#4d9fff', popular: false },
+                          { name: 'Creator Spark',   price: '₹499', usd: '$12', credits: '250 cr/mo',  color: '#4d9fff', popular: true  },
+                          { name: 'Creator Odyssey', price: '₹999', usd: '$24', credits: '500 cr/mo',  color: '#4d9fff', popular: false },
+                        ].map((tier) => (
+                          <div key={tier.name} style={{
+                            background: tier.popular ? '#0d2344' : '#0a1628',
+                            border: `1.5px solid ${tier.popular ? '#2563eb' : '#1e3a5f'}`,
+                            borderRadius: 14, padding: '16px 10px',
+                            position: 'relative',
+                          }}>
+                            {tier.popular && (
+                              <div style={{
+                                position: 'absolute', top: -11, left: '50%', transform: 'translateX(-50%)',
+                                background: 'linear-gradient(135deg, #6355dc, #8b5cf6)',
+                                color: '#fff', fontSize: 9, fontWeight: 800,
+                                padding: '3px 10px', borderRadius: 999,
+                                whiteSpace: 'nowrap', letterSpacing: '0.08em',
+                              }}>⭐ POPULAR</div>
+                            )}
+                            <div style={{ fontSize: 11, color: '#60a5fa', fontWeight: 700, marginBottom: 6 }}>
+                              {tier.name}
+                            </div>
+                            <div style={{ fontSize: 20, fontWeight: 900, color: '#ffffff', lineHeight: 1 }}>
+                              {tier.price}
+                            </div>
+                            <div style={{ fontSize: 10, color: '#cbd5e1', marginBottom: 8 }}>
+                              /mo · {tier.usd}
+                            </div>
+                            <div style={{
+                              fontSize: 10, fontWeight: 700,
+                              color: '#ffffff',
+                              background: 'rgba(96,165,250,0.25)',
+                              borderRadius: 6, padding: '3px 8px',
+                              display: 'inline-block',
                             }}>
-                              {model.creditsPerImage}cr
-                            </span>
+                              {tier.credits}
+                            </div>
                           </div>
                         ))}
                       </div>
-                    </div>                    
-
-                    {/* CTA buttons */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                      
-                      <a  href="/pricing"
-                        style={{
-                          display: 'block', padding: '15px 24px',
-                          borderRadius: 12, textDecoration: 'none',
-                          background: 'linear-gradient(135deg, #6355dc 0%, #8b5cf6 100%)',
-                          color: '#fff', fontWeight: 800, fontSize: 15,
-                          boxShadow: '0 8px 28px rgba(99,85,220,0.45)',
-                        }}
-                      >
-                        🚀 Upgrade Now — Unlock Image Generation
-                      </a>
-                      <p style={{ fontSize: 12, color: '#a8c8ff', margin: 0 }}>
-                        Plans from ₹99/mo · Commercial use included 
-                      </p>
+  
+                      {/* what's included checklist */}
+                      <div style={{
+                        background: '#0a1628',
+                        border: '1px solid #1e3a5f',
+                        borderRadius: 14, padding: '16px 20px',
+                        marginBottom: 28, textAlign: 'left',
+                        display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 16px',
+                      }}>
+                        {[
+                          '7 powerful AI image models',
+                          'Realistic, Anime, 3D & more styles',
+                          'High-res 1024×1024 PNG downloads',
+                          'Commercial use rights included',
+                          'No watermarks on any image',
+                        ].map((item) => (
+                          <div key={item} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#ffffff' }}>
+                            <span style={{ color: '#34d399', fontWeight: 700, flexShrink: 0 }}>✓</span>
+                            {item}
+                          </div>
+                        ))}
+                      </div>
+  
+                      {/* Colorful model showcase */}
+                      <div style={{ marginBottom: 24 }}>
+                        <p style={{ fontSize: 13, color: '#a8c8ff', fontWeight: 600, marginBottom: 10 }}>
+                          🎨 Models you'll unlock:
+                        </p>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center' }}>
+                          {[
+                            { displayName: 'Stability AI Core',    creditsPerImage: 2,  bg: 'linear-gradient(135deg,#0c2d4a,#0e3a5e)', borderColor: '#38bdf8', color: '#7dd3fc', badgeBg: 'rgba(56,189,248,0.2)',  badgeColor: '#38bdf8' },
+                            { displayName: 'GPT Image 1 Mini',     creditsPerImage: 3,  bg: 'linear-gradient(135deg,#052e16,#064e25)', borderColor: '#4ade80', color: '#86efac', badgeBg: 'rgba(74,222,128,0.2)',  badgeColor: '#4ade80' },
+                            { displayName: 'Imagen 4 Fast',        creditsPerImage: 5,  bg: 'linear-gradient(135deg,#2d1a00,#3d2400)', borderColor: '#fbbf24', color: '#fcd34d', badgeBg: 'rgba(251,191,36,0.2)',  badgeColor: '#fbbf24' },
+                            { displayName: 'FLUX 1.1 Pro',         creditsPerImage: 7,  bg: 'linear-gradient(135deg,#1e0a3c,#2d1256)', borderColor: '#a78bfa', color: '#c4b5fd', badgeBg: 'rgba(167,139,250,0.2)', badgeColor: '#a78bfa' },
+                            { displayName: 'Imagen 4 Standard',    creditsPerImage: 8,  bg: 'linear-gradient(135deg,#3b0a28,#4a0f33)', borderColor: '#f472b6', color: '#f9a8d4', badgeBg: 'rgba(244,114,182,0.2)', badgeColor: '#f472b6' },
+                            { displayName: 'GPT Image 1 (Medium)', creditsPerImage: 10, bg: 'linear-gradient(135deg,#2d1500,#3d1e00)', borderColor: '#fb923c', color: '#fdba74', badgeBg: 'rgba(251,146,60,0.2)',  badgeColor: '#fb923c' },
+                            { displayName: 'Grok Aurora',          creditsPerImage: 12, bg: 'linear-gradient(135deg,#0f0c29,#1a1650)', borderColor: '#818cf8', color: '#a5b4fc', badgeBg: 'rgba(129,140,248,0.25)', badgeColor: '#818cf8' },
+                          ].map((model) => (
+                            <div
+                              key={model.displayName}
+                              style={{
+                                display: 'flex', alignItems: 'center', gap: 6,
+                                padding: '7px 14px', borderRadius: 999,
+                                border: `2px solid ${model.borderColor}`,
+                                background: model.bg,
+                                color: model.color,
+                                fontSize: 13, fontWeight: 600,
+                              }}
+                            >
+                              <span>🔒</span>
+                              <span>{model.displayName}</span>
+                              <span style={{
+                                fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 999,
+                                background: model.badgeBg, color: model.badgeColor,
+                              }}>
+                                {model.creditsPerImage}cr
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>                    
+  
+                      {/* CTA buttons */}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                        
+                        <a  href="/pricing"
+                          style={{
+                            display: 'block', padding: '15px 24px',
+                            borderRadius: 12, textDecoration: 'none',
+                            background: 'linear-gradient(135deg, #6355dc 0%, #8b5cf6 100%)',
+                            color: '#fff', fontWeight: 800, fontSize: 15,
+                            boxShadow: '0 8px 28px rgba(99,85,220,0.45)',
+                          }}
+                        >
+                          🚀 Upgrade Now — Unlock Image Generation
+                        </a>
+                        <p style={{ fontSize: 12, color: '#a8c8ff', margin: 0 }}>
+                          Plans from ₹99/mo · Commercial use included 
+                        </p>
+                      </div>
                     </div>
-                  </div>
+                  </>
                 ) : (
                   <>
                     <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }}>
