@@ -1330,8 +1330,8 @@ return (
                     <h3 className="script-title">Your AI Voice Script</h3>
                   </div>
                   <div className="header-right">
-                    {isLoggedIn && (
-                      <>
+                    <>
+                      {isLoggedIn && (
                         <button
                           className="browse-templates-btn"
                           onClick={() => {
@@ -1342,11 +1342,11 @@ return (
                         >
                           📝 Browse Templates
                         </button>
-                        <span className={`live-char-badge ${characterCount > maxCharsPerRequest ? 'exceeded' : ''}`}>
-                          {characterCount.toLocaleString()} / {maxCharsPerRequest.toLocaleString()}
-                        </span>
-                      </>
-                    )}
+                      )}
+                      <span className={`live-char-badge ${characterCount > maxCharsPerRequest ? 'exceeded' : ''}`}>
+                        {characterCount.toLocaleString()} / {maxCharsPerRequest.toLocaleString()}
+                      </span>
+                    </>
                   </div>
                 </div>
                   
@@ -1356,25 +1356,9 @@ return (
                     onChange={handleTextChange}
                     placeholder="✨ Type or paste your script here..."                  
                     className={`ai-voice-textarea ${characterCount > maxCharsPerRequest ? 'limit-exceeded' : ''}`}
-                    disabled={!isLoggedIn || limitsExceeded}
+                    disabled={limitsExceeded}
                     aria-label="Text input for AI voice generation"
                   />
-
-                  {!isLoggedIn && (
-                    <div className="textarea-overlay">
-                      <div className="overlay-content">
-                        <span className="lock-icon">🔒</span>
-                        <h4>Login to Start Creating</h4>
-                        <p>Sign in to generate professional AI voices</p>
-                        <button 
-                          className="overlay-login-btn"
-                          onClick={() => setShowLoginModal(true)}
-                        >
-                          Login Now
-                        </button>
-                      </div>
-                    </div>
-                  )}
 
                   {isLoggedIn && limitsExceeded && (
                     <div className="textarea-overlay">
@@ -1392,7 +1376,7 @@ return (
                     </div>
                   )}
 
-                  {isLoggedIn && !limitsExceeded && aiVoiceText.length === 0 && (
+                  {!limitsExceeded && aiVoiceText.length === 0 && (
                     <div className="textarea-hint">
                       <div className="hint-items">
                         <div className="hint-item">💡 <strong>Quick tip:</strong> Add commas for natural pauses</div>
@@ -1657,13 +1641,12 @@ return (
                       handleGenerateAiAudio();
                     }}
                     disabled={
-                      !isLoggedIn ? false : (
+                      isLoggedIn && (
                         !aiVoiceText.trim() ||
                         !selectedVoice ||
                         isGenerating ||
                         characterCount > maxCharsPerRequest ||
-                        wouldExceedLimits ||
-                        undefined
+                        wouldExceedLimits
                       )
                     }
                     aria-label="Generate AI voice from text"
