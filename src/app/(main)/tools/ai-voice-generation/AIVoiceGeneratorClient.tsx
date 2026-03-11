@@ -772,6 +772,20 @@ const AIVoiceGeneratorClient: React.FC = () => {
     return () => clearTimeout(timer);
   }, [isPaidUser]);
 
+  useEffect(() => {
+    try {
+      const hindiScript = sessionStorage.getItem('microToolScript');
+      if (hindiScript) {
+        setAiVoiceText(hindiScript);
+        sessionStorage.removeItem('microToolScript');
+        setTimeout(() => {
+          const el = document.querySelector('.ai-voice-textarea') as HTMLTextAreaElement;
+          if (el) el.focus();
+        }, 300);
+      }
+    } catch {}
+  }, []);  
+
   const handleGenerateAiAudio = async () => {
     if (!isLoggedIn) {
       setShowLoginModal(true);
@@ -1323,6 +1337,38 @@ return (
         <div className="hero-cta-section">
           <div className="main-content">
             <div className="text-input-section">
+              <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+                <button
+                  onClick={() => {
+                    const el = document.querySelector('.user-generated-showcase');
+                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }}
+                  style={{
+                    padding: '10px 22px',
+                    background: 'linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.1))',
+                    border: '2px solid rgba(59,130,246,0.3)',
+                    borderRadius: '20px',
+                    color: '#3B82F6',
+                    fontSize: '0.9rem',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    fontFamily: "'Montserrat', sans-serif",
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(59,130,246,0.15), rgba(139,92,246,0.15))';
+                    e.currentTarget.style.borderColor = 'rgba(59,130,246,0.5)';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.1))';
+                    e.currentTarget.style.borderColor = 'rgba(59,130,246,0.3)';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }}
+                >
+                  🎬 Full AI Content Creation Flow... →
+                </button>
+              </div>              
               <div className="script-input-wrapper">
                 <div className="script-input-header">
                   <div className="header-left">
@@ -2130,7 +2176,93 @@ return (
                 </span>
               </a>
             </div>
-          </section>                
+          </section>   
+          <section className="user-generated-showcase" role="region" aria-labelledby="ugc-title">
+            <div className="container">
+              <div className="ugc-header">
+                <h2 id="ugc-title">Created by Our Community</h2>
+                <p>Real images and videos made with Scenith AI tools — your creativity is the only limit</p>
+              </div>
+
+              {/* AI Images Row */}
+              <div className="ugc-block">
+                <div className="ugc-block-header">
+                  <span className="ugc-block-icon">🖼️</span>
+                  <h3>AI-Generated Images</h3>
+                  <a href="/tools/ai-image-generation" className="ugc-try-link">Try Image Generator →</a>
+                </div>
+
+                <div className="demo-marquee-wrapper">
+                  {(() => {
+                    const IMAGE_DEMOS = [
+                      "https://cdn.scenith.in/images/sole_image_gen/7/92c16acb-0f22-44e4-9a87-32314e3d4b5a.png",
+                      "https://cdn.scenith.in/images/sole_image_gen/1001/72fafd61-493e-46f9-be5c-f6eed674662f.png",
+                      "https://cdn.scenith.in/images/sole_image_gen/1032/172e0d0f-c194-4ac7-bb93-9aaf6e3e21d8.png",
+                      "https://cdn.scenith.in/images/sole_image_gen/1032/562b0ac3-fc69-4ac7-b4b3-3f05e7b5638c.png",
+                      "https://cdn.scenith.in/images/sole_image_gen/1139/ed2d9f3e-5d95-4da1-88e4-95971941730e.png",
+                      "https://cdn.scenith.in/images/sole_image_gen/1139/f0d70db9-6388-446b-ac27-8ffa0bb162aa.png",
+                      "https://cdn.scenith.in/images/sole_image_gen/1139/be641c98-d248-4c77-b82a-e704fa4c7b2a.png",
+                      "https://cdn.scenith.in/images/sole_image_gen/1162/3a656bf0-af3e-466d-a65f-b9a9fd85c39f.png",
+                      "https://cdn.scenith.in/images/sole_image_gen/1162/cc4b271c-4941-4a2d-97e5-070afb8a0c09.png",
+                      "https://cdn.scenith.in/images/sole_image_gen/1162/f53619ce-8fe5-446e-b38f-d6069469db6f.png",
+                      "https://cdn.scenith.in/images/sole_image_gen/1204/aefc2c01-dbfb-49c8-89fe-957d313c207f.png",
+                      "https://cdn.scenith.in/images/sole_image_gen/1202/788ab6df-fe3d-4a44-b6aa-fc51a8e8c97d.png",
+                      "https://cdn.scenith.in/images/sole_image_gen/1259/31bdd81a-6a9a-44d7-816e-b4053269e8ef.png",
+                      "https://cdn.scenith.in/images/sole_image_gen/1391/93c6fb3d-bd1e-4782-8444-07761d6fba66.png",
+                      "https://cdn.scenith.in/images/sole_image_gen/2/16743040-1fb6-4b2e-80c4-e4079c4c3287.png",
+                      "https://cdn.scenith.in/images/sole_image_gen/1580/176a73c0-c0a8-4a51-a356-31962b94d51a.png",
+                    ];
+                    return (
+                      <div className="demo-marquee-track" aria-hidden="true">
+                        <div className="demo-marquee-inner demo-scroll-left">
+                          {[...IMAGE_DEMOS, ...IMAGE_DEMOS].map((src, i) => (
+                            <div key={`img-${i}`} className="demo-marquee-card">
+                              <img
+                                src={src}
+                                alt="User generated AI image"
+                                loading="lazy"
+                                decoding="async"
+                                width={180}
+                                height={180}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </div>
+              </div>
+                
+              {/* AI Videos Row */}
+              <div className="ugc-block" style={{ marginTop: '40px' }}>
+                <div className="ugc-block-header">
+                  <span className="ugc-block-icon">🎬</span>
+                  <h3>AI-Generated Videos</h3>
+                  <a href="/tools/ai-video-generation" className="ugc-try-link">Try Video Generator →</a>
+                </div>
+                
+                <div className="ugc-videos-grid">
+                  {[
+                    // Replace these with your actual CDN video paths
+                    { src: "https://cdn.scenith.in/ai_video_gen/2/video_3a8f8067-40ff-4ec4-9173-83cfc81a5cb4.mp4"}
+                  ].map((video, i) => (
+                    <div key={i} className="ugc-video-card">
+                      <video
+                        src={video.src}
+                        loop
+                        muted
+                        playsInline
+                        onMouseEnter={e => (e.currentTarget as HTMLVideoElement).play()}
+                        onMouseLeave={e => { (e.currentTarget as HTMLVideoElement).pause(); (e.currentTarget as HTMLVideoElement).currentTime = 0; }}
+                      />
+                      <div className="ugc-video-overlay">▶ Hover to play</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>                       
           <div className="trust-indicators">
             <span className="trust-item">✅ 100% Free</span>
             <span className="trust-item">🎤 40+ Voices</span>
