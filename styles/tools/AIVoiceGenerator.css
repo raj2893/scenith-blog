@@ -5249,6 +5249,110 @@
   pointer-events: none;
 }
 
+.speed-control-section {
+  margin: 16px 0;
+  padding: 14px 16px;
+  background: rgba(59, 130, 246, 0.05);
+  border-radius: 10px;
+  border: 1px solid rgba(59, 130, 246, 0.12);
+}
+
+.speed-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.speed-header label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1E293B;
+}
+
+.speed-locked-badge {
+  background: rgba(239, 68, 68, 0.1);
+  color: #EF4444;
+  padding: 3px 8px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.speed-presets {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.speed-preset-btn {
+  padding: 4px 10px;
+  border: 1.5px solid rgba(59, 130, 246, 0.2);
+  border-radius: 16px;
+  background: #fff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #64748B;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Montserrat', sans-serif;
+  line-height: 1.4;
+}
+
+.speed-preset-btn:hover:not(:disabled) {
+  border-color: #3B82F6;
+  color: #3B82F6;
+}
+
+.speed-preset-btn.active {
+  background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+.speed-preset-btn.locked,
+.speed-custom-input.locked {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.speed-custom-input {
+  width: 72px;
+  padding: 4px 8px;
+  border: 1.5px solid rgba(59, 130, 246, 0.2);
+  border-radius: 16px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #1E293B;
+  font-family: 'Montserrat', sans-serif;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.speed-custom-input:focus {
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.speed-locked-text {
+  font-size: 0.8rem;
+  color: #94A3B8;
+  margin: 8px 0 0;
+}
+
+.speed-locked-text a {
+  color: #3B82F6;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.speed-locked-text a:hover {
+  text-decoration: underline;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .main-content {
@@ -6463,5 +6567,15 @@
   .provider-tab {
     font-size: 0.75rem;
     padding: 7px 8px;
+  }  
+
+  .speed-preset-btn {
+    padding: 4px 8px;
+    font-size: 0.74rem;
+  }
+
+  .speed-custom-input {
+    width: 62px;
+    font-size: 0.74rem;
   }  
 }

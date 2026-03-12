@@ -131,18 +131,6 @@ const CustomAudioPlayer = ({ src }: { src: string }) => {
   );
 };
 
-const EMOTION_PRESETS = [
-  { value: 'default', label: 'Default (Natural)', icon: '🎭', description: 'Natural speaking tone' },
-  { value: 'happy', label: 'Happy/Excited', icon: '😊', description: 'Upbeat and energetic' },
-  { value: 'calm', label: 'Calm/Relaxed', icon: '😌', description: 'Soothing and peaceful' },
-  { value: 'angry', label: 'Angry/Intense', icon: '😠', description: 'Powerful and assertive' },
-  { value: 'sad', label: 'Sad/Somber', icon: '😢', description: 'Melancholic and reflective' },
-  { value: 'announcer', label: 'Announcer', icon: '📢', description: 'Clear and authoritative' },
-  { value: 'meditation', label: 'Meditation', icon: '🧘', description: 'Very slow and peaceful' },
-  { value: 'enthusiastic', label: 'Enthusiastic', icon: '🎉', description: 'Very energetic and exciting' },
-  { value: 'professional', label: 'Professional', icon: '📚', description: 'Business-like and neutral' },
-];
-
 const SCRIPT_TEMPLATES = [
   {
     id: 1,
@@ -304,9 +292,6 @@ const AIVoiceGeneratorClient: React.FC = () => {
     };
   } | null>(null);
   const characterCount = useMemo(() => aiVoiceText.length, [aiVoiceText]);
-  const [selectedEmotion, setSelectedEmotion] = useState<string>('default');
-  const [isPlayingEmotionPreview, setIsPlayingEmotionPreview] = useState(false);
-  const emotionPreviewAudioRef = useRef<HTMLAudioElement | null>(null);  
   const [downloadSuccess, setDownloadSuccess] = useState(false);
   const [showFirstGenBanner, setShowFirstGenBanner] = useState(false);
   const [showRepeatGenBanner, setShowRepeatGenBanner] = useState(false);
@@ -324,7 +309,6 @@ const AIVoiceGeneratorClient: React.FC = () => {
   const [historyLoading, setHistoryLoading] = useState(false); 
   const [showScriptTemplates, setShowScriptTemplates] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('All'); 
-  const [showEmotionUpgradePopup, setShowEmotionUpgradePopup] = useState(false); 
   const [selectedProvider, setSelectedProvider] = useState<'GOOGLE' | 'OPENAI' | 'AZURE'>('GOOGLE');
   const [externalVoices, setExternalVoices] = useState<(Voice & { voiceId?: string })[]>([]);
   const [externalVoicesLoading, setExternalVoicesLoading] = useState(false); 
@@ -333,6 +317,13 @@ const AIVoiceGeneratorClient: React.FC = () => {
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);  
   const [activePlans, setActivePlans] = useState<string[]>([]);
   const isPaidUser = activePlans.length > 0;
+  const [speed, setSpeed] = useState<number>(1.0);
+  const [speedInput, setSpeedInput] = useState<string>('1');
+
+  const hasSpeedAccess = useMemo(() => {
+    if (!isLoggedIn || !ttsUsage) return false;
+    return ttsUsage.monthly.limit > 2000 || ttsUsage.monthly.limit === -1;
+  }, [isLoggedIn, ttsUsage]);  
 
   useEffect(() => {
     if (!isLoggedIn || !ttsUsage || userProfile?.role !== 'BASIC') return;
@@ -453,16 +444,10 @@ const AIVoiceGeneratorClient: React.FC = () => {
       demoAudioRef.current.pause();
       demoAudioRef.current.currentTime = 0;
     }
-    
-    if (emotionPreviewAudioRef.current) {
-      emotionPreviewAudioRef.current.pause();
-      emotionPreviewAudioRef.current.currentTime = 0;
-    }
   
     // If clicking the same voice, just stop
     if (playingDemo === voiceId) {
       setPlayingDemo(null);
-      setIsPlayingEmotionPreview(false);
       return;
     }
   
@@ -497,78 +482,30 @@ const AIVoiceGeneratorClient: React.FC = () => {
     // Create and play audio
     const audio = new Audio(demoUrl);
     
-    // Apply emotion-based playback adjustments if requested
-    if (useEmotion && selectedEmotion !== 'default') {
-      const emotionSettings = getEmotionPlaybackSettings(selectedEmotion);
-      audio.playbackRate = emotionSettings.playbackRate;
-      audio.volume = emotionSettings.volume;
-      setIsPlayingEmotionPreview(true);
-    } else {
-      setIsPlayingEmotionPreview(false);
-    }
-    
+    audio.playbackRate = hasSpeedAccess ? speed : 1.0;
     audio.play().catch((error) => {
       console.error('Error playing demo:', error);
       setPlayingDemo(null);
-      setIsPlayingEmotionPreview(false);
     });
   
     audio.onended = () => {
       setPlayingDemo(null);
-      setIsPlayingEmotionPreview(false);
     };
   
     audio.onerror = () => {
       console.error('Error loading demo audio:', demoUrl);
       setPlayingDemo(null);
-      setIsPlayingEmotionPreview(false);
     };
-  
-    if (useEmotion) {
-      emotionPreviewAudioRef.current = audio;
-    } else {
-      demoAudioRef.current = audio;
-    }
+    demoAudioRef.current = audio;
     
     setPlayingDemo(voiceId);
   };
-
-  const getEmotionPlaybackSettings = (emotion: string): { playbackRate: number; volume: number } => {
-    switch (emotion.toLowerCase()) {
-      case 'happy':
-      case 'excited':
-        return { playbackRate: 1.15, volume: 1.0 }; // Slightly faster, full volume
-      case 'calm':
-      case 'relaxed':
-        return { playbackRate: 0.85, volume: 0.8 }; // Slower, quieter
-      case 'angry':
-      case 'intense':
-        return { playbackRate: 1.1, volume: 1.0 }; // Faster, full volume
-      case 'sad':
-      case 'somber':
-        return { playbackRate: 0.8, volume: 0.75 }; // Much slower, quieter
-      case 'announcer':
-        return { playbackRate: 1.0, volume: 1.0 }; // Normal speed, full volume
-      case 'meditation':
-        return { playbackRate: 0.7, volume: 0.7 }; // Very slow, softer
-      case 'enthusiastic':
-        return { playbackRate: 1.25, volume: 1.0 }; // Very fast, full volume
-      case 'professional':
-        return { playbackRate: 0.95, volume: 0.9 }; // Slightly slower, clear
-      default:
-        return { playbackRate: 1.0, volume: 1.0 }; // Default settings
-    }
-  };  
 
   useEffect(() => {
     return () => {
       if (demoAudioRef.current) {
         demoAudioRef.current.pause();
         demoAudioRef.current = null;
-      }
-      if (emotionPreviewAudioRef.current) {
-        emotionPreviewAudioRef.current.pause();
-        emotionPreviewAudioRef.current = null;
       }
     };
   }, []);
@@ -864,12 +801,13 @@ const AIVoiceGeneratorClient: React.FC = () => {
             text: aiVoiceText,
             voiceId: selectedVoice.voiceId || selectedVoice.voiceName,
             provider: selectedProvider,
+            speed: hasSpeedAccess ? speed : 1.0,
           }
         : {
             text: aiVoiceText,
             voiceName: selectedVoice.voiceName,
             languageCode: selectedVoice.languageCode,
-            emotion: hasEmotionAccess ? selectedEmotion : 'default',
+            speed: hasSpeedAccess ? speed : 1.0,
           };
         
       const endpoint = isExternalProvider
@@ -1122,10 +1060,6 @@ const AIVoiceGeneratorClient: React.FC = () => {
     setAiVoiceText(e.target.value);
   }, []);
   
-  const handleEmotionChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedEmotion(e.target.value);
-  }, []);
-  
   const handleVoiceSelect = useCallback((voice: Voice) => {
     setSelectedVoice(voice);
   }, []);
@@ -1149,15 +1083,6 @@ const AIVoiceGeneratorClient: React.FC = () => {
   const toggleHistory = useCallback(() => {
     setShowHistory(prev => !prev);
   }, []);
-
-  const hasEmotionAccess = useMemo(() => {
-    if (!isLoggedIn || !ttsUsage) return false;
-    return ttsUsage.monthly.limit > 2000 || ttsUsage.monthly.limit === -1;
-  }, [isLoggedIn, ttsUsage]);  
-
-  const isEmotionBlocked = useMemo(() => {
-    return !hasEmotionAccess && selectedVoice !== null && selectedEmotion !== 'default';
-  }, [hasEmotionAccess, selectedVoice, selectedEmotion]);  
 
 return (
   <div className="ai-voice-generator-page">
@@ -1455,63 +1380,6 @@ return (
                     </div>
                   </div>
                 </div>
-              </div>            
-              
-              <div className="emotion-control-section">
-                <div className="emotion-selector-wrapper">
-                  <label className="emotion-label-text" htmlFor="emotion-select">
-                    🎭 Voice Emotion:
-                  </label>
-                              
-                  <select
-                    id="emotion-select"
-                    value={selectedEmotion}
-                    onChange={handleEmotionChange}
-                    className="emotion-dropdown"
-                    aria-label="Select voice emotion"
-                  >
-                    {EMOTION_PRESETS.map((emotion) => (
-                      <option key={emotion.value} value={emotion.value}>
-                        {emotion.label}
-                      </option>
-                    ))}
-                  </select>
-                  
-                  <button
-                    type="button"
-                    className={`emotion-preview-button ${isPlayingEmotionPreview ? 'playing' : ''}`}
-                    onClick={() => {
-                      if (!selectedVoice) {
-                        setError('Please select a voice first');
-                        setTimeout(() => setError(null), 3000);
-                        return;
-                      }
-                      handlePlayDemo(selectedVoice, true);
-                    }}
-                    disabled={!selectedVoice || isGenerating}
-                    aria-label="Preview selected emotion"
-                  >
-                    {isPlayingEmotionPreview ? '⏸️ Playing...' : '▶️ Preview Emotion'}
-                  </button>
-                </div>
-                  
-                {selectedEmotion !== 'default' && (
-                  <div className="emotion-info-tooltip">
-                    <strong>{EMOTION_PRESETS.find(e => e.value === selectedEmotion)?.label}:</strong>{' '}
-                    {EMOTION_PRESETS.find(e => e.value === selectedEmotion)?.description}
-                  </div>
-                )}
-              
-                {!hasEmotionAccess && (
-                  <div className="emotion-upgrade-prompt">
-                    <span className="emotion-locked-badge">🔒 Premium feature</span>
-                    <p className="emotion-locked-text">
-                      You can preview emotions freely, but <strong>generating</strong> with emotions requires{' '}
-                       <strong>Creator Odyssey </strong> or <strong>Creator Spark</strong>
-                    </p>
-                    <a href="/pricing" className="emotion-upgrade-link">Upgrade →</a>
-                  </div>
-                )}
               </div>
 
               {isLoggedIn && ttsUsage && (
@@ -1604,7 +1472,62 @@ return (
                     )}                   
                   </div>
                 </div>
-              )}
+              )}              
+
+              {isLoggedIn && (
+                <div className="speed-control-section">
+                  <div className="speed-header">
+                    <label>⚡ Speed</label>
+                    {!hasSpeedAccess && (
+                      <span className="speed-locked-badge">🔒 Paid</span>
+                    )}
+                  </div>
+                  
+                  <div className="speed-presets">
+                    {[0.5, 1.0, 1.25, 1.5, 1.75, 2.0, 3.0, 4.0].map(s => (
+                      <button
+                        key={s}
+                        onClick={() => {
+                          if (!hasSpeedAccess) return;
+                          setSpeed(s);
+                          setSpeedInput(String(s));
+                        }}
+                        disabled={!hasSpeedAccess}
+                        className={`speed-preset-btn ${speed === s ? 'active' : ''} ${!hasSpeedAccess ? 'locked' : ''}`}
+                      >
+                        {s}x
+                      </button>
+                    ))}
+                    <input
+                      type="text"
+                      value={speedInput}
+                      disabled={!hasSpeedAccess}
+                      onChange={(e) => {
+                        if (!hasSpeedAccess) return;
+                        setSpeedInput(e.target.value);
+                        const val = parseFloat(parseFloat(e.target.value).toFixed(2));
+                        if (!isNaN(val) && val >= 0.5 && val <= 4.0) setSpeed(val);
+                      }}
+                      onBlur={() => {
+                        if (speedInput === '' || isNaN(parseFloat(speedInput))) {
+                          setSpeedInput('1');
+                          setSpeed(1.0);
+                        } else {
+                          setSpeedInput(String(speed));
+                        }
+                      }}
+                      className={`speed-custom-input ${!hasSpeedAccess ? 'locked' : ''}`}
+                      placeholder="1"
+                    />
+                  </div>
+                    
+                  {!hasSpeedAccess && (
+                    <p className="speed-locked-text">
+                      Requires <a href="/pricing">Creator Lite or higher</a>
+                    </p>
+                  )}
+                </div>
+              )}            
 
               {ttsUsage && ttsUsage.role === 'BASIC' && (
                 ttsUsage.monthly.used / ttsUsage.monthly.limit >= 0.5 && (
@@ -1680,10 +1603,6 @@ return (
                   <button
                     className="cta-button generate-voice-button"
                     onClick={() => {
-                      if (isEmotionBlocked) {
-                        setShowEmotionUpgradePopup(true);
-                        return;
-                      }
                       handleGenerateAiAudio();
                     }}
                     disabled={
@@ -4130,75 +4049,6 @@ return (
               <small>Creator Spark from ₹499/mo</small>
             </span>
           </button>
-        </div>
-      )}   
-
-      {showEmotionUpgradePopup && (
-        <div className="modal-overlay">
-          <motion.div
-            className="emotion-upgrade-popup"
-            initial={{ opacity: 0, scale: 0.85, y: 30 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.35, ease: 'easeOut' }}
-          >
-            <button
-              className="modal-close-button"
-              onClick={() => setShowEmotionUpgradePopup(false)}
-              aria-label="Close"
-            >
-              <FaTimes />
-            </button>
-      
-            <div className="emotion-popup-header">
-              <span className="emotion-popup-glow">🎭</span>
-              <h2>Unlock Voice Emotions</h2>
-              <p className="emotion-popup-subtitle">
-                You've selected a <strong>{EMOTION_PRESETS.find(e => e.value === selectedEmotion)?.label}</strong> emotion,
-                but generating with emotions requires a premium plan.
-              </p>
-            </div>
-      
-            <div className="emotion-popup-plans">
-              <a href="/pricing" className="emotion-popup-plan-card creator">
-                <span className="plan-emoji">⭐</span>
-                <div>
-                  <strong>Creator Spark</strong>
-                  <p>75,000 chars/month + Emotions</p>
-                </div>
-                <span className="plan-arrow">→</span>
-              </a>
-              <a href="/pricing" className="emotion-popup-plan-card studio">
-                <span className="plan-emoji">🏆</span>
-                <div>
-                  <strong>Creator Odyssey</strong>
-                  <p>250,000 chars/month + Emotions</p>
-                </div>
-                <span className="plan-arrow">→</span>
-              </a>
-              <a href="/pricing" className="emotion-popup-plan-card voicepro">
-                <span className="plan-emoji">🎙️</span>
-                <div>
-                  <strong>Creator Spark or Odyssey</strong>
-                  <p>Bundled plan + Emotions included</p>
-                </div>
-                <span className="plan-arrow">→</span>
-              </a>
-            </div>
-      
-            <a href="/pricing" className="emotion-popup-cta-btn">
-              View Plans & Upgrade →
-            </a>
-      
-            <button
-              className="emotion-popup-dismiss"
-              onClick={() => {
-                setSelectedEmotion('default');
-                setShowEmotionUpgradePopup(false);
-              }}
-            >
-              Continue with Default emotion instead
-            </button>
-          </motion.div>
         </div>
       )}          
     </div>
