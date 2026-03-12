@@ -1745,4 +1745,28 @@
     <changefreq>weekly</changefreq>
     <lastmod>2026-03-11</lastmod>
   </url>
+    <url>
+    <loc>https://scenith.in/tools/video-speed-controller</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-03-12</lastmod>
+  </url>
+    <url>
+    <loc>https://scenith.in/tools/free-background-remover-online</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-03-12</lastmod>
+  </url>
+    <url>
+    <loc>https://scenith.in/tools/youtube-thumbnail-ai-generator</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-03-12</lastmod>
+  </url>
+    <url>
+    <loc>https://scenith.in/tools/faceless-youtube-video-generator</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-03-12</lastmod>
+  </url>
 </urlset>
