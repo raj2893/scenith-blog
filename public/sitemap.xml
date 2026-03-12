@@ -1769,4 +1769,25 @@
     <changefreq>weekly</changefreq>
     <lastmod>2026-03-12</lastmod>
   </url>
+  
+  <url>
+    <loc>https://scenith.in/svg-library/bundled/saas-ui-interface-icons</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-03-12</lastmod>
+  </url>
+
+  <url>
+    <loc>https://scenith.in/tools/instagram-story-maker</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-03-12</lastmod>
+  </url>
+
+  <url>
+    <loc>https://scenith.in/tools/text-to-video-generator</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-03-12</lastmod>
+  </url>
 </urlset>
