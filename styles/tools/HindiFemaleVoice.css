@@ -1348,6 +1348,323 @@
 .hfv-inline-link:hover { opacity: 0.8; }
 
 /* ============================================
+   SCRIPT STUDIO + VOICE PANEL
+   ============================================ */
+
+.hindi-studio-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 40px auto;
+  max-width: 1100px;
+  align-items: start;
+}
+
+.hindi-script-studio {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(214, 51, 132, 0.2);
+  border: 2px solid var(--hfv-rose-light);
+  overflow: hidden;
+}
+
+.hindi-script-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: var(--hfv-rose-pale);
+  border-bottom: 1px solid rgba(214, 51, 132, 0.2);
+}
+
+.hindi-script-title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hindi-script-title-group span {
+  font-size: 1.4rem;
+}
+
+.hindi-script-title-group h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--hfv-dark);
+  margin: 0;
+}
+
+.hindi-char-badge {
+  background: rgba(214, 51, 132, 0.1);
+  color: var(--hfv-rose);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid rgba(214, 51, 132, 0.25);
+}
+
+.hindi-char-badge.warning {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.hindi-script-textarea {
+  width: 100%;
+  padding: 20px;
+  border: none;
+  outline: none;
+  resize: vertical;
+  font-size: 1rem;
+  font-family: 'Montserrat', sans-serif;
+  color: var(--hfv-dark);
+  line-height: 1.7;
+  background: #FAFAFA;
+  box-sizing: border-box;
+  min-height: 160px;
+}
+
+.hindi-script-textarea::placeholder {
+  color: var(--hfv-light);
+  line-height: 1.7;
+}
+
+.hindi-script-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: var(--hfv-rose-pale);
+  border-top: 1px solid rgba(214, 51, 132, 0.2);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.hindi-script-stats {
+  display: flex;
+  gap: 16px;
+  font-size: 0.9rem;
+  color: var(--hfv-mid);
+}
+
+.hindi-script-stats strong {
+  color: var(--hfv-rose);
+}
+
+.hindi-script-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.hindi-script-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.hindi-script-btn.copy {
+  background: white;
+  color: var(--hfv-rose);
+  border: 2px solid var(--hfv-rose-light);
+}
+
+.hindi-script-btn.copy:hover,
+.hindi-script-btn.copy.copied {
+  background: var(--hfv-rose);
+  color: white;
+  border-color: var(--hfv-rose);
+}
+
+.hindi-script-btn.generate {
+  background: var(--hfv-gradient-primary);
+  color: white;
+  box-shadow: 0 4px 15px rgba(214, 51, 132, 0.35);
+}
+
+.hindi-script-btn.generate:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(214, 51, 132, 0.5);
+}
+
+.hindi-script-empty {
+  font-size: 0.9rem;
+  color: var(--hfv-light);
+  font-style: italic;
+}
+
+/* ============================================
+   VOICE PANEL
+   ============================================ */
+
+.hindi-voice-panel {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(214, 51, 132, 0.2);
+  border: 2px solid var(--hfv-rose-light);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.hindi-voice-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: var(--hfv-rose-pale);
+  border-bottom: 1px solid rgba(214, 51, 132, 0.2);
+}
+
+.hindi-voice-filters {
+  display: flex;
+  gap: 10px;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(214, 51, 132, 0.1);
+  background: #FAFAFA;
+}
+
+.hindi-filter-select {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid rgba(214, 51, 132, 0.25);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: var(--hfv-dark);
+  background: white;
+  outline: none;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.hindi-filter-select:focus {
+  border-color: var(--hfv-rose);
+}
+
+.hindi-voice-list {
+  overflow-y: auto;
+  max-height: 320px;
+  padding: 8px 0;
+}
+
+.hindi-voice-loading {
+  padding: 30px;
+  text-align: center;
+  color: var(--hfv-light);
+  font-size: 0.95rem;
+}
+
+.hindi-voice-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  border-bottom: 1px solid rgba(214, 51, 132, 0.06);
+}
+
+.hindi-voice-item:hover {
+  background: var(--hfv-rose-pale);
+}
+
+.hindi-voice-item.playing {
+  background: linear-gradient(135deg, rgba(214, 51, 132, 0.08), rgba(255, 153, 51, 0.05));
+}
+
+.hindi-voice-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--hfv-rose-light);
+  flex-shrink: 0;
+}
+
+.hindi-voice-avatar-emoji {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--hfv-rose-pale);
+  border: 2px solid var(--hfv-rose-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.hindi-voice-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.hindi-voice-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--hfv-dark);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.hindi-voice-style-badge {
+  font-size: 0.7rem;
+  color: var(--hfv-rose);
+  background: rgba(214, 51, 132, 0.1);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.hindi-voice-meta {
+  font-size: 0.78rem;
+  color: var(--hfv-light);
+}
+
+.hindi-play-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid var(--hfv-rose-light);
+  background: white;
+  color: var(--hfv-rose);
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.hindi-play-btn:hover,
+.hindi-play-btn.playing-active {
+  background: var(--hfv-gradient-primary);
+  color: white;
+  border-color: var(--hfv-rose);
+}
+
+.hindi-voice-count {
+  padding: 12px 16px;
+  font-size: 0.85rem;
+  color: var(--hfv-light);
+  border-top: 1px solid rgba(214, 51, 132, 0.1);
+  background: #FAFAFA;
+  text-align: center;
+}
+
+/* ============================================
    RESPONSIVE DESIGN
    ============================================ */
 
@@ -1409,6 +1726,29 @@
   .hfv-paa-section h2 {
     font-size: 1.8rem;
   }
+
+  .hindi-studio-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .hindi-voice-list {
+    max-height: 250px;
+  }
+
+  .hindi-script-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hindi-script-actions {
+    width: 100%;
+  }
+
+  .hindi-script-btn {
+    flex: 1;
+    text-align: center;
+  }  
 }
 
 @media (max-width: 480px) {
