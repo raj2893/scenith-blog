@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
@@ -21,22 +21,22 @@ interface UserProfile {
 interface VideoModel {
   id: string;
   displayName: string;
-  tier: string;
-  resolution: string;
+  defaultResolution: string;
   supportsAudio: boolean;
-  creditsPerFiveSeconds: number;
-  creditsPer10Seconds: number;
   description: string;
+  creditCosts: Array<{
+    resolution: string;
+    duration: number;
+    audio: boolean;
+    credits: number;
+  }>;
 }
 
 interface Credits {
-  monthlyLimit: number;
-  monthlyUsed: number;
-  monthlyRemaining: number;
-  dailyLimit: number;
-  dailyRemaining: number;
-  activePlan: string;
-  hasVideoPlan: boolean;
+  balance: number;
+  planType: string;
+  expiresAt: string | "N/A";
+  creditCosts: any[];
 }
 
 interface VideoJob {
@@ -52,7 +52,6 @@ interface VideoJob {
   aspectRatio: string;
   creditsUsed: number;
   resolution: string;
-//   videoPath: string | null;
   videoUrl?: string | null;  
   createdAt: string;
   completedAt: string | null;
@@ -82,19 +81,6 @@ const GENERATION_TYPES = [
   { value: "image", label: "Image to Video", icon: "🖼️" },
 ];
 
-const TIER_COLORS: Record<string, string> = {
-  STARTER: "#10B981",
-  PRO:     "#3B82F6",
-  ELITE:   "#8B5CF6",
-  PREMIUM: "#EC4899",
-};
-
-const TIER_LABELS: Record<string, string> = {
-  STARTER: "Starter",
-  PRO:     "Pro",
-  ELITE:   "Elite",
-};
-
 // ─── Component ────────────────────────────────────────────────────────────────
 
 const AIVideoGenerationClient: React.FC = () => {
@@ -109,7 +95,7 @@ const AIVideoGenerationClient: React.FC = () => {
   // Plan & models
   const [models, setModels] = useState<VideoModel[]>([]);
   const [credits, setCredits] = useState<Credits | null>(null);
-  const [hasPlan, setHasPlan] = useState<boolean | null>(null); // null = loading
+  const hasPlan = credits !== null && credits.balance > 0;
 
   // Form state
   const [genType, setGenType] = useState<"text" | "image">("text");
@@ -140,7 +126,6 @@ const AIVideoGenerationClient: React.FC = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) { setHasPlan(false); return; }
     axios
       .get(`${API_BASE_URL}/auth/me`, { headers: { Authorization: `Bearer ${token}` } })
       .then((res) => {
@@ -157,7 +142,6 @@ const AIVideoGenerationClient: React.FC = () => {
       })
       .catch(() => {
         localStorage.removeItem("token");
-        setHasPlan(false);
       });
   }, []);
 
@@ -177,14 +161,12 @@ const AIVideoGenerationClient: React.FC = () => {
         const mods: VideoModel[] = modelsRes.data.models || [];
         setModels(mods);
         setCredits(creditsRes.data);
-        setHasPlan(creditsRes.data.hasVideoPlan);
         if (mods.length > 0) setSelectedModel(mods[0].id);
         setHistory(historyRes.data || []);
       })
       .catch((err) => {
         if (err.response?.status === 402) {
-          setHasPlan(false);
-          setCredits({ monthlyLimit: 0, monthlyUsed: 0, monthlyRemaining: 0, dailyLimit: 0, dailyRemaining: 0, activePlan: "NONE", hasVideoPlan: false });
+          setCredits({ balance: 0, planType: 'FREE', expiresAt: 'N/A', creditCosts: [] });
         }
       });
   }, [isLoggedIn]);
@@ -241,14 +223,16 @@ const AIVideoGenerationClient: React.FC = () => {
   };
 
   const selectedModelData = models.find((m) => m.id === selectedModel);
-  const creditsNeeded = selectedModelData
-    ? selectedModelData[duration <= 5 ? "creditsPerFiveSeconds" : "creditsPer10Seconds"] *
-      (audioEnabled && selectedModelData.supportsAudio ? 2 : 1)
-    : 0;
+  const creditsNeeded = useMemo(() => {
+    if (!selectedModelData?.creditCosts) return 0;
+    const entry = selectedModelData.creditCosts.find(
+      (c: any) => c.duration === duration && c.audio === audioEnabled
+    );
+    return entry?.credits ?? 0;
+  }, [selectedModelData, duration, audioEnabled]);
 
   const handleGenerate = async () => {
     if (!isLoggedIn) { setShowLoginModal(true); return; }
-    if (!hasPlan) { window.location.href = "/pricing"; return; }
     if (!prompt.trim()) { setError("Please describe what you want to create."); return; }
     if (genType === "image" && !imageFile) { setError("Please upload a reference image."); return; }
 
@@ -358,7 +342,7 @@ const AIVideoGenerationClient: React.FC = () => {
   };
 
   const currentModelCanAudio = selectedModelData?.supportsAudio ?? false;
-  const maxDuration = credits?.activePlan === "VIDEO_GEN_STARTER" ? 5 : 10;
+  const maxDuration = credits?.planType === "VIDEO_GEN_STARTER" ? 5 : 10;
 
   // ─────────────────────────────────────────────────────────────────────────
   return (
@@ -859,10 +843,10 @@ const AIVideoGenerationClient: React.FC = () => {
 
         {/* Header */}
         <header className="vg-header">
-            {isLoggedIn && credits && credits.hasVideoPlan && (
+            {isLoggedIn && credits && hasPlan && (
               <div className="vg-eyebrow">
                 <span />
-                {credits.monthlyRemaining} credits remaining
+                {credits.balance.toLocaleString()} credits remaining
               </div>
             )}
           <h1 className="vg-title">AI Video Generator</h1>
@@ -889,18 +873,8 @@ const AIVideoGenerationClient: React.FC = () => {
           </div>
         </div>
 
-        {/* ── No plan state ── */}
-        {isLoggedIn && hasPlan === false && (
-          <div className="vg-no-plan">
-            <div className="vg-no-plan-icon">🎬</div>
-            <h2>Unlock AI Video Generation</h2>
-            <p>Choose a plan to start generating cinematic AI videos — from quick social clips to 10-second high-resolution films.</p>
-            <a href="/pricing" className="vg-upgrade-btn">View Plans & Pricing →</a>
-          </div>
-        )}
-
         {/* ── Main tool card ── */}
-        {(!isLoggedIn || hasPlan !== false) && (
+        {(
           <div className="vg-card">
             <div className="vg-card-inner">
 
@@ -1009,7 +983,7 @@ const AIVideoGenerationClient: React.FC = () => {
                 <div className="vg-option-group">
                   <label className="vg-label">Resolution</label>
                   <div style={{ padding: "10px 14px", background: "rgba(0,0,0,0.2)", borderRadius: 12, border: "1.5px solid rgba(99,102,241,0.15)", color: "#64748B", fontSize: "0.9rem" }}>
-                    {selectedModelData?.resolution || "—"} · MP4
+                    {selectedModelData?.defaultResolution || "—"} · MP4
                   </div>
                 </div>
               </div>
@@ -1035,9 +1009,10 @@ const AIVideoGenerationClient: React.FC = () => {
                   <label className="vg-label">AI Model</label>
                   <div className="vg-models">
                     {models.map((model) => {
-                      const tierColor = TIER_COLORS[model.tier] || "#6366F1";
-                      const credCost = duration <= 5 ? model.creditsPerFiveSeconds : model.creditsPer10Seconds;
-                      const finalCost = audioEnabled && model.supportsAudio ? credCost * 2 : credCost;
+                      const matchingCost = model.creditCosts?.find(
+                        (c: any) => c.duration === duration && c.audio === (audioEnabled && model.supportsAudio)
+                      );
+                      const finalCost = matchingCost?.credits ?? 0;
                       return (
                         <div
                           key={model.id}
@@ -1052,12 +1027,6 @@ const AIVideoGenerationClient: React.FC = () => {
                             <div className="vg-model-desc">{model.description}</div>
                           </div>
                           <div className="vg-model-meta">
-                            <span
-                              className="vg-tier-badge"
-                              style={{ color: tierColor, borderColor: tierColor + "40", background: tierColor + "15" }}
-                            >
-                              {TIER_LABELS[model.tier] || model.tier}
-                            </span>
                             <span className="vg-credit-cost">{finalCost} cr</span>
                           </div>
                         </div>
@@ -1088,18 +1057,15 @@ const AIVideoGenerationClient: React.FC = () => {
               </details>
 
               {/* Credits info */}
-              {isLoggedIn && credits && credits.hasVideoPlan && (
+              {isLoggedIn && credits && hasPlan && (
                 <div className="vg-credits-box">
                   <div className="vg-credits-row">
-                    <span className="vg-credits-label">Monthly credits</span>
-                    <span className="vg-credits-value">{credits.monthlyRemaining} / {credits.monthlyLimit} remaining</span>
-                  </div>
-                  <div className="vg-credits-bar">
-                    <div className="vg-credits-fill" style={{ width: `${Math.min(100, (credits.monthlyUsed / Math.max(credits.monthlyLimit, 1)) * 100)}%` }} />
+                    <span className="vg-credits-label">Credit Balance</span>
+                    <span className="vg-credits-value">{credits.balance.toLocaleString()} credits</span>
                   </div>
                   <div className="vg-credits-row" style={{ marginBottom: 0 }}>
-                    <span className="vg-credits-label">Daily remaining</span>
-                    <span className="vg-credits-value">{credits.dailyRemaining} credits</span>
+                    <span className="vg-credits-label">Plan</span>
+                    <span className="vg-credits-value">{credits.planType}</span>
                   </div>
                   {selectedModel && (
                     <div className="vg-credits-cost">
@@ -1124,8 +1090,6 @@ const AIVideoGenerationClient: React.FC = () => {
                 <button className="vg-login-btn" onClick={() => setShowLoginModal(true)}>
                   🔒 Login to Generate Videos
                 </button>
-              ) : !hasPlan ? (
-                <a href="/pricing" className="vg-upgrade-btn">🚀 Get a Plan to Start Generating</a>
               ) : (
                 <button
                   className="vg-generate-btn"
