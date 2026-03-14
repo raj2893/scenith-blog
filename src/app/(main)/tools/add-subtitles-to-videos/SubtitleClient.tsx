@@ -23,6 +23,7 @@ interface UserProfile {
   picture: string | null;
   googleAuth: boolean;
   role: string;
+  planType: string;
 }
 
 interface SubtitleMedia {
@@ -378,15 +379,17 @@ const SubtitleClient: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [userProfile, setUserProfile] = useState<UserProfile>({
-    id: 0,
-    email: '',
-    firstName: '',
-    lastName: '',
-    picture: null,
-    googleAuth: false,
-    role: '',
-  });
-  const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
+  id: 0,
+  email: '',
+  firstName: '',
+  lastName: '',
+  picture: null,
+  googleAuth: false,
+  role: '',
+  planType: '',
+});
+  const [isPageLoading, setIsPageLoading] = useState<boolean>(true);
+const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
   const [loginError, setLoginError] = useState<string | null>(null);
   const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
   const [uploads, setUploads] = useState<SubtitleMedia[]>([]);
@@ -413,7 +416,14 @@ const SubtitleClient: React.FC = () => {
   const [itemToDelete, setItemToDelete] = useState<{id: number; name: string; type: string} | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deletedSubtitlesStack, setDeletedSubtitlesStack] = useState<{ subtitle: SubtitleDTO; index: number }[]>([]);
-
+const [creditBalance, setCreditBalance] = useState<number | null>(null);
+const [planLimits, setPlanLimits] = useState<{
+  maxVideoLength: number;
+  maxQuality: string;
+  hasWatermark: boolean;
+  costPerGeneration: number;
+  balance: number;
+} | null>(null);
   const prevSelectedAiStyleRef = useRef<AiStyle | null>(null);
   const getAvailableQualities = (role: string): string[] => {
   switch (role) {
@@ -477,6 +487,7 @@ const getDefaultQuality = (role: string): string => {
             picture: res.data.picture || null,
             googleAuth: res.data.googleAuth || false,
             role: res.data.role || 'BASIC',
+            planType: res.data.planType || 'FREE',
           });
           setIsLoggedIn(true);
           setShowLoginModal(false);
@@ -487,9 +498,13 @@ const getDefaultQuality = (role: string): string => {
             localStorage.removeItem('token');
             setIsLoggedIn(false);
           }
+        })
+        .finally(() => {
+          setIsPageLoading(false);
         });
     } else {
       setIsLoggedIn(false);
+      setIsPageLoading(false);
     }
   }, []);
 
@@ -510,9 +525,10 @@ const getDefaultQuality = (role: string): string => {
     fetchAiStyles();
   }, []);
 
-  // Fetch user uploads
+  // Fetch user uploads + plan limits
   useEffect(() => {
     if (!isLoggedIn) return;
+
     const fetchUploads = async () => {
       try {
         const response = await axios.get(`${API_BASE_URL}/api/subtitles/user-media`, {
@@ -524,14 +540,28 @@ const getDefaultQuality = (role: string): string => {
         setUploads([]);
       }
     };
+
+    const fetchPlanLimits = async () => {
+      try {
+        const response = await axios.get(`${API_BASE_URL}/api/subtitles/plan-limits`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        });
+        setPlanLimits(response.data);
+        setCreditBalance(response.data.balance);
+      } catch (error) {
+        console.error('Error fetching plan limits:', error);
+      }
+    };
+
     fetchUploads();
+    fetchPlanLimits();
   }, [isLoggedIn]);
-  useEffect(() => {
-  if (userProfile.role) {
-    setSelectedQuality(getDefaultQuality(userProfile.role));
-    setAvailableQualities(getAvailableQualities(userProfile.role));
+   useEffect(() => {
+  if (userProfile.planType) {
+    setSelectedQuality(getDefaultQuality(userProfile.planType));
+    setAvailableQualities(getAvailableQualities(userProfile.planType));
   }
-}, [userProfile.role]);
+}, [userProfile.planType]);
 
 
   const requireLogin = () => {
@@ -557,7 +587,7 @@ const getDefaultQuality = (role: string): string => {
       const nameParts = fullName.trim().split(' ');
       const firstName = nameParts[0] || '';
       const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
-      setUserProfile({
+       setUserProfile({
         id: res.data.id || 0,
         email: res.data.email || '',
         firstName,
@@ -565,6 +595,7 @@ const getDefaultQuality = (role: string): string => {
         picture: res.data.picture || null,
         googleAuth: res.data.googleAuth || false,
         role: res.data.role || 'BASIC',
+        planType: res.data.planType || 'FREE',
       });
       setIsLoggedIn(true);
       setShowLoginModal(false);
@@ -600,7 +631,7 @@ const getDefaultQuality = (role: string): string => {
           const nameParts = fullName.trim().split(' ');
           const firstName = nameParts[0] || '';
           const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
-          setUserProfile({
+         setUserProfile({
             id: res.data.id || '',
             email: res.data.email || '',
             firstName,
@@ -608,6 +639,7 @@ const getDefaultQuality = (role: string): string => {
             picture: res.data.picture || null,
             googleAuth: res.data.googleAuth || false,
             role: res.data.role || 'BASIC',
+            planType: res.data.planType || 'FREE',
           });
           setIsLoggedIn(true);
           setShowLoginModal(false);
@@ -1025,6 +1057,14 @@ const handleDeleteConfirm = async () => {
             if (updatedMedia.status === 'SUCCESS' && updatedMedia.processedCdnUrl) {
               clearInterval(interval);
               setIsProcessing(false);
+              // Refresh credit balance after spending
+              try {
+                const limitsRes = await axios.get(`${API_BASE_URL}/api/subtitles/plan-limits`, {
+                  headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+                });
+                setPlanLimits(limitsRes.data);
+                setCreditBalance(limitsRes.data.balance);
+              } catch (_) {}
               const outputSection = document.querySelector('.video-output-section');
               if (outputSection) {
                 outputSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1153,6 +1193,31 @@ const handleDeleteConfirm = async () => {
       setError('Failed to undo deletion.');
     }
   };
+
+   if (isPageLoading) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'linear-gradient(135deg, #0f0c29 0%, #1e1a45 60%, #0d0b22 100%)',
+        gap: '16px',
+      }}>
+        <div style={{
+          width: '48px', height: '48px', borderRadius: '50%',
+          border: '3px solid rgba(102,126,234,0.2)',
+          borderTopColor: '#6366F1',
+          animation: 'spin 0.9s linear infinite',
+        }} />
+        <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.9rem', fontWeight: 500 }}>
+          Loading...
+        </p>
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
 
   return (
     <div className="video-filter-page">
@@ -1560,9 +1625,9 @@ const handleDeleteConfirm = async () => {
                   <div className="quality-selector-container">
                     <label htmlFor="quality-select" className="quality-label">
                       Output Quality:
-                      {(userProfile.role === 'BASIC' || userProfile.role === 'CREATOR_LITE' || userProfile.role === 'CREATOR') && (
+                      {(userProfile.planType === 'FREE' || userProfile.planType === 'CREATOR_LITE' ) && (
                         <span className="unlock-badge" onClick={() => window.location.href = '/pricing'}>
-                          🔓 Unlock {userProfile.role === 'BASIC' ? '4K' : userProfile.role === 'CREATOR_LITE' ? '4K' : '4K'}
+                          🔓 Unlock 4K
                         </span>
                       )}
                     </label>
@@ -1579,17 +1644,22 @@ const handleDeleteConfirm = async () => {
                         </option>
                       ))}
                     </select>
-                    {userProfile.role === 'BASIC' && (
+                    {userProfile.planType === 'FREE' && (
                       <p className="quality-upgrade-hint">
-                        💡 Upgrade to <a href="/pricing">Creator Lite</a> for 1080p or <a href="/pricing">Creator Spark</a> for 2K quality
+                        💡 Upgrade to <a href="/pricing">Creator Lite</a> for 1080p, <a href="/pricing">Creator</a> for 2K quality
                       </p>
                     )}
-                    {userProfile.role === 'CREATOR_LITE' && (
+                    {userProfile.planType === 'CREATOR_LITE' && (
                       <p className="quality-upgrade-hint">
-                        💡 Upgrade to <a href="/pricing">Creator Spark</a> for 2K quality
+                        💡 Upgrade to <a href="/pricing">Creator</a> for 2K quality
                       </p>
                     )}
-                    {userProfile.role === 'BASIC' && (
+                    {userProfile.planType === 'CREATOR' && (
+                      <p className="quality-upgrade-hint">
+                        💡 Upgrade to <a href="/pricing">Studio</a> for 4K quality
+                      </p>
+                    )}
+                    {userProfile.planType === 'FREE' && (
                       <p className="quality-upgrade-hint" style={{color: '#f87171'}}>
                         ⚠️ Free plan: watermark will be added to exported video
                       </p>
@@ -1597,6 +1667,24 @@ const handleDeleteConfirm = async () => {
                   </div>
                 )}
                 <div className="action-buttons">
+                  {/* Credit balance display */}
+                  {isLoggedIn && planLimits && (
+                    <div className="credit-info-bar">
+                      <span className="credit-balance">
+                        💳 Credits: <strong>{creditBalance ?? planLimits.balance}</strong>
+                      </span>
+                      <span className="credit-cost-hint">
+                        Process costs <strong>{planLimits.costPerGeneration}</strong> credits
+                      </span>
+                      {(creditBalance ?? planLimits.balance) < planLimits.costPerGeneration && (
+                        <span className="credit-warning">
+                          ⚠️ Insufficient credits.{' '}
+                          <a href="/pricing">Top up here</a>
+                        </span>
+                      )}
+                    </div>
+                  )}
+
                   {selectedUpload && (
                     <div className="button-wrapper">
                       <button
@@ -1616,7 +1704,15 @@ const handleDeleteConfirm = async () => {
                     <button
                       className="cta-button process-video-button"
                       onClick={handleStartProcessing}
-                      disabled={isLoggedIn && (!selectedUpload || isProcessing || !subtitles.length || isGenerating)}
+                      disabled={
+                        isLoggedIn && (
+                          !selectedUpload ||
+                          isProcessing ||
+                          !subtitles.length ||
+                          isGenerating ||
+                          (planLimits !== null && (creditBalance ?? planLimits.balance) < planLimits.costPerGeneration)
+                        )
+                      }
                       aria-label="Start subtitle processing"
                     >
                       {isProcessing ? 'Processing...' : isLoggedIn ? 'Process Subtitles' : 'Login to Process'}

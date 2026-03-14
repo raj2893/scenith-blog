@@ -251,7 +251,8 @@ const AIVoiceGeneratorClient: React.FC = () => {
     googleAuth: false,
     role: '',
   });
-  const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
+  const [isPageLoading, setIsPageLoading] = useState<boolean>(true);
+const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
   const [loginError, setLoginError] = useState<string | null>(null);
   const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
 
@@ -382,7 +383,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
   }, [isLoggedIn]);  
 
   // Check auth status and fetch user profile if token exists
-  useEffect(() => {
+   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
       axios
@@ -412,9 +413,13 @@ const AIVoiceGeneratorClient: React.FC = () => {
             localStorage.removeItem('userProfile');
             setIsLoggedIn(false);
           }
+        })
+        .finally(() => {
+          setIsPageLoading(false);
         });
     } else {
       setIsLoggedIn(false);
+      setIsPageLoading(false);
     }
   }, []);
 
@@ -1020,6 +1025,31 @@ const AIVoiceGeneratorClient: React.FC = () => {
   const toggleHistory = useCallback(() => {
     setShowHistory(prev => !prev);
   }, []);
+
+if (isPageLoading) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'linear-gradient(135deg, #0f0c29 0%, #1e1a45 60%, #0d0b22 100%)',
+        gap: '16px',
+      }}>
+        <div style={{
+          width: '48px', height: '48px', borderRadius: '50%',
+          border: '3px solid rgba(102,126,234,0.2)',
+          borderTopColor: '#6366F1',
+          animation: 'spin 0.9s linear infinite',
+        }} />
+        <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.9rem', fontWeight: 500 }}>
+          Loading...
+        </p>
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
 
 return (
   <div className="ai-voice-generator-page">

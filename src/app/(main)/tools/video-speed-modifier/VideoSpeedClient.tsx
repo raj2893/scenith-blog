@@ -21,6 +21,7 @@ interface UserProfile {
   picture: string | null;
   googleAuth: boolean;
   role: string;
+  planType: string;
 }
 
 interface VideoUpload {
@@ -154,7 +155,7 @@ function UpgradePopup({ onClose }: { onClose: () => void }) {
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
       role="dialog"
       aria-modal="true"
-      aria-label="Upgrade to unlock more video speed exports"
+      aria-label="Get credits to export speed videos"
     >
       <div
         style={{
@@ -214,36 +215,65 @@ function UpgradePopup({ onClose }: { onClose: () => void }) {
           fontSize: 'clamp(1.2rem, 4vw, 1.6rem)', fontWeight: 900, color: 'white',
           margin: '0 0 8px', lineHeight: 1.2, letterSpacing: '-0.02em',
         }}>
-          Unlock Unlimited{' '}
+          Get More{' '}
           <span style={{
             background: 'linear-gradient(90deg, #667eea, #a78bfa, #f093fb)',
             WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
           }}>
-            Video Exports
+            Export Credits
           </span>
         </h2>
 
         {/* Sub-copy */}
         <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem', margin: '0 0 5px', lineHeight: 1.6 }}>
-          Free plan limits your speed videos to{' '}
-          <span style={{ color: '#ff8a8a', fontWeight: 700 }}>5/month</span>.
-          Upgrade and never stop creating.
+          Each video export costs{' '}
+          <span style={{ color: '#ff8a8a', fontWeight: 700 }}>credits</span>.
+          Top up your balance and never stop creating.
         </p>
 
         <p style={{
           color: 'rgba(255,255,255,0.75)', fontSize: '0.82rem', margin: '0 0 22px',
           fontWeight: 600, letterSpacing: '0.01em',
         }}>
-          More videos. Higher quality. Zero wait.
+          More credits. Higher quality. No watermarks.
         </p>
+
+        {/* Credit plan pills */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px', marginBottom: '22px' }}>
+          {[
+            { name: 'Lite', credits: '300 cr', price: '₹9/mo',  highlight: false },
+            { name: 'Creator', credits: '900 cr', price: '₹19/mo', highlight: true  },
+            { name: 'Studio', credits: '2500 cr', price: '₹39/mo', highlight: false },
+          ].map((plan) => (
+            <div key={plan.name} style={{
+              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px',
+              background: plan.highlight ? 'rgba(102,126,234,0.18)' : 'rgba(102,126,234,0.08)',
+              border: `1px solid ${plan.highlight ? 'rgba(102,126,234,0.5)' : 'rgba(102,126,234,0.15)'}`,
+              borderRadius: '12px', padding: '10px 8px',
+              position: 'relative',
+            }}>
+              {plan.highlight && (
+                <span style={{
+                  position: 'absolute', top: '-9px',
+                  background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                  color: 'white', fontSize: '0.6rem', fontWeight: 800,
+                  padding: '2px 8px', borderRadius: '100px', letterSpacing: '0.5px',
+                }}>POPULAR</span>
+              )}
+              <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'rgba(255,255,255,0.6)' }}>{plan.name}</span>
+              <span style={{ fontSize: '0.9rem', fontWeight: 800, color: '#a78bfa' }}>{plan.credits}</span>
+              <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)' }}>{plan.price}</span>
+            </div>
+          ))}
+        </div>
 
         {/* Value pills */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '22px' }}>
           {[
-            { icon: '⚡', text: '45 Speed Videos/mo' },
-            { icon: '🎬', text: 'Up to 2K Quality' },
-            { icon: '📏', text: 'Longer Video Length' },
-            { icon: '🚀', text: 'Priority Processing' },
+            { icon: '💎', text: 'Credits never expire' },
+            { icon: '🎬', text: 'Up to 4K Quality' },
+            { icon: '📏', text: 'Longer video length' },
+            { icon: '✨', text: 'No watermarks' },
           ].map((item) => (
             <div key={item.text} style={{
               display: 'flex', alignItems: 'center', gap: '7px',
@@ -257,8 +287,7 @@ function UpgradePopup({ onClose }: { onClose: () => void }) {
         </div>
 
         {/* CTA */}
-        
-        <a  href="/pricing"
+        <a href="/pricing"
           onClick={onClose}
           style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
@@ -273,7 +302,7 @@ function UpgradePopup({ onClose }: { onClose: () => void }) {
           onMouseOver={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.transform = 'scale(1.03)'; el.style.boxShadow = '0 8px 32px rgba(102,126,234,0.55)'; }}
           onMouseOut={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.transform = 'scale(1)'; el.style.boxShadow = '0 4px 24px rgba(102,126,234,0.4)'; }}
         >
-          🚀 Claim 25% OFF — View Plans
+          🚀 Claim 25% OFF — Get Credits Now
         </a>
         <style>{`
           @keyframes vsPopFadeOverlay { from { opacity:0; } to { opacity:1; } }
@@ -297,6 +326,7 @@ const VideoSpeedClient: React.FC = () => {
     picture: null,
     googleAuth: false,
     role: '',
+    planType: '',
   });
   const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
   const [loginError, setLoginError] = useState<string | null>(null);
@@ -318,12 +348,14 @@ const VideoSpeedClient: React.FC = () => {
   const [showUpgradeModal, setShowUpgradeModal] = useState<boolean>(false);
   const [upgradeModalMessage, setUpgradeModalMessage] = useState<string>('');
   const [showUpgradePopup, setShowUpgradePopup] = useState<boolean>(false);
+  const [isPageLoading, setIsPageLoading] = useState<boolean>(true);
   const [planLimits, setPlanLimits] = useState<{
-    videosPerMonth: number;
-    videosUsed: number;
     maxVideoLength: number;
     maxQuality: string;
-  } | null>(null);  
+    hasWatermark: boolean;
+    costPerExport: number;
+    balance: number;
+  } | null>(null);
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowUpgradePopup(true);
@@ -362,7 +394,7 @@ const VideoSpeedClient: React.FC = () => {
   }, []);
 
   // Check auth status and fetch user profile
-  useEffect(() => {
+useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
       axios
@@ -382,6 +414,7 @@ const VideoSpeedClient: React.FC = () => {
             picture: res.data.picture || null,
             googleAuth: res.data.googleAuth || false,
             role: res.data.role || 'BASIC',
+            planType: res.data.planType || 'FREE',
           });
           setIsLoggedIn(true);
           setShowLoginModal(false);
@@ -393,9 +426,13 @@ const VideoSpeedClient: React.FC = () => {
             localStorage.removeItem('userProfile');
             setIsLoggedIn(false);
           }
+        })
+        .finally(() => {
+          setIsPageLoading(false);
         });
     } else {
       setIsLoggedIn(false);
+      setIsPageLoading(false);
     }
   }, []);
 
@@ -416,42 +453,47 @@ const VideoSpeedClient: React.FC = () => {
     fetchVideos();
   }, [isLoggedIn]);
 
-  const getAvailableQualities = (role: string): string[] => {
-    switch (role) {
-      case 'BASIC':
-        return ['144p', '240p', '360p', '480p', '720p'];
-      case 'CREATOR':
-        return ['144p', '240p', '360p', '480p', '720p', '1080p', '1440p', '2k'];
-      case 'STUDIO':
-      case 'ADMIN':
-        return ['144p', '240p', '360p', '480p', '720p', '1080p', '1440p', '2k', '4k'];
-      default:
-        return ['720p'];
-    }
-  };
+  // NEW
+const getAvailableQualities = (role: string): string[] => {
+  switch (role) {
+    case 'FREE':
+      return ['144p', '240p', '360p', '480p', '720p'];
+    case 'CREATOR_LITE':
+      return ['144p', '240p', '360p', '480p', '720p', '1080p'];
+    case 'CREATOR':
+      return ['144p', '240p', '360p', '480p', '720p', '1080p', '1440p', '2k'];
+    case 'STUDIO':
+    case 'ADMIN':
+      return ['144p', '240p', '360p', '480p', '720p', '1080p', '1440p', '2k', '4k'];
+    default:
+      return ['144p', '240p', '360p', '480p', '720p'];
+  }
+};
   
   const getDefaultQuality = (role: string): string => {
-    switch (role) {
-      case 'BASIC':
-        return '720p';
-      case 'CREATOR':
-        return '1080p';
-      case 'STUDIO':
-      case 'ADMIN':
-        return '1440p';
-      default:
-        return '720p';
-    }
-  };
+  switch (role) {
+    case 'FREE':
+      return '720p';
+    case 'CREATOR_LITE':
+      return '1080p';
+    case 'CREATOR':
+      return '1080p';
+    case 'STUDIO':
+    case 'ADMIN':
+      return '1440p';
+    default:
+      return '720p';
+  }
+};
   
   // Add useEffect
   useEffect(() => {
-    if (userProfile.role) {
-      const qualities = getAvailableQualities(userProfile.role);
-      setAvailableQualities(qualities);
-      setSelectedQuality(getDefaultQuality(userProfile.role));
-    }
-  }, [userProfile.role]);  
+  if (userProfile.planType) {
+    const qualities = getAvailableQualities(userProfile.planType);
+    setAvailableQualities(qualities);
+    setSelectedQuality(getDefaultQuality(userProfile.planType));
+  }
+}, [userProfile.planType]);
 
   // Handle login form submission
   const handleLogin = async (formData: LoginFormData) => {
@@ -469,14 +511,15 @@ const VideoSpeedClient: React.FC = () => {
         const firstName = nameParts[0] || '';
         const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
         setUserProfile({
-          id: res.data.id || '',
-          email: res.data.email || '',
-          firstName,
-          lastName,
-          picture: res.data.picture || null,
-          googleAuth: res.data.googleAuth || false,
-          role: res.data.role || 'BASIC',
-        });
+            id: res.data.id || 0,
+            email: res.data.email || '',
+            firstName,
+            lastName,
+            picture: res.data.picture || null,
+            googleAuth: res.data.googleAuth || false,
+            role: res.data.role || 'BASIC',
+            planType: res.data.planType || 'FREE',
+          });
         setIsLoggedIn(true);
         setShowLoginModal(false);
       });
@@ -512,13 +555,14 @@ const VideoSpeedClient: React.FC = () => {
           const firstName = nameParts[0] || '';
           const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
           setUserProfile({
-            id: res.data.id || '',
+            id: res.data.id || 0,
             email: res.data.email || '',
             firstName,
             lastName,
             picture: res.data.picture || null,
             googleAuth: res.data.googleAuth || false,
             role: res.data.role || 'BASIC',
+            planType: res.data.planType || 'FREE',
           });
           setIsLoggedIn(true);
           setShowLoginModal(false);
@@ -767,7 +811,7 @@ const VideoSpeedClient: React.FC = () => {
             if (statusResponse.data.status === 'COMPLETED') {
               clearInterval(interval);
               setIsProcessing(false);
-              // Refresh plan limits so remaining video count updates immediately
+              // Refresh credit balance after export
               try {
                 const limitsResponse = await axios.get(`${API_BASE_URL}/api/video-speed/plan-limits`, {
                   headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
@@ -859,6 +903,31 @@ const VideoSpeedClient: React.FC = () => {
 
   // Current date for SEO freshness
   const currentYear = new Date().getFullYear();
+
+   if (isPageLoading) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'linear-gradient(135deg, #0f0c29 0%, #1e1a45 60%, #0d0b22 100%)',
+        gap: '16px',
+      }}>
+        <div style={{
+          width: '48px', height: '48px', borderRadius: '50%',
+          border: '3px solid rgba(102,126,234,0.2)',
+          borderTopColor: '#6366F1',
+          animation: 'spin 0.9s linear infinite',
+        }} />
+        <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.9rem', fontWeight: 500 }}>
+          Loading...
+        </p>
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
 
   return (
     <div className="video-speed-page">
@@ -1155,56 +1224,45 @@ const VideoSpeedClient: React.FC = () => {
                 {planLimits && (
                   <div className="usage-info">
                     <div className="usage-grid">
-                      {/* Main Usage Section */}
+                      {/* Credit Balance */}
                       <div className="usage-main">
                         <div className="usage-header">
-                          <span className="usage-label">
-                            📅 {/* For VideoSpeed: "Speed Videos" | For Subtitles: "Subtitle Videos" */} This Month
-                          </span>
-                          {planLimits.videosPerMonth !== -1 && (
-                            <span className="usage-badge">
-                              {planLimits.videosUsed}/{planLimits.videosPerMonth}
-                            </span>
-                          )}
+                          <span className="usage-label">💎 Credit Balance</span>
+                          <span className="usage-badge">{planLimits.balance} cr</span>
                         </div>
-                        
-                        {planLimits.videosPerMonth === -1 ? (
-                          <p className="usage-text">
-                            <strong>Unlimited</strong> - No monthly video limit
-                          </p>
-                        ) : (
-                          <>
-                            <div className="usage-bar-container">
-                              <div 
-                                className={`usage-bar-fill ${
-                                  (planLimits.videosUsed / planLimits.videosPerMonth) >= 0.95 ? 'critical' :
-                                  (planLimits.videosUsed / planLimits.videosPerMonth) >= 0.80 ? 'warning' : 'normal'
-                                }`}
-                                style={{ width: `${(planLimits.videosUsed / planLimits.videosPerMonth) * 100}%` }}
-                              />
-                            </div>
-                            <p className="usage-text">
-                              <strong>{planLimits.videosPerMonth - planLimits.videosUsed}</strong> videos remaining
-                            </p>
-                                
-                            {(planLimits.videosUsed / planLimits.videosPerMonth) >= 0.80 && 
-                             (planLimits.videosPerMonth - planLimits.videosUsed) > 0 && (
-                              <div className="usage-micro-warning">
-                                ⚠️ Almost out of videos - Upgrade to avoid interruption
-                              </div>
-                            )}
+                        <div className="usage-bar-container">
+                          <div
+                            className={`usage-bar-fill ${
+                              planLimits.balance <= 0 ? 'critical' :
+                              planLimits.balance <= 5 ? 'warning' : 'normal'
+                            }`}
+                            style={{ width: '100%' }}
+                          />
+                        </div>
+                        <p className="usage-text">
+                          <strong style={{ color: planLimits.balance <= 0 ? '#ef4444' : planLimits.balance <= 5 ? '#f59e0b' : '#34d399' }}>
+                            {planLimits.balance}
+                          </strong> credits remaining
+                          <span style={{ color: '#55557a', marginLeft: 8, fontSize: 11 }}>
+                            · {planLimits.costPerExport} cr per export
+                          </span>
+                        </p>
 
-                            {userProfile.role === 'BASIC' && (
-                              <div className="inline-upgrade-cta">
-                                <a href="/pricing" className="inline-upgrade-link">
-                                  🔓 Upgrade to Creator for 9× more videos (45/month) →
-                                </a>
-                              </div>
-                            )}
-                          </>
+                        {planLimits.balance <= 0 && (
+                          <div className="inline-upgrade-cta">
+                            <a href="/pricing" className="inline-upgrade-link">
+                              🔓 Out of credits — Upgrade for more
+                            </a>
+                          </div>
+                        )}
+
+                        {planLimits.balance > 0 && planLimits.balance <= 5 && (
+                          <div className="usage-micro-warning">
+                            ⚠️ Low credits — Upgrade to avoid interruption
+                          </div>
                         )}
                       </div>
-                      
+
                       {/* Limits Sidebar */}
                       <div className="limits-sidebar">
                         <div className="limit-item">
@@ -1216,7 +1274,6 @@ const VideoSpeedClient: React.FC = () => {
                             </div>
                           </div>
                         </div>
-
                         <div className="limit-item">
                           <span className="limit-icon">🎬</span>
                           <div className="limit-details">
@@ -1224,10 +1281,17 @@ const VideoSpeedClient: React.FC = () => {
                             <div className="limit-value">{planLimits.maxQuality}</div>
                           </div>
                         </div>
+                        <div className="limit-item">
+                          <span className="limit-icon">{planLimits.hasWatermark ? '💧' : '✨'}</span>
+                          <div className="limit-details">
+                            <div className="limit-label">Watermark</div>
+                            <div className="limit-value">{planLimits.hasWatermark ? 'Yes' : 'None'}</div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                )}             
+                )}         
                 {selectedUpload && (
                   <div className="quality-selector-container">
                     <label htmlFor="quality-select" className="quality-label">
@@ -1246,38 +1310,52 @@ const VideoSpeedClient: React.FC = () => {
                         </option>
                       ))}
                     </select>
-                    {userProfile.role === 'BASIC' && (
+                    {userProfile.planType === 'FREE' && (
                       <p className="quality-upgrade-hint">
-                        💡 Upgrade to <a href="/pricing">CREATOR</a> for up to 2K or <a href="/pricing">STUDIO</a> for 4K quality
+                        💡 Upgrade to <a href="/pricing">Creator Lite</a> for 1080p, <a href="/pricing">Creator</a> for 2K, or <a href="/pricing">Studio</a> for 4K
                       </p>
                     )}
-                    {userProfile.role === 'CREATOR' && (
+                    {userProfile.planType === 'CREATOR_LITE' && (
                       <p className="quality-upgrade-hint">
-                        💡 Upgrade to <a href="/pricing">STUDIO</a> for 4K quality
+                        💡 Upgrade to <a href="/pricing">Creator</a> for up to 2K or <a href="/pricing">Studio</a> for 4K quality
+                      </p>
+                    )}
+                    {userProfile.planType === 'CREATOR' && (
+                      <p className="quality-upgrade-hint">
+                        💡 Upgrade to <a href="/pricing">Studio</a> for 4K quality
                       </p>
                     )}
                   </div>
-                )}                
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                )}
+
+                <div style={{
+                  display: 'flex', alignItems: 'center', gap: '8px',
+                  flexWrap: 'wrap',
+                }}>
                   <button
                     className="cta-button process-video-button"
                     onClick={handleStartProcessing}
                     disabled={isLoggedIn && (!selectedUpload || isProcessing)}
                     aria-label="Start video processing"
-                    style={{ flex: '1', margin: 0, padding: '10px 16px', fontSize: '0.875rem' }}
+                    style={{
+                      flex: '1 1 140px', margin: 0,
+                      padding: '10px 12px', fontSize: '0.85rem',
+                      minWidth: 0, whiteSpace: 'nowrap',
+                    }}
                   >
                     {isProcessing ? 'Processing...' : isLoggedIn ? 'Start Processing' : 'Login to Process'}
                   </button>
-                  {isLoggedIn && userProfile.role === 'BASIC' && (
+                  {isLoggedIn && planLimits?.hasWatermark && (
                     <a href="/pricing"
                       style={{
-                        flex: '1', display: 'inline-flex', alignItems: 'center',
-                        justifyContent: 'center', gap: '5px', whiteSpace: 'nowrap',
+                        flex: '1 1 120px', display: 'inline-flex', alignItems: 'center',
+                        justifyContent: 'center', gap: '5px',
+                        whiteSpace: 'nowrap', minWidth: 0,
                         background: 'rgba(102, 126, 234, 0.12)',
                         border: '1px solid rgba(102, 126, 234, 0.45)',
                         color: '#a78bfa',
                         textDecoration: 'none', margin: 0,
-                        padding: '10px 16px', fontSize: '0.875rem', fontWeight: 600,
+                        padding: '10px 12px', fontSize: '0.85rem', fontWeight: 600,
                         borderRadius: '8px', letterSpacing: '0.01em',
                         transition: 'all 0.2s',
                       }}
@@ -1285,32 +1363,41 @@ const VideoSpeedClient: React.FC = () => {
                       onMouseOut={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.background = 'rgba(102,126,234,0.12)'; el.style.borderColor = 'rgba(102,126,234,0.45)'; }}
                       aria-label="Remove watermark by upgrading"
                     >
-                      ⚡ Remove Watermark
+                      ⚡ No Watermark
                     </a>
                   )}
                 </div>
-                {selectedUpload?.status === 'COMPLETED' && selectedUpload.cdnUrl && (
+
+               {selectedUpload?.status === 'COMPLETED' && selectedUpload.cdnUrl && (
                   <div className="download-section" role="region" aria-labelledby="download-title">
                     <h3 id="download-title">Download Your Speed-Adjusted Video</h3>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{
+                      display: 'flex', alignItems: 'center', gap: '8px',
+                      flexWrap: 'wrap',
+                    }}>
                       <button
                         onClick={handleDownload}
                         className="cta-button download-button"
-                        style={{ flex: '1', margin: 0, padding: '10px 16px', fontSize: '0.875rem' }}
+                        style={{
+                          flex: '1 1 140px', margin: 0,
+                          padding: '10px 12px', fontSize: '0.85rem',
+                          minWidth: 0, whiteSpace: 'nowrap',
+                        }}
                         aria-label="Download speed-adjusted video as MP4"
                       >
-                        Download MP4
+                        📥 Download MP4
                       </button>
-                      {userProfile.role === 'BASIC' && (
+                      {planLimits?.hasWatermark && (
                         <a href="/pricing"
                           style={{
-                            flex: '1', display: 'inline-flex', alignItems: 'center',
-                            justifyContent: 'center', gap: '5px', whiteSpace: 'nowrap',
+                            flex: '1 1 120px', display: 'inline-flex', alignItems: 'center',
+                            justifyContent: 'center', gap: '5px',
+                            whiteSpace: 'nowrap', minWidth: 0,
                             background: 'rgba(102, 126, 234, 0.12)',
                             border: '1px solid rgba(102, 126, 234, 0.45)',
                             color: '#a78bfa',
                             textDecoration: 'none', margin: 0,
-                            padding: '10px 16px', fontSize: '0.875rem', fontWeight: 600,
+                            padding: '10px 12px', fontSize: '0.85rem', fontWeight: 600,
                             borderRadius: '8px', letterSpacing: '0.01em',
                             transition: 'all 0.2s',
                           }}
@@ -1318,21 +1405,24 @@ const VideoSpeedClient: React.FC = () => {
                           onMouseOut={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.background = 'rgba(102,126,234,0.12)'; el.style.borderColor = 'rgba(102,126,234,0.45)'; }}
                           aria-label="Remove watermark by upgrading"
                         >
-                          ⚡ Remove Watermark
+                          ⚡ No Watermark
                         </a>
                       )}
                     </div>
                   </div>
                 )}
-              </div>
-            </div>
+
+              </div> {/* end video-input-section */}
+            </div> {/* end main-content */}
+
             <div className="trust-indicators">
               <span className="trust-item">✅ 100% Free</span>
               <span className="trust-item">⚡ Fast Speed Adjustment</span>
               <span className="trust-item">🎥 High-Quality Output</span>
               <span className="trust-item">📥 Instant MP4 Download</span>
             </div>
-          </div>
+          </div> {/* end hero-cta-section */}
+
           <figure className="hero-image-container">
             <Image
               src="/images/VideoSpeedModifierSS.png"
@@ -2142,20 +2232,20 @@ const VideoSpeedClient: React.FC = () => {
         </div>
       )}
 
-      {isLoggedIn && userProfile.role === 'BASIC' && (
+      {isLoggedIn && planLimits && planLimits.balance <= 5 && userProfile.role !== 'STUDIO' && userProfile.role !== 'ADMIN' && (
         <div className="floating-upgrade-cta">
-          <button 
+          <button
             className="floating-upgrade-btn"
             onClick={() => window.location.href = '/pricing'}
           >
             <span className="float-icon">⚡</span>
             <span className="float-text">
-              <strong>Upgrade for 9× More Videos</strong>
-              <small>Or get AI Speed Pro</small>
+              <strong>{planLimits.balance <= 0 ? 'Out of Credits' : 'Low Credits'}</strong>
+              <small>Upgrade to keep exporting</small>
             </span>
           </button>
         </div>
-      )}      
+      )}     
     </div>
   );
 };

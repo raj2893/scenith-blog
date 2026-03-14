@@ -86,6 +86,7 @@ const GENERATION_TYPES = [
 const AIVideoGenerationClient: React.FC = () => {
   // Auth
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isPageLoading, setIsPageLoading] = useState(true);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
@@ -104,7 +105,7 @@ const AIVideoGenerationClient: React.FC = () => {
   const [negativePrompt, setNegativePrompt] = useState("");
   const [duration, setDuration] = useState(5);
   const [aspectRatio, setAspectRatio] = useState("16:9");
-  const [audioEnabled, setAudioEnabled] = useState(false);
+  const [audioEnabled, setAudioEnabled] = useState(false); // off by default
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
@@ -126,6 +127,10 @@ const AIVideoGenerationClient: React.FC = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    if (!token) {
+      setIsPageLoading(false);
+      return;
+    }
     axios
       .get(`${API_BASE_URL}/auth/me`, { headers: { Authorization: `Bearer ${token}` } })
       .then((res) => {
@@ -142,6 +147,9 @@ const AIVideoGenerationClient: React.FC = () => {
       })
       .catch(() => {
         localStorage.removeItem("token");
+      })
+      .finally(() => {
+        setIsPageLoading(false);
       });
   }, []);
 
@@ -161,7 +169,9 @@ const AIVideoGenerationClient: React.FC = () => {
         const mods: VideoModel[] = modelsRes.data.models || [];
         setModels(mods);
         setCredits(creditsRes.data);
-        if (mods.length > 0) setSelectedModel(mods[0].id);
+        // Default to Wan2.5 if available, otherwise first model
+        const wan = mods.find(m => m.id.toLowerCase().includes('wan'));
+        setSelectedModel(wan ? wan.id : mods[0]?.id || "");
         setHistory(historyRes.data || []);
       })
       .catch((err) => {
@@ -342,9 +352,34 @@ const AIVideoGenerationClient: React.FC = () => {
   };
 
   const currentModelCanAudio = selectedModelData?.supportsAudio ?? false;
-  const maxDuration = credits?.planType === "VIDEO_GEN_STARTER" ? 5 : 10;
+  const maxDuration = 10;
 
   // ─────────────────────────────────────────────────────────────────────────
+ if (isPageLoading) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: '#080B12',
+        gap: '16px',
+      }}>
+        <div style={{
+          width: '48px', height: '48px', borderRadius: '50%',
+          border: '3px solid rgba(99,102,241,0.2)',
+          borderTopColor: '#6366F1',
+          animation: 'spin 0.9s linear infinite',
+        }} />
+        <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.9rem', fontWeight: 500, fontFamily: "'DM Sans', sans-serif" }}>
+          Loading...
+        </p>
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
+
   return (
     <div className="vg-page">
       <style>{`
@@ -983,7 +1018,7 @@ const AIVideoGenerationClient: React.FC = () => {
                 <div className="vg-option-group">
                   <label className="vg-label">Resolution</label>
                   <div style={{ padding: "10px 14px", background: "rgba(0,0,0,0.2)", borderRadius: 12, border: "1.5px solid rgba(99,102,241,0.15)", color: "#64748B", fontSize: "0.9rem" }}>
-                    {selectedModelData?.defaultResolution || "—"} · MP4
+                    {selectedModelData?.defaultResolution || "1080p"} · MP4
                   </div>
                 </div>
               </div>
@@ -1007,32 +1042,37 @@ const AIVideoGenerationClient: React.FC = () => {
               {isLoggedIn && models.length > 0 && (
                 <>
                   <label className="vg-label">AI Model</label>
-                  <div className="vg-models">
+                  <select
+                    className="vg-select"
+                    value={selectedModel}
+                    onChange={(e) => setSelectedModel(e.target.value)}
+                    style={{ marginBottom: 20 }}
+                  >
                     {models.map((model) => {
                       const matchingCost = model.creditCosts?.find(
                         (c: any) => c.duration === duration && c.audio === (audioEnabled && model.supportsAudio)
                       );
                       const finalCost = matchingCost?.credits ?? 0;
                       return (
-                        <div
-                          key={model.id}
-                          className={`vg-model-card ${selectedModel === model.id ? "active" : ""}`}
-                          onClick={() => setSelectedModel(model.id)}
-                        >
-                          <div className="vg-model-radio">
-                            <div className="vg-model-radio-dot" />
-                          </div>
-                          <div className="vg-model-info">
-                            <div className="vg-model-name">{model.displayName}</div>
-                            <div className="vg-model-desc">{model.description}</div>
-                          </div>
-                          <div className="vg-model-meta">
-                            <span className="vg-credit-cost">{finalCost} cr</span>
-                          </div>
-                        </div>
+                        <option key={model.id} value={model.id}>
+                          {model.displayName} — {finalCost} cr · {model.defaultResolution}
+                        </option>
                       );
                     })}
-                  </div>
+                  </select>
+                  {/* Selected model description */}
+                  {selectedModelData && (
+                    <div style={{
+                      marginTop: -14, marginBottom: 20,
+                      padding: '10px 14px',
+                      background: 'rgba(99,102,241,0.07)',
+                      border: '1px solid rgba(99,102,241,0.15)',
+                      borderRadius: 10,
+                      fontSize: '0.82rem', color: '#64748B', lineHeight: 1.5,
+                    }}>
+                      {selectedModelData.description}
+                    </div>
+                  )}
                 </>
               )}
 

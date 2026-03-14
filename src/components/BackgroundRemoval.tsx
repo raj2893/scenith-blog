@@ -39,34 +39,28 @@ const BackgroundRemoval: React.FC = () => {
   const [loginSuccess, setLoginSuccess] = useState<string>('');
   const [loginLoading, setLoginLoading] = useState<boolean>(false);
   const [isCreatingProject, setIsCreatingProject] = useState<boolean>(false);
-  const [usageStats, setUsageStats] = useState<{
-    usedThisMonth: number;
-    monthlyLimit: number;
-    remaining: number;
-    maxQuality: string;
-    userRole: string;
+const [usageStats, setUsageStats] = useState<{
+    balance: number;
+    costPerRemoval: number;
+    isPaid: boolean;
+    planType?: string;
   } | null>(null);
-  const [loadingStats, setLoadingStats] = useState<boolean>(false);  
+  const [loadingStats, setLoadingStats] = useState<boolean>(false);
+  const [isPageLoading, setIsPageLoading] = useState<boolean>(true);  
 
-  useEffect(() => {
+   useEffect(() => {
     const checkAuth = async () => {
       setCheckingAuth(true);
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          const res = await axios.get<{ id: string; email: string; name: string; picture?: string; googleAuth: boolean; role: string }>(
+          const res = await axios.get<{ id: string; email: string; name: string; picture?: string; googleAuth: boolean; role: string; planType: string }>(
             `${API_BASE_URL}/auth/me`,
             { headers: { Authorization: `Bearer ${token}` } }
           );
-          const fullName = res.data.name || '';
-          const nameParts = fullName.trim().split(' ');
-          const firstName = nameParts[0] || '';
-          const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
           setUserId(res.data.id);
           setIsLoggedIn(true);
           setCheckingAuth(false);
-          
-          // Fetch usage stats after authentication
           await fetchUsageStats();
         } catch (error: any) {
           console.error('Auth check failed:', error);
@@ -74,10 +68,13 @@ const BackgroundRemoval: React.FC = () => {
           localStorage.removeItem('userProfile');
           setIsLoggedIn(false);
           setCheckingAuth(false);
+        } finally {
+          setIsPageLoading(false);
         }
       } else {
         setIsLoggedIn(false);
         setCheckingAuth(false);
+        setIsPageLoading(false);
       }
     };
     checkAuth();
@@ -329,7 +326,7 @@ const BackgroundRemoval: React.FC = () => {
       setStatus('error');
       
       // Check if it's a limit error
-      if (error.response?.data?.message?.includes('limit reached')) {
+    if (error.response?.data?.message?.includes('credits') || error.response?.data?.message?.includes('Insufficient')) {
         setErrorMessage(error.response.data.message);
       } else {
         setErrorMessage(
@@ -531,6 +528,31 @@ const BackgroundRemoval: React.FC = () => {
     }
   };  
 
+ if (isPageLoading) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'linear-gradient(135deg, #0f0c29 0%, #1e1a45 60%, #0d0b22 100%)',
+        gap: '16px',
+      }}>
+        <div style={{
+          width: '48px', height: '48px', borderRadius: '50%',
+          border: '3px solid rgba(102,126,234,0.2)',
+          borderTopColor: '#6366F1',
+          animation: 'spin 0.9s linear infinite',
+        }} />
+        <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.9rem', fontWeight: 500 }}>
+          Loading...
+        </p>
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
+
   return (
     <div className="background-removal-page">
       <div className="particle-background">
@@ -549,47 +571,39 @@ const BackgroundRemoval: React.FC = () => {
       >
         <h1>Remove Background from Your Image</h1>
         <p>Upload an image and remove its background with a single click. Perfect for creating clean, professional visuals.</p>
-        {isLoggedIn && usageStats && (
+       {isLoggedIn && usageStats && (
           <div className="usage-stats-banner">
             <div className="stats-content">
               <div className="stat-item">
+                <span className="stat-label">Credits Balance:</span>
+                <span className="stat-value highlight">{usageStats.balance}</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-label">Cost per Removal:</span>
+                <span className="stat-value">{usageStats.costPerRemoval} credits</span>
+              </div>
+               <div className="stat-item">
                 <span className="stat-label">Plan:</span>
-                <span className="stat-value">
-                  {usageStats.userRole === 'ADMIN' ? 'Admin' :
-                  usageStats.userRole === 'STUDIO' ? 'Creator Odyssey' :
-                  usageStats.userRole === 'CREATOR' ? 'Creator Spark' :
-                  'Free'}
+               <span className="stat-value">
+                  {usageStats.planType
+                    ? usageStats.planType.charAt(0).toUpperCase() +
+                      usageStats.planType.slice(1).toLowerCase().replace('_', ' ')
+                    : usageStats.isPaid ? 'Premium' : 'Free'}
                 </span>
-              </div>
-              <div className="stat-item">
-                <span className="stat-label">Used This Month:</span>
-                <span className="stat-value">
-                  {usageStats.usedThisMonth} / {usageStats.monthlyLimit === -1 ? '∞' : usageStats.monthlyLimit}
-                </span>
-              </div>
-              <div className="stat-item">
-                <span className="stat-label">Remaining:</span>
-                <span className="stat-value highlight">
-                  {usageStats.remaining === -1 ? 'Unlimited' : usageStats.remaining}
-                </span>
-              </div>
-              <div className="stat-item">
-                <span className="stat-label">Max Quality:</span>
-                <span className="stat-value">{usageStats.maxQuality}</span>
               </div>
             </div>
-            {usageStats.monthlyLimit !== -1 && usageStats.remaining <= 5 && usageStats.remaining > 0 && (
+            {usageStats.balance > 0 && usageStats.balance < usageStats.costPerRemoval * 3 && (
               <div className="usage-warning">
-                ⚠️ Only {usageStats.remaining} background removals remaining this month!
+                ⚠️ Low credits! Only {Math.floor(usageStats.balance / usageStats.costPerRemoval)} removal(s) left.
               </div>
             )}
-            {usageStats.monthlyLimit !== -1 && usageStats.remaining === 0 && (
+            {usageStats.balance < usageStats.costPerRemoval && (
               <div className="usage-error">
-                🚫 Monthly limit reached. Please upgrade your plan to continue.
+                🚫 Insufficient credits. Please top up to continue.
               </div>
             )}
           </div>
-        )}        
+        )}      
         <div className="upload-container">
           <input
             type="file"

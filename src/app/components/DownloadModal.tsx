@@ -21,14 +21,13 @@ interface DownloadModalProps {
 interface DownloadLimits {
   canDownloadSvg: boolean;
   maxResolution: number;
-  dailyLimit: number;
-  monthlyLimit: number;
   plan: string;
 }
 
-interface DownloadUsage {
-  dailyCount: number;
-  monthlyCount: number;
+interface CreditStats {
+  balance: number;
+  costPerDownload: number;
+  isPaid: boolean;
 }
 
 const FORMATS = [
@@ -63,8 +62,8 @@ const DownloadModal: React.FC<DownloadModalProps> = ({
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadSuccess, setDownloadSuccess] = useState(false);
 
-  const [downloadLimits, setDownloadLimits] = useState<DownloadLimits | null>(null);
-  const [downloadUsage, setDownloadUsage] = useState<DownloadUsage | null>(null);
+ const [downloadLimits, setDownloadLimits] = useState<DownloadLimits | null>(null);
+  const [creditStats, setCreditStats] = useState<CreditStats | null>(null);
   const [limitsLoading, setLimitsLoading] = useState(false);
   const [usageLoading, setUsageLoading] = useState(false);
 
@@ -75,7 +74,7 @@ const DownloadModal: React.FC<DownloadModalProps> = ({
     const authHeader = token ? { Authorization: `Bearer ${token}` } : {};
 
     // Fetch limits (works for guests too)
-    const fetchLimits = async () => {
+   const fetchLimits = async () => {
       setLimitsLoading(true);
       try {
         const res = await axios.get(
@@ -90,41 +89,37 @@ const DownloadModal: React.FC<DownloadModalProps> = ({
       }
     };
 
-    // Fetch usage (only for logged-in users)
-    const fetchUsage = async () => {
+    // Fetch credit stats (only for logged-in users)
+    const fetchCreditStats = async () => {
       if (!isLoggedIn) return;
       setUsageLoading(true);
       try {
         const res = await axios.get(
-          `${API_BASE_URL}/api/image-editor/elements/${elementId}/download-usage`,
+          `${API_BASE_URL}/api/standalone-images/usage-stats`,
           { headers: authHeader }
         );
-        setDownloadUsage(res.data);
+        setCreditStats(res.data);
       } catch (e) {
-        console.error("Failed to fetch download usage", e);
+        console.error("Failed to fetch credit stats", e);
       } finally {
         setUsageLoading(false);
       }
     };
 
     fetchLimits();
-    fetchUsage();
+    fetchCreditStats();
   }, [isOpen, elementId, isLoggedIn]);
 
-  // Derived limit values
+ // Derived limit values
   const canSvg = downloadLimits?.canDownloadSvg ?? false;
   const maxRes = downloadLimits?.maxResolution ?? 256;
-  const dailyLimit = downloadLimits?.dailyLimit ?? 2;
-  const monthlyLimit = downloadLimits?.monthlyLimit ?? 10;
   const plan = downloadLimits?.plan ?? "GUEST";
-  const isUnlimited = dailyLimit === UNLIMITED || dailyLimit === -1;
 
-  // Derived usage values
-  const dailyUsed = downloadUsage?.dailyCount ?? 0;
-  const monthlyUsed = downloadUsage?.monthlyCount ?? 0;
-  const isDailyLimitReached = !isUnlimited && dailyLimit > 0 && dailyUsed >= dailyLimit;
-  const isMonthlyLimitReached = !isUnlimited && monthlyLimit > 0 && monthlyUsed >= monthlyLimit;
-  const isLimitReached = isDailyLimitReached || isMonthlyLimitReached;
+  // Derived credit values
+  const balance = creditStats?.balance ?? 0;
+  const costPerDownload = creditStats?.costPerDownload ?? 1;
+  const isPaid = creditStats?.isPaid ?? false;
+  const isLimitReached = isLoggedIn && balance < costPerDownload;
 
   const isSvgLocked = selectedFormat === "SVG" && !canSvg;
 
@@ -132,15 +127,6 @@ const DownloadModal: React.FC<DownloadModalProps> = ({
     if (maxRes === UNLIMITED) return false;
     const w = parseInt(resValue.split("x")[0]);
     return w > maxRes;
-  };
-
-  const dailyPercent = isUnlimited ? 0 : Math.min((dailyUsed / dailyLimit) * 100, 100);
-  const monthlyPercent = isUnlimited ? 0 : Math.min((monthlyUsed / monthlyLimit) * 100, 100);
-
-  const getBarClass = (percent: number) => {
-    if (percent >= 100) return "critical";
-    if (percent >= 80) return "warning";
-    return "normal";
   };
 
   const handleDownload = async () => {
@@ -190,10 +176,10 @@ const DownloadModal: React.FC<DownloadModalProps> = ({
       if (isLoggedIn) {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          `${API_BASE_URL}/api/image-editor/elements/${elementId}/download-usage`,
+          `${API_BASE_URL}/api/standalone-images/usage-stats`,
           { headers: token ? { Authorization: `Bearer ${token}` } : {} }
         );
-        setDownloadUsage(res.data);
+        setCreditStats(res.data);
       }
 
       setTimeout(() => {
@@ -258,39 +244,25 @@ const DownloadModal: React.FC<DownloadModalProps> = ({
           )}
 
           {/* Usage section — only for logged-in users with limits */}
-          {isLoggedIn && !isLoading && !isUnlimited && downloadLimits && (
+          {/* Credit balance section — only for logged-in users */}
+          {isLoggedIn && !isLoading && creditStats && (
             <div className="usage-section">
               <div className="usage-section__header">
-                <span className="usage-section__title">Your Downloads</span>
+                <span className="usage-section__title">Your Credits</span>
                 {isLimitReached && (
-                  <span className="usage-section__exceeded-tag">Limit reached</span>
+                  <span className="usage-section__exceeded-tag">Insufficient credits</span>
                 )}
               </div>
 
               <div className="usage-row">
-                <span className="usage-row__label">Today</span>
-                <span className={`usage-row__count ${isDailyLimitReached ? "exceeded" : ""}`}>
-                  {dailyUsed} / {dailyLimit}
+                <span className="usage-row__label">Balance</span>
+                <span className={`usage-row__count ${isLimitReached ? "exceeded" : ""}`}>
+                  {balance} credits
                 </span>
               </div>
-              <div className="usage-bar-track">
-                <div
-                  className={`usage-bar-fill usage-bar-fill--${getBarClass(dailyPercent)}`}
-                  style={{ width: `${dailyPercent}%` }}
-                />
-              </div>
-
-              <div className="usage-row" style={{ marginTop: "10px" }}>
-                <span className="usage-row__label">This month</span>
-                <span className={`usage-row__count ${isMonthlyLimitReached ? "exceeded" : ""}`}>
-                  {monthlyUsed} / {monthlyLimit}
-                </span>
-              </div>
-              <div className="usage-bar-track">
-                <div
-                  className={`usage-bar-fill usage-bar-fill--${getBarClass(monthlyPercent)}`}
-                  style={{ width: `${monthlyPercent}%` }}
-                />
+              <div className="usage-row">
+                <span className="usage-row__label">Cost per download</span>
+                <span className="usage-row__count">{costPerDownload} credits</span>
               </div>
 
               {isLimitReached && (
@@ -298,26 +270,15 @@ const DownloadModal: React.FC<DownloadModalProps> = ({
                   <div className="limit-reached-banner__left">
                     <FaLock className="limit-reached-banner__icon" />
                     <div>
-                      <strong>Download limit reached</strong>
-                      <p>Upgrade to CREATOR for unlimited downloads</p>
+                      <strong>Insufficient credits</strong>
+                      <p>You need {costPerDownload} credits to download</p>
                     </div>
                   </div>
                   <a href="/pricing" className="limit-reached-banner__cta">
-                    <FaCrown /> Upgrade
+                    <FaCrown /> Top Up
                   </a>
                 </div>
               )}
-            </div>
-          )}
-
-          {/* Unlimited badge for paid plans */}
-          {isLoggedIn && !isLoading && isUnlimited && (
-            <div className="info-banner info-banner--unlimited">
-              <span className="info-banner__icon">✨</span>
-              <div className="info-banner__text">
-                <strong>Unlimited downloads</strong>
-                <p>Your {plan} plan includes unlimited element downloads</p>
-              </div>
             </div>
           )}
 
@@ -416,11 +377,11 @@ const DownloadModal: React.FC<DownloadModalProps> = ({
             </button>
           )}
 
-          {/* Remaining hint */}
-          {isLoggedIn && !isLimitReached && !isUnlimited && !isLoading && downloadLimits && (
+           {/* Remaining hint */}
+          {isLoggedIn && !isLimitReached && !isLoading && creditStats && (
             <p className="remaining-hint">
-              {Math.max(0, dailyLimit - dailyUsed)} downloads left today ·{" "}
-              <a href="/pricing">Upgrade for unlimited</a>
+              {Math.floor(balance / costPerDownload)} download(s) remaining ·{" "}
+              <a href="/pricing">Top up credits</a>
             </p>
           )}
         </motion.div>

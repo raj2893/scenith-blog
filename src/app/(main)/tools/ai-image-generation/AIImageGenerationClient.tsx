@@ -29,21 +29,14 @@ interface GeneratedImage {
 }
 
 interface ImageUsage {
-  monthly: {
-    used: number;
-    limit: number;
-    remaining: number;
-  };
-  daily: {
-    used: number;
-    limit: number;
-    remaining: number;
-  };
-  role: string;
+  balance: number;
+  planType: string;
+  expiresAt: string | "N/A";
   availableModels: {
     id: string;
     displayName: string;
     creditsPerImage: number;
+    accessible: boolean;
   }[];
 }
 
@@ -75,6 +68,7 @@ const AIImageGeneratorClient: React.FC = () => {
     googleAuth: false,
     role: '',
   });
+  const [isPageLoading, setIsPageLoading] = useState<boolean>(true);
   const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
   const [loginError, setLoginError] = useState<string | null>(null);
   const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
@@ -89,7 +83,7 @@ const AIImageGeneratorClient: React.FC = () => {
   const [imageUsage, setImageUsage] = useState<ImageUsage | null>(null);
   const [promptCharCount, setPromptCharCount] = useState(0);
   const [imageHistory, setImageHistory] = useState<GeneratedImage[]>([]);
-  const [selectedModel, setSelectedModel] = useState<string>('');
+  const [selectedModel, setSelectedModel] = useState<string>('gpt-image-1-medium');
   const [showHistory, setShowHistory] = useState(false);
   const [downloadSuccess, setDownloadSuccess] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState<string>('');
@@ -189,9 +183,13 @@ const AIImageGeneratorClient: React.FC = () => {
             localStorage.removeItem('userProfile');
             setIsLoggedIn(false);
           }
+        })
+        .finally(() => {
+          setIsPageLoading(false);
         });
     } else {
       setIsLoggedIn(false);
+      setIsPageLoading(false);
     }
   }, []);
 
@@ -322,22 +320,11 @@ const AIImageGeneratorClient: React.FC = () => {
     if (imageUsage) {
       const selectedModelData = imageUsage.availableModels?.find(m => m.id === selectedModel);
       const creditCost = selectedModelData?.creditsPerImage ?? 1;
-      
-      if (creditCost !== -1) {
-        const monthlyExceeded = imageUsage.monthly.limit > 0 && imageUsage.monthly.remaining < creditCost;
-        const dailyExceeded = imageUsage.daily.limit > 0 && imageUsage.daily.remaining < creditCost;
-  
-        if (monthlyExceeded) {
-          setError(`Not enough monthly credits. This model costs ${creditCost} credits (${imageUsage.monthly.remaining} remaining). Upgrade to generate more.`);
-          setTimeout(() => setError(null), 10000);
-          return;
-        }
-  
-        if (dailyExceeded) {
-          setError(`Not enough daily credits. This model costs ${creditCost} credits (${imageUsage.daily.remaining} remaining today). Try tomorrow or upgrade.`);
-          setTimeout(() => setError(null), 10000);
-          return;
-        }
+
+      if (imageUsage.balance < creditCost) {
+        setError(`Not enough credits. This model costs ${creditCost} credits (${imageUsage.balance} remaining). Upgrade to generate more.`);
+        setTimeout(() => setError(null), 10000);
+        return;
       }
     }
 
@@ -496,10 +483,7 @@ const AIImageGeneratorClient: React.FC = () => {
     if (!isLoggedIn || !imageUsage) return false;
     const selectedModelData = imageUsage.availableModels?.find(m => m.id === selectedModel);
     const creditCost = selectedModelData?.creditsPerImage ?? 1;
-    if (creditCost === -1) return false; // unlimited model
-    const monthlyExceeded = imageUsage.monthly.limit > 0 && imageUsage.monthly.remaining < creditCost;
-    const dailyExceeded = imageUsage.daily.limit > 0 && imageUsage.daily.remaining < creditCost;
-    return monthlyExceeded || dailyExceeded;
+    return imageUsage.balance < creditCost;
   }, [isLoggedIn, imageUsage, selectedModel]);
 
   const uploadOriginalImage = async (file: File): Promise<string> => {
@@ -618,6 +602,31 @@ const AIImageGeneratorClient: React.FC = () => {
       alert(error.response?.data?.message || 'Failed to create project');
     }
   };  
+
+  if (isPageLoading) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'linear-gradient(135deg, #0f0c29 0%, #1e1a45 60%, #0d0b22 100%)',
+        gap: '16px',
+      }}>
+        <div style={{
+          width: '48px', height: '48px', borderRadius: '50%',
+          border: '3px solid rgba(102,126,234,0.2)',
+          borderTopColor: '#6366F1',
+          animation: 'spin 0.9s linear infinite',
+        }} />
+        <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.9rem', fontWeight: 500 }}>
+          Loading...
+        </p>
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
 
   return (
     <div className="ai-image-generator-page">
@@ -798,189 +807,6 @@ const AIImageGeneratorClient: React.FC = () => {
           <div className="hero-cta-section">
             <div className="main-content">
               <div className="input-section">
-                {(isLoggedIn && imageUsage && imageUsage.availableModels?.length === 0) || !isLoggedIn ? (
-                  <>
-                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }}>
-                      <button
-                        onClick={() => {
-                          const el = document.querySelector('.demo-marquee-section');
-                          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        }}
-                        style={{
-                          display: 'inline-flex', alignItems: 'center', gap: 6,
-                          padding: '7px 16px', borderRadius: 999, cursor: 'pointer',
-                          border: '1.5px solid rgba(99,85,220,0.3)',
-                          background: 'rgba(99,85,220,0.07)',
-                          color: '#6355dc', fontWeight: 600, fontSize: 13,
-                          transition: 'all 0.2s',
-                        }}
-                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(99,85,220,0.15)'}
-                        onMouseLeave={e => e.currentTarget.style.background = 'rgba(99,85,220,0.07)'}
-                      >
-                        🖼️ See examples by our users ↓
-                      </button>
-                    </div>
-                    <div style={{
-                     background: 'linear-gradient(135deg, #0a1628 0%, #0d1f3c 100%)',
-                     border: '1.5px solid #1e3a5f',
-                     borderRadius: 24,
-                     padding: '48px 32px',
-                     textAlign: 'center',
-                     width: '100%',
-                    }}>
-                      {/* lock icon */}
-                      <div style={{
-                        width: 76, height: 76, borderRadius: '50%',
-                        background: 'linear-gradient(135deg, rgba(99,85,220,0.18), rgba(236,72,153,0.12))',
-                        border: '2px solid rgba(99,85,220,0.35)',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        margin: '0 auto 22px', fontSize: 34,
-                      }}>🔒</div>
-  
-                      <h3 style={{
-                        fontSize: 22, fontWeight: 800, color: '#4d9fff',
-                        marginBottom: 10, letterSpacing: '-0.02em',
-                      }}>
-                        AI Image Generation is a Premium Feature
-                      </h3>
-  
-                      <p style={{ fontSize: 14, color: '#ffffff', lineHeight: 1.75, marginBottom: 6 }}>
-                        Your current <strong style={{ color: '#60a5fa' }}>Starter Forge (Free)</strong> plan doesn't include image generation credits.
-                      </p>
-                      <p style={{ fontSize: 14, color: '#ffffff', lineHeight: 1.75, marginBottom: 30 }}>
-                        Upgrade to unlock access to <strong style={{ color: '#60a5fa' }}>7 powerful AI models</strong> and start generating stunning visuals instantly.
-                      </p>
-  
-                      {/* plan tier cards */}
-                      <div style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(3, 1fr)',
-                        gap: 12, marginBottom: 30,
-                      }}>
-                        {[
-                          { name: 'Creator Lite',    price: '₹99',  usd: '$5',  credits: '100 cr/mo',  color: '#4d9fff', popular: false },
-                          { name: 'Creator Spark',   price: '₹499', usd: '$12', credits: '250 cr/mo',  color: '#4d9fff', popular: true  },
-                          { name: 'Creator Odyssey', price: '₹999', usd: '$24', credits: '500 cr/mo',  color: '#4d9fff', popular: false },
-                        ].map((tier) => (
-                          <div key={tier.name} style={{
-                            background: tier.popular ? '#0d2344' : '#0a1628',
-                            border: `1.5px solid ${tier.popular ? '#2563eb' : '#1e3a5f'}`,
-                            borderRadius: 14, padding: '16px 10px',
-                            position: 'relative',
-                          }}>
-                            {tier.popular && (
-                              <div style={{
-                                position: 'absolute', top: -11, left: '50%', transform: 'translateX(-50%)',
-                                background: 'linear-gradient(135deg, #6355dc, #8b5cf6)',
-                                color: '#fff', fontSize: 9, fontWeight: 800,
-                                padding: '3px 10px', borderRadius: 999,
-                                whiteSpace: 'nowrap', letterSpacing: '0.08em',
-                              }}>⭐ POPULAR</div>
-                            )}
-                            <div style={{ fontSize: 11, color: '#60a5fa', fontWeight: 700, marginBottom: 6 }}>
-                              {tier.name}
-                            </div>
-                            <div style={{ fontSize: 20, fontWeight: 900, color: '#ffffff', lineHeight: 1 }}>
-                              {tier.price}
-                            </div>
-                            <div style={{ fontSize: 10, color: '#cbd5e1', marginBottom: 8 }}>
-                              /mo · {tier.usd}
-                            </div>
-                            <div style={{
-                              fontSize: 10, fontWeight: 700,
-                              color: '#ffffff',
-                              background: 'rgba(96,165,250,0.25)',
-                              borderRadius: 6, padding: '3px 8px',
-                              display: 'inline-block',
-                            }}>
-                              {tier.credits}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-  
-                      {/* what's included checklist */}
-                      <div style={{
-                        background: '#0a1628',
-                        border: '1px solid #1e3a5f',
-                        borderRadius: 14, padding: '16px 20px',
-                        marginBottom: 28, textAlign: 'left',
-                        display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 16px',
-                      }}>
-                        {[
-                          '7 powerful AI image models',
-                          'Realistic, Anime, 3D & more styles',
-                          'High-res 1024×1024 PNG downloads',
-                          'Commercial use rights included',
-                          'No watermarks on any image',
-                        ].map((item) => (
-                          <div key={item} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#ffffff' }}>
-                            <span style={{ color: '#34d399', fontWeight: 700, flexShrink: 0 }}>✓</span>
-                            {item}
-                          </div>
-                        ))}
-                      </div>
-  
-                      {/* Colorful model showcase */}
-                      <div style={{ marginBottom: 24 }}>
-                        <p style={{ fontSize: 13, color: '#a8c8ff', fontWeight: 600, marginBottom: 10 }}>
-                          🎨 Models you'll unlock:
-                        </p>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center' }}>
-                          {[
-                            { displayName: 'Stability AI Core',    creditsPerImage: 2,  bg: 'linear-gradient(135deg,#0c2d4a,#0e3a5e)', borderColor: '#38bdf8', color: '#7dd3fc', badgeBg: 'rgba(56,189,248,0.2)',  badgeColor: '#38bdf8' },
-                            { displayName: 'GPT Image 1 Mini',     creditsPerImage: 3,  bg: 'linear-gradient(135deg,#052e16,#064e25)', borderColor: '#4ade80', color: '#86efac', badgeBg: 'rgba(74,222,128,0.2)',  badgeColor: '#4ade80' },
-                            { displayName: 'Imagen 4 Fast',        creditsPerImage: 5,  bg: 'linear-gradient(135deg,#2d1a00,#3d2400)', borderColor: '#fbbf24', color: '#fcd34d', badgeBg: 'rgba(251,191,36,0.2)',  badgeColor: '#fbbf24' },
-                            { displayName: 'FLUX 1.1 Pro',         creditsPerImage: 7,  bg: 'linear-gradient(135deg,#1e0a3c,#2d1256)', borderColor: '#a78bfa', color: '#c4b5fd', badgeBg: 'rgba(167,139,250,0.2)', badgeColor: '#a78bfa' },
-                            { displayName: 'Imagen 4 Standard',    creditsPerImage: 8,  bg: 'linear-gradient(135deg,#3b0a28,#4a0f33)', borderColor: '#f472b6', color: '#f9a8d4', badgeBg: 'rgba(244,114,182,0.2)', badgeColor: '#f472b6' },
-                            { displayName: 'GPT Image 1 (Medium)', creditsPerImage: 10, bg: 'linear-gradient(135deg,#2d1500,#3d1e00)', borderColor: '#fb923c', color: '#fdba74', badgeBg: 'rgba(251,146,60,0.2)',  badgeColor: '#fb923c' },
-                            { displayName: 'Grok Aurora',          creditsPerImage: 12, bg: 'linear-gradient(135deg,#0f0c29,#1a1650)', borderColor: '#818cf8', color: '#a5b4fc', badgeBg: 'rgba(129,140,248,0.25)', badgeColor: '#818cf8' },
-                          ].map((model) => (
-                            <div
-                              key={model.displayName}
-                              style={{
-                                display: 'flex', alignItems: 'center', gap: 6,
-                                padding: '7px 14px', borderRadius: 999,
-                                border: `2px solid ${model.borderColor}`,
-                                background: model.bg,
-                                color: model.color,
-                                fontSize: 13, fontWeight: 600,
-                              }}
-                            >
-                              <span>🔒</span>
-                              <span>{model.displayName}</span>
-                              <span style={{
-                                fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 999,
-                                background: model.badgeBg, color: model.badgeColor,
-                              }}>
-                                {model.creditsPerImage}cr
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>                    
-  
-                      {/* CTA buttons */}
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                        
-                        <a  href="/pricing"
-                          style={{
-                            display: 'block', padding: '15px 24px',
-                            borderRadius: 12, textDecoration: 'none',
-                            background: 'linear-gradient(135deg, #6355dc 0%, #8b5cf6 100%)',
-                            color: '#fff', fontWeight: 800, fontSize: 15,
-                            boxShadow: '0 8px 28px rgba(99,85,220,0.45)',
-                          }}
-                        >
-                          🚀 Upgrade Now — Unlock Image Generation
-                        </a>
-                        <p style={{ fontSize: 12, color: '#a8c8ff', margin: 0 }}>
-                          Plans from ₹99/mo · Commercial use included 
-                        </p>
-                      </div>
-                    </div>
-                  </>
-                ) : (
                   <>
                     <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }}>
                       <button
@@ -1026,26 +852,10 @@ const AIImageGeneratorClient: React.FC = () => {
                           }}
                           placeholder="✨ Describe your image..."
                           className={`ai-voice-textarea ${promptCharCount > 1800 ? 'limit-exceeded' : ''}`}
-                          disabled={!isLoggedIn}
+                          disabled={isGenerating}
                           aria-label="Image description prompt"
                           maxLength={2000}
                         />
-
-                        {!isLoggedIn && (
-                          <div className="textarea-overlay">
-                            <div className="overlay-content">
-                              <span className="lock-icon">🔒</span>
-                              <h4>Login to Start Creating</h4>
-                              <p>Sign in to generate stunning AI images</p>
-                              <button
-                                className="overlay-login-btn"
-                                onClick={() => setShowLoginModal(true)}
-                              >
-                                Login Now
-                              </button>
-                            </div>
-                          </div>
-                        )}
 
                         {isLoggedIn && promptCharCount > 1800 && (
                           <div className="character-limit-warning">
@@ -1108,41 +918,44 @@ const AIImageGeneratorClient: React.FC = () => {
                         <label className="style-label-text">🤖 AI Model:</label>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 8 }}>
                           {[
-                            { id: 'stability-core',    displayName: 'Stability AI Core',    creditsPerImage: 2,  bg: 'linear-gradient(135deg,#e0f2fe,#bae6fd)', borderColor: '#38bdf8', color: '#0369a1', badgeBg: 'rgba(3,105,161,0.15)',  badgeColor: '#0369a1' },
-                            { id: 'gpt-image-1-mini',  displayName: 'GPT Image 1 Mini',     creditsPerImage: 3,  bg: 'linear-gradient(135deg,#dcfce7,#bbf7d0)', borderColor: '#4ade80', color: '#15803d', badgeBg: 'rgba(21,128,61,0.15)',  badgeColor: '#15803d' },
-                            { id: 'imagen-4-fast',     displayName: 'Imagen 4 Fast',        creditsPerImage: 5,  bg: 'linear-gradient(135deg,#fef9c3,#fde68a)', borderColor: '#fbbf24', color: '#92400e', badgeBg: 'rgba(146,64,14,0.15)',  badgeColor: '#b45309' },
-                            { id: 'flux-1-1-pro',      displayName: 'FLUX 1.1 Pro',         creditsPerImage: 7,  bg: 'linear-gradient(135deg,#ede9fe,#ddd6fe)', borderColor: '#a78bfa', color: '#5b21b6', badgeBg: 'rgba(91,33,182,0.15)',  badgeColor: '#6d28d9' },
-                            { id: 'imagen-4-standard', displayName: 'Imagen 4 Standard',    creditsPerImage: 8,  bg: 'linear-gradient(135deg,#fce7f3,#fbcfe8)', borderColor: '#f472b6', color: '#9d174d', badgeBg: 'rgba(157,23,77,0.15)',  badgeColor: '#be185d' },
-                            { id: 'gpt-image-1-medium',displayName: 'GPT Image 1 (Medium)', creditsPerImage: 10, bg: 'linear-gradient(135deg,#ffedd5,#fed7aa)', borderColor: '#fb923c', color: '#9a3412', badgeBg: 'rgba(154,52,18,0.15)',  badgeColor: '#c2410c' },
-                            { id: 'grok-aurora',       displayName: 'Grok Aurora',          creditsPerImage: 12, bg: 'linear-gradient(135deg,#1e1b4b,#312e81)', borderColor: '#6366f1', color: '#e0e7ff', badgeBg: 'rgba(99,102,241,0.3)',  badgeColor: '#a5b4fc' },
+                            { id: 'stability-core',     displayName: 'Stability AI Core',    creditsPerImage: 2  },
+                            { id: 'gpt-image-1-mini',   displayName: 'GPT Image 1 Mini',     creditsPerImage: 3  },
+                            { id: 'imagen-4-fast',      displayName: 'Imagen 4 Fast',        creditsPerImage: 5  },
+                            { id: 'flux-1-1-pro',       displayName: 'FLUX 1.1 Pro',         creditsPerImage: 7  },
+                            { id: 'imagen-4-standard',  displayName: 'Imagen 4 Standard',    creditsPerImage: 8  },
+                            { id: 'gpt-image-1-medium', displayName: 'GPT Image 1 (Medium)', creditsPerImage: 10 },
+                            { id: 'grok-aurora',        displayName: 'Grok Aurora',          creditsPerImage: 12 },
                           ].map((model) => (
-                            <div
+                            <button
                               key={model.id}
+                              onClick={() => setSelectedModel(model.id)}
                               style={{
                                 display: 'flex', alignItems: 'center', gap: 6,
-                                padding: '7px 14px', borderRadius: 999,
-                                border: `2px solid ${model.borderColor}`,
-                                background: model.bg,
-                                color: model.color,
+                                padding: '7px 14px', borderRadius: 999, cursor: 'pointer',
+                                border: `2px solid ${selectedModel === model.id ? '#7c6ef5' : 'rgba(0,0,0,0.12)'}`,
+                                background: selectedModel === model.id
+                                  ? 'linear-gradient(135deg, #6355dc, #8b5cf6)'
+                                  : '#f4f4f8',
+                                color: selectedModel === model.id ? '#fff' : '#444',
+                                fontWeight: selectedModel === model.id ? 700 : 500,
                                 fontSize: 13,
-                                cursor: 'default',
-                                fontWeight: 600,
-                                filter: 'brightness(0.88)',
+                                transition: 'all 0.18s',
+                                boxShadow: selectedModel === model.id ? '0 2px 10px rgba(99,85,220,0.3)' : 'none',
                               }}
                             >
                               <span>{model.displayName}</span>
                               <span style={{
                                 fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 999,
-                                background: model.badgeBg,
-                                color: model.badgeColor,
+                                background: selectedModel === model.id ? 'rgba(255,255,255,0.22)' : 'rgba(99,85,220,0.1)',
+                                color: selectedModel === model.id ? '#fff' : '#6355dc',
                               }}>
                                 {model.creditsPerImage}cr
                               </span>
-                            </div>
+                            </button>
                           ))}
                         </div>
                         <p style={{ fontSize: 12, color: '#6355dc', marginTop: 10, fontWeight: 600 }}>
-                          🔒 Login & upgrade to unlock these models →{' '}
+                          💡 Login to generate · Plans from ₹99/mo →{' '}
                           <a href="/pricing" style={{ color: '#6355dc', textDecoration: 'underline' }}>View Plans</a>
                         </p>
                       </div>
@@ -1211,101 +1024,84 @@ const AIImageGeneratorClient: React.FC = () => {
                     </details>
 
                     {isLoggedIn && imageUsage && (
-                      <div className="usage-info">
-                        {imageUsage.daily.limit > 0 &&
-                         imageUsage.monthly.limit > 0 &&
-                         imageUsage.daily.remaining < imageUsage.monthly.remaining && (
-                          <div className="usage-section">
-                            <p className="usage-label today">⚠️ Today's Credits</p>
-                            <div className="usage-bar-container">
-                              <div
-                                className={`usage-bar-fill ${
-                                  (imageUsage.daily.used / imageUsage.daily.limit) >= 0.95 ? 'critical' :
-                                  (imageUsage.daily.used / imageUsage.daily.limit) >= 0.80 ? 'warning' : 'normal'
-                                }`}
-                                style={{ width: `${(imageUsage.daily.used / imageUsage.daily.limit) * 100}%` }}
-                              />
-                            </div>
-                            <p className="usage-text">
-                              <strong>{imageUsage.daily.remaining}</strong> credits remaining today
-                              ({imageUsage.daily.used} / {imageUsage.daily.limit} used)
-                            </p>
-                          </div>
-                        )}
+  <div style={{
+    background: 'rgba(0,0,0,0.15)',
+    border: '1px solid rgba(99,85,220,0.15)',
+    borderRadius: 14, padding: '16px 18px', marginBottom: 16,
+  }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+      <span style={{ fontSize: '0.8rem', color: '#64748B', fontWeight: 500 }}>Credit Balance</span>
+      <span style={{ fontSize: '0.85rem', color: '#a899f5', fontWeight: 600 }}>
+        {imageUsage.balance.toLocaleString()} credits
+      </span>
+    </div>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+      <span style={{ fontSize: '0.8rem', color: '#64748B', fontWeight: 500 }}>Plan</span>
+      <span style={{ fontSize: '0.85rem', color: '#a899f5', fontWeight: 600 }}>
+        {imageUsage.planType}
+      </span>
+    </div>
+    {imageUsage.expiresAt && imageUsage.expiresAt !== 'N/A' && (
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+        <span style={{ fontSize: '0.8rem', color: '#64748B', fontWeight: 500 }}>Expires</span>
+        <span style={{ fontSize: '0.8rem', color: '#64748B' }}>
+          {new Date(imageUsage.expiresAt).toLocaleDateString()}
+        </span>
+      </div>
+    )}
+    {selectedModel && imageUsage.availableModels?.length > 0 && (() => {
+      const m = imageUsage.availableModels.find(x => x.id === selectedModel);
+      return m ? (
+        <div style={{
+          fontSize: '0.82rem', color: '#55557a', marginTop: 8,
+          paddingTop: 8, borderTop: '1px solid rgba(99,85,220,0.1)',
+          display: 'flex', justifyContent: 'space-between',
+        }}>
+          <span>This generation will cost</span>
+          <strong style={{ color: '#a899f5' }}>
+            {m.creditsPerImage} credit{m.creditsPerImage !== 1 ? 's' : ''}
+          </strong>
+        </div>
+      ) : null;
+    })()}
+    {imageUsage.balance <= 0 && (
+      <div className="inline-upgrade-cta" style={{ marginTop: 10 }}>
+        <a href="/pricing" className="inline-upgrade-link">
+          🔓 Out of credits — Upgrade for more
+        </a>
+      </div>
+    )}
+  </div>
+)}
 
-                        <div className="usage-section">
-                          <p className="usage-label month">📅 Monthly Credits</p>
-                          <div className="usage-bar-container">
-                            <div
-                              className={`usage-bar-fill ${
-                                imageUsage.monthly.limit === -1 ? 'normal' :
-                                (imageUsage.monthly.used / imageUsage.monthly.limit) >= 0.95 ? 'critical' :
-                                (imageUsage.monthly.used / imageUsage.monthly.limit) >= 0.80 ? 'warning' : 'normal'
-                              }`}
-                              style={{ width: imageUsage.monthly.limit === -1 ? '100%' : `${Math.min(100, (imageUsage.monthly.used / Math.max(imageUsage.monthly.limit, 1)) * 100)}%` }}
-                            />
-                          </div>
-                          <p className="usage-text">
-                            {imageUsage.monthly.limit === -1 ? (
-                              <><span style={{ color: '#34d399', fontWeight: 700 }}>∞ Unlimited</span> credits this month</>
-                            ) : (
-                              <><strong>{imageUsage.monthly.remaining}</strong> credits remaining this month
-                              ({imageUsage.monthly.used} / {imageUsage.monthly.limit} used)</>
-                            )}
-                          </p>
-
-                          {selectedModel && imageUsage.availableModels?.length > 0 && (() => {
-                            const m = imageUsage.availableModels.find(x => x.id === selectedModel);
-                            return m ? (
-                              <p className="usage-text" style={{ marginTop: 4, color: '#a899f5' }}>
-                                ✦ <strong>{m.displayName}</strong> costs{' '}
-                                <strong>{m.creditsPerImage === -1 ? '∞ unlimited' : `${m.creditsPerImage} credit${m.creditsPerImage !== 1 ? 's' : ''}`}</strong> per image
-                                {imageUsage.monthly.limit !== -1 && m.creditsPerImage !== -1 && (
-                                  <> → ~<strong>{Math.floor(imageUsage.monthly.remaining / m.creditsPerImage)}</strong> images remaining</>
-                                )}
-                              </p>
-                            ) : null;
-                          })()}
-
-                          {imageUsage.availableModels?.length > 0 && imageUsage.monthly.limit !== -1 && imageUsage.monthly.remaining <= 0 && (
-                            <div className="inline-upgrade-cta">
-                              <a href="/pricing" className="inline-upgrade-link">
-                                🔓 Out of credits — Upgrade for more
-                              </a>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    {isLimitsExceeded() ? (
-                      
-                      <a  href="https://scenith.in/pricing"
-                        className="cta-button upgrade-button"
-                        aria-label="Upgrade to unlock more image generations"
-                      >
-                        <span className="upgrade-icon">🚀</span>
-                        Upgrade to Pro - Generate More Images
-                        <span className="upgrade-badge">Limited Time</span>
-                      </a>
-                    ) : (
-                      <button
-                        className="cta-button generate-button"
-                        onClick={handleGenerateImage}
-                        disabled={
-                          !isLoggedIn ? false : (
-                            !prompt.trim() ||
-                            isGenerating ||
-                            undefined
-                          )
-                        }
-                        aria-label="Generate AI image from description"
-                      >
-                        {isGenerating ? 'Creating Your Image...' : isLoggedIn ? 'Generate Image' : 'Login to Generate'}
-                      </button>
-                    )}
+                    {!isLoggedIn ? (
+  <button
+    className="cta-button generate-button"
+    onClick={() => setShowLoginModal(true)}
+    aria-label="Login to generate AI images"
+  >
+    🔒 Login to Generate Images
+  </button>
+) : isLimitsExceeded() ? (
+  <a href="/pricing"
+    className="cta-button upgrade-button"
+    aria-label="Upgrade to get more image generation credits"
+  >
+    <span className="upgrade-icon">🚀</span>
+    Get More Credits — View Plans
+    <span className="upgrade-badge">Upgrade</span>
+  </a>
+) : (
+  <button
+    className="cta-button generate-button"
+    onClick={handleGenerateImage}
+    disabled={!prompt.trim() || isGenerating || !selectedModel}
+    aria-label="Generate AI image from description"
+  >
+    {isGenerating ? 'Creating Your Image...' : 'Generate Image'}
+  </button>
+)}
                   </>
-                )}
               </div>
             </div>
 
@@ -2115,29 +1911,22 @@ const AIImageGeneratorClient: React.FC = () => {
           </motion.div>
         </div>
       )}
-      {isLoggedIn && activePlanRole !== 'STUDIO' && activePlanRole !== 'ADMIN' && (() => {
-        const upgradeMap: Record<string, { icon: string; title: string; sub: string }> = {
-          BASIC:        { icon: '🎨', title: 'Unlock AI Image Generation', sub: 'Creator Lite from ₹99/mo' },
-          CREATOR_LITE: { icon: '⚡', title: 'Get More Image Credits',     sub: 'Creator Spark — 250 cr/mo' },
-          CREATOR:      { icon: '👑', title: 'Unlock 500 Credits/Month',   sub: 'Creator Odyssey — ₹999/mo' },
-        };
-        const upgrade = upgradeMap[activePlanRole];
-        if (!upgrade) return null;
-        return (
-          <div className="floating-upgrade-cta">
-            <button
-              className="floating-upgrade-btn"
-              onClick={() => window.location.href = '/pricing'}
-            >
-              <span className="float-icon">{upgrade.icon}</span>
-              <span className="float-text">
-                <strong>{upgrade.title}</strong>
-                <small>{upgrade.sub}</small>
-              </span>
-            </button>
-          </div>
-        );
-      })()}
+      {isLoggedIn && imageUsage && imageUsage.balance <= 20 && (
+  <div className="floating-upgrade-cta">
+    <button
+      className="floating-upgrade-btn"
+      onClick={() => window.location.href = '/pricing'}
+    >
+      <span className="float-icon">🎨</span>
+      <span className="float-text">
+        <strong>
+          {imageUsage.balance <= 0 ? 'Out of credits — Upgrade now' : 'Running low on credits'}
+        </strong>
+        <small>View plans for more →</small>
+      </span>
+    </button>
+  </div>
+)}
     </div>
   );
 };

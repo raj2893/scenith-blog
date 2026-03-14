@@ -32,15 +32,16 @@ interface UserProfile {
   role: string;
 }
 
-interface IndividualPlan {
+interface TopupPack {
   name: string;
-  planType: 'VIDEO_GEN_PRO' | 'VIDEO_GEN_ELITE';
+  planType: 'TOPUP_SMALL' | 'TOPUP_MEDIUM' | 'TOPUP_LARGE';
+  credits: number;
   price: number;
   originalPrice?: number;
   currency: string;
-  features: string[];
   symbol?: string;
-  service: string;
+  badge?: string;
+  perCreditLabel: string;
 }
 
 /* ─────────────────────────────────────────────────────────────────────
@@ -570,7 +571,7 @@ export default function PricingPageClient() {
   const [isIndianUser, setIsIndianUser] = useState<boolean | null>(null);
   const [isPricingReady, setIsPricingReady] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [activeSection, setActiveSection] = useState<'individual' | 'bundle'>('bundle');
+  const [activeSection] = useState<'bundle'>('bundle');
   const [isPaymentInProgress, setIsPaymentInProgress] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
@@ -804,24 +805,24 @@ export default function PricingPageClient() {
   const getPlans = (): PricingPlan[] => {
     const basicFeats = ['600 voice chars/mo · 720p export · 500/day', '5 speed videos + 5 BG removals', '10 SVG downloads', 'Community support', 'Commercial use'];
     const creatorLiteFeats = [
-  '10,000 voice chars/mo · 1080p export',
-  '🎭 Voice emotions — 9 presets',
-  '30 videos · 100 BG removals · Unlimited SVGs',
-  '🎨 100 image credits/mo · All 7 models included'
+  '300 credits/mo · 1080p export · all features unlocked',
+  '🎭 Voice emotions — 9 presets · 10,000 voice chars/mo',
+  '30 speed videos · 100 BG removals · Unlimited SVGs',
+  '🎨 AI Image gen · All 7 models · ~3 Kling 5s videos/mo',
 ];
 
 const creatorFeats = [
-  '75,000 voice chars/mo · 1440p export',
-  '🎭 Voice emotions — 9 presets',
-  '60 videos · 500 BG removals · Unlimited SVGs',
-  '🎨 250 image credits/mo · All 7 models included'
+  '900 credits/mo · 1440p export · all features unlocked',
+  '🎭 Voice emotions — 9 presets · 75,000 voice chars/mo',
+  '60 speed videos · 500 BG removals · Unlimited SVGs',
+  '🎨 AI Image gen · All 7 models · ~14 Kling 5s videos/mo',
 ];
 
 const odysseyFeats = [
-  '250,000 voice chars/mo · 4K export',
-  '🎭 Voice emotions + all premium voices',
-  'Unlimited videos, removals & SVGs',
-  '🎨 500 image credits/mo · All 7 models included'
+  '2,500 credits/mo · 4K export · all features unlocked',
+  '🎭 Voice emotions + all premium voices · 250,000 chars/mo',
+  'Unlimited speed videos, removals & SVGs',
+  '🎨 AI Image gen · All 7 models · ~39 Kling 5s videos/mo',
 ];
     
     if (isIndianUser === null) {
@@ -849,54 +850,47 @@ const odysseyFeats = [
   };
   
   /* ── getIndividualPlans — original, untouched ── */
-  const getIndividualPlans = (): IndividualPlan[] => {
-    if (isIndianUser === null) {
-      return [
-        {
-          name: 'Video Gen Pro',
-          planType: 'VIDEO_GEN_PRO',
-          price: 0,
-          currency: 'LOADING',
-          service: 'AI Video Generation',
-          features: ['40 Credits/month', '8 Credits/day', 'Max 10 seconds per video', 'Wan 2.5 + Kling 2.5/2.6 Pro', 'Commercial Use Allowed']
-        },
-        {
-          name: 'Video Gen Elite',
-          planType: 'VIDEO_GEN_ELITE',
-          price: 0,
-          currency: 'LOADING',
-          service: 'AI Video Generation',
-          features: ['100 Credits/month', '20 Credits/day', 'Max 10 seconds per video', 'All models incl. Google Veo 3', 'Commercial Use Allowed']
-        }
-      ];
-    }
-    const videoProPrice   = isIndianUser ? 599  : 15;
-    const videoElitePrice = isIndianUser ? 1199 : 25;
-    const videoProOriginal   = Math.round(videoProPrice   / 0.75);
-    const videoEliteOriginal = Math.round(videoElitePrice / 0.75);
-    const currency = isIndianUser ? 'INR' : 'USD';
-    const symbol   = isIndianUser ? '₹'   : '$';
+  const getTopupPacks = (): TopupPack[] => {
+  if (isIndianUser === null) {
     return [
-      {
-        name: 'Video Gen Pro',
-        planType: 'VIDEO_GEN_PRO',
-        price: videoProPrice,
-        originalPrice: videoProOriginal,
-        currency, symbol,
-        service: 'AI Video Generation',
-        features: ['40 Credits/month', '8 Credits/day', 'Max 10 seconds per video', 'Wan 2.5 + Kling 2.5/2.6 Pro', 'Commercial Use Allowed']
-      },
-      {
-        name: 'Video Gen Elite',
-        planType: 'VIDEO_GEN_ELITE',
-        price: videoElitePrice,
-        originalPrice: videoEliteOriginal,
-        currency, symbol,
-        service: 'AI Video Generation',
-        features: ['100 Credits/month', '20 Credits/day', 'Max 10 seconds per video', 'All models incl. Google Veo 3', 'Commercial Use Allowed']
-      }
+      { name: 'Small Pack',  planType: 'TOPUP_SMALL',  credits: 500,  price: 0, currency: 'LOADING', perCreditLabel: '—' },
+      { name: 'Medium Pack', planType: 'TOPUP_MEDIUM', credits: 1500, price: 0, currency: 'LOADING', perCreditLabel: '—', badge: '⭐ Best Value' },
+      { name: 'Large Pack',  planType: 'TOPUP_LARGE',  credits: 5000, price: 0, currency: 'LOADING', perCreditLabel: '—' },
     ];
+  }
+  const currency = isIndianUser ? 'INR' : 'USD';
+  const symbol   = isIndianUser ? '₹'   : '$';
+  const prices   = isIndianUser
+    ? { small: 499,  medium: 1199,  large: 2999  }
+    : { small: 5,    medium: 12,    large: 30    };
+  const originals = {
+    small:  Math.round(prices.small  / 0.75),
+    medium: Math.round(prices.medium / 0.75),
+    large:  Math.round(prices.large  / 0.75),
   };
+  const perCredit = (price: number, credits: number) =>
+    isIndianUser
+      ? `₹${(price / credits).toFixed(2)}/cr`
+      : `$${(price / credits).toFixed(3)}/cr`;
+
+  return [
+    {
+      name: 'Small Pack', planType: 'TOPUP_SMALL', credits: 500,
+      price: prices.small, originalPrice: originals.small,
+      currency, symbol, perCreditLabel: perCredit(prices.small, 500),
+    },
+    {
+      name: 'Medium Pack', planType: 'TOPUP_MEDIUM', credits: 1500,
+      price: prices.medium, originalPrice: originals.medium,
+      currency, symbol, badge: '⭐ Best Value', perCreditLabel: perCredit(prices.medium, 1500),
+    },
+    {
+      name: 'Large Pack', planType: 'TOPUP_LARGE', credits: 5000,
+      price: prices.large, originalPrice: originals.large,
+      currency, symbol, perCreditLabel: perCredit(prices.large, 5000),
+    },
+  ];
+};
 
   // /* ── getAddonPlans — original, untouched ── */
   // const getAddonPlans = () => {
@@ -927,14 +921,17 @@ const odysseyFeats = [
   //   ];
   // };
 
-  /* ── handleIndividualPlanUpgrade — original, untouched ── */
-  const handleIndividualPlanUpgrade = async (plan: IndividualPlan) => {
+    const handleTopupPurchase = async (pack: TopupPack) => {
     if (!isLoggedIn) { setShowLoginModal(true); return; }
-    setLoading(plan.planType);
+    if (currentPlan === 'BASIC') {
+      alert('Topups are only available for paid plan users. Please upgrade to a Creator plan first.');
+      return;
+    }
+    setLoading(pack.planType);
     try {
       const orderResponse = await axios.post(
-        `${API_BASE_URL}/api/payments/create-order`,
-        { planType: plan.planType, amount: plan.price, currency: plan.currency },
+        `${API_BASE_URL}/api/payments/create-topup-order`,
+        { planType: pack.planType, amount: pack.price, currency: pack.currency },
         { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
       );
       const { internalOrderId, gatewayOrderId, keyId, gateway } = orderResponse.data;
@@ -947,9 +944,9 @@ const odysseyFeats = [
           document.body.appendChild(script);
         }
         const options = {
-          key: keyId, amount: plan.price * 100, currency: 'INR',
+          key: keyId, amount: pack.price * 100, currency: 'INR',
           order_id: gatewayOrderId, name: 'Scenith',
-          description: `${plan.name} - ${plan.service}`,
+          description: `${pack.name} — ${pack.credits} Credits`,
           modal: { ondismiss: function() { setIsPaymentInProgress(false); setLoading(null); } },
           handler: async function (response: any) {
             setIsPaymentInProgress(true);
@@ -960,10 +957,8 @@ const odysseyFeats = [
                 { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
               );
               setIsPaymentInProgress(false);
-              alert(`🎉 Successfully purchased ${plan.name}!`);
-              router.push('/tools/ai-voice-generation');
+              alert(`🎉 ${pack.credits} credits added to your account!`);
             } catch (err: any) {
-              console.error('Verification failed:', err);
               setIsPaymentInProgress(false);
               alert('Payment verification failed. Please contact support.');
             }
@@ -979,41 +974,34 @@ const odysseyFeats = [
         if (!paypalContainer) {
           paypalContainer = document.createElement('div');
           paypalContainer.id = 'paypal-button-container';
-          paypalContainer.style.position = 'fixed'; paypalContainer.style.top = '50%';
-          paypalContainer.style.left = '50%'; paypalContainer.style.transform = 'translate(-50%, -50%)';
-          paypalContainer.style.zIndex = '1000'; paypalContainer.style.background = 'white';
-          paypalContainer.style.padding = '20px'; paypalContainer.style.borderRadius = '12px';
-          paypalContainer.style.boxShadow = '0 10px 30px rgba(0,0,0,0.3)';
+          paypalContainer.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1000;background:white;padding:20px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.3)';
           document.body.appendChild(paypalContainer);
         }
         paypalContainer.innerHTML = '';
         // @ts-ignore
         paypal.Buttons({
           createOrder: () => gatewayOrderId,
-          onApprove: async (data: any, actions: any) => {
+          onApprove: async (data: any) => {
             setIsPaymentInProgress(true);
             try {
-              const captureResponse = await axios.post(
+              await axios.post(
                 `${API_BASE_URL}/api/payments/capture-paypal`,
                 { internalOrderId, paypalOrderId: data.orderID },
                 { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
               );
               setIsPaymentInProgress(false);
-              if (captureResponse.data.status === 'SUCCESS') {
-                alert(`🎉 Successfully purchased ${plan.name} via PayPal!`);
-                router.push('/tools/ai-voice-generation');
-              } else { alert('Payment capture failed. Please try again.'); }
+              alert(`🎉 ${pack.credits} credits added to your account!`);
             } catch (err: any) {
-              console.error('PayPal capture error:', err); setIsPaymentInProgress(false);
-              alert('Error capturing payment: ' + (err.response?.data || 'Unknown error'));
+              setIsPaymentInProgress(false);
+              alert('Error capturing payment.');
             } finally { if (paypalContainer) document.body.removeChild(paypalContainer); }
           },
-          onCancel: () => { alert('Payment cancelled.'); if (paypalContainer) document.body.removeChild(paypalContainer); },
-          onError: (err: any) => { console.error('PayPal error:', err); alert('PayPal error occurred.'); if (paypalContainer) document.body.removeChild(paypalContainer); }
+          onCancel: () => { if (paypalContainer) document.body.removeChild(paypalContainer); },
+          onError: (err: any) => { console.error(err); if (paypalContainer) document.body.removeChild(paypalContainer); }
         }).render('#paypal-button-container');
       }
     } catch (error: any) {
-      console.error('Payment error:', error); setIsPaymentInProgress(false);
+      setIsPaymentInProgress(false);
       alert('Error: ' + (error.response?.data || error.message));
     } finally { setLoading(null); }
   };
@@ -1055,7 +1043,8 @@ const odysseyFeats = [
   };
 
   const plans = getPlans();
-  const individualPlans = getIndividualPlans();
+const topupPacks = getTopupPacks();
+const isPaidUser = currentPlan !== 'BASIC' && currentPlan !== 'ADMIN';
 
   /* ── LOADING SCREEN ── */
   if (!isPricingReady) {
@@ -1090,30 +1079,8 @@ const odysseyFeats = [
             <span className="sc-grad">Pricing</span>
           </h1>
           <p className="sc-hero-sub">Choose the plan that fits your needs</p>
-
-          {/* Section Tabs — same IDs & logic as original */}
-          <div className="sc-tabs">
-            <button
-              className={`sc-tab${activeSection === 'bundle' ? ' active' : ''}`}
-              onClick={() => setActiveSection('bundle')}
-            >
-              <span>✨</span> Creator Suites
-            </button>
-            <button
-              className={`sc-tab${activeSection === 'individual' ? ' active' : ''}`}
-              onClick={() => setActiveSection('individual')}
-            >
-              <span>🎬</span> Video Generation
-            </button>
-          </div>
-
           <div style={{ marginTop: 14 }}>
-            {activeSection === 'bundle' && (
-              <span className="sc-tab-hint">Bundle = Voice + Video + Images + More in one subscription</span>
-            )}
-             {activeSection === 'individual' && (
-              <span className="sc-tab-hint">Standalone AI Video Generation — no bundle required</span>
-            )}
+            <span className="sc-tab-hint">Credits power everything — voice, video, images & more</span>
           </div>
         </div>
       </header>
@@ -1176,7 +1143,7 @@ const odysseyFeats = [
 
                     <p className="sc-plan-tagline">
                       {plan.role === 'BASIC'        && 'Build your first AI creations — free forever.'}
-                      {plan.role === 'CREATOR_LITE' && 'Start creating — voice, images & more at ₹99/mo.'}
+                     {plan.role === 'CREATOR_LITE' && 'Start creating with 300 credits — voice, video & images.'}
                       {plan.role === 'CREATOR'       && 'Spark your creativity with powerful AI tools.'}
                       {plan.role === 'STUDIO'        && 'Master your creative journey with limitless power.'}
                     </p>
@@ -1228,8 +1195,96 @@ const odysseyFeats = [
                       {btnLabel()}
                     </button>
                   </motion.div>
-                );
-              })}
+              );
+            })}
+
+            {/* ── TOPUP CARDS ── */}
+            {topupPacks.map((pack, idx) => {
+              const locked = !isPaidUser && isLoggedIn;
+              const isLoading = loading === pack.planType;
+              return (
+                <motion.div
+                  key={pack.planType}
+                  className="sc-card"
+                  style={{ borderColor: pack.badge ? 'rgba(99,85,220,0.4)' : undefined }}
+                  whileHover={{ scale: 1.025 }}
+                  initial={{ opacity: 0, y: 44 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.42, delay: idx * 0.07 }}
+                >
+                  {pack.badge && (
+                    <div className="sc-card-badge sc-badge-popular">{pack.badge}</div>
+                  )}
+
+                  <div className="sc-plan-icon">
+                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="32" cy="32" r="22" stroke="url(#tg)" strokeWidth="2.5" fill="none"/>
+                      <path d="M32 22v10l7 4" stroke="url(#tg)" strokeWidth="2.5" strokeLinecap="round"/>
+                      <path d="M22 14l4 8M42 14l-4 8" stroke="url(#tg)" strokeWidth="2" strokeLinecap="round"/>
+                      <defs><linearGradient id="tg" x1="0" y1="0" x2="64" y2="64"><stop offset="0%" stopColor="#a899f5"/><stop offset="100%" stopColor="#f06cbe"/></linearGradient></defs>
+                    </svg>
+                  </div>
+
+                  <p className="sc-plan-tagline">Credit Top-up · One-time purchase</p>
+                  <h2 className="sc-plan-name">{pack.name}</h2>
+
+                  <div className="sc-price-area">
+                    {pack.currency === 'LOADING' ? (
+                      <span className="sc-loading-price">Loading...</span>
+                    ) : (
+                      <>
+                        {pack.originalPrice && (
+                          <div className="sc-strike">{pack.symbol}{pack.originalPrice}</div>
+                        )}
+                        <div className="sc-price-row">
+                          <span className="sc-sym">{pack.symbol}</span>
+                          <span className="sc-num">{pack.price}</span>
+                          <span className="sc-per">one-time</span>
+                        </div>
+                        <span className="sc-save-pill">✓ Save 25%</span>
+                      </>
+                    )}
+                  </div>
+
+                  <ul className="sc-features">
+                    <li className="sc-feat sc-feat-hl">
+                      <span className="sc-feat-icon star">✦</span>
+                      {pack.credits.toLocaleString()} credits added instantly
+                    </li>
+                    <li className="sc-feat sc-feat-hl">
+                      <span className="sc-feat-icon star">✦</span>
+                      {pack.perCreditLabel === '—' ? 'Best per-credit rate' : pack.perCreditLabel + ' · best rate'}
+                    </li>
+                    <li className="sc-feat">
+                      <span className="sc-feat-icon check">✓</span>
+                      Works for voice, video & images
+                    </li>
+                    <li className="sc-feat">
+                      <span className="sc-feat-icon check">✓</span>
+                      Expiry extended 30 days
+                    </li>
+                    <li className="sc-feat">
+                      <span className="sc-feat-icon check">✓</span>
+                      No subscription — pay once
+                    </li>
+                  </ul>
+
+                  {locked ? (
+                    <button className="sc-btn sc-btn-ghost" disabled>
+                      🔒 Upgrade to a paid plan first
+                    </button>
+                  ) : (
+                    <button
+                      className="sc-btn sc-btn-primary"
+                      onClick={() => handleTopupPurchase(pack)}
+                      disabled={loading !== null}
+                    >
+                      {isLoading ? 'Processing...' : `Buy ${pack.credits.toLocaleString()} Credits →`}
+                    </button>
+                  )}
+                </motion.div>
+              );
+            })}
             </div>
 
             {/* value callout */}
@@ -1268,9 +1323,9 @@ const odysseyFeats = [
                       ['Max Video Length',         '5 min',    '10 min',       '30 min',       'Unlimited'],
                       ['Background Removals/mo',   '5',        '100',          '500',          '1,500'],
                       ['SVG Downloads',            '10/month', 'Unlimited',    'Unlimited',    'Unlimited'],
-                      ['AI Image Credits/Month',   '✗',       '100 cr',         '250 cr',          '500 cr'],
-                      ['Daily Image Credit Cap',   '✗',       '15 cr/day',      '30 cr/day',       '60 cr/day'],
-                      ['Image Models Available', '✗', 'All 7 models', 'All 7 models', 'All 7 models'],
+                      ['Monthly Credits (shared pool)', '50 cr',  '300 cr',      '900 cr',          '2,500 cr'],
+                      ['AI Video Generation',      '✗',        '✓ All models', '✓ All models', '✓ All models'],
+                      ['AI Image Generation',      '✗',        '✓ All 7 models', '✓ All 7 models', '✓ All 7 models'],
                       ['Max Export Quality',       '720p',     '1080p',        '1440p',        '4K'],
                       ['Commercial Use',           '✓',        '✓',            '✓',            '✓'],
                       ['Priority Support',         '✗',        '✗',            '✓',            '✓ Dedicated'],
@@ -1308,70 +1363,6 @@ const odysseyFeats = [
             </div>
           </div>
         </>
-      )}
-
-      {/* ══ CINEAI TAB ══ */}
-      {activeSection === 'individual' && (
-        <div className="sc-section">
-          <h2 className="sc-section-title">AI Video Generation Plans</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', maxWidth: '760px', margin: '0 auto' }}>
-            {getIndividualPlans().map((plan) => (
-              <motion.div
-                key={plan.planType}
-                className="sc-spotlight"
-                initial={{ opacity: 0, y: 32 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.42 }}
-                style={{ margin: 0 }}
-              >
-                <div className="sc-spotlight-ribbon">
-                  {plan.planType === 'VIDEO_GEN_ELITE' ? '👑 Best Value' : '🎬 Standalone'}
-                </div>
-                <div className="sc-spotlight-inner">
-                  <div className="sc-spotlight-tag">{plan.service}</div>
-                  <div className="sc-spotlight-name">{plan.name}</div>
-                  <div className="sc-spotlight-sub">
-                    {plan.planType === 'VIDEO_GEN_PRO'
-                      ? 'Wan 2.5 + Kling models — serious creators'
-                      : 'All models including Google Veo 3'}
-                  </div>
-
-                  <div className="sc-spotlight-price-row">
-                    {plan.currency === 'LOADING' ? (
-                      <span className="sc-loading-price">Loading...</span>
-                    ) : (
-                      <>
-                        {plan.originalPrice && (
-                          <span className="sc-spotlight-strike">{plan.symbol}{plan.originalPrice}/mo</span>
-                        )}
-                        <span className="sc-spotlight-price" style={{ fontSize: '48px' }}>{plan.symbol}{plan.price}</span>
-                        <span className="sc-spotlight-period">/mo</span>
-                        <span className="sc-save-pill">✓ Save 25%</span>
-                      </>
-                    )}
-                  </div>
-
-                  <div className="sc-spotlight-feats" style={{ gridTemplateColumns: '1fr' }}>
-                    {plan.features.map((feat, i) => (
-                      <div key={i} className="sc-feat sc-feat-hl">
-                        <span className="sc-feat-icon star">✦</span>
-                        {feat}
-                      </div>
-                    ))}
-                  </div>
-
-                  <button
-                    className="sc-btn sc-btn-primary"
-                    onClick={() => handleIndividualPlanUpgrade(plan)}
-                    disabled={loading !== null}
-                  >
-                    {loading === plan.planType ? 'Processing...' : `Get ${plan.name} →`}
-                  </button>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
       )}
 
       {/* ══ TRUST BAR ══ */}

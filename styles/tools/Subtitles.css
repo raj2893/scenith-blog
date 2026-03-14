@@ -3424,3 +3424,32 @@
     color: #e2e8f0;
   }
 }
+.credit-info-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.credit-balance {
+  color: #a3e635;
+}
+
+.credit-cost-hint {
+  color: #94a3b8;
+}
+
+.credit-warning {
+  color: #f87171;
+}
+
+.credit-warning a {
+  color: #fb923c;
+  text-decoration: underline;
+}
