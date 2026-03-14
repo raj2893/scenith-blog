@@ -81,6 +81,13 @@ const GENERATION_TYPES = [
   { value: "image", label: "Image to Video", icon: "🖼️" },
 ];
 
+const STATIC_MODELS_PREVIEW = [
+  { id: "wan2.5",             name: "Wan 2.5",           res: "720p",  cr: 10 },
+  { id: "kling-v2.5-standard",name: "Kling 2.5 Standard",res: "1080p", cr: 15 },
+  { id: "kling-v2.5-pro",     name: "Kling 2.5 Pro",     res: "1080p", cr: 30 },
+  { id: "veo3",               name: "Veo 3",             res: "1080p", cr: 50 },
+];
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 const AIVideoGenerationClient: React.FC = () => {
@@ -1038,43 +1045,113 @@ const AIVideoGenerationClient: React.FC = () => {
                 </div>
               )}
 
-              {/* Model selector */}
-              {isLoggedIn && models.length > 0 && (
-                <>
-                  <label className="vg-label">AI Model</label>
-                  <select
-                    className="vg-select"
-                    value={selectedModel}
-                    onChange={(e) => setSelectedModel(e.target.value)}
-                    style={{ marginBottom: 20 }}
-                  >
-                    {models.map((model) => {
-                      const matchingCost = model.creditCosts?.find(
-                        (c: any) => c.duration === duration && c.audio === (audioEnabled && model.supportsAudio)
-                      );
-                      const finalCost = matchingCost?.credits ?? 0;
-                      return (
-                        <option key={model.id} value={model.id}>
-                          {model.displayName} — {finalCost} cr · {model.defaultResolution}
-                        </option>
-                      );
-                    })}
-                  </select>
-                  {/* Selected model description */}
-                  {selectedModelData && (
-                    <div style={{
-                      marginTop: -14, marginBottom: 20,
-                      padding: '10px 14px',
-                      background: 'rgba(99,102,241,0.07)',
-                      border: '1px solid rgba(99,102,241,0.15)',
-                      borderRadius: 10,
-                      fontSize: '0.82rem', color: '#64748B', lineHeight: 1.5,
-                    }}>
-                      {selectedModelData.description}
+{/* Model selector */}
+              <>
+                <label className="vg-label">AI Model</label>
+                {!isLoggedIn ? (
+                  <>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 10 }}>
+                      {STATIC_MODELS_PREVIEW.map((m) => (
+                        <button
+                          key={m.id}
+                          onClick={() => setSelectedModel(m.id)}
+                          style={{
+                            display: 'flex', alignItems: 'center', gap: 6,
+                            padding: '7px 14px', borderRadius: 999, cursor: 'pointer',
+                            border: `2px solid ${selectedModel === m.id ? '#6366F1' : 'rgba(99,102,241,0.2)'}`,
+                            background: selectedModel === m.id
+                              ? 'linear-gradient(135deg, #6366F1, #4F46E5)'
+                              : 'rgba(0,0,0,0.2)',
+                            color: selectedModel === m.id ? '#fff' : '#64748B',
+                            fontWeight: selectedModel === m.id ? 700 : 500,
+                            fontSize: 13,
+                            fontFamily: "'DM Sans', sans-serif",
+                            transition: 'all 0.18s',
+                            boxShadow: selectedModel === m.id ? '0 2px 10px rgba(99,102,241,0.35)' : 'none',
+                          }}
+                        >
+                          <span>{m.name}</span>
+                          <span style={{
+                            fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 999,
+                            background: selectedModel === m.id ? 'rgba(255,255,255,0.2)' : 'rgba(99,102,241,0.12)',
+                            color: selectedModel === m.id ? '#fff' : '#818CF8',
+                          }}>
+                            {m.cr}cr
+                          </span>
+                          <span style={{
+                            fontSize: 11, fontWeight: 500,
+                            color: selectedModel === m.id ? 'rgba(255,255,255,0.7)' : '#475569',
+                          }}>
+                            {m.res}
+                          </span>
+                        </button>
+                      ))}
                     </div>
-                  )}
-                </>
-              )}
+                    <p style={{ fontSize: 12, color: '#6366F1', marginBottom: 20, fontWeight: 600 }}>
+                      🔒 Login to generate · Plans from ₹99/mo →{' '}
+                      <a href="/pricing" style={{ color: '#818CF8', textDecoration: 'underline' }}>View Plans</a>
+                    </p>
+                  </>
+                ) : models.length > 0 ? (
+                  <>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 10 }}>
+                      {models.map((model) => {
+                        const matchingCost = model.creditCosts?.find(
+                          (c: any) => c.duration === duration && c.audio === (audioEnabled && model.supportsAudio)
+                        );
+                        const finalCost = matchingCost?.credits ?? 0;
+                        return (
+                          <button
+                            key={model.id}
+                            onClick={() => setSelectedModel(model.id)}
+                            style={{
+                              display: 'flex', alignItems: 'center', gap: 6,
+                              padding: '7px 14px', borderRadius: 999, cursor: 'pointer',
+                              border: `2px solid ${selectedModel === model.id ? '#6366F1' : 'rgba(99,102,241,0.2)'}`,
+                              background: selectedModel === model.id
+                                ? 'linear-gradient(135deg, #6366F1, #4F46E5)'
+                                : 'rgba(0,0,0,0.2)',
+                              color: selectedModel === model.id ? '#fff' : '#64748B',
+                              fontWeight: selectedModel === model.id ? 700 : 500,
+                              fontSize: 13,
+                              fontFamily: "'DM Sans', sans-serif",
+                              transition: 'all 0.18s',
+                              boxShadow: selectedModel === model.id ? '0 2px 10px rgba(99,102,241,0.35)' : 'none',
+                            }}
+                          >
+                            <span>{model.displayName}</span>
+                            <span style={{
+                              fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 999,
+                              background: selectedModel === model.id ? 'rgba(255,255,255,0.2)' : 'rgba(99,102,241,0.12)',
+                              color: selectedModel === model.id ? '#fff' : '#818CF8',
+                            }}>
+                              {finalCost}cr
+                            </span>
+                            <span style={{
+                              fontSize: 11, fontWeight: 500,
+                              color: selectedModel === model.id ? 'rgba(255,255,255,0.7)' : '#475569',
+                            }}>
+                              {model.defaultResolution}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                    {selectedModelData && (
+                      <div style={{
+                        marginBottom: 20,
+                        padding: '10px 14px',
+                        background: 'rgba(99,102,241,0.07)',
+                        border: '1px solid rgba(99,102,241,0.15)',
+                        borderRadius: 10,
+                        fontSize: '0.82rem', color: '#64748B', lineHeight: 1.5,
+                      }}>
+                        {selectedModelData.description}
+                      </div>
+                    )}
+                  </>
+                ) : null}
+              </>
 
               {/* Advanced: negative prompt */}
               <details style={{ marginBottom: 20 }}>
