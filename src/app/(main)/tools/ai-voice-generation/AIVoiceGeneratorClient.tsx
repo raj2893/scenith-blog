@@ -251,7 +251,8 @@ const AIVoiceGeneratorClient: React.FC = () => {
     googleAuth: false,
     role: '',
   });
-  const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
+  const [isPageLoading, setIsPageLoading] = useState<boolean>(true);
+const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
   const [loginError, setLoginError] = useState<string | null>(null);
   const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
 
@@ -271,25 +272,14 @@ const AIVoiceGeneratorClient: React.FC = () => {
   const [playingDemo, setPlayingDemo] = useState<string | null>(null);
   const demoAudioRef = useRef<HTMLAudioElement | null>(null);  
   const [ttsUsage, setTtsUsage] = useState<{
-    monthly: {
-      used: number;
-      limit: number;
-      remaining: number;
-    };
-    daily: {
-      used: number;
-      limit: number;
-      remaining: number;
-    };
-    role: string;
-    maxCharRequest: number;
-    externalProviders?: {
-      hasAccess: boolean;
-      usage: Record<string, {
-        monthly: { used: number; limit: number; remaining: number };
-        daily: { used: number; limit: number; remaining: number };
-      }>;
-    };
+    balance: number;
+    planType: string;
+    maxCharsPerRequest: number;
+    isPaid: boolean;
+    creditCostPer100Chars: number;
+    freeVoiceCharsUsed?: number;
+    freeVoiceCharsLimit?: number;
+    externalProviders?: { hasAccess: boolean; };
   } | null>(null);
   const characterCount = useMemo(() => aiVoiceText.length, [aiVoiceText]);
   const [downloadSuccess, setDownloadSuccess] = useState(false);
@@ -322,25 +312,18 @@ const AIVoiceGeneratorClient: React.FC = () => {
 
   const hasSpeedAccess = useMemo(() => {
     if (!isLoggedIn || !ttsUsage) return false;
-    return ttsUsage.monthly.limit > 2000 || ttsUsage.monthly.limit === -1;
-  }, [isLoggedIn, ttsUsage]);  
+    return ttsUsage.isPaid;
+  }, [isLoggedIn, ttsUsage]); 
 
   useEffect(() => {
-    if (!isLoggedIn || !ttsUsage || userProfile?.role !== 'BASIC') return;
-
-    const dailyPercent = ttsUsage.daily.limit > 0 
-      ? (ttsUsage.daily.used / ttsUsage.daily.limit) * 100 
-      : 0;
-    const monthlyPercent = ttsUsage.monthly.limit > 0 
-      ? (ttsUsage.monthly.used / ttsUsage.monthly.limit) * 100 
-      : 0;
-
-    const maxPercent = Math.max(dailyPercent, monthlyPercent);
-
-    if (maxPercent >= 70 && maxPercent < 100 && !showLimitModal) {
+    if (!isLoggedIn || !ttsUsage) return;
+    if (ttsUsage.isPaid) return;
+    const used = ttsUsage.freeVoiceCharsUsed ?? 0;
+    const limit = ttsUsage.freeVoiceCharsLimit ?? 1;
+    if (used / limit >= 0.70 && used / limit < 1.0 && !showLimitModal) {
       setShowLimitModal(true);
     }
-  }, [ttsUsage, isLoggedIn, userProfile]);  
+  }, [ttsUsage, isLoggedIn]);
 
   useEffect(() => {
   const fetchActivePlans = async () => {
@@ -400,7 +383,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
   }, [isLoggedIn]);  
 
   // Check auth status and fetch user profile if token exists
-  useEffect(() => {
+   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
       axios
@@ -430,9 +413,13 @@ const AIVoiceGeneratorClient: React.FC = () => {
             localStorage.removeItem('userProfile');
             setIsLoggedIn(false);
           }
+        })
+        .finally(() => {
+          setIsPageLoading(false);
         });
     } else {
       setIsLoggedIn(false);
+      setIsPageLoading(false);
     }
   }, []);
 
@@ -729,7 +716,7 @@ const AIVoiceGeneratorClient: React.FC = () => {
       return;
     }
 
-    if (selectedProvider !== 'GOOGLE' && !ttsUsage?.externalProviders?.hasAccess) {
+    if (selectedProvider !== 'GOOGLE' && !ttsUsage?.isPaid) {
       window.location.href = '/pricing';
       return;
     }    
@@ -739,58 +726,32 @@ const AIVoiceGeneratorClient: React.FC = () => {
       return;
     }
     if (aiVoiceText.length > maxCharsPerRequest) {
-      const roleBasedLimit = ttsUsage?.maxCharRequest || 80;
-      const limitType = ttsUsage?.daily.remaining !== -1 && 
-                        (ttsUsage?.daily.remaining ?? 0) < (ttsUsage?.monthly.remaining ?? 0)
-        ? 'daily' 
-        : 'monthly';
-      const remainingChars = limitType === 'daily' 
-        ? (ttsUsage?.daily.remaining ?? 0) 
-        : (ttsUsage?.monthly.remaining ?? 0);
-      
-      setError(`Text exceeds the maximum limit of ${maxCharsPerRequest.toLocaleString()} characters per request for your ${ttsUsage?.role || 'BASIC'} plan (Role limit: ${roleBasedLimit.toLocaleString()} chars, ${remainingChars.toLocaleString()} left ${limitType}).`);
-      setTimeout(() => {
-        const errorElement = document.querySelector('.error-message');
-        if (errorElement) {
-          errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-      }, 100);
+      setError(`Text exceeds the maximum limit of ${maxCharsPerRequest.toLocaleString()} characters per request.`);
+      setTimeout(() => document.querySelector('.error-message')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
       setTimeout(() => setError(null), 10000);
       return;
     }
-  
-    // Check if this request would exceed remaining limits
+    
     if (ttsUsage) {
-      const wouldExceedDaily = ttsUsage.daily.limit > 0 && 
-                               (ttsUsage.daily.remaining < aiVoiceText.length);
-      const wouldExceedMonthly = ttsUsage.monthly.limit > 0 && 
-                                 (ttsUsage.monthly.remaining < aiVoiceText.length);
-  
-      if (wouldExceedDaily) {
-        setError(`This request would exceed your daily limit. You have ${ttsUsage.daily.remaining.toLocaleString()} characters remaining today, but this text is ${aiVoiceText.length.toLocaleString()} characters long.`);
-        setTimeout(() => {
-          const errorElement = document.querySelector('.error-message');
-          if (errorElement) {
-            errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }
-        }, 100);
-        setTimeout(() => setError(null), 10000);
-        return;
-      }
-  
-      if (wouldExceedMonthly) {
-        setError(`This request would exceed your monthly limit. You have ${ttsUsage.monthly.remaining.toLocaleString()} characters remaining this month, but this text is ${aiVoiceText.length.toLocaleString()} characters long.`);
-        setTimeout(() => {
-          const errorElement = document.querySelector('.error-message');
-          if (errorElement) {
-            errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }
-        }, 100);
-        setTimeout(() => setError(null), 10000);
-        return;
+      if (!ttsUsage.isPaid) {
+        const remaining = (ttsUsage.freeVoiceCharsLimit ?? 0) - (ttsUsage.freeVoiceCharsUsed ?? 0);
+        if (aiVoiceText.length > remaining) {
+          setError(`This request would exceed your free limit. You have ${remaining.toLocaleString()} characters remaining, but this text is ${aiVoiceText.length.toLocaleString()} characters long.`);
+          setTimeout(() => document.querySelector('.error-message')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+          setTimeout(() => setError(null), 10000);
+          return;
+        }
+      } else {
+        const creditsNeeded = Math.ceil(aiVoiceText.length / 100);
+        if (ttsUsage.balance < creditsNeeded) {
+          setError(`Insufficient credits. This text needs ${creditsNeeded} credit${creditsNeeded !== 1 ? 's' : ''}, but you only have ${ttsUsage.balance}.`);
+          setTimeout(() => document.querySelector('.error-message')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+          setTimeout(() => setError(null), 10000);
+          return;
+        }
       }
     }
-  
+    
     setIsGenerating(true);
     setError(null);
     try {
@@ -996,41 +957,29 @@ const AIVoiceGeneratorClient: React.FC = () => {
 
   const isLimitsExceeded = useCallback(() => {
     if (!isLoggedIn || !ttsUsage) return false;
-
-    const monthlyExceeded = ttsUsage.monthly.limit > 0 && ttsUsage.monthly.remaining <= 0;
-    const dailyExceeded = ttsUsage.daily.limit > 0 && ttsUsage.daily.remaining <= 0;
-
-    return monthlyExceeded || dailyExceeded;
+    if (ttsUsage.isPaid) return ttsUsage.balance <= 0;
+    return (ttsUsage.freeVoiceCharsUsed ?? 0) >= (ttsUsage.freeVoiceCharsLimit ?? 0);
   }, [isLoggedIn, ttsUsage]); 
 
   const maxCharsPerRequest = useMemo(() => {
     if (!isLoggedIn || !ttsUsage) return 80;
-    return ttsUsage.maxCharRequest || 80;
+    return ttsUsage.maxCharsPerRequest || 80;
   }, [isLoggedIn, ttsUsage]);
   
   const limitsExceeded = useMemo(() => {
     if (!isLoggedIn || !ttsUsage) return false;
-  
-    const monthlyExceeded = ttsUsage.monthly.limit > 0 && ttsUsage.monthly.remaining <= 0;
-    const dailyExceeded = ttsUsage.daily.limit > 0 && ttsUsage.daily.remaining <= 0;
-  
-    return monthlyExceeded || dailyExceeded;
+    if (ttsUsage.isPaid) return ttsUsage.balance <= 0;
+    return (ttsUsage.freeVoiceCharsUsed ?? 0) >= (ttsUsage.freeVoiceCharsLimit ?? 0);
   }, [isLoggedIn, ttsUsage]);
-
+  
   const wouldExceedLimits = useMemo(() => {
     if (!isLoggedIn || !ttsUsage) return false;
-  
-    const textLength = aiVoiceText.length;
-  
-    if (ttsUsage.monthly.limit > 0 && ttsUsage.monthly.remaining < textLength) {
-      return true;
+    if (ttsUsage.isPaid) {
+      const creditsNeeded = Math.ceil(aiVoiceText.length / 100);
+      return ttsUsage.balance < creditsNeeded;
     }
-  
-    if (ttsUsage.daily.limit > 0 && ttsUsage.daily.remaining < textLength) {
-      return true;
-    }
-  
-    return false;
+    const remaining = (ttsUsage.freeVoiceCharsLimit ?? 0) - (ttsUsage.freeVoiceCharsUsed ?? 0);
+    return aiVoiceText.length > remaining;
   }, [isLoggedIn, ttsUsage, aiVoiceText.length]);  
 
   const disabledReason = useMemo((): string | null => {
@@ -1038,20 +987,13 @@ const AIVoiceGeneratorClient: React.FC = () => {
     if (!aiVoiceText.trim()) return "Please enter some text to generate voice";
     if (!selectedVoice) return "Please select a voice before generating";
     if (isGenerating) return "Audio generation in progress...";
-    if (characterCount > maxCharsPerRequest) {
-      const roleBasedLimit = ttsUsage?.maxCharRequest || 80;
-      return `Text exceeds maximum limit of ${maxCharsPerRequest.toLocaleString()} characters`;
-    }
     if (wouldExceedLimits) {
-      const dailyWouldExceed = ttsUsage && ttsUsage.daily.limit > 0 && ttsUsage.daily.remaining < aiVoiceText.length;
-      const monthlyWouldExceed = ttsUsage && ttsUsage.monthly.limit > 0 && ttsUsage.monthly.remaining < aiVoiceText.length;
-      
-      if (dailyWouldExceed) {
-        return `Would exceed daily limit. You have ${ttsUsage.daily.remaining.toLocaleString()} characters remaining today`;
+      if (ttsUsage?.isPaid) {
+        const creditsNeeded = Math.ceil(aiVoiceText.length / 100);
+        return `Insufficient credits. Need ${creditsNeeded}, have ${ttsUsage.balance}`;
       }
-      if (monthlyWouldExceed) {
-        return `Would exceed monthly limit. You have ${ttsUsage.monthly.remaining.toLocaleString()} characters remaining this month`;
-      }
+      const remaining = (ttsUsage?.freeVoiceCharsLimit ?? 0) - (ttsUsage?.freeVoiceCharsUsed ?? 0);
+      return `Would exceed free limit. You have ${remaining.toLocaleString()} free characters remaining`;
     }
     return null;
   }, [isLoggedIn, aiVoiceText, selectedVoice, isGenerating, characterCount, maxCharsPerRequest, wouldExceedLimits, ttsUsage]);   
@@ -1083,6 +1025,31 @@ const AIVoiceGeneratorClient: React.FC = () => {
   const toggleHistory = useCallback(() => {
     setShowHistory(prev => !prev);
   }, []);
+
+if (isPageLoading) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'linear-gradient(135deg, #0f0c29 0%, #1e1a45 60%, #0d0b22 100%)',
+        gap: '16px',
+      }}>
+        <div style={{
+          width: '48px', height: '48px', borderRadius: '50%',
+          border: '3px solid rgba(102,126,234,0.2)',
+          borderTopColor: '#6366F1',
+          animation: 'spin 0.9s linear infinite',
+        }} />
+        <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.9rem', fontWeight: 500 }}>
+          Loading...
+        </p>
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
 
 return (
   <div className="ai-voice-generator-page">
@@ -1384,95 +1351,50 @@ return (
 
               {isLoggedIn && ttsUsage && (
                 <div className="usage-info">
-                  {ttsUsage.daily.limit > 0 && 
-                   ttsUsage.monthly.limit > 0 &&
-                   ttsUsage.daily.remaining < ttsUsage.monthly.remaining && (
+                  {ttsUsage.isPaid ? (
                     <div className="usage-section">
-                      <p className="usage-label today">⚠️ Today's Limit</p>
+                      <p className="usage-label">💳 Credit Balance</p>
+                      <p className="usage-text">
+                        <strong>{ttsUsage.balance.toLocaleString()}</strong> credits remaining
+                        &nbsp;·&nbsp; {ttsUsage.creditCostPer100Chars} credit per 100 chars
+                        &nbsp;·&nbsp; This text costs <strong>{Math.ceil(aiVoiceText.length / 100)}</strong> credit{Math.ceil(aiVoiceText.length / 100) !== 1 ? 's' : ''}
+                      </p>
+                      {ttsUsage.balance < 10 && (
+                        <div className="usage-micro-warning">
+                          Running low on credits. <a href="/pricing">Top up your balance</a>.
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="usage-section">
+                      <p className="usage-label">🆓 Free Tier Usage</p>
                       <div className="usage-bar-container">
-                        <div 
+                        <div
                           className={`usage-bar-fill ${
-                            (ttsUsage.daily.used / ttsUsage.daily.limit) >= 0.95 ? 'critical' :
-                            (ttsUsage.daily.used / ttsUsage.daily.limit) >= 0.80 ? 'warning' : 'normal'
+                            ((ttsUsage.freeVoiceCharsUsed ?? 0) / (ttsUsage.freeVoiceCharsLimit ?? 1)) >= 0.95 ? 'critical' :
+                            ((ttsUsage.freeVoiceCharsUsed ?? 0) / (ttsUsage.freeVoiceCharsLimit ?? 1)) >= 0.80 ? 'warning' : 'normal'
                           }`}
-                          style={{ width: `${(ttsUsage.daily.used / ttsUsage.daily.limit) * 100}%` }}
+                          style={{ width: `${Math.min(100, ((ttsUsage.freeVoiceCharsUsed ?? 0) / (ttsUsage.freeVoiceCharsLimit ?? 1)) * 100)}%` }}
                         />
                       </div>
                       <p className="usage-text">
-                        <strong>{ttsUsage.daily.remaining.toLocaleString()}</strong> characters remaining today
-                        ({ttsUsage.daily.used.toLocaleString()} / {ttsUsage.daily.limit.toLocaleString()} used)
+                        <strong>{((ttsUsage.freeVoiceCharsLimit ?? 0) - (ttsUsage.freeVoiceCharsUsed ?? 0)).toLocaleString()}</strong> free characters remaining this month
+                        &nbsp;({(ttsUsage.freeVoiceCharsUsed ?? 0).toLocaleString()} / {(ttsUsage.freeVoiceCharsLimit ?? 0).toLocaleString()} used)
                       </p>
-                          
-                      {(ttsUsage.daily.used / ttsUsage.daily.limit) >= 0.80 && 
-                       ttsUsage.daily.remaining > 0 && (
+                      {((ttsUsage.freeVoiceCharsUsed ?? 0) / (ttsUsage.freeVoiceCharsLimit ?? 1)) >= 0.80 && (
                         <div className="usage-micro-warning">
                           You're almost out of free characters. Upgrade to avoid interruption.
                         </div>
                       )}
+                      <div className="inline-upgrade-cta">
+                        <a href="/pricing" className="inline-upgrade-link">
+                          🔓 Upgrade for credits-based access with no monthly caps
+                        </a>
+                      </div>
                     </div>
                   )}
-
-                  <div className="usage-section">
-                    <p className={`usage-label ${
-                      ttsUsage.monthly.limit === -1 ? '' :
-                      ttsUsage.daily.limit > 0 && 
-                      ttsUsage.monthly.remaining > 0 && 
-                      ttsUsage.daily.remaining >= ttsUsage.monthly.remaining
-                        ? 'month'
-                        : ''
-                    }`}>
-                      📅 {ttsUsage.monthly.limit === -1 ? 'This Month (Unlimited)' : 'This Month\'s Limit'}
-                    </p>
-                    {ttsUsage.monthly.limit === -1 ? (
-                      <p className="usage-text">
-                        <strong>Unlimited</strong> - No monthly character limit
-                      </p>
-                    ) : (
-                      <>
-                        <div className="usage-bar-container">
-                          <div 
-                            className={`usage-bar-fill ${
-                              (ttsUsage.monthly.used / ttsUsage.monthly.limit) >= 0.95 ? 'critical' :
-                              (ttsUsage.monthly.used / ttsUsage.monthly.limit) >= 0.80 ? 'warning' : 'normal'
-                            }`}
-                            style={{ width: `${(ttsUsage.monthly.used / ttsUsage.monthly.limit) * 100}%` }}
-                          />
-                        </div>
-                        <p className="usage-text">
-                          <strong>{ttsUsage.monthly.remaining.toLocaleString()}</strong> characters remaining this month
-                          ({ttsUsage.monthly.used.toLocaleString()} / {ttsUsage.monthly.limit.toLocaleString()} used)
-                        </p>
-                            
-                        {(ttsUsage.monthly.used / ttsUsage.monthly.limit) >= 0.80 && 
-                         ttsUsage.monthly.remaining > 0 && (
-                          <div className="usage-micro-warning">
-                            You're almost out of free characters. Upgrade to avoid interruption.
-                          </div>
-                        )}
-                      </>
-                    )}
-
-                    {ttsUsage.role === 'BASIC' && (
-                      <div className="inline-upgrade-cta">
-                        <a href="/pricing" className="inline-upgrade-link">
-                          🔓 Need more? Upgrade to <span className="highlight-pro">Creator Spark</span> OR <span className="highlight-creator">Creator Odyssey </span> for 10× higher limits
-                        </a>
-                        <div className="creator-upgrade-hint">
-                          Creators usually upgrade after 2–3 generations.
-                        </div>                        
-                      </div>
-                    )}
-
-                    {ttsUsage.role === 'CREATOR' && (
-                      <div className="inline-upgrade-cta">
-                        <a href="/pricing" className="inline-upgrade-link">
-                          🔓 Need more? Upgrade to Creator Odyssey for 3× higher limits (250,000 chars/mo)
-                        </a>
-                      </div>
-                    )}                   
-                  </div>
                 </div>
-              )}              
+              )}          
 
               {isLoggedIn && (
                 <div className="speed-control-section">
@@ -1527,28 +1449,6 @@ return (
                     </p>
                   )}
                 </div>
-              )}            
-
-              {ttsUsage && ttsUsage.role === 'BASIC' && (
-                ttsUsage.monthly.used / ttsUsage.monthly.limit >= 0.5 && (
-                  <div className="upgrade-prompt-card">
-                    <div className="upgrade-prompt-content">
-                      <span className="upgrade-prompt-icon">⚡</span>
-                      <div className="upgrade-prompt-text">
-                        <h4>Running low on characters?</h4>
-                        <p>Upgrade to Creator Spark for <strong>37× more characters</strong> (75,000/month) or Creator Odyssey for 125× more (250,000/month).</p>
-                      </div>
-                      <div className="upgrade-prompt-actions">
-                        <a href="/pricing" className="upgrade-prompt-btn primary">
-                          View Plans
-                        </a>
-                        <a href="/pricing?tab=individual" className="upgrade-prompt-btn secondary">
-                          Individual Plans
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                )
               )}     
 
               {showLimitModal && (
@@ -1559,17 +1459,7 @@ return (
                     <p className="modal-usage-text">
                       You've used{' '}
                       <strong>
-                        {ttsUsage?.daily?.limit && ttsUsage?.monthly?.limit
-                          ? Math.max(
-                              Math.round((ttsUsage.daily.used / ttsUsage.daily.limit) * 100),
-                              Math.round((ttsUsage.monthly.used / ttsUsage.monthly.limit) * 100)
-                            )
-                          : ttsUsage?.monthly?.limit
-                          ? Math.round((ttsUsage.monthly.used / ttsUsage.monthly.limit) * 100)
-                          : ttsUsage?.daily?.limit
-                          ? Math.round((ttsUsage.daily.used / ttsUsage.daily.limit) * 100)
-                          : 0}
-                        %
+                        {Math.round(((ttsUsage?.freeVoiceCharsUsed ?? 0) / (ttsUsage?.freeVoiceCharsLimit ?? 1)) * 100)}%
                       </strong>{' '}
                       of your free limit
                     </p>
@@ -1648,19 +1538,19 @@ return (
                     <button
                       key={p}
                       className={`provider-tab ${selectedProvider === p ? 'active' : ''} ${
-                        p !== 'GOOGLE' && !ttsUsage?.externalProviders?.hasAccess ? 'locked' : ''
+                        p !== 'GOOGLE' && !ttsUsage?.isPaid ? 'locked' : ''
                       }`}
                       onClick={() => {
                         setSelectedProvider(p);
                         setSelectedVoice(null);
                       }}
-                      title={p !== 'GOOGLE' && !ttsUsage?.externalProviders?.hasAccess ? 'Requires paid plan' : ''}
+                      title={p !== 'GOOGLE' && !ttsUsage?.isPaid ? 'Requires paid plan' : ''}
                     >
                       {p === 'GOOGLE' && '🔵 '}
                       {p === 'OPENAI' && '🟢 '}
                       {p === 'AZURE' && '🔷 '}
                       {p.charAt(0) + p.slice(1).toLowerCase()}
-                      {p !== 'GOOGLE' && !ttsUsage?.externalProviders?.hasAccess && (
+                      {p !== 'GOOGLE' && !ttsUsage?.isPaid && (
                         <span className="tab-lock">👑</span>
                       )}
                     </button>
