@@ -1,0 +1,1343 @@
+/* ═══════════════════════════════════════════════════════
+   Merge PDF Documents for Free — Landing Page Styles
+   /app/tools/merge-pdf-documents-for-free/merge-pdf-landing.css
+   
+   Aesthetic: Editorial / Magazine — clean light theme,
+   ink-blue accents, strong typographic hierarchy.
+   Contrast: completely different from dark YVG page.
+═══════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* ── Variables ──────────────────────────────────────── */
+.mpdf-page {
+  --mpdf-bg:        #fafaf8;
+  --mpdf-surface:   #ffffff;
+  --mpdf-tinted:    #f4f3ef;
+  --mpdf-border:    #e5e2d9;
+  --mpdf-border-hi: #c8c4b8;
+
+  --mpdf-ink:       #1a1a1a;
+  --mpdf-ink-med:   #3d3d3a;
+  --mpdf-ink-muted: #6b6963;
+  --mpdf-ink-dim:   #9b9890;
+
+  --mpdf-blue:      #1d4ed8;
+  --mpdf-blue-mid:  #2563eb;
+  --mpdf-blue-soft: #eff6ff;
+  --mpdf-blue-border: #bfdbfe;
+
+  --mpdf-green:     #15803d;
+  --mpdf-green-soft: #f0fdf4;
+  --mpdf-green-border: #bbf7d0;
+
+  --mpdf-amber:     #b45309;
+  --mpdf-amber-soft: #fffbeb;
+  --mpdf-amber-border: #fde68a;
+
+  --mpdf-red:       #dc2626;
+
+  --mpdf-font-display: 'Fraunces', Georgia, serif;
+  --mpdf-font-body:    'Plus Jakarta Sans', sans-serif;
+  --mpdf-font-mono:    'JetBrains Mono', monospace;
+
+  --mpdf-radius:    14px;
+  --mpdf-radius-sm: 8px;
+  --mpdf-shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+  --mpdf-shadow:    0 8px 32px rgba(0,0,0,0.08);
+  --mpdf-shadow-lg: 0 24px 64px rgba(0,0,0,0.1);
+
+  font-family: var(--mpdf-font-body);
+  background: var(--mpdf-bg);
+  color: var(--mpdf-ink);
+  line-height: 1.7;
+  font-size: 16px;
+  overflow-x: hidden;
+}
+
+/* ── Container ──────────────────────────────────────── */
+.mpdf-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ── Breadcrumb ─────────────────────────────────────── */
+.mpdf-breadcrumb {
+  padding: 18px 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+  border-bottom: 1px solid var(--mpdf-border);
+}
+
+.mpdf-breadcrumb ol {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+.mpdf-breadcrumb a {
+  color: var(--mpdf-ink-muted);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: color 0.15s;
+}
+
+.mpdf-breadcrumb a:hover { color: var(--mpdf-blue); }
+
+.mpdf-breadcrumb li:last-child span {
+  font-size: 13px;
+  color: var(--mpdf-ink-dim);
+}
+
+.mpdf-breadcrumb > ol > span {
+  color: var(--mpdf-ink-dim);
+  font-size: 12px;
+}
+
+/* ── Tags/Badges ────────────────────────────────────── */
+.mpdf-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-family: var(--mpdf-font-body);
+  border: 1px solid;
+}
+
+.mpdf-tag--blue {
+  color: var(--mpdf-blue);
+  background: var(--mpdf-blue-soft);
+  border-color: var(--mpdf-blue-border);
+}
+
+.mpdf-tag--green {
+  color: var(--mpdf-green);
+  background: var(--mpdf-green-soft);
+  border-color: var(--mpdf-green-border);
+}
+
+.mpdf-tag--amber {
+  color: var(--mpdf-amber);
+  background: var(--mpdf-amber-soft);
+  border-color: var(--mpdf-amber-border);
+}
+
+/* ── Hero ───────────────────────────────────────────── */
+.mpdf-hero {
+  padding: 60px 24px 80px;
+  background: var(--mpdf-surface);
+  border-bottom: 1px solid var(--mpdf-border);
+  position: relative;
+  overflow: hidden;
+}
+
+.mpdf-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--mpdf-blue) 0%, #6366f1 50%, #0ea5e9 100%);
+}
+
+.mpdf-hero-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 64px;
+  align-items: center;
+}
+
+.mpdf-hero-tags {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.mpdf-hero-h1 {
+  font-family: var(--mpdf-font-display);
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  color: var(--mpdf-ink);
+  margin: 0 0 20px;
+}
+
+.mpdf-hero-h1 em {
+  font-style: italic;
+  color: var(--mpdf-blue);
+}
+
+.mpdf-hero-h1-line3 {
+  display: block;
+  font-size: 0.42em;
+  font-weight: 600;
+  color: var(--mpdf-ink-muted);
+  font-style: normal;
+  letter-spacing: -0.01em;
+  margin-top: 10px;
+  line-height: 1.4;
+}
+
+.mpdf-hero-lead {
+  font-size: 1.1rem;
+  color: var(--mpdf-ink-med);
+  line-height: 1.75;
+  max-width: 580px;
+  margin-bottom: 36px;
+}
+
+/* Stats row */
+.mpdf-stats-row {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 36px;
+  background: var(--mpdf-tinted);
+  border: 1px solid var(--mpdf-border);
+  border-radius: var(--mpdf-radius);
+  padding: 18px 24px;
+  width: fit-content;
+  flex-wrap: wrap;
+}
+
+.mpdf-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 22px;
+  text-align: center;
+}
+
+.mpdf-stat-num {
+  font-family: var(--mpdf-font-display);
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: var(--mpdf-blue);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.mpdf-stat-label {
+  font-size: 11px;
+  color: var(--mpdf-ink-muted);
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.mpdf-stat-sep {
+  width: 1px;
+  height: 32px;
+  background: var(--mpdf-border);
+  flex-shrink: 0;
+}
+
+/* CTA buttons */
+.mpdf-hero-cta {
+  margin-bottom: 24px;
+}
+
+.mpdf-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 32px;
+  border-radius: var(--mpdf-radius);
+  font-family: var(--mpdf-font-body);
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+  cursor: pointer;
+  white-space: nowrap;
+  border: none;
+}
+
+.mpdf-cta-btn--primary {
+  background: var(--mpdf-blue);
+  color: #ffffff;
+  box-shadow: 0 4px 20px rgba(29, 78, 216, 0.3);
+}
+
+.mpdf-cta-btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 36px rgba(29, 78, 216, 0.4);
+  filter: brightness(1.06);
+}
+
+.mpdf-cta-btn--outline {
+  background: transparent;
+  color: var(--mpdf-ink-med);
+  border: 1.5px solid var(--mpdf-border-hi);
+}
+
+.mpdf-cta-btn--outline:hover {
+  border-color: var(--mpdf-blue);
+  color: var(--mpdf-blue);
+  background: var(--mpdf-blue-soft);
+}
+
+.mpdf-cta-btn--lg {
+  font-size: 1.05rem;
+  padding: 18px 36px;
+}
+
+.mpdf-cta-btn--xl {
+  font-size: 1.1rem;
+  padding: 20px 40px;
+}
+
+.mpdf-cta-icon { font-size: 1.2em; }
+.mpdf-cta-arrow {
+  font-size: 1em;
+  transition: transform 0.2s;
+}
+.mpdf-cta-btn:hover .mpdf-cta-arrow {
+  transform: translateX(4px);
+}
+
+.mpdf-cta-note {
+  margin-top: 10px;
+  font-size: 12.5px;
+  color: var(--mpdf-ink-dim);
+}
+
+/* Trust pills */
+.mpdf-trust-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mpdf-trust-pill {
+  padding: 5px 12px;
+  background: var(--mpdf-tinted);
+  border: 1px solid var(--mpdf-border);
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--mpdf-ink-muted);
+  font-weight: 500;
+}
+
+/* Hero right — Document stack illustration */
+.mpdf-hero-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mpdf-doc-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.mpdf-doc {
+  width: 100%;
+  max-width: 260px;
+  background: var(--mpdf-surface);
+  border: 1.5px solid var(--mpdf-border);
+  border-radius: 10px;
+  padding: 18px 20px 14px;
+  position: relative;
+  box-shadow: var(--mpdf-shadow-sm);
+  transition: transform 0.2s;
+  animation: mpdf-slide-in 0.5s ease both;
+}
+
+.mpdf-doc--1 { animation-delay: 0.1s; }
+.mpdf-doc--2 { animation-delay: 0.2s; }
+.mpdf-doc--3 { animation-delay: 0.3s; }
+.mpdf-doc--result {
+  border-color: var(--mpdf-blue-border);
+  background: var(--mpdf-blue-soft);
+  animation-delay: 0.6s;
+  max-width: 260px;
+}
+
+@keyframes mpdf-slide-in {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.mpdf-doc-result-icon {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28px;
+  height: 28px;
+  background: var(--mpdf-blue);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(29,78,216,0.3);
+}
+
+.mpdf-doc-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.mpdf-doc-line {
+  height: 6px;
+  background: var(--mpdf-border);
+  border-radius: 3px;
+}
+.mpdf-doc--result .mpdf-doc-line {
+  background: var(--mpdf-blue-border);
+}
+
+.mpdf-doc-line--wide  { width: 100%; }
+.mpdf-doc-line--med   { width: 75%; }
+.mpdf-doc-line--short { width: 45%; }
+
+.mpdf-doc-label {
+  font-family: var(--mpdf-font-mono);
+  font-size: 10px;
+  color: var(--mpdf-ink-dim);
+  display: block;
+}
+.mpdf-doc-label--result {
+  color: var(--mpdf-blue);
+  font-weight: 500;
+}
+
+.mpdf-arrow-merge {
+  font-size: 1.4rem;
+  color: var(--mpdf-blue-border);
+  line-height: 1;
+  animation: mpdf-pulse 1.5s ease-in-out infinite;
+}
+@keyframes mpdf-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* ── Definition ─────────────────────────────────────── */
+.mpdf-definition-section {
+  padding: 40px 0;
+  background: var(--mpdf-surface);
+  border-bottom: 1px solid var(--mpdf-border);
+}
+
+.mpdf-definition-box {
+  border-left: 4px solid var(--mpdf-blue);
+  background: var(--mpdf-blue-soft);
+  border-radius: 0 var(--mpdf-radius-sm) var(--mpdf-radius-sm) 0;
+  padding: 22px 28px;
+  max-width: 820px;
+}
+
+.mpdf-definition-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mpdf-blue);
+  margin-bottom: 10px;
+  display: block;
+  font-family: var(--mpdf-font-body);
+}
+
+.mpdf-definition-box p {
+  font-size: 1rem;
+  color: var(--mpdf-ink-med);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ── Sections ───────────────────────────────────────── */
+.mpdf-section {
+  padding: 80px 0;
+}
+
+.mpdf-section--tinted {
+  background: var(--mpdf-tinted);
+}
+
+.mpdf-section-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--mpdf-blue);
+  margin-bottom: 12px;
+  font-family: var(--mpdf-font-body);
+}
+
+.mpdf-section-h2 {
+  font-family: var(--mpdf-font-display);
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  line-height: 1.12;
+  color: var(--mpdf-ink);
+  margin: 0 0 16px;
+}
+
+.mpdf-h2-sub {
+  display: block;
+  color: var(--mpdf-ink-muted);
+  font-size: 0.65em;
+  font-weight: 600;
+  font-style: italic;
+  margin-top: 6px;
+}
+
+.mpdf-section-intro {
+  font-size: 1.05rem;
+  color: var(--mpdf-ink-muted);
+  max-width: 700px;
+  margin-bottom: 48px;
+  line-height: 1.75;
+}
+
+.mpdf-cta-center {
+  text-align: center;
+  margin-top: 48px;
+}
+
+/* ── How-To Steps Grid ──────────────────────────────── */
+.mpdf-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 24px;
+  margin-bottom: 0;
+}
+
+.mpdf-step-card {
+  background: var(--mpdf-surface);
+  border: 1.5px solid var(--mpdf-border);
+  border-radius: var(--mpdf-radius);
+  padding: 28px;
+  position: relative;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.mpdf-step-card:hover {
+  border-color: var(--mpdf-blue-border);
+  box-shadow: var(--mpdf-shadow);
+  transform: translateY(-2px);
+}
+
+.mpdf-step-num {
+  font-family: var(--mpdf-font-display);
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: var(--mpdf-border-hi);
+  line-height: 1;
+  margin-bottom: 8px;
+  letter-spacing: -0.04em;
+}
+
+.mpdf-step-icon {
+  font-size: 1.8rem;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.mpdf-step-card h3 {
+  font-family: var(--mpdf-font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--mpdf-ink);
+  margin: 0 0 12px;
+}
+
+.mpdf-step-card p {
+  font-size: 0.93rem;
+  color: var(--mpdf-ink-muted);
+  line-height: 1.68;
+  margin: 0 0 16px;
+}
+
+.mpdf-step-tip {
+  background: var(--mpdf-tinted);
+  border-radius: var(--mpdf-radius-sm);
+  padding: 12px 16px;
+  font-size: 0.87rem;
+  color: var(--mpdf-ink-muted);
+  line-height: 1.55;
+  border-left: 3px solid var(--mpdf-blue);
+}
+
+.mpdf-step-tip strong {
+  color: var(--mpdf-blue);
+  font-size: 0.85rem;
+}
+
+/* ── Use Cases ──────────────────────────────────────── */
+.mpdf-usecase-list {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.mpdf-usecase-card {
+  background: var(--mpdf-surface);
+  border: 1.5px solid var(--mpdf-border);
+  border-top: 4px solid var(--uc-color, var(--mpdf-blue));
+  border-radius: var(--mpdf-radius);
+  padding: 32px;
+  transition: box-shadow 0.2s;
+}
+
+.mpdf-usecase-card:hover {
+  box-shadow: var(--mpdf-shadow);
+}
+
+.mpdf-usecase-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.mpdf-usecase-icon {
+  font-size: 2.4rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.mpdf-usecase-category {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--uc-color, var(--mpdf-blue));
+  display: block;
+  margin-bottom: 4px;
+}
+
+.mpdf-usecase-title {
+  font-family: var(--mpdf-font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--mpdf-ink);
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.mpdf-usecase-stat {
+  margin-left: auto;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.mpdf-usecase-stat-num {
+  font-family: var(--mpdf-font-display);
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: var(--uc-color, var(--mpdf-blue));
+  display: block;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.mpdf-usecase-stat-label {
+  font-size: 11px;
+  color: var(--mpdf-ink-dim);
+  max-width: 160px;
+  line-height: 1.3;
+  display: block;
+  margin-top: 3px;
+}
+
+.mpdf-usecase-intro {
+  font-size: 1rem;
+  color: var(--mpdf-ink-muted);
+  line-height: 1.75;
+  margin: 0 0 18px;
+  max-width: 820px;
+}
+
+.mpdf-usecase-list-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 8px;
+}
+
+.mpdf-usecase-list-items li {
+  font-size: 0.9rem;
+  color: var(--mpdf-ink-muted);
+  padding-left: 18px;
+  position: relative;
+  line-height: 1.5;
+}
+
+.mpdf-usecase-list-items li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--uc-color, var(--mpdf-blue));
+  font-size: 0.8rem;
+}
+
+/* ── Comparison Table ───────────────────────────────── */
+.mpdf-table-wrap {
+  overflow-x: auto;
+  border: 1.5px solid var(--mpdf-border);
+  border-radius: var(--mpdf-radius);
+  margin-bottom: 32px;
+  background: var(--mpdf-surface);
+}
+
+.mpdf-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  min-width: 760px;
+}
+
+.mpdf-table thead tr {
+  background: var(--mpdf-tinted);
+}
+
+.mpdf-table th {
+  padding: 14px 16px;
+  text-align: left;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mpdf-ink-muted);
+  border-bottom: 1.5px solid var(--mpdf-border);
+  white-space: nowrap;
+  font-family: var(--mpdf-font-body);
+}
+
+.mpdf-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--mpdf-border);
+  color: var(--mpdf-ink-muted);
+  vertical-align: top;
+  line-height: 1.4;
+}
+
+.mpdf-table td strong {
+  color: var(--mpdf-ink);
+  font-weight: 600;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.mpdf-table tr:last-child td { border-bottom: none; }
+
+.mpdf-table-row--highlight td {
+  background: var(--mpdf-blue-soft);
+}
+
+.mpdf-table-cell--green {
+  color: var(--mpdf-green) !important;
+  font-weight: 600;
+}
+
+.mpdf-table-you-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--mpdf-blue);
+  background: var(--mpdf-blue-border);
+  border-radius: 4px;
+  padding: 2px 7px;
+  margin-top: 4px;
+  font-style: normal;
+}
+
+.mpdf-compare-verdict {
+  background: var(--mpdf-tinted);
+  border: 1px solid var(--mpdf-border);
+  border-radius: var(--mpdf-radius);
+  padding: 24px 28px;
+  max-width: 820px;
+}
+
+.mpdf-compare-verdict h3 {
+  font-family: var(--mpdf-font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--mpdf-ink);
+  margin: 0 0 10px;
+}
+
+.mpdf-compare-verdict p {
+  font-size: 0.97rem;
+  color: var(--mpdf-ink-muted);
+  line-height: 1.72;
+  margin: 0;
+}
+
+.mpdf-compare-verdict strong {
+  color: var(--mpdf-ink);
+}
+
+/* ── Workflow Tips ──────────────────────────────────── */
+.mpdf-tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: 22px;
+}
+
+.mpdf-tip-card {
+  background: var(--mpdf-surface);
+  border: 1.5px solid var(--mpdf-border);
+  border-radius: var(--mpdf-radius);
+  padding: 28px;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.mpdf-tip-card:hover {
+  box-shadow: var(--mpdf-shadow);
+  transform: translateY(-2px);
+}
+
+.mpdf-tip-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.mpdf-tip-num {
+  font-family: var(--mpdf-font-display);
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--mpdf-border-hi);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.mpdf-tip-tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid;
+  font-family: var(--mpdf-font-body);
+}
+
+.mpdf-tip-title {
+  font-family: var(--mpdf-font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--mpdf-ink);
+  margin: 0 0 12px;
+  line-height: 1.3;
+}
+
+.mpdf-tip-body {
+  font-size: 0.92rem;
+  color: var(--mpdf-ink-muted);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ── Security ───────────────────────────────────────── */
+.mpdf-security-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: flex-start;
+}
+
+.mpdf-security-prose p {
+  font-size: 1rem;
+  color: var(--mpdf-ink-muted);
+  line-height: 1.75;
+  margin-bottom: 16px;
+}
+
+.mpdf-security-prose p:last-child { margin-bottom: 0; }
+
+.mpdf-security-prose strong {
+  color: var(--mpdf-ink);
+}
+
+.mpdf-security-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.mpdf-security-card {
+  background: var(--mpdf-tinted);
+  border: 1px solid var(--mpdf-border);
+  border-radius: var(--mpdf-radius-sm);
+  padding: 18px;
+}
+
+.mpdf-security-icon {
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.mpdf-security-card h3 {
+  font-family: var(--mpdf-font-body);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--mpdf-ink);
+  margin: 0 0 6px;
+}
+
+.mpdf-security-card p {
+  font-size: 0.83rem;
+  color: var(--mpdf-ink-muted);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* ── Quality Grid ───────────────────────────────────── */
+.mpdf-quality-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 22px;
+}
+
+.mpdf-quality-card {
+  background: var(--mpdf-surface);
+  border: 1.5px solid var(--mpdf-border);
+  border-radius: var(--mpdf-radius);
+  padding: 26px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.mpdf-quality-card:hover {
+  border-color: var(--mpdf-blue-border);
+  transform: translateY(-2px);
+}
+
+.mpdf-quality-icon {
+  font-size: 1.7rem;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.mpdf-quality-card h3 {
+  font-family: var(--mpdf-font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--mpdf-ink);
+  margin: 0 0 10px;
+}
+
+.mpdf-quality-card p {
+  font-size: 0.9rem;
+  color: var(--mpdf-ink-muted);
+  line-height: 1.68;
+  margin: 0;
+}
+
+/* ── Decision Cards ─────────────────────────────────── */
+.mpdf-decision-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+
+.mpdf-decision-card {
+  border-radius: var(--mpdf-radius);
+  padding: 32px;
+  border: 1.5px solid;
+}
+
+.mpdf-decision-card--yes {
+  background: var(--mpdf-green-soft);
+  border-color: var(--mpdf-green-border);
+}
+
+.mpdf-decision-card--alt {
+  background: var(--mpdf-amber-soft);
+  border-color: var(--mpdf-amber-border);
+}
+
+.mpdf-decision-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.mpdf-decision-icon { font-size: 1.6rem; }
+
+.mpdf-decision-card h3 {
+  font-family: var(--mpdf-font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--mpdf-ink);
+  margin: 0;
+}
+
+.mpdf-decision-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mpdf-decision-card li {
+  font-size: 0.92rem;
+  color: var(--mpdf-ink-muted);
+  padding-left: 20px;
+  position: relative;
+  line-height: 1.55;
+}
+
+.mpdf-decision-card--yes li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--mpdf-green);
+  font-weight: 700;
+}
+
+.mpdf-decision-card--alt li::before {
+  content: '⚠';
+  position: absolute;
+  left: 0;
+  font-size: 0.8em;
+}
+
+.mpdf-decision-card li strong {
+  color: var(--mpdf-ink);
+}
+
+/* ── Mid-Page CTA ───────────────────────────────────── */
+.mpdf-mid-cta {
+  background: var(--mpdf-blue);
+  padding: 56px 0;
+}
+
+.mpdf-mid-cta-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.mpdf-mid-cta h2 {
+  font-family: var(--mpdf-font-display);
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.025em;
+  margin: 0 0 8px;
+  line-height: 1.15;
+}
+
+.mpdf-mid-cta p {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.75);
+  margin: 0;
+}
+
+.mpdf-mid-cta .mpdf-cta-btn--primary {
+  background: #ffffff;
+  color: var(--mpdf-blue);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  flex-shrink: 0;
+}
+
+.mpdf-mid-cta .mpdf-cta-btn--primary:hover {
+  background: #f0f9ff;
+}
+
+/* ── FAQ ────────────────────────────────────────────── */
+.mpdf-faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-width: 820px;
+}
+
+.mpdf-faq-item {
+  padding: 26px 0;
+  border-bottom: 1px solid var(--mpdf-border);
+}
+
+.mpdf-faq-item:last-child {
+  border-bottom: none;
+}
+
+.mpdf-faq-item h3 {
+  font-family: var(--mpdf-font-display);
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: var(--mpdf-ink);
+  margin: 0 0 12px;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+
+.mpdf-faq-item p {
+  font-size: 0.97rem;
+  color: var(--mpdf-ink-muted);
+  line-height: 1.75;
+  margin: 0;
+}
+
+/* ── Final CTA ──────────────────────────────────────── */
+.mpdf-final-cta {
+  padding: 100px 0;
+  background: var(--mpdf-surface);
+  border-top: 1px solid var(--mpdf-border);
+  text-align: center;
+}
+
+.mpdf-final-cta-inner {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.mpdf-final-cta-badge {
+  font-size: 2.4rem;
+  margin-bottom: 20px;
+  display: block;
+  letter-spacing: -0.02em;
+}
+
+.mpdf-final-cta h2 {
+  font-family: var(--mpdf-font-display);
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--mpdf-ink);
+  line-height: 1.1;
+  margin: 0 0 20px;
+}
+
+.mpdf-final-cta p {
+  font-size: 1.05rem;
+  color: var(--mpdf-ink-muted);
+  line-height: 1.7;
+  margin-bottom: 40px;
+}
+
+.mpdf-final-cta-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 36px;
+}
+
+.mpdf-final-features {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+}
+
+.mpdf-final-feature {
+  font-size: 13px;
+  color: var(--mpdf-ink-muted);
+  font-weight: 500;
+}
+
+/* ── Related Tools ──────────────────────────────────── */
+.mpdf-related {
+  background: var(--mpdf-tinted);
+  padding: 60px 0;
+  border-top: 1px solid var(--mpdf-border);
+}
+
+.mpdf-related-h2 {
+  font-family: var(--mpdf-font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--mpdf-ink);
+  margin: 0 0 28px;
+  letter-spacing: -0.02em;
+}
+
+.mpdf-related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.mpdf-related-card {
+  background: var(--mpdf-surface);
+  border: 1.5px solid var(--mpdf-border);
+  border-radius: var(--mpdf-radius);
+  padding: 22px;
+  text-decoration: none;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mpdf-related-card:hover {
+  border-color: var(--mpdf-blue);
+  box-shadow: var(--mpdf-shadow);
+  transform: translateY(-2px);
+}
+
+.mpdf-related-icon {
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
+.mpdf-related-card h3 {
+  font-family: var(--mpdf-font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--mpdf-ink);
+  margin: 0;
+}
+
+.mpdf-related-card p {
+  font-size: 0.84rem;
+  color: var(--mpdf-ink-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ── Responsive ─────────────────────────────────────── */
+@media (max-width: 960px) {
+  .mpdf-hero-inner {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .mpdf-hero-right {
+    order: -1;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  .mpdf-security-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .mpdf-decision-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 680px) {
+  .mpdf-hero {
+    padding: 40px 20px 60px;
+  }
+
+  .mpdf-section {
+    padding: 56px 0;
+  }
+
+  .mpdf-stats-row {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    padding: 14px 16px;
+  }
+
+  .mpdf-stat-sep { display: none; }
+
+  .mpdf-stat {
+    padding: 0 10px;
+  }
+
+  .mpdf-steps-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mpdf-usecase-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .mpdf-usecase-stat {
+    margin-left: 0;
+    text-align: left;
+  }
+
+  .mpdf-mid-cta-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .mpdf-final-cta-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .mpdf-cta-btn--xl {
+    font-size: 1rem;
+    padding: 18px 28px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .mpdf-security-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .mpdf-hero-h1 {
+    font-size: 2.2rem;
+  }
+
+  .mpdf-section-h2 {
+    font-size: 1.7rem;
+  }
+
+  .mpdf-cta-btn--primary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .mpdf-tips-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mpdf-quality-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Utility ────────────────────────────────────────── */
+code {
+  font-family: var(--mpdf-font-mono);
+  font-size: 0.87em;
+  background: var(--mpdf-tinted);
+  border: 1px solid var(--mpdf-border);
+  border-radius: 4px;
+  padding: 2px 6px;
+  color: var(--mpdf-blue);
+}
