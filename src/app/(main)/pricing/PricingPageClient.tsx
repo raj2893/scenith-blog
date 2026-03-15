@@ -50,7 +50,8 @@ interface TopupPack {
 const injectStyles = () => {
   if (typeof document === 'undefined') return;
   const ID = 'scenith-v2-styles';
-  if (document.getElementById(ID)) return;
+  const existing = document.getElementById(ID);
+  if (existing) existing.remove();
   const s = document.createElement('style');
   s.id = ID;
   s.textContent = `
@@ -732,19 +733,38 @@ export default function PricingPageClient() {
 
   useEffect(() => {
     const detectCountry = async () => {
+      // Try multiple geo APIs in order of CORS friendliness
+      const apis = [
+        { url: 'https://api.country.is/', extractor: (d: any) => d.country },
+        { url: 'https://freeipapi.com/api/json/', extractor: (d: any) => d.countryCode },
+        { url: 'https://ipapi.co/json/', extractor: (d: any) => d.country_code },
+      ];
+
+      for (const api of apis) {
+        try {
+          const response = await fetch(api.url);
+          if (!response.ok) continue;
+          const data = await response.json();
+          const countryCode = api.extractor(data);
+          if (countryCode) {
+            setIsIndianUser(countryCode === 'IN');
+            return;
+          }
+        } catch {
+          continue;
+        }
+      }
+
+      // All APIs failed — try timezone as fallback
       try {
-        const response = await fetch('https://ipapi.co/json/');
-        const data = await response.json();
-        const countryCode = data.country_code;
-        setIsIndianUser(countryCode === 'IN');
-      } catch (err) {
-        console.error('Geo detection failed, defaulting to international');
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        setIsIndianUser(tz === 'Asia/Calcutta' || tz === 'Asia/Kolkata');
+      } catch {
         setIsIndianUser(false);
-      } finally {
-        setIsPricingReady(true);
       }
     };
-    detectCountry();
+
+    detectCountry().finally(() => setIsPricingReady(true));
   }, []);
 
   useEffect(() => {
@@ -921,16 +941,19 @@ export default function PricingPageClient() {
         { name: 'Creator Odyssey', role: 'STUDIO',        price: 0, currency: 'LOADING', ttsLimit: 400000, features: odysseyFeats },
       ];
     }
-    const starterPrice  = isIndianUser ? 749  : 9;
-    const creatorPrice  = isIndianUser ? 1499 : 19;
-    const proPrice      = isIndianUser ? 2999 : 39;
+    const starterPrice  = isIndianUser ? 99  : 5;
+    const creatorPrice  = isIndianUser ? 499 : 12;
+    const proPrice      = isIndianUser ? 999 : 24;
+    const originalStarterPrice = Math.round(starterPrice / 0.75);
+    const originalCreatorPrice = Math.round(creatorPrice / 0.75);
+    const originalProPrice     = Math.round(proPrice / 0.75);
     const currency = isIndianUser ? 'INR' : 'USD';
     const symbol   = isIndianUser ? '₹'   : '$';
     return [
       { name: 'Starter Forge',   role: 'BASIC',        price: 0,           currency: 'FREE', ttsLimit: 600,    features: basicFeats },
-      { name: 'Creator Lite',    role: 'CREATOR_LITE',  price: starterPrice, currency, symbol, ttsLimit: 50000,  features: creatorLiteFeats },
-      { name: 'Creator Spark',   role: 'CREATOR',       price: creatorPrice, currency, symbol, ttsLimit: 150000, popular: true, features: creatorFeats },
-      { name: 'Creator Odyssey', role: 'STUDIO',        price: proPrice,     currency, symbol, ttsLimit: 400000, features: odysseyFeats },
+      { name: 'Creator Lite',    role: 'CREATOR_LITE',  price: starterPrice, originalPrice: originalStarterPrice, currency, symbol, ttsLimit: 50000,  features: creatorLiteFeats },
+      { name: 'Creator Spark',   role: 'CREATOR',       price: creatorPrice, originalPrice: originalCreatorPrice, currency, symbol, ttsLimit: 150000, popular: true, features: creatorFeats },
+      { name: 'Creator Odyssey', role: 'STUDIO',        price: proPrice,     originalPrice: originalProPrice,     currency, symbol, ttsLimit: 400000, features: odysseyFeats },
     ];
   };
   
@@ -1382,7 +1405,7 @@ const isPaidUser = currentPlan !== 'BASIC' && currentPlan !== 'ADMIN';
               <span className="sc-callout-icon">💡</span>
               <p className="sc-callout-text">
                 <strong style={{ color: '#2d2d5e' }}>One credit pool powers everything.</strong>{' '}
-                Voice, video, images, BG removal — all deducted from the same monthly credits. Starter at $9/mo is all most creators ever need.
+                Voice, video, images, BG removal — all deducted from the same monthly credits. Creator Lite ({isIndianUser ? '₹99' : '$5'}/mo) is all most creators ever need.
               </p>
             </div>
           </div>
