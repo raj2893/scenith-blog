@@ -60,10 +60,451 @@ const injectStyles = () => {
 
     .sc-root {
       font-family: 'Satoshi', 'DM Sans', sans-serif;
-      background: #06060f;
-      color: #e2e2ef;
+      background: #f5f4ff;
+      color: #1a1a2e;
       min-height: 100vh;
       overflow-x: hidden;
+    }
+
+    /* ── HERO ── */
+    .sc-hero {
+      position: relative;
+      padding: 90px 24px 60px;
+      text-align: center;
+      overflow: hidden;
+      background: linear-gradient(160deg, #eeeaff 0%, #f9f7ff 60%, #fdf0f8 100%);
+      border-bottom: 1px solid rgba(99,85,220,0.1);
+    }
+    .sc-hero-orb1 {
+      position: absolute; pointer-events: none;
+      width: 600px; height: 600px; border-radius: 50%;
+      top: -240px; left: 50%; transform: translateX(-50%);
+      background: radial-gradient(circle, rgba(99,85,220,0.12) 0%, transparent 65%);
+    }
+    .sc-hero-orb2 {
+      position: absolute; pointer-events: none;
+      width: 350px; height: 350px; border-radius: 50%;
+      top: 40px; right: -80px;
+      background: radial-gradient(circle, rgba(236,72,153,0.07) 0%, transparent 60%);
+    }
+    .sc-hero-grid {
+      position: absolute; inset: 0; pointer-events: none; opacity: 0.04;
+      background-image:
+        linear-gradient(rgba(99,85,220,1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99,85,220,1) 1px, transparent 1px);
+      background-size: 56px 56px;
+    }
+    .sc-hero-inner { position: relative; max-width: 840px; margin: 0 auto; }
+
+    .sc-badge-row { margin-bottom: 20px; }
+    .sc-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 18px; border-radius: 999px;
+      background: rgba(99,85,220,0.08);
+      border: 1px solid rgba(99,85,220,0.25);
+      font-size: 11.5px; font-weight: 700; letter-spacing: 0.11em;
+      color: #6355dc; text-transform: uppercase;
+    }
+    .sc-badge-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #6355dc; box-shadow: 0 0 8px rgba(99,85,220,0.5);
+      animation: sc-blink 1.5s ease-in-out infinite;
+    }
+    @keyframes sc-blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
+
+    .sc-h1 {
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-size: clamp(34px, 6vw, 62px);
+      font-weight: 900; line-height: 1.06; letter-spacing: -0.035em;
+      margin-bottom: 18px; color: #1a1a2e;
+    }
+    .sc-grad {
+      background: linear-gradient(120deg, #6355dc 0%, #e040a0 55%, #f97316 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .sc-hero-sub {
+      font-size: 16px; color: #6666aa; line-height: 1.65;
+      max-width: 480px; margin: 0 auto 36px;
+    }
+
+    /* ── TABS ── */
+    .sc-tab-hint {
+      display: inline-block;
+      font-size: 12.5px; color: #6666aa;
+      background: rgba(99,85,220,0.06);
+      border: 1px solid rgba(99,85,220,0.15);
+      border-radius: 8px; padding: 7px 18px;
+    }
+
+    /* ── SECTION WRAPPER ── */
+    .sc-section { max-width: 1300px; margin: 0 auto; padding: 56px 24px; }
+    .sc-section-dark { background: #f0eeff; }
+    .sc-section-title {
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-size: 28px; font-weight: 800; text-align: center;
+      letter-spacing: -0.025em; margin-bottom: 44px; color: #1a1a2e;
+    }
+
+    /* ── PLANS ROW — 4 cards in one line ── */
+    .sc-plans-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      align-items: start;
+      margin-bottom: 0;
+    }
+    @media(max-width: 900px) {
+      .sc-plans-row { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media(max-width: 540px) {
+      .sc-plans-row { grid-template-columns: 1fr; }
+    }
+
+    /* ── TOPUPS ROW — 3 cards in one line ── */
+    .sc-topups-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      align-items: start;
+      margin-top: 40px;
+    }
+    .sc-topups-label {
+      text-align: center; margin-bottom: 20px; margin-top: 48px;
+    }
+    .sc-topups-label h3 {
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-size: 20px; font-weight: 800; color: #1a1a2e;
+      margin-bottom: 6px;
+    }
+    .sc-topups-label p {
+      font-size: 13px; color: #8888bb;
+    }
+    @media(max-width: 640px) {
+      .sc-topups-row { grid-template-columns: 1fr; }
+    }
+
+    /* ── PRICING CARD ── */
+    .sc-card {
+      position: relative; display: flex; flex-direction: column;
+      background: #ffffff;
+      border: 1.5px solid rgba(99,85,220,0.12);
+      border-radius: 18px; padding: 20px 16px 16px;
+      transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+      box-shadow: 0 2px 12px rgba(99,85,220,0.05);
+    }
+    .sc-card:hover {
+      border-color: rgba(99,85,220,0.3);
+      box-shadow: 0 12px 40px rgba(99,85,220,0.1);
+      transform: translateY(-3px);
+    }
+    .sc-card.sc-popular {
+      border: 2px solid #6355dc;
+      box-shadow: 0 0 0 3px rgba(99,85,220,0.1), 0 16px 48px rgba(99,85,220,0.16);
+      transform: translateY(-8px);
+    }
+    .sc-card.sc-popular:hover { transform: translateY(-11px); }
+    .sc-card.sc-current {
+      border: 2px solid #10b981;
+      box-shadow: 0 0 0 3px rgba(16,185,129,0.08);
+    }
+
+    .sc-card-badge {
+      position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+      padding: 4px 16px; border-radius: 999px;
+      font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .sc-badge-popular {
+      background: linear-gradient(135deg, #6355dc, #8b5cf6);
+      color: #fff; box-shadow: 0 4px 14px rgba(99,85,220,0.4);
+    }
+    .sc-badge-studio {
+      background: linear-gradient(135deg, #f59e0b, #f97316);
+      color: #fff; box-shadow: 0 4px 14px rgba(245,158,11,0.35);
+    }
+    .sc-badge-current {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+    }
+    .sc-badge-downgrade {
+      background: rgba(239,68,68,0.08);
+      border: 1px solid rgba(239,68,68,0.3);
+      color: #ef4444;
+    }
+
+    .sc-plan-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: rgba(99,85,220,0.08);
+      border: 1px solid rgba(99,85,220,0.15);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 10px;
+    }
+    .sc-plan-icon svg { width: 20px; height: 20px; }
+
+    .sc-plan-tagline { font-size: 11px; color: #9999bb; margin-bottom: 3px; line-height: 1.4; }
+    .sc-plan-name {
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-size: 18px; font-weight: 900; letter-spacing: -0.02em;
+      margin-bottom: 12px; color: #1a1a2e;
+    }
+
+    .sc-price-area { margin-bottom: 8px; }
+    .sc-strike { font-size: 13px; color: #bbbbcc; text-decoration: line-through; margin-bottom: 3px; }
+    .sc-price-row { display: flex; align-items: baseline; gap: 2px; }
+    .sc-sym { font-size: 18px; font-weight: 700; color: #6355dc; }
+    .sc-num {
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-size: 38px; font-weight: 900; line-height: 1; letter-spacing: -0.04em; color: #1a1a2e;
+    }
+    .sc-per { font-size: 12px; color: #9999bb; margin-left: 3px; }
+    .sc-free-price {
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-size: 32px; font-weight: 900; color: #aaaacc;
+    }
+    .sc-loading-price { font-size: 15px; color: #bbbbcc; animation: sc-shimmer 1.4s ease-in-out infinite; }
+    @keyframes sc-shimmer { 0%,100%{opacity:0.35} 50%{opacity:1} }
+
+    .sc-save-pill {
+      display: inline-flex; align-items: center; gap: 4px; margin-top: 6px;
+      padding: 2px 10px; border-radius: 999px;
+      background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.22);
+      color: #059669; font-size: 10.5px; font-weight: 700;
+    }
+    .sc-forever { font-size: 12px; color: #aaaacc; margin-top: 6px; }
+
+    .sc-features {
+      list-style: none; flex: 1;
+      display: flex; flex-direction: column; gap: 7px;
+      margin: 12px 0 14px;
+    }
+    .sc-feat {
+      display: flex; align-items: flex-start; gap: 7px;
+      font-size: 12px; color: #6666aa; line-height: 1.4;
+    }
+    .sc-feat.sc-feat-hl { color: #2d2d5e; font-weight: 500; }
+    .sc-feat-icon { flex-shrink: 0; margin-top: 1px; font-size: 11px; }
+    .sc-feat-icon.star { color: #6355dc; }
+    .sc-feat-icon.check { color: #bbbbcc; }
+
+    .sc-btn {
+      width: 100%; padding: 11px 14px; border-radius: 10px; border: none;
+      font-family: 'Satoshi', sans-serif;
+      font-size: 13px; font-weight: 700; letter-spacing: 0.015em;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .sc-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+    .sc-btn-ghost {
+      background: rgba(99,85,220,0.05);
+      border: 1.5px solid rgba(99,85,220,0.15); color: #9999bb;
+    }
+    .sc-btn-ghost:hover:not(:disabled) {
+      background: rgba(99,85,220,0.09); color: #6355dc;
+      border-color: rgba(99,85,220,0.3);
+    }
+    .sc-btn-primary {
+      background: linear-gradient(135deg, #6355dc 0%, #8b5cf6 100%);
+      color: #fff; box-shadow: 0 5px 20px rgba(99,85,220,0.32);
+    }
+    .sc-btn-primary:hover:not(:disabled) {
+      box-shadow: 0 8px 30px rgba(99,85,220,0.5); transform: translateY(-1px);
+    }
+    .sc-btn-gold {
+      background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+      color: #fff; box-shadow: 0 5px 20px rgba(245,158,11,0.28);
+    }
+    .sc-btn-gold:hover:not(:disabled) {
+      box-shadow: 0 8px 30px rgba(245,158,11,0.45); transform: translateY(-1px);
+    }
+    .sc-btn-current {
+      background: rgba(16,185,129,0.07);
+      border: 1.5px solid rgba(16,185,129,0.25); color: #059669;
+    }
+
+    /* ── CALLOUT ── */
+    .sc-callout {
+      display: flex; align-items: center; gap: 14px;
+      background: rgba(99,85,220,0.05);
+      border: 1px solid rgba(99,85,220,0.15);
+      border-radius: 12px; padding: 14px 20px;
+      margin-top: 32px; max-width: 700px; margin-left: auto; margin-right: auto;
+    }
+    .sc-callout-icon { font-size: 20px; flex-shrink: 0; }
+    .sc-callout-text { font-size: 13.5px; color: #6666aa; line-height: 1.6; }
+
+    /* ── COMPARISON TABLE ── */
+    .sc-table-wrap {
+      overflow-x: auto;
+      border-radius: 16px;
+      border: 1.5px solid rgba(99,85,220,0.1);
+      box-shadow: 0 2px 16px rgba(99,85,220,0.05);
+    }
+    .sc-table { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 620px; background: #fff; }
+    .sc-table th {
+      padding: 13px 16px; text-align: center;
+      font-size: 11px; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase;
+      color: #9999bb; border-bottom: 1.5px solid rgba(99,85,220,0.08);
+      background: #f9f8ff;
+    }
+    .sc-table th:first-child { text-align: left; }
+    .sc-table th.sc-th-hl { color: #6355dc; }
+    .sc-table td {
+      padding: 12px 16px; border-bottom: 1px solid rgba(99,85,220,0.06);
+      color: #8888bb; text-align: center;
+    }
+    .sc-table td:first-child { text-align: left; color: #3d3d6b; font-weight: 500; }
+    .sc-table td.sc-td-hl { color: #6355dc; font-weight: 600; background: rgba(99,85,220,0.025); }
+    .sc-table tr:last-child td { border-bottom: none; }
+    .sc-table tr:hover td { background: rgba(99,85,220,0.02); }
+    .sc-yes { color: #059669 !important; font-weight: 700; }
+    .sc-no { color: #ccccdd !important; }
+
+    /* ── USE CASES ── */
+    .sc-use-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(210px,1fr)); gap: 16px;
+    }
+    .sc-use-card {
+      background: #fff;
+      border: 1.5px solid rgba(99,85,220,0.1);
+      border-radius: 16px; padding: 24px 20px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .sc-use-card:hover {
+      border-color: rgba(99,85,220,0.28);
+      box-shadow: 0 8px 28px rgba(99,85,220,0.08);
+    }
+    .sc-use-icon { font-size: 28px; margin-bottom: 12px; }
+    .sc-use-title {
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-size: 16px; font-weight: 800; margin-bottom: 8px; color: #1a1a2e;
+    }
+    .sc-use-body { font-size: 13px; color: #8888bb; line-height: 1.6; }
+
+    /* ── TRUST BAR ── */
+    .sc-trust {
+      display: flex; flex-wrap: wrap; justify-content: center;
+      border-top: 1.5px solid rgba(99,85,220,0.08);
+      border-bottom: 1.5px solid rgba(99,85,220,0.08);
+      background: #fff;
+      padding: 8px 16px;
+    }
+    .sc-trust-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 20px;
+      border-right: 1px solid rgba(99,85,220,0.08);
+    }
+    .sc-trust-item:last-child { border-right: none; }
+    .sc-trust-ico { font-size: 20px; }
+    .sc-trust-lbl { font-size: 13px; font-weight: 700; color: #2d2d5e; }
+    .sc-trust-sub { font-size: 11.5px; color: #9999bb; }
+
+    /* ── FAQ ── */
+    .sc-faq-wrap { max-width: 760px; margin: 0 auto; padding: 56px 24px; }
+    .sc-faq-item {
+      border-bottom: 1px solid rgba(99,85,220,0.08);
+      background: #fff; margin-bottom: 2px; border-radius: 10px;
+      overflow: hidden;
+    }
+    .sc-faq-q {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 18px 20px; cursor: pointer; user-select: none;
+      font-size: 14.5px; font-weight: 600; color: #2d2d5e;
+      transition: color 0.16s;
+    }
+    .sc-faq-q:hover { color: #6355dc; }
+    .sc-faq-chev { color: #bbbbcc; font-size: 16px; transition: transform 0.2s; }
+    .sc-faq-chev.open { transform: rotate(180deg); color: #6355dc; }
+    .sc-faq-a { padding: 0 20px 18px; font-size: 13.5px; color: #8888bb; line-height: 1.75; }
+
+    /* ── LOADING ── */
+    .sc-loading {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      min-height: 100vh; gap: 20px; background: #f5f4ff;
+    }
+    .sc-spinner {
+      width: 44px; height: 44px; border-radius: 50%;
+      border: 3px solid rgba(99,85,220,0.15);
+      border-top-color: #6355dc;
+      animation: sc-spin 0.75s linear infinite;
+    }
+    @keyframes sc-spin { to { transform: rotate(360deg); } }
+    .sc-loading p { font-size: 14px; color: #9999bb; }
+
+    /* ── MODAL ── */
+    .sc-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(20,10,50,0.55); backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: center; padding: 24px;
+    }
+    .sc-modal {
+      position: relative;
+      background: #ffffff;
+      border: 1.5px solid rgba(99,85,220,0.18);
+      border-radius: 24px; padding: 38px 32px;
+      width: 100%; max-width: 400px;
+      box-shadow: 0 30px 80px rgba(99,85,220,0.2);
+    }
+    .sc-modal-close {
+      position: absolute; top: 14px; right: 14px;
+      background: rgba(99,85,220,0.06); border: 1px solid rgba(99,85,220,0.12);
+      border-radius: 8px; width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      color: #9999bb; cursor: pointer; transition: all 0.16s;
+    }
+    .sc-modal-close:hover { background: rgba(99,85,220,0.1); color: #6355dc; }
+    .sc-modal-logo {
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-size: 28px; font-weight: 900; letter-spacing: -0.03em; text-align: center;
+      background: linear-gradient(120deg, #6355dc, #e040a0);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      margin-bottom: 5px;
+    }
+    .sc-modal-sub { font-size: 13.5px; color: #9999bb; text-align: center; margin-bottom: 26px; }
+    .sc-modal-form { display: flex; flex-direction: column; gap: 12px; }
+    .sc-modal-input {
+      width: 100%; padding: 13px 15px; border-radius: 11px;
+      background: #f8f7ff; border: 1.5px solid rgba(99,85,220,0.12);
+      color: #1a1a2e; font-family: 'Satoshi', sans-serif; font-size: 14px;
+      outline: none; transition: border-color 0.16s;
+    }
+    .sc-modal-input:focus { border-color: rgba(99,85,220,0.45); background: #fff; }
+    .sc-modal-input::placeholder { color: #bbbbcc; }
+    .sc-modal-error {
+      background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.2);
+      color: #dc2626; border-radius: 10px; padding: 11px 14px; font-size: 13px;
+      margin-bottom: 12px;
+    }
+    .sc-modal-or {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 11px; color: #bbbbcc; font-weight: 700;
+      letter-spacing: 0.1em; margin: 4px 0;
+    }
+    .sc-modal-or::before, .sc-modal-or::after {
+      content: ''; flex: 1; height: 1px; background: rgba(99,85,220,0.1);
+    }
+    .sc-modal-link { text-align: center; font-size: 13px; color: #9999bb; margin-top: 12px; }
+    .sc-modal-link a { color: #6355dc; text-decoration: none; font-weight: 700; }
+    .sc-modal-link a:hover { text-decoration: underline; }
+    .sc-modal-loading-overlay {
+      position: absolute; inset: 0; border-radius: 24px;
+      background: rgba(255,255,255,0.92); backdrop-filter: blur(4px);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 12px; z-index: 10;
+    }
+    .sc-modal-loading-overlay p { font-size: 14px; color: #9999bb; }
+    #googleSignInButtonPricing { display: flex; justify-content: center; }
+
+    /* ── FOOTER ── */
+    .sc-footer {
+      text-align: center; padding: 28px 24px;
+      border-top: 1px solid rgba(99,85,220,0.08);
+      font-size: 13px; color: #aaaacc; background: #fff;
+    }
+
+    @media(max-width:660px) {
+      .sc-card.sc-popular { transform: none; }
+      .sc-trust-item { padding: 10px 12px; }
+      .sc-modal { padding: 28px 18px; }
     }
 
     /* ── HERO ── */
@@ -171,364 +612,10 @@ const injectStyles = () => {
       gap: 22px; align-items: start;
     }
 
-    /* ── PRICING CARD ── */
-    
-    .sc-card:hover {
-      border-color: rgba(99,85,220,0.38);
-      box-shadow: 0 24px 64px rgba(99,85,220,0.11);
-    }
-    .sc-card.sc-popular {
-      border: 2px solid #6355dc;
-      box-shadow: 0 0 0 1px rgba(99,85,220,0.18), 0 32px 80px rgba(99,85,220,0.22);
-      transform: translateY(-14px);
-    }
-    .sc-card.sc-current {
-      border: 2px solid #10b981;
-      box-shadow: 0 0 0 1px rgba(16,185,129,0.15);
-    }
-
-    .sc-card-badge {
-      position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
-      padding: 5px 20px; border-radius: 999px;
-      font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
-      white-space: nowrap;
-    }
-    .sc-badge-popular {
-      background: linear-gradient(135deg, #6355dc, #8b5cf6);
-      color: #fff; box-shadow: 0 4px 18px rgba(99,85,220,0.55);
-    }
-    .sc-badge-studio {
-      background: linear-gradient(135deg, #f59e0b, #f97316);
-      color: #1a0800; box-shadow: 0 4px 18px rgba(245,158,11,0.45);
-    }
-    .sc-badge-current {
-      background: linear-gradient(135deg, #10b981, #059669);
-      color: #fff;
-    }
-    .sc-badge-downgrade {
-      background: rgba(239,68,68,0.12);
-      border: 1px solid rgba(239,68,68,0.35);
-      color: #f87171;
-    }
-
-    .sc-price-area { margin-bottom: 10px; }
-    .sc-strike { font-size: 14px; color: #3a3a52; text-decoration: line-through; margin-bottom: 4px; }
-    .sc-price-row { display: flex; align-items: baseline; gap: 2px; }
-    .sc-sym { font-size: 22px; font-weight: 700; color: #a899f5; }
-    
-    .sc-loading-price { font-size: 16px; color: #3a3a52; animation: sc-shimmer 1.4s ease-in-out infinite; }
-    @keyframes sc-shimmer { 0%,100%{opacity:0.35} 50%{opacity:1} }
-
-    .sc-save-pill {
-      display: inline-flex; align-items: center; gap: 5px; margin-top: 8px;
-      padding: 3px 12px; border-radius: 999px;
-      background: rgba(16,185,129,0.10); border: 1px solid rgba(16,185,129,0.28);
-      color: #34d399; font-size: 11px; font-weight: 700;
-    }
-    .sc-forever { font-size: 13px; color: #44445e; margin-top: 8px; }
-
-    .sc-feat.sc-feat-hl { color: #d4d4f0; font-weight: 500; }
-    .sc-feat-icon { flex-shrink: 0; margin-top: 2px; font-size: 12px; }
-    .sc-feat-icon.star { color: #a899f5; }
-    .sc-feat-icon.check { color: #3a3a52; }
-/* ── PRICING CARD ── */
-    .sc-card {
-      position: relative; display: flex; flex-direction: column;
-      background: #0d0d1c;
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 20px; padding: 24px 20px 20px;
-      transition: border-color 0.28s, box-shadow 0.28s;
-    }
-      .sc-plan-icon {
-      width: 42px; height: 42px; border-radius: 12px;
-      background: rgba(99,85,220,0.1);
-      border: 1px solid rgba(99,85,220,0.2);
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 12px;
-    }
-    .sc-plan-icon svg { width: 22px; height: 22px; }
-
-    .sc-plan-tagline { font-size: 12px; color: #55557a; margin-bottom: 3px; line-height: 1.4; }
-    .sc-plan-name {
-      font-family: 'Cabinet Grotesk', sans-serif;
-      font-size: 20px; font-weight: 900; letter-spacing: -0.02em; margin-bottom: 14px;
-    }
-      .sc-num {
-      font-family: 'Cabinet Grotesk', sans-serif;
-      font-size: 44px; font-weight: 900; line-height: 1; letter-spacing: -0.04em;
-    }
-    .sc-per { font-size: 13px; color: #55557a; margin-left: 4px; }
-    .sc-free-price {
-      font-family: 'Cabinet Grotesk', sans-serif;
-      font-size: 36px; font-weight: 900; color: #6a6a8a;
-    }
-      .sc-features {
-      list-style: none; flex: 1;
-      display: flex; flex-direction: column; gap: 8px;
-      margin: 14px 0 18px;
-    }
-    .sc-feat {
-      display: flex; align-items: flex-start; gap: 8px;
-      font-size: 12.5px; color: #7878a0; line-height: 1.4;
-    }
-      .sc-btn {
-      width: 100%; padding: 12px 16px; border-radius: 11px; border: none;
-      font-family: 'Satoshi', sans-serif;
-      font-size: 13.5px; font-weight: 700; letter-spacing: 0.015em;
-      cursor: pointer; transition: all 0.22s;
-    }
-    .sc-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
-    .sc-btn-ghost {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.09); color: #6a6a8a;
-    }
-    .sc-btn-ghost:hover:not(:disabled) {
-      background: rgba(255,255,255,0.07); color: #b0b0cc;
-      border-color: rgba(255,255,255,0.16);
-    }
-    .sc-btn-primary {
-      background: linear-gradient(135deg, #6355dc 0%, #8b5cf6 100%);
-      color: #fff; box-shadow: 0 6px 26px rgba(99,85,220,0.42);
-    }
-    .sc-btn-primary:hover:not(:disabled) {
-      box-shadow: 0 10px 38px rgba(99,85,220,0.62); transform: translateY(-1px);
-    }
-    .sc-btn-gold {
-      background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
-      color: #1a0800; box-shadow: 0 6px 26px rgba(245,158,11,0.32);
-    }
-    .sc-btn-gold:hover:not(:disabled) {
-      box-shadow: 0 10px 38px rgba(245,158,11,0.5); transform: translateY(-1px);
-    }
-    .sc-btn-current {
-      background: rgba(16,185,129,0.09);
-      border: 1px solid rgba(16,185,129,0.3); color: #34d399;
-    }
-
-    /* ── CALLOUT ── */
-    .sc-callout {
-      display: flex; align-items: center; gap: 16px;
-      background: rgba(99,85,220,0.07);
-      border: 1px solid rgba(99,85,220,0.2);
-      border-radius: 14px; padding: 16px 24px;
-      margin-top: 38px; max-width: 700px; margin-left: auto; margin-right: auto;
-    }
-    .sc-callout-icon { font-size: 22px; flex-shrink: 0; }
-    .sc-callout-text { font-size: 14px; color: #7878a0; line-height: 1.6; }
-
-    /* ── CINEAI SPOTLIGHT ── */
-    .sc-spotlight {
-      position: relative; overflow: hidden;
-      background: #0d0d1c;
-      border: 2px solid #6355dc;
-      border-radius: 28px; padding: 40px 36px;
-      max-width: 680px; margin: 0 auto;
-      box-shadow: 0 0 80px rgba(99,85,220,0.2);
-    }
-    .sc-spotlight::before {
-      content: ''; position: absolute; inset: 0; pointer-events: none;
-      background: radial-gradient(ellipse 70% 55% at 50% 0%, rgba(99,85,220,0.14) 0%, transparent 70%);
-    }
-    .sc-spotlight-inner { position: relative; }
-    .sc-spotlight-tag {
-      font-size: 11px; color: #a899f5; font-weight: 700;
-      letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 8px;
-    }
-    .sc-spotlight-name {
-      font-family: 'Cabinet Grotesk', sans-serif;
-      font-size: 36px; font-weight: 900; letter-spacing: -0.03em; margin-bottom: 6px;
-    }
-    .sc-spotlight-sub { font-size: 15px; color: #6a6a8a; margin-bottom: 28px; }
-    .sc-spotlight-price-row {
-      display: flex; align-items: baseline; gap: 12px; margin-bottom: 28px; flex-wrap: wrap;
-    }
-    .sc-spotlight-strike { font-size: 16px; color: #3a3a52; text-decoration: line-through; }
-    .sc-spotlight-price {
-      font-family: 'Cabinet Grotesk', sans-serif;
-      font-size: 60px; font-weight: 900; line-height: 1; letter-spacing: -0.04em;
-    }
-    .sc-spotlight-period { font-size: 16px; color: #55557a; }
-    .sc-spotlight-ribbon {
-      position: absolute; top: 20px; right: -2px;
-      background: linear-gradient(135deg, #f59e0b, #f97316);
-      color: #1a0800; font-size: 11px; font-weight: 800;
-      padding: 5px 18px 5px 14px; border-radius: 4px 0 0 4px;
-      box-shadow: -4px 4px 14px rgba(245,158,11,0.35);
-    }
-    .sc-spotlight-feats {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-      margin-bottom: 28px;
-    }
-    @media(max-width:500px) { .sc-spotlight-feats { grid-template-columns: 1fr; } }
-
-    /* ── COMPARISON TABLE ── */
-    .sc-table-wrap {
-      overflow-x: auto;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,0.055);
-    }
-    .sc-table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 640px; }
-    .sc-table th {
-      padding: 14px 18px; text-align: center;
-      font-size: 11.5px; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase;
-      color: #55557a; border-bottom: 1px solid rgba(255,255,255,0.055);
-      background: rgba(255,255,255,0.018);
-    }
-    .sc-table th:first-child { text-align: left; }
-    .sc-table th.sc-th-hl { color: #a899f5; }
-    .sc-table td {
-      padding: 13px 18px; border-bottom: 1px solid rgba(255,255,255,0.038);
-      color: #7878a0; text-align: center;
-    }
-    .sc-table td:first-child { text-align: left; color: #b0b0cc; font-weight: 500; }
-    .sc-table td.sc-td-hl { color: #a899f5; font-weight: 600; }
-    .sc-table tr:last-child td { border-bottom: none; }
-    .sc-table tr:nth-child(even) td { background: rgba(255,255,255,0.012); }
-    .sc-yes { color: #34d399 !important; font-weight: 700; }
-    .sc-no { color: #2e2e42 !important; }
-
-    /* ── USE CASES ── */
-    .sc-use-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 20px;
-    }
-    .sc-use-card {
-      background: #0d0d1c;
-      border: 1px solid rgba(255,255,255,0.062);
-      border-radius: 20px; padding: 28px 24px;
-      transition: border-color 0.22s;
-    }
-    .sc-use-card:hover { border-color: rgba(99,85,220,0.35); }
-    .sc-use-icon { font-size: 32px; margin-bottom: 14px; }
-    .sc-use-title {
-      font-family: 'Cabinet Grotesk', sans-serif;
-      font-size: 17px; font-weight: 800; margin-bottom: 10px;
-    }
-    .sc-use-body { font-size: 13.5px; color: #6a6a8a; line-height: 1.65; }
-
-    /* ── TRUST BAR ── */
-    .sc-trust {
-      display: flex; flex-wrap: wrap; justify-content: center;
-      border-top: 1px solid rgba(255,255,255,0.048);
-      border-bottom: 1px solid rgba(255,255,255,0.048);
-      background: rgba(255,255,255,0.018);
-      padding: 10px 16px;
-    }
-    .sc-trust-item {
-      display: flex; align-items: center; gap: 10px;
-      padding: 12px 22px;
-      border-right: 1px solid rgba(255,255,255,0.048);
-    }
-    .sc-trust-item:last-child { border-right: none; }
-    .sc-trust-ico { font-size: 20px; }
-    .sc-trust-lbl { font-size: 13px; font-weight: 700; color: #c8c8e4; }
-    .sc-trust-sub { font-size: 12px; color: #44445e; }
-
-    /* ── FAQ ── */
-    .sc-faq-wrap { max-width: 780px; margin: 0 auto; padding: 64px 24px; }
-    .sc-faq-item { border-bottom: 1px solid rgba(255,255,255,0.055); }
-    .sc-faq-q {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 20px 2px; cursor: pointer; user-select: none;
-      font-size: 15px; font-weight: 600; color: #c0c0de;
-      transition: color 0.18s;
-    }
-    .sc-faq-q:hover { color: #a899f5; }
-    .sc-faq-chev { color: #44445e; font-size: 18px; transition: transform 0.22s; }
-    .sc-faq-chev.open { transform: rotate(180deg); }
-    .sc-faq-a { padding: 0 4px 20px; font-size: 14px; color: #7878a0; line-height: 1.78; }
-
-    /* ── LOADING ── */
-    .sc-loading {
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      min-height: 100vh; gap: 20px;
-    }
-    .sc-spinner {
-      width: 46px; height: 46px; border-radius: 50%;
-      border: 3px solid rgba(99,85,220,0.18);
-      border-top-color: #6355dc;
-      animation: sc-spin 0.75s linear infinite;
-    }
-    @keyframes sc-spin { to { transform: rotate(360deg); } }
-    .sc-loading p { font-size: 14px; color: #7878a0; }
-
-    /* ── MODAL ── */
-    .sc-overlay {
-      position: fixed; inset: 0; z-index: 9999;
-      background: rgba(0,0,0,0.82); backdrop-filter: blur(10px);
-      display: flex; align-items: center; justify-content: center; padding: 24px;
-    }
-    .sc-modal {
-      position: relative;
-      background: #0d0d1c;
-      border: 1px solid rgba(99,85,220,0.32);
-      border-radius: 26px; padding: 42px 36px;
-      width: 100%; max-width: 420px;
-      box-shadow: 0 50px 120px rgba(0,0,0,0.65);
-    }
-    .sc-modal-close {
-      position: absolute; top: 16px; right: 16px;
-      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09);
-      border-radius: 9px; width: 34px; height: 34px;
-      display: flex; align-items: center; justify-content: center;
-      color: #7878a0; cursor: pointer; transition: all 0.18s;
-    }
-    .sc-modal-close:hover { background: rgba(255,255,255,0.1); color: #fff; }
-    .sc-modal-logo {
-      font-family: 'Cabinet Grotesk', sans-serif;
-      font-size: 30px; font-weight: 900; letter-spacing: -0.03em; text-align: center;
-      background: linear-gradient(120deg, #a899f5, #f06cbe);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      margin-bottom: 6px;
-    }
-    .sc-modal-sub { font-size: 14px; color: #55557a; text-align: center; margin-bottom: 30px; }
-    .sc-modal-form { display: flex; flex-direction: column; gap: 14px; }
-    .sc-modal-input {
-      width: 100%; padding: 14px 16px; border-radius: 12px;
-      background: rgba(255,255,255,0.045); border: 1px solid rgba(255,255,255,0.09);
-      color: #e2e2ef; font-family: 'Satoshi', sans-serif; font-size: 14px;
-      outline: none; transition: border-color 0.18s;
-    }
-    .sc-modal-input:focus { border-color: rgba(99,85,220,0.6); }
-    .sc-modal-input::placeholder { color: #3a3a52; }
-    .sc-modal-error {
-      background: rgba(239,68,68,0.09); border: 1px solid rgba(239,68,68,0.3);
-      color: #f87171; border-radius: 10px; padding: 12px 16px; font-size: 13px;
-      margin-bottom: 14px;
-    }
-    .sc-modal-or {
-      display: flex; align-items: center; gap: 12px;
-      font-size: 11px; color: #3a3a52; font-weight: 700;
-      letter-spacing: 0.1em; margin: 4px 0;
-    }
-    .sc-modal-or::before, .sc-modal-or::after {
-      content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.055);
-    }
-    .sc-modal-link { text-align: center; font-size: 13px; color: #55557a; margin-top: 14px; }
-    .sc-modal-link a { color: #a899f5; text-decoration: none; font-weight: 700; }
-    .sc-modal-link a:hover { text-decoration: underline; }
-    .sc-modal-loading-overlay {
-      position: absolute; inset: 0; border-radius: 26px;
-      background: rgba(6,6,15,0.88); backdrop-filter: blur(4px);
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      gap: 14px; z-index: 10;
-    }
-    .sc-modal-loading-overlay p { font-size: 14px; color: #7878a0; }
-    #googleSignInButtonPricing { display: flex; justify-content: center; }
-
-    /* ── FOOTER ── */
-    .sc-footer {
-      text-align: center; padding: 32px 24px;
-      border-top: 1px solid rgba(255,255,255,0.048);
-      font-size: 13px; color: #3a3a52;
-    }
-
     @media(max-width:660px) {
       .sc-card.sc-popular { transform: none; }
       .sc-trust-item { padding: 10px 12px; }
-      .sc-tab { padding: 10px 18px; font-size: 13px; }
-      .sc-modal { padding: 32px 22px; }
-      .sc-spotlight { padding: 28px 22px; }
+      .sc-modal { padding: 28px 18px; }
     }
   `;
   document.head.appendChild(s);
@@ -548,12 +635,13 @@ const HL: Record<string, number[]> = {
    FAQ DATA
 ───────────────────────────────────────────────────────────────────── */
 const FAQ = [
-  { q: 'What is AI voice generation?', a: 'AI voice generation uses advanced text-to-speech technology to convert written text into natural-sounding speech. Scenith offers 30+ premium AI voices in multiple languages for various use cases including content creation, e-learning, podcasts, and commercial projects.' },
-  { q: 'Can I upgrade or downgrade my plan?', a: 'Yes! You can upgrade your plan at any time. Upgrades take effect immediately. Note that downgrades from Creator Odyssey to Creator Spark are not available to maintain service quality. All plans are billed monthly with no long-term commitments.' },
-  { q: 'What happens if I exceed my character limit?', a: "Your daily and monthly character limits are tracked separately. If you reach your daily limit, you can continue the next day. If you exceed your monthly limit, you'll need to upgrade to a higher tier or wait until your plan renews." },
-  { q: 'Do you offer refunds?', a: 'No. We do not offer refunds on our paid plans. We recommend starting on the free plan to test quality before upgrading.' },
-  { q: 'Can I use the voices for commercial projects?', a: 'All our plans allow you to use generated voices for commercial projects including YouTube videos, podcasts, advertisements, and e-learning content.' },
-  { q: 'Which payment methods do you accept?', a: 'We accept all major payment methods through Razorpay (for India) and PayPal (international). This includes credit cards, debit cards, UPI, net banking, and digital wallets for secure transactions.' },
+  { q: 'How do credits work?', a: 'Credits are a shared pool that powers all AI features — voice generation, AI video, AI images, background removal, and speed videos all draw from the same monthly credit balance. 1 credit = 100 voice characters = 1 background removal = 1 speed video = varies by AI model for video/image. Credits reset monthly with your plan.' },
+  { q: 'What is the difference between Free and Starter?', a: 'The Free plan gives 50 credits and 600 voice chars/mo with limited AI models and watermarked 720p exports. Starter ($9/mo) gives 300 credits, 50,000 voice chars, all AI models unlocked, HD 1080p exports with no watermark, and access to credit topups for extra capacity.' },
+  { q: 'Can I buy extra credits with topups?', a: 'Yes! Topup packs are one-time purchases available to paid plan users (Starter and above). They add credits to your existing balance instantly and extend your expiry by 30 days. Topups are not available on the Free plan.' },
+  { q: 'Can I upgrade or downgrade my plan?', a: 'You can upgrade at any time — it takes effect immediately. Downgrades are not available mid-cycle. All plans are billed monthly with no long-term commitments, so you can cancel before the next renewal.' },
+  { q: 'Do you offer refunds?', a: 'No. We do not offer refunds on paid plans or topup purchases. We recommend starting on the Free plan to test quality before upgrading — it gives you real access to core features.' },
+  { q: 'Can I use generated content commercially?', a: 'Yes! All plans including Free include full commercial use rights. Use generated voices, videos, and images in YouTube videos, client work, ads, podcasts, and any commercial project — no attribution required.' },
+  { q: 'Which payment methods do you accept?', a: 'We accept all major payment methods through Razorpay (India: credit/debit cards, UPI, net banking, wallets) and PayPal (international: cards and PayPal balance). All transactions are encrypted and secure.' },
 ];
 
 /* ─────────────────────────────────────────────────────────────────────
@@ -803,49 +891,46 @@ export default function PricingPageClient() {
 
   /* ── getPlans ── */
   const getPlans = (): PricingPlan[] => {
-    const basicFeats = ['600 voice chars/mo · 720p export · 500/day', '5 speed videos + 5 BG removals', '10 SVG downloads', 'Community support', 'Commercial use'];
+    const basicFeats = ['50 credits · 600 voice chars/mo', '5 speed videos + 5 BG removals · 720p', '10 SVG downloads/mo', 'Limited AI models only', 'Commercial use'];
     const creatorLiteFeats = [
-  '300 credits/mo · 1080p export · all features unlocked',
-  '🎭 Voice emotions — 9 presets · 10,000 voice chars/mo',
-  '30 speed videos · 100 BG removals · Unlimited SVGs',
-  '🎨 AI Image gen · All 7 models · ~3 Kling 5s videos/mo',
-];
+      '300 credits/mo · 50,000 voice chars/mo',
+      '🎭 All AI models unlocked · 1080p export',
+      '30 speed videos · 100 BG removals · Unlimited SVGs',
+      '💳 Topups available · No watermark',
+    ];
 
-const creatorFeats = [
-  '900 credits/mo · 1440p export · all features unlocked',
-  '🎭 Voice emotions — 9 presets · 75,000 voice chars/mo',
-  '60 speed videos · 500 BG removals · Unlimited SVGs',
-  '🎨 AI Image gen · All 7 models · ~14 Kling 5s videos/mo',
-];
+    const creatorFeats = [
+      '900 credits/mo · 150,000 voice chars/mo',
+      '🎭 All AI models unlocked · 1440p export',
+      '60 speed videos · 500 BG removals · Unlimited SVGs',
+      '💳 Topups available · Priority support',
+    ];
 
-const odysseyFeats = [
-  '2,500 credits/mo · 4K export · all features unlocked',
-  '🎭 Voice emotions + all premium voices · 250,000 chars/mo',
-  'Unlimited speed videos, removals & SVGs',
-  '🎨 AI Image gen · All 7 models · ~39 Kling 5s videos/mo',
-];
+    const odysseyFeats = [
+      '2,500 credits/mo · 400,000 voice chars/mo',
+      '🎭 All AI models · 4K export · Fastest queue',
+      'Unlimited speed videos + BG removals + SVGs',
+      '💳 Topups available · Dedicated support',
+    ];
     
     if (isIndianUser === null) {
       return [
-        { name: 'Starter Forge',   role: 'BASIC',        price: 0, currency: 'FREE',    ttsLimit: 500,    features: basicFeats },
-        { name: 'Creator Lite',    role: 'CREATOR_LITE',  price: 0, currency: 'LOADING', ttsLimit: 10000,  features: creatorLiteFeats },
-        { name: 'Creator Spark',   role: 'CREATOR',       price: 0, currency: 'LOADING', ttsLimit: 75000,  popular: true, features: creatorFeats },
-        { name: 'Creator Odyssey', role: 'STUDIO',        price: 0, currency: 'LOADING', ttsLimit: 250000, features: odysseyFeats },
+        { name: 'Starter Forge',   role: 'BASIC',        price: 0, currency: 'FREE',    ttsLimit: 600,    features: basicFeats },
+        { name: 'Creator Lite',    role: 'CREATOR_LITE',  price: 0, currency: 'LOADING', ttsLimit: 50000,  features: creatorLiteFeats },
+        { name: 'Creator Spark',   role: 'CREATOR',       price: 0, currency: 'LOADING', ttsLimit: 150000, popular: true, features: creatorFeats },
+        { name: 'Creator Odyssey', role: 'STUDIO',        price: 0, currency: 'LOADING', ttsLimit: 400000, features: odysseyFeats },
       ];
     }
-    const creatorLitePrice = isIndianUser ? 99  : 5;
-    const creatorPrice     = isIndianUser ? 499 : 12;
-    const studioPrice      = isIndianUser ? 999 : 24;
-    const originalCreatorLitePrice = Math.round(creatorLitePrice / 0.75);
-    const originalCreatorPrice     = Math.round(creatorPrice / 0.75);
-    const originalStudioPrice      = Math.round(studioPrice  / 0.75);
+    const starterPrice  = isIndianUser ? 749  : 9;
+    const creatorPrice  = isIndianUser ? 1499 : 19;
+    const proPrice      = isIndianUser ? 2999 : 39;
     const currency = isIndianUser ? 'INR' : 'USD';
     const symbol   = isIndianUser ? '₹'   : '$';
     return [
-      { name: 'Starter Forge',   role: 'BASIC',        price: 0,               currency: 'FREE',    ttsLimit: 2000,   features: basicFeats },
-      { name: 'Creator Lite',    role: 'CREATOR_LITE',  price: creatorLitePrice, originalPrice: originalCreatorLitePrice, currency, symbol, ttsLimit: 10000,  features: creatorLiteFeats },
-      { name: 'Creator Spark',   role: 'CREATOR',       price: creatorPrice,    originalPrice: originalCreatorPrice,     currency, symbol, ttsLimit: 75000,  popular: true, features: creatorFeats },
-      { name: 'Creator Odyssey', role: 'STUDIO',        price: studioPrice,     originalPrice: originalStudioPrice,      currency, symbol, ttsLimit: 250000, features: odysseyFeats },
+      { name: 'Starter Forge',   role: 'BASIC',        price: 0,           currency: 'FREE', ttsLimit: 600,    features: basicFeats },
+      { name: 'Creator Lite',    role: 'CREATOR_LITE',  price: starterPrice, currency, symbol, ttsLimit: 50000,  features: creatorLiteFeats },
+      { name: 'Creator Spark',   role: 'CREATOR',       price: creatorPrice, currency, symbol, ttsLimit: 150000, popular: true, features: creatorFeats },
+      { name: 'Creator Odyssey', role: 'STUDIO',        price: proPrice,     currency, symbol, ttsLimit: 400000, features: odysseyFeats },
     ];
   };
   
@@ -1078,9 +1163,10 @@ const isPaidUser = currentPlan !== 'BASIC' && currentPlan !== 'ADMIN';
             Simple, Transparent<br />
             <span className="sc-grad">Pricing</span>
           </h1>
-          <p className="sc-hero-sub">Choose the plan that fits your needs</p>
-          <div style={{ marginTop: 14 }}>
-            <span className="sc-tab-hint">Credits power everything — voice, video, images & more</span>
+          <p className="sc-hero-sub">One credit pool for voice, video, images & more.</p>
+          <div style={{ marginTop: 14, display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <span className="sc-tab-hint">🎤 Voice · 🎬 Video · 🖼️ Images · ✂️ BG Removal</span>
+            <span className="sc-tab-hint">💳 1 credit = 100 voice chars</span>
           </div>
         </div>
       </header>
@@ -1089,7 +1175,8 @@ const isPaidUser = currentPlan !== 'BASIC' && currentPlan !== 'ADMIN';
       {activeSection === 'bundle' && (
         <>
           <div className="sc-section">
-            <div className="sc-bundle-grid">
+            {/* ── PLAN CARDS ROW ── */}
+            <div className="sc-plans-row">
               {plans.map((plan) => {
                 const isFree = plan.price === 0;
                 const isPopular = plan.role === 'CREATOR';
@@ -1143,9 +1230,9 @@ const isPaidUser = currentPlan !== 'BASIC' && currentPlan !== 'ADMIN';
 
                     <p className="sc-plan-tagline">
                       {plan.role === 'BASIC'        && 'Build your first AI creations — free forever.'}
-                     {plan.role === 'CREATOR_LITE' && 'Start creating with 300 credits — voice, video & images.'}
-                      {plan.role === 'CREATOR'       && 'Spark your creativity with powerful AI tools.'}
-                      {plan.role === 'STUDIO'        && 'Master your creative journey with limitless power.'}
+                      {plan.role === 'CREATOR_LITE' && 'Start creating with 300 credits — voice, video & images.'}
+                      {plan.role === 'CREATOR'      && 'Spark your creativity with powerful AI tools.'}
+                      {plan.role === 'STUDIO'       && 'Master your creative journey with limitless power.'}
                     </p>
 
                     <h2 className="sc-plan-name">{plan.name}</h2>
@@ -1198,7 +1285,14 @@ const isPaidUser = currentPlan !== 'BASIC' && currentPlan !== 'ADMIN';
               );
             })}
 
-            {/* ── TOPUP CARDS ── */}
+            </div>
+
+            {/* ── TOPUP SECTION ── */}
+            <div className="sc-topups-label">
+              <h3>💳 Credit Top-ups</h3>
+              <p>One-time purchases for paid plan users (Starter and above) — add credits anytime.</p>
+            </div>
+            <div className="sc-topups-row">
             {topupPacks.map((pack, idx) => {
               const locked = !isPaidUser && isLoggedIn;
               const isLoading = loading === pack.planType;
@@ -1225,7 +1319,7 @@ const isPaidUser = currentPlan !== 'BASIC' && currentPlan !== 'ADMIN';
                     </svg>
                   </div>
 
-                  <p className="sc-plan-tagline">Credit Top-up · One-time purchase</p>
+                  <p className="sc-plan-tagline">One-time top-up · Paid users only</p>
                   <h2 className="sc-plan-name">{pack.name}</h2>
 
                   <div className="sc-price-area">
@@ -1255,23 +1349,19 @@ const isPaidUser = currentPlan !== 'BASIC' && currentPlan !== 'ADMIN';
                       <span className="sc-feat-icon star">✦</span>
                       {pack.perCreditLabel === '—' ? 'Best per-credit rate' : pack.perCreditLabel + ' · best rate'}
                     </li>
-                    <li className="sc-feat">
-                      <span className="sc-feat-icon check">✓</span>
-                      Works for voice, video & images
+                    <li className="sc-feat sc-feat-hl">
+                      <span className="sc-feat-icon star">✦</span>
+                      Works for voice, video & images and more
                     </li>
-                    <li className="sc-feat">
-                      <span className="sc-feat-icon check">✓</span>
+                    <li className="sc-feat sc-feat-hl">
+                      <span className="sc-feat-icon star">✦</span>
                       Expiry extended 30 days
-                    </li>
-                    <li className="sc-feat">
-                      <span className="sc-feat-icon check">✓</span>
-                      No subscription — pay once
                     </li>
                   </ul>
 
                   {locked ? (
                     <button className="sc-btn sc-btn-ghost" disabled>
-                      🔒 Upgrade to a paid plan first
+                      🔒 Requires Starter plan or above
                     </button>
                   ) : (
                     <button
@@ -1291,16 +1381,16 @@ const isPaidUser = currentPlan !== 'BASIC' && currentPlan !== 'ADMIN';
             <div className="sc-callout">
               <span className="sc-callout-icon">💡</span>
               <p className="sc-callout-text">
-                <strong style={{ color: '#d4d4f0' }}>Bundle = best deal.</strong>{' '}
-                Creator Spark gives you Voice + Speed Videos + Background Removals + AI Images for less than buying them individually.
+                <strong style={{ color: '#2d2d5e' }}>One credit pool powers everything.</strong>{' '}
+                Voice, video, images, BG removal — all deducted from the same monthly credits. Starter at $9/mo is all most creators ever need.
               </p>
             </div>
           </div>
 
           {/* comparison table */}
-          <div className="sc-section-dark">
+          <div style={{ background: '#f0eeff' }}>
             <div className="sc-section">
-              <h2 className="sc-section-title">Detailed Plan Comparison</h2>
+              <h2 className="sc-section-title">What Do You Get? Full Breakdown</h2>
               <div className="sc-table-wrap">
                 <table className="sc-table">
                   <thead>
@@ -1314,28 +1404,26 @@ const isPaidUser = currentPlan !== 'BASIC' && currentPlan !== 'ADMIN';
                   </thead>
                   <tbody>
                     {[
-                      ['Monthly Voice Characters', '600',    '10,000',       '75,000',       '250,000'],
-                      ['Daily Character Limit',    '150',      '2,500',        '20,000',       'Unlimited'],
-                      ['Max Chars per Request',    '80',      '700',          '4,000',        '6,000'],
-                      ['Voice Emotions',           '✗',        '✓ 9 Presets',  '✓ 9 Presets',  '✓ 9 Presets'],
-                      ['Speed Videos/Month',       '5',        '30',           '60',           'Unlimited'],
-                      ['Video Watermark',          '✓ Added',  '✗ None',       '✗ None',       '✗ None'],
-                      ['Max Video Length',         '5 min',    '10 min',       '30 min',       'Unlimited'],
-                      ['Background Removals/mo',   '5',        '100',          '500',          '1,500'],
-                      ['SVG Downloads',            '10/month', 'Unlimited',    'Unlimited',    'Unlimited'],
-                      ['Monthly Credits (shared pool)', '50 cr',  '300 cr',      '900 cr',          '2,500 cr'],
-                      ['AI Video Generation',      '✗',        '✓ All models', '✓ All models', '✓ All models'],
-                      ['AI Image Generation',      '✗',        '✓ All 7 models', '✓ All 7 models', '✓ All 7 models'],
-                      ['Max Export Quality',       '720p',     '1080p',        '1440p',        '4K'],
-                      ['Commercial Use',           '✓',        '✓',            '✓',            '✓'],
-                      ['Priority Support',         '✗',        '✗',            '✓',            '✓ Dedicated'],
-                    ].map(([feat, basic, lite, creator, studio], i) => (
+                      ['Monthly Credits',           '50 cr',      '300 cr',         '900 cr',          '2,500 cr'],
+                      ['Monthly Voice Characters',  '600',        '50,000',         '150,000',         '400,000'],
+                      ['Max Chars per Request',     '200',        '4,000',          '4,000',           '6,000'],
+                      ['AI Video Generation',       '✗',          '✓ All models',   '✓ All models',    '✓ All models'],
+                      ['AI Image Generation',       '✗',          '✓ All models',   '✓ All models',    '✓ All models'],
+                      ['Speed Videos/Month',        '5',          '30',             '60',              'Unlimited'],
+                      ['Background Removals/mo',    '5',          '100',            '500',             '1,500'],
+                      ['SVG Downloads',             '10/mo',      'Unlimited',      'Unlimited',       'Unlimited'],
+                      ['Watermark on exports',      '✓ Added',    '✗ None',         '✗ None',          '✗ None'],
+                      ['Max Export Quality',        '720p',       '1080p',          '1440p',           '4K'],
+                      ['Credit Topups',             '✗',          '✓ Available',    '✓ Available',     '✓ Available'],
+                      ['Commercial Use',            '✓',          '✓',              '✓',               '✓'],
+                      ['Priority Support',          '✗',          '✗',              '✓',               '✓ Dedicated'],
+                    ].map(([feat, basic, starter, creator, pro], i) => (
                       <tr key={i}>
                         <td>{feat}</td>
                         <td className={basic === '✓' ? 'sc-yes' : basic === '✗' ? 'sc-no' : ''}>{basic}</td>
-                        <td className={lite === '✓' ? 'sc-yes' : lite === '✗' ? 'sc-no' : ''}>{lite}</td>
+                        <td className={starter === '✓' ? 'sc-yes' : starter === '✗' ? 'sc-no' : ''}>{starter}</td>
                         <td className={`sc-td-hl${creator === '✓' ? ' sc-yes' : creator === '✗' ? ' sc-no' : ''}`}>{creator}</td>
-                        <td className={studio === '✓' ? 'sc-yes' : studio === '✗' ? 'sc-no' : ''}>{studio}</td>
+                        <td className={pro === '✓' ? 'sc-yes' : pro === '✗' ? 'sc-no' : ''}>{pro}</td>
                       </tr>
                     ))}
                   </tbody>

@@ -1388,7 +1388,7 @@ return (
                       )}
                       <div className="inline-upgrade-cta">
                         <a href="/pricing" className="inline-upgrade-link">
-                          🔓 Upgrade for credits-based access with no monthly caps
+                          🔓 Upgrade to Starter — 50,000 chars/mo + 300 credits for $9/mo
                         </a>
                       </div>
                     </div>
@@ -1519,13 +1519,13 @@ return (
                 <div className="limit-exceeded-message">
                   <p className="limit-message-title">⚡ You've used all your {userProfile.role} plan characters!</p>
                   <div className="limit-benefits">
-                    <div className="benefit-item">✓ Creator Spark: 75,000 chars/month + 20,000/day</div>
-                    <div className="benefit-item">✓ Creator Odyssey: 250,000 chars/month + Unlimited/day</div>
-                    <div className="benefit-item">✓ Unlimited voice generations</div>
+                    <div className="benefit-item">✓ Starter: 50,000 chars/mo · 300 credits · $9/mo</div>
+                    <div className="benefit-item">✓ Creator: 150,000 chars/mo · 900 credits · $19/mo</div>
+                    <div className="benefit-item">✓ Pro: 400,000 chars/mo · 2,500 credits · $39/mo</div>
                   </div>
                   <p className="limit-message-cta">Upgrade now and continue creating! 🎯</p>
                 </div>
-              )}              
+              )}             
             </div>
 
             <div className="voice-list-section">
@@ -1696,7 +1696,7 @@ return (
           
                 {/* MOVE POPUPS HERE */}
                 {showFirstGenBanner && (
-                  <motion.div 
+                  <motion.div
                     className="inline-upgrade-banner first-gen-banner"
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -1705,7 +1705,7 @@ return (
                     <div className="banner-content">
                       <span className="banner-icon">⚡</span>
                       <div className="banner-text">
-                       <strong>Like this voice?</strong> Upgrade to 37× more characters & voice emotions
+                        <strong>Like this voice?</strong> Starter gives you 83× more characters + all models for $9/mo
                       </div>
                       <a href="/pricing" className="banner-cta">
                         Upgrade Now
@@ -1715,7 +1715,7 @@ return (
                 )}
 
                 {showRepeatGenBanner && (
-                  <motion.div 
+                  <motion.div
                     className="inline-upgrade-banner repeat-gen-banner"
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -1724,7 +1724,7 @@ return (
                     <div className="banner-content">
                       <span className="banner-icon">👀</span>
                       <div className="banner-text">
-                        <strong>You're using Scenith a lot today!</strong> Creator Spark gives 37× limits + longer scripts
+                        <strong>You're using Scenith a lot!</strong> Starter unlocks 50,000 chars/mo + HD exports for $9/mo
                       </div>
                       <a href="/pricing" className="banner-cta">
                         See Plans
@@ -1734,7 +1734,7 @@ return (
                 )}
 
                 {downloadSuccess && userProfile.role === 'BASIC' && (
-                  <motion.div 
+                  <motion.div
                     className="inline-download-success"
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -1744,7 +1744,7 @@ return (
                       <span className="success-icon">✅</span>
                       <div className="success-text">
                         <strong>Download successful!</strong>
-                        <p>Want to create more? Get 17× more characters with Creator or AI Voice Pro.</p>
+                        <p>Want to create more? Get 83× more characters with Starter — just $9/mo, 300 credits included.</p>
                       </div>
                       <a href="/pricing" className="success-cta-btn">
                         View Plans
@@ -3645,10 +3645,10 @@ return (
                   {upgradeModalType === 'limit_warning' && 'Almost Out of Characters'}
                 </h2>
                 <p style={{ fontSize: '13px', color: '#6a6a8a', lineHeight: 1.55, maxWidth: '340px', margin: '0 auto' }}>
-                  {upgradeModalType === 'first_gen' && (<>You just heard what professional AI voice sounds like. <strong style={{ color: '#a899f5' }}>Creator Lite gives you 5× more</strong> — enough for videos, reels & campaigns.</>)}
-                  {upgradeModalType === 'repeat_gen' && (<>You keep coming back because it works. <strong style={{ color: '#a899f5' }}>Stop hitting free limits</strong> — Creator Lite unlocks 10,000 chars/mo + emotions.</>)}
-                  {upgradeModalType === 'download' && (<>Great content deserves great tools. <strong style={{ color: '#34d399' }}>Upgrade now</strong> and get 5× more characters plus speed videos, BG removal & AI images.</>)}
-                  {upgradeModalType === 'limit_warning' && (<>You're running low. <strong style={{ color: '#f59e0b' }}>Don't lose momentum</strong> — upgrade and keep creating without interruption.</>)}
+                  {upgradeModalType === 'first_gen' && (<>You just heard what professional AI voice sounds like. <strong style={{ color: '#a899f5' }}>Starter gives you 83× more characters</strong> — 50,000/mo for videos, reels & campaigns.</>)}
+                  {upgradeModalType === 'repeat_gen' && (<>You keep coming back because it works. <strong style={{ color: '#a899f5' }}>Stop hitting the 600-char free limit</strong> — Starter unlocks 50,000 chars/mo + all models.</>)}
+                  {upgradeModalType === 'download' && (<>Great content deserves great tools. <strong style={{ color: '#34d399' }}>Upgrade to Starter</strong> and get 300 credits/mo, HD exports, no watermarks & every AI model.</>)}
+                  {upgradeModalType === 'limit_warning' && (<>You're running low on your 600 free chars. <strong style={{ color: '#f59e0b' }}>Don't lose momentum</strong> — Starter gives you 50,000 chars/mo for just $9.</>)}
                 </p>
               </div>
               
@@ -3663,23 +3663,20 @@ return (
                   <div style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', color: '#3a3a52', textTransform: 'uppercase', marginBottom: '10px' }}>
                     Free Plan
                   </div>
-                  {[
-                    { icon: '🎤', text: '2,000 chars/mo' },
-                    { icon: '📅', text: '200 chars/day' },
-                    { icon: '📝', text: '150 chars/request' },
-                    { icon: '🎬', text: '5 speed videos' },
-                    { icon: '🖼️', text: '5 BG removals' },
-                    { icon: '🤖', text: 'No AI images' },
-                    { icon: '🎭', text: 'No emotions' },
+                   {[
+                    { icon: '🎤', text: '600 chars/mo' },
+                    { icon: '💳', text: '50 credits total' },
+                    { icon: '⚡', text: 'Limited models' },
+                    { icon: '🚫', text: 'No topups available' },
                   ].map((item, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '7px', marginBottom: i < 6 ? '7px' : 0 }}>
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '7px', marginBottom: i < 3 ? '7px' : 0 }}>
                       <span style={{ fontSize: '13px', flexShrink: 0 }}>{item.icon}</span>
                       <span style={{ fontSize: '11.5px', color: '#44445e' }}>{item.text}</span>
                     </div>
                   ))}
                 </div>
-                
-                {/* Creator Lite column */}
+
+                {/* Starter column */}
                 <div style={{
                   background: 'rgba(99,85,220,0.08)',
                   border: '1px solid rgba(99,85,220,0.28)',
@@ -3691,46 +3688,41 @@ return (
                     background: 'linear-gradient(135deg, #6355dc, #8b5cf6)',
                     color: '#fff', fontSize: '9px', fontWeight: 800, letterSpacing: '0.08em',
                     padding: '3px 10px', borderRadius: '999px', whiteSpace: 'nowrap',
-                  }}>⭐ BEST VALUE</div>
+                  }}>⭐ MOST POPULAR</div>
                   <div style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', color: '#6355dc', textTransform: 'uppercase', marginBottom: '10px' }}>
-                    Creator Lite
+                    Starter — $9/mo
                   </div>
                   {[
-                    { icon: '🎤', text: '10,000 chars/mo' },
-                    { icon: '📅', text: '2,500 chars/day' },
-                    { icon: '📝', text: '700 chars/request' },
-                    { icon: '🎬', text: '30 speed videos' },
-                    { icon: '🖼️', text: '100 BG removals' },
-                    { icon: '🤖', text: '50 AI images/mo' },
-                    { icon: '🎭', text: '9 emotion presets' },
+                    { icon: '🎤', text: '50,000 chars/mo' },
+                    { icon: '💳', text: '300 credits/mo' },
+                    { icon: '⚡', text: 'All models unlocked' },
+                    { icon: '✅', text: 'Topups available' },
                   ].map((item, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '7px', marginBottom: i < 6 ? '7px' : 0 }}>
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '7px', marginBottom: i < 3 ? '7px' : 0 }}>
                       <span style={{ fontSize: '13px', flexShrink: 0 }}>{item.icon}</span>
                       <span style={{ fontSize: '11.5px', color: '#b0b0cc', fontWeight: 500 }}>{item.text}</span>
                     </div>
                   ))}
                 </div>
               </div>
-                
+
               {/* Price + CTA */}
               <div style={{ textAlign: 'center', marginBottom: '12px' }}>
                 <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: '6px', marginBottom: '2px' }}>
-                  <span style={{ fontSize: '13px', color: '#3a3a52', textDecoration: 'line-through' }}>₹132 / $7</span>
                   <span style={{
                     fontFamily: "'Cabinet Grotesk', sans-serif",
                     fontSize: '36px', fontWeight: 900, color: '#e2e2ef', letterSpacing: '-0.03em',
-                  }}>₹99 / $5</span>
+                  }}>$9</span>
                   <span style={{ fontSize: '13px', color: '#55557a' }}>/mo</span>
                   <span style={{
                     background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.28)',
                     color: '#34d399', fontSize: '10px', fontWeight: 700,
                     padding: '3px 8px', borderRadius: '999px',
-                  }}>25% OFF</span>
+                  }}>300 CREDITS</span>
                 </div>
-                <p style={{ fontSize: '11px', color: '#3a3a52', marginBottom: '14px' }}>Cancel anytime · No contracts</p>
-                
-                
-                <a  href="/pricing"
+                <p style={{ fontSize: '11px', color: '#3a3a52', marginBottom: '14px' }}>Cancel anytime · No contracts · All models included</p>
+
+                <a href="/pricing"
                   onClick={() => setShowUpgradeModal(false)}
                   style={{
                     display: 'block', width: '100%', padding: '13px 24px',
@@ -3740,10 +3732,10 @@ return (
                     boxShadow: '0 8px 32px rgba(99,85,220,0.45)', textAlign: 'center',
                   }}
                 >
-                  Upgrade to Creator Lite →
+                  Upgrade to Starter — $9/mo →
                 </a>
               </div>
-                
+
               {/* Social proof + dismiss */}
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <span style={{ fontSize: '11px', color: '#3a3a52' }}>⭐⭐⭐⭐⭐ Trusted by 1,500+ creators</span>
@@ -3815,7 +3807,7 @@ return (
                   Welcome to Scenith AI Voice
                 </h2>
                 <p style={{ fontSize: '13px', color: '#6a6a8a', maxWidth: '380px', margin: '0 auto', lineHeight: 1.55 }}>
-                  You're on the <strong style={{ color: '#a899f5' }}>Free Plan</strong>. Here's what you get — and what you unlock with <strong style={{ color: '#a899f5' }}>Creator Lite</strong> for just ₹99 / $5/mo.
+                  You're on the <strong style={{ color: '#a899f5' }}>Free Plan</strong> (600 chars/mo). Here's what you get — and what you unlock with <strong style={{ color: '#a899f5' }}>Starter</strong> for just $9/mo.
                 </p>
               </div>
               
@@ -3830,24 +3822,20 @@ return (
                   <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', color: '#44445e', textTransform: 'uppercase', marginBottom: '12px' }}>
                     🆓 Free Plan
                   </div>
-                  {[
+                 {[
                     { icon: '🎤', label: 'Voice chars', val: '600 /mo' },
-                    { icon: '📅', label: 'Daily limit', val: '150 /day' },
-                    { icon: '📝', label: 'Per request', val: '80 chars' },
-                    { icon: '🎬', label: 'Speed videos', val: '5 /mo' },
-                    { icon: '🖼️', label: 'BG removals', val: '5 /mo' },
-                    { icon: '🤖', label: 'AI images', val: '✗ None' },
-                    { icon: '🎭', label: 'Emotions', val: '✗ Locked' },
-                    { icon: '📤', label: 'Export', val: '720p' },
+                    { icon: '💳', label: 'Credits', val: '50 total' },
+                    { icon: '🤖', label: 'Models', val: 'Limited only' },
+                    { icon: '💰', label: 'Topups', val: '✗ Not available' },
                   ].map((item, i) => (
-                    <div key={i} style={{ marginBottom: i < 7 ? '8px' : 0 }}>
+                    <div key={i} style={{ marginBottom: i < 3 ? '8px' : 0 }}>
                       <div style={{ fontSize: '10px', color: '#3a3a52', marginBottom: '1px' }}>{item.icon} {item.label}</div>
                       <div style={{ fontSize: '12px', color: '#55557a', fontWeight: 600 }}>{item.val}</div>
                     </div>
                   ))}
                 </div>
-                
-                {/* Creator Lite */}
+
+                {/* Starter */}
                 <div style={{
                   background: 'rgba(99,85,220,0.08)',
                   border: '1px solid rgba(99,85,220,0.3)',
@@ -3859,47 +3847,41 @@ return (
                     background: 'linear-gradient(135deg, #6355dc, #8b5cf6)',
                     color: '#fff', fontSize: '9px', fontWeight: 800, letterSpacing: '0.08em',
                     padding: '3px 12px', borderRadius: '999px', whiteSpace: 'nowrap',
-                  }}>⭐ UPGRADE</div>
+                  }}>⭐ MOST POPULAR</div>
                   <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', color: '#6355dc', textTransform: 'uppercase', marginBottom: '12px' }}>
-                    Creator Lite
+                    Starter — $9/mo
                   </div>
                   {[
-                    { icon: '🎤', label: 'Voice chars', val: '10,000 /mo', hl: true },
-                    { icon: '📅', label: 'Daily limit', val: '2,500 /day', hl: true },
-                    { icon: '📝', label: 'Per request', val: '700 chars', hl: true },
-                    { icon: '🎬', label: 'Speed videos', val: '30 /mo', hl: true },
-                    { icon: '🖼️', label: 'BG removals', val: '100 /mo', hl: true },
-                    { icon: '🤖', label: 'AI images', val: '50 /mo', hl: true },
-                    { icon: '🎭', label: 'Emotions', val: '9 presets ✓', hl: true },
-                    { icon: '📤', label: 'Export', val: '1080p', hl: true },
+                    { icon: '🎤', label: 'Voice chars', val: '50,000 /mo' },
+                    { icon: '💳', label: 'Credits', val: '300 /mo' },
+                    { icon: '🤖', label: 'Models', val: 'All models ✓' },
+                    { icon: '💰', label: 'Topups', val: '✓ Available' },
                   ].map((item, i) => (
-                    <div key={i} style={{ marginBottom: i < 7 ? '8px' : 0 }}>
+                    <div key={i} style={{ marginBottom: i < 3 ? '8px' : 0 }}>
                       <div style={{ fontSize: '10px', color: '#6355dc', marginBottom: '1px' }}>{item.icon} {item.label}</div>
                       <div style={{ fontSize: '12px', color: '#a899f5', fontWeight: 700 }}>{item.val}</div>
                     </div>
                   ))}
                 </div>
               </div>
-                
+
               {/* Price */}
               <div style={{ textAlign: 'center', marginBottom: '14px' }}>
-                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: '6px', marginBottom: '2px' }}>
-                  <span style={{ fontSize: '12px', color: '#3a3a52', textDecoration: 'line-through' }}>₹132 / $7</span>
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: '6px', marginBottom: '4px' }}>
                   <span style={{
                     fontFamily: "'Cabinet Grotesk', sans-serif",
                     fontSize: '34px', fontWeight: 900, color: '#e2e2ef', letterSpacing: '-0.03em',
-                  }}>₹99 / $5</span>
+                  }}>$9</span>
                   <span style={{ fontSize: '12px', color: '#55557a' }}>/mo</span>
                   <span style={{
                     background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.28)',
                     color: '#34d399', fontSize: '10px', fontWeight: 700,
                     padding: '3px 8px', borderRadius: '999px',
-                  }}>25% OFF</span>
+                  }}>300 CREDITS INCLUDED</span>
                 </div>
-                <p style={{ fontSize: '11px', color: '#3a3a52', marginBottom: '14px' }}>Cancel anytime · No hidden fees</p>
-                
-                
-                <a  href="/pricing"
+                <p style={{ fontSize: '11px', color: '#3a3a52', marginBottom: '14px' }}>Cancel anytime · No hidden fees · All models included</p>
+
+                <a href="/pricing"
                   onClick={() => setShowWelcomeModal(false)}
                   style={{
                     display: 'block', width: '100%', padding: '13px 24px',
@@ -3909,10 +3891,10 @@ return (
                     boxShadow: '0 8px 32px rgba(99,85,220,0.45)', textAlign: 'center',
                   }}
                 >
-                  Upgrade to Creator Lite — ₹99 / $5/mo →
+                  Upgrade to Starter — $9/mo →
                 </a>
               </div>
-                
+
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <span style={{ fontSize: '11px', color: '#3a3a52' }}>⭐⭐⭐⭐⭐ 1,500+ creators trust Scenith</span>
                 <button
@@ -3929,18 +3911,18 @@ return (
 
       {isLoggedIn && userProfile.role === 'BASIC' && (
         <div className="floating-upgrade-cta">
-          <button 
+          <button
             className="floating-upgrade-btn"
             onClick={() => window.location.href = '/pricing'}
           >
             <span className="float-icon">⚡</span>
             <span className="float-text">
-              <strong>Upgrade for 37× More Characters</strong>
-              <small>Creator Spark from ₹499/mo</small>
+              <strong>Upgrade for 83× More Characters</strong>
+              <small>Starter from $9/mo · 300 credits included</small>
             </span>
           </button>
         </div>
-      )}          
+      )}    
     </div>
   );
 };
