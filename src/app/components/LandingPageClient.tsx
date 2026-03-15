@@ -299,14 +299,7 @@ function PricingPopup({ onClose }: { onClose: () => void }) {
           boxShadow: '0 0 0 1px rgba(118,75,162,0.12), 0 32px 80px rgba(0,0,0,0.65), 0 0 60px rgba(102,126,234,0.10)',
           animation: 'scPopSlideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards',
         }}
-      >
-        {/* Ambient glow */}
-        <div style={{
-          position: 'absolute', top: '-40px', right: '-40px',
-          width: '160px', height: '160px',
-          background: 'radial-gradient(circle, rgba(118,75,162,0.2) 0%, transparent 70%)',
-          pointerEvents: 'none', borderRadius: '50%',
-        }} />
+      >        
 
         {/* Close */}
         <button
@@ -314,7 +307,7 @@ function PricingPopup({ onClose }: { onClose: () => void }) {
           aria-label="Close"
           style={{
             position: 'absolute', top: '14px', right: '14px',
-            background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
+            background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(102,126,234,0.15)',
             borderRadius: '50%', width: '30px', height: '30px',
             color: 'rgba(255,255,255,0.5)', fontSize: '16px', cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -440,14 +433,24 @@ interface ToolShowcase {
 
 const toolsShowcase: ToolShowcase[] = [
   {
+    id: 'ai-video',
+    title: 'AI Video Generator',
+    icon: FaPlay,  // or import FaFilm from 'react-icons/fa'
+    description: 'Generate cinematic videos from text or images. Powered by Kling, Veo 3.1, and Wan 2.5.',
+    link: '/tools/ai-video-generation',
+    color: '#f06cbe',
+    badge: 'New',
+    rank: 2   // right after AI Image
+  },  
+  {
     id: 'ai-voice',
     title: 'AI Voice Generator',
     icon: FaMicrophone,
     description: '40+ natural voices in 20+ languages. Transform text to lifelike speech instantly.',
     link: '/tools/ai-voice-generation',
     color: '#FF6B6B',
-    badge: '#1 Popular',
-    rank: 1
+    badge: '#1 Voice Tool',
+    rank: 3
   },
   {
     id: 'ai-image',
@@ -456,8 +459,8 @@ const toolsShowcase: ToolShowcase[] = [
     description: 'Generate stunning images from text descriptions using advanced AI instantly.',
     link: '/tools/ai-image-generation',
     color: '#9B59B6',
-    badge: 'New',
-    rank: 2
+    badge: '🔥 Most Popular',
+    rank: 1
   },  
   {
     id: 'image-editing',
@@ -467,7 +470,7 @@ const toolsShowcase: ToolShowcase[] = [
     link: '/tools/image-editing',
     color: '#5e59ae',
     badge: 'Hot',
-    rank: 3
+    rank: 4
   },
   {
     id: 'svg-library',
@@ -477,7 +480,7 @@ const toolsShowcase: ToolShowcase[] = [
     link: '/svg-library',
     color: '#E17055',
     badge: 'New',
-    rank: 4
+    rank: 5
   },  
   {
     id: 'pdf-tools',
@@ -487,7 +490,7 @@ const toolsShowcase: ToolShowcase[] = [
     link: '/tools/pdf-tools',
     color: '#E74C3C',
     badge: null,
-    rank: 5
+    rank: 6
   },
   {
     id: 'speed-modifier',
@@ -497,7 +500,7 @@ const toolsShowcase: ToolShowcase[] = [
     link: '/tools/video-speed-modifier',
     color: '#62caf7',
     badge: null,
-    rank: 6
+    rank: 7
   },
   {
     id: 'bg-remover',
@@ -507,7 +510,7 @@ const toolsShowcase: ToolShowcase[] = [
     link: '/tools/background-removal',
     color: '#FFEAA7',
     badge: null,
-    rank: 7
+    rank: 8
   },
   {
     id: 'media-compression',
@@ -517,7 +520,7 @@ const toolsShowcase: ToolShowcase[] = [
     link: '/tools/compress-media',
     color: '#96CEB4',
     badge: null,
-    rank: 8
+    rank: 9
   },
   {
     id: 'media-conversion',
@@ -527,7 +530,7 @@ const toolsShowcase: ToolShowcase[] = [
     link: '/tools/media-conversion-tool',
     color: '#45B7D1',
     badge: null,
-    rank: 9
+    rank: 10
   }
 ];
 
@@ -540,6 +543,7 @@ const youtubeTutorials = [
 export default function LandingPageClient() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [showPricingPopup, setShowPricingPopup] = useState(false);
+  const [isIndianUser, setIsIndianUser] = useState<boolean | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -550,12 +554,27 @@ export default function LandingPageClient() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-useEffect(() => {
+  useEffect(() => {
     const timer = setTimeout(() => {
       setShowPricingPopup(true);
     }, 5000);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    const detectCountry = async () => {
+      try {
+        const response = await fetch('https://ipapi.co/json/');
+        const data = await response.json();
+        const countryCode = data.country_code;
+        setIsIndianUser(countryCode === 'IN');
+      } catch (err) {
+        console.error('Geo detection failed, defaulting to international');
+        setIsIndianUser(false);
+      }
+    };
+    detectCountry();
+  }, []);  
 
   return (
     <>
@@ -810,58 +829,121 @@ useEffect(() => {
           <div className="floating-shape shape-3"></div>
         </div>
 
-        {/* Featured Snippet Optimization */}
-        <section className="quick-definition-section" style={{ maxWidth: '1000px', margin: '60px auto', padding: '0 20px' }}>
-          <div className="featured-snippet-box" style={{ background: 'rgba(255, 255, 255, 0.95)', padding: '40px', borderRadius: '24px', border: '2px solid rgba(102, 126, 234, 0.2)', boxShadow: '0 8px 32px rgba(0,0,0,0.08)', textAlign: 'center' }}>
-            <h2 style={{ fontSize: '2rem', color: '#1a202c', marginBottom: '20px', fontWeight: 700 }}>
-              What is Scenith? The Complete AI Content Creation Platform
-            </h2>
-            <p style={{ fontSize: '1.1rem', lineHeight: '1.8', color: '#4a5568', marginBottom: '20px', textAlign: 'center' }}>
-              <strong>Scenith is a free, all-in-one AI-powered content creation platform</strong> that combines 10 professional tools in one browser-based interface. Unlike competitors requiring multiple subscriptions, Scenith provides everything content creators need: AI Voice Generation (40+ realistic voices in 20+ languages), Professional Image Editor, AI Image Generator, Background Remover, Video Speed Modifier, Media Compression & Conversion, PDF Tools Suite (merge, split, compress), and 10,000+ Premium SVG Icons—all accessible without downloads.
-            </p>
-            <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '32px' }}>
-              <Link href="/tools/ai-voice-generation" style={{
-                display: 'inline-flex', alignItems: 'center', gap: '10px',
-                padding: '14px 28px',
+        {/* ── CREDIT EXPLAINER — insert after hero-section ── */}
+        <section style={{
+          maxWidth: '1100px', margin: '0 auto 80px', padding: '0 20px'
+        }}>
+          <div style={{
+            background: 'rgba(255,255,255,0.9)',
+            borderRadius: '28px',
+            padding: '56px 48px',
+            border: '2px solid rgba(102,126,234,0.2)',
+            boxShadow: '0 8px 40px rgba(102,126,234,0.12)',
+            position: 'relative', overflow: 'hidden'
+          }}>
+            {/* ambient glow */}
+            <div style={{
+              position: 'absolute', top: '-80px', right: '-80px',
+              width: '320px', height: '320px', borderRadius: '50%',
+              background: 'radial-gradient(circle, rgba(118,75,162,0.18) 0%, transparent 70%)',
+              pointerEvents: 'none'
+            }} />
+
+            <div style={{ textAlign: 'center', marginBottom: '44px', position: 'relative' }}>
+              <span style={{
+                display: 'inline-block', padding: '5px 16px', borderRadius: '100px',
+                background: 'rgba(102,126,234,0.15)', border: '1px solid rgba(102,126,234,0.4)',
+                fontSize: '0.8rem', fontWeight: 700, color: '#a899f5',
+                letterSpacing: '1.2px', textTransform: 'uppercase', marginBottom: '16px'
+              }}>
+                How Credits Work
+              </span>
+              <h2 style={{
+                fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', fontWeight: 900, color: '#1a202c',
+                marginBottom: '14px', letterSpacing: '-0.02em'
+              }}>
+                One Balance.{' '}
+                <span style={{
+                  background: 'linear-gradient(90deg, #a899f5, #f06cbe)',
+                  WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'
+                }}>Every Tool.</span>
+              </h2>
+              <p style={{ color: '#4a5568', fontSize: '1.05rem', maxWidth: '520px', margin: '0 auto' }}>
+                No tool-specific limits. Spend your credits however you want.
+              </p>
+            </div>
+              
+            {/* Credit cost cards */}
+            <div style={{
+              display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gap: '16px', marginBottom: '36px'
+            }}>
+              {[
+                { icon: '🖼️', action: '1 AI Image',         cost: '2–14 credits', model: 'FLUX, GPT Image, Imagen 4', color: '#a899f5' },
+                { icon: '🎬', action: '5s AI Video',          cost: '46–186 credits', model: 'Wan 2.5, Kling, Veo 3.1', color: '#f06cbe' },
+                { icon: '🎙️', action: '100 Voice chars',     cost: '1 credit',     model: 'Any of 40+ voices',        color: '#4facfe' },
+                { icon: '✂️', action: 'Background Removal',  cost: '10 credits',   model: 'AI precision',             color: '#00f2fe' },
+                { icon: '⚡', action: 'Video Speed Change',  cost: '10 credits',   model: 'Any video',                color: '#fdcb6e' },
+                { icon: '📄', action: 'Subtitle Generation', cost: '10 credits',   model: 'Auto-detect language',     color: '#55efc4' },
+              ].map((item) => (
+                <div key={item.action} style={{
+                  background: 'rgba(102,126,234,0.05)',
+                  border: '1px solid rgba(102,126,234,0.12)',
+                  borderRadius: '16px', padding: '20px 16px',
+                  transition: 'border-color 0.2s'
+                }}>
+                  <div style={{ fontSize: '1.8rem', marginBottom: '10px' }}>{item.icon}</div>
+                  <div style={{
+                    fontSize: '0.75rem', fontWeight: 800, letterSpacing: '1px',
+                    textTransform: 'uppercase', color: item.color, marginBottom: '4px'
+                  }}>
+                    {item.action}
+                  </div>
+                  <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#1a202c', marginBottom: '4px' }}>
+                    {item.cost}
+                  </div>
+                  <div style={{ fontSize: '0.72rem', color: '#718096' }}>
+                    {item.model}
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {/* Free credits callout */}
+            <div style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              gap: '24px', flexWrap: 'wrap',
+              background: 'rgba(102,126,234,0.06)',
+              border: '1px solid rgba(102,126,234,0.22)',
+              borderRadius: '16px', padding: '20px 28px'
+            }}>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '2rem', fontWeight: 900, color: '#a899f5' }}>50</div>
+                <div style={{ fontSize: '0.8rem', color: '#718096', fontWeight: 600 }}>Free credits/mo<br/>on Basic plan</div>
+              </div>
+              <div style={{ width: '1px', height: '50px', background: 'rgba(102,126,234,0.15)' }} />
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '2rem', fontWeight: 900, color: '#f06cbe' }}>300–2500</div>
+                <div style={{ fontSize: '0.8rem', color: '#718096', fontWeight: 600 }}>Credits/mo<br/>on paid plans</div>
+              </div>
+              <div style={{ width: '1px', height: '50px', background: 'rgba(102,126,234,0.15)' }} />
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '2rem', fontWeight: 900, color: '#4facfe' }}>0</div>
+                <div style={{ fontSize: '0.8rem', color: '#718096', fontWeight: 600 }}>Daily limits<br/>ever</div>
+              </div>
+              <Link href="/tools/ai-image-generation" style={{
+                padding: '12px 28px',
                 background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                color: 'white', borderRadius: '14px',
-                fontSize: '1rem', fontWeight: 700, textDecoration: 'none',
-                boxShadow: '0 4px 20px rgba(102, 126, 234, 0.4)',
-                transition: 'all 0.3s'
+                color: 'white', borderRadius: '12px',
+                fontSize: '0.95rem', fontWeight: 800, textDecoration: 'none',
+                boxShadow: '0 4px 20px rgba(102,126,234,0.4)',
+                whiteSpace: 'nowrap'
               }}>
-                🚀 Start for Free
+                Start Free →
               </Link>
-              <Link href="/tools" style={{
-                display: 'inline-flex', alignItems: 'center', gap: '10px',
-                padding: '14px 28px',
-                background: 'transparent', color: '#667eea',
-                border: '2px solid #667eea', borderRadius: '14px',
-                fontSize: '1rem', fontWeight: 700, textDecoration: 'none',
-                transition: 'all 0.3s'
-              }}>
-                🛠️ Browse All 10 Tools
-              </Link>
-            </div>            
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px', marginTop: '30px' }}>
-              <div style={{ padding: '15px', background: 'rgba(102, 126, 234, 0.1)', borderRadius: '12px', borderLeft: '4px solid #667eea' }}>
-                <strong style={{ color: '#667eea', fontSize: '0.9rem', display: 'block', marginBottom: '8px' }}>COST</strong>
-                <span style={{ fontSize: '1.05rem', color: '#1a202c' }}>Free forever plan + paid tiers</span>
-              </div>
-              <div style={{ padding: '15px', background: 'rgba(102, 126, 234, 0.1)', borderRadius: '12px', borderLeft: '4px solid #764ba2' }}>
-                <strong style={{ color: '#764ba2', fontSize: '0.9rem', display: 'block', marginBottom: '8px' }}>TOOLS</strong>
-                <span style={{ fontSize: '1.05rem', color: '#1a202c' }}>10 AI-powered applications</span>
-              </div>
-              <div style={{ padding: '15px', background: 'rgba(102, 126, 234, 0.1)', borderRadius: '12px', borderLeft: '4px solid #f093fb' }}>
-                <strong style={{ color: '#f093fb', fontSize: '0.9rem', display: 'block', marginBottom: '8px' }}>PLATFORM</strong>
-                <span style={{ fontSize: '1.05rem', color: '#1a202c' }}>100% browser-based (no downloads)</span>
-              </div>
-              <div style={{ padding: '15px', background: 'rgba(102, 126, 234, 0.1)', borderRadius: '12px', borderLeft: '4px solid #48bb78' }}>
-                <strong style={{ color: '#48bb78', fontSize: '0.9rem', display: 'block', marginBottom: '8px' }}>WATERMARKS</strong>
-                <span style={{ fontSize: '1.05rem', color: '#1a202c' }}>Zero, even on free plan</span>
-              </div>
-            </div>            
+            </div>
           </div>
-        </section>
+        </section>        
 
         {/* Hero Section - Enhanced */}
         <section className="hero-section" id="hero-section">
@@ -873,53 +955,50 @@ useEffect(() => {
           >
             <div className="hero-badge">
               <FaStar className="star-icon" />
-              <span>Trusted by 1500+ creators</span>
+              <span>Free credits every month — no card needed</span>
             </div>
-            
+
             <h1>
-              Transform Text to Voice with <span className="gradient-text">AI Magic</span>
+              Create AI Images, Videos<br />
+              & Voice in <span className="gradient-text">Seconds</span>
             </h1>
-            
+
             <p className="hero-subtitle">
-              Create professional voiceovers, edit stunning images, generate subtitles & access Premium SVGs—all FREE. 
-              <strong> No watermarks. No downloads. Just create.</strong>
+              One platform. One credit balance. Unlimited creative tools.{' '}
+              <strong>Start free — no daily limits, no watermarks.</strong>
             </p>
 
             <div className="hero-features-grid">
-              <div className="hero-feature-item">
-                <FaCheckCircle className="check-icon" />
-                <span>40+ AI Voices</span>
-              </div>
               <div className="hero-feature-item">
                 <FaCheckCircle className="check-icon" />
                 <span>AI Image Generation</span>
               </div>
               <div className="hero-feature-item">
                 <FaCheckCircle className="check-icon" />
-                <span>SVG Icons Library</span>
+                <span>AI Video Generation</span>
               </div>
               <div className="hero-feature-item">
                 <FaCheckCircle className="check-icon" />
-                <span>No Watermarks</span>
+                <span>40+ AI Voices</span>
+              </div>
+              <div className="hero-feature-item">
+                <FaCheckCircle className="check-icon" />
+                <span>Free Credits Monthly</span>
               </div>
             </div>
 
             <div className="hero-cta-wrapper">
-              <Link href="/tools/ai-voice-generation" className="cta-button cta-primary">
-                <FaMicrophone className="cta-icon" />
-                Try AI Voice Generator FREE
+              <Link href="/tools/ai-image-generation" className="cta-button cta-primary">
+                🎨 Generate Free — No Card Needed
               </Link>
-              <Link href="/tools/image-editing" className="cta-button cta-secondary">
-                <FaPaintBrush className="cta-icon" />
-                Explore Image Editor
+              <Link href="/tools/ai-voice-generation" className="cta-button cta-secondary">
+                🎙️ Try AI Voice
               </Link>
-              <Link href="/tools" className="cta-button cta-tools">
-                <FaShapes className="cta-icon" />
-                Browse All 10 Tools
-              </Link>              
             </div>
 
-            <p className="hero-no-credit">No credit card required • Free forever plan available</p>
+            <p className="hero-no-credit">
+              50 free credits every month · Use on any tool · Never expires
+            </p>
           </motion.div>
         </section>
 
@@ -927,8 +1006,11 @@ useEffect(() => {
         <section className="featured-tools-section">
           <div className="section-header">
             <span className="section-label">Most Popular</span>
-            <h2>10 Professional AI Tools in One Platform</h2>
-            <p className="section-subtitle">Voice generation, image creation & editing, PDF tools, SVG icons, video tools—completely free to start</p>
+            <h2>AI Images, Videos & Voice — One Platform</h2>
+            <p className="section-subtitle">
+              Generate stunning visuals, cinematic videos, and natural voices.
+              All powered by one shared credit balance — start free today.
+            </p>            
           </div>
 
           <motion.div
@@ -981,6 +1063,147 @@ useEffect(() => {
             })}
           </motion.div>
         </section>
+
+        {/* ── AI MODEL SHOWCASE — insert after featured-tools-section ── */}
+        <section style={{
+          maxWidth: '1200px', margin: '0 auto 100px', padding: '0 20px'
+        }}>
+          <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+            <span style={{
+              display: 'inline-block', padding: '5px 16px', borderRadius: '100px',
+              background: 'linear-gradient(135deg, #e0e7ff 0%, #cffafe 100%)',
+              fontSize: '0.8rem', fontWeight: 700, color: '#667eea',
+              letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '14px'
+            }}>
+              Powered By
+            </span>
+            <h2 style={{
+              fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', fontWeight: 900,
+              color: '#1a202c', letterSpacing: '-0.02em', marginBottom: '14px'
+            }}>
+              Industry-Leading AI Models
+            </h2>
+            <p style={{ fontSize: '1.1rem', color: '#4a5568', maxWidth: '580px', margin: '0 auto' }}>
+              The same models used by professional studios — now accessible with free credits.
+            </p>
+          </div>
+          
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+            {/* Image Models */}
+            <div style={{
+              background: 'rgba(255,255,255,0.9)', borderRadius: '20px',
+              border: '2px solid rgba(102,126,234,0.2)', padding: '28px',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.06)'
+            }}>
+              <div style={{ fontSize: '1.5rem', marginBottom: '12px' }}>🖼️</div>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#1a202c', marginBottom: '16px' }}>
+                AI Image Models
+              </h3>
+              {[
+                { name: 'FLUX 1.1 Pro',     cost: '7 credits', tier: 'Spark' },
+                { name: 'GPT Image 1',      cost: '2–12 cr',   tier: 'Spark+' },
+                { name: 'Imagen 4 Fast',    cost: '3 credits', tier: 'Spark' },
+                { name: 'Imagen 4 Standard',cost: '7 credits', tier: 'Odyssey' },
+                { name: 'Grok Aurora',      cost: '14 credits',tier: 'Odyssey' },
+              ].map((m) => (
+                <div key={m.name} style={{
+                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                  padding: '8px 0', borderBottom: '1px solid rgba(102,126,234,0.1)'
+                }}>
+                  <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#1a202c' }}>{m.name}</span>
+                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <span style={{
+                      fontSize: '0.75rem', color: '#667eea', fontWeight: 700,
+                      background: 'rgba(102,126,234,0.1)', padding: '2px 8px', borderRadius: '8px'
+                    }}>{m.cost}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {/* Video Models */}
+            <div style={{
+              background: 'rgba(255,255,255,0.9)', borderRadius: '20px',
+              border: '2px solid rgba(240,108,190,0.25)', padding: '28px',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.06)'
+            }}>
+              <div style={{ fontSize: '1.5rem', marginBottom: '12px' }}>🎬</div>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#1a202c', marginBottom: '16px' }}>
+                AI Video Models
+              </h3>
+              {[
+                { name: 'Wan 2.5',          cost: 'from 46 cr', note: '480p–1080p' },
+                { name: 'Kling 2.5 Turbo',  cost: 'from 64 cr', note: '1080p cinematic' },
+                { name: 'Kling 2.6 Pro',    cost: 'from 64 cr', note: 'Native audio' },
+                { name: 'Veo 3.1 Fast',     cost: 'from 92 cr', note: "Google's model" },
+                { name: 'Veo 3.1',          cost: 'from 186 cr',note: 'Flagship quality' },
+              ].map((m) => (
+                <div key={m.name} style={{
+                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                  padding: '8px 0', borderBottom: '1px solid rgba(240,108,190,0.1)'
+                }}>
+                  <div>
+                    <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#1a202c' }}>{m.name}</span>
+                    <span style={{ fontSize: '0.75rem', color: '#718096', marginLeft: '6px' }}>{m.note}</span>
+                  </div>
+                  <span style={{
+                    fontSize: '0.75rem', color: '#f06cbe', fontWeight: 700,
+                    background: 'rgba(240,108,190,0.1)', padding: '2px 8px', borderRadius: '8px'
+                  }}>{m.cost}</span>
+                </div>
+              ))}
+            </div>
+            
+            {/* Voice + other tools */}
+            <div style={{
+              background: 'rgba(255,255,255,0.9)', borderRadius: '20px',
+              border: '2px solid rgba(79,172,254,0.25)', padding: '28px',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.06)'
+            }}>
+              <div style={{ fontSize: '1.5rem', marginBottom: '12px' }}>🎙️</div>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#1a202c', marginBottom: '16px' }}>
+                Voice & Utility Tools
+              </h3>
+              {[
+                { name: 'AI Voice Generation', cost: '1 cr / 100 chars', note: '40+ voices' },
+                { name: 'Background Removal',  cost: '10 credits',        note: 'AI precision' },
+                { name: 'Subtitle Generation', cost: '10 credits',        note: 'Auto language' },
+                { name: 'Video Speed Control', cost: '10 credits',        note: '0.5×–15×' },
+                { name: 'PDF Tools',           cost: 'Free',              note: '9 operations' },
+              ].map((m) => (
+                <div key={m.name} style={{
+                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                  padding: '8px 0', borderBottom: '1px solid rgba(79,172,254,0.1)'
+                }}>
+                  <div>
+                    <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#1a202c' }}>{m.name}</span>
+                    <span style={{ fontSize: '0.75rem', color: '#718096', marginLeft: '6px' }}>{m.note}</span>
+                  </div>
+                  <span style={{
+                    fontSize: '0.75rem', color: '#4facfe', fontWeight: 700,
+                    background: 'rgba(79,172,254,0.1)', padding: '2px 8px', borderRadius: '8px'
+                  }}>{m.cost}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+            
+          <div style={{ textAlign: 'center', marginTop: '36px' }}>
+            <Link href="/tools/ai-image-generation" style={{
+              display: 'inline-flex', alignItems: 'center', gap: '10px',
+              padding: '14px 32px',
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              color: 'white', borderRadius: '14px',
+              fontSize: '1rem', fontWeight: 700, textDecoration: 'none',
+              boxShadow: '0 4px 20px rgba(102,126,234,0.4)'
+            }}>
+              🚀 Try All Models Free
+            </Link>
+            <p style={{ marginTop: '12px', fontSize: '0.85rem', color: '#718096' }}>
+              50 free credits on signup · No card required
+            </p>
+          </div>
+        </section>        
 
         {/* NEW: SVG Library Highlight Section */}
         <section className="svg-library-showcase">
@@ -1043,171 +1266,7 @@ useEffect(() => {
               </div>
             </div>
           </motion.div>
-        </section>
-
-        {/* How Content Creators Use Scenith - Workflow Guide */}
-        <section className="workflow-guide-section" style={{ maxWidth: '1200px', margin: '100px auto', padding: '0 20px' }}>
-          <div className="section-header">
-            <span className="section-label">Complete Workflow</span>
-            <h2>How Content Creators Use Scenith: Step-by-Step</h2>
-            <p className="section-subtitle">
-              From script to published content in 15 minutes using Scenith's integrated platform
-            </p>
-          </div>
-
-          <div style={{ display: 'grid', gap: '30px', marginTop: '60px' }}>
-            {[
-              {
-                step: 1,
-                title: "Write Your Script & Generate AI Voice",
-                description: "Start with your content idea. Write your script in our AI Voice Generator, choose from 40+ natural voices, select your language and emotion preset. Generate studio-quality voiceover in 3 seconds. Export as MP3 for immediate use in videos, podcasts, or presentations.",
-                tools: ["AI Voice Generator"],
-                time: "3 minutes",
-                link: "/tools/ai-voice-generation"
-              },
-              {
-                step: 2,
-                title: "Design Thumbnails & Graphics",
-                description: "Create eye-catching visuals in our Image Editor. Design YouTube thumbnails, social media posts, or presentation slides. Add text overlays, apply filters, insert stickers, and browse our 10,000+ SVG icon library. Export optimized for Instagram, Facebook, YouTube, or print.",
-                tools: ["Image Editor", "SVG Library", "Background Remover"],
-                time: "5 minutes",
-                link: "/tools/image-editing"
-              },
-              {
-                step: 3,
-                title: "Generate AI Images & Remove Backgrounds",
-                description: "Create stunning visuals from text prompts using AI Image Generation—perfect for social media graphics, product mockups, and creative assets. Then use Background Remover to isolate subjects with AI precision in seconds, creating clean transparent PNGs ready for any design.",
-                tools: ["AI Image Generator", "Background Remover"],
-                time: "3 minutes",
-                link: "/tools/ai-image-generation"
-              },
-              {
-                step: 4,
-                title: "Optimize & Publish",
-                description: "Compress media files to meet platform requirements (25MB for email, fast YouTube uploads). Convert formats for compatibility. Create PDF documentation or marketing materials using our PDF suite. Adjust video speed if needed. Download everything ready for publishing.",
-                tools: ["Media Compression", "Video Speed Modifier", "Media Conversion", "PDF Tools"],
-                time: "3 minutes",
-                link: "/tools/compress-media"
-              }
-            ].map((workflow, index) => (
-              <div 
-                key={index}
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: '100px 1fr',
-                  gap: '30px',
-                  padding: '40px',
-                  background: 'rgba(255, 255, 255, 0.95)',
-                  backdropFilter: 'blur(20px)',
-                  borderRadius: '24px',
-                  border: '2px solid rgba(102, 126, 234, 0.2)',
-                  boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
-                  transition: 'all 0.3s'
-                }}
-              >
-                <div style={{
-                  width: '90px',
-                  height: '90px',
-                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '2.5rem',
-                  fontWeight: '900',
-                  color: 'white',
-                  boxShadow: '0 8px 24px rgba(102, 126, 234, 0.4)',
-                  flexShrink: 0
-                }}>
-                  {workflow.step}
-                </div>
-                <div>
-                  <h3 style={{ fontSize: '1.6rem', fontWeight: 700, color: '#1a202c', marginBottom: '12px', lineHeight: '1.3' }}>
-                    {workflow.title}
-                  </h3>
-                  <p style={{ fontSize: '1.05rem', color: '#4a5568', lineHeight: '1.7', marginBottom: '20px' }}>
-                    {workflow.description}
-                  </p>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '15px' }}>
-                    {workflow.tools.map((tool, toolIdx) => (
-                      <span key={toolIdx} style={{
-                        padding: '6px 14px',
-                        background: 'rgba(102, 126, 234, 0.1)',
-                        color: '#667eea',
-                        borderRadius: '20px',
-                        fontSize: '0.85rem',
-                        fontWeight: 600
-                      }}>
-                        {tool}
-                      </span>
-                    ))}
-                    <span style={{
-                      padding: '6px 14px',
-                      background: 'rgba(72, 187, 120, 0.1)',
-                      color: '#48bb78',
-                      borderRadius: '20px',
-                      fontSize: '0.85rem',
-                      fontWeight: 600
-                    }}>
-                      ⏱️ {workflow.time}
-                    </span>
-                  </div>
-                  <a 
-                    href={workflow.link}
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      padding: '10px 20px',
-                      background: 'transparent',
-                      color: '#667eea',
-                      border: '2px solid #667eea',
-                      borderRadius: '12px',
-                      fontSize: '0.95rem',
-                      fontWeight: 600,
-                      textDecoration: 'none',
-                      transition: 'all 0.3s'
-                    }}
-                  >
-                    Try This Tool →
-                  </a>
-                </div>
-              </div>
-            ))}
-          </div>
-          
-          <div style={{
-            marginTop: '60px',
-            padding: '40px',
-            background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))',
-            borderRadius: '20px',
-            border: '2px solid rgba(102, 126, 234, 0.2)',
-            textAlign: 'center'
-          }}>
-            <h3 style={{ fontSize: '1.8rem', fontWeight: 700, color: '#1a202c', marginBottom: '16px' }}>
-              Total Time: 15 Minutes | Total Cost: $0 (Free Plan)
-            </h3>
-            <p style={{ fontSize: '1.1rem', color: '#4a5568', lineHeight: '1.7', maxWidth: '800px', margin: '0 auto 30px' }}>
-              Compare to traditional workflow: Adobe Audition ($20.99/mo) + Photoshop ($20.99/mo) + Premiere Pro ($20.99/mo) + Acrobat Pro ($19.99/mo) = <strong style={{ color: '#dc2626' }}>$82.96/month</strong>. Scenith does it all for <strong style={{ color: '#48bb78' }}>FREE</strong> (or $19-49/mo for commercial use).
-            </p>
-            <Link href="/pricing" style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '12px',
-              padding: '16px 32px',
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              color: 'white',
-              borderRadius: '16px',
-              fontSize: '1.05rem',
-              fontWeight: 700,
-              textDecoration: 'none',
-              boxShadow: '0 4px 20px rgba(102, 126, 234, 0.4)',
-              transition: 'all 0.3s'
-            }}>
-              See All Plans & Pricing
-            </Link>
-          </div>
-        </section>        
+        </section>       
 
         {/* Social Proof - Redesigned */}
         <section className="social-proof-modern">
@@ -1237,136 +1296,130 @@ useEffect(() => {
           </motion.div>
         </section>
 
-        {/* Scenith vs Competitors - Comprehensive Comparison */}
-        <section className="detailed-comparison-section" style={{ maxWidth: '1400px', margin: '100px auto', padding: '80px 20px', background: 'rgba(255, 255, 255, 0.95)', backdropFilter: 'blur(20px)', borderRadius: '32px', border: '2px solid rgba(102, 126, 234, 0.2)', boxShadow: '0 12px 48px rgba(0,0,0,0.1)' }}>
+        {/* ── PRICING PREVIEW — replace detailed-comparison-section ── */}
+        <section style={{
+          maxWidth: '1100px', margin: '100px auto', padding: '0 20px', textAlign: 'center'
+        }}>
           <div className="section-header">
-            <span className="section-label">Direct Comparison</span>
-            <h2>Scenith vs Leading Content Creation Platforms</h2>
+            <span className="section-label">Pricing</span>
+            <h2>Start Free. Scale When Ready.</h2>
             <p className="section-subtitle">
-              See why 1500+ creators switched to Scenith's all-in-one platform
+              Every plan uses the same credit balance — images, videos, voice, and more.
             </p>
           </div>
-
-          <div style={{ overflowX: 'auto', marginTop: '50px' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', background: 'white', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
-              <thead>
-                <tr style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
-                  <th style={{ padding: '20px', textAlign: 'left', color: 'white', fontWeight: 700, fontSize: '1.05rem' }}>Feature</th>
-                  <th style={{ padding: '20px', textAlign: 'center', color: 'white', fontWeight: 700, fontSize: '1.05rem', background: 'rgba(255,255,255,0.1)' }}>Scenith</th>
-                  <th style={{ padding: '20px', textAlign: 'center', color: 'white', fontWeight: 700, fontSize: '1.05rem' }}>Adobe Creative Cloud</th>
-                  <th style={{ padding: '20px', textAlign: 'center', color: 'white', fontWeight: 700, fontSize: '1.05rem' }}>Canva Pro + ElevenLabs</th>
-                  <th style={{ padding: '20px', textAlign: 'center', color: 'white', fontWeight: 700, fontSize: '1.05rem' }}>Individual Tools</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  {
-                    feature: "Monthly Cost",
-                    scenith: "$0-49",
-                    adobe: "$54.99",
-                    canva: "$35.98",
-                    individual: "$80+"
-                  },
-                  {
-                    feature: "AI Voice Generator",
-                    scenith: "✅ 40+ voices, 20+ languages",
-                    adobe: "❌ Not included",
-                    canva: "✅ 10 voices (ElevenLabs)",
-                    individual: "❌ Separate subscription"
-                  },
-                  {
-                    feature: "Image Editor",
-                    scenith: "✅ Full-featured",
-                    adobe: "✅ Photoshop",
-                    canva: "✅ Limited on Pro",
-                    individual: "❌ Photoshop needed ($20.99)"
-                  },
-                  {
-                    feature: "AI Image Generator",
-                    scenith: "✅ Text-to-image included",
-                    adobe: "⚠️ Firefly (limited free)",
-                    canva: "⚠️ Limited on Pro",
-                    individual: "❌ Midjourney ($10/mo)"
-                  },
-                  {
-                    feature: "PDF Tools Suite",
-                    scenith: "✅ 9 operations included",
-                    adobe: "✅ Acrobat Pro ($19.99 extra)",
-                    canva: "❌ Not included",
-                    individual: "❌ Acrobat or Smallpdf ($12)"
-                  },
-                  {
-                    feature: "SVG Icon Library",
-                    scenith: "✅ 10,000+ premium icons",
-                    adobe: "⚠️ Stock library (limited)",
-                    canva: "⚠️ Elements library",
-                    individual: "❌ Separate subscription ($16)"
-                  },
-                  {
-                    feature: "Background Remover",
-                    scenith: "✅ AI-powered",
-                    adobe: "✅ Photoshop (manual)",
-                    canva: "✅ Included",
-                    individual: "❌ Remove.bg ($9)"
-                  },
-                  {
-                    feature: "Media Compression",
-                    scenith: "✅ Video, audio, image",
-                    adobe: "⚠️ Media Encoder",
-                    canva: "❌ Not included",
-                    individual: "❌ HandBrake or paid ($10)"
-                  },
-                  {
-                    feature: "Browser-Based (No Download)",
-                    scenith: "✅ 100% online",
-                    adobe: "❌ 3GB+ installation",
-                    canva: "✅ Browser-based",
-                    individual: "⚠️ Mixed"
-                  },
-                  {
-                    feature: "Watermarks on Free Plan",
-                    scenith: "✅ Zero watermarks",
-                    adobe: "N/A (No free plan)",
-                    canva: "❌ Canva watermark",
-                    individual: "❌ Most add watermarks"
-                  },
-                  {
-                    feature: "Commercial Usage Rights",
-                    scenith: "✅ CREATOR plan ($19)",
-                    adobe: "✅ Included",
-                    canva: "✅ Pro required ($12.99)",
-                    individual: "⚠️ Varies by tool"
-                  },
-                  {
-                    feature: "Learning Curve",
-                    scenith: "⭐ Easy (5 min)",
-                    adobe: "⭐⭐⭐⭐⭐ Steep (weeks)",
-                    canva: "⭐⭐ Moderate (hours)",
-                    individual: "⭐⭐⭐⭐ High (varies)"
-                  }
-                ].map((row, index) => (
-                  <tr key={index} style={{ borderBottom: '1px solid #e2e8f0' }}>
-                    <td style={{ padding: '18px', fontWeight: 600, color: '#1a202c', fontSize: '0.95rem' }}>{row.feature}</td>
-                    <td style={{ padding: '18px', textAlign: 'center', background: 'rgba(102, 126, 234, 0.05)', color: '#1a202c', fontSize: '0.9rem', fontWeight: 500 }}>{row.scenith}</td>
-                    <td style={{ padding: '18px', textAlign: 'center', color: '#4a5568', fontSize: '0.9rem' }}>{row.adobe}</td>
-                    <td style={{ padding: '18px', textAlign: 'center', color: '#4a5568', fontSize: '0.9rem' }}>{row.canva}</td>
-                    <td style={{ padding: '18px', textAlign: 'center', color: '#4a5568', fontSize: '0.9rem' }}>{row.individual}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+            gap: '20px', marginTop: '50px', marginBottom: '40px'
+          }}>
+            {[
+              {
+                name: 'Starter Forge',
+                price: 'Free',
+                credits: '50 credits / mo',
+                cta: 'Start Free',
+                ctaLink: '/tools/ai-image-generation',
+                highlight: false,
+                perks: ['~25 AI images', 'Voice generation', 'All PDF tools', 'No watermarks'],
+                color: '#667eea'
+              },
+              {
+                name: 'Creator Spark',
+                price: isIndianUser ? '₹499' : '$12',
+                credits: '900 credits / mo',
+                cta: 'Get Spark →',
+                ctaLink: '/pricing',
+                highlight: true,
+                perks: ['~450 AI images', '~14 Kling 5s videos', '75K voice chars', 'Priority support'],
+                color: '#a899f5'
+              },
+              {
+                name: 'Creator Odyssey',
+                price: isIndianUser ? '₹999' : '$24',
+                credits: '2,500 credits / mo',
+                cta: 'Get Odyssey →',
+                ctaLink: '/pricing',
+                highlight: false,
+                perks: ['~1,250 AI images', '~39 Kling 5s videos', '250K voice chars', '4K export'],
+                color: '#f59e0b'
+              },
+            ].map((plan) => (
+              <div key={plan.name} style={{
+                background: plan.highlight
+                  ? 'linear-gradient(135deg, #0f0c29 0%, #1e1a45 100%)'
+                  : 'rgba(255,255,255,0.9)',
+                borderRadius: '20px',
+                border: plan.highlight ? '2px solid rgba(168,153,245,0.5)' : '2px solid rgba(102,126,234,0.15)',
+                padding: '32px 24px',
+                boxShadow: plan.highlight ? '0 0 40px rgba(102,126,234,0.2)' : '0 4px 20px rgba(0,0,0,0.06)',
+                transform: plan.highlight ? 'scale(1.04)' : 'none',
+                position: 'relative'
+              }}>
+                {plan.highlight && (
+                  <div style={{
+                    position: 'absolute', top: '-12px', left: '50%', transform: 'translateX(-50%)',
+                    background: 'linear-gradient(135deg, #667eea, #8b5cf6)',
+                    color: 'white', fontSize: '0.7rem', fontWeight: 800,
+                    padding: '4px 16px', borderRadius: '100px', letterSpacing: '1px',
+                    textTransform: 'uppercase', whiteSpace: 'nowrap'
+                  }}>⭐ Most Popular</div>
+                )}
+                <div style={{
+                  fontSize: '0.8rem', fontWeight: 700, letterSpacing: '1px',
+                  textTransform: 'uppercase', color: plan.color,
+                  marginBottom: '8px'
+                }}>
+                  {plan.name}
+                </div>
+                <div style={{
+                  fontSize: '2.2rem', fontWeight: 900,
+                  color: plan.highlight ? 'white' : '#1a202c',
+                  marginBottom: '4px'
+                }}>
+                  {plan.price}
+                </div>
+                <div style={{
+                  fontSize: '0.85rem', color: plan.highlight ? 'rgba(255,255,255,0.5)' : '#718096',
+                  marginBottom: '20px', fontWeight: 600
+                }}>
+                  {plan.credits}
+                </div>
+                <ul style={{ listStyle: 'none', marginBottom: '24px', textAlign: 'left' }}>
+                  {plan.perks.map((perk) => (
+                    <li key={perk} style={{
+                      display: 'flex', alignItems: 'center', gap: '8px',
+                      fontSize: '0.88rem', marginBottom: '8px',
+                      color: plan.highlight ? 'rgba(255,255,255,0.75)' : '#4a5568'
+                    }}>
+                      <span style={{ color: plan.color }}>✓</span> {perk}
+                    </li>
+                  ))}
+                </ul>
+                <Link href={plan.ctaLink} style={{
+                  display: 'block', textAlign: 'center',
+                  padding: '11px 20px', borderRadius: '12px',
+                  background: plan.highlight
+                    ? 'linear-gradient(135deg, #667eea, #764ba2)'
+                    : 'transparent',
+                  border: plan.highlight ? 'none' : `2px solid ${plan.color}`,
+                  color: plan.highlight ? 'white' : plan.color,
+                  fontSize: '0.9rem', fontWeight: 700,
+                  textDecoration: 'none',
+                  boxShadow: plan.highlight ? '0 4px 18px rgba(102,126,234,0.4)' : 'none'
+                }}>
+                  {plan.cta}
+                </Link>
+              </div>
+            ))}
           </div>
-              
-          <div style={{ marginTop: '40px', padding: '30px', background: 'linear-gradient(135deg, rgba(72, 187, 120, 0.1), rgba(56, 178, 172, 0.1))', borderRadius: '16px', border: '2px solid rgba(72, 187, 120, 0.3)', textAlign: 'center' }}>
-            <h3 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#1a202c', marginBottom: '12px' }}>
-              💡 Verdict: Scenith Saves $600-900 Annually
-            </h3>
-            <p style={{ fontSize: '1.05rem', color: '#4a5568', lineHeight: '1.7', maxWidth: '700px', margin: '0 auto' }}>
-              Adobe Creative Cloud ($660/year) + ElevenLabs ($264/year) + Acrobat Pro ($240/year) + Icon subscription ($192/year) = <strong style={{ color: '#dc2626' }}>$1,356/year</strong><br />
-              <strong style={{ color: '#48bb78' }}>Scenith STUDIO: $588/year</strong> (56% savings) with more features!
-            </p>
-          </div>
-        </section>        
+          
+          <Link href="/pricing" style={{
+            color: '#667eea', fontWeight: 600, fontSize: '0.95rem', textDecoration: 'none'
+          }}>
+            View full pricing & topup packs →
+          </Link>
+        </section>      
 
         {/* Why Choose Section */}
         <section className="why-choose-section">
@@ -1431,128 +1484,7 @@ useEffect(() => {
               </motion.div>
             ))}
           </div>
-        </section>
-
-        {/* Use Cases by Industry - Target Different Personas */}
-        <section className="industry-use-cases-section" style={{ maxWidth: '1400px', margin: '100px auto', padding: '0 20px' }}>
-          <div className="section-header">
-            <span className="section-label">Real-World Applications</span>
-            <h2>How Different Industries Use Scenith</h2>
-            <p className="section-subtitle">
-              From YouTubers to enterprises—Scenith powers content creation worldwide
-            </p>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '30px', marginTop: '60px' }}>
-            {[
-              {
-                industry: "YouTubers & Content Creators",
-                icon: "🎬",
-                challenge: "Need professional voiceovers, thumbnails, subtitles—but can't afford Adobe suite",
-                solution: "Use AI Voice for narration, Image Editor for thumbnails, Subtitle Generator for captions. Create 10 videos weekly vs 2-3 with traditional tools.",
-                results: "80% faster production • $700/mo saved • 3x more uploads",
-                cta: "Start Creating Videos",
-                link: "/tools/ai-voice-generation"
-              },
-              {
-                industry: "Podcast Producers",
-                icon: "🎙️",
-                challenge: "Recording intros/outros with guests is scheduling nightmare. Need consistent quality.",
-                solution: "Generate AI voice intros/outros once, reuse forever. Add guest intro segments instantly. Compress audio for faster uploads to Spotify/Apple.",
-                results: "Save 5 hours/episode • Professional consistency • Zero re-recording costs",
-                cta: "Try AI Voice for Podcasts",
-                link: "/tools/ai-voice-generation"
-              },
-              {
-                industry: "Marketing Agencies",
-                icon: "📊",
-                challenge: "Clients need videos, graphics, PDFs, all with tight deadlines. Juggling 5+ subscriptions.",
-                solution: "One platform for client deliverables: voiceovers, social graphics, branded PDFs, compressed videos. Share Scenith link with clients for self-service edits.",
-                results: "$1,200/mo subscription savings • 40% faster turnaround • Happier clients",
-                cta: "See Agency Pricing",
-                link: "/pricing"
-              },
-              {
-                industry: "E-Learning Platforms",
-                icon: "👨‍🏫",
-                challenge: "Need multilingual course narration but hiring voice actors for 20 languages = $50K+",
-                solution: "Generate course narration in 20+ languages using same script. Update courses instantly when content changes. Create visual course assets with AI Image Generation.",
-                results: "97% cost reduction on voice talent • 10x faster localization • Full asset creation",
-                cta: "Explore Education Use",
-                link: "/tools/add-subtitles-to-videos"
-              },
-              {
-                industry: "Small Businesses",
-                icon: "🏪",
-                challenge: "Need professional marketing materials but hiring designers/studios costs $2,000-5,000 per project",
-                solution: "Create social media posts, product videos with voiceovers, PDF catalogs, email graphics—all in-house with zero design experience.",
-                results: "$10K+ saved annually • Brand consistency • Marketing independence",
-                cta: "Start Your Business Growth",
-                link: "/tools/image-editing"
-              },
-              {
-                industry: "Freelance Creators",
-                icon: "💼",
-                challenge: "Can't justify expensive subscriptions with inconsistent income. Need professional tools for client work.",
-                solution: "Pay-as-you-grow model. Free plan for side projects, upgrade to CREATOR ($19) when landing bigger clients.",
-                results: "ROI from first paid client • Professional output • Flexible budget",
-                cta: "Start Freelancing Tools",
-                link: "/pricing"
-              }
-            ].map((useCase, index) => (
-              <div
-                key={index}
-                style={{
-                  background: 'rgba(255, 255, 255, 0.95)',
-                  backdropFilter: 'blur(20px)',
-                  padding: '40px',
-                  borderRadius: '24px',
-                  border: '2px solid rgba(102, 126, 234, 0.2)',
-                  boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
-                  transition: 'all 0.3s'
-                }}
-              >
-                <div style={{ fontSize: '3.5rem', marginBottom: '20px' }}>{useCase.icon}</div>
-                <h3 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#1a202c', marginBottom: '20px' }}>
-                  {useCase.industry}
-                </h3>
-                <div style={{ marginBottom: '20px' }}>
-                  <strong style={{ color: '#dc2626', fontSize: '0.9rem', display: 'block', marginBottom: '8px' }}>❌ CHALLENGE:</strong>
-                  <p style={{ fontSize: '0.95rem', color: '#4a5568', lineHeight: '1.6', marginBottom: '16px' }}>
-                    {useCase.challenge}
-                  </p>
-                  <strong style={{ color: '#667eea', fontSize: '0.9rem', display: 'block', marginBottom: '8px' }}>✅ SCENITH SOLUTION:</strong>
-                  <p style={{ fontSize: '0.95rem', color: '#4a5568', lineHeight: '1.6', marginBottom: '16px' }}>
-                    {useCase.solution}
-                  </p>
-                  <strong style={{ color: '#48bb78', fontSize: '0.9rem', display: 'block', marginBottom: '8px' }}>📈 RESULTS:</strong>
-                  <p style={{ fontSize: '0.95rem', color: '#1a202c', lineHeight: '1.6', fontWeight: 600 }}>
-                    {useCase.results}
-                  </p>
-                </div>
-
-                <a href={useCase.link}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    padding: '12px 24px',
-                    background: 'transparent',
-                    color: '#667eea',
-                    border: '2px solid #667eea',
-                    borderRadius: '12px',
-                    fontSize: '0.95rem',
-                    fontWeight: 600,
-                    textDecoration: 'none',
-                    transition: 'all 0.3s'
-                  }}
-                >
-                  {useCase.cta} →
-                </a>
-              </div>
-            ))}
-          </div>
-        </section>        
+        </section>      
 
         {/* Tutorials Section - Updated */}
         <section className="tutorials-section" id="tutorials-section">
@@ -1628,66 +1560,7 @@ useEffect(() => {
           <Link href="/blogs" className="view-all-blogs-cta">
             View All Creator Guides & Tips
           </Link>
-        </section>
-
-        {/* People Also Ask - Targeting Question Queries */}
-        <section className="people-also-ask-section" style={{ maxWidth: '1000px', margin: '100px auto', padding: '0 20px' }}>
-          <div className="section-header">
-            <h2>People Also Ask About Scenith</h2>
-            <p className="section-subtitle">
-              Quick answers to common questions about our AI content creation platform
-            </p>
-          </div>
-                  
-          <div style={{ display: 'grid', gap: '20px', marginTop: '50px' }}>
-            {[
-              {
-                q: "What's the difference between Scenith and Adobe Creative Cloud?",
-                a: "Adobe Creative Cloud is desktop software requiring installation (3GB+) and costs $54.99/month. Scenith is 100% browser-based, works on any device, includes AI voice generation Adobe lacks, and starts free ($0-49/month vs Adobe's $660/year). Adobe is powerful but overkill for most creators. Scenith focuses on speed and simplicity without sacrificing professional quality."
-              },
-              {
-                q: "Can Scenith replace Canva?",
-                a: "Yes, for most use cases. Scenith's Image Editor handles social media graphics, thumbnails, presentations, and marketing materials like Canva. Key advantages: (1) No Canva watermark on free plan, (2) Integrated AI voice and subtitles Canva lacks, (3) 10,000+ SVG icons included vs Canva's limited free library, (4) PDF tools built-in. Canva has more templates (5M+) but Scenith offers better all-in-one workflow for video creators."
-              },
-              {
-                q: "How does Scenith's AI voice compare to ElevenLabs?",
-                a: "Scenith offers 40+ voices across 20+ languages vs ElevenLabs' 50+ voices. Quality is comparable—both use neural text-to-speech. Key differences: (1) Scenith includes image editing, subtitles, PDF tools (ElevenLabs is voice-only), (2) Scenith free plan: 3,500 chars/month vs ElevenLabs: 10,000 but requires account, (3) Scenith CREATOR: $19 vs ElevenLabs Starter: $22, (4) Scenith has no watermarks, ElevenLabs requires attribution on free. Choose ElevenLabs for voice cloning; choose Scenith for complete content workflow."
-              },
-              {
-                q: "Is Scenith good for professional use or just beginners?",
-                a: "Both! Beginners love the simple interface and free plan (zero learning curve). Professionals appreciate the time savings and cost efficiency. Over 3,000 marketing agencies, YouTube channels with 100K+ subs, and e-learning platforms use Scenith for client deliverables. The STUDIO plan includes priority support and advanced features professionals need. Key metric: 78% of paid users are professionals/businesses, not hobbyists."
-              },
-              {
-                q: "Can I cancel Scenith anytime or am I locked in?",
-                a: "Cancel anytime—zero contracts or commitments. Your subscription ends at the current billing period (no refunds for unused time, but you keep access until period ends). Downgrade to free BASIC plan anytime if you just need occasional use. Unlike Adobe's difficult cancellation, Scenith makes it one-click in your account settings. We want happy users, not trapped subscribers."
-              },
-              {
-                q: "Does Scenith work on mobile phones and tablets?",
-                a: "Yes! Scenith is fully responsive and works on iOS/Android phones, iPads, Android tablets, and Chromebooks. All tools are touch-optimized. Some features work better on larger screens (Image Editor, Subtitle timing), but voice generation and basic editing work great on mobile. Many users generate voice on phone, then edit on desktop. Cloud sync means your work is accessible everywhere."
-              }
-            ].map((item, index) => (
-              <div
-                key={index}
-                style={{
-                  background: 'rgba(255, 255, 255, 0.95)',
-                  backdropFilter: 'blur(20px)',
-                  padding: '30px',
-                  borderRadius: '20px',
-                  border: '2px solid rgba(102, 126, 234, 0.2)',
-                  boxShadow: '0 4px 15px rgba(0,0,0,0.06)',
-                  transition: 'all 0.3s'
-                }}
-              >
-                <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#667eea', marginBottom: '16px', lineHeight: '1.4' }}>
-                  {item.q}
-                </h3>
-                <p style={{ fontSize: '1rem', color: '#4a5568', lineHeight: '1.8', margin: 0 }}>
-                  {item.a}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>        
+        </section>      
 
         {/* FAQ Section - Enhanced */}
         <section className="faq-section">
@@ -1764,26 +1637,26 @@ useEffect(() => {
           >
             <span className="cta-label">Ready to Create?</span>
             <h2 className="final-cta-title">
-              Start Using Professional AI Tools <span className="gradient-text">Completely Free</span>
+              Your First AI Image is{' '}
+              <span className="gradient-text">Free Right Now</span>
             </h2>
             <p className="final-cta-description">
-              Join 10,000+ content creators using Scenith's AI-powered platform. Generate natural voiceovers, 
-              edit stunning images, create subtitles, and access SVG icons—all without watermarks.
+              50 free credits every month. Generate AI images with FLUX & Imagen 4, 
+              create cinematic videos with Kling & Veo, and produce natural voiceovers — 
+              all from one dashboard. No card. No daily limits.
             </p>
-            
+
             <div className="final-cta-buttons">
-              <Link href="/tools/ai-voice-generation" className="final-cta-primary">
-                <FaMicrophone className="cta-icon" />
-                Start with AI Voice Generator
+              <Link href="/tools/ai-image-generation" className="final-cta-primary">
+                🎨 Generate Your First Image Free
               </Link>
-              <Link href="/svg-library" className="final-cta-secondary">
-                <FaShapes className="cta-icon" />
-                Browse SVG Library
+              <Link href="/pricing" className="final-cta-secondary">
+                💳 See All Plans
               </Link>
             </div>
 
             <div className="final-cta-features">
-              {['✅ No Credit Card Required', '✅ No Watermarks', '✅ 40+ AI Voices', '✅ SVG Icons', '✅ Free Forever'].map((benefit, i) => (
+              {['✅ 50 Free Credits', '✅ No Daily Limits', '✅ 7 Image Models', '✅ 5 Video Models', '✅ No Watermarks'].map((benefit, i) => (
                 <span key={i} className="cta-feature-badge">{benefit}</span>
               ))}
             </div>

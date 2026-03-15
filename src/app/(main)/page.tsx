@@ -2,9 +2,19 @@ import { Metadata } from "next";
 import LandingPageClient from "../components/LandingPageClient";
 
 export const metadata: Metadata = {
-  title: "Scenith - Free AI Voice Generator & Content Creation Platform | 9 Professional Tools",
-  description: "Create professional content with Scenith's all-in-one platform. AI Voice Generator (40+ voices), Image Editor, Subtitles, PDF Tools, 10K+ SVG Icons. Free forever, no watermarks. Join 1500+ creators saving $600+ yearly vs Adobe/Canva.",
+  title: "Scenith - Free AI Image & Video Generator | FLUX, Kling, Veo 3.1 & More",
+  description: "Generate AI images with FLUX, GPT Image & Imagen 4. Create cinematic AI videos with Kling & Veo 3.1. Plus AI Voice, PDF Tools & more. 50 free credits monthly — no card, no daily limits.",
   keywords: [
+    // New primary keywords
+    "AI image generator free",
+    "AI video generator online",
+    "FLUX image generation",
+    "Kling video generator",
+    "Veo 3.1 video generation",
+    "Imagen 4 AI image",
+    "free AI image generator",
+    "text to video AI free",
+    "AI content creation platform",
     // Primary keywords
     "AI content creation platform",
     "free AI tools for content creators",
@@ -65,8 +75,8 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://scenith.in/",
     siteName: "Scenith",
-    title: "Scenith - #1 Free AI Voice Generator & Content Creation Platform",
-    description: "Transform text to natural speech with 40+ AI voices. Plus Image Editor, Auto Subtitles, 10,000+ SVG Icons & more. No watermark. Free forever!",
+    title: "Scenith - Free AI Image, Video & Voice Generator",
+    description: "Generate AI images with FLUX & Imagen 4, cinematic videos with Kling & Veo 3.1, and natural voiceovers — all from one platform. 50 free credits monthly, no card required.",
     images: [
       {
         url: "https://scenith.in/images/og-image.jpg",
@@ -80,8 +90,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@scenith",
     creator: "@scenith",
-    title: "Scenith - Free AI Voice Generator & Content Tools",
-    description: "40+ natural AI voices, Image Editor, Auto Subtitles, 10K+ SVG Icons. Create professional content FREE!",
+    title: "Scenith - Free AI Image, Video & Voice Generator",
+    description: "FLUX, Kling, Veo 3.1, Imagen 4 & more. 50 free credits/month. No card, no daily limits.",
     images: ["https://scenith.in/images/twitter-image.jpg"],
   },
   alternates: {
