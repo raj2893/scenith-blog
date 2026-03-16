@@ -941,9 +941,9 @@ export default function PricingPageClient() {
         { name: 'Creator Odyssey', role: 'STUDIO',        price: 0, currency: 'LOADING', ttsLimit: 400000, features: odysseyFeats },
       ];
     }
-    const starterPrice  = isIndianUser ? 99  : 5;
-    const creatorPrice  = isIndianUser ? 499 : 12;
-    const proPrice      = isIndianUser ? 999 : 24;
+    const starterPrice  = isIndianUser ? 799  : 15;
+    const creatorPrice  = isIndianUser ? 1749 : 22;
+    const proPrice      = isIndianUser ? 2299 : 27;
     const originalStarterPrice = Math.round(starterPrice / 0.75);
     const originalCreatorPrice = Math.round(creatorPrice / 0.75);
     const originalProPrice     = Math.round(proPrice / 0.75);
