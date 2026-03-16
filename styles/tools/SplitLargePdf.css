@@ -1,0 +1,1005 @@
+/* =============================================
+   split-large-pdf-into-multiple-files - Page CSS
+   Aesthetic: Editorial tech magazine × utility-first
+   Font palette: Sora (headings) + DM Sans (body)
+   ============================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
+
+/* ── Root Tokens ─────────────────────────────── */
+:root {
+  --ink:        #0d1117;
+  --ink-soft:   #3a4250;
+  --ink-muted:  #6b7585;
+  --canvas:     #f9fafb;
+  --surface:    #ffffff;
+  --border:     #e4e7ed;
+
+  --brand:      #2563eb;
+  --brand-dark: #1d4ed8;
+  --brand-pale: #eff6ff;
+  --brand-glow: rgba(37,99,235,0.12);
+
+  --accent:     #f97316;
+  --accent-pale:#fff7ed;
+
+  --success:    #16a34a;
+  --success-pale:#f0fdf4;
+
+  --warn:       #d97706;
+  --warn-pale:  #fffbeb;
+
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  20px;
+  --radius-xl:  32px;
+
+  --shadow-card: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.06);
+  --shadow-lift: 0 8px 32px rgba(0,0,0,.10), 0 1px 4px rgba(0,0,0,.06);
+  --shadow-pop:  0 20px 60px rgba(37,99,235,.18), 0 4px 16px rgba(37,99,235,.1);
+}
+
+/* ── Reset Scoped to Page ────────────────────── */
+.slp-page * { box-sizing: border-box; }
+.slp-page {
+  font-family: 'DM Sans', sans-serif;
+  color: var(--ink);
+  background: var(--canvas);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Hero Banner ─────────────────────────────── */
+.slp-hero {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #1d4ed8 100%);
+  padding: 100px 20px 80px;
+  text-align: center;
+}
+
+.slp-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(ellipse 900px 500px at 60% -10%, rgba(99,179,237,.15) 0%, transparent 60%),
+    radial-gradient(ellipse 600px 400px at -10% 80%, rgba(249,115,22,.12) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+/* Subtle grid overlay */
+.slp-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+}
+
+.slp-hero__inner {
+  position: relative;
+  z-index: 2;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.slp-hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.2);
+  backdrop-filter: blur(8px);
+  border-radius: 999px;
+  padding: 6px 18px;
+  font-family: 'Sora', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.85);
+  margin-bottom: 28px;
+}
+
+.slp-hero__badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #34d399;
+  animation: slp-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes slp-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .6; transform: scale(1.35); }
+}
+
+.slp-hero__title {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(32px, 5.5vw, 58px);
+  font-weight: 900;
+  line-height: 1.12;
+  color: #ffffff;
+  margin: 0 0 22px;
+  letter-spacing: -.02em;
+}
+
+.slp-hero__title em {
+  font-style: normal;
+  background: linear-gradient(90deg, #60a5fa, #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.slp-hero__subtitle {
+  font-size: clamp(17px, 2.2vw, 21px);
+  color: rgba(255,255,255,.72);
+  max-width: 680px;
+  margin: 0 auto 40px;
+  font-weight: 400;
+  line-height: 1.65;
+}
+
+/* ── Pill Stats Strip ────────────────────────── */
+.slp-hero__stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 48px;
+}
+
+.slp-hero__stat-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.18);
+  backdrop-filter: blur(6px);
+  border-radius: 999px;
+  padding: 9px 20px;
+  font-size: 14px;
+  color: rgba(255,255,255,.88);
+  font-weight: 500;
+}
+
+.slp-hero__stat-pill-icon {
+  font-size: 16px;
+}
+
+/* ── Mega CTA Button ─────────────────────────── */
+.slp-cta-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.slp-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  background: linear-gradient(135deg, #f97316 0%, #ef4444 100%);
+  color: #ffffff;
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(16px, 2.2vw, 20px);
+  font-weight: 700;
+  text-decoration: none;
+  padding: 20px 48px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(249,115,22,.45), 0 2px 8px rgba(0,0,0,.2);
+  transition: transform .2s ease, box-shadow .2s ease;
+  position: relative;
+  overflow: hidden;
+  letter-spacing: -.01em;
+}
+
+.slp-cta-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.18) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.slp-cta-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 48px rgba(249,115,22,.55), 0 4px 16px rgba(0,0,0,.25);
+}
+
+.slp-cta-btn:active { transform: translateY(-1px); }
+
+.slp-cta-btn__arrow {
+  font-size: 22px;
+  transition: transform .2s ease;
+}
+
+.slp-cta-btn:hover .slp-cta-btn__arrow {
+  transform: translateX(5px);
+}
+
+.slp-cta-trust {
+  font-size: 13px;
+  color: rgba(255,255,255,.55);
+  font-weight: 400;
+}
+
+/* ── Trust Bar ───────────────────────────────── */
+.slp-trust-bar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 20px;
+}
+
+.slp-trust-bar__inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+}
+
+.slp-trust-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+
+.slp-trust-item__icon {
+  font-size: 16px;
+}
+
+/* ── Section Shared ──────────────────────────── */
+.slp-section {
+  padding: 80px 20px;
+}
+
+.slp-section--alt {
+  background: var(--surface);
+}
+
+.slp-section--dark {
+  background: #0d1117;
+  color: #e2e8f0;
+}
+
+.slp-container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.slp-section-label {
+  font-family: 'Sora', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--brand);
+  margin-bottom: 12px;
+}
+
+.slp-section-title {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(26px, 3.5vw, 40px);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -.025em;
+  color: var(--ink);
+  margin: 0 0 16px;
+}
+
+.slp-section--dark .slp-section-title { color: #f1f5f9; }
+
+.slp-section-desc {
+  font-size: 17px;
+  color: var(--ink-muted);
+  max-width: 620px;
+  line-height: 1.75;
+  margin: 0 0 48px;
+}
+
+.slp-section--dark .slp-section-desc { color: #94a3b8; }
+
+/* ── Divider ─────────────────────────────────── */
+.slp-divider {
+  width: 48px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--brand), var(--accent));
+  border-radius: 2px;
+  margin-bottom: 20px;
+}
+
+/* ── Why Split – Icon Grid ───────────────────── */
+.slp-why-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 24px;
+}
+
+.slp-why-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px 28px;
+  transition: box-shadow .22s ease, transform .22s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.slp-why-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--card-accent, var(--brand));
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.slp-why-card:hover {
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-4px);
+}
+
+.slp-why-card__icon {
+  font-size: 36px;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.slp-why-card__title {
+  font-family: 'Sora', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+.slp-why-card__body {
+  font-size: 15px;
+  color: var(--ink-soft);
+  line-height: 1.75;
+  margin: 0;
+}
+
+/* ── Method Comparison ───────────────────────── */
+.slp-method-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 28px;
+}
+
+.slp-method-card {
+  border-radius: var(--radius-lg);
+  padding: 36px 30px;
+  position: relative;
+  overflow: hidden;
+}
+
+.slp-method-card--a {
+  background: linear-gradient(145deg, #eff6ff, #dbeafe);
+  border: 1.5px solid #bfdbfe;
+}
+
+.slp-method-card--b {
+  background: linear-gradient(145deg, #f0fdf4, #dcfce7);
+  border: 1.5px solid #bbf7d0;
+}
+
+.slp-method-card--c {
+  background: linear-gradient(145deg, #fff7ed, #fed7aa);
+  border: 1.5px solid #fdba74;
+}
+
+.slp-method-card__num {
+  font-family: 'Sora', sans-serif;
+  font-size: 72px;
+  font-weight: 900;
+  line-height: 1;
+  opacity: .08;
+  position: absolute;
+  top: 16px; right: 24px;
+  color: var(--ink);
+  user-select: none;
+}
+
+.slp-method-card__tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-bottom: 18px;
+}
+
+.slp-method-card--a .slp-method-card__tag { background: #bfdbfe; color: #1d4ed8; }
+.slp-method-card--b .slp-method-card__tag { background: #bbf7d0; color: #15803d; }
+.slp-method-card--c .slp-method-card__tag { background: #fdba74; color: #92400e; }
+
+.slp-method-card__title {
+  font-family: 'Sora', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  margin: 0 0 14px;
+  color: var(--ink);
+}
+
+.slp-method-card__desc {
+  font-size: 15.5px;
+  color: var(--ink-soft);
+  line-height: 1.75;
+  margin-bottom: 20px;
+}
+
+.slp-method-card__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.slp-method-card__list li {
+  padding: 6px 0;
+  font-size: 14.5px;
+  color: var(--ink-soft);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.slp-method-card__list li::before {
+  content: '→';
+  color: var(--brand);
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ── Step Timeline ───────────────────────────── */
+.slp-steps {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.slp-steps::before {
+  content: '';
+  position: absolute;
+  left: 27px;
+  top: 56px;
+  bottom: 56px;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--brand), var(--accent));
+  border-radius: 2px;
+}
+
+.slp-step {
+  display: flex;
+  gap: 28px;
+  padding: 24px 0;
+  position: relative;
+}
+
+.slp-step__num-wrap {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 56px;
+}
+
+.slp-step__num {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--brand);
+  color: white;
+  font-family: 'Sora', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 16px var(--brand-glow);
+  z-index: 1;
+  position: relative;
+}
+
+.slp-step__body {
+  flex: 1;
+  padding-top: 8px;
+}
+
+.slp-step__title {
+  font-family: 'Sora', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 10px;
+}
+
+.slp-step__desc {
+  font-size: 15.5px;
+  color: var(--ink-soft);
+  line-height: 1.75;
+  margin: 0 0 14px;
+}
+
+.slp-step__tip {
+  background: var(--brand-pale);
+  border-left: 3px solid var(--brand);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 12px 16px;
+  font-size: 13.5px;
+  color: var(--brand-dark);
+}
+
+.slp-step__tip strong { font-weight: 700; }
+
+/* ── Use-case Accordion Cards ────────────────── */
+.slp-usecase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.slp-usecase-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: box-shadow .2s ease, transform .2s ease;
+}
+
+.slp-usecase-card:hover {
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-3px);
+}
+
+.slp-usecase-card__head {
+  padding: 22px 24px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.slp-usecase-card__icon-wrap {
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.slp-usecase-card__title {
+  font-family: 'Sora', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0;
+}
+
+.slp-usecase-card__body {
+  padding: 20px 24px;
+}
+
+.slp-usecase-card__body ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.slp-usecase-card__body li {
+  padding: 5px 0;
+  font-size: 14px;
+  color: var(--ink-soft);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.slp-usecase-card__body li::before {
+  content: '✓';
+  color: var(--success);
+  font-weight: 700;
+  flex-shrink: 0;
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+/* ── Stats Row ───────────────────────────────── */
+.slp-stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.slp-stat-card {
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: var(--radius-lg);
+  padding: 32px 24px;
+  text-align: center;
+  transition: background .2s ease;
+}
+
+.slp-stat-card:hover {
+  background: rgba(255,255,255,.1);
+}
+
+.slp-stat-card__val {
+  font-family: 'Sora', sans-serif;
+  font-size: 42px;
+  font-weight: 900;
+  color: #60a5fa;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.slp-stat-card__label {
+  font-size: 14px;
+  color: #94a3b8;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+/* ── FAQ Accordion ───────────────────────────── */
+.slp-faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.slp-faq-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: box-shadow .2s ease;
+}
+
+.slp-faq-item:hover { box-shadow: var(--shadow-card); }
+
+.slp-faq-item details summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 22px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: 'Sora', sans-serif;
+  font-size: 16.5px;
+  font-weight: 600;
+  color: var(--ink);
+  user-select: none;
+}
+
+.slp-faq-item details summary::-webkit-details-marker { display: none; }
+
+.slp-faq-item details summary::after {
+  content: '+';
+  font-size: 22px;
+  color: var(--brand);
+  font-weight: 300;
+  flex-shrink: 0;
+  transition: transform .25s ease;
+}
+
+.slp-faq-item details[open] summary::after {
+  transform: rotate(45deg);
+}
+
+.slp-faq-item details[open] summary {
+  border-bottom: 1px solid var(--border);
+}
+
+.slp-faq-body {
+  padding: 22px 28px;
+  font-size: 15.5px;
+  color: var(--ink-soft);
+  line-height: 1.78;
+}
+
+/* ── Comparison Table ────────────────────────── */
+.slp-table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
+}
+
+.slp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  background: var(--surface);
+}
+
+.slp-table thead {
+  background: linear-gradient(135deg, #1e3a8a, #1d4ed8);
+  color: white;
+}
+
+.slp-table th {
+  padding: 18px 20px;
+  text-align: left;
+  font-family: 'Sora', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.slp-table td {
+  padding: 15px 20px;
+  color: var(--ink-soft);
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.slp-table tbody tr:last-child td { border-bottom: none; }
+.slp-table tbody tr:hover td { background: var(--brand-pale); }
+
+.slp-table td:first-child {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.slp-badge-yes {
+  background: var(--success-pale);
+  color: var(--success);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.slp-badge-no {
+  background: #fef2f2;
+  color: #dc2626;
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* ── Inline CTA Strip ────────────────────────── */
+.slp-inline-cta {
+  background: linear-gradient(135deg, #1e3a8a, #2563eb);
+  border-radius: var(--radius-xl);
+  padding: 56px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  margin: 0 20px;
+}
+
+.slp-inline-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 700px 400px at 50% -30%, rgba(96,165,250,.25), transparent);
+  pointer-events: none;
+}
+
+.slp-inline-cta__title {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(22px, 3.5vw, 36px);
+  font-weight: 800;
+  color: white;
+  margin: 0 0 14px;
+  position: relative;
+}
+
+.slp-inline-cta__sub {
+  font-size: 17px;
+  color: rgba(255,255,255,.7);
+  margin: 0 auto 32px;
+  max-width: 520px;
+  position: relative;
+}
+
+.slp-inline-cta .slp-cta-btn {
+  position: relative;
+}
+
+/* ── Pro Tips Boxes ──────────────────────────── */
+.slp-tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 22px;
+}
+
+.slp-tip-card {
+  border-radius: var(--radius-md);
+  padding: 26px;
+  position: relative;
+  padding-left: 32px;
+}
+
+.slp-tip-card--blue  { background: var(--brand-pale); border-left: 4px solid var(--brand); }
+.slp-tip-card--green { background: var(--success-pale); border-left: 4px solid var(--success); }
+.slp-tip-card--orange{ background: var(--accent-pale); border-left: 4px solid var(--accent); }
+.slp-tip-card--warn  { background: var(--warn-pale); border-left: 4px solid var(--warn); }
+
+.slp-tip-card__heading {
+  font-family: 'Sora', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--ink);
+}
+
+.slp-tip-card__body {
+  font-size: 14.5px;
+  color: var(--ink-soft);
+  line-height: 1.72;
+  margin: 0;
+}
+
+/* ── Final CTA Section ───────────────────────── */
+.slp-final-cta {
+  background: var(--ink);
+  padding: 100px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.slp-final-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 800px 500px at 30% 50%, rgba(37,99,235,.2), transparent),
+    radial-gradient(ellipse 600px 400px at 75% 50%, rgba(249,115,22,.15), transparent);
+}
+
+.slp-final-cta__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.slp-final-cta__label {
+  font-family: 'Sora', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: #60a5fa;
+  margin-bottom: 18px;
+}
+
+.slp-final-cta__title {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(28px, 4.5vw, 48px);
+  font-weight: 900;
+  color: white;
+  line-height: 1.15;
+  letter-spacing: -.025em;
+  margin: 0 0 18px;
+}
+
+.slp-final-cta__sub {
+  font-size: 17px;
+  color: #94a3b8;
+  margin: 0 0 40px;
+  line-height: 1.7;
+}
+
+.slp-final-cta__features {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.slp-final-cta__feat {
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 999px;
+  padding: 7px 16px;
+  font-size: 13px;
+  color: rgba(255,255,255,.75);
+  font-weight: 500;
+}
+
+/* ── Rich Content Section ────────────────────── */
+.slp-rich-text {
+  font-size: 16px;
+  color: var(--ink-soft);
+  line-height: 1.8;
+}
+
+.slp-rich-text h3 {
+  font-family: 'Sora', sans-serif;
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 32px 0 14px;
+}
+
+.slp-rich-text h4 {
+  font-family: 'Sora', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 24px 0 10px;
+}
+
+.slp-rich-text p { margin: 0 0 18px; }
+
+.slp-rich-text ul {
+  margin: 10px 0 20px;
+  padding-left: 24px;
+}
+
+.slp-rich-text li { margin-bottom: 8px; }
+
+.slp-rich-text strong { color: var(--ink); font-weight: 600; }
+
+/* ── Breadcrumb ──────────────────────────────── */
+.slp-breadcrumb {
+  padding: 16px 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.slp-breadcrumb__inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--ink-muted);
+}
+
+.slp-breadcrumb a {
+  color: var(--brand);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.slp-breadcrumb a:hover { text-decoration: underline; }
+
+.slp-breadcrumb__sep {
+  color: var(--border);
+  font-size: 16px;
+}
+
+/* ── Responsive ──────────────────────────────── */
+@media (max-width: 640px) {
+  .slp-hero { padding: 70px 16px 60px; }
+  .slp-section { padding: 56px 16px; }
+  .slp-steps::before { display: none; }
+  .slp-step { flex-direction: column; gap: 12px; }
+  .slp-inline-cta { padding: 40px 20px; margin: 0; border-radius: var(--radius-lg); }
+  .slp-cta-btn { padding: 16px 28px; }
+  .slp-table th, .slp-table td { padding: 12px 14px; font-size: 13px; }
+}
+
+@media (max-width: 480px) {
+  .slp-hero__stats { flex-direction: column; align-items: center; }
+  .slp-stats-row { grid-template-columns: 1fr 1fr; }
+}
