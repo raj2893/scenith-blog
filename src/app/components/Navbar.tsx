@@ -49,6 +49,9 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState<string>('');
   const [navbarLoginTriggered, setNavbarLoginTriggered] = useState(false);
+  const [isUtilitiesDropdownOpen, setIsUtilitiesDropdownOpen] = useState(false);
+  const [credits, setCredits] = useState<number>(50);
+  const [isCreditsDropdownOpen, setIsCreditsDropdownOpen] = useState(false);
 
   // Check authentication status on mount
   useEffect(() => {
@@ -59,6 +62,8 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
           const response = await axios.get(`${API_BASE_URL}/auth/me`, {
             headers: { Authorization: `Bearer ${token}` },
           });
+          console.log('User data from API:', response.data);
+          console.log('Picture value:', response.data.picture);
           const fullName = response.data.name || '';
           const nameParts = fullName.trim().split(' ');
           const firstName = nameParts[0] || '';
@@ -68,16 +73,19 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
             picture: response.data.picture || null,
           });
           setIsLoggedIn(true);
+          setCredits(response.data.creditBalance ?? 50);
         } catch (error) {
           console.error('Auth check failed:', error);
           localStorage.removeItem('token');
           localStorage.removeItem('userProfile');
           setIsLoggedIn(false);
           setUserProfile(null);
+          setCredits(50);
         }
       } else {
         setIsLoggedIn(false);
         setUserProfile(null);
+        setCredits(50);
       }
     };
 
@@ -128,7 +136,15 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
       window.removeEventListener('storage', handleStorageChange);
       stopPolling();
     };
-  }, [isLoggedIn]); // Re-run when login state changes
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    const onScroll = () => {
+      document.querySelector('.nav-bar')?.classList.toggle('scrolled', window.scrollY > 10);
+    };
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);  
 
   const dispatchLoginEvent = () => {
     window.dispatchEvent(new Event('userLoggedIn'));
@@ -305,47 +321,33 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
   }, [showLoginModal, navbarLoginTriggered]);
 
   const baseNavLinks: NavLink[] = [
-  { label: 'Home', path: '/', icon: <FaHome /> },
-  {
-    label: 'AI Image Generator',
-    path: '/tools/ai-image-generation',
-    icon: <FaImage />,
-    isNew: true
-  },
-  {
-    label: 'AI Video Generator',
-    path: '/tools/ai-video-generation',
-    icon: <FaVideo />,
-    isNew: true
-  },
-  {
-    label: 'PDF Tools',
-    path: '/tools/pdf-tools',
-    icon: <FaFilePdf />,
-  },
+    { label: 'Home', path: '/', icon: <FaHome /> },
     {
-      label: 'Tools',
+      label: 'AI Tools',
       isDropdown: true,
       icon: <FaTools />,
       dropdownItems: [
+        { label: 'AI Image Generator', href: '/tools/ai-image-generation' },
+        { label: 'AI Video Generator', href: '/tools/ai-video-generation' },
         { label: 'AI Voice Generator', href: '/tools/ai-voice-generation' },
-        { label: 'PDF Tools', href: '/tools/pdf-tools' },
-        { label: 'AI Image Generation', href: '/tools/ai-image-generation' },
-        { label: 'SVG Library', href: '/svg-library' },
-  /*    { label: 'AI Subtitle Generator', href: '/tools/add-subtitles-to-videos' },   */
-        { label: 'Image Editing', href: '/tools/image-editing' },
-        { label: 'Background Remover', href: '/tools/background-removal' },
+        { label: 'AI Background Removal', href: '/tools/background-removal' },
+        { label: 'AI Subtitle Generator', href: '/tools/add-subtitles-to-videos' },
+      ],
+    },
+    {
+      label: 'Utilities',
+      isDropdown: true,
+      icon: <FaTools />,
+      dropdownItems: [
         { label: 'Video Speed Modifier', href: '/tools/video-speed-modifier' },
+        { label: 'Image Editor', href: '/tools/image-editing' },
+        { label: 'PDF Tools', href: '/tools/pdf-tools' },
+        { label: 'SVG Library', href: '/svg-library' },
         { label: 'Media Compression', href: '/tools/compress-media' },
         { label: 'Media Conversion', href: '/tools/media-conversion-tool' },
       ],
     },
     { label: 'Pricing', path: '/pricing', icon: <FaDollarSign /> },
-    {
-    label: 'Dashboard',
-    path: '/user-dashboard',
-    icon: <FaUser />,
-  },
     { label: 'Blogs', path: '/blogs', icon: <FaBlog /> },
   ];
 
@@ -375,38 +377,34 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
           <div className={`nav-links ${isNavMenuOpen ? 'open' : ''}`}>
             {navLinks.map((link) => (
               <div key={link.label} className="nav-item">
-                {link.isDropdown ? (
-                  <>
-                    <button
-                      type="button"
-                      className={`nav-link nav-link-with-icon dropdown-trigger ${pathname === link.path ? 'active' : ''}`}
-                      onMouseEnter={() => setIsToolsDropdownOpen(true)}
-                      onMouseLeave={() => setIsToolsDropdownOpen(false)}
-                      onClick={toggleToolsDropdown}
+              {link.isDropdown ? (
+                <>
+                  <button
+                    type="button"
+                    className={`nav-link nav-link-with-icon dropdown-trigger`}
+                    onMouseEnter={() => link.label === 'Utilities' ? setIsUtilitiesDropdownOpen(true) : setIsToolsDropdownOpen(true)}
+                    onMouseLeave={() => link.label === 'Utilities' ? setIsUtilitiesDropdownOpen(false) : setIsToolsDropdownOpen(false)}
+                    onClick={() => link.label === 'Utilities' ? setIsUtilitiesDropdownOpen(v => !v) : setIsToolsDropdownOpen(v => !v)}
+                  >
+                    {link.icon && <span className="nav-link-icon">{link.icon}</span>}
+                    {link.label}
+                    <span className="dropdown-chevron">▾</span>
+                  </button>
+                  {(link.label === 'Utilities' ? isUtilitiesDropdownOpen : isToolsDropdownOpen) && (
+                    <div
+                      className="tools-dropdown"
+                      onMouseEnter={() => link.label === 'Utilities' ? setIsUtilitiesDropdownOpen(true) : setIsToolsDropdownOpen(true)}
+                      onMouseLeave={() => link.label === 'Utilities' ? setIsUtilitiesDropdownOpen(false) : setIsToolsDropdownOpen(false)}
                     >
-                      {link.icon && <span className="nav-link-icon">{link.icon}</span>}
-                      {link.label}
-                    </button>
-                    {isToolsDropdownOpen && (
-                      <div
-                        className="tools-dropdown"
-                        onMouseEnter={() => setIsToolsDropdownOpen(true)}
-                        onMouseLeave={() => setIsToolsDropdownOpen(false)}
-                      >
-                        {link.dropdownItems?.map((item) => (
-                          <button
-                            key={item.label}
-                            type="button"
-                            className="tools-dropdown-item"
-                            onClick={() => navigate(item.href)}
-                          >
-                            {item.label}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </>
-                ) : (
+                      {link.dropdownItems?.map((item) => (
+                        <button key={item.label} type="button" className="tools-dropdown-item" onClick={() => navigate(item.href)}>
+                          {item.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </>
+              ) : (
                   <button
                     type="button"
                     className={`nav-link ${link.icon ? 'nav-link-with-icon' : ''} ${pathname === link.path ? 'active' : ''}`}
@@ -427,46 +425,85 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
               </div>
             ))}
 
-            {/* Auth Button */}
-            <div className="nav-item auth-nav-item">
-              {isLoggedIn ? (
-                <>
-                  <button
-                    type="button"
-                    className="nav-link nav-link-with-icon dropdown-trigger"
-                    onMouseEnter={() => setIsProfileDropdownOpen(true)}
-                    onMouseLeave={() => setIsProfileDropdownOpen(false)}
-                    onClick={toggleProfileDropdown}
-                  >
-                    <span className="nav-link-icon"><FaUser /></span>
-                    {userProfile?.firstName || 'Profile'}
-                  </button>
-                  {isProfileDropdownOpen && (
-                    <div
-                      className="tools-dropdown profile-dropdown"
+            {/* RIGHT SECTION: Credits + Upgrade + User */}
+            <div className="nav-right-section">
+              {/* Credits Indicator */}
+              <div
+                className="nav-item credits-nav-item"
+                onMouseEnter={() => setIsCreditsDropdownOpen(true)}
+                onMouseLeave={() => setIsCreditsDropdownOpen(false)}
+              >
+                <button type="button" className="credits-pill">
+                  <span className="credits-bolt">⚡</span>
+                  <span className="credits-count">{credits}</span>
+                  <span className="credits-label">Credits</span>
+                </button>
+                {isCreditsDropdownOpen && (
+                  <div className="credits-dropdown">
+                    <div className="credits-dropdown-header">Credit Balance</div>
+                    <div className="credits-dropdown-amount">⚡ {credits} remaining</div>
+                    <div className="credits-dropdown-plan">
+                      Plan: <strong>{isLoggedIn ? (userProfile ? 'Pro' : 'Free') : 'Free'}</strong>
+                    </div>
+                    <button
+                      type="button"
+                      className="credits-upgrade-cta"
+                      onClick={() => navigate('/pricing')}
+                    >
+                      Upgrade Plan
+                    </button>
+                  </div>
+                )}
+              </div>
+              
+              {/* Upgrade Button */}
+              <button
+                type="button"
+                className="nav-upgrade-button"
+                onClick={() => navigate('/pricing')}
+              >
+                Upgrade ✦
+              </button>
+              
+              {/* User Avatar / Login */}
+              <div className="nav-item auth-nav-item">
+                {isLoggedIn ? (
+                  <>
+                    <button
+                      type="button"
+                      className="nav-avatar-button"
                       onMouseEnter={() => setIsProfileDropdownOpen(true)}
                       onMouseLeave={() => setIsProfileDropdownOpen(false)}
+                      onClick={toggleProfileDropdown}
                     >
-                      <button
-                        type="button"
-                        className="tools-dropdown-item logout-item"
-                        onClick={handleLogout}
+                      {userProfile?.picture && userProfile.picture.trim() !== ''
+                        ? <img src={userProfile.picture} alt="avatar" className="nav-avatar-img" referrerPolicy="no-referrer" />
+                        : <span className="nav-avatar-initials">{userProfile?.firstName?.[0]?.toUpperCase() || 'U'}</span>
+                      }
+                    </button>
+                    {isProfileDropdownOpen && (
+                      <div
+                        className="tools-dropdown profile-dropdown"
+                        onMouseEnter={() => setIsProfileDropdownOpen(true)}
+                        onMouseLeave={() => setIsProfileDropdownOpen(false)}
                       >
-                        Logout
-                      </button>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <button
-                  type="button"
-                  className="nav-link nav-link-with-icon navbar-auth-button"
-                  onClick={handleNavbarLoginClick}
-                >
-                  <span className="nav-link-icon"><FaUser /></span>
-                  Login
-                </button>
-              )}
+                        <button type="button" className="tools-dropdown-item" onClick={() => navigate('/user-dashboard')}>Dashboard</button>
+                        <button type="button" className="tools-dropdown-item" onClick={() => navigate('/pricing')}>Billing</button>
+                        <button type="button" className="tools-dropdown-item logout-item" onClick={handleLogout}>Logout</button>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <button
+                    type="button"
+                    className="nav-link nav-link-with-icon navbar-auth-button"
+                    onClick={handleNavbarLoginClick}
+                  >
+                    <span className="nav-link-icon"><FaUser /></span>
+                    Login
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
