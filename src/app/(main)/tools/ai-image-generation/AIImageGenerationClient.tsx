@@ -795,13 +795,14 @@ const AIImageGeneratorClient: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1>Free AI Image Generator: Create Stunning Visuals from Text (Social Media & Marketing)</h1>
+          <h1>Turn any idea into an image <span style={{ background: 'linear-gradient(120deg, #6355dc, #e040a0)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>in seconds</span></h1>
           <p className="hero-description">
-            Transform your ideas into beautiful images instantly with AI. Create professional visuals for{' '}
-            <a href="/tools/add-subtitles-to-videos" className="inline-link">video thumbnails</a>,{' '}
-            social media posts, marketing materials, and creative projects. Works perfectly with our{' '}
-            <a href="/tools/image-editing" className="inline-link">free image editor</a>{' '}
-            for complete design workflows. Generate unlimited creativity - completely free!
+            Type a description. Pick a style. Your image is ready in under 15 seconds. 
+            No design skills needed — just your imagination.
+            <br /><br />
+            <span style={{ fontSize: '0.95rem', color: '#94a3b8' }}>
+              Free plan includes 50 credits · No credit card required
+            </span>
           </p>
 
           <div className="hero-cta-section">
@@ -842,6 +843,35 @@ const AIImageGeneratorClient: React.FC = () => {
                           )}
                         </div>
                       </div>
+
+                      <div style={{
+                        background: 'white', padding: '8px 16px 0',
+                        display: 'flex', gap: 8, flexWrap: 'wrap',
+                      }}>
+                        {[
+                          '🌅 Cinematic sunset over mountains',
+                          '🤖 Futuristic robot in neon city',
+                          '🌸 Watercolor cherry blossom portrait',
+                          '🚀 Astronaut floating in deep space',
+                          '🏙️ Aerial Tokyo at night',
+                        ].map((suggestion) => (
+                          <button
+                            key={suggestion}
+                            onClick={() => { setPrompt(suggestion.slice(2).trim()); setPromptCharCount(suggestion.slice(2).trim().length); }}
+                            disabled={isGenerating}
+                            style={{
+                              padding: '5px 12px', borderRadius: 999, border: '1.5px solid rgba(99,85,220,0.2)',
+                              background: 'rgba(99,85,220,0.05)', color: '#6355dc',
+                              fontSize: 11.5, fontWeight: 600, cursor: 'pointer',
+                              transition: 'all 0.18s', whiteSpace: 'nowrap',
+                            }}
+                            onMouseEnter={e => e.currentTarget.style.background = 'rgba(99,85,220,0.12)'}
+                            onMouseLeave={e => e.currentTarget.style.background = 'rgba(99,85,220,0.05)'}
+                          >
+                            {suggestion}
+                          </button>
+                        ))}
+                      </div>                      
 
                       <div className="textarea-container">
                         <textarea
@@ -894,23 +924,33 @@ const AIImageGeneratorClient: React.FC = () => {
                       </div>
                     )}
 
-                    <div className="style-selector-section">
-                      <label className="style-label-text" htmlFor="style-select">
-                        🎨 Art Style:
-                      </label>
-                      <select
-                        id="style-select"
-                        value={selectedStyle}
-                        onChange={(e) => setSelectedStyle(e.target.value)}
-                        className="style-dropdown"
-                        aria-label="Select art style"
-                      >
+                    <div style={{ margin: '16px 0' }}>
+                      <p style={{ fontSize: 12, fontWeight: 700, color: '#6666aa', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                        🎨 Art Style
+                      </p>
+                      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                         {STYLE_PRESETS.map((style) => (
-                          <option key={style.value} value={style.value}>
-                            {style.label}
-                          </option>
+                          <button
+                            key={style.value}
+                            onClick={() => setSelectedStyle(style.value)}
+                            style={{
+                              display: 'flex', alignItems: 'center', gap: 6,
+                              padding: '7px 14px', borderRadius: 999, cursor: 'pointer',
+                              border: `2px solid ${selectedStyle === style.value ? '#6355dc' : 'rgba(0,0,0,0.1)'}`,
+                              background: selectedStyle === style.value
+                                ? 'linear-gradient(135deg, #6355dc, #8b5cf6)'
+                                : '#f4f4f8',
+                              color: selectedStyle === style.value ? '#fff' : '#555',
+                              fontWeight: selectedStyle === style.value ? 700 : 500,
+                              fontSize: 12.5, transition: 'all 0.18s',
+                              boxShadow: selectedStyle === style.value ? '0 2px 10px rgba(99,85,220,0.3)' : 'none',
+                            }}
+                          >
+                            <span>{style.icon}</span>
+                            <span>{style.label}</span>
+                          </button>
                         ))}
-                      </select>
+                      </div>
                     </div>
 
                     {!isLoggedIn && (
@@ -954,10 +994,6 @@ const AIImageGeneratorClient: React.FC = () => {
                             </button>
                           ))}
                         </div>
-                        <p style={{ fontSize: 12, color: '#6355dc', marginTop: 10, fontWeight: 600 }}>
-                          💡 Login to generate · Plans from ₹99/mo →{' '}
-                          <a href="/pricing" style={{ color: '#6355dc', textDecoration: 'underline' }}>View Plans</a>
-                        </p>
                       </div>
                     )}                    
 
@@ -1023,84 +1059,111 @@ const AIImageGeneratorClient: React.FC = () => {
                       <p className="help-text">Specify what you DON'T want in the image</p>
                     </details>
 
-                    {isLoggedIn && imageUsage && (
-  <div style={{
-    background: 'rgba(0,0,0,0.15)',
-    border: '1px solid rgba(99,85,220,0.15)',
-    borderRadius: 14, padding: '16px 18px', marginBottom: 16,
-  }}>
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-      <span style={{ fontSize: '0.8rem', color: '#64748B', fontWeight: 500 }}>Credit Balance</span>
-      <span style={{ fontSize: '0.85rem', color: '#a899f5', fontWeight: 600 }}>
-        {imageUsage.balance.toLocaleString()} credits
-      </span>
-    </div>
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-      <span style={{ fontSize: '0.8rem', color: '#64748B', fontWeight: 500 }}>Plan</span>
-      <span style={{ fontSize: '0.85rem', color: '#a899f5', fontWeight: 600 }}>
-        {imageUsage.planType}
-      </span>
-    </div>
-    {imageUsage.expiresAt && imageUsage.expiresAt !== 'N/A' && (
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-        <span style={{ fontSize: '0.8rem', color: '#64748B', fontWeight: 500 }}>Expires</span>
-        <span style={{ fontSize: '0.8rem', color: '#64748B' }}>
-          {new Date(imageUsage.expiresAt).toLocaleDateString()}
-        </span>
-      </div>
-    )}
-    {selectedModel && imageUsage.availableModels?.length > 0 && (() => {
-      const m = imageUsage.availableModels.find(x => x.id === selectedModel);
-      return m ? (
-        <div style={{
-          fontSize: '0.82rem', color: '#55557a', marginTop: 8,
-          paddingTop: 8, borderTop: '1px solid rgba(99,85,220,0.1)',
-          display: 'flex', justifyContent: 'space-between',
-        }}>
-          <span>This generation will cost</span>
-          <strong style={{ color: '#a899f5' }}>
-            {m.creditsPerImage} credit{m.creditsPerImage !== 1 ? 's' : ''}
-          </strong>
-        </div>
-      ) : null;
-    })()}
-    {imageUsage.balance <= 0 && (
-      <div className="inline-upgrade-cta" style={{ marginTop: 10 }}>
-        <a href="/pricing" className="inline-upgrade-link">
-          🔓 Out of credits — Upgrade for more
-        </a>
-      </div>
-    )}
-  </div>
-)}
+                    <div style={{
+                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                      padding: '10px 16px', borderRadius: 12, marginBottom: 16,
+                      background: 'linear-gradient(135deg, rgba(99,85,220,0.08), rgba(240,108,190,0.06))',
+                      border: '1.5px solid rgba(99,85,220,0.18)',
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <span style={{ fontSize: 18 }}>⚡</span>
+                        <span style={{ fontSize: 13, fontWeight: 700, color: '#2d2d5e' }}>
+                          {isLoggedIn ? (imageUsage?.balance ?? '...') : 50} credits remaining
+                        </span>
+                      </div>
+                      {selectedModel && imageUsage?.availableModels && (() => {
+                        const m = imageUsage.availableModels.find(x => x.id === selectedModel);
+                        return m ? (
+                          <span style={{
+                            fontSize: 12, fontWeight: 700, padding: '4px 12px', borderRadius: 999,
+                            background: 'rgba(99,85,220,0.1)', color: '#6355dc',
+                          }}>
+                            This image = {m.creditsPerImage} cr
+                          </span>
+                        ) : null;
+                      })()}
+                      {!isLoggedIn && (
+                        <span style={{
+                          fontSize: 12, fontWeight: 700, padding: '4px 12px', borderRadius: 999,
+                          background: 'rgba(99,85,220,0.1)', color: '#6355dc',
+                        }}>
+                          Selected model = {
+                            [
+                              { id: 'stability-core', c: 2 }, { id: 'gpt-image-1-mini', c: 3 },
+                              { id: 'imagen-4-fast', c: 5 }, { id: 'flux-1-1-pro', c: 7 },
+                              { id: 'imagen-4-standard', c: 8 }, { id: 'gpt-image-1-medium', c: 10 },
+                              { id: 'grok-aurora', c: 12 },
+                            ].find(x => x.id === selectedModel)?.c ?? '?'
+                          } cr
+                        </span>
+                      )}
+                    </div>
+
+                    {isLoggedIn && imageUsage && imageUsage.balance < 15 && imageUsage.balance > 0 && (
+                      <div style={{
+                        padding: '10px 14px', borderRadius: 10, marginBottom: 12,
+                        background: 'linear-gradient(135deg, rgba(245,158,11,0.08), rgba(239,68,68,0.06))',
+                        border: '1.5px solid rgba(245,158,11,0.3)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
+                      }}>
+                        <span style={{ fontSize: 13, color: '#92400e', fontWeight: 600 }}>
+                          ⚠️ Only {imageUsage.balance} credits left — running low!
+                        </span>
+                        <a href="/pricing" style={{
+                          fontSize: 12, fontWeight: 700, padding: '5px 14px', borderRadius: 999,
+                          background: 'linear-gradient(135deg, #f59e0b, #f97316)',
+                          color: '#fff', textDecoration: 'none', whiteSpace: 'nowrap',
+                          boxShadow: '0 2px 8px rgba(245,158,11,0.35)',
+                        }}>
+                          Top up →
+                        </a>
+                      </div>
+                    )}                    
 
                     {!isLoggedIn ? (
-  <button
-    className="cta-button generate-button"
-    onClick={() => setShowLoginModal(true)}
-    aria-label="Login to generate AI images"
-  >
-    🔒 Login to Generate Images
-  </button>
-) : isLimitsExceeded() ? (
-  <a href="/pricing"
-    className="cta-button upgrade-button"
-    aria-label="Upgrade to get more image generation credits"
-  >
-    <span className="upgrade-icon">🚀</span>
-    Get More Credits — View Plans
-    <span className="upgrade-badge">Upgrade</span>
-  </a>
-) : (
-  <button
-    className="cta-button generate-button"
-    onClick={handleGenerateImage}
-    disabled={!prompt.trim() || isGenerating || !selectedModel}
-    aria-label="Generate AI image from description"
-  >
-    {isGenerating ? 'Creating Your Image...' : 'Generate Image'}
-  </button>
-)}
+                      <button
+                        className="cta-button generate-button"
+                        onClick={() => setShowLoginModal(true)}
+                        aria-label="Login to generate AI images"
+                      >
+                        🔒 Login to Generate Images
+                      </button>
+                    ) : isLimitsExceeded() ? (
+                      <a href="/pricing"
+                        className="cta-button upgrade-button"
+                        aria-label="Upgrade to get more image generation credits"
+                      >
+                        <span className="upgrade-icon">🚀</span>
+                        Get More Credits — View Plans
+                        <span className="upgrade-badge">Upgrade</span>
+                      </a>
+                    ) : (
+                      <button
+                        className="cta-button generate-button"
+                        onClick={handleGenerateImage}
+                        disabled={!prompt.trim() || isGenerating || !selectedModel}
+                        aria-label="Generate AI image from description"
+                      >
+                      {isGenerating ? (
+                        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
+                          <span style={{
+                            width: 18, height: 18, border: '2.5px solid rgba(255,255,255,0.3)',
+                            borderTopColor: '#fff', borderRadius: '50%',
+                            animation: 'spin 0.75s linear infinite', display: 'inline-block',
+                          }} />
+                          Generating... this takes ~10 seconds
+                        </span>
+                      ) : (
+                        <span>
+                          ✨ Generate Image
+                          {isLoggedIn && selectedModel && imageUsage?.availableModels && (() => {
+                            const m = imageUsage.availableModels.find(x => x.id === selectedModel);
+                            return m ? <span style={{ opacity: 0.75, fontWeight: 400, fontSize: 12, marginLeft: 8 }}>({m.creditsPerImage} credits)</span> : null;
+                          })()}
+                        </span>
+                      )}
+                      </button>
+                    )}
                   </>
               </div>
             </div>
@@ -1144,6 +1207,29 @@ const AIImageGeneratorClient: React.FC = () => {
                           {isCreatingProject ? '⏳ Creating Project...' : '✏️ Edit in Editor'}
                         </button>
                       </div>
+
+                      <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+                        <button
+                          onClick={() => { setGeneratedImages([]); setTimeout(() => document.querySelector('textarea')?.focus(), 100); }}
+                          style={{
+                            flex: 1, padding: '9px 14px', borderRadius: 10, cursor: 'pointer',
+                            border: '1.5px solid rgba(99,85,220,0.2)', background: 'rgba(99,85,220,0.05)',
+                            color: '#6355dc', fontSize: 12.5, fontWeight: 600, transition: 'all 0.2s',
+                          }}
+                        >
+                          🔄 Try another prompt
+                        </button>
+                        <button
+                          onClick={() => { navigator.clipboard.writeText(generatedImages[0]?.prompt || ''); }}
+                          style={{
+                            padding: '9px 14px', borderRadius: 10, cursor: 'pointer',
+                            border: '1.5px solid rgba(99,85,220,0.2)', background: 'rgba(99,85,220,0.05)',
+                            color: '#6355dc', fontSize: 12.5, fontWeight: 600, transition: 'all 0.2s',
+                          }}
+                        >
+                          📋 Copy prompt
+                        </button>
+                      </div>                      
                       <p className="image-prompt">{image.prompt}</p>
                     </div>
                     ))}
@@ -1775,7 +1861,7 @@ const AIImageGeneratorClient: React.FC = () => {
             <div className="vs-card">
               <h3>Scenith vs Midjourney</h3>
               <ul>
-                <li>✅ <strong>Scenith:</strong> Credit-based plans from ₹99/mo, web-based interface</li>
+                <li>✅ <strong>Scenith:</strong> Credit-based plans from $15/mo, web-based interface</li>
                 <li>❌ <strong>Midjourney:</strong> $10/month minimum, Discord-only access</li>
                 <li>✅ <strong>Scenith:</strong> One-click generation, no commands needed</li>
                 <li>⚠️ <strong>Midjourney:</strong> Complex slash commands required</li>

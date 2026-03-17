@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { FaBars, FaDollarSign, FaHome, FaTools, FaBlog, FaTimes, FaUser, FaFilePdf , FaImage, FaVideo} from 'react-icons/fa';
+import { FaBars, FaDollarSign, FaHome, FaTools, FaBlog, FaTimes, FaUser, FaFilePdf , FaImage, FaVideo, FaTachometerAlt} from 'react-icons/fa';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { API_BASE_URL } from '../config';
@@ -348,7 +348,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
       ],
     },
     { label: 'Pricing', path: '/pricing', icon: <FaDollarSign /> },
-    { label: 'Blogs', path: '/blogs', icon: <FaBlog /> },
+    { label: 'User Dashboard', path: '/user-dashboard', icon: <FaTachometerAlt /> },
   ];
 
   const navLinks = pathname.startsWith('/blogs/') && pathname !== '/blogs'

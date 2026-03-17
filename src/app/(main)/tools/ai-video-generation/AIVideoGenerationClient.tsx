@@ -82,10 +82,11 @@ const GENERATION_TYPES = [
 ];
 
 const STATIC_MODELS_PREVIEW = [
-  { id: "wan2.5",             name: "Wan 2.5",           res: "720p",  cr: 10 },
-  { id: "kling-v2.5-standard",name: "Kling 2.5 Standard",res: "1080p", cr: 15 },
-  { id: "kling-v2.5-pro",     name: "Kling 2.5 Pro",     res: "1080p", cr: 30 },
-  { id: "veo3",               name: "Veo 3",             res: "1080p", cr: 50 },
+  { id: "wan2.5",          name: "Wan 2.5",          res: "480p",  cr: 46  },
+  { id: "kling-v2.5-turbo",name: "Kling 2.5 Turbo",  res: "1080p", cr: 64  },
+  { id: "kling-v2.6-pro",  name: "Kling 2.6 Pro",    res: "1080p", cr: 64  },
+  { id: "veo3.1-fast",     name: "Veo 3.1 Fast",     res: "1080p", cr: 92  },
+  { id: "veo3.1",          name: "Veo 3.1",          res: "1080p", cr: 186 },
 ];
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -893,7 +894,7 @@ const AIVideoGenerationClient: React.FC = () => {
             {isLoggedIn && credits && hasPlan && (
               <div className="vg-eyebrow">
                 <span />
-                {credits.balance.toLocaleString()} credits remaining
+                {isLoggedIn && credits ? `${credits.balance.toLocaleString()} credits remaining` : '50 free credits waiting for you'}
               </div>
             )}
           <h1 className="vg-title">AI Video Generator</h1>
@@ -954,6 +955,31 @@ const AIVideoGenerationClient: React.FC = () => {
                 disabled={!isLoggedIn || isSubmitting}
                 maxLength={2000}
               />
+              {/* Prompt suggestions */}
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 10, marginBottom: 4 }}>
+                {[
+                  "Aerial shot of a neon city at night",
+                  "Golden retriever running in slow motion",
+                  "Ocean waves crashing at sunset, cinematic",
+                  "Abstract particle explosion, 3D render",
+                ].map((suggestion) => (
+                  <button
+                    key={suggestion}
+                    onClick={() => setPrompt(suggestion)}
+                    style={{
+                      padding: '5px 12px', borderRadius: 999, border: '1px solid rgba(99,102,241,0.22)',
+                      background: 'rgba(99,102,241,0.08)', color: '#6366F1',
+                      fontSize: 12, fontWeight: 500, cursor: 'pointer',
+                      fontFamily: "'DM Sans', sans-serif", transition: 'all 0.15s',
+                      whiteSpace: 'nowrap',
+                    }}
+                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(99,102,241,0.18)'}
+                    onMouseLeave={e => e.currentTarget.style.background = 'rgba(99,102,241,0.08)'}
+                  >
+                    {suggestion}
+                  </button>
+                ))}
+              </div>              
               {isLoggedIn && (
                 <div style={{ textAlign: "right", fontSize: "0.75rem", color: "#334155", marginTop: 6, marginBottom: 16 }}>
                   {prompt.length} / 2,000
@@ -1050,7 +1076,7 @@ const AIVideoGenerationClient: React.FC = () => {
                 </div>
               )}
 
-{/* Model selector */}
+              {/* Model selector */}
               <>
                 <label className="vg-label">AI Model</label>
                 {!isLoggedIn ? (
@@ -1207,16 +1233,94 @@ const AIVideoGenerationClient: React.FC = () => {
                 )}
               </AnimatePresence>
 
+              {!isLoggedIn && (
+                <div className="vg-credits-box" style={{ marginBottom: 20 }}>
+                  <div className="vg-credits-row">
+                    <span className="vg-credits-label">Your free credits</span>
+                    <span className="vg-credits-value">50 credits</span>
+                  </div>
+                  <div className="vg-credits-bar">
+                    <div className="vg-credits-fill" style={{ width: '100%' }} />
+                  </div>
+                  <div className="vg-credits-cost">
+                    <span>This generation will cost approx.</span>
+                    <strong>
+                      {selectedModel === 'wan2.5'           ? (duration === 5 ? '46'  : '92')  :
+                       selectedModel === 'kling-v2.5-turbo' ? (duration === 5 ? '64'  : '130') :
+                       selectedModel === 'kling-v2.6-pro'   ? (duration === 5 ? '64'  : '130') :
+                       selectedModel === 'veo3.1-fast'      ? (duration === 5 ? '92'  : '186') :
+                       selectedModel === 'veo3.1'           ? (duration === 5 ? '186' : '370') :
+                       duration === 5 ? '46' : '92'} credits
+                    </strong>
+                  </div>
+                </div>
+              )}    
+
+              {isLoggedIn && credits && credits.balance < 100 && credits.balance > 0 && (
+                <div style={{
+                  background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.25)',
+                  borderRadius: 12, padding: '12px 16px', marginBottom: 16,
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
+                }}>
+                  <div>
+                    <p style={{ fontSize: 13, color: '#F59E0B', fontWeight: 600, margin: 0 }}>
+                      ⚡ Running low — {credits.balance} credits left
+                    </p>
+                    <p style={{ fontSize: 11.5, color: '#78716C', margin: '3px 0 0' }}>
+                      Get 300 more credits for $15/mo
+                    </p>
+                  </div>
+                  <a href="/pricing" style={{
+                    padding: '8px 16px', borderRadius: 8, background: 'rgba(245,158,11,0.15)',
+                    border: '1px solid rgba(245,158,11,0.35)', color: '#F59E0B',
+                    fontSize: 12, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap',
+                    flexShrink: 0,
+                  }}>
+                    Top Up →
+                  </a>
+                </div>
+              )} 
+
+              {isLoggedIn && credits && credits.balance === 0 && (
+                <div style={{
+                  background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)',
+                  borderRadius: 12, padding: '16px', marginBottom: 16, textAlign: 'center',
+                }}>
+                  <p style={{ fontSize: 14, color: '#FCA5A5', fontWeight: 600, marginBottom: 8 }}>
+                    🪫 You're out of credits
+                  </p>
+                  <p style={{ fontSize: 12.5, color: '#64748B', marginBottom: 14 }}>
+                    Upgrade to keep generating — plans start at ₹99/mo
+                  </p>
+                  <a href="/pricing" style={{
+                    display: 'inline-block', padding: '11px 28px', borderRadius: 10,
+                    background: 'linear-gradient(135deg, #6366F1, #4F46E5)', color: 'white',
+                    fontWeight: 700, fontSize: 14, textDecoration: 'none',
+                  }}>
+                    View Plans & Top Up →
+                  </a>
+                </div>
+              )}                                     
+
               {/* Generate / Login / Upgrade button */}
               {!isLoggedIn ? (
-                <button className="vg-login-btn" onClick={() => setShowLoginModal(true)}>
-                  🔒 Login to Generate Videos
-                </button>
+                <div>
+                  <button className="vg-generate-btn" onClick={() => setShowLoginModal(true)}>
+                    ✨ Generate Free — No Card Required
+                  </button>
+                  <p style={{
+                    textAlign: 'center', fontSize: 12, color: '#475569',
+                    marginTop: 10, fontFamily: "'DM Sans', sans-serif"
+                  }}>
+                    Free account · 50 credits instantly · No credit card
+                  </p>
+                </div>
               ) : (
+                
                 <button
                   className="vg-generate-btn"
                   onClick={handleGenerate}
-                  disabled={isSubmitting || !prompt.trim() || (genType === "image" && !imageFile)}
+                  disabled={isSubmitting || !prompt.trim() || (genType === "image" && !imageFile) || (isLoggedIn && credits?.balance === 0)}
                 >
                   {isSubmitting ? "Submitting…" : "✨ Generate Video"}
                 </button>
@@ -1224,6 +1328,33 @@ const AIVideoGenerationClient: React.FC = () => {
             </div>
           </div>
         )}
+
+        {isLoggedIn && credits && credits.planType === 'FREE' && (
+          <div style={{
+            background: 'rgba(15,23,42,0.8)', border: '1px solid rgba(99,102,241,0.25)',
+            borderRadius: 20, padding: '36px 28px', textAlign: 'center', marginBottom: 24,
+          }}>
+            <div style={{ fontSize: '2.8rem', marginBottom: 12 }}>🎬</div>
+            <h3 style={{ fontFamily: "'Syne', sans-serif", fontSize: '1.5rem', color: '#E2E8F0', marginBottom: 8 }}>
+              Get more credits for AI Videos!
+            </h3>
+            <p style={{ color: '#64748B', fontSize: 14, maxWidth: 380, margin: '0 auto 22px', lineHeight: 1.6 }}>
+              Premium Plans start at just $15/month and includes 300 credits!
+            </p>
+            <a href="/pricing" style={{
+              display: 'inline-block', padding: '14px 36px', borderRadius: 12,
+              background: 'linear-gradient(135deg, #6366F1, #4F46E5)', color: 'white',
+              fontWeight: 700, fontSize: 15, textDecoration: 'none',
+              boxShadow: '0 8px 28px rgba(99,102,241,0.4)',
+            }}>
+              Unlock AI Video — $15/mo →
+            </a>
+            <p style={{ fontSize: 11.5, color: '#334155', marginTop: 12 }}>
+              · Instant access · All AI models included
+            </p>
+          </div>
+        )}      
+
         {/* ── Demo Video ── */}
         <div style={{ marginBottom: 36 }}>
           <div style={{
@@ -1281,7 +1412,11 @@ const AIVideoGenerationClient: React.FC = () => {
             }}>
               <span style={{ fontSize: 13 }}>🎬</span>
               <span style={{ fontSize: 11.5, fontWeight: 600, color: '#CBD5E1', fontFamily: "'DM Sans', sans-serif" }}>
-                Generated with Scenith AI · Kling 2.5 Pro · 10s · 1080p
+                Made with Kling 2.5 Pro · 130 credits · 
+                <a href="#" onClick={() => { setPrompt("Aerial shot of a neon-lit futuristic city at night, cinematic, 8K"); window.scrollTo({top: 0, behavior: 'smooth'}); }}
+                   style={{ color: '#818CF8', textDecoration: 'underline', marginLeft: 4 }}>
+                  Try this prompt →
+                </a>
               </span>
             </div>
           </div>
