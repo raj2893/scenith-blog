@@ -243,7 +243,7 @@ const AIImageGeneratorFreeClient: React.FC = () => {
               name: "Scenith Free AI Image Generator",
               description:
                 "Generate professional AI images from text descriptions. 8 art styles including realistic, anime, digital art, 3D render, fantasy, sci-fi, artistic, and vintage. Commercial use included.",
-              url: "https://scenith.in/tools/ai-image-generator-free",
+              url: "https://scenith.in/tools/ai-image-generation",
               applicationCategory: "MultimediaApplication",
               operatingSystem: "Web Browser",
               offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
@@ -303,7 +303,7 @@ const AIImageGeneratorFreeClient: React.FC = () => {
               itemListElement: [
                 { "@type": "ListItem", position: 1, name: "Home", item: "https://scenith.in/" },
                 { "@type": "ListItem", position: 2, name: "Tools", item: "https://scenith.in/tools" },
-                { "@type": "ListItem", position: 3, name: "Free AI Image Generator", item: "https://scenith.in/tools/ai-image-generator-free" },
+                { "@type": "ListItem", position: 3, name: "Free AI Image Generator", item: "https://scenith.in/tools/ai-image-generation" },
               ],
             },
           ]),

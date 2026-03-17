@@ -28,13 +28,13 @@ export const metadata: Metadata = {
     "text to image generator online free",
   ].join(", "),
   alternates: {
-    canonical: "https://scenith.in/tools/ai-image-generator-free",
+    canonical: "https://scenith.in/tools/ai-image-generation",
   },
   openGraph: {
     title: "Free AI Image Generator — Text to Image in Seconds",
     description:
       "Type a description, pick a style, and generate professional AI art for free. Realistic photos, anime, digital art, fantasy & more. No watermarks, commercial use included.",
-    url: "https://scenith.in/tools/ai-image-generator-free",
+    url: "https://scenith.in/tools/ai-image-generation",
     siteName: "Scenith",
     locale: "en_US",
     type: "website",

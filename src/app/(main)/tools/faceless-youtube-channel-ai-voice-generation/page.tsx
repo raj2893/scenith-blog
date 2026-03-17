@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     canonical: 'https://scenith.in/tools/faceless-youtube-channel-ai-voice-generation',
     languages: {
       'en-IN': 'https://scenith.in/tools/faceless-youtube-channel-ai-voice-generation',
-      'hi-IN': 'https://scenith.in/tools/faceless-youtube-channel-ai-voice-generation-hindi',
+      'hi-IN': 'https://scenith.in/tools/faceless-youtube-channel-ai-voice-generation',
     },
   },
   viewport: 'width=device-width, initial-scale=1',
