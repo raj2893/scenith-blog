@@ -941,12 +941,12 @@ export default function PricingPageClient() {
         { name: 'Creator Odyssey', role: 'STUDIO',        price: 0, currency: 'LOADING', ttsLimit: 400000, features: odysseyFeats },
       ];
     }
-    const starterPrice  = isIndianUser ? 799  : 15;
-    const creatorPrice  = isIndianUser ? 1749 : 22;
-    const proPrice      = isIndianUser ? 2299 : 27;
-    const originalStarterPrice = Math.round(starterPrice / 0.75);
-    const originalCreatorPrice = Math.round(creatorPrice / 0.75);
-    const originalProPrice     = Math.round(proPrice / 0.75);
+    const starterPrice  = isIndianUser ? 899  : 9;
+    const creatorPrice  = isIndianUser ? 1799 : 19;
+    const proPrice      = isIndianUser ? 3599 : 39;
+    const originalStarterPrice = isIndianUser ? 1199 : Math.round(starterPrice / 0.75);
+    const originalCreatorPrice = isIndianUser ? 2399 : Math.round(creatorPrice / 0.75); 
+    const originalProPrice     = isIndianUser ? 4799 : Math.round(proPrice / 0.75);
     const currency = isIndianUser ? 'INR' : 'USD';
     const symbol   = isIndianUser ? '₹'   : '$';
     return [
