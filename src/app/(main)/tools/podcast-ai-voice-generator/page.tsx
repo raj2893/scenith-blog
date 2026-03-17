@@ -556,7 +556,7 @@ export default function PodcastAIVoiceGeneratorPage() {
                 {
                   icon: '💰',
                   title: 'Production Costs Drop to Near Zero',
-                  body: `The average independent podcaster spends $180–$420 per episode on voice talent, studio time, and audio editing services. AI voice generation eliminates the recording cost entirely. A single $9/month subscription to Scenith Starter delivers 50,000 characters of podcast audio per month — enough for roughly 8–10 full 10-minute episodes. That is a 98% cost reduction without any quality compromise for scripted formats.`,
+                  body: `The average independent podcaster spends $180–$420 per episode on voice talent, studio time, and audio editing services. AI voice generation eliminates the recording cost entirely. A single $15/month subscription to Scenith Starter delivers 50,000 characters of podcast audio per month — enough for roughly 8–10 full 10-minute episodes. That is a 98% cost reduction without any quality compromise for scripted formats.`,
                   stat: '98% cost reduction vs. professional voice talent',
                 },
                 {

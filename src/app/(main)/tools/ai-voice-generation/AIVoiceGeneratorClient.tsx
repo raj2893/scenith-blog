@@ -283,12 +283,9 @@ const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
   } | null>(null);
   const characterCount = useMemo(() => aiVoiceText.length, [aiVoiceText]);
   const [downloadSuccess, setDownloadSuccess] = useState(false);
-  const [showFirstGenBanner, setShowFirstGenBanner] = useState(false);
-  const [showRepeatGenBanner, setShowRepeatGenBanner] = useState(false);
   const [showLimitModal, setShowLimitModal] = useState(false);
   const [showDownloadToast, setShowDownloadToast] = useState(false);
   const [generationCount, setGenerationCount] = useState(0);
-  const [show15SecPopup, setShow15SecPopup] = useState(false);
   const [generationHistory, setGenerationHistory] = useState<Array<{
     id: number;
     audioPath: string;
@@ -1260,7 +1257,51 @@ return (
                 >
                   🎬 Full AI Content Creation Flow... →
                 </button>
-              </div>              
+              </div> 
+              {/* Sticky credit display */}
+              {isLoggedIn && ttsUsage && (
+                <div style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  padding: '10px 16px', marginBottom: '16px',
+                  background: 'linear-gradient(135deg, rgba(99,85,220,0.05), rgba(139,92,246,0.05))',
+                  border: '1px solid rgba(99,85,220,0.15)', borderRadius: '12px',
+                }}>
+                  <div style={{display:'flex', alignItems:'center', gap:'8px', fontSize:'0.875rem', fontWeight:600, color:'#3d3d6b'}}>
+                    <span>💳</span>
+                    {ttsUsage.isPaid
+                      ? <span><strong style={{color:'#6355dc'}}>{ttsUsage.balance}</strong> credits remaining</span>
+                      : <span><strong style={{color:'#059669'}}>{(ttsUsage.freeVoiceCharsLimit ?? 0) - (ttsUsage.freeVoiceCharsUsed ?? 0)}</strong> free chars left this month</span>
+                    }
+                  </div>
+                  {!ttsUsage.isPaid && (
+                    <a href="/pricing" style={{
+                      fontSize:'0.75rem', fontWeight:700, color:'#6355dc',
+                      textDecoration:'none', padding:'4px 12px',
+                      background:'rgba(99,85,220,0.08)', borderRadius:'20px',
+                      border:'1px solid rgba(99,85,220,0.2)'
+                    }}>Upgrade →</a>
+                  )}
+                </div>
+              )}
+              
+              {/* Non-logged-in users: show default 50 credits */}
+              {!isLoggedIn && (
+                <div style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  padding: '10px 16px', marginBottom: '16px',
+                  background: 'rgba(99,85,220,0.04)', border: '1px solid rgba(99,85,220,0.12)',
+                  borderRadius: '12px',
+                }}>
+                  <span style={{fontSize:'0.875rem', fontWeight:600, color:'#6666aa'}}>
+                    💳 <strong style={{color:'#6355dc'}}>50 free credits</strong> available on signup
+                  </span>
+                  <a href="/register" style={{
+                    fontSize:'0.75rem', fontWeight:700, color:'#fff',
+                    textDecoration:'none', padding:'5px 14px',
+                    background:'linear-gradient(135deg,#6355dc,#8b5cf6)', borderRadius:'20px'
+                  }}>Start Free →</a>
+                </div>
+              )}                           
               <div className="script-input-wrapper">
                 <div className="script-input-header">
                   <div className="header-left">
@@ -1297,6 +1338,29 @@ return (
                     disabled={limitsExceeded}
                     aria-label="Text input for AI voice generation"
                   />
+
+                  {!isLoggedIn && (
+                    <div className="textarea-overlay">
+                      <div className="overlay-content">
+                        <span className="lock-icon">🎤</span>
+                        <h4>Try AI Voice Generation Free</h4>
+                        <p>Sign up for 50 free credits — no card needed</p>
+                        <a href="/register" className="overlay-login-btn">
+                          Get 50 Free Credits →
+                        </a>
+                        <button
+                          onClick={() => setShowLoginModal(true)}
+                          style={{
+                            marginTop:'10px', background:'transparent', border:'none',
+                            color:'rgba(255,255,255,0.7)', cursor:'pointer',
+                            fontSize:'0.85rem', textDecoration:'underline'
+                          }}
+                        >
+                          Already have an account? Login
+                        </button>
+                      </div>
+                    </div>
+                  )}                  
 
                   {isLoggedIn && limitsExceeded && (
                     <div className="textarea-overlay">
@@ -1388,7 +1452,7 @@ return (
                       )}
                       <div className="inline-upgrade-cta">
                         <a href="/pricing" className="inline-upgrade-link">
-                          🔓 Upgrade to Starter — 50,000 chars/mo + 300 credits for $9/mo
+                          🔓 Upgrade to Starter — 50,000 chars/mo + 300 credits for $15/mo
                         </a>
                       </div>
                     </div>
@@ -1490,6 +1554,24 @@ return (
                 </a>                
               ) : (
                 <div className="button-wrapper-with-tooltip">
+                  {/* Add this ABOVE the generate button wrapper */}
+                  {isLoggedIn && aiVoiceText.length > 0 && (
+                    <div style={{
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      gap: '8px', marginBottom: '10px',
+                      padding: '8px 16px',
+                      background: ttsUsage?.isPaid
+                        ? 'rgba(99,85,220,0.06)' : 'rgba(16,185,129,0.06)',
+                      border: `1px solid ${ttsUsage?.isPaid ? 'rgba(99,85,220,0.2)' : 'rgba(16,185,129,0.2)'}`,
+                      borderRadius: '20px', fontSize: '0.875rem', fontWeight: 600,
+                    }}>
+                      <span>⚡</span>
+                      {ttsUsage?.isPaid
+                        ? <span>This will cost <strong style={{color:'#6355dc'}}>{Math.ceil(aiVoiceText.length / 100)} credit{Math.ceil(aiVoiceText.length / 100) !== 1 ? 's' : ''}</strong></span>
+                        : <span>Uses <strong style={{color:'#059669'}}>{aiVoiceText.length} / {maxCharsPerRequest} free chars</strong></span>
+                      }
+                    </div>
+                  )}                  
                   <button
                     className="cta-button generate-voice-button"
                     onClick={() => {
@@ -1506,7 +1588,7 @@ return (
                     }
                     aria-label="Generate AI voice from text"
                   >
-                    {isGenerating ? 'Generating...' : isLoggedIn ? 'Generate AI Voice' : 'Login to Generate'}
+                    {isGenerating ? '🎙️ Generating your voice...' : isLoggedIn ? '🎙️ Generate AI Voice' : '✨ Sign Up Free & Generate'}
                   </button>
                   {isLoggedIn && disabledReason && (
                     <div className="button-tooltip">
@@ -1519,9 +1601,9 @@ return (
                 <div className="limit-exceeded-message">
                   <p className="limit-message-title">⚡ You've used all your {userProfile.role} plan characters!</p>
                   <div className="limit-benefits">
-                    <div className="benefit-item">✓ Starter: 50,000 chars/mo · 300 credits · $9/mo</div>
-                    <div className="benefit-item">✓ Creator: 150,000 chars/mo · 900 credits · $19/mo</div>
-                    <div className="benefit-item">✓ Pro: 400,000 chars/mo · 2,500 credits · $39/mo</div>
+                    <div className="benefit-item">✓ Starter: 50,000 chars/mo · 300 credits · $15/mo</div>
+                    <div className="benefit-item">✓ Creator: 150,000 chars/mo · 900 credits · $22/mo</div>
+                    <div className="benefit-item">✓ Pro: 400,000 chars/mo · 2,500 credits · $27/mo</div>
                   </div>
                   <p className="limit-message-cta">Upgrade now and continue creating! 🎯</p>
                 </div>
@@ -1584,6 +1666,31 @@ return (
                   </div>
                 )}
               </div>
+
+              {selectedVoice && (
+                <div style={{
+                  margin: '0 20px 0', padding: '8px 14px',
+                  background: 'linear-gradient(135deg, rgba(99,85,220,0.08), rgba(139,92,246,0.06))',
+                  border: '1px solid rgba(99,85,220,0.2)', borderRadius: '10px',
+                  display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.825rem',
+                }}>
+                  <img
+                    src={selectedVoice.profileUrl || ''}
+                    alt="" width={28} height={28}
+                    style={{borderRadius:'50%', objectFit:'cover'}}
+                  />
+                  <span style={{fontWeight:600, color:'#2d2d5e'}}>
+                    {selectedVoice.humanName || selectedVoice.voiceName}
+                  </span>
+                  <span style={{color:'#9999bb'}}>·</span>
+                  <span style={{color:'#9999bb'}}>{selectedVoice.language}</span>
+                  <span style={{
+                    marginLeft:'auto', color:'#059669', fontWeight:700,
+                    fontSize:'0.75rem', background:'rgba(16,185,129,0.08)',
+                    padding:'2px 8px', borderRadius:'12px', border:'1px solid rgba(16,185,129,0.2)'
+                  }}>✓ Selected</span>
+                </div>
+              )}              
               
               <div className="scrollable-voices">
                 {selectedProvider === 'GOOGLE' ? (
@@ -1694,43 +1801,31 @@ return (
                   Download MP3
                 </button>
           
-                {/* MOVE POPUPS HERE */}
-                {showFirstGenBanner && (
-                  <motion.div
-                    className="inline-upgrade-banner first-gen-banner"
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                  >
-                    <div className="banner-content">
-                      <span className="banner-icon">⚡</span>
-                      <div className="banner-text">
-                        <strong>Like this voice?</strong> Starter gives you 83× more characters + all models for $9/mo
-                      </div>
-                      <a href="/pricing" className="banner-cta">
-                        Upgrade Now
-                      </a>
+                {generationCount === 1 && !ttsUsage?.isPaid && (
+                  <div style={{
+                    marginTop:'20px', padding:'16px 20px',
+                    background:'linear-gradient(135deg, rgba(99,85,220,0.06), rgba(236,72,153,0.04))',
+                    border:'1px solid rgba(99,85,220,0.18)', borderRadius:'14px',
+                    display:'flex', alignItems:'center', gap:'14px', flexWrap:'wrap',
+                  }}>
+                    <span style={{fontSize:'1.5rem'}}>🎉</span>
+                    <div style={{flex:1}}>
+                      <strong style={{color:'#2d2d5e', display:'block', marginBottom:'3px'}}>
+                        Your first AI voice is ready!
+                      </strong>
+                      <span style={{fontSize:'0.875rem', color:'#8888bb'}}>
+                        Liked the quality? Starter gives you <strong style={{color:'#6355dc'}}>300 credits</strong> + 50,000 chars/mo for $15/mo.
+                      </span>
                     </div>
-                  </motion.div>
-                )}
-
-                {showRepeatGenBanner && (
-                  <motion.div
-                    className="inline-upgrade-banner repeat-gen-banner"
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                  >
-                    <div className="banner-content">
-                      <span className="banner-icon">👀</span>
-                      <div className="banner-text">
-                        <strong>You're using Scenith a lot!</strong> Starter unlocks 50,000 chars/mo + HD exports for $9/mo
-                      </div>
-                      <a href="/pricing" className="banner-cta">
-                        See Plans
-                      </a>
-                    </div>
-                  </motion.div>
+                    <a href="/pricing" style={{
+                      padding:'10px 20px', borderRadius:'10px', fontWeight:700,
+                      fontSize:'0.875rem', textDecoration:'none', color:'#fff',
+                      background:'linear-gradient(135deg,#6355dc,#8b5cf6)',
+                      boxShadow:'0 4px 14px rgba(99,85,220,0.3)', whiteSpace:'nowrap'
+                    }}>
+                      See Plans →
+                    </a>
+                  </div>
                 )}
 
                 {downloadSuccess && userProfile.role === 'BASIC' && (
@@ -1744,7 +1839,7 @@ return (
                       <span className="success-icon">✅</span>
                       <div className="success-text">
                         <strong>Download successful!</strong>
-                        <p>Want to create more? Get 83× more characters with Starter — just $9/mo, 300 credits included.</p>
+                        <p>Want to create more? Get 83× more characters with Starter — just $15/mo, 300 credits included.</p>
                       </div>
                       <a href="/pricing" className="success-cta-btn">
                         View Plans
@@ -3574,181 +3669,6 @@ return (
             </div>
           </motion.div>
         </div>
-      )}
-
-      {showUpgradeModal && (
-        <div
-          className="modal-overlay"
-          onClick={(e) => { if (e.target === e.currentTarget) setShowUpgradeModal(false); }}
-        >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.85, y: 40 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.85, y: 40 }}
-            transition={{ type: 'spring', stiffness: 340, damping: 28 }}
-            style={{
-              background: '#0d0d1c',
-              borderRadius: '24px',
-              padding: '0',
-              maxWidth: '480px',
-              width: '94%',
-              maxHeight: '82vh',
-              overflowY: 'auto',
-              position: 'relative',
-              border: '1px solid rgba(99,85,220,0.35)',
-              boxShadow: '0 40px 120px rgba(0,0,0,0.75)',
-            }}
-          >
-            {/* Dismiss */}
-            <button
-              onClick={() => setShowUpgradeModal(false)}
-              style={{
-                position: 'absolute', top: 14, right: 14, zIndex: 10,
-                background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)',
-                borderRadius: '8px', width: 32, height: 32, cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: '#6a6a8a', fontSize: '16px',
-              }}
-              aria-label="Close"
-            >
-              <FaTimes size={11} />
-            </button>
-            
-            {/* Top gradient bar */}
-            <div style={{
-              height: '5px', borderRadius: '24px 24px 0 0',
-              background: upgradeModalType === 'download'
-                ? 'linear-gradient(90deg, #10b981, #059669)'
-                : upgradeModalType === 'limit_warning'
-                ? 'linear-gradient(90deg, #f59e0b, #f97316)'
-                : 'linear-gradient(90deg, #6355dc, #8b5cf6, #f06cbe)',
-            }} />
-
-            <div style={{ padding: '28px 28px 24px' }}>
-          
-              {/* Icon + headline */}
-              <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-                <div style={{ fontSize: '44px', marginBottom: '10px', lineHeight: 1 }}>
-                  {upgradeModalType === 'first_gen' && '🎉'}
-                  {upgradeModalType === 'repeat_gen' && '🚀'}
-                  {upgradeModalType === 'download' && '✅'}
-                  {upgradeModalType === 'limit_warning' && '⚠️'}
-                </div>
-                <h2 style={{
-                  fontFamily: "'Cabinet Grotesk', sans-serif",
-                  fontSize: '21px', fontWeight: 900, letterSpacing: '-0.025em',
-                  color: '#e2e2ef', marginBottom: '8px',
-                }}>
-                  {upgradeModalType === 'first_gen' && 'Your First AI Voice is Ready! 🔥'}
-                  {upgradeModalType === 'repeat_gen' && "You're on a Roll — Unlock More!"}
-                  {upgradeModalType === 'download' && 'Downloaded! Ready for More?'}
-                  {upgradeModalType === 'limit_warning' && 'Almost Out of Characters'}
-                </h2>
-                <p style={{ fontSize: '13px', color: '#6a6a8a', lineHeight: 1.55, maxWidth: '340px', margin: '0 auto' }}>
-                  {upgradeModalType === 'first_gen' && (<>You just heard what professional AI voice sounds like. <strong style={{ color: '#a899f5' }}>Starter gives you 83× more characters</strong> — 50,000/mo for videos, reels & campaigns.</>)}
-                  {upgradeModalType === 'repeat_gen' && (<>You keep coming back because it works. <strong style={{ color: '#a899f5' }}>Stop hitting the 600-char free limit</strong> — Starter unlocks 50,000 chars/mo + all models.</>)}
-                  {upgradeModalType === 'download' && (<>Great content deserves great tools. <strong style={{ color: '#34d399' }}>Upgrade to Starter</strong> and get 300 credits/mo, HD exports, no watermarks & every AI model.</>)}
-                  {upgradeModalType === 'limit_warning' && (<>You're running low on your 600 free chars. <strong style={{ color: '#f59e0b' }}>Don't lose momentum</strong> — Starter gives you 50,000 chars/mo for just $9.</>)}
-                </p>
-              </div>
-              
-              {/* Side-by-side comparison */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '18px' }}>
-                {/* Free column */}
-                <div style={{
-                  background: 'rgba(255,255,255,0.03)',
-                  border: '1px solid rgba(255,255,255,0.07)',
-                  borderRadius: '12px', padding: '14px 12px',
-                }}>
-                  <div style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', color: '#3a3a52', textTransform: 'uppercase', marginBottom: '10px' }}>
-                    Free Plan
-                  </div>
-                   {[
-                    { icon: '🎤', text: '600 chars/mo' },
-                    { icon: '💳', text: '50 credits total' },
-                    { icon: '⚡', text: 'Limited models' },
-                    { icon: '🚫', text: 'No topups available' },
-                  ].map((item, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '7px', marginBottom: i < 3 ? '7px' : 0 }}>
-                      <span style={{ fontSize: '13px', flexShrink: 0 }}>{item.icon}</span>
-                      <span style={{ fontSize: '11.5px', color: '#44445e' }}>{item.text}</span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Starter column */}
-                <div style={{
-                  background: 'rgba(99,85,220,0.08)',
-                  border: '1px solid rgba(99,85,220,0.28)',
-                  borderRadius: '12px', padding: '14px 12px',
-                  position: 'relative',
-                }}>
-                  <div style={{
-                    position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)',
-                    background: 'linear-gradient(135deg, #6355dc, #8b5cf6)',
-                    color: '#fff', fontSize: '9px', fontWeight: 800, letterSpacing: '0.08em',
-                    padding: '3px 10px', borderRadius: '999px', whiteSpace: 'nowrap',
-                  }}>⭐ MOST POPULAR</div>
-                  <div style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', color: '#6355dc', textTransform: 'uppercase', marginBottom: '10px' }}>
-                    Starter — $9/mo
-                  </div>
-                  {[
-                    { icon: '🎤', text: '50,000 chars/mo' },
-                    { icon: '💳', text: '300 credits/mo' },
-                    { icon: '⚡', text: 'All models unlocked' },
-                    { icon: '✅', text: 'Topups available' },
-                  ].map((item, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '7px', marginBottom: i < 3 ? '7px' : 0 }}>
-                      <span style={{ fontSize: '13px', flexShrink: 0 }}>{item.icon}</span>
-                      <span style={{ fontSize: '11.5px', color: '#b0b0cc', fontWeight: 500 }}>{item.text}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Price + CTA */}
-              <div style={{ textAlign: 'center', marginBottom: '12px' }}>
-                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: '6px', marginBottom: '2px' }}>
-                  <span style={{
-                    fontFamily: "'Cabinet Grotesk', sans-serif",
-                    fontSize: '36px', fontWeight: 900, color: '#e2e2ef', letterSpacing: '-0.03em',
-                  }}>$9</span>
-                  <span style={{ fontSize: '13px', color: '#55557a' }}>/mo</span>
-                  <span style={{
-                    background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.28)',
-                    color: '#34d399', fontSize: '10px', fontWeight: 700,
-                    padding: '3px 8px', borderRadius: '999px',
-                  }}>300 CREDITS</span>
-                </div>
-                <p style={{ fontSize: '11px', color: '#3a3a52', marginBottom: '14px' }}>Cancel anytime · No contracts · All models included</p>
-
-                <a href="/pricing"
-                  onClick={() => setShowUpgradeModal(false)}
-                  style={{
-                    display: 'block', width: '100%', padding: '13px 24px',
-                    background: 'linear-gradient(135deg, #6355dc 0%, #8b5cf6 100%)',
-                    color: '#fff', borderRadius: '12px', textDecoration: 'none',
-                    fontSize: '14px', fontWeight: 700, letterSpacing: '0.01em',
-                    boxShadow: '0 8px 32px rgba(99,85,220,0.45)', textAlign: 'center',
-                  }}
-                >
-                  Upgrade to Starter — $9/mo →
-                </a>
-              </div>
-
-              {/* Social proof + dismiss */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '11px', color: '#3a3a52' }}>⭐⭐⭐⭐⭐ Trusted by 1,500+ creators</span>
-                <button
-                  onClick={() => setShowUpgradeModal(false)}
-                  style={{ background: 'none', border: 'none', color: '#3a3a52', fontSize: '11px', cursor: 'pointer', textDecoration: 'underline' }}
-                >
-                  Maybe later
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        </div>
       )} 
 
       {showWelcomeModal && (
@@ -3807,7 +3727,7 @@ return (
                   Welcome to Scenith AI Voice
                 </h2>
                 <p style={{ fontSize: '13px', color: '#6a6a8a', maxWidth: '380px', margin: '0 auto', lineHeight: 1.55 }}>
-                  You're on the <strong style={{ color: '#a899f5' }}>Free Plan</strong> (600 chars/mo). Here's what you get — and what you unlock with <strong style={{ color: '#a899f5' }}>Starter</strong> for just $9/mo.
+                  You're on the <strong style={{ color: '#a899f5' }}>Free Plan</strong> (600 chars/mo). Here's what you get — and what you unlock with <strong style={{ color: '#a899f5' }}>Starter</strong> for just $15/mo.
                 </p>
               </div>
               
@@ -3849,7 +3769,7 @@ return (
                     padding: '3px 12px', borderRadius: '999px', whiteSpace: 'nowrap',
                   }}>⭐ MOST POPULAR</div>
                   <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', color: '#6355dc', textTransform: 'uppercase', marginBottom: '12px' }}>
-                    Starter — $9/mo
+                    Starter — $15/mo
                   </div>
                   {[
                     { icon: '🎤', label: 'Voice chars', val: '50,000 /mo' },
@@ -3891,7 +3811,7 @@ return (
                     boxShadow: '0 8px 32px rgba(99,85,220,0.45)', textAlign: 'center',
                   }}
                 >
-                  Upgrade to Starter — $9/mo →
+                  Upgrade to Starter — $15/mo →
                 </a>
               </div>
 
@@ -3918,7 +3838,7 @@ return (
             <span className="float-icon">⚡</span>
             <span className="float-text">
               <strong>Upgrade for 83× More Characters</strong>
-              <small>Starter from $9/mo · 300 credits included</small>
+              <small>Starter from $15/mo · 300 credits included</small>
             </span>
           </button>
         </div>

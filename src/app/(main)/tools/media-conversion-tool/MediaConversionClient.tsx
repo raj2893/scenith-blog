@@ -595,9 +595,7 @@ const MediaConversionWorkspace: React.FC = () => {
 
         <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.88rem', margin: '0 0 6px', lineHeight: 1.6 }}>
           All-in-one alternative to expensive tools{' '}
-          <span style={{ color: '#a78bfa', fontWeight: 700 }}>₹349/mo</span>
-          {' '}·{' '}
-          <span style={{ color: '#a78bfa', fontWeight: 700 }}>$9/mo</span>
+          <span style={{ color: '#a78bfa', fontWeight: 700 }}>$15/mo</span>
         </p>
 
         <p style={{

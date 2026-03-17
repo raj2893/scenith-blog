@@ -5353,6 +5353,16 @@
   text-decoration: underline;
 }
 
+.ai-voice-textarea:placeholder-shown ~ .textarea-hint {
+  display: block;
+}
+
+/* Pulse animation for credit pill */
+@keyframes credit-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(99,85,220,0.15); }
+  50% { box-shadow: 0 0 0 6px rgba(99,85,220,0); }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .main-content {
