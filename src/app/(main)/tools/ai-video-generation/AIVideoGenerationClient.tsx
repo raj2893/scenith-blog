@@ -160,6 +160,34 @@ const AIVideoGenerationClient: React.FC = () => {
       });
   }, []);
 
+ // ── Polling ───────────────────────────────────────────────────────────────
+
+  const startPolling = useCallback((falRequestId: string) => {
+    if (pollingRef.current) clearInterval(pollingRef.current);
+    pollingRef.current = setInterval(async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axios.get(`${API_BASE_URL}/api/video-gen/status/${falRequestId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const job: VideoJob = res.data;
+        setCurrentJob(job);
+        if (job.status === "COMPLETED" || job.status === "FAILED") {
+          clearInterval(pollingRef.current!);
+          pollingRef.current = null;
+          const credRes = await axios.get(`${API_BASE_URL}/api/video-gen/credits`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setCredits(credRes.data);
+          const histRes = await axios.get(`${API_BASE_URL}/api/video-gen/history`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setHistory(histRes.data || []);
+        }
+      } catch {}
+    }, 5000);
+  }, []);
+
   // ── Fetch models & credits after login ──────────────────────────────────
 
   useEffect(() => {
@@ -176,47 +204,24 @@ const AIVideoGenerationClient: React.FC = () => {
         const mods: VideoModel[] = modelsRes.data.models || [];
         setModels(mods);
         setCredits(creditsRes.data);
-        // Default to Wan2.5 if available, otherwise first model
         const wan = mods.find(m => m.id.toLowerCase().includes('wan'));
         setSelectedModel(wan ? wan.id : mods[0]?.id || "");
-        setHistory(historyRes.data || []);
+        const jobs: VideoJob[] = historyRes.data || [];
+        setHistory(jobs);
+        const inProgressJob = jobs.find(
+          j => j.status === 'PENDING' || j.status === 'PROCESSING'
+        );
+        if (inProgressJob) {
+          setCurrentJob(inProgressJob);
+          startPolling(inProgressJob.falRequestId);
+        }
       })
       .catch((err) => {
         if (err.response?.status === 402) {
           setCredits({ balance: 0, planType: 'FREE', expiresAt: 'N/A', creditCosts: [] });
         }
       });
-  }, [isLoggedIn]);
-
-  // ── Polling ───────────────────────────────────────────────────────────────
-
-  const startPolling = useCallback((falRequestId: string) => {
-    if (pollingRef.current) clearInterval(pollingRef.current);
-    pollingRef.current = setInterval(async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const res = await axios.get(`${API_BASE_URL}/api/video-gen/status/${falRequestId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const job: VideoJob = res.data;
-        setCurrentJob(job);
-        if (job.status === "COMPLETED" || job.status === "FAILED") {
-          clearInterval(pollingRef.current!);
-          pollingRef.current = null;
-          // Refresh credits
-          const credRes = await axios.get(`${API_BASE_URL}/api/video-gen/credits`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          setCredits(credRes.data);
-          // Refresh history
-          const histRes = await axios.get(`${API_BASE_URL}/api/video-gen/history`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          setHistory(histRes.data || []);
-        }
-      } catch {}
-    }, 5000);
-  }, []);
+  }, [isLoggedIn, startPolling]);
 
   useEffect(() => () => { if (pollingRef.current) clearInterval(pollingRef.current); }, []);
 
@@ -1348,12 +1353,21 @@ const AIVideoGenerationClient: React.FC = () => {
 
               {/* Failed */}
               {currentJob.status === "FAILED" && (
-                <div className="vg-error" style={{ marginTop: 0 }}>
-                  <span>⚠️</span>
-                  <div>
-                    <strong>Generation failed.</strong> {currentJob.errorMessage || "Something went wrong on our end. Your credits have been refunded."}
+                <>
+                  <div className="vg-error" style={{ marginTop: 0 }}>
+                    <span>⚠️</span>
+                    <div>
+                      <strong>Generation failed.</strong> {currentJob.errorMessage || "Something went wrong on our end. Your credits have been refunded."}
+                    </div>
                   </div>
-                </div>
+                  <button
+                    className="vg-video-btn secondary"
+                    style={{ marginTop: 12, width: '100%' }}
+                    onClick={() => setCurrentJob(null)}
+                  >
+                    🔄 Try Again
+                  </button>
+                </>
               )}
             </motion.div>
           )}
