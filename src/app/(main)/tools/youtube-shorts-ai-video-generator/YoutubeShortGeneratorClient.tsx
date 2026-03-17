@@ -141,7 +141,7 @@ const FAQ = [
   },
   {
     q: "Is Scenith's AI video generator free?",
-    a: "Scenith offers a credit-based system with plans starting at ₹99/month. New accounts receive starter credits to try the generator. Different models consume different credit amounts — Wan 2.5 costs 10 credits for a 5-second Short while Veo 3 costs 50 credits.",
+    a: "Scenith offers a credit-based system with plans starting at $15/month. New accounts receive starter credits to try the generator. Different models consume different credit amounts — Wan 2.5 costs 10 credits for a 5-second Short while Veo 3 costs 50 credits.",
   },
   {
     q: "What kind of YouTube Shorts perform best with AI generation?",
@@ -263,7 +263,7 @@ export default function YoutubeShortGeneratorClient() {
               <span className={styles.ctaArrow}>→</span>
             </a>
             <p className={styles.ctaNote}>
-              No credit card needed to start &nbsp;·&nbsp; Plans from ₹99/mo &nbsp;·&nbsp; 1080p output
+              No credit card needed to start &nbsp;·&nbsp; Plans from $15/mo &nbsp;·&nbsp; 1080p output
             </p>
           </div>
 
@@ -767,7 +767,7 @@ export default function YoutubeShortGeneratorClient() {
               <span>✓ 1080p HD Output</span>
               <span>✓ 9:16 Shorts Format</span>
               <span>✓ Instant MP4 Download</span>
-              <span>✓ Plans from ₹99/mo</span>
+              <span>✓ Plans from $15/mo</span>
             </div>
           </div>
         </section>

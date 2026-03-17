@@ -79,7 +79,7 @@ const FAQ_ITEMS = [
   { q: 'What poster sizes can I generate with AI?', a: "The AI generates 1024×1024 pixel square outputs by default. For specific poster sizes (A4, A3, landscape banner, Instagram Story), generate the base visual at standard resolution, then use Scenith's free Image Editor to resize and crop to your target dimensions." },
   { q: 'How do I add text to an AI-generated poster?', a: "AI image generators create the visual background of your poster — the art, mood, and composition. To add event title, date, venue, or other text, use Scenith's free Image Editor after downloading your AI-generated image." },
   { q: 'What writing style works best for generating event posters with AI?', a: 'The most effective event poster prompts follow this structure: [Event type] + [Visual setting] + [Mood] + [Color palette] + [Design style] + [Typography space instruction]. More specific prompts produce dramatically better outputs than vague descriptions.' },
-  { q: 'Is there a free AI poster generator without watermarks?', a: "Yes. Scenith's AI poster generation produces watermark-free images on all plans, including the free tier. Free plan users receive starter credits on signup. Creator plans starting at ₹99/month provide larger credit balances." },
+  { q: 'Is there a free AI poster generator without watermarks?', a: "Yes. Scenith's AI poster generation produces watermark-free images on all plans, including the free tier. Free plan users receive starter credits on signup. Creator plans starting at $15/month provide larger credit balances." },
   { q: 'Can AI generate movie-style poster art?', a: 'Absolutely. Specify cinematic descriptors like "dramatic low-angle perspective," "lens flare and god rays," "movie poster composition," and genre keywords (thriller, fantasy, sci-fi). The AI produces convincing cinematic compositions that work well as wall art, fan prints, or creative projects.' },
   { q: 'How is AI poster generation different from Canva or Adobe Express?', a: "Canva and Adobe Express are template-based tools — you choose a pre-made layout and fill in your content. AI poster generation creates entirely original artwork from your description with no templates. Every poster is unique and not something someone else has already used." },
   { q: 'What resolution are AI-generated posters? Can they be printed?', a: 'AI-generated images from Scenith are 1024×1024 pixels. For small print sizes (up to A5), this is print-ready. For larger formats (A4, A3), use AI upscaling tools to reach 2000×2000+ pixels before printing.' },
@@ -285,7 +285,7 @@ export default function AIPosterGeneratorPage() {
 
             <h3>The Economics of Poster Design in India: Why the Math Has Changed</h3>
             <p>A freelance graphic designer in India charges ₹500–3,000 for a single event poster, with a turnaround of 24–72 hours. A design agency charges more. Canva Pro costs ₹500/month and still requires your own creative direction and 30–60 minutes per design. Stock template sites charge per download and watermark free versions behind paywalls.</p>
-            <p>Contrast this with AI poster generation on Scenith: each generation costs 2–12 credits depending on the model, with Creator plans starting at ₹99/month providing 100+ credits. That's the equivalent of generating 8–50 unique poster designs per month — each one completely original, unrepeatable, and commercially usable — for less than the cost of a single freelance poster.</p>
+            <p>Contrast this with AI poster generation on Scenith: each generation costs 2–12 credits depending on the model, with Creator plans starting at $15/month providing 100+ credits. That's the equivalent of generating 8–50 unique poster designs per month — each one completely original, unrepeatable, and commercially usable — for less than the cost of a single freelance poster.</p>
             <p>For a college cultural committee planning a semester of events, a local event promoter running weekly shows, or a gym owner wanting fresh promotional content monthly — this math is transformative.</p>
 
             <div className="apgpage__cost-compare">
@@ -402,7 +402,7 @@ export default function AIPosterGeneratorPage() {
             </ul>
             <a href="https://scenith.in/tools/ai-image-generation?utm_source=ai_poster_generator&utm_medium=mid_page_cta&utm_campaign=poster_tool_page" className="apgpage__cta-hero">
               <span className="apgpage__cta-hero-icon">🎨</span>
-              <span className="apgpage__cta-hero-body"><strong>Create My Poster Now — Free</strong><small>Opens AI Image Generator · Plans from ₹99/month</small></span>
+              <span className="apgpage__cta-hero-body"><strong>Create My Poster Now — Free</strong><small>Opens AI Image Generator · Plans from $15/month</small></span>
               <span className="apgpage__cta-arrow">→</span>
             </a>
           </div>
@@ -456,7 +456,7 @@ export default function AIPosterGeneratorPage() {
               <span className="apgpage__cta-hero-body"><strong>Generate My Free AI Poster Now</strong><small>Opens Scenith AI Image Generator · No credit card · Free credits on signup</small></span>
               <span className="apgpage__cta-arrow">→</span>
             </a>
-            <div className="apgpage__finalcta-trust"><span>🔒 No credit card to start</span><span>•</span><span>✅ No watermarks</span><span>•</span><span>💎 Plans from ₹99/month</span></div>
+            <div className="apgpage__finalcta-trust"><span>🔒 No credit card to start</span><span>•</span><span>✅ No watermarks</span><span>•</span><span>💎 Plans from $15/month</span></div>
           </div>
         </div>
       </section>

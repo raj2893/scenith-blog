@@ -36,7 +36,7 @@ const FAQS = [
   },
   {
     q: 'What is the best text-to-image AI generator in 2025?',
-    a: 'Scenith\'s AI Image Generator offers 7 powerful models including photorealistic and anime pipelines, all accessible via a clean web interface with no Discord or CLI required. Plans start free with paid credit bundles from ₹99/month.',
+    a: 'Scenith\'s AI Image Generator offers 7 powerful models including photorealistic and anime pipelines, all accessible via a clean web interface with no Discord or CLI required. Plans start free with paid credit bundles from $15/month.',
   },
   {
     q: 'Can I use AI-generated images commercially?',

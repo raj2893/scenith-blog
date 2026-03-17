@@ -1119,7 +1119,7 @@ const AIVideoGenerationClient: React.FC = () => {
                       ))}
                     </div>
                     <p style={{ fontSize: 12, color: '#6366F1', marginBottom: 20, fontWeight: 600 }}>
-                      🔒 Login to generate · Plans from ₹99/mo →{' '}
+                      🔒 Login to generate · Plans from $15/mo →{' '}
                       <a href="/pricing" style={{ color: '#818CF8', textDecoration: 'underline' }}>View Plans</a>
                     </p>
                   </>
@@ -1290,7 +1290,7 @@ const AIVideoGenerationClient: React.FC = () => {
                     🪫 You're out of credits
                   </p>
                   <p style={{ fontSize: 12.5, color: '#64748B', marginBottom: 14 }}>
-                    Upgrade to keep generating — plans start at ₹99/mo
+                    Upgrade to keep generating — plans start at $15/mo
                   </p>
                   <a href="/pricing" style={{
                     display: 'inline-block', padding: '11px 28px', borderRadius: 10,

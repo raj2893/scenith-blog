@@ -120,7 +120,7 @@ const jsonLd = {
           name: "Can I use AI to generate educational videos for free?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Scenith offers a free trial with limited credits. Paid plans start at ₹99/month and give you access to multiple AI models including Kling 2.5 and Veo 3 for generating educational videos.",
+            text: "Scenith offers a free trial with limited credits. Paid plans start at $15/month and give you access to multiple AI models including Kling 2.5 and Veo 3 for generating educational videos.",
           },
         },
         {
@@ -440,7 +440,7 @@ export default function AIEducationalVideoGeneratorPage() {
                 <span className={styles.ctaArrow} aria-hidden="true">→</span>
               </a>
               <p className={styles.ctaMeta}>
-                No credit card required to preview · Plans from ₹99/month · 1080p MP4 output
+                No credit card required to preview · Plans from $15/month · 1080p MP4 output
               </p>
             </div>
           </section>
@@ -973,7 +973,7 @@ export default function AIEducationalVideoGeneratorPage() {
               {[
                 {
                   q: "Can I use AI to generate educational videos for free?",
-                  a: "Scenith offers a free trial with limited credits so you can test the tool before committing. Paid plans start at ₹99/month and unlock access to all four AI models including Kling 2.5 Pro and Veo 3. There is no free tier with unlimited generation — high-quality AI video generation requires significant compute, and we price it as fairly as possible.",
+                  a: "Scenith offers a free trial with limited credits so you can test the tool before committing. Paid plans start at $15/month and unlock access to all four AI models including Kling 2.5 Pro and Veo 3. There is no free tier with unlimited generation — high-quality AI video generation requires significant compute, and we price it as fairly as possible.",
                 },
                 {
                   q: "Do I own the copyright to videos I generate with Scenith?",
@@ -997,7 +997,7 @@ export default function AIEducationalVideoGeneratorPage() {
                 },
                 {
                   q: "How does Scenith compare to other AI video generators for education?",
-                  a: "Scenith is currently the only AI video platform offering access to multiple state-of-the-art models — including Kling 2.5 Pro and Veo 3 — at India-first pricing (plans from ₹99/month vs $20+/month for international competitors). We're specifically optimised for ease of use for non-technical creators, including educators, with a simple prompt-to-video workflow.",
+                  a: "Scenith is currently the only AI video platform offering access to multiple state-of-the-art models — including Kling 2.5 Pro and Veo 3 — at India-first pricing (plans from $15/month vs $20+/month for international competitors). We're specifically optimised for ease of use for non-technical creators, including educators, with a simple prompt-to-video workflow.",
                 },
                 {
                   q: "What file format do AI-generated videos download as?",
@@ -1045,7 +1045,7 @@ export default function AIEducationalVideoGeneratorPage() {
               <span aria-hidden="true">→</span>
             </a>
             <div className={styles.finalCtaMeta}>
-              <span>✓ Plans from ₹99/month</span>
+              <span>✓ Plans from $15/month</span>
               <span>✓ 1080p MP4 output</span>
               <span>✓ Kling 2.5 · Veo 3 · Wan 2.5</span>
               <span>✓ Full commercial rights</span>

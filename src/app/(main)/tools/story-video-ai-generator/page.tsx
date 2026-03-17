@@ -108,7 +108,7 @@ const jsonLd = {
         "@type": "Offer",
         price: "0",
         priceCurrency: "INR",
-        description: "Free to start. Credit-based plans from ₹99/mo.",
+        description: "Free to start. Credit-based plans from $15/mo.",
       },
       featureList: [
         "Story to Video AI Generation",
@@ -167,7 +167,7 @@ const jsonLd = {
           name: "Is AI story video generation free?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Scenith offers a credit-based model with starter credits for new accounts. Paid plans begin at ₹99/month. Generating a story video scene (5 seconds, 1080p) costs between 10 and 50 credits depending on the AI model selected.",
+            text: "Scenith offers a credit-based model with starter credits for new accounts. Paid plans begin at $15/month. Generating a story video scene (5 seconds, 1080p) costs between 10 and 50 credits depending on the AI model selected.",
           },
         },
         {

@@ -308,7 +308,7 @@ export default function StoryVideoGeneratorClient() {
             <span>Generate My Story Video — Free</span>
             <span className={styles.ctaChevron}>→</span>
           </a>
-          <p className={styles.heroNote}>No editing skills needed &nbsp;·&nbsp; 1080p HD &nbsp;·&nbsp; Plans from ₹99/mo</p>
+          <p className={styles.heroNote}>No editing skills needed &nbsp;·&nbsp; 1080p HD &nbsp;·&nbsp; Plans from $15/mo</p>
 
           {/* Demo video — inside a "book" frame */}
           <div className={styles.bookFrame} role="img" aria-label="AI-generated story video example">
@@ -644,7 +644,7 @@ export default function StoryVideoGeneratorClient() {
               <span>✓ No filming required</span>
               <span>✓ 1080p cinematic output</span>
               <span>✓ Instant MP4 download</span>
-              <span>✓ From ₹99/month</span>
+              <span>✓ From $15/month</span>
             </div>
           </div>
         </section>
@@ -843,7 +843,7 @@ export default function StoryVideoGeneratorClient() {
 
             <p className={styles.finalNote}>
               scenith.in/tools/ai-video-generation &nbsp;·&nbsp; 1080p HD &nbsp;·&nbsp;
-              Multiple AI Models &nbsp;·&nbsp; Plans from ₹99/mo
+              Multiple AI Models &nbsp;·&nbsp; Plans from $15/mo
             </p>
 
             {/* Related tool links for internal linking / SEO */}

@@ -107,7 +107,7 @@ const comparisons = [
     watermark: "No",
     commercial: "Paid tier only",
     styles: "Unlimited but complex",
-    scenith: "Credit plans from ₹99/mo, web UI, 1-click",
+    scenith: "Credit plans from $15/mo, web UI, 1-click",
   },
   {
     tool: "DALL-E 3",
@@ -152,7 +152,7 @@ const prompts = [
 const faqs = [
   {
     q: "Is Scenith's AI image generator completely free?",
-    a: "The free BASIC plan does not include AI image generation credits — you'll need to upgrade to a paid plan starting from ₹99/month (Creator Lite) which includes 100 credits per month. Each image costs 1–5 credits depending on the model. There are no watermarks on any generated images regardless of plan.",
+    a: "The free BASIC plan does not include AI image generation credits — you'll need to upgrade to a paid plan starting from $15/month (Creator Lite) which includes 100 credits per month. Each image costs 1–5 credits depending on the model. There are no watermarks on any generated images regardless of plan.",
   },
   {
     q: "What is the difference between the 8 art styles?",
@@ -164,7 +164,7 @@ const faqs = [
   },
   {
     q: "How is Scenith different from Midjourney or DALL-E?",
-    a: "Midjourney requires a paid Discord subscription and knowledge of slash commands. DALL-E 3 requires a ChatGPT Plus subscription ($20/month). Scenith offers a clean web interface, 8 style presets selectable with a single click, and paid plans starting at ₹99/month — significantly more accessible than Western-priced alternatives, with no platform lock-in.",
+    a: "Midjourney requires a paid Discord subscription and knowledge of slash commands. DALL-E 3 requires a ChatGPT Plus subscription ($20/month). Scenith offers a clean web interface, 8 style presets selectable with a single click, and paid plans starting at $15/month — significantly more accessible than Western-priced alternatives, with no platform lock-in.",
   },
   {
     q: "What resolution are generated images?",
@@ -705,7 +705,7 @@ const AIImageGeneratorFreeClient: React.FC = () => {
               </thead>
               <tbody>
                 {[
-                  ["Entry cost", "₹99/month", "$10/month", "$20/month", "$22.99/month"],
+                  ["Entry cost", "$15/month", "$10/month", "$20/month", "$22.99/month"],
                   ["Interface", "Web UI", "Discord only", "ChatGPT only", "Adobe ecosystem"],
                   ["Watermarks", "Never", "No", "No", "Free tier: Yes"],
                   ["Commercial rights", "All plans", "Paid tiers", "Paid tier", "Paid tier"],
@@ -778,7 +778,7 @@ const AIImageGeneratorFreeClient: React.FC = () => {
               </p>
               <p>
                 Cost comparison: Stock photo subscriptions run $29–$199/month. Professional photography runs
-                ₹5,000–₹50,000 per session. AI image generation on Scenith starts at ₹99/month for 100 credits.
+                ₹5,000–₹50,000 per session. AI image generation on Scenith starts at $15/month for 100 credits.
               </p>
             </article>
 
