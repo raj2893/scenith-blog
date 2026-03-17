@@ -89,6 +89,9 @@ const AIImageGeneratorClient: React.FC = () => {
   const [loginSuccess, setLoginSuccess] = useState<string>('');
   const [isCreatingProject, setIsCreatingProject] = useState<boolean>(false);
   const [showImageUpgradePopup, setShowImageUpgradePopup] = useState<boolean>(false);
+  // Async job polling — mirrors video gen
+  const [currentImageJob, setCurrentImageJob] = useState<{ id: number; status: string; imagePath?: string; prompt?: string; errorMessage?: string } | null>(null);
+  const imagePollingRef = useRef<NodeJS.Timeout | null>(null);
 
   // Handle scroll for navbar
   useEffect(() => {
@@ -300,29 +303,15 @@ const AIImageGeneratorClient: React.FC = () => {
   }, []);
 
   const handleGenerateImage = async () => {
-    if (!isLoggedIn) {
-      setShowLoginModal(true);
-      return;
-    }
+    if (!isLoggedIn) { setShowLoginModal(true); return; }
+    if (!prompt.trim()) { setError('Please enter a description for your image.'); return; }
+    if (!selectedModel) { setError('Please select an AI model to generate with.'); return; }
 
-    if (!prompt.trim()) {
-      setError('Please enter a description for your image.');
-      return;
-    }
-
-    // Check model selected
-    if (!selectedModel) {
-      setError('Please select an AI model to generate with.');
-      return;
-    }
-
-    // Check usage limits (credit-based)
     if (imageUsage) {
       const selectedModelData = imageUsage.availableModels?.find(m => m.id === selectedModel);
       const creditCost = selectedModelData?.creditsPerImage ?? 1;
-
       if (imageUsage.balance < creditCost) {
-        setError(`Not enough credits. This model costs ${creditCost} credits (${imageUsage.balance} remaining). Upgrade to generate more.`);
+        setError(`Not enough credits. This model costs ${creditCost} credits (${imageUsage.balance} remaining).`);
         setTimeout(() => setError(null), 10000);
         return;
       }
@@ -331,16 +320,15 @@ const AIImageGeneratorClient: React.FC = () => {
     setIsGenerating(true);
     setError(null);
     setGeneratedImages([]);
+    setCurrentImageJob(null);
 
     try {
-      // Add style to prompt
       let enhancedPrompt = prompt;
-      const stylePreset = STYLE_PRESETS.find(s => s.value === selectedStyle);
-      if (stylePreset && selectedStyle !== 'realistic') {
+      if (selectedStyle !== 'realistic') {
         enhancedPrompt = `${prompt}, ${selectedStyle} style`;
       }
 
-      const response = await fetch(`${API_BASE_URL}/api/sole-image-gen/generate`, {
+      const res = await fetch(`${API_BASE_URL}/api/sole-image-gen/generate-async`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -353,60 +341,30 @@ const AIImageGeneratorClient: React.FC = () => {
         }),
       });
 
-      if (!response.ok) {
-        const errorText = await response.text().catch(() => 'Unknown error');
-        throw new Error(errorText || `HTTP error! status: ${response.status}`);
+      if (!res.ok) {
+        const errText = await res.text().catch(() => 'Unknown error');
+        throw new Error(errText || `HTTP error ${res.status}`);
       }
 
-            const img = await response.json();
-      const rawPath = img.imagePath as string;
-      const fullImagePath = rawPath.startsWith('http')
-        ? rawPath
-        : `${CDN_URL}/${rawPath}`;
-      const images: GeneratedImage[] = [{
-        id: img.id,
-        imagePath: fullImagePath,
-        prompt: img.prompt,
-        negativePrompt: img.negativePrompt,
-        resolution: img.resolution || '1024x1024',
-        createdAt: img.createdAt,
-      }];
+      const { jobId } = await res.json();
 
-      setGeneratedImages(images);
+      // Save to localStorage — survives tab close
+      localStorage.setItem('scenith_image_job_id', String(jobId));
+      setCurrentImageJob({ id: jobId, status: 'PENDING' });
+      startImagePolling(jobId);
 
-      // Refresh usage
-      const usageResponse = await fetch(`${API_BASE_URL}/api/sole-image-gen/usage`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-      if (usageResponse.ok) {
-        const usageData = await usageResponse.json();
-        setImageUsage(usageData);
-      }
-
-      // Scroll to results
+      // Scroll to job status card
       setTimeout(() => {
-        const resultsSection = document.querySelector('.image-results-section');
-        if (resultsSection) {
-          resultsSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
+        const el = document.querySelector('.image-job-status-card');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }, 100);
+
     } catch (err: any) {
-      const errorMessage = err.message || 'Failed to generate image.';
-      setError(errorMessage);
-      
-      setTimeout(() => {
-        const errorElement = document.querySelector('.error-message');
-        if (errorElement) {
-          errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-      }, 100);
-
-      setTimeout(() => setError(null), 10000);
-    } finally {
+      setError(err.message || 'Failed to submit image generation.');
       setIsGenerating(false);
+      setTimeout(() => setError(null), 10000);
     }
+    // Note: setIsGenerating(false) is NOT called here — polling handles it when done
   };
 
   const handleDownloadImage = async (imageUrl: string, imageId: number) => {
@@ -485,6 +443,56 @@ const AIImageGeneratorClient: React.FC = () => {
     const creditCost = selectedModelData?.creditsPerImage ?? 1;
     return imageUsage.balance < creditCost;
   }, [isLoggedIn, imageUsage, selectedModel]);
+const startImagePolling = useCallback((jobId: number) => {
+    if (imagePollingRef.current) clearInterval(imagePollingRef.current);
+    imagePollingRef.current = setInterval(async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/sole-image-gen/status/${jobId}`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        });
+        if (!res.ok) return;
+        const job = await res.json();
+        setCurrentImageJob(job);
+
+        if (job.status === 'COMPLETED' || job.status === 'FAILED') {
+          clearInterval(imagePollingRef.current!);
+          imagePollingRef.current = null;
+          localStorage.removeItem('scenith_image_job_id');
+
+          if (job.status === 'COMPLETED' && job.imagePath) {
+            setGeneratedImages([{
+              id: job.id,
+              imagePath: job.imagePath,
+              prompt: job.prompt || '',
+              resolution: job.resolution || '1024x1024',
+              createdAt: job.createdAt,
+            }]);
+            // Refresh usage
+            const usageRes = await fetch(`${API_BASE_URL}/api/sole-image-gen/usage`, {
+              headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+            });
+            if (usageRes.ok) setImageUsage(await usageRes.json());
+          }
+          setIsGenerating(false);
+        }
+      } catch {}
+    }, 3000);
+  }, []);
+
+  // Cleanup polling on unmount
+  useEffect(() => () => { if (imagePollingRef.current) clearInterval(imagePollingRef.current); }, []);
+
+  // Resume polling on page load if a job was in progress when tab was closed
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    const savedJobId = localStorage.getItem('scenith_image_job_id');
+    if (savedJobId) {
+      const jobId = parseInt(savedJobId, 10);
+      setIsGenerating(true);
+      setCurrentImageJob({ id: jobId, status: 'PROCESSING' });
+      startImagePolling(jobId);
+    }
+  }, [isLoggedIn, startImagePolling]);
 
   const uploadOriginalImage = async (file: File): Promise<string> => {
     const formData = new FormData();
@@ -1167,6 +1175,51 @@ const AIImageGeneratorClient: React.FC = () => {
                   </>
               </div>
             </div>
+
+            {/* ── Image Job Status Card — shown while generating ── */}
+            {currentImageJob && (currentImageJob.status === 'PENDING' || currentImageJob.status === 'PROCESSING') && (
+              <div className="image-job-status-card" style={{
+                background: 'rgba(99,85,220,0.06)', border: '1.5px solid rgba(99,85,220,0.2)',
+                borderRadius: 16, padding: '24px 20px', marginBottom: 20,
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14,
+              }}>
+                <div style={{
+                  width: 44, height: 44, borderRadius: '50%',
+                  border: '3px solid rgba(99,85,220,0.15)',
+                  borderTopColor: '#6355dc',
+                  animation: 'spin 0.9s linear infinite',
+                }} />
+                <div style={{ textAlign: 'center' }}>
+                  <strong style={{ color: '#2d2d5e', display: 'block', marginBottom: 4 }}>
+                    {currentImageJob.status === 'PENDING' ? 'Queued — starting soon…' : 'Generating your image…'}
+                  </strong>
+                  <span style={{ fontSize: 13, color: '#8888bb' }}>
+                    This usually takes 10–30 seconds. You can safely close this tab — we'll keep generating.
+                  </span>
+                </div>
+                <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+              </div>
+            )}
+
+            {/* ── Failed job card ── */}
+            {currentImageJob && currentImageJob.status === 'FAILED' && (
+              <div style={{
+                background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.2)',
+                borderRadius: 14, padding: '16px 18px', marginBottom: 16,
+                display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+              }}>
+                <span style={{ fontSize: 13, color: '#dc2626' }}>
+                  ⚠️ Generation failed. {currentImageJob.errorMessage || 'Your credits have been refunded.'}
+                </span>
+                <button onClick={() => setCurrentImageJob(null)} style={{
+                  background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)',
+                  borderRadius: 8, padding: '5px 12px', color: '#dc2626',
+                  fontSize: 12, fontWeight: 700, cursor: 'pointer',
+                }}>
+                  Dismiss
+                </button>
+              </div>
+            )}
 
             {generatedImages.length > 0 && (
               <section className="image-results-section" role="region" aria-labelledby="results-title">
