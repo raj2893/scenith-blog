@@ -972,7 +972,7 @@ const startImagePolling = useCallback((jobId: number) => {
                             { id: 'flux-1-1-pro',       displayName: 'FLUX 1.1 Pro',         creditsPerImage: 7  },
                             { id: 'imagen-4-standard',  displayName: 'Imagen 4 Standard',    creditsPerImage: 8  },
                             { id: 'gpt-image-1-medium', displayName: 'GPT Image 1 (Medium)', creditsPerImage: 10 },
-                            { id: 'grok-aurora',        displayName: 'Grok Aurora',          creditsPerImage: 12 },
+                            /*{ id: 'grok-aurora',        displayName: 'Grok Aurora',          creditsPerImage: 12 },*/
                           ].map((model) => (
                             <button
                               key={model.id}
@@ -1100,7 +1100,7 @@ const startImagePolling = useCallback((jobId: number) => {
                               { id: 'stability-core', c: 2 }, { id: 'gpt-image-1-mini', c: 3 },
                               { id: 'imagen-4-fast', c: 5 }, { id: 'flux-1-1-pro', c: 7 },
                               { id: 'imagen-4-standard', c: 8 }, { id: 'gpt-image-1-medium', c: 10 },
-                              { id: 'grok-aurora', c: 12 },
+                              /*{ id: 'grok-aurora', c: 12 },*/
                             ].find(x => x.id === selectedModel)?.c ?? '?'
                           } cr
                         </span>
