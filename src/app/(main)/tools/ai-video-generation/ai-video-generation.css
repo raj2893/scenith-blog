@@ -1,0 +1,586 @@
+/* ═══════════════════════════════════════════════════════════════
+   Scenith — AI Video Generation · SEO Sections CSS
+   File: /app/tools/ai-video-generation/ai-video-seo.css
+   Import in AIVideoGenerationClient.tsx:
+     import './ai-video-seo.css';
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Shared section wrapper ── */
+.seo-section {
+  margin-bottom: 64px;
+}
+
+.seo-section-header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.seo-eyebrow {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #6366F1;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+
+.seo-section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  font-weight: 800;
+  color: #E2E8F0;
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+
+.seo-section-sub {
+  font-size: 0.98rem;
+  color: #64748B;
+  max-width: 540px;
+  margin: 0 auto;
+  line-height: 1.65;
+  font-weight: 300;
+}
+
+/* ── Divider ── */
+.seo-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(99,102,241,0.25), transparent);
+  margin: 0 0 64px;
+}
+
+/* ══════════════════════════════════════
+   1. FEATURES GRID
+══════════════════════════════════════ */
+.seo-features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .seo-features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .seo-features-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.seo-feature-card {
+  padding: 24px 22px;
+  border-radius: 18px;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(99, 102, 241, 0.13);
+  transition: border-color 0.25s, transform 0.2s;
+}
+
+.seo-feature-card:hover {
+  border-color: rgba(99, 102, 241, 0.35);
+  transform: translateY(-3px);
+}
+
+.seo-feature-icon {
+  font-size: 2rem;
+  margin-bottom: 14px;
+  display: block;
+}
+
+.seo-feature-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #CBD5E1;
+  margin-bottom: 8px;
+}
+
+.seo-feature-desc {
+  font-size: 0.85rem;
+  color: #475569;
+  line-height: 1.6;
+}
+
+/* ══════════════════════════════════════
+   2. MODELS COMPARISON TABLE
+══════════════════════════════════════ */
+.seo-models-table-wrap {
+  overflow-x: auto;
+  border-radius: 18px;
+  border: 1px solid rgba(99, 102, 241, 0.18);
+  background: rgba(15, 23, 42, 0.7);
+}
+
+.seo-models-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.seo-models-table thead tr {
+  border-bottom: 1px solid rgba(99, 102, 241, 0.15);
+}
+
+.seo-models-table th {
+  padding: 16px 20px;
+  text-align: left;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #6366F1;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  white-space: nowrap;
+}
+
+.seo-models-table td {
+  padding: 16px 20px;
+  color: #94A3B8;
+  border-bottom: 1px solid rgba(99, 102, 241, 0.07);
+  vertical-align: middle;
+}
+
+.seo-models-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.seo-models-table tbody tr:hover td {
+  background: rgba(99, 102, 241, 0.04);
+}
+
+.seo-model-name-cell {
+  font-weight: 700;
+  color: #CBD5E1 !important;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.92rem !important;
+}
+
+.seo-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.seo-badge-fast    { background: rgba(245,158,11,0.12);  color: #F59E0B; border: 1px solid rgba(245,158,11,0.3); }
+.seo-badge-quality { background: rgba(99,102,241,0.12);  color: #818CF8; border: 1px solid rgba(99,102,241,0.3); }
+.seo-badge-audio   { background: rgba(16,185,129,0.12);  color: #34D399; border: 1px solid rgba(16,185,129,0.3); }
+.seo-badge-budget  { background: rgba(100,116,139,0.12); color: #94A3B8; border: 1px solid rgba(100,116,139,0.3); }
+
+.seo-check   { color: #34D399; font-size: 1rem; }
+.seo-cross   { color: #EF4444; font-size: 1rem; }
+
+/* ══════════════════════════════════════
+   3. USE CASES
+══════════════════════════════════════ */
+.seo-usecases-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+@media (max-width: 900px) {
+  .seo-usecases-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .seo-usecases-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.seo-usecase-card {
+  padding: 22px 18px;
+  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(99, 102, 241, 0.12);
+  text-align: center;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.seo-usecase-card:hover {
+  border-color: rgba(99, 102, 241, 0.3);
+  transform: translateY(-2px);
+}
+
+.seo-usecase-icon {
+  font-size: 2.2rem;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.seo-usecase-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #CBD5E1;
+  margin-bottom: 6px;
+  font-family: 'Syne', sans-serif;
+}
+
+.seo-usecase-desc {
+  font-size: 0.78rem;
+  color: #475569;
+  line-height: 1.55;
+}
+
+/* ══════════════════════════════════════
+   4. FAQ ACCORDION
+══════════════════════════════════════ */
+.seo-faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.seo-faq-item {
+  border-radius: 14px;
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  background: rgba(15, 23, 42, 0.7);
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.seo-faq-item.open {
+  border-color: rgba(99, 102, 241, 0.35);
+}
+
+.seo-faq-question {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  background: none;
+  border: none;
+  color: #CBD5E1;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  gap: 12px;
+  transition: color 0.2s;
+}
+
+.seo-faq-question:hover {
+  color: #E2E8F0;
+}
+
+.seo-faq-item.open .seo-faq-question {
+  color: #818CF8;
+}
+
+.seo-faq-chevron {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: #6366F1;
+  transition: transform 0.25s;
+}
+
+.seo-faq-item.open .seo-faq-chevron {
+  transform: rotate(180deg);
+  background: rgba(99, 102, 241, 0.15);
+}
+
+.seo-faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, padding 0.25s ease;
+  padding: 0 22px;
+}
+
+.seo-faq-item.open .seo-faq-answer {
+  max-height: 400px;
+  padding: 0 22px 18px;
+}
+
+.seo-faq-answer p {
+  font-size: 0.88rem;
+  color: #64748B;
+  line-height: 1.7;
+}
+
+.seo-faq-answer a {
+  color: #6366F1;
+  text-decoration: none;
+}
+
+.seo-faq-answer a:hover {
+  color: #818CF8;
+}
+
+/* ══════════════════════════════════════
+   5. PROMPT TIPS
+══════════════════════════════════════ */
+.seo-tips-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .seo-tips-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.seo-tip-card {
+  padding: 22px;
+  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(99, 102, 241, 0.12);
+}
+
+.seo-tip-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #6366F1;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.seo-tip-card h4 {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #CBD5E1;
+  margin-bottom: 10px;
+}
+
+.seo-tip-card ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.seo-tip-card ul li {
+  font-size: 0.83rem;
+  color: #64748B;
+  line-height: 1.5;
+  padding-left: 16px;
+  position: relative;
+}
+
+.seo-tip-card ul li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: #6366F1;
+  font-size: 0.75rem;
+}
+
+.seo-prompt-example {
+  margin-top: 10px;
+  padding: 12px 14px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  border-left: 3px solid #6366F1;
+  font-size: 0.8rem;
+  color: #818CF8;
+  font-style: italic;
+  line-height: 1.5;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.seo-prompt-example:hover {
+  background: rgba(99, 102, 241, 0.08);
+}
+
+.seo-prompt-example span {
+  display: block;
+  font-size: 0.7rem;
+  color: #475569;
+  font-style: normal;
+  margin-top: 4px;
+  font-weight: 600;
+}
+
+/* ══════════════════════════════════════
+   6. STATS STRIP
+══════════════════════════════════════ */
+.seo-stats-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(99, 102, 241, 0.18);
+  margin-bottom: 64px;
+}
+
+@media (max-width: 640px) {
+  .seo-stats-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.seo-stat-cell {
+  padding: 28px 20px;
+  text-align: center;
+  background: rgba(15, 23, 42, 0.7);
+  border-right: 1px solid rgba(99, 102, 241, 0.1);
+}
+
+.seo-stat-cell:last-child {
+  border-right: none;
+}
+
+.seo-stat-number {
+  font-family: 'Syne', sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #818CF8, #34D399);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 4px;
+}
+
+.seo-stat-label {
+  font-size: 0.8rem;
+  color: #475569;
+  line-height: 1.4;
+}
+
+/* ══════════════════════════════════════
+   7. CTA BANNER
+══════════════════════════════════════ */
+.seo-cta-banner {
+  border-radius: 24px;
+  padding: 52px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  margin-bottom: 64px;
+}
+
+.seo-cta-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 80% at 20% 50%, rgba(99,102,241,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 80% 50%, rgba(52,211,153,0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.seo-cta-banner h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 800;
+  color: #E2E8F0;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.seo-cta-banner p {
+  font-size: 1rem;
+  color: #64748B;
+  max-width: 440px;
+  margin: 0 auto 28px;
+  line-height: 1.6;
+  position: relative;
+}
+
+.seo-cta-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.seo-cta-primary {
+  display: inline-block;
+  padding: 15px 36px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #6366F1, #4F46E5);
+  color: white;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 8px 28px rgba(99,102,241,0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.seo-cta-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 36px rgba(99,102,241,0.5);
+}
+
+.seo-cta-secondary {
+  display: inline-block;
+  padding: 15px 36px;
+  border-radius: 12px;
+  background: transparent;
+  border: 1.5px solid rgba(99, 102, 241, 0.35);
+  color: #818CF8;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.seo-cta-secondary:hover {
+  background: rgba(99, 102, 241, 0.1);
+  border-color: rgba(99, 102, 241, 0.55);
+}
+
+/* ══════════════════════════════════════
+   8. SCHEMA / STRUCTURED DATA NOTE
+   (hidden visually, for bots only)
+══════════════════════════════════════ */
+.seo-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE TWEAKS
+══════════════════════════════════════ */
+@media (max-width: 768px) {
+  .seo-section {
+    margin-bottom: 48px;
+  }
+
+  .seo-cta-banner {
+    padding: 36px 22px;
+  }
+
+  .seo-stats-strip {
+    margin-bottom: 48px;
+  }
+
+  .seo-models-table th,
+  .seo-models-table td {
+    padding: 12px 14px;
+  }
+}

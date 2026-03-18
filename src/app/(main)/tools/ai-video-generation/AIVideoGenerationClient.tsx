@@ -6,6 +6,7 @@ import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { API_BASE_URL, CDN_URL } from "../../../config";
 import { FaTimes } from "react-icons/fa";
+import VideoPageSEOSections from "./VideoPageSeoSections";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -1592,7 +1593,7 @@ const AIVideoGenerationClient: React.FC = () => {
           </>
         )}
 
-        <div style={{ height: 60 }} />
+        <VideoPageSEOSections onPromptSelect={setPrompt} />
       </div>
 
       {/* ── Login modal ── */}
