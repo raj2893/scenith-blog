@@ -4,7 +4,7 @@
   --gradient: linear-gradient(135deg, #00FF88, #00C96E);
   --nav-height: 64px;
   --nav-height-mobile: 56px;
-  --nav-bg: rgba(8, 8, 14, 0.75);
+  --nav-bg: rgba(8, 8, 14, 1.0);
   --nav-border: rgba(255, 255, 255, 0.08);
   --nav-text: rgba(255, 255, 255, 0.85);
   --nav-text-muted: rgba(255, 255, 255, 0.45);
