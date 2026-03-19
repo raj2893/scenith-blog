@@ -80,11 +80,11 @@
 }
 
 .text-input-section {
-  background: #FFFFFF;
-  border-radius: 16px;
-  padding: 40px 30px;
-  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(59, 130, 246, 0.1);
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+  border: none;
 }
 
 .generate-voice-button {
@@ -4017,15 +4017,16 @@
 
 .ai-voice-textarea {
   width: 100%;
-  min-height: 240px;
-  padding: 25px;
+  min-height: 100px;
+  max-height: 180px;
+  padding: 14px 16px 8px;
   border: none;
-  background: white;
-  font-size: 1.05rem;
-  line-height: 1.8;
-  resize: vertical;
+  background: transparent;
+  font-size: 14px;
+  line-height: 1.6;
+  resize: none;
   font-family: 'Montserrat', sans-serif;
-  color: #1E293B;
+  color: #2d2d5e;
   transition: all 0.3s ease;
   box-sizing: border-box;
 }
@@ -4136,18 +4137,17 @@
   font-weight: 600;
 }
 
-.script-input-footer {
-  background: white;
-  padding: 18px 25px;
-  border-radius: 0 0 18px 18px;
-  border-top: 2px solid rgba(102, 126, 234, 0.1);
-}
-
-.footer-stats {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  gap: 20px;
+.textarea-hint {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  right: 15px;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+  border-radius: 12px;
+  padding: 15px;
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  pointer-events: none;
+  animation: fadeIn 0.5s ease-out;
 }
 
 .stat-item {

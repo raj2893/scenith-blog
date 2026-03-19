@@ -818,322 +818,246 @@ const startImagePolling = useCallback((jobId: number) => {
               <div className="input-section">
 
                 {/* ── Top bar: examples link + char count ── */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                  <button
-                    onClick={() => {
-                      const el = document.querySelector('.demo-marquee-section');
-                      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }}
-                    style={{
-                      display: 'inline-flex', alignItems: 'center', gap: 5,
-                      padding: '5px 12px', borderRadius: 999, cursor: 'pointer',
-                      border: '1.5px solid rgba(99,85,220,0.25)',
-                      background: 'rgba(99,85,220,0.06)',
-                      color: '#6355dc', fontWeight: 600, fontSize: 12,
-                      transition: 'all 0.2s',
-                    }}
-                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(99,85,220,0.14)'}
-                    onMouseLeave={e => e.currentTarget.style.background = 'rgba(99,85,220,0.06)'}
-                  >
-                    🖼️ See examples ↓
-                  </button>
-                  {isLoggedIn && (
-                    <span style={{ fontSize: 11, color: promptCharCount > 1800 ? '#dc2626' : '#9999bb', fontWeight: 600 }}>
-                      {promptCharCount} / 2,000
-                    </span>
-                  )}
-                </div>
-
-                {/* ── Prompt suggestions ── */}
-                <div style={{ display: 'flex', gap: 5, marginBottom: 6, overflowX: 'auto', paddingBottom: 2, scrollbarWidth: 'none' }}>
-                  {[
-                    '🌅 Cinematic sunset',
-                    '🤖 Neon city robot',
-                    '🌸 Watercolor portrait',
-                    '🚀 Deep space astronaut',
-                    '🏙️ Aerial Tokyo night',
-                  ].map((s) => (
-                    <button
-                      key={s}
-                      onClick={() => { const t = s.slice(2).trim(); setPrompt(t); setPromptCharCount(t.length); }}
-                      disabled={isGenerating}
-                      style={{
-                        padding: '4px 10px', borderRadius: 999, border: '1.5px solid rgba(99,85,220,0.2)',
-                        background: 'rgba(99,85,220,0.05)', color: '#6355dc',
-                        fontSize: 11, fontWeight: 600, cursor: 'pointer',
-                        whiteSpace: 'nowrap', flexShrink: 0, transition: 'all 0.15s',
-                      }}
-                      onMouseEnter={e => e.currentTarget.style.background = 'rgba(99,85,220,0.12)'}
-                      onMouseLeave={e => e.currentTarget.style.background = 'rgba(99,85,220,0.05)'}
-                    >
-                      {s}
-                    </button>
-                  ))}
-                </div>
-
-                {/* ── Prompt textarea (compact) ── */}
-                <textarea
-                  value={prompt}
-                  onChange={(e) => { setPrompt(e.target.value); setPromptCharCount(e.target.value.length); }}
-                  placeholder="✨ Describe your image in detail..."
-                  disabled={isGenerating}
-                  maxLength={2000}
-                  aria-label="Image description prompt"
-                  style={{
-                    width: '100%', minHeight: 80, maxHeight: 120,
-                    padding: '10px 14px', borderRadius: 12, resize: 'vertical',
-                    border: `1.5px solid ${promptCharCount > 1800 ? '#dc2626' : 'rgba(99,85,220,0.25)'}`,
-                    background: '#fff', color: '#2d2d5e',
-                    fontSize: 14, lineHeight: 1.5, fontFamily: 'inherit',
-                    outline: 'none', boxSizing: 'border-box',
-                    transition: 'border-color 0.2s',
-                  }}
-                  onFocus={e => { if (promptCharCount <= 1800) e.target.style.borderColor = '#6355dc'; }}
-                  onBlur={e => { if (promptCharCount <= 1800) e.target.style.borderColor = 'rgba(99,85,220,0.25)'; }}
-                />
-
-                {/* ── Style + Model in two columns ── */}
-                <div style={{
-                  display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, margin: '10px 0',
-                }}>
-                  {/* Art Style */}
-                  <div>
-                    <p style={{ fontSize: 11, fontWeight: 700, color: '#6666aa', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                      🎨 Style
-                    </p>
-                    <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
-                      {STYLE_PRESETS.map((style) => (
-                        <button
-                          key={style.value}
-                          onClick={() => setSelectedStyle(style.value)}
-                          title={style.description}
-                          style={{
-                            display: 'flex', alignItems: 'center', gap: 4,
-                            padding: '5px 10px', borderRadius: 999, cursor: 'pointer',
-                            border: `2px solid ${selectedStyle === style.value ? '#6355dc' : 'rgba(0,0,0,0.1)'}`,
-                            background: selectedStyle === style.value
-                              ? 'linear-gradient(135deg, #6355dc, #8b5cf6)'
-                              : '#f4f4f8',
-                            color: selectedStyle === style.value ? '#fff' : '#555',
-                            fontWeight: selectedStyle === style.value ? 700 : 500,
-                            fontSize: 11.5, transition: 'all 0.15s',
-                            boxShadow: selectedStyle === style.value ? '0 2px 8px rgba(99,85,220,0.28)' : 'none',
-                          }}
-                        >
-                          <span style={{ fontSize: 13 }}>{style.icon}</span>
-                          <span>{style.label}</span>
-                        </button>
-                      ))}
-                    </div>
+                {/* ── Compact prompt suggestions ── */}
+                  <div style={{ display: 'flex', gap: 5, marginBottom: 6, overflowX: 'auto', scrollbarWidth: 'none' }}>
+                    {['🌅 Cinematic sunset', '🤖 Neon city robot', '🌸 Watercolor portrait', '🚀 Deep space astronaut', '🏙️ Aerial Tokyo night'].map((s) => (
+                      <button key={s}
+                        onClick={() => { const t = s.slice(2).trim(); setPrompt(t); setPromptCharCount(t.length); }}
+                        disabled={isGenerating}
+                        style={{
+                          padding: '4px 10px', borderRadius: 999, border: '1.5px solid rgba(99,85,220,0.2)',
+                          background: 'rgba(99,85,220,0.05)', color: '#6355dc',
+                          fontSize: 11, fontWeight: 600, cursor: 'pointer',
+                          whiteSpace: 'nowrap', flexShrink: 0,
+                        }}
+                      >{s}</button>
+                    ))}
                   </div>
 
-                  {/* AI Model */}
-                  <div>
-                    <p style={{ fontSize: 11, fontWeight: 700, color: '#6666aa', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                      🤖 Model
-                    </p>
-                    <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
-                      {(isLoggedIn && imageUsage?.availableModels
-                        ? imageUsage.availableModels
-                        : [
-                            { id: 'stability-core',     displayName: 'Stability Core',    creditsPerImage: 3,  accessible: true },
-                            { id: 'gpt-image-1-mini',   displayName: 'GPT Mini',          creditsPerImage: 2,  accessible: true },
-                            { id: 'imagen-4-fast',      displayName: 'Imagen 4 Fast',     creditsPerImage: 3,  accessible: true },
-                            { id: 'flux-1-1-pro',       displayName: 'FLUX 1.1 Pro',      creditsPerImage: 7,  accessible: true },
-                            { id: 'imagen-4-standard',  displayName: 'Imagen 4',          creditsPerImage: 7,  accessible: true },
-                            { id: 'gpt-image-1-medium', displayName: 'GPT Medium',        creditsPerImage: 12, accessible: true },
-                          ]
-                      ).map((model) => (
-                        <button
-                          key={model.id}
-                          onClick={() => setSelectedModel(model.id)}
-                          style={{
-                            display: 'flex', alignItems: 'center', gap: 4,
-                            padding: '5px 10px', borderRadius: 999, cursor: 'pointer',
-                            border: `2px solid ${selectedModel === model.id ? '#7c6ef5' : 'rgba(0,0,0,0.1)'}`,
-                            background: selectedModel === model.id
-                              ? 'linear-gradient(135deg, #6355dc, #8b5cf6)'
-                              : '#f4f4f8',
-                            color: selectedModel === model.id ? '#fff' : '#444',
-                            fontWeight: selectedModel === model.id ? 700 : 500,
-                            fontSize: 11.5, transition: 'all 0.15s',
-                            boxShadow: selectedModel === model.id ? '0 2px 8px rgba(99,85,220,0.28)' : 'none',
-                          }}
-                        >
-                          <span>{model.displayName}</span>
-                          <span style={{
-                            fontSize: 10, fontWeight: 700, padding: '1px 6px', borderRadius: 999,
-                            background: selectedModel === model.id ? 'rgba(255,255,255,0.22)' : 'rgba(99,85,220,0.1)',
-                            color: selectedModel === model.id ? '#fff' : '#6355dc',
-                          }}>
-                            {model.creditsPerImage === -1 ? '∞' : `${model.creditsPerImage}cr`}
-                          </span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* ── Advanced options (collapsed) ── */}
-                <details style={{ marginBottom: 10 }}>
-                  <summary style={{
-                    fontSize: 12, color: '#8888bb', cursor: 'pointer', fontWeight: 600,
-                    listStyle: 'none', display: 'flex', alignItems: 'center', gap: 6,
-                    padding: '6px 0',
+                  {/* ── Main input box — Grok style ── */}
+                  <div style={{
+                    border: '1.5px solid rgba(99,85,220,0.25)', borderRadius: 16,
+                    background: '#fff', overflow: 'hidden',
+                    boxShadow: '0 2px 12px rgba(99,85,220,0.08)',
                   }}>
-                    <span style={{ color: '#6355dc' }}>⚙️</span> Advanced options
-                  </summary>
-                  <textarea
-                    value={negativePrompt}
-                    onChange={(e) => setNegativePrompt(e.target.value)}
-                    placeholder="What to avoid... (e.g. blurry, distorted, low quality)"
-                    maxLength={500}
-                    aria-label="Negative prompt"
-                    style={{
-                      width: '100%', minHeight: 56, padding: '8px 12px', borderRadius: 10,
-                      border: '1.5px solid rgba(99,85,220,0.2)', background: '#f9f9ff',
-                      fontSize: 13, color: '#444', resize: 'vertical',
-                      fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box',
-                      marginTop: 8,
-                    }}
-                  />
-                </details>
+                    {/* Textarea */}
+                    <textarea
+                      value={prompt}
+                      onChange={(e) => { setPrompt(e.target.value); setPromptCharCount(e.target.value.length); }}
+                      placeholder="✨ Describe your image in detail..."
+                      disabled={isGenerating}
+                      maxLength={2000}
+                      aria-label="Image description prompt"
+                      style={{
+                        width: '100%', minHeight: 90, maxHeight: 160,
+                        padding: '14px 16px 8px', resize: 'none', border: 'none', outline: 'none',
+                        background: 'transparent', color: '#2d2d5e',
+                        fontSize: 14, lineHeight: 1.6, fontFamily: 'inherit',
+                        boxSizing: 'border-box',
+                      }}
+                    />
 
-                {/* ── Credits bar ── */}
-                <div style={{
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  padding: '8px 14px', borderRadius: 10, marginBottom: 10,
-                  background: 'linear-gradient(135deg, rgba(99,85,220,0.07), rgba(240,108,190,0.05))',
-                  border: '1.5px solid rgba(99,85,220,0.15)',
-                  flexWrap: 'wrap', gap: 6,
-                }}>
-                  <span style={{ fontSize: 12.5, fontWeight: 700, color: '#2d2d5e', display: 'flex', alignItems: 'center', gap: 6 }}>
-                    ⚡ {isLoggedIn ? (imageUsage?.balance ?? '...') : 50} credits remaining
-                  </span>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    {(() => {
-                      const models = isLoggedIn && imageUsage?.availableModels
-                        ? imageUsage.availableModels
-                        : [
-                            { id: 'stability-core', creditsPerImage: 3 },
-                            { id: 'gpt-image-1-mini', creditsPerImage: 2 },
-                            { id: 'imagen-4-fast', creditsPerImage: 3 },
-                            { id: 'flux-1-1-pro', creditsPerImage: 7 },
-                            { id: 'imagen-4-standard', creditsPerImage: 7 },
-                            { id: 'gpt-image-1-medium', creditsPerImage: 12 },
-                          ];
-                      const m = models.find((x: any) => x.id === selectedModel);
-                      return m ? (
-                        <span style={{
-                          fontSize: 11.5, fontWeight: 700, padding: '3px 10px', borderRadius: 999,
-                          background: 'rgba(99,85,220,0.1)', color: '#6355dc',
-                        }}>
-                          This image = {(m as any).creditsPerImage}cr
-                        </span>
-                      ) : null;
-                    })()}
-                    {isLoggedIn && imageUsage && imageUsage.balance < 15 && imageUsage.balance > 0 && (
-                      <a href="/pricing" style={{
-                        fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 999,
-                        background: 'linear-gradient(135deg, #f59e0b, #f97316)',
-                        color: '#fff', textDecoration: 'none',
+                    {/* ── Bottom toolbar — single line ── */}
+                    <div style={{
+                      display: 'flex', alignItems: 'center', gap: 6,
+                      padding: '8px 12px', borderTop: '1px solid rgba(99,85,220,0.1)',
+                      background: '#fafafa', flexWrap: 'wrap',
+                    }}>
+
+                      {/* Style dropdown */}
+                      <select
+                        value={selectedStyle}
+                        onChange={(e) => setSelectedStyle(e.target.value)}
+                        style={{
+                          padding: '5px 28px 5px 10px', borderRadius: 8, fontSize: 12, fontWeight: 600,
+                          border: '1.5px solid rgba(99,85,220,0.2)', background: '#fff', color: '#6355dc',
+                          cursor: 'pointer', appearance: 'none', fontFamily: 'inherit',
+                          backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%236355dc' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")",
+                          backgroundRepeat: 'no-repeat', backgroundPosition: 'right 8px center',
+                        }}
+                      >
+                        {STYLE_PRESETS.map(s => (
+                          <option key={s.value} value={s.value}>{s.icon} {s.label}</option>
+                        ))}
+                      </select>
+
+                      {/* Model dropdown */}
+                      <select
+                        value={selectedModel}
+                        onChange={(e) => setSelectedModel(e.target.value)}
+                        style={{
+                          padding: '5px 28px 5px 10px', borderRadius: 8, fontSize: 12, fontWeight: 600,
+                          border: '1.5px solid rgba(99,85,220,0.2)', background: '#fff', color: '#6355dc',
+                          cursor: 'pointer', appearance: 'none', fontFamily: 'inherit',
+                          backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%236355dc' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")",
+                          backgroundRepeat: 'no-repeat', backgroundPosition: 'right 8px center',
+                          maxWidth: 180,
+                        }}
+                      >
+                        {(isLoggedIn && imageUsage?.availableModels
+                          ? imageUsage.availableModels
+                          : [
+                              { id: 'stability-core',     displayName: 'Stability Core',    creditsPerImage: 3  },
+                              { id: 'gpt-image-1-mini',   displayName: 'GPT Mini',          creditsPerImage: 2  },
+                              { id: 'imagen-4-fast',      displayName: 'Imagen 4 Fast',     creditsPerImage: 3  },
+                              { id: 'flux-1-1-pro',       displayName: 'FLUX 1.1 Pro',      creditsPerImage: 7  },
+                              { id: 'imagen-4-standard',  displayName: 'Imagen 4',          creditsPerImage: 7  },
+                              { id: 'gpt-image-1-medium', displayName: 'GPT Medium',        creditsPerImage: 12 },
+                            ]
+                        ).map((m: any) => (
+                          <option key={m.id} value={m.id}>
+                            {m.displayName} · {m.creditsPerImage === -1 ? '∞' : `${m.creditsPerImage}cr`}
+                          </option>
+                        ))}
+                      </select>
+
+                      {/* Negative prompt toggle */}
+                      <button
+                        onClick={() => {
+                          const el = document.getElementById('neg-prompt-area');
+                          if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+                        }}
+                        title="Negative prompt"
+                        style={{
+                          padding: '5px 10px', borderRadius: 8, fontSize: 12, fontWeight: 600,
+                          border: '1.5px solid rgba(99,85,220,0.2)', background: '#fff',
+                          color: '#8888bb', cursor: 'pointer', whiteSpace: 'nowrap',
+                        }}
+                      >⚙️ Advanced Options</button>
+
+                      {/* Credits pill */}
+                      <span style={{
+                        fontSize: 11.5, fontWeight: 700, padding: '4px 10px', borderRadius: 999,
+                        background: 'rgba(99,85,220,0.08)', color: '#6355dc', whiteSpace: 'nowrap',
                       }}>
-                        Top up →
-                      </a>
-                    )}
-                  </div>
-                </div>
-
-                {/* ── Generate / Login / Upgrade button ── */}
-                {!isLoggedIn ? (
-                  <button
-                    className="cta-button generate-button"
-                    onClick={() => setShowLoginModal(true)}
-                    aria-label="Login to generate AI images"
-                    style={{ width: '100%' }}
-                  >
-                    🔒 Login to Generate — Free
-                  </button>
-                ) : isLimitsExceeded() ? (
-                  
-                  <a  href="/pricing"
-                    className="cta-button upgrade-button"
-                    aria-label="Upgrade to get more credits"
-                    style={{ display: 'block', textAlign: 'center', width: '100%' }}
-                  >
-                    🚀 Get More Credits — View Plans
-                  </a>
-                ) : (
-                  <button
-                    className="cta-button generate-button"
-                    onClick={handleGenerateImage}
-                    disabled={!prompt.trim() || isGenerating || !selectedModel}
-                    aria-label="Generate AI image"
-                    style={{ width: '100%' }}
-                  >
-                    {isGenerating ? (
-                      <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-                        <span style={{
-                          width: 16, height: 16, border: '2.5px solid rgba(255,255,255,0.3)',
-                          borderTopColor: '#fff', borderRadius: '50%',
-                          animation: 'spin 0.75s linear infinite', display: 'inline-block',
-                        }} />
-                        Generating... ~10 seconds
-                      </span>
-                    ) : (
-                      <span>
-                        ✨ Generate Image
-                        {isLoggedIn && imageUsage?.availableModels && (() => {
-                          const m = imageUsage.availableModels.find(x => x.id === selectedModel);
-                          return m ? <span style={{ opacity: 0.7, fontWeight: 400, fontSize: 12, marginLeft: 6 }}>({m.creditsPerImage}cr)</span> : null;
+                        ⚡ {isLoggedIn ? (imageUsage?.balance ?? '...') : 50} cr
+                        {(() => {
+                          const models = isLoggedIn && imageUsage?.availableModels ? imageUsage.availableModels
+                            : [{ id: 'stability-core', creditsPerImage: 3 }, { id: 'gpt-image-1-mini', creditsPerImage: 2 },
+                              { id: 'imagen-4-fast', creditsPerImage: 3 }, { id: 'flux-1-1-pro', creditsPerImage: 7 },
+                              { id: 'imagen-4-standard', creditsPerImage: 7 }, { id: 'gpt-image-1-medium', creditsPerImage: 12 }];
+                          const m = models.find((x: any) => x.id === selectedModel);
+                          return m ? ` · ${(m as any).creditsPerImage}cr/img` : '';
                         })()}
                       </span>
-                    )}
-                  </button>
-                )}
 
-                {/* ── Job status cards ── */}
-                {currentImageJob && (currentImageJob.status === 'PENDING' || currentImageJob.status === 'PROCESSING') && (
-                  <div className="image-job-status-card" style={{
-                    background: 'rgba(99,85,220,0.06)', border: '1.5px solid rgba(99,85,220,0.2)',
-                    borderRadius: 14, padding: '16px', marginTop: 12,
-                    display: 'flex', alignItems: 'center', gap: 14,
-                  }}>
-                    <div style={{
-                      width: 36, height: 36, flexShrink: 0, borderRadius: '50%',
-                      border: '3px solid rgba(99,85,220,0.15)', borderTopColor: '#6355dc',
-                      animation: 'spin 0.9s linear infinite',
-                    }} />
-                    <div>
-                      <strong style={{ color: '#2d2d5e', display: 'block', marginBottom: 2, fontSize: 14 }}>
-                        {currentImageJob.status === 'PENDING' ? 'Queued — starting soon…' : 'Generating your image…'}
-                      </strong>
-                      <span style={{ fontSize: 12, color: '#8888bb' }}>
-                        Takes 10–30 sec. You can close this tab safely.
-                      </span>
+                      {isLoggedIn && imageUsage && imageUsage.balance < 15 && imageUsage.balance > 0 && (
+                        <a href="/pricing" style={{
+                          fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 999,
+                          background: 'linear-gradient(135deg, #f59e0b, #f97316)',
+                          color: '#fff', textDecoration: 'none', whiteSpace: 'nowrap',
+                        }}>Top up →</a>
+                      )}
+
+                      {/* Spacer */}
+                      <div style={{ flex: 1 }} />
+
+                      {/* char count */}
+                      {promptCharCount > 0 && (
+                        <span style={{ fontSize: 10.5, color: promptCharCount > 1800 ? '#dc2626' : '#aaaacc', fontWeight: 600 }}>
+                          {promptCharCount}/2k
+                        </span>
+                      )}
+
+                      {/* Generate button */}
+                      {!isLoggedIn ? (
+                        <button
+                          onClick={() => setShowLoginModal(true)}
+                          style={{
+                            padding: '7px 18px', borderRadius: 10, border: 'none', cursor: 'pointer',
+                            background: 'linear-gradient(135deg, #6355dc, #8b5cf6)', color: '#fff',
+                            fontWeight: 700, fontSize: 13, fontFamily: 'inherit', whiteSpace: 'nowrap',
+                          }}
+                        >🔒 Login — Free</button>
+                      ) : isLimitsExceeded() ? (
+                        <a href="/pricing" style={{
+                          padding: '7px 18px', borderRadius: 10,
+                          background: 'linear-gradient(135deg, #059669, #10b981)', color: '#fff',
+                          fontWeight: 700, fontSize: 13, textDecoration: 'none', whiteSpace: 'nowrap',
+                        }}>🚀 Get Credits</a>
+                      ) : (
+                        <button
+                          onClick={handleGenerateImage}
+                          disabled={!prompt.trim() || isGenerating || !selectedModel}
+                          style={{
+                            padding: '7px 18px', borderRadius: 10, border: 'none', cursor: 'pointer',
+                            background: !prompt.trim() || isGenerating || !selectedModel
+                              ? '#e2e2f0' : 'linear-gradient(135deg, #6355dc, #8b5cf6)',
+                            color: !prompt.trim() || isGenerating || !selectedModel ? '#aaa' : '#fff',
+                            fontWeight: 700, fontSize: 13, fontFamily: 'inherit',
+                            display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap',
+                          }}
+                        >
+                          {isGenerating ? (
+                            <>
+                              <span style={{
+                                width: 14, height: 14, border: '2px solid rgba(255,255,255,0.3)',
+                                borderTopColor: '#fff', borderRadius: '50%',
+                                animation: 'spin 0.75s linear infinite', display: 'inline-block',
+                              }} />
+                              Generating…
+                            </>
+                          ) : '✨ Generate'}
+                        </button>
+                      )}
                     </div>
-                    <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-                  </div>
-                )}
 
-                {currentImageJob && currentImageJob.status === 'FAILED' && (
-                  <div style={{
-                    background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.2)',
-                    borderRadius: 12, padding: '12px 14px', marginTop: 12,
-                    display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10,
-                  }}>
-                    <span style={{ fontSize: 13, color: '#dc2626' }}>
-                      ⚠️ Generation failed. {currentImageJob.errorMessage || 'Credits refunded.'}
-                    </span>
-                    <button onClick={() => setCurrentImageJob(null)} style={{
-                      background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)',
-                      borderRadius: 8, padding: '4px 10px', color: '#dc2626',
-                      fontSize: 12, fontWeight: 700, cursor: 'pointer', flexShrink: 0,
-                    }}>
-                      Dismiss
-                    </button>
+                    {/* Negative prompt — hidden by default */}
+                    <div id="neg-prompt-area" style={{ display: 'none', borderTop: '1px solid rgba(99,85,220,0.1)' }}>
+                      <textarea
+                        value={negativePrompt}
+                        onChange={(e) => setNegativePrompt(e.target.value)}
+                        placeholder="What to avoid... (e.g. blurry, distorted, low quality)"
+                        maxLength={500}
+                        style={{
+                          width: '100%', minHeight: 50, padding: '10px 16px', border: 'none', outline: 'none',
+                          background: '#f9f9ff', fontSize: 12.5, color: '#555', resize: 'none',
+                          fontFamily: 'inherit', boxSizing: 'border-box',
+                        }}
+                      />
+                    </div>
                   </div>
-                )}
+
+                  {/* ── Job status cards ── */}
+                  {currentImageJob && (currentImageJob.status === 'PENDING' || currentImageJob.status === 'PROCESSING') && (
+                    <div className="image-job-status-card" style={{
+                      background: 'rgba(99,85,220,0.06)', border: '1.5px solid rgba(99,85,220,0.2)',
+                      borderRadius: 14, padding: '14px 16px', marginTop: 10,
+                      display: 'flex', alignItems: 'center', gap: 14,
+                    }}>
+                      <div style={{
+                        width: 32, height: 32, flexShrink: 0, borderRadius: '50%',
+                        border: '3px solid rgba(99,85,220,0.15)', borderTopColor: '#6355dc',
+                        animation: 'spin 0.9s linear infinite',
+                      }} />
+                      <div>
+                        <strong style={{ color: '#2d2d5e', display: 'block', marginBottom: 2, fontSize: 13 }}>
+                          {currentImageJob.status === 'PENDING' ? 'Queued — starting soon…' : 'Generating your image…'}
+                        </strong>
+                        <span style={{ fontSize: 11.5, color: '#8888bb' }}>
+                          Takes 10–30 sec. You can safely close this tab.
+                        </span>
+                      </div>
+                      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+                    </div>
+                  )}
+
+                  {currentImageJob && currentImageJob.status === 'FAILED' && (
+                    <div style={{
+                      background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.2)',
+                      borderRadius: 12, padding: '12px 14px', marginTop: 10,
+                      display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10,
+                    }}>
+                      <span style={{ fontSize: 13, color: '#dc2626' }}>
+                        ⚠️ Generation failed. {currentImageJob.errorMessage || 'Credits refunded.'}
+                      </span>
+                      <button onClick={() => setCurrentImageJob(null)} style={{
+                        background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)',
+                        borderRadius: 8, padding: '4px 10px', color: '#dc2626',
+                        fontSize: 12, fontWeight: 700, cursor: 'pointer', flexShrink: 0,
+                      }}>Dismiss</button>
+                    </div>
+                  )}
 
               </div>
             </div>
