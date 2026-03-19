@@ -124,6 +124,10 @@ const AIVideoGenerationClient: React.FC = () => {
   const [history, setHistory] = useState<VideoJob[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [showHistory, setShowHistory] = useState(false);
+  const [modelAuto, setModelAuto] = useState(true);
+  const jobCardRef = useRef<HTMLDivElement>(null);
+  const historyRef = useRef<HTMLButtonElement>(null);
+  const upsellRef = useRef<HTMLDivElement>(null);
 
   // Polling
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
@@ -185,6 +189,7 @@ const AIVideoGenerationClient: React.FC = () => {
             headers: { Authorization: `Bearer ${token}` },
           });
           setHistory(histRes.data || []);
+          setShowHistory(true);
         }
       } catch {}
     }, 5000);
@@ -206,8 +211,10 @@ const AIVideoGenerationClient: React.FC = () => {
         const mods: VideoModel[] = modelsRes.data.models || [];
         setModels(mods);
         setCredits(creditsRes.data);
-        const wan = mods.find(m => m.id.toLowerCase().includes('wan'));
-        setSelectedModel(wan ? wan.id : mods[0]?.id || "");
+        if (modelAuto) {
+          const wan = mods.find(m => m.id.toLowerCase().includes('wan'));
+          setSelectedModel(wan ? wan.id : mods[0]?.id || "");
+        }
         const jobs: VideoJob[] = historyRes.data || [];
         setHistory(jobs);
         const inProgressJob = jobs.find(
@@ -226,6 +233,22 @@ const AIVideoGenerationClient: React.FC = () => {
   }, [isLoggedIn, startPolling]);
 
   useEffect(() => () => { if (pollingRef.current) clearInterval(pollingRef.current); }, []);
+
+  useEffect(() => {
+    const main = document.querySelector('main');
+    if (main) {
+      main.style.background = '#080B12';
+      main.style.margin = '0';
+      main.style.padding = '0';
+    }
+    return () => {
+      if (main) {
+        main.style.background = '';
+        main.style.margin = '';
+        main.style.padding = '';
+      }
+    };
+  }, []);  
 
   // ── Handlers ──────────────────────────────────────────────────────────────
 
@@ -246,7 +269,26 @@ const AIVideoGenerationClient: React.FC = () => {
     }
   };
 
-  const selectedModelData = models.find((m) => m.id === selectedModel);
+  const effectiveModel = useMemo(() => {
+    if (!modelAuto) return selectedModel;
+    // Pick model with lowest credit cost for current duration/audio
+    if (models.length === 0) {
+      // fallback for logged-out static preview
+      const costs: Record<string, number> = {
+        'wan2.5': 46, 'kling-v2.5-turbo': 64, 'kling-v2.6-pro': 64,
+        'veo3.1-fast': 92, 'veo3.1': 186,
+      };
+      return Object.entries(costs).sort((a, b) => a[1] - b[1])[0][0];
+    }
+    const sorted = [...models].sort((a, b) => {
+      const costA = a.creditCosts?.find((c: any) => c.duration === duration && c.audio === false)?.credits ?? 999;
+      const costB = b.creditCosts?.find((c: any) => c.duration === duration && c.audio === false)?.credits ?? 999;
+      return costA - costB;
+    });
+    return sorted[0]?.id ?? selectedModel;
+  }, [modelAuto, selectedModel, models, duration]);   
+
+  const selectedModelData = models.find((m) => m.id === effectiveModel);
   const creditsNeeded = useMemo(() => {
     if (!selectedModelData?.creditCosts) return 0;
     const entry = selectedModelData.creditCosts.find(
@@ -271,13 +313,13 @@ const AIVideoGenerationClient: React.FC = () => {
       if (genType === "text") {
         const res = await axios.post(
           `${API_BASE_URL}/api/video-gen/text-to-video`,
-          { model: selectedModel, prompt, negativePrompt: negativePrompt || undefined, durationSeconds: duration, audioEnabled, aspectRatio },
+          { model: effectiveModel, prompt, negativePrompt: negativePrompt || undefined, durationSeconds: duration, audioEnabled, aspectRatio },
           { headers: { Authorization: `Bearer ${token}` } }
         );
         job = res.data;
       } else {
         const formData = new FormData();
-        formData.append("model", selectedModel);
+        formData.append("model", effectiveModel);
         formData.append("prompt", prompt);
         formData.append("durationSeconds", String(duration));
         formData.append("audioEnabled", String(audioEnabled));
@@ -291,6 +333,9 @@ const AIVideoGenerationClient: React.FC = () => {
 
       setCurrentJob(job);
       startPolling(job.falRequestId);
+      setTimeout(() => {
+        jobCardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);      
     } catch (err: any) {
       setError(err.response?.data || err.message || "Failed to submit generation.");
     } finally {
@@ -367,7 +412,7 @@ const AIVideoGenerationClient: React.FC = () => {
 
   const currentModelCanAudio = selectedModelData?.supportsAudio ?? false;
   const maxDuration = 10;
-
+  
   // ─────────────────────────────────────────────────────────────────────────
  if (isPageLoading) {
     return (
@@ -401,18 +446,25 @@ const AIVideoGenerationClient: React.FC = () => {
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+        body { overflow-x: hidden; }
+
+        main { background: #080B12 !important; margin: 0 !important; padding: 0 !important; }
+        
         .vg-page {
           font-family: 'DM Sans', sans-serif;
           background: #080B12;
           min-height: 100vh;
           color: #E2E8F0;
-          overflow-x: hidden;
           position: relative;
+          overflow: hidden;
+          isolation: isolate;
+          margin: 0;
         }
 
         /* ── Background ── */
         .vg-bg {
-          position: fixed; inset: 0; z-index: 0; pointer-events: none;
+          position: absolute; inset: 0; z-index: 0; pointer-events: none;
+          will-change: transform;
           background:
             radial-gradient(ellipse 80% 50% at 20% -10%, rgba(99,102,241,0.18) 0%, transparent 60%),
             radial-gradient(ellipse 60% 40% at 80% 110%, rgba(16,185,129,0.12) 0%, transparent 60%),
@@ -420,7 +472,8 @@ const AIVideoGenerationClient: React.FC = () => {
         }
 
         .vg-grid {
-          position: fixed; inset: 0; z-index: 0; pointer-events: none;
+          position: absolute; inset: 0; z-index: 0; pointer-events: none;
+          will-change: transform;
           background-image: linear-gradient(rgba(99,102,241,0.04) 1px, transparent 1px),
             linear-gradient(90deg, rgba(99,102,241,0.04) 1px, transparent 1px);
           background-size: 48px 48px;
@@ -472,8 +525,6 @@ const AIVideoGenerationClient: React.FC = () => {
           background: rgba(15,23,42,0.8);
           border: 1px solid rgba(99,102,241,0.2);
           border-radius: 24px;
-          backdrop-filter: blur(20px);
-          overflow: hidden;
           margin-bottom: 24px;
           box-shadow: 0 24px 80px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
         }
@@ -825,7 +876,7 @@ const AIVideoGenerationClient: React.FC = () => {
         /* ── Login modal ── */
         .vg-modal-overlay {
           position: fixed; inset: 0; background: rgba(0,0,0,0.7);
-          backdrop-filter: blur(8px); z-index: 1000;
+          z-index: 1000;
           display: flex; align-items: center; justify-content: center; padding: 20px;
         }
         .vg-modal {
@@ -866,7 +917,7 @@ const AIVideoGenerationClient: React.FC = () => {
         @keyframes pulse {
           0%, 100% { opacity: 1; transform: scale(1); }
           50% { opacity: 0.5; transform: scale(0.85); }
-        }
+        }     
 
         /* ── Responsive ── */
         @media (max-width: 768px) {
@@ -934,81 +985,206 @@ const AIVideoGenerationClient: React.FC = () => {
           <div className="vg-card">
             <div className="vg-card-inner">
 
-              {/* Gen type toggle */}
-              <div className="vg-toggle">
-                {GENERATION_TYPES.map((t) => (
-                  <button
-                    key={t.value}
-                    className={`vg-toggle-btn ${genType === t.value ? "active" : ""}`}
-                    onClick={() => setGenType(t.value as "text" | "image")}
-                  >
-                    {t.icon} {t.label}
-                  </button>
-                ))}
-              </div>
-
-              {/* Prompt */}
-              <label className="vg-label">
-                {genType === "text" ? "Describe your video" : "Describe the motion & action"}
-              </label>
+              {/* Prompt textarea */}
               <textarea
                 className="vg-textarea"
                 placeholder={
                   genType === "text"
-                    ? "e.g. A golden retriever running through a sunlit meadow, cinematic slow motion, shallow depth of field..."
-                    : "e.g. The character slowly turns toward the camera, dramatic lighting shifts, wind blowing through hair..."
+                    ? "e.g. A golden retriever running through a sunlit meadow, cinematic slow motion..."
+                    : "e.g. The character slowly turns toward the camera, dramatic lighting shifts..."
                 }
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 disabled={!isLoggedIn || isSubmitting}
                 maxLength={2000}
+                style={{ minHeight: 90, marginBottom: 0 }}
               />
-              {/* Prompt suggestions — inline scrollable */}
-              <div style={{ display: 'flex', gap: 6, marginTop: 6, overflowX: 'auto', paddingBottom: 2, scrollbarWidth: 'none' }}>
-                {[
-                  "Aerial neon city at night",
-                  "Golden retriever slow motion",
-                  "Ocean waves at sunset",
-                  "Abstract particle explosion",
-                ].map((suggestion) => (
-                  <button
-                    key={suggestion}
-                    onClick={() => setPrompt(suggestion)}
-                    style={{
-                      padding: '4px 10px', borderRadius: 999, border: '1px solid rgba(99,102,241,0.22)',
-                      background: 'rgba(99,102,241,0.08)', color: '#6366F1',
-                      fontSize: 11, fontWeight: 500, cursor: 'pointer',
-                      fontFamily: "'DM Sans', sans-serif", transition: 'all 0.15s',
-                      whiteSpace: 'nowrap', flexShrink: 0,
-                    }}
-                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(99,102,241,0.18)'}
-                    onMouseLeave={e => e.currentTarget.style.background = 'rgba(99,102,241,0.08)'}
-                  >
-                    {suggestion}
-                  </button>
-                ))}
-              </div>             
-              {isLoggedIn && (
-                <div style={{ textAlign: "right", fontSize: "0.72rem", color: "#334155", marginTop: 3, marginBottom: 10 }}>
-                  {prompt.length} / 2,000
-                </div>
-              )}
 
-              {/* Image upload — for image-to-video */}
+              {/* ── Compact toolbar ── */}
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: 6, marginTop: 8,
+                flexWrap: 'wrap',
+              }}>
+              
+                {/* Gen type */}
+                <div style={{ display: 'flex', background: 'rgba(0,0,0,0.3)', borderRadius: 10, padding: 2, border: '1px solid rgba(99,102,241,0.15)', flexShrink: 0 }}>
+                  {GENERATION_TYPES.map((t) => (
+                    <button
+                      key={t.value}
+                      onClick={() => setGenType(t.value as "text" | "image")}
+                      style={{
+                        padding: '6px 12px', borderRadius: 8, border: 'none', cursor: 'pointer',
+                        fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600,
+                        background: genType === t.value ? 'linear-gradient(135deg, #6366F1, #4F46E5)' : 'transparent',
+                        color: genType === t.value ? '#fff' : '#64748B',
+                        transition: 'all 0.2s', whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {t.icon} {t.label}
+                    </button>
+                  ))}
+                </div>
+                
+                {/* Duration */}
+                <div style={{ display: 'flex', background: 'rgba(0,0,0,0.3)', borderRadius: 10, padding: 2, border: '1px solid rgba(99,102,241,0.15)', flexShrink: 0 }}>
+                  {DURATION_OPTIONS.map((d) => (
+                    <button
+                      key={d.value}
+                      onClick={() => setDuration(d.value)}
+                      disabled={!isLoggedIn}
+                      style={{
+                        padding: '6px 12px', borderRadius: 8, border: 'none', cursor: 'pointer',
+                        fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600,
+                        background: duration === d.value ? 'rgba(99,102,241,0.3)' : 'transparent',
+                        color: duration === d.value ? '#818CF8' : '#64748B',
+                        transition: 'all 0.2s', opacity: !isLoggedIn ? 0.5 : 1,
+                      }}
+                    >
+                      {d.label}
+                    </button>
+                  ))}
+                </div>
+                
+                {/* Aspect ratio dropdown */}
+                <select
+                  value={aspectRatio}
+                  onChange={(e) => setAspectRatio(e.target.value)}
+                  disabled={!isLoggedIn}
+                  style={{
+                    padding: '7px 28px 7px 10px', borderRadius: 10,
+                    background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(99,102,241,0.2)',
+                    color: '#CBD5E1', fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600,
+                    cursor: 'pointer', appearance: 'none', flexShrink: 0,
+                    backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%236366F1' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")",
+                    backgroundRepeat: 'no-repeat', backgroundPosition: 'right 8px center',
+                  }}
+                >
+                  {ASPECT_RATIOS.map((ar) => (
+                    <option key={ar.value} value={ar.value} style={{ background: '#0F172A' }}>
+                      {ar.icon} {ar.label} — {ar.desc.split(' ')[0]}
+                    </option>
+                  ))}
+                </select>
+                
+                {/* Model dropdown */}
+                <select
+                  value={modelAuto ? '__auto__' : effectiveModel}
+                  onChange={(e) => {
+                    if (e.target.value === '__auto__') {
+                      setModelAuto(true);
+                    } else {
+                      setModelAuto(false);
+                      setSelectedModel(e.target.value);
+                    }
+                  }}
+                  style={{
+                    padding: '7px 28px 7px 10px', borderRadius: 10,
+                    background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(99,102,241,0.2)',
+                    color: '#CBD5E1', fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600,
+                    cursor: 'pointer', appearance: 'none', flexShrink: 0,
+                    backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%236366F1' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")",
+                    backgroundRepeat: 'no-repeat', backgroundPosition: 'right 8px center',
+                    flex: '1 1 auto', minWidth: 140, maxWidth: 220,
+                  }}
+                >
+                  <option value="__auto__" style={{ background: '#0F172A' }}>✨ Auto Model (Cheapest for you)</option>
+                  {(isLoggedIn ? models : STATIC_MODELS_PREVIEW.map(m => ({ id: m.id, displayName: m.name, creditCosts: [{ duration: 5, audio: false, credits: m.cr }], defaultResolution: m.res, supportsAudio: false, description: '' }))).map((m: any) => {
+                    const cost = m.creditCosts?.find((c: any) => c.duration === duration && c.audio === false)?.credits
+                      ?? m.creditCosts?.[0]?.credits ?? '?';
+                    const canAfford = !isLoggedIn || !credits || typeof cost !== 'number' || credits.balance >= cost;
+                    return (
+                      <option key={m.id} value={m.id} style={{ background: '#0F172A' }}>
+                        {!canAfford ? '👑 ' : ''}{m.displayName} · {cost}cr · {m.defaultResolution}{!canAfford ? ' — insufficient credits' : ''}
+                      </option>
+                    );
+                  })}
+                </select>
+
+                {(() => {
+                  const cost = selectedModelData?.creditCosts?.find(
+                    (c: any) => c.duration === duration && c.audio === false
+                  )?.credits ?? 0;
+                  const canAfford = !isLoggedIn || !credits || credits.balance >= cost;
+                  if (canAfford || !isLoggedIn) return null;
+                  return (
+                    <button
+                      onClick={() => upsellRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
+                      title="Not enough credits — get more"
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: 5,
+                        padding: '6px 12px', borderRadius: 10, border: '1px solid rgba(245,158,11,0.35)',
+                        background: 'rgba(245,158,11,0.08)', color: '#F59E0B',
+                        fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600,
+                        cursor: 'pointer', flexShrink: 0, transition: 'all 0.2s',
+                        whiteSpace: 'nowrap',
+                      }}
+                      onMouseEnter={e => e.currentTarget.style.background = 'rgba(245,158,11,0.18)'}
+                      onMouseLeave={e => e.currentTarget.style.background = 'rgba(245,158,11,0.08)'}
+                    >
+                      👑 Get credits
+                    </button>
+                  );
+                })()}                
+                
+                {/* Audio toggle — only if model supports it */}
+                {(isLoggedIn ? (models.find(m => m.id === effectiveModel)?.supportsAudio) : false) && (
+                  <label style={{ display: 'flex', alignItems: 'center', gap: 5, cursor: 'pointer', flexShrink: 0 }}
+                    title="AI-generated audio (2× credits)">
+                    <div className="vg-switch" style={{ width: 36, height: 20 }}>
+                      <input type="checkbox" checked={audioEnabled} onChange={(e) => setAudioEnabled(e.target.checked)} />
+                      <div className="vg-switch-track" />
+                      <div className="vg-switch-thumb" style={{ width: 14, height: 14, top: 2, left: 2 }} />
+                    </div>
+                    <span style={{ fontSize: 11, color: '#64748B', fontFamily: "'DM Sans', sans-serif" }}>🎵</span>
+                  </label>
+                )}
+
+                {/* Prompt suggestions button — moved into toolbar as a subtle icon */}
+                <div style={{ display: 'flex', gap: 4, overflowX: 'auto', scrollbarWidth: 'none', flexShrink: 1 }}>
+                  {["Aerial neon city", "Golden retriever", "Ocean sunset", "Particle blast"].map((s, i) => (
+                    <button key={i}
+                      onClick={() => setPrompt(["Aerial neon city at night", "Golden retriever slow motion", "Ocean waves at sunset", "Abstract particle explosion"][i])}
+                      style={{
+                        padding: '5px 9px', borderRadius: 999, border: '1px solid rgba(99,102,241,0.2)',
+                        background: 'rgba(99,102,241,0.07)', color: '#6366F1',
+                        fontSize: 10.5, fontWeight: 500, cursor: 'pointer',
+                        fontFamily: "'DM Sans', sans-serif", whiteSpace: 'nowrap', flexShrink: 0,
+                      }}
+                    >{s}</button>
+                  ))}
+                </div>
+                
+                {/* Spacer */}
+                <div style={{ flex: 1 }} />
+                
+                {/* Generate button — compact */}
+                {!isLoggedIn ? (
+                  <button className="vg-generate-btn" onClick={() => setShowLoginModal(true)}
+                    style={{ width: 'auto', padding: '8px 20px', fontSize: '0.9rem', borderRadius: 10, flexShrink: 0 }}>
+                    ✨ Generate Free
+                  </button>
+                ) : (
+                  <button className="vg-generate-btn"
+                    onClick={handleGenerate}
+                    disabled={isSubmitting || !prompt.trim() || (genType === "image" && !imageFile) || (credits?.balance === 0)  || (!!currentJob && (currentJob.status === 'PENDING' || currentJob.status === 'PROCESSING'))}
+                    style={{ width: 'auto', padding: '8px 20px', fontSize: '0.9rem', borderRadius: 10, flexShrink: 0 }}>
+                    {isSubmitting ? "Submitting…" : (currentJob && (currentJob.status === 'PENDING' || currentJob.status === 'PROCESSING')) ? "⏳ Generating…" : "✨ Generate"}
+                  </button>
+                )}
+              </div>
+              
+              {/* Image upload — for image-to-video (kept below toolbar) */}
               {genType === "image" && (
-                <div style={{ marginBottom: 20 }}>
-                  <label className="vg-label">Reference image</label>
+                <div style={{ marginTop: 12 }}>
                   {!imagePreview ? (
-                    <div
-                      className="vg-dropzone"
-                      ref={dropRef}
+                    <div className="vg-dropzone" ref={dropRef}
                       onDragOver={(e) => { e.preventDefault(); dropRef.current?.classList.add("drag-over"); }}
                       onDragLeave={() => dropRef.current?.classList.remove("drag-over")}
                       onDrop={(e) => { dropRef.current?.classList.remove("drag-over"); handleImageDrop(e); }}
                       onClick={() => fileInputRef.current?.click()}
-                    >
-                      <div className="vg-dropzone-icon">🖼️</div>
-                      <p>Drop your image here or <span style={{ color: "#6366F1" }}>click to browse</span></p>
+                      style={{ padding: '20px 16px' }}>
+                      <div className="vg-dropzone-icon" style={{ fontSize: '1.8rem' }}>🖼️</div>
+                      <p>Drop image or <span style={{ color: "#6366F1" }}>click to browse</span></p>
                       <small>PNG, JPG, WEBP — up to 10MB</small>
                       <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageSelect} style={{ display: "none" }} />
                     </div>
@@ -1021,338 +1197,130 @@ const AIVideoGenerationClient: React.FC = () => {
                 </div>
               )}
 
-              {/* Options row */}
-              <div className="vg-options">
-                {/* Duration */}
-                <div className="vg-option-group">
-                  <label className="vg-label">Duration</label>
-                  <div className="vg-pill-group">
-                    {DURATION_OPTIONS.map((d) => (
-                      <button
-                        key={d.value}
-                        className={`vg-pill ${duration === d.value ? "active" : ""}`}
-                        onClick={() => setDuration(d.value)}
-                        disabled={d.value > maxDuration || !isLoggedIn}
-                      >
-                        {d.label}
-                        {d.value > maxDuration && <span style={{ fontSize: "0.65rem", display: "block", color: "#4B5563" }}>Upgrade</span>}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Aspect ratio */}
-                <div className="vg-option-group">
-                  <label className="vg-label">Aspect Ratio</label>
-                  <div className="vg-ar-group">
-                    {ASPECT_RATIOS.map((ar) => (
-                      <button
-                        key={ar.value}
-                        className={`vg-ar ${aspectRatio === ar.value ? "active" : ""}`}
-                        onClick={() => setAspectRatio(ar.value)}
-                        disabled={!isLoggedIn}
-                        title={ar.desc}
-                      >
-                        <span>{ar.icon}</span>
-                        <span>{ar.label}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Resolution display */}
-                <div className="vg-option-group">
-                  <label className="vg-label">Resolution</label>
-                  <div style={{ padding: "10px 14px", background: "rgba(0,0,0,0.2)", borderRadius: 12, border: "1.5px solid rgba(99,102,241,0.15)", color: "#64748B", fontSize: "0.9rem" }}>
-                    {selectedModelData?.defaultResolution || "1080p"} · MP4
-                  </div>
-                </div>
-              </div>
-
-              {/* Audio toggle */}
-              {currentModelCanAudio && (
-                <div className="vg-audio-row">
-                  <div className="vg-audio-info">
-                    <h4>🎵 Native Audio</h4>
-                    <p>AI-generated sound effects & ambient audio (2× credits)</p>
-                  </div>
-                  <label className="vg-switch">
-                    <input type="checkbox" checked={audioEnabled} onChange={(e) => setAudioEnabled(e.target.checked)} disabled={!isLoggedIn} />
-                    <div className="vg-switch-track" />
-                    <div className="vg-switch-thumb" />
-                  </label>
-                </div>
-              )}
-
-              {/* Model selector */}
-              <>
-                <label className="vg-label">AI Model</label>
-                {!isLoggedIn ? (
-                  <>
-                    <div style={{ display: 'flex', flexWrap: 'nowrap', gap: 6, marginBottom: 8, overflowX: 'auto', paddingBottom: 4, scrollbarWidth: 'none' }}>
-                      {STATIC_MODELS_PREVIEW.map((m) => (
-                        <button
-                          key={m.id}
-                          onClick={() => setSelectedModel(m.id)}
-                          style={{
-                            display: 'flex', alignItems: 'center', gap: 6,
-                            padding: '7px 14px', borderRadius: 999, cursor: 'pointer',
-                            border: `2px solid ${selectedModel === m.id ? '#6366F1' : 'rgba(99,102,241,0.2)'}`,
-                            background: selectedModel === m.id
-                              ? 'linear-gradient(135deg, #6366F1, #4F46E5)'
-                              : 'rgba(0,0,0,0.2)',
-                            color: selectedModel === m.id ? '#fff' : '#64748B',
-                            fontWeight: selectedModel === m.id ? 700 : 500,
-                            fontSize: 13,
-                            fontFamily: "'DM Sans', sans-serif",
-                            transition: 'all 0.18s',
-                            boxShadow: selectedModel === m.id ? '0 2px 10px rgba(99,102,241,0.35)' : 'none',
-                          }}
-                        >
-                          <span>{m.name}</span>
-                          <span style={{
-                            fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 999,
-                            background: selectedModel === m.id ? 'rgba(255,255,255,0.2)' : 'rgba(99,102,241,0.12)',
-                            color: selectedModel === m.id ? '#fff' : '#818CF8',
-                          }}>
-                            {m.cr}cr
-                          </span>
-                          <span style={{
-                            fontSize: 11, fontWeight: 500,
-                            color: selectedModel === m.id ? 'rgba(255,255,255,0.7)' : '#475569',
-                          }}>
-                            {m.res}
-                          </span>
-                        </button>
-                      ))}
-                    </div>
-                    <p style={{ fontSize: 12, color: '#6366F1', marginBottom: 20, fontWeight: 600 }}>
-                      🔒 Login to generate · Plans from $15/mo →{' '}
-                      <a href="/pricing" style={{ color: '#818CF8', textDecoration: 'underline' }}>View Plans</a>
-                    </p>
-                  </>
-                ) : models.length > 0 ? (
-                  <>
-                    <div style={{ display: 'flex', flexWrap: 'nowrap', gap: 6, marginBottom: 8, overflowX: 'auto', paddingBottom: 4, scrollbarWidth: 'none' }}>
-                      {models.map((model) => {
-                        const matchingCost = model.creditCosts?.find(
-                          (c: any) => c.duration === duration && c.audio === (audioEnabled && model.supportsAudio)
-                        );
-                        const finalCost = matchingCost?.credits ?? 0;
-                        return (
-                          <button
-                            key={model.id}
-                            onClick={() => setSelectedModel(model.id)}
-                            style={{
-                              display: 'flex', alignItems: 'center', gap: 6,
-                              padding: '7px 14px', borderRadius: 999, cursor: 'pointer',
-                              border: `2px solid ${selectedModel === model.id ? '#6366F1' : 'rgba(99,102,241,0.2)'}`,
-                              background: selectedModel === model.id
-                                ? 'linear-gradient(135deg, #6366F1, #4F46E5)'
-                                : 'rgba(0,0,0,0.2)',
-                              color: selectedModel === model.id ? '#fff' : '#64748B',
-                              fontWeight: selectedModel === model.id ? 700 : 500,
-                              fontSize: 13,
-                              fontFamily: "'DM Sans', sans-serif",
-                              transition: 'all 0.18s',
-                              boxShadow: selectedModel === model.id ? '0 2px 10px rgba(99,102,241,0.35)' : 'none',
-                            }}
-                          >
-                            <span>{model.displayName}</span>
-                            <span style={{
-                              fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 999,
-                              background: selectedModel === model.id ? 'rgba(255,255,255,0.2)' : 'rgba(99,102,241,0.12)',
-                              color: selectedModel === model.id ? '#fff' : '#818CF8',
-                            }}>
-                              {finalCost}cr
-                            </span>
-                            <span style={{
-                              fontSize: 11, fontWeight: 500,
-                              color: selectedModel === model.id ? 'rgba(255,255,255,0.7)' : '#475569',
-                            }}>
-                              {model.defaultResolution}
-                            </span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                    {selectedModelData && (
-                      <div style={{
-                        marginBottom: 12,
-                        padding: '8px 12px',
-                        background: 'rgba(99,102,241,0.07)',
-                        border: '1px solid rgba(99,102,241,0.15)',
-                        borderRadius: 10,
-                        fontSize: '0.82rem', color: '#64748B', lineHeight: 1.5,
-                      }}>
-                        {selectedModelData.description}
-                      </div>
-                    )}
-                  </>
-                ) : null}
-              </>
-
-              {/* Advanced: negative prompt */}
-              <details style={{ marginBottom: 12 }}>
-                <summary className="vg-advanced-toggle">
+              {/* Advanced options */}
+              <details style={{ marginTop: 10 }}>
+                <summary className="vg-advanced-toggle" style={{ marginBottom: 0 }}>
                   <span>⚙️ Advanced options</span>
                   <span style={{ marginLeft: "auto", fontSize: "0.75rem" }}>Optional</span>
                 </summary>
-                <div style={{ marginTop: 12 }}>
+                <div style={{ marginTop: 10 }}>
                   <label className="vg-label">Negative prompt — what to avoid</label>
-                  <textarea
-                    className="vg-textarea"
-                    style={{ minHeight: 70 }}
+                  <textarea className="vg-textarea" style={{ minHeight: 60 }}
                     placeholder="e.g. blurry, low quality, distorted, watermark..."
-                    value={negativePrompt}
-                    onChange={(e) => setNegativePrompt(e.target.value)}
-                    disabled={!isLoggedIn}
-                    maxLength={500}
-                  />
+                    value={negativePrompt} onChange={(e) => setNegativePrompt(e.target.value)}
+                    disabled={!isLoggedIn} maxLength={500} />
                 </div>
               </details>
-
-              {/* Credits info */}
+            
+              {/* Credits / status strip */}
               {isLoggedIn && credits && hasPlan && (
                 <div style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  padding: '9px 14px', background: 'rgba(0,0,0,0.2)',
-                  border: '1px solid rgba(99,102,241,0.15)', borderRadius: 10, marginBottom: 10,
+                  padding: '7px 12px', background: 'rgba(0,0,0,0.2)',
+                  border: '1px solid rgba(99,102,241,0.12)', borderRadius: 8, marginTop: 10,
                   flexWrap: 'wrap', gap: 6,
                 }}>
-                  <span style={{ fontSize: 12, color: '#64748B' }}>
+                  <span style={{ fontSize: 11.5, color: '#64748B' }}>
                     <span style={{ color: '#818CF8', fontWeight: 600 }}>{credits.balance.toLocaleString()}</span> credits · {credits.planType}
                   </span>
-                  {selectedModel && (
-                    <span style={{ fontSize: 12, color: '#475569' }}>
-                      Cost: <strong style={{ color: '#818CF8' }}>{creditsNeeded} cr</strong>
-                    </span>
-                  )}
+                  <span style={{ fontSize: 11.5, color: '#475569' }}>
+                    Cost: <strong style={{ color: '#818CF8' }}>{creditsNeeded} cr</strong>
+                  </span>
+                </div>
+              )}
+
+              {!isLoggedIn && (
+                <div style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  padding: '7px 12px', background: 'rgba(0,0,0,0.15)',
+                  border: '1px solid rgba(99,102,241,0.1)', borderRadius: 8, marginTop: 10,
+                }}>
+                  <span style={{ fontSize: 11.5, color: '#64748B' }}>50 free credits on signup</span>
+                  <span style={{ fontSize: 11.5, color: '#475569' }}>
+                    Est. cost: <strong style={{ color: '#818CF8' }}>
+                      {selectedModel === 'wan2.5' ? (duration === 5 ? '46' : '92') :
+                       selectedModel === 'kling-v2.5-turbo' ? (duration === 5 ? '64' : '130') :
+                       selectedModel === 'kling-v2.6-pro' ? (duration === 5 ? '64' : '130') :
+                       selectedModel === 'veo3.1-fast' ? (duration === 5 ? '92' : '186') :
+                       selectedModel === 'veo3.1' ? (duration === 5 ? '186' : '370') :
+                       duration === 5 ? '46' : '92'} cr
+                    </strong>
+                  </span>
+                </div>
+              )}
+
+              {/* Low credits warning */}
+              {isLoggedIn && credits && credits.balance < 100 && credits.balance > 0 && (
+                <div style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  padding: '7px 12px', background: 'rgba(245,158,11,0.07)',
+                  border: '1px solid rgba(245,158,11,0.22)', borderRadius: 8, marginTop: 8, gap: 10,
+                }}>
+                  <span style={{ fontSize: 11.5, color: '#F59E0B', fontWeight: 600 }}>⚡ {credits.balance} credits left</span>
+                  <a href="/pricing" style={{
+                    fontSize: 11, fontWeight: 700, color: '#F59E0B', textDecoration: 'none',
+                    padding: '3px 9px', borderRadius: 6, background: 'rgba(245,158,11,0.15)',
+                    border: '1px solid rgba(245,158,11,0.3)',
+                  }}>Top Up →</a>
+                </div>
+              )}
+
+              {/* Out of credits */}
+              {isLoggedIn && credits && credits.balance === 0 && (
+                <div style={{
+                  background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)',
+                  borderRadius: 10, padding: '14px', marginTop: 10, textAlign: 'center',
+                }}>
+                  <p style={{ fontSize: 13.5, color: '#FCA5A5', fontWeight: 600, marginBottom: 6 }}>🪫 Out of credits</p>
+                  <a href="/pricing" style={{
+                    display: 'inline-block', padding: '9px 22px', borderRadius: 9,
+                    background: 'linear-gradient(135deg, #6366F1, #4F46E5)', color: 'white',
+                    fontWeight: 700, fontSize: 13, textDecoration: 'none',
+                  }}>View Plans & Top Up →</a>
                 </div>
               )}
 
               {/* Error */}
               <AnimatePresence>
                 {error && (
-                  <motion.div className="vg-error" initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+                  <motion.div className="vg-error" style={{ marginTop: 10, marginBottom: 0 }}
+                    initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
                     <span>⚠️</span> {error}
                   </motion.div>
                 )}
               </AnimatePresence>
-
-              {!isLoggedIn && (
-                <div className="vg-credits-box" style={{ marginBottom: 20 }}>
-                  <div className="vg-credits-row">
-                    <span className="vg-credits-label">Your free credits</span>
-                    <span className="vg-credits-value">50 credits</span>
-                  </div>
-                  <div className="vg-credits-bar">
-                    <div className="vg-credits-fill" style={{ width: '100%' }} />
-                  </div>
-                  <div className="vg-credits-cost">
-                    <span>This generation will cost approx.</span>
-                    <strong>
-                      {selectedModel === 'wan2.5'           ? (duration === 5 ? '46'  : '92')  :
-                       selectedModel === 'kling-v2.5-turbo' ? (duration === 5 ? '64'  : '130') :
-                       selectedModel === 'kling-v2.6-pro'   ? (duration === 5 ? '64'  : '130') :
-                       selectedModel === 'veo3.1-fast'      ? (duration === 5 ? '92'  : '186') :
-                       selectedModel === 'veo3.1'           ? (duration === 5 ? '186' : '370') :
-                       duration === 5 ? '46' : '92'} credits
-                    </strong>
-                  </div>
-                </div>
-              )}    
-
-              {isLoggedIn && credits && credits.balance < 100 && credits.balance > 0 && (
-                <div style={{
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  padding: '8px 12px', background: 'rgba(245,158,11,0.07)',
-                  border: '1px solid rgba(245,158,11,0.22)', borderRadius: 9, marginBottom: 10, gap: 10,
-                }}>
-                  <span style={{ fontSize: 12, color: '#F59E0B', fontWeight: 600 }}>
-                    ⚡ {credits.balance} credits left
-                  </span>
-                  <a href="/pricing" style={{
-                    fontSize: 11, fontWeight: 700, color: '#F59E0B', textDecoration: 'none',
-                    padding: '4px 10px', borderRadius: 6, background: 'rgba(245,158,11,0.15)',
-                    border: '1px solid rgba(245,158,11,0.3)', whiteSpace: 'nowrap',
-                  }}>Top Up →</a>
-                </div>
-              )} 
-
-              {isLoggedIn && credits && credits.balance === 0 && (
-                <div style={{
-                  background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)',
-                  borderRadius: 12, padding: '16px', marginBottom: 16, textAlign: 'center',
-                }}>
-                  <p style={{ fontSize: 14, color: '#FCA5A5', fontWeight: 600, marginBottom: 8 }}>
-                    🪫 You're out of credits
-                  </p>
-                  <p style={{ fontSize: 12.5, color: '#64748B', marginBottom: 14 }}>
-                    Upgrade to keep generating — plans start at $15/mo
-                  </p>
-                  <a href="/pricing" style={{
-                    display: 'inline-block', padding: '11px 28px', borderRadius: 10,
-                    background: 'linear-gradient(135deg, #6366F1, #4F46E5)', color: 'white',
-                    fontWeight: 700, fontSize: 14, textDecoration: 'none',
-                  }}>
-                    View Plans & Top Up →
-                  </a>
-                </div>
-              )}                                     
-
-              {/* Generate / Login / Upgrade button */}
-              {!isLoggedIn ? (
-                <div>
-                  <button className="vg-generate-btn" onClick={() => setShowLoginModal(true)}>
-                    ✨ Generate Free — No Card Required
-                  </button>
-                  <p style={{
-                    textAlign: 'center', fontSize: 12, color: '#475569',
-                    marginTop: 10, fontFamily: "'DM Sans', sans-serif"
-                  }}>
-                    Free account · 50 credits instantly · No credit card
-                  </p>
-                </div>
-              ) : (
-                
+              {/* Scroll to history nudge — shown when job is processing or history exists */}
+              {isLoggedIn && (currentJob || history.length > 0) && (
                 <button
-                  className="vg-generate-btn"
-                  onClick={handleGenerate}
-                  disabled={isSubmitting || !prompt.trim() || (genType === "image" && !imageFile) || (isLoggedIn && credits?.balance === 0)}
+                  onClick={() => historyRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
+                  style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                    width: '100%', marginTop: 8, padding: '7px 12px',
+                    background: 'transparent', border: '1px dashed rgba(99,102,241,0.45)',
+                    borderRadius: 8, cursor: 'pointer', transition: 'all 0.2s',
+                    fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#818CF8',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.borderColor = 'rgba(99,102,241,0.5)';
+                    e.currentTarget.style.color = '#A5B4FC';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.borderColor = 'rgba(99,102,241,0.25)';
+                    e.currentTarget.style.color = '#818CF8';
+                  }}
                 >
-                  {isSubmitting ? "Submitting…" : "✨ Generate Video"}
+                  🕒 {history.length > 0 ? `${history.length} video${history.length > 1 ? 's' : ''} in history` : 'Generation in progress'} — scroll to results ↓
                 </button>
+              )}              
+              
+              {!isLoggedIn && (
+                <p style={{ textAlign: 'center', fontSize: 11.5, color: '#475569', marginTop: 8 }}>
+                  Free account · 50 credits instantly · No credit card
+                </p>
               )}
             </div>
           </div>
-        )}
-
-        {isLoggedIn && credits && credits.planType === 'FREE' && (
-          <div style={{
-            background: 'rgba(15,23,42,0.8)', border: '1px solid rgba(99,102,241,0.25)',
-            borderRadius: 20, padding: '36px 28px', textAlign: 'center', marginBottom: 24,
-          }}>
-            <div style={{ fontSize: '2.8rem', marginBottom: 12 }}>🎬</div>
-            <h3 style={{ fontFamily: "'Syne', sans-serif", fontSize: '1.5rem', color: '#E2E8F0', marginBottom: 8 }}>
-              Get more credits for AI Videos!
-            </h3>
-            <p style={{ color: '#64748B', fontSize: 14, maxWidth: 380, margin: '0 auto 22px', lineHeight: 1.6 }}>
-              Premium Plans start at just $15/month and includes 300 credits!
-            </p>
-            <a href="/pricing" style={{
-              display: 'inline-block', padding: '14px 36px', borderRadius: 12,
-              background: 'linear-gradient(135deg, #6366F1, #4F46E5)', color: 'white',
-              fontWeight: 700, fontSize: 15, textDecoration: 'none',
-              boxShadow: '0 8px 28px rgba(99,102,241,0.4)',
-            }}>
-              Unlock AI Video — $15/mo →
-            </a>
-            <p style={{ fontSize: 11.5, color: '#334155', marginTop: 12 }}>
-              · Instant access · All AI models included
-            </p>
-          </div>
-        )}      
+        )}     
 
         {/* ── Demo Video ── */}
         <div style={{ marginBottom: 36 }}>
@@ -1431,7 +1399,7 @@ const AIVideoGenerationClient: React.FC = () => {
         {/* ── Current job card ── */}
         <AnimatePresence>
           {currentJob && (
-            <motion.div className="vg-job-card" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+            <motion.div ref={jobCardRef} className="vg-job-card" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
               <div className="vg-job-header">
                 <div>
                   <div className="vg-job-title">Generation {currentJob.id}</div>
@@ -1510,7 +1478,7 @@ const AIVideoGenerationClient: React.FC = () => {
         {/* ── History ── */}
         {isLoggedIn && history.length > 0 && (
           <>
-            <button className="vg-history-toggle" onClick={() => setShowHistory(!showHistory)}>
+            <button ref={historyRef} className="vg-history-toggle" onClick={() => setShowHistory(!showHistory)}>
               <span>🕒 Generation History ({history.length})</span>
               <span>{showHistory ? "▲" : "▼"}</span>
             </button>
@@ -1590,6 +1558,32 @@ const AIVideoGenerationClient: React.FC = () => {
             </AnimatePresence>
           </>
         )}
+
+        {isLoggedIn && credits && credits.planType === 'FREE' && (
+          <div ref={upsellRef} style={{
+            background: 'rgba(15,23,42,0.8)', border: '1px solid rgba(99,102,241,0.25)',
+            borderRadius: 20, padding: '36px 28px', textAlign: 'center', marginBottom: 24,
+          }}>
+            <div style={{ fontSize: '2.8rem', marginBottom: 12 }}>🎬</div>
+            <h3 style={{ fontFamily: "'Syne', sans-serif", fontSize: '1.5rem', color: '#E2E8F0', marginBottom: 8 }}>
+              Get more credits for AI Videos!
+            </h3>
+            <p style={{ color: '#64748B', fontSize: 14, maxWidth: 380, margin: '0 auto 22px', lineHeight: 1.6 }}>
+              Premium Plans start at just $15/month and includes 300 credits!
+            </p>
+            <a href="/pricing" style={{
+              display: 'inline-block', padding: '14px 36px', borderRadius: 12,
+              background: 'linear-gradient(135deg, #6366F1, #4F46E5)', color: 'white',
+              fontWeight: 700, fontSize: 15, textDecoration: 'none',
+              boxShadow: '0 8px 28px rgba(99,102,241,0.4)',
+            }}>
+              Unlock AI Video — $15/mo →
+            </a>
+            <p style={{ fontSize: 11.5, color: '#334155', marginTop: 12 }}>
+              · Instant access · All AI models included
+            </p>
+          </div>
+        )}         
 
         <VideoPageSEOSections onPromptSelect={setPrompt} />
       </div>
