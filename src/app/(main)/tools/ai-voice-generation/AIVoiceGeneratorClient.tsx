@@ -1285,387 +1285,340 @@ return (
               )}
               
               {/* Non-logged-in users: show default 50 credits */}
-              {!isLoggedIn && (
+              {/* Non-logged-in users: hide credit bar, show nothing — CTA is inside the box */}                        
                 <div style={{
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  padding: '10px 16px', marginBottom: '16px',
-                  background: 'rgba(99,85,220,0.04)', border: '1px solid rgba(99,85,220,0.12)',
-                  borderRadius: '12px',
+                  border: '1.5px solid rgba(99,85,220,0.25)', borderRadius: 16,
+                  background: '#fff', overflow: 'hidden',
+                  boxShadow: '0 2px 12px rgba(99,85,220,0.08)', marginBottom: 12,
+                  position: 'relative',
                 }}>
-                  <span style={{fontSize:'0.875rem', fontWeight:600, color:'#6666aa'}}>
-                    💳 <strong style={{color:'#6355dc'}}>50 free credits</strong> available on signup
-                  </span>
-                  <a href="/register" style={{
-                    fontSize:'0.75rem', fontWeight:700, color:'#fff',
-                    textDecoration:'none', padding:'5px 14px',
-                    background:'linear-gradient(135deg,#6355dc,#8b5cf6)', borderRadius:'20px'
-                  }}>Start Free →</a>
-                </div>
-              )}                           
-              <div className="script-input-wrapper">
-                <div className="script-input-header">
-                  <div className="header-left">
-                    <span className="script-icon">✍️</span>
-                    <h3 className="script-title">Your AI Voice Script</h3>
-                  </div>
-                  <div className="header-right">
-                    <>
-                      {isLoggedIn && (
-                        <button
-                          className="browse-templates-btn"
-                          onClick={() => {
-                            scrollToSection('script-templates');
-                            toggleScriptTemplates();
-                          }}
-                          aria-label="Browse script templates"
-                        >
-                          📝 Browse Templates
-                        </button>
-                      )}
-                      <span className={`live-char-badge ${characterCount > maxCharsPerRequest ? 'exceeded' : ''}`}>
-                        {characterCount.toLocaleString()} / {maxCharsPerRequest.toLocaleString()}
-                      </span>
-                    </>
-                  </div>
-                </div>
-                  
-                <div className="textarea-container">
-                  <textarea
-                    value={aiVoiceText}
-                    onChange={handleTextChange}
-                    placeholder="✨ Type or paste your script here..."                  
-                    className={`ai-voice-textarea ${characterCount > maxCharsPerRequest ? 'limit-exceeded' : ''}`}
-                    disabled={limitsExceeded}
-                    aria-label="Text input for AI voice generation"
-                  />
+                  {/* Textarea */}
+                  <div style={{ position: 'relative' }}>
+                    <textarea
+                      value={aiVoiceText}
+                      onChange={handleTextChange}
+                      placeholder="✨ Type or paste your script here..."
+                      className={`ai-voice-textarea ${characterCount > maxCharsPerRequest ? 'limit-exceeded' : ''}`}
+                      disabled={limitsExceeded}
+                      aria-label="Text input for AI voice generation"
+                      style={{
+                        width: '100%', minHeight: 100, maxHeight: 180,
+                        padding: '14px 16px 8px', resize: 'none', border: 'none', outline: 'none',
+                        background: 'transparent', color: '#2d2d5e',
+                        fontSize: 14, lineHeight: 1.6, fontFamily: 'inherit',
+                        boxSizing: 'border-box',
+                      }}
+                    />
 
-                  {!isLoggedIn && (
-                    <div className="textarea-overlay">
-                      <div className="overlay-content">
-                        <span className="lock-icon">🎤</span>
-                        <h4>Try AI Voice Generation Free</h4>
-                        <p>Sign up for 50 free credits — no card needed</p>
-                        <a href="/register" className="overlay-login-btn">
-                          Get 50 Free Credits →
-                        </a>
-                        <button
-                          onClick={() => setShowLoginModal(true)}
-                          style={{
-                            marginTop:'10px', background:'transparent', border:'none',
-                            color:'rgba(255,255,255,0.7)', cursor:'pointer',
-                            fontSize:'0.85rem', textDecoration:'underline'
-                          }}
-                        >
-                          Already have an account? Login
-                        </button>
+                    {!isLoggedIn && (
+                      <div style={{
+                        position: 'absolute', inset: 0, zIndex: 10,
+                        background: 'linear-gradient(135deg, #6355dc, #8b5cf6)',
+                        borderRadius: 16,
+                        display: 'flex', flexDirection: 'column',
+                        alignItems: 'center', justifyContent: 'center',
+                        gap: 10, padding: '28px 24px', textAlign: 'center',
+                      }}>
+                        <span style={{ fontSize: 32 }}>🎤</span>
+                        <h4 style={{ color: '#fff', fontSize: 18, fontWeight: 800, margin: 0 }}>
+                          Try AI Voice Generation Free
+                        </h4>
+                        <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: 13, margin: 0 }}>
+                          Sign up for 50 free credits — no card needed
+                        </p>
                       </div>
-                    </div>
-                  )}                  
+                    )}
 
-                  {isLoggedIn && limitsExceeded && (
-                    <div className="textarea-overlay">
-                      <div className="overlay-content">
-                        <span className="lock-icon">⚠️</span>
-                        <h4>Character Limit Reached</h4>
-                        <p>You've used all your {userProfile.role} plan characters</p>
-                        <a 
-                          href="/pricing"
-                          className="overlay-login-btn"
-                        >
-                          Upgrade Now
-                        </a>
-                      </div>
-                    </div>
-                  )}
-
-                  {!limitsExceeded && aiVoiceText.length === 0 && (
-                    <div className="textarea-hint">
-                      <div className="hint-items">
-                        <div className="hint-item">💡 <strong>Quick tip:</strong> Add commas for natural pauses</div>
-                        <div className="hint-item">🎯 <strong>Best for:</strong> Clear, conversational text</div>
-                        <div className="hint-item">⚡ <strong>Max length:</strong> {maxCharsPerRequest.toLocaleString()} characters</div>
-                      </div>
-                    </div>
-                  )}  
-                  {isLoggedIn && characterCount > maxCharsPerRequest && (
-                    <div className="character-limit-warning">
-                      <span className="warning-icon">⚠️</span>
-                      <strong>Character limit exceeded!</strong>
-                      <span>Please reduce your text by {(characterCount - maxCharsPerRequest).toLocaleString()} characters to generate.</span>
-                    </div>
-                  )}                    
-                </div>                
-                <div className="script-input-footer">
-                  <div className="footer-stats">
-                    <div className="stat-item">
-                      <span className="stat-icon">📝</span>
-                      <span className="stat-label">Words: <strong>{aiVoiceText.trim().split(/\s+/).filter(w => w.length > 0).length}</strong></span>
-                    </div>
-                    <div className="stat-item">
-                      <span className="stat-icon">⏱️</span>
-                      <span className="stat-label">~{Math.ceil(aiVoiceText.trim().split(/\s+/).filter(w => w.length > 0).length / 200)} min read</span>
-                    </div>
-                    <div className="stat-item">
-                      <span className="stat-icon">🎤</span>
-                      <span className="stat-label">Ready to generate</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {isLoggedIn && ttsUsage && (
-                <div className="usage-info">
-                  {ttsUsage.isPaid ? (
-                    <div className="usage-section">
-                      <p className="usage-label">💳 Credit Balance</p>
-                      <p className="usage-text">
-                        <strong>{ttsUsage.balance.toLocaleString()}</strong> credits remaining
-                        &nbsp;·&nbsp; {ttsUsage.creditCostPer100Chars} credit per 100 chars
-                        &nbsp;·&nbsp; This text costs <strong>{Math.ceil(aiVoiceText.length / 100)}</strong> credit{Math.ceil(aiVoiceText.length / 100) !== 1 ? 's' : ''}
-                      </p>
-                      {ttsUsage.balance < 10 && (
-                        <div className="usage-micro-warning">
-                          Running low on credits. <a href="/pricing">Top up your balance</a>.
+                    {isLoggedIn && limitsExceeded && (
+                      <div className="textarea-overlay">
+                        <div className="overlay-content">
+                          <span className="lock-icon">⚠️</span>
+                          <h4>Character Limit Reached</h4>
+                          <p>You've used all your {userProfile.role} plan characters</p>
+                          <a href="/pricing" className="overlay-login-btn">Upgrade Now</a>
                         </div>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="usage-section">
-                      <p className="usage-label">🆓 Free Tier Usage</p>
-                      <div className="usage-bar-container">
-                        <div
-                          className={`usage-bar-fill ${
-                            ((ttsUsage.freeVoiceCharsUsed ?? 0) / (ttsUsage.freeVoiceCharsLimit ?? 1)) >= 0.95 ? 'critical' :
-                            ((ttsUsage.freeVoiceCharsUsed ?? 0) / (ttsUsage.freeVoiceCharsLimit ?? 1)) >= 0.80 ? 'warning' : 'normal'
-                          }`}
-                          style={{ width: `${Math.min(100, ((ttsUsage.freeVoiceCharsUsed ?? 0) / (ttsUsage.freeVoiceCharsLimit ?? 1)) * 100)}%` }}
-                        />
                       </div>
-                      <p className="usage-text">
-                        <strong>{((ttsUsage.freeVoiceCharsLimit ?? 0) - (ttsUsage.freeVoiceCharsUsed ?? 0)).toLocaleString()}</strong> free characters remaining this month
-                        &nbsp;({(ttsUsage.freeVoiceCharsUsed ?? 0).toLocaleString()} / {(ttsUsage.freeVoiceCharsLimit ?? 0).toLocaleString()} used)
-                      </p>
-                      {((ttsUsage.freeVoiceCharsUsed ?? 0) / (ttsUsage.freeVoiceCharsLimit ?? 1)) >= 0.80 && (
-                        <div className="usage-micro-warning">
-                          You're almost out of free characters. Upgrade to avoid interruption.
-                        </div>
-                      )}
-                      <div className="inline-upgrade-cta">
-                        <a href="/pricing" className="inline-upgrade-link">
-                          🔓 Upgrade to Starter — 50,000 chars/mo + 300 credits for $15/mo
-                        </a>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}          
+                    )}
 
-              {isLoggedIn && (
-                <div className="speed-control-section">
-                  <div className="speed-header">
-                    <label>⚡ Speed</label>
-                    {!hasSpeedAccess && (
-                      <span className="speed-locked-badge">🔒 Paid</span>
+                    {isLoggedIn && characterCount > maxCharsPerRequest && (
+                      <div style={{
+                        margin: '0 14px 6px', padding: '6px 10px', borderRadius: 8,
+                        background: 'rgba(220,38,38,0.06)', border: '1px solid rgba(220,38,38,0.2)',
+                        fontSize: 12, color: '#dc2626', display: 'flex', alignItems: 'center', gap: 6,
+                      }}>
+                        ⚠️ Exceeds limit by {(characterCount - maxCharsPerRequest).toLocaleString()} chars
+                      </div>
                     )}
                   </div>
-                  
-                  <div className="speed-presets">
-                    {[0.5, 1.0, 1.25, 1.5, 1.75, 2.0, 3.0, 4.0].map(s => (
-                      <button
-                        key={s}
-                        onClick={() => {
-                          if (!hasSpeedAccess) return;
-                          setSpeed(s);
-                          setSpeedInput(String(s));
-                        }}
-                        disabled={!hasSpeedAccess}
-                        className={`speed-preset-btn ${speed === s ? 'active' : ''} ${!hasSpeedAccess ? 'locked' : ''}`}
-                      >
-                        {s}x
-                      </button>
-                    ))}
-                    <input
-                      type="text"
-                      value={speedInput}
-                      disabled={!hasSpeedAccess}
-                      onChange={(e) => {
-                        if (!hasSpeedAccess) return;
-                        setSpeedInput(e.target.value);
-                        const val = parseFloat(parseFloat(e.target.value).toFixed(2));
-                        if (!isNaN(val) && val >= 0.5 && val <= 4.0) setSpeed(val);
-                      }}
-                      onBlur={() => {
-                        if (speedInput === '' || isNaN(parseFloat(speedInput))) {
-                          setSpeedInput('1');
-                          setSpeed(1.0);
-                        } else {
-                          setSpeedInput(String(speed));
-                        }
-                      }}
-                      className={`speed-custom-input ${!hasSpeedAccess ? 'locked' : ''}`}
-                      placeholder="1"
-                    />
-                  </div>
-                    
-                  {!hasSpeedAccess && (
-                    <p className="speed-locked-text">
-                      Requires <a href="/pricing">Creator Lite or higher</a>
-                    </p>
-                  )}
-                </div>
-              )}     
 
-              {showLimitModal && (
-                <div className="inline-limit-warning">
-                  <div className="limit-warning-content">
-                    <div className="modal-icon-warning">⚠️</div>
-                    <h3>You're Running Low on Characters!</h3>
-                    <p className="modal-usage-text">
-                      You've used{' '}
-                      <strong>
-                        {Math.round(((ttsUsage?.freeVoiceCharsUsed ?? 0) / (ttsUsage?.freeVoiceCharsLimit ?? 1)) * 100)}%
-                      </strong>{' '}
-                      of your free limit
-                    </p>
-                    <div className="inline-modal-actions">
-                      <a href="/pricing" className="inline-upgrade-btn">
-                        Upgrade Now
-                      </a>
-                      <button 
-                        className="inline-dismiss-btn"
-                        onClick={() => setShowLimitModal(false)}
-                      >
-                        Continue with Free
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}                       
+                  {/* ── Bottom toolbar ── */}
+<div style={{
+  display: 'flex', alignItems: 'center', gap: 6,
+  padding: '8px 12px', borderTop: '1px solid rgba(99,85,220,0.1)',
+  background: '#fafafa', flexWrap: 'wrap',
+}}>
 
-              {isLimitsExceeded() ? (
-                <a
-                  href="https://scenith.in/pricing"
-                  className="cta-button upgrade-button"
-                  aria-label="Upgrade to unlock more characters"
-                >
-                  <span className="upgrade-icon">🚀</span>
-                  Upgrade to Pro - Unlock More Characters
-                  <span className="upgrade-badge">Limited Time Offer</span>
-                </a>                
-              ) : (
-                <div className="button-wrapper-with-tooltip">
-                  {/* Add this ABOVE the generate button wrapper */}
-                  {isLoggedIn && aiVoiceText.length > 0 && (
+  {/* Speed — paid only, logged in only */}
+  {isLoggedIn && (
+    <select
+      value={hasSpeedAccess ? speed : 1.0}
+      onChange={(e) => {
+        if (!hasSpeedAccess) return;
+        const val = parseFloat(e.target.value);
+        setSpeed(val);
+        setSpeedInput(String(val));
+      }}
+      disabled={!hasSpeedAccess}
+      title={!hasSpeedAccess ? 'Speed control requires paid plan' : 'Playback speed'}
+      style={{
+        padding: '5px 28px 5px 10px', borderRadius: 8, fontSize: 12, fontWeight: 600,
+        border: '1.5px solid rgba(99,85,220,0.2)',
+        background: hasSpeedAccess ? '#fff' : '#f4f4f8',
+        color: hasSpeedAccess ? '#6355dc' : '#aaa',
+        cursor: hasSpeedAccess ? 'pointer' : 'not-allowed',
+        appearance: 'none', fontFamily: 'inherit',
+        backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%236355dc' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")",
+        backgroundRepeat: 'no-repeat', backgroundPosition: 'right 8px center',
+      }}
+    >
+      {[0.5, 1.0, 1.25, 1.5, 1.75, 2.0, 3.0, 4.0].map(s => (
+        <option key={s} value={s}>⚡ {s}x{!hasSpeedAccess && s !== 1.0 ? ' 👑' : ''}</option>
+      ))}
+    </select>
+  )}
+
+  {/* Templates — logged in only */}
+  {isLoggedIn && (
+    <button
+      onClick={() => {
+        scrollToSection('script-templates');
+        toggleScriptTemplates();
+      }}
+      style={{
+        padding: '5px 10px', borderRadius: 8, fontSize: 12, fontWeight: 600,
+        border: '1.5px solid rgba(99,85,220,0.2)', background: '#fff',
+        color: '#8888bb', cursor: 'pointer', whiteSpace: 'nowrap',
+      }}
+    >
+      📝 Templates
+    </button>
+  )}
+
+  {/* Credits pill */}
+  <span style={{
+    fontSize: 11.5, fontWeight: 700, padding: '4px 10px', borderRadius: 999,
+    background: 'rgba(99,85,220,0.08)', color: '#6355dc', whiteSpace: 'nowrap',
+  }}>
+    {isLoggedIn
+      ? ttsUsage?.isPaid
+        ? `⚡ ${ttsUsage.balance} cr · ${Math.ceil(aiVoiceText.length / 100)}cr/req`
+        : `⚡ ${((ttsUsage?.freeVoiceCharsLimit ?? 0) - (ttsUsage?.freeVoiceCharsUsed ?? 0)).toLocaleString()} chars left`
+      : '⚡ 50 free credits on signup'
+    }
+  </span>
+
+  {/* char count — only when typing */}
+  {characterCount > 0 && (
+    <span style={{
+      fontSize: 10.5, color: characterCount > maxCharsPerRequest ? '#dc2626' : '#aaaacc',
+      fontWeight: 600, whiteSpace: 'nowrap',
+    }}>
+      {characterCount}/{maxCharsPerRequest}
+    </span>
+  )}
+
+  {/* Spacer */}
+  <div style={{ flex: 1 }} />
+
+  {/* Selected voice pill — shown when a voice is picked */}
+  {selectedVoice && (
+    <div style={{
+      display: 'flex', alignItems: 'center', gap: 5, padding: '4px 8px',
+      borderRadius: 8, background: 'rgba(16,185,129,0.08)',
+      border: '1px solid rgba(16,185,129,0.2)', fontSize: 11.5, color: '#059669',
+      fontWeight: 600, whiteSpace: 'nowrap',
+    }}>
+      {selectedVoice.profileUrl && (
+        <img src={selectedVoice.profileUrl} alt="" width={18} height={18}
+          style={{ borderRadius: '50%', objectFit: 'cover' }} />
+      )}
+      {selectedVoice.humanName || selectedVoice.voiceName} ✓
+    </div>
+  )}
+
+  {/* Not logged in — single CTA */}
+  {!isLoggedIn && (
+    <button
+      onClick={() => setShowLoginModal(true)}
+      style={{
+        padding: '7px 18px', borderRadius: 10, border: 'none', cursor: 'pointer',
+        background: 'linear-gradient(135deg, #6355dc, #8b5cf6)', color: '#fff',
+        fontWeight: 700, fontSize: 13, fontFamily: 'inherit', whiteSpace: 'nowrap',
+      }}
+    >
+      ✨ Sign Up Free & Generate
+    </button>
+  )}
+
+  {/* Logged in — generate or upgrade */}
+  {isLoggedIn && (
+    isLimitsExceeded() ? (
+      <a href="https://scenith.in/pricing" style={{
+        padding: '7px 16px', borderRadius: 10,
+        background: 'linear-gradient(135deg, #059669, #10b981)', color: '#fff',
+        fontWeight: 700, fontSize: 12, textDecoration: 'none', whiteSpace: 'nowrap',
+      }}>🚀 Upgrade</a>
+    ) : (
+      <button
+        onClick={handleGenerateAiAudio}
+        disabled={
+          !aiVoiceText.trim() || !selectedVoice || isGenerating ||
+          characterCount > maxCharsPerRequest || wouldExceedLimits
+        }
+        style={{
+          padding: '7px 18px', borderRadius: 10, border: 'none', cursor: 'pointer',
+          background: (!aiVoiceText.trim() || !selectedVoice || isGenerating || characterCount > maxCharsPerRequest || wouldExceedLimits)
+            ? '#e2e2f0' : 'linear-gradient(135deg, #6355dc, #8b5cf6)',
+          color: (!aiVoiceText.trim() || !selectedVoice || isGenerating || characterCount > maxCharsPerRequest || wouldExceedLimits)
+            ? '#aaa' : '#fff',
+          fontWeight: 700, fontSize: 13, fontFamily: 'inherit',
+          display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap',
+        }}
+      >
+        {isGenerating ? (
+          <>
+            <span style={{
+              width: 14, height: 14, border: '2px solid rgba(255,255,255,0.3)',
+              borderTopColor: '#fff', borderRadius: '50%',
+              animation: 'spin 0.75s linear infinite', display: 'inline-block',
+            }} />
+            Generating…
+          </>
+        ) : '🎙️ Generate Voice'}
+      </button>
+    )
+  )}
+</div>
+
+                  {/* Low credits warning inline */}
+                  {isLoggedIn && ttsUsage && !ttsUsage.isPaid &&
+                    ((ttsUsage.freeVoiceCharsUsed ?? 0) / (ttsUsage.freeVoiceCharsLimit ?? 1)) >= 0.80 && (
                     <div style={{
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      gap: '8px', marginBottom: '10px',
-                      padding: '8px 16px',
-                      background: ttsUsage?.isPaid
-                        ? 'rgba(99,85,220,0.06)' : 'rgba(16,185,129,0.06)',
-                      border: `1px solid ${ttsUsage?.isPaid ? 'rgba(99,85,220,0.2)' : 'rgba(16,185,129,0.2)'}`,
-                      borderRadius: '20px', fontSize: '0.875rem', fontWeight: 600,
+                      padding: '8px 14px', borderTop: '1px solid rgba(245,158,11,0.15)',
+                      background: 'rgba(245,158,11,0.04)', fontSize: 12, color: '#92400e',
+                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                     }}>
-                      <span>⚡</span>
-                      {ttsUsage?.isPaid
-                        ? <span>This will cost <strong style={{color:'#6355dc'}}>{Math.ceil(aiVoiceText.length / 100)} credit{Math.ceil(aiVoiceText.length / 100) !== 1 ? 's' : ''}</strong></span>
-                        : <span>Uses <strong style={{color:'#059669'}}>{aiVoiceText.length} / {maxCharsPerRequest} free chars</strong></span>
-                      }
-                    </div>
-                  )}                  
-                  <button
-                    className="cta-button generate-voice-button"
-                    onClick={() => {
-                      handleGenerateAiAudio();
-                    }}
-                    disabled={
-                      isLoggedIn && (
-                        !aiVoiceText.trim() ||
-                        !selectedVoice ||
-                        isGenerating ||
-                        characterCount > maxCharsPerRequest ||
-                        wouldExceedLimits
-                      )
-                    }
-                    aria-label="Generate AI voice from text"
-                  >
-                    {isGenerating ? '🎙️ Generating your voice...' : isLoggedIn ? '🎙️ Generate AI Voice' : '✨ Sign Up Free & Generate'}
-                  </button>
-                  {isLoggedIn && disabledReason && (
-                    <div className="button-tooltip">
-                      {disabledReason}
+                      <span>⚠️ Almost out of free chars</span>
+                      <a href="/pricing" style={{
+                        fontSize: 11, fontWeight: 700, color: '#f59e0b', textDecoration: 'none',
+                        padding: '3px 8px', borderRadius: 6, background: 'rgba(245,158,11,0.12)',
+                      }}>Upgrade →</a>
                     </div>
                   )}
-                </div>
-              )}
-              {isLimitsExceeded() && (
-                <div className="limit-exceeded-message">
-                  <p className="limit-message-title">⚡ You've used all your {userProfile.role} plan characters!</p>
-                  <div className="limit-benefits">
-                    <div className="benefit-item">✓ Starter: 50,000 chars/mo · 300 credits · $15/mo</div>
-                    <div className="benefit-item">✓ Creator: 150,000 chars/mo · 900 credits · $22/mo</div>
-                    <div className="benefit-item">✓ Pro: 400,000 chars/mo · 2,500 credits · $27/mo</div>
-                  </div>
-                  <p className="limit-message-cta">Upgrade now and continue creating! 🎯</p>
-                </div>
-              )}             
+
+                  {/* Limit modal inline */}
+                  {showLimitModal && (
+                    <div style={{
+                      padding: '12px 14px', borderTop: '1px solid rgba(245,158,11,0.2)',
+                      background: 'rgba(245,158,11,0.05)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10,
+                    }}>
+                      <span style={{ fontSize: 12.5, color: '#92400e', fontWeight: 600 }}>
+                        ⚠️ {Math.round(((ttsUsage?.freeVoiceCharsUsed ?? 0) / (ttsUsage?.freeVoiceCharsLimit ?? 1)) * 100)}% of free limit used
+                      </span>
+                      <div style={{ display: 'flex', gap: 6 }}>
+                        <a href="/pricing" style={{
+                          fontSize: 12, fontWeight: 700, padding: '4px 12px', borderRadius: 8,
+                          background: 'linear-gradient(135deg, #6355dc, #8b5cf6)', color: '#fff',
+                          textDecoration: 'none',
+                        }}>Upgrade</a>
+                        <button onClick={() => setShowLimitModal(false)} style={{
+                          fontSize: 12, fontWeight: 600, padding: '4px 10px', borderRadius: 8,
+                          border: '1px solid rgba(0,0,0,0.1)', background: '#fff', cursor: 'pointer',
+                          color: '#666',
+                        }}>Dismiss</button>
+                      </div>
+                    </div>
+                  )}
+                </div>                               
             </div>
 
             <div className="voice-list-section">
               <div className="fixed-header">
-                <h3>Select a Voice</h3>
-
-                {/* Provider Tabs */}
-                <div className="provider-tabs">
-                  {(['GOOGLE', 'OPENAI', 'AZURE'] as const).map(p => (
-                    <button
-                      key={p}
-                      className={`provider-tab ${selectedProvider === p ? 'active' : ''} ${
-                        p !== 'GOOGLE' && !ttsUsage?.isPaid ? 'locked' : ''
-                      }`}
-                      onClick={() => {
-                        setSelectedProvider(p);
-                        setSelectedVoice(null);
-                      }}
-                      title={p !== 'GOOGLE' && !ttsUsage?.isPaid ? 'Requires paid plan' : ''}
-                    >
-                      {p === 'GOOGLE' && '🔵 '}
-                      {p === 'OPENAI' && '🟢 '}
-                      {p === 'AZURE' && '🔷 '}
-                      {p.charAt(0) + p.slice(1).toLowerCase()}
-                      {p !== 'GOOGLE' && !ttsUsage?.isPaid && (
-                        <span className="tab-lock">👑</span>
-                      )}
-                    </button>
-                  ))}
-                </div>
-                
-                {selectedProvider === 'GOOGLE' && (
-                  <div className="filter-section">
-                    <select
-                      value={filterLanguage}
-                      onChange={(e) => setFilterLanguage(e.target.value)}
-                      className="filter-select"
-                      aria-label="Filter voices by language"
-                    >
-                      <option value="">All Languages</option>
-                      {uniqueLanguages.map((lang) => (
-                        <option key={lang} value={lang}>{lang}</option>
-                      ))}
-                    </select>
-                    <select
-                      value={filterGender}
-                      onChange={(e) => setFilterGender(e.target.value)}
-                      className="filter-select"
-                      aria-label="Filter voices by gender"
-                    >
-                      <option value="">All Genders</option>
-                      {uniqueGenders.map((gen) => (
-                        <option key={gen} value={gen}>{gen}</option>
-                      ))}
-                    </select>
-                  </div>
-                )}
-              </div>
+  <h3>Select a Voice</h3>
+  {/* Provider tabs — kept for voice list context, synced with toolbar dropdown */}
+  <div className="provider-tabs">
+    {(['GOOGLE', 'OPENAI', 'AZURE'] as const).map(p => (
+      <button
+        key={p}
+        className={`provider-tab ${selectedProvider === p ? 'active' : ''} ${
+          p !== 'GOOGLE' && !ttsUsage?.isPaid ? 'locked' : ''
+        }`}
+        onClick={() => {
+          setSelectedProvider(p);
+          setSelectedVoice(null);
+        }}
+        title={p !== 'GOOGLE' && !ttsUsage?.isPaid ? 'Requires paid plan' : ''}
+      >
+        {p === 'GOOGLE' && '🔵 '}
+        {p === 'OPENAI' && '🟢 '}
+        {p === 'AZURE' && '🔷 '}
+        {p.charAt(0) + p.slice(1).toLowerCase()}
+        {p !== 'GOOGLE' && !ttsUsage?.isPaid && (
+          <span className="tab-lock">👑</span>
+        )}
+      </button>
+    ))}
+  </div>
+  {/* Filters only for Google — compact, no label banner */}
+  {selectedProvider === 'GOOGLE' && (
+  <div style={{
+    display: 'flex', gap: 6, padding: '6px 12px 10px',
+    boxSizing: 'border-box', width: '100%',
+  }}>
+    <select
+      value={filterLanguage}
+      onChange={(e) => setFilterLanguage(e.target.value)}
+      aria-label="Filter voices by language"
+      style={{
+        flex: 1, minWidth: 0, boxSizing: 'border-box',
+        padding: '6px 8px', borderRadius: 8, fontSize: 11,
+        fontWeight: 600, border: '1.5px solid rgba(99,85,220,0.25)',
+        background: '#fff', color: '#2d2d5e',
+        cursor: 'pointer', appearance: 'none',
+        backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 12 12'%3E%3Cpath fill='%236355dc' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")",
+        backgroundRepeat: 'no-repeat', backgroundPosition: 'right 6px center',
+        paddingRight: 22, overflow: 'hidden', textOverflow: 'ellipsis',
+      }}
+    >
+      <option value="">🌍 Language</option>
+      {uniqueLanguages.map((lang) => (
+        <option key={lang} value={lang}>{lang}</option>
+      ))}
+    </select>
+    <select
+      value={filterGender}
+      onChange={(e) => setFilterGender(e.target.value)}
+      aria-label="Filter voices by gender"
+      style={{
+        flex: 1, minWidth: 0, boxSizing: 'border-box',
+        padding: '6px 8px', borderRadius: 8, fontSize: 11,
+        fontWeight: 600, border: '1.5px solid rgba(99,85,220,0.25)',
+        background: '#fff', color: '#2d2d5e',
+        cursor: 'pointer', appearance: 'none',
+        backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 12 12'%3E%3Cpath fill='%236355dc' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")",
+        backgroundRepeat: 'no-repeat', backgroundPosition: 'right 6px center',
+        paddingRight: 22, overflow: 'hidden', textOverflow: 'ellipsis',
+      }}
+    >
+      <option value="">👤 Gender</option>
+      {uniqueGenders.map((gen) => (
+        <option key={gen} value={gen}>{gen}</option>
+      ))}
+    </select>
+  </div>
+)}
+</div>
 
               {selectedVoice && (
                 <div style={{
