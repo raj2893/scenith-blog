@@ -431,7 +431,7 @@ const AIVideoGenerationClient: React.FC = () => {
 
         /* ── Header ── */
         .vg-header {
-          padding: 48px 0 0;
+          padding: 20px 0 0;
           text-align: center;
         }
         .vg-eyebrow {
@@ -445,15 +445,15 @@ const AIVideoGenerationClient: React.FC = () => {
         .vg-eyebrow span { width: 6px; height: 6px; border-radius: 50%; background: #6366F1; display: inline-block; animation: pulse 2s infinite; }
         .vg-title {
           font-family: 'Syne', sans-serif;
-          font-size: clamp(2.2rem, 5vw, 3.6rem);
+          font-size: clamp(1.5rem, 3vw, 2.2rem);
           font-weight: 800; line-height: 1.1;
           background: linear-gradient(135deg, #E2E8F0 0%, #818CF8 50%, #34D399 100%);
           -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-          margin-bottom: 14px;
+          margin-bottom: 6px;
         }
         .vg-sub {
-          font-size: 1.05rem; color: #94A3B8; max-width: 520px; margin: 0 auto 36px;
-          line-height: 1.65; font-weight: 300;
+          font-size: 0.9rem; color: #94A3B8; max-width: 520px;
+          line-height: 1.4; font-weight: 300; margin: 0 auto 12px;
         }
 
         /* ── Breadcrumb ── */
@@ -477,13 +477,13 @@ const AIVideoGenerationClient: React.FC = () => {
           box-shadow: 0 24px 80px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
         }
 
-        .vg-card-inner { padding: 32px; }
+        .vg-card-inner { padding: 16px 20px; }
 
         /* ── Gen type toggle ── */
         .vg-toggle {
           display: flex; gap: 4px;
           background: rgba(0,0,0,0.3); border-radius: 14px; padding: 4px;
-          width: fit-content; margin-bottom: 28px;
+          width: fit-content; margin-bottom: 16px;
           border: 1px solid rgba(99,102,241,0.15);
         }
         .vg-toggle-btn {
@@ -502,14 +502,14 @@ const AIVideoGenerationClient: React.FC = () => {
 
         /* ── Section label ── */
         .vg-label {
-          font-size: 0.75rem; font-weight: 600; color: #6366F1;
+          font-size: 0.72rem; font-weight: 600; color: #6366F1;
           text-transform: uppercase; letter-spacing: 1.5px;
-          margin-bottom: 10px; display: block;
+          margin-bottom: 7px; display: block;
         }
 
         /* ── Prompt textarea ── */
         .vg-textarea {
-          width: 100%; min-height: 120px; padding: 16px 18px;
+          width: 100%; min-height: 72px; padding: 10px 14px;
           background: rgba(0,0,0,0.3); border: 1.5px solid rgba(99,102,241,0.2);
           border-radius: 14px; color: #E2E8F0; font-family: 'DM Sans', sans-serif;
           font-size: 1rem; line-height: 1.65; resize: vertical;
@@ -554,7 +554,7 @@ const AIVideoGenerationClient: React.FC = () => {
         .vg-img-remove:hover { background: #EF4444; }
 
         /* ── Options row ── */
-        .vg-options { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 24px 0; }
+       .vg-options { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 10px 0; }
         @media (max-width: 640px) { .vg-options { grid-template-columns: 1fr; } }
 
         .vg-option-group label.vg-label { margin-bottom: 8px; }
@@ -576,7 +576,7 @@ const AIVideoGenerationClient: React.FC = () => {
         /* ── Duration pills ── */
         .vg-pill-group { display: flex; gap: 8px; }
         .vg-pill {
-          flex: 1; padding: 10px; border-radius: 10px; border: 1.5px solid rgba(99,102,241,0.2);
+          flex: 1; padding: 8px; border-radius: 9px; border: 1.5px solid rgba(99,102,241,0.2);
           background: rgba(0,0,0,0.2); color: #64748B;
           font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500;
           cursor: pointer; transition: all 0.2s; text-align: center;
@@ -589,7 +589,7 @@ const AIVideoGenerationClient: React.FC = () => {
         /* ── Aspect ratio buttons ── */
         .vg-ar-group { display: flex; gap: 8px; }
         .vg-ar {
-          flex: 1; padding: 10px 6px; border-radius: 10px; border: 1.5px solid rgba(99,102,241,0.2);
+          flex: 1; padding: 7px 6px; border-radius: 9px; border: 1.5px solid rgba(99,102,241,0.2);
           background: rgba(0,0,0,0.2); color: #64748B;
           font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 500;
           cursor: pointer; transition: all 0.2s; text-align: center;
@@ -601,9 +601,9 @@ const AIVideoGenerationClient: React.FC = () => {
         /* ── Audio toggle ── */
         .vg-audio-row {
           display: flex; align-items: center; justify-content: space-between;
-          padding: 14px 16px; background: rgba(0,0,0,0.2);
-          border-radius: 12px; border: 1.5px solid rgba(99,102,241,0.15);
-          margin-bottom: 20px;
+          padding: 10px 14px; background: rgba(0,0,0,0.2);
+          border-radius: 10px; border: 1.5px solid rgba(99,102,241,0.15);
+          margin-bottom: 12px;
         }
         .vg-audio-info h4 { font-size: 0.92rem; font-weight: 500; color: #CBD5E1; margin-bottom: 2px; }
         .vg-audio-info p { font-size: 0.78rem; color: #475569; }
@@ -669,7 +669,7 @@ const AIVideoGenerationClient: React.FC = () => {
 
         /* ── Generate button ── */
         .vg-generate-btn {
-          width: 100%; padding: 18px;
+          width: 100%; padding: 14px;
           background: linear-gradient(135deg, #6366F1 0%, #4F46E5 50%, #7C3AED 100%);
           color: white; border: none; border-radius: 14px;
           font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700;
@@ -709,7 +709,7 @@ const AIVideoGenerationClient: React.FC = () => {
         /* ── Credits bar ── */
         .vg-credits-box {
           background: rgba(0,0,0,0.2); border: 1px solid rgba(99,102,241,0.15);
-          border-radius: 14px; padding: 16px 18px; margin-bottom: 20px;
+          border-radius: 12px; padding: 12px 14px; margin-bottom: 12px;
         }
         .vg-credits-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .vg-credits-label { font-size: 0.8rem; color: #64748B; font-weight: 500; }
@@ -881,7 +881,7 @@ const AIVideoGenerationClient: React.FC = () => {
 
       <div className="vg-wrap">
         {/* Breadcrumb */}
-        <nav className="vg-breadcrumb" style={{ marginTop: 110 }}>
+        <nav className="vg-breadcrumb" style={{ marginTop: 80 }}>
           <a href="/">Home</a>
           <span>›</span>
           <a href="/tools">Tools</a>
@@ -903,8 +903,15 @@ const AIVideoGenerationClient: React.FC = () => {
           </p>
         </header>
 
-        {/* How it works — always visible */}
-        <div className="vg-how">
+        {/* How it works — collapsible */}
+        <details className="vg-how" style={{ marginBottom: 16 }}>
+          <summary style={{
+            cursor: 'pointer', fontSize: '0.82rem', color: '#475569',
+            fontFamily: "'DM Sans', sans-serif", marginBottom: 12,
+            listStyle: 'none', display: 'flex', alignItems: 'center', gap: 6,
+          }}>
+            <span style={{ color: '#6366F1' }}>▸</span> How it works
+          </summary>
           <div className="vg-how-steps">
             {[
               { num: "Step 01", icon: "✍️", title: "Describe your video", body: "Type what you want to see. The more specific, the better the result." },
@@ -919,7 +926,7 @@ const AIVideoGenerationClient: React.FC = () => {
               </div>
             ))}
           </div>
-        </div>
+        </details>
 
         {/* ── Main tool card ── */}
         {(
@@ -955,23 +962,23 @@ const AIVideoGenerationClient: React.FC = () => {
                 disabled={!isLoggedIn || isSubmitting}
                 maxLength={2000}
               />
-              {/* Prompt suggestions */}
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 10, marginBottom: 4 }}>
+              {/* Prompt suggestions — inline scrollable */}
+              <div style={{ display: 'flex', gap: 6, marginTop: 6, overflowX: 'auto', paddingBottom: 2, scrollbarWidth: 'none' }}>
                 {[
-                  "Aerial shot of a neon city at night",
-                  "Golden retriever running in slow motion",
-                  "Ocean waves crashing at sunset, cinematic",
-                  "Abstract particle explosion, 3D render",
+                  "Aerial neon city at night",
+                  "Golden retriever slow motion",
+                  "Ocean waves at sunset",
+                  "Abstract particle explosion",
                 ].map((suggestion) => (
                   <button
                     key={suggestion}
                     onClick={() => setPrompt(suggestion)}
                     style={{
-                      padding: '5px 12px', borderRadius: 999, border: '1px solid rgba(99,102,241,0.22)',
+                      padding: '4px 10px', borderRadius: 999, border: '1px solid rgba(99,102,241,0.22)',
                       background: 'rgba(99,102,241,0.08)', color: '#6366F1',
-                      fontSize: 12, fontWeight: 500, cursor: 'pointer',
+                      fontSize: 11, fontWeight: 500, cursor: 'pointer',
                       fontFamily: "'DM Sans', sans-serif", transition: 'all 0.15s',
-                      whiteSpace: 'nowrap',
+                      whiteSpace: 'nowrap', flexShrink: 0,
                     }}
                     onMouseEnter={e => e.currentTarget.style.background = 'rgba(99,102,241,0.18)'}
                     onMouseLeave={e => e.currentTarget.style.background = 'rgba(99,102,241,0.08)'}
@@ -979,9 +986,9 @@ const AIVideoGenerationClient: React.FC = () => {
                     {suggestion}
                   </button>
                 ))}
-              </div>              
+              </div>             
               {isLoggedIn && (
-                <div style={{ textAlign: "right", fontSize: "0.75rem", color: "#334155", marginTop: 6, marginBottom: 16 }}>
+                <div style={{ textAlign: "right", fontSize: "0.72rem", color: "#334155", marginTop: 3, marginBottom: 10 }}>
                   {prompt.length} / 2,000
                 </div>
               )}
@@ -1081,7 +1088,7 @@ const AIVideoGenerationClient: React.FC = () => {
                 <label className="vg-label">AI Model</label>
                 {!isLoggedIn ? (
                   <>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 10 }}>
+                    <div style={{ display: 'flex', flexWrap: 'nowrap', gap: 6, marginBottom: 8, overflowX: 'auto', paddingBottom: 4, scrollbarWidth: 'none' }}>
                       {STATIC_MODELS_PREVIEW.map((m) => (
                         <button
                           key={m.id}
@@ -1125,7 +1132,7 @@ const AIVideoGenerationClient: React.FC = () => {
                   </>
                 ) : models.length > 0 ? (
                   <>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 10 }}>
+                    <div style={{ display: 'flex', flexWrap: 'nowrap', gap: 6, marginBottom: 8, overflowX: 'auto', paddingBottom: 4, scrollbarWidth: 'none' }}>
                       {models.map((model) => {
                         const matchingCost = model.creditCosts?.find(
                           (c: any) => c.duration === duration && c.audio === (audioEnabled && model.supportsAudio)
@@ -1170,8 +1177,8 @@ const AIVideoGenerationClient: React.FC = () => {
                     </div>
                     {selectedModelData && (
                       <div style={{
-                        marginBottom: 20,
-                        padding: '10px 14px',
+                        marginBottom: 12,
+                        padding: '8px 12px',
                         background: 'rgba(99,102,241,0.07)',
                         border: '1px solid rgba(99,102,241,0.15)',
                         borderRadius: 10,
@@ -1185,7 +1192,7 @@ const AIVideoGenerationClient: React.FC = () => {
               </>
 
               {/* Advanced: negative prompt */}
-              <details style={{ marginBottom: 20 }}>
+              <details style={{ marginBottom: 12 }}>
                 <summary className="vg-advanced-toggle">
                   <span>⚙️ Advanced options</span>
                   <span style={{ marginLeft: "auto", fontSize: "0.75rem" }}>Optional</span>
@@ -1206,20 +1213,19 @@ const AIVideoGenerationClient: React.FC = () => {
 
               {/* Credits info */}
               {isLoggedIn && credits && hasPlan && (
-                <div className="vg-credits-box">
-                  <div className="vg-credits-row">
-                    <span className="vg-credits-label">Credit Balance</span>
-                    <span className="vg-credits-value">{credits.balance.toLocaleString()} credits</span>
-                  </div>
-                  <div className="vg-credits-row" style={{ marginBottom: 0 }}>
-                    <span className="vg-credits-label">Plan</span>
-                    <span className="vg-credits-value">{credits.planType}</span>
-                  </div>
+                <div style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  padding: '9px 14px', background: 'rgba(0,0,0,0.2)',
+                  border: '1px solid rgba(99,102,241,0.15)', borderRadius: 10, marginBottom: 10,
+                  flexWrap: 'wrap', gap: 6,
+                }}>
+                  <span style={{ fontSize: 12, color: '#64748B' }}>
+                    <span style={{ color: '#818CF8', fontWeight: 600 }}>{credits.balance.toLocaleString()}</span> credits · {credits.planType}
+                  </span>
                   {selectedModel && (
-                    <div className="vg-credits-cost">
-                      <span>This generation will cost</span>
-                      <strong>{creditsNeeded} credit{creditsNeeded !== 1 ? "s" : ""}</strong>
-                    </div>
+                    <span style={{ fontSize: 12, color: '#475569' }}>
+                      Cost: <strong style={{ color: '#818CF8' }}>{creditsNeeded} cr</strong>
+                    </span>
                   )}
                 </div>
               )}
@@ -1258,26 +1264,18 @@ const AIVideoGenerationClient: React.FC = () => {
 
               {isLoggedIn && credits && credits.balance < 100 && credits.balance > 0 && (
                 <div style={{
-                  background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.25)',
-                  borderRadius: 12, padding: '12px 16px', marginBottom: 16,
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  padding: '8px 12px', background: 'rgba(245,158,11,0.07)',
+                  border: '1px solid rgba(245,158,11,0.22)', borderRadius: 9, marginBottom: 10, gap: 10,
                 }}>
-                  <div>
-                    <p style={{ fontSize: 13, color: '#F59E0B', fontWeight: 600, margin: 0 }}>
-                      ⚡ Running low — {credits.balance} credits left
-                    </p>
-                    <p style={{ fontSize: 11.5, color: '#78716C', margin: '3px 0 0' }}>
-                      Get 300 more credits for $15/mo
-                    </p>
-                  </div>
+                  <span style={{ fontSize: 12, color: '#F59E0B', fontWeight: 600 }}>
+                    ⚡ {credits.balance} credits left
+                  </span>
                   <a href="/pricing" style={{
-                    padding: '8px 16px', borderRadius: 8, background: 'rgba(245,158,11,0.15)',
-                    border: '1px solid rgba(245,158,11,0.35)', color: '#F59E0B',
-                    fontSize: 12, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap',
-                    flexShrink: 0,
-                  }}>
-                    Top Up →
-                  </a>
+                    fontSize: 11, fontWeight: 700, color: '#F59E0B', textDecoration: 'none',
+                    padding: '4px 10px', borderRadius: 6, background: 'rgba(245,158,11,0.15)',
+                    border: '1px solid rgba(245,158,11,0.3)', whiteSpace: 'nowrap',
+                  }}>Top Up →</a>
                 </div>
               )} 
 
