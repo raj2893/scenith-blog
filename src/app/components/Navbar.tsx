@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { FaBars, FaDollarSign, FaHome, FaTools, FaBlog, FaTimes, FaUser, FaFilePdf , FaImage, FaVideo, FaTachometerAlt} from 'react-icons/fa';
+import { FaBars, FaDollarSign, FaHome, FaTools, FaBlog, FaTimes, FaUser, FaFilePdf, FaImage, FaVideo, FaTachometerAlt, FaShieldAlt } from 'react-icons/fa';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { API_BASE_URL } from '../config';
@@ -52,6 +52,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
   const [isUtilitiesDropdownOpen, setIsUtilitiesDropdownOpen] = useState(false);
   const [credits, setCredits] = useState<number>(50);
   const [isCreditsDropdownOpen, setIsCreditsDropdownOpen] = useState(false);
+  const [isAdminUser, setIsAdminUser] = useState(false);
 
   // Check authentication status on mount
   useEffect(() => {
@@ -74,6 +75,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
           });
           setIsLoggedIn(true);
           setCredits(response.data.creditBalance ?? 50);
+          setIsAdminUser(response.data.role === 'ADMIN');
         } catch (error) {
           console.error('Auth check failed:', error);
           localStorage.removeItem('token');
@@ -151,7 +153,13 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
   };
 
   const navigate = (path: string) => {
-    if (path.startsWith('/blogs') || path.startsWith('/background-removal') || path.startsWith('/pricing')) {
+    if (
+      path.startsWith('/blogs') ||
+      path.startsWith('/background-removal') ||
+      path.startsWith('/pricing') ||
+      path.startsWith('/user-dashboard') ||
+      path.startsWith('/admin-portal')
+    ) {
       router.push(path);
     } else {
       window.location.href = `https://scenith.in${path}`;
@@ -349,6 +357,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
     },
     { label: 'Pricing', path: '/pricing', icon: <FaDollarSign /> },
     { label: 'User Dashboard', path: '/user-dashboard', icon: <FaTachometerAlt /> },
+    ...(isAdminUser ? [{ label: 'Admin Portal', path: '/admin-portal', icon: <FaShieldAlt />, isNew: true }] : []),
   ];
 
   const navLinks = pathname.startsWith('/blogs/') && pathname !== '/blogs'
