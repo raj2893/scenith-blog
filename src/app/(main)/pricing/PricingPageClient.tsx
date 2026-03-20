@@ -389,7 +389,7 @@ const injectStyles = () => {
     .v3-outcome-count { font-size: 12.5px; color: var(--violet); font-weight: 700; margin-left: auto; white-space: nowrap; }
 
     /* features */
-    .v3-feats { list-style: none; flex: 1; display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+    .v3-feats { list-style: none; flex: 1; display: flex; flex-direction: column; gap: 8px; margin-top: 18px; }
     .v3-feat { display: flex; align-items: flex-start; gap: 8px; font-size: 12.5px; color: var(--muted); line-height: 1.45; }
     .v3-feat-hl { color: var(--ink2); font-weight: 500; }
     .v3-feat-ico { flex-shrink: 0; margin-top: 1px; }
@@ -890,7 +890,9 @@ export default function PricingPageClient() {
       <header className="v3-hero">
         <div className="v3-hero-bg" />
         <div className="v3-hero-dots" />
-        <div className="v3-hero-inner">
+
+        {/* ══ PRICING ══ */}
+        <div className="v3-pricing" ref={plansRef}>
           <motion.div className="v3-proof-row" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <div className="v3-proof-avatars">
               {['A','B','C','D','E'].map((l,i) => (
@@ -908,7 +910,194 @@ export default function PricingPageClient() {
           <motion.p className="v3-hero-sub" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.16 }}>
             One unified credit pool for every AI tool. Start free — upgrade when you're ready to create more.
           </motion.p>
+          <div className="v3-plans-wrap">
+            <div className="v3-plans-row">
+              {plans.map((plan, idx) => {
+                const isFree = plan.price === 0;
+                const isPopular = plan.role === 'CREATOR';
+                const isStudio = plan.role === 'STUDIO';
+                const isCurrent = currentPlan === plan.role;
+                const isDowngradeBlocked =
+                  (currentPlan === 'STUDIO' && (plan.role === 'CREATOR' || plan.role === 'CREATOR_LITE')) ||
+                  (currentPlan === 'CREATOR' && plan.role === 'CREATOR_LITE');
 
+                const badgeClass = () => {
+                  if (plan.role === 'CREATOR_LITE') return 'v3-card-plan-badge v3-badge-lite';
+                  if (isPopular) return 'v3-card-plan-badge v3-badge-creator';
+                  if (isStudio) return 'v3-card-plan-badge v3-badge-studio';
+                  return 'v3-card-plan-badge v3-badge-free';
+                };
+                const badgeLabel = () => {
+                  if (plan.role === 'BASIC') return '🌱 Free';
+                  if (plan.role === 'CREATOR_LITE') return '⚡ Lite';
+                  if (isPopular) return '⭐ Most Popular';
+                  return '👑 Pro';
+                };
+                const btnClass = () => {
+                  if (isCurrent) return 'v3-btn v3-btn-green';
+                  if (isDowngradeBlocked) return 'v3-btn v3-btn-block';
+                  if (isFree) return 'v3-btn v3-btn-plain';
+                  if (isStudio) return 'v3-btn v3-btn-gold';
+                  return 'v3-btn v3-btn-primary';
+                };
+                const btnLabel = () => {
+                  if (loading === plan.role) return 'Processing...';
+                  if (isCurrent) return '✓ Your Current Plan';
+                  if (isDowngradeBlocked) return 'Downgrade Not Available';
+                  if (isFree) return 'Free Forever';
+                  return `Get ${plan.name} →`;
+                };
+
+                return (
+                  <motion.div
+                    key={plan.role}
+                    className={`v3-card${isPopular ? ' v3-card-pop' : ''}${isCurrent ? ' v3-card-current' : ''}`}
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.44, delay: idx * 0.07 }}
+                  >
+                    {/* top ribbon */}
+                    {isPopular && !isCurrent && !isDowngradeBlocked && <div className="v3-card-ribbon v3-ribbon-pop">⭐ Most Popular</div>}
+                    {isStudio && !isCurrent && !isDowngradeBlocked && <div className="v3-card-ribbon v3-ribbon-gold">👑 Best Value</div>}
+                    {isCurrent && <div className="v3-card-ribbon v3-ribbon-current">✓ Active Plan</div>}
+                    {isDowngradeBlocked && <div className="v3-card-ribbon v3-ribbon-block">Downgrade Not Available</div>}
+
+                    <span className={badgeClass()}>{badgeLabel()}</span>
+                    <h2 className="v3-plan-name">{plan.name}</h2>
+                    <p className="v3-plan-tagline">{plan.tagline}</p>
+
+                    {/* price */}
+                    {plan.currency === 'LOADING' ? (
+                      <div className="v3-price-area"><span className="v3-price-loading">Loading price...</span></div>
+                    ) : isFree ? (
+                      <div className="v3-price-area">
+                        <div className="v3-price-free">Free</div>
+                        <div className="v3-price-forever">Always free, no card needed</div>
+                      </div>
+                    ) : (
+                      <div className="v3-price-area">
+                        {plan.originalPrice && <div className="v3-price-strike">{plan.symbol}{plan.originalPrice}/mo</div>}
+                        <div className="v3-price-row">
+                          <span className="v3-price-sym">{plan.symbol}</span>
+                          <span className="v3-price-num">{plan.price}</span>
+                          <span className="v3-price-per">/mo</span>
+                        </div>
+                        <span className="v3-price-save">✓ 25% introductory discount</span>
+                      </div>
+                    )}
+
+                    {isFree && (
+                      <div className="v3-outcomes">
+                        <div className="v3-outcomes-title">Try every tool free</div>
+                        {plan.outcomes.map((o, i) => (
+                          <div key={i} className="v3-outcome-row">
+                            <span className="v3-outcome-icon">{o.icon}</span>
+                            <span className="v3-outcome-label">{o.label}</span>
+                            <span className="v3-outcome-count">/ mo</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* features */}
+                    <ul className="v3-feats">
+                      {plan.features.map((feat, i) => (
+                        <li key={i} className={`v3-feat${i < 2 ? ' v3-feat-hl' : ''}`}>
+                          <span className={`v3-feat-ico ${isFree ? 'y' : 'v'}`}>{isFree ? '✓' : '✦'}</span>
+                          {feat}
+                        </li>
+                      ))}
+                    </ul>
+                    {!isFree && plan.currency !== 'LOADING' && (
+                      <div className="v3-outcomes">
+                        <div className="v3-outcomes-title">With this plan you can create</div>
+                        {plan.outcomes.map((o, i) => (
+                          <div key={i} className="v3-outcome-row">
+                            <span className="v3-outcome-icon">{o.icon}</span>
+                            <span className="v3-outcome-label">{o.label}</span>
+                            <span className="v3-outcome-count">/ mo</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}                    
+
+                    <button
+                      className={btnClass()}
+                      onClick={() => handleUpgrade(plan)}
+                      disabled={loading !== null || isFree || isCurrent || isDowngradeBlocked}
+                    >
+                      {btnLabel()}
+                    </button>
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            {/* urgency bar */}
+            <div className="v3-urgency">
+              <div className="v3-urgency-inner">
+                <span className="v3-urgency-icon">⏰</span>
+                <p className="v3-urgency-text">
+                  <strong>Introductory pricing for early users.</strong> These rates are locked in for existing subscribers when prices increase. New users after this period will pay the standard rate.
+                </p>
+                <span className="v3-urgency-badge">Lock in your rate →</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ══ TOPUPS ══ */}
+        <div className="v3-topups">
+          <div className="v3-topups-inner">
+            <p className="v3-section-label" style={{ textAlign: 'center' }}>Need More Credits?</p>
+            <h2 className="v3-section-title">One-time Credit Top-ups</h2>
+            <p className="v3-section-sub">Available to paid plan users. Add credits anytime — they're added to your pool instantly.</p>
+            <div className="v3-topups-row">
+              {topupPacks.map((pack, idx) => {
+                const locked = !isPaidUser && isLoggedIn;
+                const isLoad = loading === pack.planType;
+                return (
+                  <motion.div key={pack.planType} className={`v3-card${pack.badge ? ' v3-card-pop' : ''}`} initial={{ opacity: 0, y: 32 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.42, delay: idx * 0.08 }}>
+                    {pack.badge && <div className="v3-card-ribbon v3-ribbon-pop">{pack.badge}</div>}
+                    <span className="v3-card-plan-badge v3-badge-lite">💳 Top-up</span>
+                    <h2 className="v3-plan-name">{pack.name}</h2>
+                    <p className="v3-plan-tagline">One-time purchase · No expiry reset needed</p>
+                    <div className="v3-price-area">
+                      {pack.currency === 'LOADING' ? (
+                        <span className="v3-price-loading">Loading...</span>
+                      ) : (
+                        <>
+                          {pack.originalPrice && <div className="v3-price-strike">{pack.symbol}{pack.originalPrice}</div>}
+                          <div className="v3-price-row">
+                            <span className="v3-price-sym">{pack.symbol}</span>
+                            <span className="v3-price-num">{pack.price}</span>
+                            <span className="v3-price-per">one-time</span>
+                          </div>
+                          <span className="v3-price-save">✓ Save 25%</span>
+                        </>
+                      )}
+                    </div>
+                    <ul className="v3-feats" style={{ marginTop: 14 }}>
+                      <li className="v3-feat v3-feat-hl"><span className="v3-feat-ico v">✦</span><strong>{pack.credits.toLocaleString()} credits</strong> added instantly</li>
+                      <li className="v3-feat v3-feat-hl"><span className="v3-feat-ico v">✦</span>{pack.perCreditLabel === '—' ? 'Best per-credit rate' : `${pack.perCreditLabel} — best rate`}</li>
+                      <li className="v3-feat"><span className="v3-feat-ico y">✓</span>Works for voice, video, images & more</li>
+                      <li className="v3-feat"><span className="v3-feat-ico y">✓</span>Extends credit expiry by 30 days</li>
+                    </ul>
+                    {locked ? (
+                      <button className="v3-btn v3-btn-plain" disabled>🔒 Requires a paid plan</button>
+                    ) : (
+                      <button className="v3-btn v3-btn-primary" onClick={() => handleTopupPurchase(pack)} disabled={loading !== null}>
+                        {isLoad ? 'Processing...' : `Buy ${pack.credits.toLocaleString()} Credits →`}
+                      </button>
+                    )}
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+        </div>         
+        <div className="v3-hero-inner">  
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.22 }}>
             <div className="v3-hero-cta">
               {!isLoggedIn ? (
@@ -938,203 +1127,7 @@ export default function PricingPageClient() {
             </div>
           ))}
         </div>
-      </div>
-
-      {/* ══ PRICING ══ */}
-      <div className="v3-pricing" ref={plansRef}>
-        <div className="v3-pricing-header">
-          <p className="v3-pricing-label">Choose Your Plan</p>
-          <h2 className="v3-pricing-title">Simple, transparent pricing</h2>
-          <p className="v3-pricing-sub">No hidden fees. No daily limits. Credits work across every tool.</p>
-        </div>
-        <div className="v3-plans-wrap">
-          <div className="v3-plans-row">
-            {plans.map((plan, idx) => {
-              const isFree = plan.price === 0;
-              const isPopular = plan.role === 'CREATOR';
-              const isStudio = plan.role === 'STUDIO';
-              const isCurrent = currentPlan === plan.role;
-              const isDowngradeBlocked =
-                (currentPlan === 'STUDIO' && (plan.role === 'CREATOR' || plan.role === 'CREATOR_LITE')) ||
-                (currentPlan === 'CREATOR' && plan.role === 'CREATOR_LITE');
-
-              const badgeClass = () => {
-                if (plan.role === 'CREATOR_LITE') return 'v3-card-plan-badge v3-badge-lite';
-                if (isPopular) return 'v3-card-plan-badge v3-badge-creator';
-                if (isStudio) return 'v3-card-plan-badge v3-badge-studio';
-                return 'v3-card-plan-badge v3-badge-free';
-              };
-              const badgeLabel = () => {
-                if (plan.role === 'BASIC') return '🌱 Free';
-                if (plan.role === 'CREATOR_LITE') return '⚡ Lite';
-                if (isPopular) return '⭐ Most Popular';
-                return '👑 Pro';
-              };
-              const btnClass = () => {
-                if (isCurrent) return 'v3-btn v3-btn-green';
-                if (isDowngradeBlocked) return 'v3-btn v3-btn-block';
-                if (isFree) return 'v3-btn v3-btn-plain';
-                if (isStudio) return 'v3-btn v3-btn-gold';
-                return 'v3-btn v3-btn-primary';
-              };
-              const btnLabel = () => {
-                if (loading === plan.role) return 'Processing...';
-                if (isCurrent) return '✓ Your Current Plan';
-                if (isDowngradeBlocked) return 'Downgrade Not Available';
-                if (isFree) return 'Free Forever';
-                return `Get ${plan.name} →`;
-              };
-
-              return (
-                <motion.div
-                  key={plan.role}
-                  className={`v3-card${isPopular ? ' v3-card-pop' : ''}${isCurrent ? ' v3-card-current' : ''}`}
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.44, delay: idx * 0.07 }}
-                >
-                  {/* top ribbon */}
-                  {isPopular && !isCurrent && !isDowngradeBlocked && <div className="v3-card-ribbon v3-ribbon-pop">⭐ Most Popular</div>}
-                  {isStudio && !isCurrent && !isDowngradeBlocked && <div className="v3-card-ribbon v3-ribbon-gold">👑 Best Value</div>}
-                  {isCurrent && <div className="v3-card-ribbon v3-ribbon-current">✓ Active Plan</div>}
-                  {isDowngradeBlocked && <div className="v3-card-ribbon v3-ribbon-block">Downgrade Not Available</div>}
-
-                  <span className={badgeClass()}>{badgeLabel()}</span>
-                  <h2 className="v3-plan-name">{plan.name}</h2>
-                  <p className="v3-plan-tagline">{plan.tagline}</p>
-
-                  {/* price */}
-                  {plan.currency === 'LOADING' ? (
-                    <div className="v3-price-area"><span className="v3-price-loading">Loading price...</span></div>
-                  ) : isFree ? (
-                    <div className="v3-price-area">
-                      <div className="v3-price-free">Free</div>
-                      <div className="v3-price-forever">Always free, no card needed</div>
-                    </div>
-                  ) : (
-                    <div className="v3-price-area">
-                      {plan.originalPrice && <div className="v3-price-strike">{plan.symbol}{plan.originalPrice}/mo</div>}
-                      <div className="v3-price-row">
-                        <span className="v3-price-sym">{plan.symbol}</span>
-                        <span className="v3-price-num">{plan.price}</span>
-                        <span className="v3-price-per">/mo</span>
-                      </div>
-                      <span className="v3-price-save">✓ 25% introductory discount</span>
-                    </div>
-                  )}
-
-                  {/* outcomes — the KEY conversion driver */}
-                  {!isFree && plan.currency !== 'LOADING' && (
-                    <div className="v3-outcomes">
-                      <div className="v3-outcomes-title">With this plan you can create</div>
-                      {plan.outcomes.map((o, i) => (
-                        <div key={i} className="v3-outcome-row">
-                          <span className="v3-outcome-icon">{o.icon}</span>
-                          <span className="v3-outcome-label">{o.label}</span>
-                          <span className="v3-outcome-count">/ mo</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                  {isFree && (
-                    <div className="v3-outcomes">
-                      <div className="v3-outcomes-title">Try every tool free</div>
-                      {plan.outcomes.map((o, i) => (
-                        <div key={i} className="v3-outcome-row">
-                          <span className="v3-outcome-icon">{o.icon}</span>
-                          <span className="v3-outcome-label">{o.label}</span>
-                          <span className="v3-outcome-count">/ mo</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* features */}
-                  <ul className="v3-feats">
-                    {plan.features.map((feat, i) => (
-                      <li key={i} className={`v3-feat${i < 2 ? ' v3-feat-hl' : ''}`}>
-                        <span className={`v3-feat-ico ${isFree ? 'y' : 'v'}`}>{isFree ? '✓' : '✦'}</span>
-                        {feat}
-                      </li>
-                    ))}
-                  </ul>
-
-                  <button
-                    className={btnClass()}
-                    onClick={() => handleUpgrade(plan)}
-                    disabled={loading !== null || isFree || isCurrent || isDowngradeBlocked}
-                  >
-                    {btnLabel()}
-                  </button>
-                </motion.div>
-              );
-            })}
-          </div>
-
-          {/* urgency bar */}
-          <div className="v3-urgency">
-            <div className="v3-urgency-inner">
-              <span className="v3-urgency-icon">⏰</span>
-              <p className="v3-urgency-text">
-                <strong>Introductory pricing for early users.</strong> These rates are locked in for existing subscribers when prices increase. New users after this period will pay the standard rate.
-              </p>
-              <span className="v3-urgency-badge">Lock in your rate →</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ══ TOPUPS ══ */}
-      <div className="v3-topups">
-        <div className="v3-topups-inner">
-          <p className="v3-section-label" style={{ textAlign: 'center' }}>Need More Credits?</p>
-          <h2 className="v3-section-title">One-time Credit Top-ups</h2>
-          <p className="v3-section-sub">Available to paid plan users. Add credits anytime — they're added to your pool instantly.</p>
-          <div className="v3-topups-row">
-            {topupPacks.map((pack, idx) => {
-              const locked = !isPaidUser && isLoggedIn;
-              const isLoad = loading === pack.planType;
-              return (
-                <motion.div key={pack.planType} className={`v3-card${pack.badge ? ' v3-card-pop' : ''}`} initial={{ opacity: 0, y: 32 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.42, delay: idx * 0.08 }}>
-                  {pack.badge && <div className="v3-card-ribbon v3-ribbon-pop">{pack.badge}</div>}
-                  <span className="v3-card-plan-badge v3-badge-lite">💳 Top-up</span>
-                  <h2 className="v3-plan-name">{pack.name}</h2>
-                  <p className="v3-plan-tagline">One-time purchase · No expiry reset needed</p>
-                  <div className="v3-price-area">
-                    {pack.currency === 'LOADING' ? (
-                      <span className="v3-price-loading">Loading...</span>
-                    ) : (
-                      <>
-                        {pack.originalPrice && <div className="v3-price-strike">{pack.symbol}{pack.originalPrice}</div>}
-                        <div className="v3-price-row">
-                          <span className="v3-price-sym">{pack.symbol}</span>
-                          <span className="v3-price-num">{pack.price}</span>
-                          <span className="v3-price-per">one-time</span>
-                        </div>
-                        <span className="v3-price-save">✓ Save 25%</span>
-                      </>
-                    )}
-                  </div>
-                  <ul className="v3-feats" style={{ marginTop: 14 }}>
-                    <li className="v3-feat v3-feat-hl"><span className="v3-feat-ico v">✦</span><strong>{pack.credits.toLocaleString()} credits</strong> added instantly</li>
-                    <li className="v3-feat v3-feat-hl"><span className="v3-feat-ico v">✦</span>{pack.perCreditLabel === '—' ? 'Best per-credit rate' : `${pack.perCreditLabel} — best rate`}</li>
-                    <li className="v3-feat"><span className="v3-feat-ico y">✓</span>Works for voice, video, images & more</li>
-                    <li className="v3-feat"><span className="v3-feat-ico y">✓</span>Extends credit expiry by 30 days</li>
-                  </ul>
-                  {locked ? (
-                    <button className="v3-btn v3-btn-plain" disabled>🔒 Requires a paid plan</button>
-                  ) : (
-                    <button className="v3-btn v3-btn-primary" onClick={() => handleTopupPurchase(pack)} disabled={loading !== null}>
-                      {isLoad ? 'Processing...' : `Buy ${pack.credits.toLocaleString()} Credits →`}
-                    </button>
-                  )}
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </div>      
+      </div>     
 
       {/* ══ CREDIT EXPLAINER ══ */}
       <div className="v3-explain">
