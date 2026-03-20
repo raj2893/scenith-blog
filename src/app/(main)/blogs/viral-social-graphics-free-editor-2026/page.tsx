@@ -105,7 +105,7 @@ export default function ViralSocialGraphicsGuide2026() {
           </p>
 
           <p>
-            The shift is massive. Attention spans have dropped to 8 seconds. Mobile dominates 70%+ of social consumption. Algorithms reward instant hooks — high-contrast colors, bold text, emotional imagery. Without these elements, even the best content gets scrolled past. The good news? You no longer need $15/month Canva Pro or $60/month Photoshop. Free browser-based editors now offer everything needed for viral graphics: unlimited layers, AI background removal, advanced typography, cloud saving, and instant exports.
+            The shift is massive. Attention spans have dropped to 8 seconds. Mobile dominates 70%+ of social consumption. Algorithms reward instant hooks — high-contrast colors, bold text, emotional imagery. Without these elements, even the best content gets scrolled past. The good news? You no longer need $9/month Canva Pro or $60/month Photoshop. Free browser-based editors now offer everything needed for viral graphics: unlimited layers, AI background removal, advanced typography, cloud saving, and instant exports.
           </p>
 
           <p>
@@ -356,7 +356,7 @@ export default function ViralSocialGraphicsGuide2026() {
 
             <div className={styles.platformCard}>
               <h3>Canva Pro</h3>
-              <p>$15/month</p>
+              <p>$9/month</p>
               <ul>
                 <li>✓ Huge templates</li>
                 <li>✗ Watermarks on free</li>

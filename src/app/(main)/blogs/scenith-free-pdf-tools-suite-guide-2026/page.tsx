@@ -572,7 +572,7 @@ export default function ScenithFreePDFToolsSuiteGuide2026() {
             <div className={styles.platformCard}>
               <h3>SmallPDF / iLovePDF</h3>
               <ul>
-                <li>Cost: $12–$15/month for premium features</li>
+                <li>Cost: $12–$20/month for premium features</li>
                 <li>Usage Limits: Daily caps (2–3 files) on free tier</li>
                 <li>Watermarks: Added to free tier outputs</li>
                 <li>File Size Limit: 100MB–300MB on free, higher on paid</li>

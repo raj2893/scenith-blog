@@ -244,7 +244,7 @@ export default function CompressVideoQuality() {
           <div className={styles.methodCard}>
             <div className={styles.methodStats}>
               <span className={styles.stat}>⏱️ Time: 10-15 minutes</span>
-              <span className={styles.stat}>💰 Cost: Free-$15/month</span>
+              <span className={styles.stat}>💰 Cost: Free-$20/month</span>
               <span className={styles.stat}>🎯 Complexity: High</span>
             </div>
 

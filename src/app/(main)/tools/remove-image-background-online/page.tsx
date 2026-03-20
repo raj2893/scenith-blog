@@ -132,7 +132,7 @@ function UpgradePopup({ onClose }: { onClose: () => void }) {
 
         <p className="rbo-popup-sub">
           Free plan: <strong style={{ color: '#e53e3e' }}>10 removals/month</strong>.
-          Upgrade from <strong>· $15/mo</strong>
+          Upgrade from <strong>· $9/mo</strong>
         </p>
 
         <div className="rbo-popup-perks">

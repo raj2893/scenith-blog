@@ -92,6 +92,16 @@ const AIImageGeneratorClient: React.FC = () => {
   // Async job polling — mirrors video gen
   const [currentImageJob, setCurrentImageJob] = useState<{ id: number; status: string; imagePath?: string; prompt?: string; errorMessage?: string } | null>(null);
   const imagePollingRef = useRef<NodeJS.Timeout | null>(null);
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);  
+  const [activePlanRole, setActivePlanRole] = useState<string>('BASIC');
+
+  useEffect(() => {
+    if (activePlanRole !== 'BASIC') return;
+    const timer = setTimeout(() => {
+      setShowWelcomeModal(true);
+    }, 15000);
+    return () => clearTimeout(timer);
+  }, [activePlanRole]);    
 
   // Handle scroll for navbar
   useEffect(() => {
@@ -101,9 +111,6 @@ const AIImageGeneratorClient: React.FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  // Fetch actual active plan (mirrors pricing page logic)
-  const [activePlanRole, setActivePlanRole] = useState<string>('BASIC');
 
   useEffect(() => {
     const fetchActivePlan = async () => {
@@ -1117,6 +1124,26 @@ const startImagePolling = useCallback((jobId: number) => {
                             📋 Copy prompt
                           </button>
                         </div>
+
+                        <div style={{
+                          marginTop: 12, padding: '12px 16px',
+                          background: 'linear-gradient(135deg, rgba(99,85,220,0.07), rgba(139,92,246,0.05))',
+                          border: '1px solid rgba(99,85,220,0.18)',
+                          borderRadius: 12,
+                          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                          gap: 10, flexWrap: 'wrap',
+                        }}>
+                          <span style={{ fontSize: 13, color: '#2d2d5e', fontWeight: 500 }}>
+                            Love this result? Create more with Premium credits! ✨
+                          </span>
+                          <a href="/pricing" style={{
+                            fontSize: 12, fontWeight: 700, color: '#fff',
+                            padding: '6px 14px', borderRadius: 8,
+                            background: 'linear-gradient(135deg, #6355dc, #8b5cf6)',
+                            textDecoration: 'none', whiteSpace: 'nowrap',
+                            boxShadow: '0 4px 14px rgba(99,85,220,0.3)',
+                          }}>View Plans →</a>
+                        </div>                        
                         <p className="image-prompt">{image.prompt}</p>
                       </div>
                     ))}
@@ -1750,7 +1777,7 @@ const startImagePolling = useCallback((jobId: number) => {
             <div className="vs-card">
               <h3>Scenith vs Midjourney</h3>
               <ul>
-                <li>✅ <strong>Scenith:</strong> Credit-based plans from $15/mo, web-based interface</li>
+                <li>✅ <strong>Scenith:</strong> Credit-based plans from $9/mo, web-based interface</li>
                 <li>❌ <strong>Midjourney:</strong> $10/month minimum, Discord-only access</li>
                 <li>✅ <strong>Scenith:</strong> One-click generation, no commands needed</li>
                 <li>⚠️ <strong>Midjourney:</strong> Complex slash commands required</li>
@@ -1887,21 +1914,96 @@ const startImagePolling = useCallback((jobId: number) => {
         </div>
       )}
       {isLoggedIn && imageUsage && imageUsage.balance <= 20 && (
-  <div className="floating-upgrade-cta">
-    <button
-      className="floating-upgrade-btn"
-      onClick={() => window.location.href = '/pricing'}
-    >
-      <span className="float-icon">🎨</span>
-      <span className="float-text">
-        <strong>
-          {imageUsage.balance <= 0 ? 'Out of credits — Upgrade now' : 'Running low on credits'}
-        </strong>
-        <small>View plans for more →</small>
-      </span>
-    </button>
-  </div>
-)}
+        <div className="floating-upgrade-cta">
+          <button
+            className="floating-upgrade-btn"
+            onClick={() => window.location.href = '/pricing'}
+          >
+            <span className="float-icon">🎨</span>
+            <span className="float-text">
+              <strong>
+                {imageUsage.balance <= 0 ? 'Out of credits — Upgrade now' : 'Running low on credits'}
+              </strong>
+              <small>View plans for more →</small>
+            </span>
+          </button>
+        </div>
+      )}
+
+      {showWelcomeModal && (
+        <div
+          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}
+          onClick={(e) => { if (e.target === e.currentTarget) setShowWelcomeModal(false); }}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.88, y: 32 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.88, y: 32 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 28 }}
+            style={{ background: '#0d0d1c', borderRadius: 24, padding: 0, maxWidth: 560, width: '96%', maxHeight: '85vh', overflowY: 'auto', position: 'relative', border: '1px solid rgba(99,85,220,0.3)', boxShadow: '0 40px 120px rgba(0,0,0,0.75)' }}
+          >
+            <button onClick={() => setShowWelcomeModal(false)} style={{ position: 'absolute', top: 14, right: 14, zIndex: 10, background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, width: 32, height: 32, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6a6a8a' }} aria-label="Close">
+              <FaTimes size={11} />
+            </button>
+            <div style={{ height: 5, borderRadius: '24px 24px 0 0', background: 'linear-gradient(90deg, #6355dc, #8b5cf6, #f06cbe)' }} />
+            <div style={{ padding: '28px 28px 24px' }}>
+              <div style={{ textAlign: 'center', marginBottom: 22 }}>
+                <div style={{ fontSize: 40, marginBottom: 10 }}>🖼️</div>
+                <h2 style={{ fontFamily: "'Cabinet Grotesk', sans-serif", fontSize: 20, fontWeight: 900, color: '#e2e2ef', marginBottom: 6 }}>Welcome to Scenith AI Images</h2>
+                <p style={{ fontSize: 13, color: '#6a6a8a', maxWidth: 380, margin: '0 auto', lineHeight: 1.55 }}>
+                  You're on the <strong style={{ color: '#a899f5' }}>Free Plan</strong> (50 credits). Here's what you get — and what you unlock with <strong style={{ color: '#a899f5' }}>Creator Lite</strong> for just $9/mo.
+                </p>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 20 }}>
+                <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 14, padding: '16px 14px' }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', color: '#44445e', textTransform: 'uppercase', marginBottom: 12 }}>🆓 Free Plan</div>
+                  {[
+                    { icon: '💳', label: 'Credits', val: '50 total' },
+                    { icon: '🖼️', label: 'Image models', val: 'Limited only' },
+                    { icon: '📥', label: 'Downloads', val: 'PNG included' },
+                    { icon: '💰', label: 'Topups', val: '✗ Not available' },
+                  ].map((item, i) => (
+                    <div key={i} style={{ marginBottom: i < 3 ? 8 : 0 }}>
+                      <div style={{ fontSize: 10, color: '#3a3a52', marginBottom: 1 }}>{item.icon} {item.label}</div>
+                      <div style={{ fontSize: 12, color: '#55557a', fontWeight: 600 }}>{item.val}</div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ background: 'rgba(99,85,220,0.08)', border: '1px solid rgba(99,85,220,0.3)', borderRadius: 14, padding: '16px 14px', position: 'relative' }}>
+                  <div style={{ position: 'absolute', top: -11, left: '50%', transform: 'translateX(-50%)', background: 'linear-gradient(135deg, #6355dc, #8b5cf6)', color: '#fff', fontSize: 9, fontWeight: 800, letterSpacing: '0.08em', padding: '3px 12px', borderRadius: 999, whiteSpace: 'nowrap' }}>⭐ MOST POPULAR</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', color: '#6355dc', textTransform: 'uppercase', marginBottom: 12 }}>Creator Lite — $9/mo</div>
+                  {[
+                    { icon: '💳', label: 'Credits', val: '300 /mo' },
+                    { icon: '🖼️', label: 'Image models', val: 'All models ✓' },
+                    { icon: '📥', label: 'Downloads', val: 'Unlimited ✓' },
+                    { icon: '💰', label: 'Topups', val: '✓ Available' },
+                  ].map((item, i) => (
+                    <div key={i} style={{ marginBottom: i < 3 ? 8 : 0 }}>
+                      <div style={{ fontSize: 10, color: '#6355dc', marginBottom: 1 }}>{item.icon} {item.label}</div>
+                      <div style={{ fontSize: 12, color: '#a899f5', fontWeight: 700 }}>{item.val}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div style={{ textAlign: 'center', marginBottom: 14 }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 6, marginBottom: 4 }}>
+                  <span style={{ fontFamily: "'Cabinet Grotesk', sans-serif", fontSize: 34, fontWeight: 900, color: '#e2e2ef', letterSpacing: '-0.03em' }}>$15</span>
+                  <span style={{ fontSize: 12, color: '#55557a' }}>/mo</span>
+                  <span style={{ background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.28)', color: '#34d399', fontSize: 10, fontWeight: 700, padding: '3px 8px', borderRadius: 999 }}>300 CREDITS INCLUDED</span>
+                </div>
+                <p style={{ fontSize: 11, color: '#3a3a52', marginBottom: 14 }}>Cancel anytime · No hidden fees · All models included</p>
+                <a href="/pricing" onClick={() => setShowWelcomeModal(false)} style={{ display: 'block', width: '100%', padding: '13px 24px', background: 'linear-gradient(135deg, #6355dc 0%, #8b5cf6 100%)', color: '#fff', borderRadius: 12, textDecoration: 'none', fontSize: 14, fontWeight: 700, boxShadow: '0 8px 32px rgba(99,85,220,0.45)', textAlign: 'center' }}>
+                  Upgrade to Creator Lite — $9/mo →
+                </a>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span style={{ fontSize: 11, color: '#3a3a52' }}>⭐⭐⭐⭐⭐ 1,500+ creators trust Scenith</span>
+                <button onClick={() => setShowWelcomeModal(false)} style={{ background: 'none', border: 'none', color: '#3a3a52', fontSize: 11, cursor: 'pointer', textDecoration: 'underline' }}>Continue free</button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}      
     </div>
   );
 };

@@ -110,7 +110,7 @@ const jsonLd = {
         "@type": "Offer",
         price: "0",
         priceCurrency: "USD",
-        description: "Free tier with 50 credits. Premium plans from $15/month.",
+        description: "Free tier with 50 credits. Premium plans from $9/month.",
       },
       aggregateRating: {
         "@type": "AggregateRating",
@@ -135,7 +135,7 @@ const jsonLd = {
           name: "Is Scenith's AI video generator free?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Yes. Scenith offers a free account with 50 starter credits — enough for at least one full video generation using models like Wan 2.5. No credit card is required to sign up. Premium plans starting at $15/month unlock more credits and access to high-end models like Kling 2.6 Pro and Veo 3.1.",
+            text: "Yes. Scenith offers a free account with 50 starter credits — enough for at least one full video generation using models like Wan 2.5. No credit card is required to sign up. Premium plans starting at $9/month unlock more credits and access to high-end models like Kling 2.6 Pro and Veo 3.1.",
           },
         },
         {
@@ -379,7 +379,7 @@ const faqData = [
   },
   {
     q: "Is Scenith's AI video generator really free?",
-    a: "Yes. Creating a free account gives you 50 starter credits instantly — no credit card required. That's enough for at least one full video generation using the Wan 2.5 model. Paid plans start at $15/month and include 300 credits plus access to premium models like Kling 2.6 Pro and Veo 3.1.",
+    a: "Yes. Creating a free account gives you 50 starter credits instantly — no credit card required. That's enough for at least one full video generation using the Wan 2.5 model. Paid plans start at $9/month and include 300 credits plus access to premium models like Kling 2.6 Pro and Veo 3.1.",
   },
   {
     q: "Which AI video model should I use in 2026?",
@@ -936,7 +936,7 @@ export default function AIVideoGeneratorOnlinePage() {
                 reflects the substantially higher compute cost of Google&apos;s flagship model.
               </p>
               <p>
-                To put this in perspective: on Scenith&apos;s $15/month plan, you get 300 credits — that&apos;s
+                To put this in perspective: on Scenith&apos;s $9/month plan, you get 300 credits — that&apos;s
                 6 full Veo 3.1 generations, or 16 Kling 2.6 Pro generations, or 6 full Wan 2.5 generations at
                 10 seconds each. Compare that to the cost of even a single professional video shoot, and the
                 value proposition becomes immediately clear.

@@ -1070,7 +1070,7 @@ export default function AIBackgroundImageGeneratorClient() {
               <tbody>
                 {[
                   ["Time to first result", "< 15 seconds", "Minutes (searching)", "Days–weeks", "Hours–days"],
-                  ["Cost", "Free / from $15/mo", "$10–$50 per image", "$50–$500 per asset", "Equipment + time"],
+                  ["Cost", "Free / from $9/mo", "$10–$50 per image", "$50–$500 per asset", "Equipment + time"],
                   ["Uniqueness", "100% unique", "Used by millions", "100% unique", "100% unique"],
                   ["Commercial rights", "✓ Included", "License required", "✓ Included", "✓ Owned"],
                   ["Style flexibility", "Unlimited styles", "Limited to library", "Any style", "Limited by skills"],
@@ -1115,7 +1115,7 @@ export default function AIBackgroundImageGeneratorClient() {
                   <p>
                     Creating a Scenith account is completely free with no credit card
                     required. You receive generation credits immediately that you can
-                    use on any AI model. Paid plans start at $15/month if you need
+                    use on any AI model. Paid plans start at $9/month if you need
                     higher volume.{" "}
                     <a href={UTM_FAQ} rel="noopener">
                       Create your free account here →
@@ -1224,7 +1224,7 @@ export default function AIBackgroundImageGeneratorClient() {
                   <p>
                     As many as your credits allow. Each generation uses a set number of
                     credits depending on the model (2–10 credits per image). Free accounts
-                    receive credits on signup. Paid plans on Scenith start at $15/month and
+                    receive credits on signup. Paid plans on Scenith start at $9/month and
                     include significantly more credits for ongoing content creation.
                     Professional content creators and agencies typically use 50–200 credits
                     per month.

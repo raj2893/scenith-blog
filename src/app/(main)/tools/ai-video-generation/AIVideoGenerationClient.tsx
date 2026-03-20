@@ -128,6 +128,15 @@ const AIVideoGenerationClient: React.FC = () => {
   const jobCardRef = useRef<HTMLDivElement>(null);
   const historyRef = useRef<HTMLButtonElement>(null);
   const upsellRef = useRef<HTMLDivElement>(null);
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
+
+  useEffect(() => {
+    if (hasPlan) return;
+    const timer = setTimeout(() => {
+      setShowWelcomeModal(true);
+    }, 15000);
+    return () => clearTimeout(timer);
+  }, [hasPlan]);  
 
   // Polling
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
@@ -1450,6 +1459,25 @@ const AIVideoGenerationClient: React.FC = () => {
                       🔄 Generate Another
                     </button>
                   </div>
+                  <div style={{
+                    marginTop: 14, padding: '12px 16px',
+                    background: 'rgba(99,102,241,0.07)',
+                    border: '1px solid rgba(99,102,241,0.2)',
+                    borderRadius: 12,
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    gap: 10, flexWrap: 'wrap',
+                  }}>
+                    <span style={{ fontSize: 13, color: '#CBD5E1', fontWeight: 500 }}>
+                      Love this result? Create more with Premium credits! ✨
+                    </span>
+                    <a href="/pricing" style={{
+                      fontSize: 12, fontWeight: 700, color: '#fff',
+                      padding: '6px 14px', borderRadius: 8,
+                      background: 'linear-gradient(135deg, #6366F1, #4F46E5)',
+                      textDecoration: 'none', whiteSpace: 'nowrap',
+                      boxShadow: '0 4px 14px rgba(99,102,241,0.35)',
+                    }}>View Plans →</a>
+                  </div>                  
                 </>
               )}
 
@@ -1569,7 +1597,7 @@ const AIVideoGenerationClient: React.FC = () => {
               Get more credits for AI Videos!
             </h3>
             <p style={{ color: '#64748B', fontSize: 14, maxWidth: 380, margin: '0 auto 22px', lineHeight: 1.6 }}>
-              Premium Plans start at just $15/month and includes 300 credits!
+              Premium Plans start at just $9/month and includes 300 credits!
             </p>
             <a href="/pricing" style={{
               display: 'inline-block', padding: '14px 36px', borderRadius: 12,
@@ -1577,7 +1605,7 @@ const AIVideoGenerationClient: React.FC = () => {
               fontWeight: 700, fontSize: 15, textDecoration: 'none',
               boxShadow: '0 8px 28px rgba(99,102,241,0.4)',
             }}>
-              Unlock AI Video — $15/mo →
+              Unlock AI Video — $9/mo →
             </a>
             <p style={{ fontSize: 11.5, color: '#334155', marginTop: 12 }}>
               · Instant access · All AI models included
@@ -1617,6 +1645,81 @@ const AIVideoGenerationClient: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {showWelcomeModal && (
+        <div
+          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}
+          onClick={(e) => { if (e.target === e.currentTarget) setShowWelcomeModal(false); }}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.88, y: 32 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.88, y: 32 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 28 }}
+            style={{ background: '#080B12', borderRadius: 24, padding: 0, maxWidth: 560, width: '96%', maxHeight: '85vh', overflowY: 'auto', position: 'relative', border: '1px solid rgba(99,102,241,0.3)', boxShadow: '0 40px 120px rgba(0,0,0,0.75)' }}
+          >
+            <button onClick={() => setShowWelcomeModal(false)} style={{ position: 'absolute', top: 14, right: 14, zIndex: 10, background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, width: 32, height: 32, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6a6a8a' }} aria-label="Close">
+              <FaTimes size={11} />
+            </button>
+            <div style={{ height: 5, borderRadius: '24px 24px 0 0', background: 'linear-gradient(90deg, #6366F1, #8b5cf6, #34D399)' }} />
+            <div style={{ padding: '28px 28px 24px' }}>
+              <div style={{ textAlign: 'center', marginBottom: 22 }}>
+                <div style={{ fontSize: 40, marginBottom: 10 }}>🎬</div>
+                <h2 style={{ fontFamily: "'Syne', sans-serif", fontSize: 20, fontWeight: 900, color: '#E2E8F0', marginBottom: 6 }}>Welcome to Scenith AI Video</h2>
+                <p style={{ fontSize: 13, color: '#6a6a8a', maxWidth: 380, margin: '0 auto', lineHeight: 1.55 }}>
+                  You're on the <strong style={{ color: '#818CF8' }}>Free Plan</strong>. Here's what you get — and what you unlock with <strong style={{ color: '#818CF8' }}>Creator Lite</strong> for just $9/mo.
+                </p>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 20 }}>
+                <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 14, padding: '16px 14px' }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', color: '#44445e', textTransform: 'uppercase', marginBottom: 12 }}>🆓 Free Plan</div>
+                  {[
+                    { icon: '💳', label: 'Credits', val: '50 total' },
+                    { icon: '🎬', label: 'Video models', val: 'Limited only' },
+                    { icon: '📥', label: 'Downloads', val: 'MP4 included' },
+                    { icon: '💰', label: 'Topups', val: '✗ Not available' },
+                  ].map((item, i) => (
+                    <div key={i} style={{ marginBottom: i < 3 ? 8 : 0 }}>
+                      <div style={{ fontSize: 10, color: '#3a3a52', marginBottom: 1 }}>{item.icon} {item.label}</div>
+                      <div style={{ fontSize: 12, color: '#55557a', fontWeight: 600 }}>{item.val}</div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.3)', borderRadius: 14, padding: '16px 14px', position: 'relative' }}>
+                  <div style={{ position: 'absolute', top: -11, left: '50%', transform: 'translateX(-50%)', background: 'linear-gradient(135deg, #6366F1, #8b5cf6)', color: '#fff', fontSize: 9, fontWeight: 800, letterSpacing: '0.08em', padding: '3px 12px', borderRadius: 999, whiteSpace: 'nowrap' }}>⭐ MOST POPULAR</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', color: '#6366F1', textTransform: 'uppercase', marginBottom: 12 }}>Creator Lite — $9/mo</div>
+                  {[
+                    { icon: '💳', label: 'Credits', val: '300 /mo' },
+                    { icon: '🎬', label: 'Video models', val: 'All models ✓' },
+                    { icon: '📥', label: 'Downloads', val: 'Unlimited ✓' },
+                    { icon: '💰', label: 'Topups', val: '✓ Available' },
+                  ].map((item, i) => (
+                    <div key={i} style={{ marginBottom: i < 3 ? 8 : 0 }}>
+                      <div style={{ fontSize: 10, color: '#6366F1', marginBottom: 1 }}>{item.icon} {item.label}</div>
+                      <div style={{ fontSize: 12, color: '#818CF8', fontWeight: 700 }}>{item.val}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div style={{ textAlign: 'center', marginBottom: 14 }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 6, marginBottom: 4 }}>
+                  <span style={{ fontFamily: "'Syne', sans-serif", fontSize: 34, fontWeight: 900, color: '#E2E8F0', letterSpacing: '-0.03em' }}>$15</span>
+                  <span style={{ fontSize: 12, color: '#55557a' }}>/mo</span>
+                  <span style={{ background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.28)', color: '#34D399', fontSize: 10, fontWeight: 700, padding: '3px 8px', borderRadius: 999 }}>300 CREDITS INCLUDED</span>
+                </div>
+                <p style={{ fontSize: 11, color: '#3a3a52', marginBottom: 14 }}>Cancel anytime · No hidden fees · All models included</p>
+                <a href="/pricing" onClick={() => setShowWelcomeModal(false)} style={{ display: 'block', width: '100%', padding: '13px 24px', background: 'linear-gradient(135deg, #6366F1 0%, #8b5cf6 100%)', color: '#fff', borderRadius: 12, textDecoration: 'none', fontSize: 14, fontWeight: 700, boxShadow: '0 8px 32px rgba(99,102,241,0.45)', textAlign: 'center' }}>
+                  Upgrade to Creator Lite — $9/mo →
+                </a>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span style={{ fontSize: 11, color: '#3a3a52' }}>⭐⭐⭐⭐⭐ 1,500+ creators trust Scenith</span>
+                <button onClick={() => setShowWelcomeModal(false)} style={{ background: 'none', border: 'none', color: '#3a3a52', fontSize: 11, cursor: 'pointer', textDecoration: 'underline' }}>Continue free</button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}      
     </div>
   );
 };

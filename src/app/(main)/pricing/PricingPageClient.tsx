@@ -836,7 +836,7 @@ export default function PricingPageClient() {
     }
     const sym = isIndianUser ? '₹' : '$';
     const cur = isIndianUser ? 'INR' : 'USD';
-    const p = isIndianUser ? { lite: 799, creator: 1749, studio: 2299 } : { lite: 15, creator: 22, studio: 27 };
+    const p = isIndianUser ? { lite: 799, creator: 1749, studio: 2599 } : { lite: 9, creator: 19, studio: 29 };
     const o = { lite: Math.round(p.lite / 0.75), creator: Math.round(p.creator / 0.75), studio: Math.round(p.studio / 0.75) };
     return [
       { name: 'Starter Forge', role: 'BASIC', price: 0, currency: 'FREE', ttsLimit: 600, tagline: 'Try every tool, no card required.', features: ['50 credits/mo', '600 voice chars/mo', '5 speed videos + 5 BG removals', '10 SVG downloads', '720p export with watermark'], outcomes: [{ icon: '🎙️', label: 'Voice (600 chars)' }, { icon: '✂️', label: '5 BG removals' }] },
@@ -882,7 +882,7 @@ export default function PricingPageClient() {
         <div className="v3-ticker-inner">
           <span className="v3-ticker-pill">🔥 LIMITED TIME</span>
           All plans are 25% off introductory pricing — lock in your rate today
-          <span className="v3-ticker-pill">2,410+ creators</span>
+          <span className="v3-ticker-pill">2,500+ creators</span>
         </div>
       </div>
 
@@ -899,7 +899,7 @@ export default function PricingPageClient() {
                 <div key={i} className="v3-proof-avatar" style={{ background: `linear-gradient(135deg, hsl(${220+i*24},70%,60%), hsl(${260+i*20},65%,55%))` }}>{l}</div>
               ))}
             </div>
-            <span className="v3-proof-text"><strong>2,410+ creators</strong> are building with Scenith</span>
+            <span className="v3-proof-text"><strong>2,500+ creators</strong> are building with Scenith</span>
           </motion.div>
 
           <motion.h1 className="v3-h1" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.08 }}>
@@ -1252,7 +1252,7 @@ export default function PricingPageClient() {
             Start creating with AI<br /><em>in seconds</em>
           </motion.h2>
           <motion.p className="v3-final-sub" initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.1 }}>
-            Join 2,410+ creators already using Scenith. Free to start, powerful when you're ready to grow.
+            Join 2,500+ creators already using Scenith. Free to start, powerful when you're ready to grow.
           </motion.p>
           <motion.div className="v3-final-cta-row" initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.18 }}>
             {!isLoggedIn ? (

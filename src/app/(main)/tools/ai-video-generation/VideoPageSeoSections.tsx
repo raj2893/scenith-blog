@@ -36,7 +36,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "How do credits work?",
-    a: "Credits are the currency for generating videos on Scenith. Each generation costs a fixed number of credits based on model, duration, and whether audio is enabled — costs are shown before you generate. Plans start at $15/month and include 300 credits. Unused credits roll over and your balance is always visible at the top of the generator.",
+    a: "Credits are the currency for generating videos on Scenith. Each generation costs a fixed number of credits based on model, duration, and whether audio is enabled — costs are shown before you generate. Plans start at $9/month and include 300 credits. Unused credits roll over and your balance is always visible at the top of the generator.",
   },
   {
     q: "Can I use AI-generated videos on YouTube, Instagram, or TikTok?",

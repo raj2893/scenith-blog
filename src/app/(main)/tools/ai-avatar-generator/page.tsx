@@ -115,7 +115,7 @@ const jsonLd = {
         "@type": "Offer",
         price: "0",
         priceCurrency: "USD",
-        description: "Free tier with 50 credits. Premium plans from $15/month.",
+        description: "Free tier with 50 credits. Premium plans from $9/month.",
       },
       featureList: [
         "Text-to-avatar AI generation",

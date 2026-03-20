@@ -103,7 +103,7 @@ export default function AdvancedBrowserCanvasGuide() {
           </div>
 
           <p>
-            Graphic design has changed dramatically. Photoshop still costs $20–60/month. Canva Pro charges $15/month for "premium" features. Affinity Designer is a one-time $70 but requires installation and lacks real-time collaboration.
+            Graphic design has changed dramatically. Photoshop still costs $20–60/month. Canva Pro charges $20/month for "premium" features. Affinity Designer is a one-time $70 but requires installation and lacks real-time collaboration.
             Meanwhile, the best browser-based editors in 2026 now deliver 85–92% of what most creators actually need — social media graphics, YouTube thumbnails, posters, banners, presentations, product mockups, marketing visuals — faster, lighter, and completely free.
           </p>
 
@@ -421,7 +421,7 @@ export default function AdvancedBrowserCanvasGuide() {
 
             <div className={styles.platformCard}>
               <h3>Canva Pro</h3>
-              <p><strong>Cost:</strong> $15/month</p>
+              <p><strong>Cost:</strong> $20/month</p>
               <ul>
                 <li>✓ Extremely beginner-friendly</li>
                 <li>✓ Huge template & stock library</li>

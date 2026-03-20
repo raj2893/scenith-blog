@@ -172,7 +172,7 @@ const FAQ_ITEMS = [
   },
   {
     q: 'Is AI banner generation free?',
-    a: "Scenith's AI banner generator is accessible via our AI Image Generation tool. The free BASIC plan lets you explore the tool, with paid plans starting from $15/month offering generous image credits. Each credit generates one high-resolution banner image with no watermarks and full commercial rights.",
+    a: "Scenith's AI banner generator is accessible via our AI Image Generation tool. The free BASIC plan lets you explore the tool, with paid plans starting from $9/month offering generous image credits. Each credit generates one high-resolution banner image with no watermarks and full commercial rights.",
   },
   {
     q: 'What banner sizes can AI generate?',
@@ -704,7 +704,7 @@ export default function AIBannerGeneratorPage() {
               </div>
               <div className="aside-card">
                 <h4>💰 Cost Comparison</h4>
-                <p>Professional designer: ₹5,000–₹50,000/project. Scenith AI: from $15/month for unlimited iterations.</p>
+                <p>Professional designer: ₹5,000–₹50,000/project. Scenith AI: from $9/month for unlimited iterations.</p>
               </div>
               <div className="aside-card">
                 <h4>🔄 Iteration Speed</h4>
@@ -930,7 +930,7 @@ The AI handles the visual narrative; the editor adds course name, instructor bra
                   ['Commercial rights', '✅ All plans', '⚠️ Paid plans', '✅ Yes', '⚠️ Paid only'],
                   ['Image Editor included', '✅ Free', '✅ Paid features', '❌ Separate', '❌ No'],
                   ['No watermarks', '✅ All plans', '⚠️ Paid only', '✅ Yes', '⚠️ Paid only'],
-                  ['Pricing (India)', '$15/mo+', '₹899/mo+', '₹1,999/mo+', '$10/mo+'],
+                  ['Pricing (India)', '$9/mo+', '₹899/mo+', '₹1,999/mo+', '$10/mo+'],
                   ['Web-based access', '✅ Yes', '✅ Yes', '✅ Yes', '❌ Discord only'],
                   ['Prompt-to-image control', '✅ Full', '⚠️ Limited', '✅ Full', '✅ Full'],
                 ].map(([feature, scenith, canva, adobe, mid]) => (
@@ -998,7 +998,7 @@ The AI handles the visual narrative; the editor adds course name, instructor bra
             <span>✅ Commercial rights</span>
             <span>✅ 7+ AI models</span>
             <span>✅ Free image editor included</span>
-            <span>✅ Plans from $15/month</span>
+            <span>✅ Plans from $9/month</span>
           </div>
         </div>
       </section>

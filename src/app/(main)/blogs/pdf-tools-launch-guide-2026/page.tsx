@@ -625,7 +625,7 @@ export default function PDFToolsLaunchGuide2026() {
             <div className={styles.platformCard}>
               <h3>SmallPDF / iLovePDF</h3>
               <ul>
-                <li>Cost: $12–$15/month for premium</li>
+                <li>Cost: $12–$20/month for premium</li>
                 <li>Usage Limits: Daily caps on free tier</li>
                 <li>Watermarks: On free tier</li>
                 <li>File Size Limit: 100MB–300MB free</li>

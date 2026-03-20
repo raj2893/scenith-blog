@@ -185,7 +185,7 @@ const FAQ_ITEMS = [
   },
   {
     q: 'Is there a free product background remover available?',
-    a: "Yes. Scenith offers free credits on signup to try the background removal tool. Paid plans start at $15/month for Creator plans with higher credit balances — making it the most affordable professional-grade background removal option for Indian e-commerce sellers.",
+    a: "Yes. Scenith offers free credits on signup to try the background removal tool. Paid plans start at $9/month for Creator plans with higher credit balances — making it the most affordable professional-grade background removal option for Indian e-commerce sellers.",
   },
   {
     q: 'How do I make a product photo white background without Photoshop?',
@@ -243,7 +243,7 @@ const COMPARISON_DATA = [
   { method: '✂️ Manual Photoshop', time: '15–45 min/image', cost: '₹500–2,000/image (freelancer)', quality: 'High (skilled operator)', scalability: 'Very Low' },
   { method: '🤖 Old AI Tools (remove.bg, etc.)', time: '5–10 seconds', cost: '$0.20–0.50/image', quality: 'Medium (struggles with complex edges)', scalability: 'Medium' },
   { method: '📱 Mobile Apps (Background Eraser, etc.)', time: '2–5 min/image', cost: '₹0–300/month', quality: 'Low (manual refinement needed)', scalability: 'Low' },
-  { method: '🚀 Scenith AI Background Remover', time: '3–8 seconds', cost: 'From $15/month', quality: 'High (modern diffusion-based AI)', scalability: 'High' },
+  { method: '🚀 Scenith AI Background Remover', time: '3–8 seconds', cost: 'From $9/month', quality: 'High (modern diffusion-based AI)', scalability: 'High' },
 ];
 
 export default function ProductImageBackgroundRemoverPage() {
@@ -852,7 +852,7 @@ export default function ProductImageBackgroundRemoverPage() {
               </a>
               <div className="pbrpage__pricing-note">
                 <span>Plans from</span>
-                <strong>$15/month</strong>
+                <strong>$9/month</strong>
                 <a href="/pricing">Compare plans →</a>
               </div>
             </div>
@@ -954,7 +954,7 @@ export default function ProductImageBackgroundRemoverPage() {
               <span>•</span>
               <span>✅ Free credits on signup</span>
               <span>•</span>
-              <span>🚀 Plans from $15/month</span>
+              <span>🚀 Plans from $9/month</span>
             </div>
           </div>
         </div>

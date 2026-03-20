@@ -103,7 +103,7 @@ const jsonLd = {
         "@type": "Offer",
         price: "0",
         priceCurrency: "INR",
-        description: "Free to start. Credit-based plans from $15/mo.",
+        description: "Free to start. Credit-based plans from $9/mo.",
       },
       featureList: [
         "Text to YouTube Shorts",

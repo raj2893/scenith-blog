@@ -145,7 +145,7 @@ const FAQ_ITEMS = [
   },
   {
     q: 'Is this Instagram Post AI Generator completely free?',
-    a: 'The core tool at Scenith is credit-based. You can use the free plan to start generating immediately after signing up. Paid plans start from $15/month for more credits and access to premium AI models like GPT Image 1 and Grok Aurora, which produce significantly better results for social media content.',
+    a: 'The core tool at Scenith is credit-based. You can use the free plan to start generating immediately after signing up. Paid plans start from $9/month for more credits and access to premium AI models like GPT Image 1 and Grok Aurora, which produce significantly better results for social media content.',
   },
   {
     q: 'Which AI model produces the best Instagram images?',
@@ -652,7 +652,7 @@ export default function InstagramPostAIGeneratorPage() {
               worth of content in 5–12 days.
             </p>
             <p>
-              AI image generation fundamentally breaks this equation. At $15/month for a Creator plan, you can
+              AI image generation fundamentally breaks this equation. At $9/month for a Creator plan, you can
               generate 50–100+ unique, professional-quality Instagram visuals — in any style, any setting, any season,
               any concept — without booking a photographer, renting a studio, or subscribing to a stock library.
             </p>
@@ -875,7 +875,7 @@ export default function InstagramPostAIGeneratorPage() {
               </a>
               <div className="igpage__plan-note">
                 <span>Plans from</span>
-                <strong>$15/month</strong>
+                <strong>$9/month</strong>
                 <a href="/pricing">Compare all plans →</a>
               </div>
             </div>
@@ -897,7 +897,7 @@ export default function InstagramPostAIGeneratorPage() {
               <ul>
                 <li>✅ <strong>Scenith:</strong> Standalone text-to-image, 7+ models, faster output</li>
                 <li>⚠️ <strong>Canva AI:</strong> Integrated in design editor, slower, fewer model options</li>
-                <li>✅ <strong>Scenith:</strong> Plans from $15/month (India-priced)</li>
+                <li>✅ <strong>Scenith:</strong> Plans from $9/month (India-priced)</li>
                 <li>❌ <strong>Canva AI:</strong> Requires Canva Pro at ₹499/month</li>
                 <li>✅ <strong>Scenith:</strong> Full commercial rights on all plans</li>
                 <li>⚠️ <strong>Canva AI:</strong> Limited commercial rights on free tier</li>
@@ -921,7 +921,7 @@ export default function InstagramPostAIGeneratorPage() {
               <ul>
                 <li>✅ <strong>Scenith:</strong> Web-based, no Discord required</li>
                 <li>❌ <strong>Midjourney:</strong> Discord-only, steep learning curve</li>
-                <li>✅ <strong>Scenith:</strong> Plans from $15/mo vs $10/month for Midjourney</li>
+                <li>✅ <strong>Scenith:</strong> Plans from $9/mo vs $10/month for Midjourney</li>
                 <li>⚠️ <strong>Midjourney:</strong> Higher artistic ceiling but complex to operate</li>
                 <li>✅ <strong>Scenith:</strong> One-click generation, beginner friendly</li>
                 <li>❌ <strong>Midjourney:</strong> Requires learning slash commands and parameters</li>
@@ -1040,7 +1040,7 @@ export default function InstagramPostAIGeneratorPage() {
               <span>•</span>
               <span>✅ Free plan available</span>
               <span>•</span>
-              <span>🚀 Plans from $15/month</span>
+              <span>🚀 Plans from $9/month</span>
             </div>
           </div>
         </div>

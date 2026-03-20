@@ -170,7 +170,7 @@ const schemaJsonLd = {
           acceptedAnswer: {
             '@type': 'Answer',
             text:
-              'Scenith offers a free BASIC plan with 600 characters per month. Paid plans unlock 50,000–400,000 characters per month, credits for OpenAI and Azure premium voices, history access, and speed controls starting at $15/month.',
+              'Scenith offers a free BASIC plan with 600 characters per month. Paid plans unlock 50,000–400,000 characters per month, credits for OpenAI and Azure premium voices, history access, and speed controls starting at $9/month.',
           },
         },
         {
@@ -1283,7 +1283,7 @@ export default function StoryAIVoiceGeneratorPage() {
               },
               {
                 q: 'What\'s the maximum length of story text I can generate in one pass?',
-                a: 'On the free BASIC plan, the per-request limit is 80 characters — useful for testing but limited for production. Starter plan ($15/month) raises this to a significantly higher per-request limit with 50,000 characters total per month. Creator and Pro plans offer expanded per-request limits with 150,000–400,000 monthly characters. For audiobook-length work, a Pro or Creator plan is the pragmatic choice. Most story chapters fall between 1,500–5,000 characters, meaning you can generate 30–270 chapters per month depending on plan.',
+                a: 'On the free BASIC plan, the per-request limit is 80 characters — useful for testing but limited for production. Starter plan ($9/month) raises this to a significantly higher per-request limit with 50,000 characters total per month. Creator and Pro plans offer expanded per-request limits with 150,000–400,000 monthly characters. For audiobook-length work, a Pro or Creator plan is the pragmatic choice. Most story chapters fall between 1,500–5,000 characters, meaning you can generate 30–270 chapters per month depending on plan.',
               },
               {
                 q: 'Which languages produce the most natural-sounding story narration?',

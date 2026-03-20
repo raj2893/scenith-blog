@@ -863,7 +863,7 @@ export default function FreeImageEditorGuide() {
             <div className={styles.platformCard}>
               <h3>🖼️ Figma</h3>
               <div className={styles.platformStats}>
-                <span>Cost: Free (limited) or $15/month</span>
+                <span>Cost: Free (limited) or $20/month</span>
                 <span>Best For: UI/UX design teams</span>
               </div>
               <ul>

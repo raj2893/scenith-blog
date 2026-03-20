@@ -146,7 +146,7 @@ const COMPARISON_DATA = [
   },
   {
     feature: "Pricing",
-    scenith: "From $15/mo",
+    scenith: "From $9/mo",
     midjourney: "$20/mo minimum",
     dalle: "Via ChatGPT Plus $20/mo",
     stable: "Self-hosted or cloud cost",
@@ -213,7 +213,7 @@ const FAQ_DATA = [
   },
   {
     q: "Can I generate AI art for free on Scenith?",
-    a: "Yes — but with a caveat. Creating an account is free, and the basic plan lets you explore the interface. AI image generation credits start with Creator Lite at $15/month (approximately $1.20 USD), which is among the most affordable in the market. This gives you 100 credits, where each image costs between 2–12 credits depending on the AI model chosen. You get commercial rights to every image you generate.",
+    a: "Yes — but with a caveat. Creating an account is free, and the basic plan lets you explore the interface. AI image generation credits start with Creator Lite at $9/month (approximately $1.20 USD), which is among the most affordable in the market. This gives you 100 credits, where each image costs between 2–12 credits depending on the AI model chosen. You get commercial rights to every image you generate.",
   },
   {
     q: "Is AI-generated art copyrightable in India and globally?",
@@ -1370,7 +1370,7 @@ export default function AIArtGeneratorPage() {
               <span className="aag-cta-arrow">→</span>
             </motion.button>
             <div className="aag-fca-trust">
-              <span>✓ Plans from $15/mo</span>
+              <span>✓ Plans from $9/mo</span>
               <span>✓ Commercial rights included</span>
               <span>✓ No watermarks</span>
             </div>

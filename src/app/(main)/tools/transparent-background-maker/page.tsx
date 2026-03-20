@@ -381,7 +381,7 @@ export default function TransparentBackgroundMakerPage() {
                 {[
                   ['Speed', '✅ 3–8 sec', '⚠️ 5–30 min', '✅ ~5 sec', '✅ ~5 sec', '❌ 30–120 min'],
                   ['Skill Required', '✅ None', '❌ Advanced', '✅ None', '✅ None', '❌ Expert'],
-                  ['Cost (India)', '✅ $15/mo+', '❌ ₹1,675/mo', '⚠️ ~₹800/50 imgs', '⚠️ ₹899/mo', '✅ Free (time cost)'],
+                  ['Cost (India)', '✅ $9/mo+', '❌ ₹1,675/mo', '⚠️ ~₹800/50 imgs', '⚠️ ₹899/mo', '✅ Free (time cost)'],
                   ['Edge Quality', '✅ AI-precise', '✅ Expert quality', '✅ Good', '⚠️ Moderate', '✅ Perfect (expert)'],
                   ['Hair / Fine Detail', '✅ Good', '✅ Excellent', '✅ Good', '⚠️ Variable', '✅ Excellent'],
                   ['Integrated Editor', '✅ Yes', '✅ Yes', '❌ No', '✅ Limited', '❌ Depends'],
@@ -445,7 +445,7 @@ export default function TransparentBackgroundMakerPage() {
             <span aria-hidden="true">✂️</span>Make Background Transparent — Free<span aria-hidden="true">→</span>
           </a>
           <div className="tbm-final-trust">
-            <span>✅ No watermark</span><span>✅ Full resolution PNG</span><span>✅ Commercial use</span><span>✅ Free image editor included</span><span>✅ Plans from $15/month</span>
+            <span>✅ No watermark</span><span>✅ Full resolution PNG</span><span>✅ Commercial use</span><span>✅ Free image editor included</span><span>✅ Plans from $9/month</span>
           </div>
         </div>
       </section>

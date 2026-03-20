@@ -208,7 +208,7 @@ const jsonLd = {
           name: "Is the AI background generator free?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Yes — creating an account on Scenith is free and you receive generation credits immediately, no credit card required. Paid plans start at $15/month for higher volume.",
+            text: "Yes — creating an account on Scenith is free and you receive generation credits immediately, no credit card required. Paid plans start at $9/month for higher volume.",
           },
         },
         {

@@ -932,7 +932,7 @@ const SocialMediaIconsPage = () => {
             <p>
               The social media icon landscape includes both free and premium options, and understanding the real differences
               helps designers make informed choices. Premium icon libraries like Streamline Icons ($180/year), Iconfinder Pro
-              ($15/month), and Flaticon Premium ($9.99/month) offer advantages including guaranteed brand compliance auditing,
+              ($20/month), and Flaticon Premium ($9.99/month) offer advantages including guaranteed brand compliance auditing,
               unified design language across 5,000+ icons, standardized grid systems, and regular updates for platform rebrands.
               For design agencies working on brand-sensitive enterprise projects, these investments can be justified.
             </p>

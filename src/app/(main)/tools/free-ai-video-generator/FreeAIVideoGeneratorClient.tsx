@@ -894,7 +894,7 @@ export default function FreeAIVideoGeneratorClient() {
                     </p>
                     <p>
                       When you want more credits,{" "}
-                      <a href={CTA_URL_FAQ} rel="noopener">paid plans start at $15/month</a> for 300
+                      <a href={CTA_URL_FAQ} rel="noopener">paid plans start at $9/month</a> for 300
                       credits, which covers 6+ high-quality 1080p videos per month.
                     </p>
                   </>

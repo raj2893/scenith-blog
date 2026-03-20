@@ -183,7 +183,7 @@ const schemaJsonLd = {
           acceptedAnswer: {
             '@type': 'Answer',
             text:
-              'Yes. Scenith offers a free BASIC plan with 600 characters per month — enough to test and produce short narration clips. Paid plans start at $15/month (Starter) with 50,000 characters and 300 credits, scaling to 400,000 characters per month on the Pro plan. All plans include full commercial rights and instant MP3 download.',
+              'Yes. Scenith offers a free BASIC plan with 600 characters per month — enough to test and produce short narration clips. Paid plans start at $9/month (Starter) with 50,000 characters and 300 credits, scaling to 400,000 characters per month on the Pro plan. All plans include full commercial rights and instant MP3 download.',
           },
         },
       ],
@@ -442,7 +442,7 @@ export default function DocumentaryAIVoiceGeneratorPage() {
                 <span className="doc-cta-arrow" aria-hidden="true">→</span>
               </Link>
               <Link href="/pricing" className="doc-cta-secondary" aria-label="View pricing plans">
-                Plans from $15/mo
+                Plans from $9/mo
               </Link>
             </div>
 

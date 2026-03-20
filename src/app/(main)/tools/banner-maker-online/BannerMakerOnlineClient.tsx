@@ -552,7 +552,7 @@ const BannerMakerOnlineClient: React.FC = () => {
               <h3>Free Banner Maker vs Expensive Design Software</h3>
               <p>
                 Professional design software like Adobe Illustrator or Photoshop can cost $54/month.
-                Canva Pro is $15/month. Scenith is free — permanently, for everyone. But free doesn't
+                Canva Pro is $9/month. Scenith is free — permanently, for everyone. But free doesn't
                 mean basic: Scenith's layer-based engine offers the same workflow professionals use
                 in premium tools. You get full opacity control, rotation, shape libraries, image filters,
                 and multi-format export — all without spending a rupee or a dollar.

@@ -271,7 +271,7 @@ const FAQ_DATA = [
   },
   {
     q: 'What is the cost comparison between AI narration and hiring a professional narrator?',
-    a: "Professional audiobook narrators on ACX typically charge $150–$400 per finished hour (PFH). A 10-hour audiobook costs $1,500–$4,000 in narration fees alone, plus editing. AI narration via Scenith costs a fraction: free credits on signup, then affordable credit-based plans for full books. The ROI calculation is straightforward: a $15/month plan generates multiple full audiobooks. For authors with backlists of 5–10 books, the savings are tens of thousands of dollars.",
+    a: "Professional audiobook narrators on ACX typically charge $150–$400 per finished hour (PFH). A 10-hour audiobook costs $1,500–$4,000 in narration fees alone, plus editing. AI narration via Scenith costs a fraction: free credits on signup, then affordable credit-based plans for full books. The ROI calculation is straightforward: a $9/month plan generates multiple full audiobooks. For authors with backlists of 5–10 books, the savings are tens of thousands of dollars.",
   },
 ];
 
@@ -996,7 +996,7 @@ export default function AudiobookAIVoiceGeneratorPage() {
               <div className="ab-cost-label">Same 80,000-word novel with Scenith AI:</div>
               <div className="ab-cost-items">
                 {[
-                  { item: 'Scenith AI narration (Creator plan)', cost: '$15/mo' },
+                  { item: 'Scenith AI narration (Creator plan)', cost: '$9/mo' },
                   { item: 'Audacity post-production (normalize + room tone)', cost: 'Free' },
                   { item: 'ACX Retail Audio Check tool', cost: 'Free' },
                   { item: 'Cover art (Canva or Scenith AI image)', cost: '$0–$30' },

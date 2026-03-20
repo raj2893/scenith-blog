@@ -1410,7 +1410,7 @@ const TextToImageAIPage = () => {
               <tbody>
                 <tr>
                   <td><strong>Pricing</strong></td>
-                  <td className="tti-col-scenith">Free tier + paid plans from $15/mo</td>
+                  <td className="tti-col-scenith">Free tier + paid plans from $9/mo</td>
                   <td>$10/month minimum</td>
                   <td>ChatGPT Plus $20/month</td>
                   <td>Free but requires setup</td>

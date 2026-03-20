@@ -55,7 +55,7 @@ const PLAN_META: Record<string, {
   BASIC: {
     name: "Starter Forge", accent: "#6355dc",
     gradientFrom: "#667eea", gradientTo: "#764ba2",
-    next: "CREATOR_LITE", nextName: "Creator Lite", price: "$15/mo",
+    next: "CREATOR_LITE", nextName: "Creator Lite", price: "$9/mo",
     monthlyCredits: 50, maxQuality: "720p",
   },
   CREATOR_LITE: {
@@ -86,7 +86,7 @@ const PLAN_META: Record<string, {
 
 const TOOLS = [
   { id: "voice",            icon: "🎙️", label: "AI Voice",             category: "AI",     desc: "Convert text to natural-sounding speech",            path: "/tools/ai-voice-generation",     availableOn: ["BASIC","CREATOR_LITE","CREATOR","STUDIO","ADMIN"], tip: "Create voiceovers for your videos, podcasts & more." },
-  { id: "image",            icon: "🎨", label: "AI Image Generation",   category: "AI",     desc: "Generate stunning images from text prompts",          path: "/tools/ai-image-generation",     availableOn: ["BASIC","CREATOR_LITE","CREATOR","STUDIO","ADMIN"], tip: "Generate professional images with AI — from $15/mo." },
+  { id: "image",            icon: "🎨", label: "AI Image Generation",   category: "AI",     desc: "Generate stunning images from text prompts",          path: "/tools/ai-image-generation",     availableOn: ["BASIC","CREATOR_LITE","CREATOR","STUDIO","ADMIN"], tip: "Generate professional images with AI — from $9/mo." },
   { id: "video",            icon: "🎬", label: "AI Video Generation",   category: "AI",     desc: "Create videos from text or images",                  path: "/tools/ai-video-generation",     availableOn: ["BASIC","CREATOR_LITE","CREATOR","STUDIO","ADMIN"], tip: "Bring ideas to life with AI-generated video." },
   { id: "bgRemoval",        icon: "✂️", label: "Background Removal",    category: "Image",  desc: "Remove backgrounds with AI precision",               path: "/tools/background-removal",      availableOn: ["BASIC","CREATOR_LITE","CREATOR","STUDIO","ADMIN"], tip: "Remove backgrounds from product photos instantly." },
   { id: "svgDownloads",     icon: "🔷", label: "SVG Library",           category: "Assets", desc: "Download premium vector icons & illustrations",      path: "svg-library",             availableOn: ["BASIC","CREATOR_LITE","CREATOR","STUDIO","ADMIN"], tip: "Access thousands of premium SVG icons & illustrations." },
@@ -184,7 +184,7 @@ function Skeleton({ w = "100%", h = 16 }: { w?: string | number; h?: number }) {
 ═══════════════════════════════════════════════════════ */
 function UpgradePopup({ plan, onClose }: { plan: string; onClose: () => void }) {
   const configs: Record<string, { emoji: string; headline: string; subtext: string; pills: string[]; btn: string }> = {
-    BASIC:        { emoji: "🚀", headline: "You're on the free plan",   subtext: "Get 300 credits/mo — use them for voice, images, video, BG removal & more for just $15/mo.", pills: ["300 credits/mo","AI Images & Video","No watermark","1080p export"],      btn: "Upgrade to Creator Lite →" },
+    BASIC:        { emoji: "🚀", headline: "You're on the free plan",   subtext: "Get 300 credits/mo — use them for voice, images, video, BG removal & more for just $9/mo.", pills: ["300 credits/mo","AI Images & Video","No watermark","1080p export"],      btn: "Upgrade to Creator Lite →" },
     CREATOR_LITE: { emoji: "⭐", headline: "Ready to level up?",        subtext: "Creator Spark triples your credits to 900/mo with 1440p export and priority support.",        pills: ["900 credits/mo","1440p export","Priority support","500 BG removals"],    btn: "Upgrade to Creator Spark →" },
     CREATOR:      { emoji: "👑", headline: "Go limitless with Odyssey", subtext: "2,500 credits/mo, 4K export, unlimited BG removals and dedicated support.",                   pills: ["2,500 credits/mo","4K export","Unlimited BG removals","Dedicated support"], btn: "Upgrade to Creator Odyssey →" },
   };

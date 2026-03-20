@@ -199,7 +199,7 @@ const RemoveBackgroundClient: React.FC = () => {
               color: 'rgba(255,255,255,0.5)', fontSize: '0.88rem', margin: '0 0 6px', lineHeight: 1.6,
             }}>
               You're on the free plan — 10 removals/month.{' '}
-              <span style={{ color: '#a78bfa', fontWeight: 700 }}>Upgrade from · $15/mo</span>
+              <span style={{ color: '#a78bfa', fontWeight: 700 }}>Upgrade from · $9/mo</span>
             </p>
 
             <p style={{

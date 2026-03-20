@@ -201,7 +201,7 @@ export default function YouTubeThumbnailClient() {
                     name: 'Is this AI YouTube thumbnail generator free?',
                     acceptedAnswer: {
                       '@type': 'Answer',
-                      text: 'Yes. Generating thumbnails is free on Creator plans starting at $15/month. The AI image generation tool is behind a creator plan to fund the compute costs, but entry pricing is very accessible.',
+                      text: 'Yes. Generating thumbnails is free on Creator plans starting at $9/month. The AI image generation tool is behind a creator plan to fund the compute costs, but entry pricing is very accessible.',
                     },
                   },
                   {
@@ -766,7 +766,7 @@ export default function YouTubeThumbnailClient() {
               <ul className="yt-cc-list">
                 {[
                   '⏱️ 3–8 seconds per thumbnail',
-                  '💰 From $15/month for creator plans',
+                  '💰 From $9/month for creator plans',
                   '🎨 Unlimited creative styles with prompts',
                   '📝 No design skills required',
                   '🔁 Instant iteration & variation testing',
@@ -953,7 +953,7 @@ export default function YouTubeThumbnailClient() {
               },
               {
                 q: 'What\'s the difference between using Midjourney vs Scenith for YouTube thumbnails?',
-                a: `Midjourney produces very high artistic quality but requires Discord access, has a complex command system, charges $10/month minimum, and doesn't integrate with any YouTube workflow tools. Scenith is a web-based interface, starts at $15/month (significantly cheaper), offers one-click generation, and directly pairs with an image editor for adding text overlays. For YouTubers who need speed and workflow integration over maximum artistic complexity, Scenith is the better fit. Both tools produce excellent results for thumbnail backgrounds.`,
+                a: `Midjourney produces very high artistic quality but requires Discord access, has a complex command system, charges $10/month minimum, and doesn't integrate with any YouTube workflow tools. Scenith is a web-based interface, starts at $9/month (significantly cheaper), offers one-click generation, and directly pairs with an image editor for adding text overlays. For YouTubers who need speed and workflow integration over maximum artistic complexity, Scenith is the better fit. Both tools produce excellent results for thumbnail backgrounds.`,
               },
               {
                 q: 'How do I add text to my AI-generated thumbnail background?',
@@ -961,7 +961,7 @@ export default function YouTubeThumbnailClient() {
               },
               {
                 q: 'Are there any YouTube thumbnail size generators that are truly free?',
-                a: `Yes. Scenith's AI image generation tool is available on creator plans from $15/month — far less than a single hired thumbnail design. The AI generates the background visual; you add text in free tools like Canva. Compare this to stock photo services ($29+/month) or freelance thumbnail designers (₹500–₹5,000 per thumbnail). For high-volume creators producing 4+ videos per week, AI generation pays for itself within the first 2–3 thumbnails.`,
+                a: `Yes. Scenith's AI image generation tool is available on creator plans from $9/month — far less than a single hired thumbnail design. The AI generates the background visual; you add text in free tools like Canva. Compare this to stock photo services ($29+/month) or freelance thumbnail designers (₹500–₹5,000 per thumbnail). For high-volume creators producing 4+ videos per week, AI generation pays for itself within the first 2–3 thumbnails.`,
               },
             ].map((item, i) => (
               <div
