@@ -1284,8 +1284,31 @@ return (
                   )}
                 </div>
               )}
+
+              {/* Viral prompt chips — above textarea */}
+              <div style={{ display: 'flex', gap: 5, marginBottom: 8, overflowX: 'auto', scrollbarWidth: 'none' }}>
+                {[
+                  { label: '🎬 YT Intro', prompt: "What's up everyone! Welcome back — today we're diving into something huge, so let's get into it!" },
+                  { label: '📦 Product ad', prompt: "Introducing the product that's changing everything. Sleek, powerful, and built for you. Try it today." },
+                  { label: '🧘 Meditation', prompt: "Close your eyes. Take a deep breath in. Hold it. Now slowly breathe out and let everything go." },
+                  { label: '💪 Motivation', prompt: "You have the power to change your story. Every single day is a new chance. So start right now." },
+                  { label: '🛍️ Flash sale', prompt: "Hurry! Our biggest sale of the year ends tonight. Up to 70% off — don't miss out on these deals." },
+                ].map((s) => (
+                  <button
+                    key={s.label}
+                    onClick={() => setAiVoiceText(s.prompt)}
+                    disabled={limitsExceeded}
+                    style={{
+                      padding: '4px 10px', borderRadius: 999, border: '1.5px solid rgba(99,85,220,0.2)',
+                      background: 'rgba(99,85,220,0.05)', color: '#6355dc',
+                      fontSize: 11, fontWeight: 600, cursor: 'pointer',
+                      whiteSpace: 'nowrap', flexShrink: 0, fontFamily: 'inherit',
+                      opacity: limitsExceeded ? 0.4 : 1,
+                    }}
+                  >{s.label}</button>
+                ))}
+              </div>              
               
-              {/* Non-logged-in users: show default 50 credits */}
               {/* Non-logged-in users: hide credit bar, show nothing — CTA is inside the box */}                        
                 <div style={{
                   border: '1.5px solid rgba(99,85,220,0.25)', borderRadius: 16,

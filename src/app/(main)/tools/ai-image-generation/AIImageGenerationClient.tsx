@@ -824,12 +824,16 @@ const startImagePolling = useCallback((jobId: number) => {
             <div className="main-content">
               <div className="input-section">
 
-                {/* ── Top bar: examples link + char count ── */}
-                {/* ── Compact prompt suggestions ── */}
                   <div style={{ display: 'flex', gap: 5, marginBottom: 6, overflowX: 'auto', scrollbarWidth: 'none' }}>
-                    {['🌅 Cinematic sunset', '🤖 Neon city robot', '🌸 Watercolor portrait', '🚀 Deep space astronaut', '🏙️ Aerial Tokyo night'].map((s) => (
-                      <button key={s}
-                        onClick={() => { const t = s.slice(2).trim(); setPrompt(t); setPromptCharCount(t.length); }}
+                    {[
+                      { label: '🌆 Neon Tokyo', prompt: 'Aerial neon-lit Tokyo streets at night, rain reflections, cinematic, 8K' },
+                      { label: '👁️ Surreal portrait', prompt: 'Hyper-realistic portrait of a woman with galaxy eyes, surreal, studio lighting' },
+                      { label: '🐉 Fantasy dragon', prompt: 'Majestic dragon perched on a cliff at sunset, epic fantasy, detailed scales' },
+                      { label: '🤖 Cyber robot', prompt: 'Futuristic humanoid robot in neon city rain, cyberpunk, ultra-detailed, 4K' },
+                      { label: '🌊 Ocean cliff', prompt: 'Dramatic ocean waves crashing on rocky cliffs, golden hour, cinematic photography' },
+                    ].map((s) => (
+                      <button key={s.label}
+                        onClick={() => { setPrompt(s.prompt); setPromptCharCount(s.prompt.length); }}
                         disabled={isGenerating}
                         style={{
                           padding: '4px 10px', borderRadius: 999, border: '1.5px solid rgba(99,85,220,0.2)',
@@ -837,7 +841,7 @@ const startImagePolling = useCallback((jobId: number) => {
                           fontSize: 11, fontWeight: 600, cursor: 'pointer',
                           whiteSpace: 'nowrap', flexShrink: 0,
                         }}
-                      >{s}</button>
+                      >{s.label}</button>
                     ))}
                   </div>
 

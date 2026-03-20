@@ -1150,16 +1150,22 @@ const AIVideoGenerationClient: React.FC = () => {
 
                 {/* Prompt suggestions button — moved into toolbar as a subtle icon */}
                 <div style={{ display: 'flex', gap: 4, overflowX: 'auto', scrollbarWidth: 'none', flexShrink: 1 }}>
-                  {["Aerial neon city", "Golden retriever", "Ocean sunset", "Particle blast"].map((s, i) => (
+                  {[
+                    { label: '🌆 Neon Tokyo', prompt: 'Aerial shot of neon-lit Tokyo streets at night, cinematic drone view, 4K' },
+                    { label: '🌊 Ocean drone', prompt: 'Drone flying low over crystal blue ocean waves at golden hour, slow motion' },
+                    { label: '🔥 Cinematic fire', prompt: 'Close-up of fire embers floating upward in slow motion, dark background, cinematic' },
+                    { label: '🌸 Cherry blossom', prompt: 'Cherry blossom petals falling in slow motion, soft sunlight, Japanese garden' },
+                    { label: '⚡ Storm clouds', prompt: 'Dramatic storm clouds forming over mountains with lightning, epic timelapse' },
+                  ].map((s, i) => (
                     <button key={i}
-                      onClick={() => setPrompt(["Aerial neon city at night", "Golden retriever slow motion", "Ocean waves at sunset", "Abstract particle explosion"][i])}
+                      onClick={() => setPrompt(s.prompt)}
                       style={{
                         padding: '5px 9px', borderRadius: 999, border: '1px solid rgba(99,102,241,0.2)',
                         background: 'rgba(99,102,241,0.07)', color: '#6366F1',
                         fontSize: 10.5, fontWeight: 500, cursor: 'pointer',
                         fontFamily: "'DM Sans', sans-serif", whiteSpace: 'nowrap', flexShrink: 0,
                       }}
-                    >{s}</button>
+                    >{s.label}</button>
                   ))}
                 </div>
                 
