@@ -836,7 +836,7 @@ export default function PricingPageClient() {
     }
     const sym = isIndianUser ? '₹' : '$';
     const cur = isIndianUser ? 'INR' : 'USD';
-    const p = isIndianUser ? { lite: 799, creator: 1749, studio: 2599 } : { lite: 9, creator: 19, studio: 29 };
+    const p = isIndianUser ? { lite: 799, creator: 1749, studio: 3599 } : { lite: 9, creator: 19, studio: 39 };
     const o = { lite: Math.round(p.lite / 0.75), creator: Math.round(p.creator / 0.75), studio: Math.round(p.studio / 0.75) };
     return [
       { name: 'Starter Forge', role: 'BASIC', price: 0, currency: 'FREE', ttsLimit: 600, tagline: 'Try every tool, no card required.', features: ['50 credits/mo', '600 voice chars/mo', '5 speed videos + 5 BG removals', '10 SVG downloads', '720p export with watermark'], outcomes: [{ icon: '🎙️', label: 'Voice (600 chars)' }, { icon: '✂️', label: '5 BG removals' }] },
