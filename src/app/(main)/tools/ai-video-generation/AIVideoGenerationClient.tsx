@@ -89,6 +89,34 @@ const STATIC_MODELS_PREVIEW = [
   { id: "veo3.1-fast",     name: "Veo 3.1 Fast",     res: "1080p", cr: 92  },
   { id: "veo3.1",          name: "Veo 3.1",          res: "1080p", cr: 186 },
 ];
+const MODEL_RESOLUTIONS: Record<string, string[]> = {
+  // Wan 2.5 variants
+  "wan2.5":                    ["480p", "720p", "1080p"],
+  "wan-2.5":                   ["480p", "720p", "1080p"],
+  "wan_2_5":                   ["480p", "720p", "1080p"],
+  // Kling — fixed 1080p
+  "kling-v2.5-turbo":          ["1080p"],
+  "kling-v2.6-pro":            ["1080p"],
+  "kling_2_5_turbo":           ["1080p"],
+  "kling_2_6_pro":             ["1080p"],
+  // Veo — 720p or 1080p
+  "veo3.1-fast":               ["720p", "1080p"],
+  "veo3.1":                    ["720p", "1080p"],
+  "veo_3_1_fast":              ["720p", "1080p"],
+  "veo_3_1":                   ["720p", "1080p"],
+};
+
+const getAvailableResolutions = (modelId: string): string[] => {
+  if (!modelId) return ["1080p"];
+  // Normalize: lowercase, try direct match first
+  const id = modelId.toLowerCase().trim();
+  if (MODEL_RESOLUTIONS[id]) return MODEL_RESOLUTIONS[id];
+  // Fuzzy match
+  if (id.includes("wan"))  return ["480p", "720p", "1080p"];
+  if (id.includes("veo"))  return ["720p", "1080p"];
+  if (id.includes("kling")) return ["1080p"];
+  return ["1080p"];
+};
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -115,6 +143,7 @@ const AIVideoGenerationClient: React.FC = () => {
   const [duration, setDuration] = useState(5);
   const [aspectRatio, setAspectRatio] = useState("16:9");
   const [audioEnabled, setAudioEnabled] = useState(false); // off by default
+const [resolution, setResolution] = useState("480p"); // default to cheapest
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
@@ -301,10 +330,12 @@ const AIVideoGenerationClient: React.FC = () => {
   const creditsNeeded = useMemo(() => {
     if (!selectedModelData?.creditCosts) return 0;
     const entry = selectedModelData.creditCosts.find(
+      (c: any) => c.duration === duration && c.audio === audioEnabled && c.resolution === resolution
+    ) ?? selectedModelData.creditCosts.find(
       (c: any) => c.duration === duration && c.audio === audioEnabled
     );
     return entry?.credits ?? 0;
-  }, [selectedModelData, duration, audioEnabled]);
+  }, [selectedModelData, duration, audioEnabled, resolution]);
 
   const handleGenerate = async () => {
     if (!isLoggedIn) { setShowLoginModal(true); return; }
@@ -322,7 +353,7 @@ const AIVideoGenerationClient: React.FC = () => {
       if (genType === "text") {
         const res = await axios.post(
           `${API_BASE_URL}/api/video-gen/text-to-video`,
-          { model: effectiveModel, prompt, negativePrompt: negativePrompt || undefined, durationSeconds: duration, audioEnabled, aspectRatio },
+          { model: effectiveModel, prompt, negativePrompt: negativePrompt || undefined, durationSeconds: duration, audioEnabled, aspectRatio, resolution },
           { headers: { Authorization: `Bearer ${token}` } }
         );
         job = res.data;
@@ -332,6 +363,8 @@ const AIVideoGenerationClient: React.FC = () => {
         formData.append("prompt", prompt);
         formData.append("durationSeconds", String(duration));
         formData.append("audioEnabled", String(audioEnabled));
+        formData.append("aspectRatio", aspectRatio);
+        formData.append("resolution", resolution);
         formData.append("aspectRatio", aspectRatio);
         if (imageFile) formData.append("image", imageFile);
         const res = await axios.post(`${API_BASE_URL}/api/video-gen/image-to-video`, formData, {
@@ -1074,6 +1107,47 @@ const AIVideoGenerationClient: React.FC = () => {
                     </option>
                   ))}
                 </select>
+
+                {/* Resolution dropdown — only show when model has choices */}
+                {(() => {
+                  const available = getAvailableResolutions(effectiveModel);
+                  const isLocked = available.length <= 1;
+                  return isLocked ? (
+                    <span
+                      title="Resolution fixed for this model"
+                      style={{
+                        padding: '7px 10px', borderRadius: 10,
+                        background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(99,102,241,0.12)',
+                        color: '#475569', fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600,
+                        flexShrink: 0, userSelect: 'none',
+                      }}
+                    >
+                      📐 {available[0] ?? "1080p"}
+                    </span>
+                  ) : (
+                    <select
+                      value={available.includes(resolution) ? resolution : available[0]}
+                      onChange={(e) => setResolution(e.target.value)}
+                      disabled={!isLoggedIn}
+                      title="Output resolution"
+                      style={{
+                        padding: '7px 28px 7px 10px', borderRadius: 10,
+                        background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(99,102,241,0.2)',
+                        color: '#CBD5E1', fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600,
+                        cursor: isLoggedIn ? 'pointer' : 'not-allowed', appearance: 'none', flexShrink: 0,
+                        backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%236366F1' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")",
+                        backgroundRepeat: 'no-repeat', backgroundPosition: 'right 8px center',
+                        opacity: isLoggedIn ? 1 : 0.5,
+                      }}
+                    >
+                      {available.map((r) => (
+                        <option key={r} value={r} style={{ background: '#0F172A' }}>
+                          📐 {r}
+                        </option>
+                      ))}
+                    </select>
+                  );
+                })()}
                 
                 {/* Model dropdown */}
                 <select
@@ -1098,12 +1172,24 @@ const AIVideoGenerationClient: React.FC = () => {
                 >
                   <option value="__auto__" style={{ background: '#0F172A' }}>✨ Auto Model (Cheapest for you)</option>
                   {(isLoggedIn ? models : STATIC_MODELS_PREVIEW.map(m => ({ id: m.id, displayName: m.name, creditCosts: [{ duration: 5, audio: false, credits: m.cr }], defaultResolution: m.res, supportsAudio: false, description: '' }))).map((m: any) => {
-                    const cost = m.creditCosts?.find((c: any) => c.duration === duration && c.audio === false)?.credits
-                      ?? m.creditCosts?.[0]?.credits ?? '?';
+                    const currentRes = getAvailableResolutions(m.id).includes(resolution)
+                      ? resolution
+                      : getAvailableResolutions(m.id)[0];
+                    const cost = m.creditCosts?.find(
+                        (c: any) => c.duration === duration && c.audio === audioEnabled && c.resolution === currentRes
+                      )?.credits
+                      ?? m.creditCosts?.find(
+                        (c: any) => c.duration === duration && c.audio === audioEnabled
+                      )?.credits
+                      ?? m.creditCosts?.find(
+                        (c: any) => c.duration === duration
+                      )?.credits
+                      ?? m.creditCosts?.[0]?.credits
+                      ?? '?';
                     const canAfford = !isLoggedIn || !credits || typeof cost !== 'number' || credits.balance >= cost;
                     return (
                       <option key={m.id} value={m.id} style={{ background: '#0F172A' }}>
-                        {!canAfford ? '👑 ' : ''}{m.displayName} · {cost}cr · {m.defaultResolution}{!canAfford ? ' — insufficient credits' : ''}
+                        {!canAfford ? '👑 ' : ''}{m.displayName} · {cost}cr{!canAfford ? ' — insufficient credits' : ''}
                       </option>
                     );
                   })}
