@@ -227,6 +227,16 @@ const inputImageRef = useRef<HTMLInputElement>(null);
   const imagePollingRef = useRef<NodeJS.Timeout | null>(null);
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);  
   const [activePlanRole, setActivePlanRole] = useState<string>('BASIC');
+  const [demoImages, setDemoImages] = useState<string[]>([]);
+  
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/api/public/gallery/images`)
+      .then(res => res.json())
+      .then((paths: string[]) => {
+        setDemoImages(paths.map(p => `${CDN_URL}/${p}`));
+      })
+      .catch(() => {});
+  }, []);  
 
   useEffect(() => {
     if (activePlanRole !== 'BASIC') return;
@@ -1418,83 +1428,35 @@ const startImagePolling = useCallback((jobId: number) => {
                 <p>Real examples generated with Scenith AI — your imagination is the only limit</p>
               </div>
 
-              {(() => {
-                const DEMO_IMAGES = [
-                  "https://cdn.scenith.in/images/sole_image_gen/7/92c16acb-0f22-44e4-9a87-32314e3d4b5a.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1001/72fafd61-493e-46f9-be5c-f6eed674662f.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1032/172e0d0f-c194-4ac7-bb93-9aaf6e3e21d8.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1032/562b0ac3-fc69-4ac7-b4b3-3f05e7b5638c.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1139/ed2d9f3e-5d95-4da1-88e4-95971941730e.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1139/f0d70db9-6388-446b-ac27-8ffa0bb162aa.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1139/be641c98-d248-4c77-b82a-e704fa4c7b2a.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1162/3a656bf0-af3e-466d-a65f-b9a9fd85c39f.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1162/cc4b271c-4941-4a2d-97e5-070afb8a0c09.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1162/f53619ce-8fe5-446e-b38f-d6069469db6f.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1204/aefc2c01-dbfb-49c8-89fe-957d313c207f.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1202/788ab6df-fe3d-4a44-b6aa-fc51a8e8c97d.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1259/31bdd81a-6a9a-44d7-816e-b4053269e8ef.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1391/93c6fb3d-bd1e-4782-8444-07761d6fba66.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/2/16743040-1fb6-4b2e-80c4-e4079c4c3287.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1580/176a73c0-c0a8-4a51-a356-31962b94d51a.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1667/4c6deab8-94ac-49f8-ae53-1a44be77e95b.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1700/ba57cabf-9fe4-4eda-ac98-6d472327da47.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1709/b03a06ef-6280-4afe-aae7-8f9f376d1ea0.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1765/c4a3e1d6-11bc-4775-9019-729d558e3ba0.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1776/9ca25bbd-0000-4fdf-ad32-546a792a661f.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1/2d838ce9-d09c-455f-8707-8a2f92291194.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1/7efc1cf0-10ac-4c12-91e5-a4bd3c0c64b9.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1/c63facda-9d8c-47cc-9060-a52feba700ae.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1904/4b47742f-d24f-4fef-9af3-7d311f4860c1.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1/e7140527-8d4e-4193-8082-b8abfda06493.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1/67d9a045-433f-43d3-acb7-ba514695b570.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1/ad90483e-1772-4567-b885-8b9e17488f4f.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1/528def5a-4ce9-4cdf-94bf-77ec6e275d18.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1/374b0170-4f85-499e-a1f7-c886b1179902.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1962/f219c323-0938-4123-ab00-4e6e88a23435.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1964/27c15170-239b-44f6-9f02-d4869ef1c436.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1/65560682-5fd5-4ebc-a322-9b49aab26dfd.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1/558ce17b-c3ab-4a99-804a-2b15d4c73a8f.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1/2dad4f37-76ff-43c6-bc23-bfc5210bb220.png",
-                  "https://cdn.scenith.in/images/sole_image_gen/1/995e4d62-2900-4460-b59b-4b16bc965c5c.png",
-                ];
+              <p style={{
+                textAlign: 'center', fontSize: 12, color: '#64748B',
+                marginBottom: 16,
+                background: 'rgba(99,85,220,0.06)', border: '1px solid rgba(99,85,220,0.15)',
+                borderRadius: 8, padding: '7px 14px', display: 'inline-block',
+              }}>
+                🔓 Images shown are from <strong style={{ color: '#6355dc' }}>Free plan</strong> users · 
+                🔒 <strong style={{ color: '#6355dc' }}>Premium</strong> users' media is always private & secured
+              </p>              
 
-                // Split into two rows, offset for visual interest
-                const row1 = DEMO_IMAGES.slice(0, Math.ceil(DEMO_IMAGES.length / 2));
-                const row2 = DEMO_IMAGES.slice(Math.ceil(DEMO_IMAGES.length / 2));
-
+              {demoImages.length > 0 && (() => {
+                const row1 = demoImages.slice(0, Math.ceil(demoImages.length / 2));
+                const row2 = demoImages.slice(Math.ceil(demoImages.length / 2));
                 return (
                   <div className="demo-marquee-wrapper">
-                    {/* Row 1 — scrolls left */}
                     <div className="demo-marquee-track" aria-hidden="true">
                       <div className="demo-marquee-inner demo-scroll-left">
                         {[...row1, ...row1].map((src, i) => (
                           <div key={`r1-${i}`} className="demo-marquee-card">
-                            <img
-                              src={src}
-                              alt="AI generated image example"
-                              loading="lazy"
-                              decoding="async"
-                              width={220}
-                              height={220}
-                            />
+                            <img src={src} alt="AI generated image example" loading="lazy" decoding="async" width={220} height={220} />
                           </div>
                         ))}
                       </div>
                     </div>
-
-                    {/* Row 2 — scrolls right (opposite direction) */}
                     <div className="demo-marquee-track" aria-hidden="true">
                       <div className="demo-marquee-inner demo-scroll-right">
                         {[...row2, ...row2].map((src, i) => (
                           <div key={`r2-${i}`} className="demo-marquee-card">
-                            <img
-                              src={src}
-                              alt="AI generated image example"
-                              loading="lazy"
-                              decoding="async"
-                              width={220}
-                              height={220}
-                            />
+                            <img src={src} alt="AI generated image example" loading="lazy" decoding="async" width={220} height={220} />
                           </div>
                         ))}
                       </div>

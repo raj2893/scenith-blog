@@ -2532,12 +2532,12 @@
 
 /* Row 1: scroll left */
 .demo-scroll-left {
-  animation: marquee-left 40s linear infinite;
+  animation: marquee-left 180s linear infinite;
 }
 
 /* Row 2: scroll right */
 .demo-scroll-right {
-  animation: marquee-right 45s linear infinite;
+  animation: marquee-right 180s linear infinite;
 }
 
 /* Pause on hover for accessibility / UX */

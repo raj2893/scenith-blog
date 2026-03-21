@@ -158,6 +158,16 @@ const [resolution, setResolution] = useState("480p"); // default to cheapest
   const historyRef = useRef<HTMLButtonElement>(null);
   const upsellRef = useRef<HTMLDivElement>(null);
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
+  const [demoVideos, setDemoVideos] = useState<string[]>([]);
+
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/api/public/gallery/videos`)
+      .then(res => res.json())
+      .then((paths: string[]) => {
+        setDemoVideos(paths.map(p => `${CDN_URL}/${p}`));
+      })
+      .catch(() => {});
+  }, []);  
 
   useEffect(() => {
     if (hasPlan) return;
@@ -1423,79 +1433,80 @@ const [resolution, setResolution] = useState("480p"); // default to cheapest
           </div>
         )}     
 
-        {/* ── Demo Video ── */}
-        <div style={{ marginBottom: 36 }}>
-          <div style={{
-            textAlign: 'center', marginBottom: 14,
-          }}>
-            <span style={{
-              display: 'inline-flex', alignItems: 'center', gap: 8,
-              background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.28)',
-              borderRadius: 999, padding: '5px 16px',
-              fontSize: 11.5, fontWeight: 700, color: '#818CF8',
-              letterSpacing: '0.1em', textTransform: 'uppercase',
-            }}>
-              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#6366F1', display: 'inline-block', animation: 'pulse 2s infinite' }} />
-              AI-Generated Sample
-            </span>
-          </div>
-
-          <div style={{
-            position: 'relative',
-            borderRadius: 20,
-            overflow: 'hidden',
-            border: '1px solid rgba(99,102,241,0.2)',
-            background: '#000',
-            boxShadow: '0 24px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(99,102,241,0.1)',
-            maxWidth: 720,
-            margin: '0 auto',
-          }}>
-            {/* Glow accent */}
-            <div style={{
-              position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1,
-              background: 'linear-gradient(180deg, transparent 60%, rgba(8,11,18,0.7) 100%)',
-            }} />
-
-            <video
-              src="https://cdn.scenith.in/ai_video_gen/2/video_3a8f8067-40ff-4ec4-9173-83cfc81a5cb4.mp4"
-              autoPlay
-              loop
-              muted
-              playsInline
-              disablePictureInPicture
-              disableRemotePlayback
-              style={{ width: '100%', display: 'block', maxHeight: 400, objectFit: 'cover', pointerEvents: 'none' }}
-              aria-label="AI-generated video demo by Scenith AI Video Generator"
-            />
-
-            {/* Bottom label */}
-            <div style={{
-              position: 'absolute', bottom: 14, left: '50%', transform: 'translateX(-50%)',
-              zIndex: 2,
-              background: 'rgba(8,11,18,0.75)', backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(99,102,241,0.25)',
-              borderRadius: 999, padding: '5px 16px',
-              display: 'flex', alignItems: 'center', gap: 8,
-              whiteSpace: 'nowrap',
-            }}>
-              <span style={{ fontSize: 13 }}>🎬</span>
-              <span style={{ fontSize: 11.5, fontWeight: 600, color: '#CBD5E1', fontFamily: "'DM Sans', sans-serif" }}>
-                Made with Kling 2.5 Pro · 130 credits · 
-                <a href="#" onClick={() => { setPrompt("Aerial shot of a neon-lit futuristic city at night, cinematic, 8K"); window.scrollTo({top: 0, behavior: 'smooth'}); }}
-                   style={{ color: '#818CF8', textDecoration: 'underline', marginLeft: 4 }}>
-                  Try this prompt →
-                </a>
+        {/* ── Demo Videos ── */}
+        {demoVideos.length > 0 && (
+          <div style={{ marginBottom: 36 }}>
+            <div style={{ textAlign: 'center', marginBottom: 14 }}>
+              <span style={{
+                display: 'inline-flex', alignItems: 'center', gap: 8,
+                background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.28)',
+                borderRadius: 999, padding: '5px 16px',
+                fontSize: 11.5, fontWeight: 700, color: '#818CF8',
+                letterSpacing: '0.1em', textTransform: 'uppercase',
+              }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#6366F1', display: 'inline-block', animation: 'pulse 2s infinite' }} />
+                AI-Generated Samples
               </span>
+              <p style={{
+                textAlign: 'center', fontSize: 12, color: '#64748B',
+                marginBottom: 14, marginTop: 8,
+                background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.15)',
+                borderRadius: 8, padding: '7px 14px', display: 'inline-block',
+              }}>
+                🔓 Videos shown are from <strong style={{ color: '#818CF8' }}>Free plan</strong> users · 
+                🔒 <strong style={{ color: '#818CF8' }}>Premium</strong> users' media is always private & secured
+              </p>              
             </div>
+            
+            {/* Scrollable video strip */}
+            <div style={{
+              display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 12,
+              scrollSnapType: 'x mandatory',
+              scrollbarWidth: 'thin',
+              scrollbarColor: 'rgba(99,102,241,0.3) transparent',
+            }}>
+              {demoVideos.map((url, i) => (
+                <div key={i} style={{
+                  flexShrink: 0, scrollSnapAlign: 'start',
+                  width: 280, borderRadius: 16, overflow: 'hidden',
+                  border: '1px solid rgba(99,102,241,0.2)', background: '#000',
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+                  position: 'relative',
+                }}>
+                  <div style={{
+                    position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1,
+                    background: 'linear-gradient(180deg, transparent 60%, rgba(8,11,18,0.6) 100%)',
+                  }} />
+                  <video
+                    src={url}
+                    autoPlay loop muted playsInline
+                    disablePictureInPicture
+                    disableRemotePlayback
+                    style={{ width: '100%', height: 200, objectFit: 'cover', display: 'block' }}
+                    aria-label={`AI-generated video sample ${i + 1}`}
+                  />
+                  <div style={{
+                    position: 'absolute', bottom: 8, left: '50%', transform: 'translateX(-50%)',
+                    zIndex: 2, background: 'rgba(8,11,18,0.7)', backdropFilter: 'blur(8px)',
+                    border: '1px solid rgba(99,102,241,0.2)', borderRadius: 999,
+                    padding: '3px 10px', whiteSpace: 'nowrap',
+                    fontSize: 10.5, fontWeight: 600, color: '#CBD5E1',
+                    fontFamily: "'DM Sans', sans-serif",
+                  }}>
+                    🎬 Sample {i + 1}
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            <p style={{
+              textAlign: 'center', fontSize: 12.5, color: '#475569',
+              marginTop: 8, fontFamily: "'DM Sans', sans-serif",
+            }}>
+              Every video is uniquely generated from your text prompt — no templates, no stock footage.
+            </p>
           </div>
-
-          <p style={{
-            textAlign: 'center', fontSize: 12.5, color: '#475569',
-            marginTop: 12, fontFamily: "'DM Sans', sans-serif",
-          }}>
-            Every video is uniquely generated from your text prompt — no templates, no stock footage.
-          </p>
-        </div>
+        )}
 
         {/* ── Current job card ── */}
         <AnimatePresence>
