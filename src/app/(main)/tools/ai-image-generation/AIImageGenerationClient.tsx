@@ -55,6 +55,132 @@ const STYLE_PRESETS = [
   { value: 'sci-fi', label: 'Sci-Fi', icon: '🚀', description: 'Science fiction aesthetic' },
   { value: 'vintage', label: 'Vintage/Retro', icon: '📼', description: 'Nostalgic retro style' },
 ];
+const MODEL_CONFIG: Record<string, {
+  sizes: { value: string; label: string; icon: string }[];
+  qualities: { value: string; label: string; desc: string; creditsExtra: number }[];
+  resolutions?: { value: string; label: string }[];
+  supportsImg2Img: boolean;
+  flatPrice: boolean; // true = no size/quality variance in credits
+}> = {
+  'GPT_IMAGE_1_MINI': {
+    flatPrice: false,
+    supportsImg2Img: true,
+    sizes: [
+      { value: 'square',    label: 'Square (1:1)',    icon: '⬛' },
+      { value: 'portrait',  label: 'Portrait (9:16)', icon: '📱' },
+      { value: 'landscape', label: 'Landscape (16:9)',icon: '🖥️' },
+    ],
+    qualities: [
+      { value: 'draft',    label: 'Draft',    desc: 'Fast & cheap. Test your prompt.',                     creditsExtra: 0  },
+      { value: 'standard', label: 'Standard', desc: 'Sharp & polished. Great for social media.',           creditsExtra: 0  },
+      { value: 'premium',  label: 'Premium',  desc: 'Max detail. Hair, texture, glass — all fully rendered.', creditsExtra: 0 },
+    ],
+  },
+  'GPT_IMAGE_1_MEDIUM': {
+    flatPrice: false,
+    supportsImg2Img: true,
+    sizes: [
+      { value: 'square',    label: 'Square (1:1)',    icon: '⬛' },
+      { value: 'portrait',  label: 'Portrait (9:16)', icon: '📱' },
+      { value: 'landscape', label: 'Landscape (16:9)',icon: '🖥️' },
+    ],
+    qualities: [
+      { value: 'draft',    label: 'Draft',    desc: 'Quick concept check. Good for internal review.',        creditsExtra: 0 },
+      { value: 'standard', label: 'Standard', desc: 'Rich lighting, realistic textures. Production-ready.',  creditsExtra: 0 },
+      { value: 'premium',  label: 'Premium',  desc: 'Photorealistic — fabric, metal, skin fully rendered.', creditsExtra: 0 },
+    ],
+  },
+  'IMAGEN_4_FAST': {
+    flatPrice: true,
+    supportsImg2Img: false,
+    sizes: [
+      { value: 'square',    label: 'Square (1:1)',    icon: '⬛' },
+      { value: 'landscape', label: 'Landscape (16:9)',icon: '🖥️' },
+      { value: 'portrait',  label: 'Portrait (9:16)', icon: '📱' },
+      { value: 'standard',  label: 'Standard (4:3)',  icon: '📺' },
+      { value: 'tall',      label: 'Tall (3:4)',      icon: '📄' },
+    ],
+    qualities: [{ value: 'standard', label: 'Fast Mode', desc: 'Good quality in ~3 sec. Best for high volume.', creditsExtra: 0 }],
+  },
+  'IMAGEN_4_STANDARD': {
+    flatPrice: true,
+    supportsImg2Img: false,
+    sizes: [
+      { value: 'square',    label: 'Square (1:1)',    icon: '⬛' },
+      { value: 'landscape', label: 'Landscape (16:9)',icon: '🖥️' },
+      { value: 'portrait',  label: 'Portrait (9:16)', icon: '📱' },
+      { value: 'standard',  label: 'Standard (4:3)',  icon: '📺' },
+      { value: 'tall',      label: 'Tall (3:4)',      icon: '📄' },
+    ],
+    qualities: [{ value: 'standard', label: 'Full Quality', desc: '4× more pixels. Sharp detail for print & web.', creditsExtra: 0 }],
+  },
+  'FLUX_1_1_PRO': {
+    flatPrice: true,
+    supportsImg2Img: false,
+    sizes: [{ value: 'square', label: 'Square (1:1)', icon: '⬛' }],
+    qualities: [{ value: 'standard', label: 'Photorealism', desc: 'Best-in-class skin, material & lighting quality.', creditsExtra: 0 }],
+  },
+  'NANO_BANANA_PRO': {
+    flatPrice: false,
+    supportsImg2Img: true,
+    sizes: [
+      { value: 'square',    label: 'Square (1:1)',    icon: '⬛' },
+      { value: 'landscape', label: 'Landscape (16:9)',icon: '🖥️' },
+      { value: 'portrait',  label: 'Portrait (9:16)', icon: '📱' },
+      { value: 'wide',      label: 'Wide (3:2)',      icon: '📺' },
+      { value: 'tall',      label: 'Tall (2:3)',      icon: '📄' },
+    ],
+    qualities: [{ value: 'standard', label: '2K/4K Premium', desc: 'Google\'s most advanced. Best text rendering.', creditsExtra: 0 }],
+    resolutions: [
+      { value: '2k', label: '2K — up to 2048px (25cr)' },
+      { value: '4k', label: '4K — up to 4096px (45cr)' },
+    ],
+  },
+  'STABILITY_AI_CORE': {
+    flatPrice: true,
+    supportsImg2Img: true,
+    sizes: [{ value: 'square', label: 'Square (1:1)', icon: '⬛' }],
+    qualities: [{ value: 'standard', label: 'SDXL Art', desc: 'Best for artistic, fantasy & illustrative styles.', creditsExtra: 0 }],
+  },
+   'GROK_AURORA': {
+    flatPrice: true,
+    supportsImg2Img: true,
+    sizes: [
+      { value: 'square',    label: 'Square (1:1)',    icon: '⬛' },
+      { value: 'landscape', label: 'Landscape (16:9)',icon: '🖥️' },
+      { value: 'portrait',  label: 'Portrait (9:16)', icon: '📱' },
+      { value: 'wide',      label: 'Wide (3:2)',      icon: '📺' },
+      { value: 'tall',      label: 'Tall (2:3)',      icon: '📄' },
+      { value: 'standard',  label: 'Standard (4:3)',  icon: '🖼️' },
+    ],
+    qualities: [{ value: 'standard', label: '2K Photorealism', desc: 'xAI\'s best image model. Sharp photorealistic images up to 2K. Top benchmark scores.', creditsExtra: 0 }],
+  },
+};
+
+// Credit lookup table matching backend getCreditsForSizeAndQuality()
+const getCreditCost = (modelId: string, size: string, quality: string, resolution: string): number => {
+  const nonSquare = size === 'portrait' || size === 'landscape';
+  const q = quality || 'standard';
+  const r = resolution || '2k';
+  switch (modelId) {
+    case 'GPT_IMAGE_1_MINI':
+      if (q === 'draft')   return 2;
+      if (q === 'premium') return nonSquare ? 10 : 8;
+      return 3; // standard
+    case 'GPT_IMAGE_1_MEDIUM':
+      if (q === 'draft')   return nonSquare ? 5 : 4;
+      if (q === 'premium') return nonSquare ? 47 : 31;
+      return nonSquare ? 16 : 12; // standard
+    case 'NANO_BANANA_PRO':
+      return r === '4k' ? 45 : 25;
+    case 'IMAGEN_4_FAST':      return 3;
+    case 'IMAGEN_4_STANDARD':  return 7;
+    case 'FLUX_1_1_PRO':       return 7;
+    case 'STABILITY_AI_CORE':  return 3;
+    case 'GROK_AURORA':        return 14;
+    default: return 3;
+  }
+};
 
 const AIImageGeneratorClient: React.FC = () => {
   const router = useRouter();
@@ -84,6 +210,13 @@ const AIImageGeneratorClient: React.FC = () => {
   const [promptCharCount, setPromptCharCount] = useState(0);
   const [imageHistory, setImageHistory] = useState<GeneratedImage[]>([]);
   const [selectedModel, setSelectedModel] = useState<string>('gpt-image-1-medium');
+const [imageSize, setImageSize] = useState<string>('square');
+const [imageQuality, setImageQuality] = useState<string>('standard');
+const [imageResolution, setImageResolution] = useState<string>('2k');
+const [inputImageFile, setInputImageFile] = useState<File | null>(null);
+const [inputImagePreview, setInputImagePreview] = useState<string | null>(null);
+const [genMode, setGenMode] = useState<'text' | 'image'>('text');
+const inputImageRef = useRef<HTMLInputElement>(null);
   const [showHistory, setShowHistory] = useState(false);
   const [downloadSuccess, setDownloadSuccess] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState<string>('');
@@ -314,11 +447,10 @@ const AIImageGeneratorClient: React.FC = () => {
     if (!prompt.trim()) { setError('Please enter a description for your image.'); return; }
     if (!selectedModel) { setError('Please select an AI model to generate with.'); return; }
 
-    if (imageUsage) {
-      const selectedModelData = imageUsage.availableModels?.find(m => m.id === selectedModel);
-      const creditCost = selectedModelData?.creditsPerImage ?? 1;
+   if (imageUsage) {
+      const creditCost = getCreditCost(selectedModel.toUpperCase().replace(/-/g,'_'), imageSize, imageQuality, imageResolution);
       if (imageUsage.balance < creditCost) {
-        setError(`Not enough credits. This model costs ${creditCost} credits (${imageUsage.balance} remaining).`);
+        setError(`Not enough credits. This costs ${creditCost} credits (${imageUsage.balance} remaining).`);
         setTimeout(() => setError(null), 10000);
         return;
       }
@@ -335,18 +467,42 @@ const AIImageGeneratorClient: React.FC = () => {
         enhancedPrompt = `${prompt}, ${selectedStyle} style`;
       }
 
-      const res = await fetch(`${API_BASE_URL}/api/sole-image-gen/generate-async`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify({
-          prompt: enhancedPrompt,
-          negativePrompt: negativePrompt.trim() || 'blurry, low quality, distorted',
-          model: selectedModel,
-        }),
-      });
+      let res: Response;
+
+      if (genMode === 'image' && inputImageFile) {
+        // Multipart for image-to-image
+        const formData = new FormData();
+        formData.append('prompt', enhancedPrompt);
+        formData.append('negativePrompt', negativePrompt.trim() || 'blurry, low quality, distorted');
+        formData.append('model', selectedModel);
+        formData.append('size', imageSize);
+        formData.append('quality', imageQuality);
+        formData.append('resolution', imageResolution);
+        formData.append('image', inputImageFile);
+
+        res = await fetch(`${API_BASE_URL}/api/sole-image-gen/generate-async`, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+          body: formData,
+        });
+      } else {
+        // JSON for text-to-image
+        res = await fetch(`${API_BASE_URL}/api/sole-image-gen/generate-async`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+          body: JSON.stringify({
+            prompt: enhancedPrompt,
+            negativePrompt: negativePrompt.trim() || 'blurry, low quality, distorted',
+            model: selectedModel,
+            size: imageSize,
+            quality: imageQuality,
+            resolution: imageResolution,
+          }),
+        });
+      }
 
       if (!res.ok) {
         const errText = await res.text().catch(() => 'Unknown error');
@@ -446,10 +602,9 @@ const AIImageGeneratorClient: React.FC = () => {
 
   const isLimitsExceeded = useCallback(() => {
     if (!isLoggedIn || !imageUsage) return false;
-    const selectedModelData = imageUsage.availableModels?.find(m => m.id === selectedModel);
-    const creditCost = selectedModelData?.creditsPerImage ?? 1;
-    return imageUsage.balance < creditCost;
-  }, [isLoggedIn, imageUsage, selectedModel]);
+    const cost = getCreditCost(selectedModel.toUpperCase().replace(/-/g,'_'), imageSize, imageQuality, imageResolution);
+    return imageUsage.balance < cost;
+  }, [isLoggedIn, imageUsage, selectedModel, imageSize, imageQuality, imageResolution]);
 const startImagePolling = useCallback((jobId: number) => {
     if (imagePollingRef.current) clearInterval(imagePollingRef.current);
     imagePollingRef.current = setInterval(async () => {
@@ -845,169 +1000,268 @@ const startImagePolling = useCallback((jobId: number) => {
                     ))}
                   </div>
 
-                  {/* ── Main input box — Grok style ── */}
+                  {/* ── Main input box ── */}
                   <div style={{
                     border: '1.5px solid rgba(99,85,220,0.25)', borderRadius: 16,
                     background: '#fff', overflow: 'hidden',
                     boxShadow: '0 2px 12px rgba(99,85,220,0.08)',
                   }}>
-                    {/* Textarea */}
+
+                    {/* Gen mode toggle */}
+                    <div style={{ display: 'flex', gap: 2, padding: '10px 12px 0', borderBottom: '1px solid rgba(99,85,220,0.08)' }}>
+                      {[
+                        { value: 'text',  label: '✍️ Text to Image' },
+                        { value: 'image', label: '🖼️ Image to Image', disabled: !MODEL_CONFIG[selectedModel.toUpperCase().replace(/-/g,'_')]?.supportsImg2Img },
+                      ].map(m => (
+                        <button key={m.value}
+                          onClick={() => { if (!m.disabled) setGenMode(m.value as 'text' | 'image'); }}
+                          disabled={!!m.disabled}
+                          style={{
+                            padding: '5px 14px', borderRadius: 8, border: 'none', cursor: m.disabled ? 'not-allowed' : 'pointer',
+                            fontFamily: 'inherit', fontSize: 11.5, fontWeight: 700,
+                            background: genMode === m.value ? 'linear-gradient(135deg, #6355dc, #8b5cf6)' : 'transparent',
+                            color: genMode === m.value ? '#fff' : m.disabled ? '#ccc' : '#6355dc',
+                            transition: 'all 0.15s',
+                          }}
+                        >{m.label}</button>
+                      ))}
+                    </div>
+
+                    {/* Image upload area — only for img2img */}
+                    {genMode === 'image' && (
+                      <div style={{ padding: '10px 12px 0' }}>
+                        {!inputImagePreview ? (
+                          <div
+                            onClick={() => inputImageRef.current?.click()}
+                            style={{
+                              border: '2px dashed rgba(99,85,220,0.3)', borderRadius: 12,
+                              padding: '16px', textAlign: 'center', cursor: 'pointer',
+                              background: 'rgba(99,85,220,0.03)', transition: 'all 0.2s',
+                            }}
+                            onMouseEnter={e => (e.currentTarget.style.borderColor = '#6355dc')}
+                            onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(99,85,220,0.3)')}
+                          >
+                            <div style={{ fontSize: 22, marginBottom: 4 }}>🖼️</div>
+                            <p style={{ fontSize: 12, color: '#6355dc', fontWeight: 600, margin: 0 }}>
+                              Drop or click to upload reference image
+                            </p>
+                            <p style={{ fontSize: 11, color: '#aaa', margin: '2px 0 0' }}>PNG, JPG — up to 10MB</p>
+                            <input ref={inputImageRef} type="file" accept="image/*" style={{ display: 'none' }}
+                              onChange={e => {
+                                const f = e.target.files?.[0];
+                                if (f) { setInputImageFile(f); setInputImagePreview(URL.createObjectURL(f)); }
+                              }} />
+                          </div>
+                        ) : (
+                          <div style={{ position: 'relative', borderRadius: 12, overflow: 'hidden', maxHeight: 120, display: 'flex', alignItems: 'center', background: '#f5f5ff' }}>
+                            <img src={inputImagePreview} alt="Reference" style={{ maxHeight: 120, maxWidth: '100%', objectFit: 'contain', display: 'block', margin: '0 auto' }} />
+                            <button onClick={() => { setInputImageFile(null); setInputImagePreview(null); }}
+                              style={{ position: 'absolute', top: 6, right: 6, background: 'rgba(0,0,0,0.6)', border: 'none', color: '#fff', borderRadius: '50%', width: 24, height: 24, cursor: 'pointer', fontSize: 11, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Prompt textarea */}
                     <textarea
                       value={prompt}
                       onChange={(e) => { setPrompt(e.target.value); setPromptCharCount(e.target.value.length); }}
-                      placeholder="✨ Describe your image in detail..."
+                      placeholder={genMode === 'image' ? '✨ Describe how to transform your image...' : '✨ Describe your image in detail...'}
                       disabled={isGenerating}
                       maxLength={2000}
                       aria-label="Image description prompt"
                       style={{
-                        width: '100%', minHeight: 90, maxHeight: 160,
-                        padding: '14px 16px 8px', resize: 'none', border: 'none', outline: 'none',
+                        width: '100%', minHeight: 80, maxHeight: 140,
+                        padding: '12px 14px 6px', resize: 'none', border: 'none', outline: 'none',
                         background: 'transparent', color: '#2d2d5e',
                         fontSize: 14, lineHeight: 1.6, fontFamily: 'inherit',
                         boxSizing: 'border-box',
                       }}
                     />
 
-                    {/* ── Bottom toolbar — single line ── */}
-                    <div style={{
-                      display: 'flex', alignItems: 'center', gap: 6,
-                      padding: '8px 12px', borderTop: '1px solid rgba(99,85,220,0.1)',
-                      background: '#fafafa', flexWrap: 'wrap',
-                    }}>
+                    {/* ── Controls row 1: Model + Style ── */}
+                    <div style={{ display: 'flex', gap: 6, padding: '6px 12px', borderTop: '1px solid rgba(99,85,220,0.08)', flexWrap: 'wrap', alignItems: 'center' }}>
+
+                      {/* Model dropdown */}
+                      <select value={selectedModel}
+                        onChange={(e) => {
+                          setSelectedModel(e.target.value);
+                          setImageSize('square');
+                          setImageQuality('standard');
+                          setImageResolution('2k');
+                          setGenMode('text');
+                          setInputImageFile(null);
+                          setInputImagePreview(null);
+                        }}
+                        style={{
+                          padding: '5px 26px 5px 9px', borderRadius: 8, fontSize: 11.5, fontWeight: 700,
+                          border: '1.5px solid rgba(99,85,220,0.2)', background: '#fff', color: '#6355dc',
+                          cursor: 'pointer', appearance: 'none', fontFamily: 'inherit', flexShrink: 0,
+                          backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%236355dc' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")",
+                          backgroundRepeat: 'no-repeat', backgroundPosition: 'right 7px center',
+                        }}>
+                        {(isLoggedIn && imageUsage?.availableModels
+                          ? imageUsage.availableModels
+                          : [
+                              { id: 'STABILITY_AI_CORE', displayName: 'Stability Core' },
+                              { id: 'GPT_IMAGE_1_MINI',  displayName: 'GPT Mini' },
+                              { id: 'IMAGEN_4_FAST',     displayName: 'Imagen 4 Fast' },
+                              { id: 'FLUX_1_1_PRO',      displayName: 'FLUX 1.1 Pro' },
+                              { id: 'IMAGEN_4_STANDARD', displayName: 'Imagen 4' },
+                              { id: 'GPT_IMAGE_1_MEDIUM',displayName: 'GPT Medium' },
+                              { id: 'NANO_BANANA_PRO',   displayName: 'Nano Banana Pro ✨' },
+                              { id: 'GROK_AURORA',       displayName: 'Grok Aurora Pro ⚡' },
+                            ]
+                        ).map((m: any) => (
+                          <option key={m.id} value={m.id}>{m.displayName}</option>
+                        ))}
+                      </select>
 
                       {/* Style dropdown */}
-                      <select
-                        value={selectedStyle}
-                        onChange={(e) => setSelectedStyle(e.target.value)}
+                      <select value={selectedStyle} onChange={(e) => setSelectedStyle(e.target.value)}
                         style={{
-                          padding: '5px 28px 5px 10px', borderRadius: 8, fontSize: 12, fontWeight: 600,
+                          padding: '5px 26px 5px 9px', borderRadius: 8, fontSize: 11.5, fontWeight: 700,
                           border: '1.5px solid rgba(99,85,220,0.2)', background: '#fff', color: '#6355dc',
-                          cursor: 'pointer', appearance: 'none', fontFamily: 'inherit',
+                          cursor: 'pointer', appearance: 'none', fontFamily: 'inherit', flexShrink: 0,
                           backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%236355dc' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")",
-                          backgroundRepeat: 'no-repeat', backgroundPosition: 'right 8px center',
-                        }}
-                      >
+                          backgroundRepeat: 'no-repeat', backgroundPosition: 'right 7px center',
+                        }}>
                         {STYLE_PRESETS.map(s => (
                           <option key={s.value} value={s.value}>{s.icon} {s.label}</option>
                         ))}
                       </select>
 
-                      {/* Model dropdown */}
-                      <select
-                        value={selectedModel}
-                        onChange={(e) => setSelectedModel(e.target.value)}
-                        style={{
-                          padding: '5px 28px 5px 10px', borderRadius: 8, fontSize: 12, fontWeight: 600,
-                          border: '1.5px solid rgba(99,85,220,0.2)', background: '#fff', color: '#6355dc',
-                          cursor: 'pointer', appearance: 'none', fontFamily: 'inherit',
-                          backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%236355dc' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")",
-                          backgroundRepeat: 'no-repeat', backgroundPosition: 'right 8px center',
-                          maxWidth: 180,
-                        }}
-                      >
-                        {(isLoggedIn && imageUsage?.availableModels
-                          ? imageUsage.availableModels
-                          : [
-                              { id: 'stability-core',     displayName: 'Stability Core',    creditsPerImage: 3  },
-                              { id: 'gpt-image-1-mini',   displayName: 'GPT Mini',          creditsPerImage: 2  },
-                              { id: 'imagen-4-fast',      displayName: 'Imagen 4 Fast',     creditsPerImage: 3  },
-                              { id: 'flux-1-1-pro',       displayName: 'FLUX 1.1 Pro',      creditsPerImage: 7  },
-                              { id: 'imagen-4-standard',  displayName: 'Imagen 4',          creditsPerImage: 7  },
-                              { id: 'gpt-image-1-medium', displayName: 'GPT Medium',        creditsPerImage: 12 },
-                            ]
-                        ).map((m: any) => (
-                          <option key={m.id} value={m.id}>
-                            {m.displayName} · {m.creditsPerImage === -1 ? '∞' : `${m.creditsPerImage}cr`}
-                          </option>
-                        ))}
-                      </select>
+                      {/* Size dropdown */}
+                      {(() => {
+                        const cfg = MODEL_CONFIG[selectedModel.toUpperCase().replace(/-/g,'_')];
+                        if (!cfg || cfg.sizes.length <= 1) return (
+                          <span style={{ fontSize: 11, color: '#aaa', padding: '5px 8px', border: '1.5px solid rgba(99,85,220,0.1)', borderRadius: 8 }}>
+                            {cfg?.sizes[0]?.icon} {cfg?.sizes[0]?.label || '⬛ Square'}
+                          </span>
+                        );
+                        return (
+                          <select value={imageSize} onChange={(e) => setImageSize(e.target.value)}
+                            style={{
+                              padding: '5px 26px 5px 9px', borderRadius: 8, fontSize: 11.5, fontWeight: 700,
+                              border: '1.5px solid rgba(99,85,220,0.2)', background: '#fff', color: '#6355dc',
+                              cursor: 'pointer', appearance: 'none', fontFamily: 'inherit', flexShrink: 0,
+                              backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%236355dc' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")",
+                              backgroundRepeat: 'no-repeat', backgroundPosition: 'right 7px center',
+                            }}>
+                            {cfg.sizes.map(s => (
+                              <option key={s.value} value={s.value}>{s.icon} {s.label}</option>
+                            ))}
+                          </select>
+                        );
+                      })()}
 
-                      {/* Negative prompt toggle */}
-                      <button
-                        onClick={() => {
-                          const el = document.getElementById('neg-prompt-area');
-                          if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
-                        }}
-                        title="Negative prompt"
-                        style={{
-                          padding: '5px 10px', borderRadius: 8, fontSize: 12, fontWeight: 600,
-                          border: '1.5px solid rgba(99,85,220,0.2)', background: '#fff',
-                          color: '#8888bb', cursor: 'pointer', whiteSpace: 'nowrap',
-                        }}
-                      >⚙️ Advanced Options</button>
+                      {/* Quality dropdown — only if model has multiple tiers */}
+                      {(() => {
+                        const cfg = MODEL_CONFIG[selectedModel.toUpperCase().replace(/-/g,'_')];
+                        if (!cfg || cfg.qualities.length <= 1) return (
+                          <span style={{ fontSize: 11, color: '#aaa', padding: '5px 8px', border: '1.5px solid rgba(99,85,220,0.1)', borderRadius: 8 }}>
+                            {cfg?.qualities[0]?.label || 'Standard'}
+                          </span>
+                        );
+                        return (
+                          <select value={imageQuality} onChange={(e) => setImageQuality(e.target.value)}
+                            title={MODEL_CONFIG[selectedModel.toUpperCase().replace(/-/g,'_')]?.qualities.find(q => q.value === imageQuality)?.desc}
+                            style={{
+                              padding: '5px 26px 5px 9px', borderRadius: 8, fontSize: 11.5, fontWeight: 700,
+                              border: '1.5px solid rgba(99,85,220,0.2)', background: '#fff', color: '#6355dc',
+                              cursor: 'pointer', appearance: 'none', fontFamily: 'inherit', flexShrink: 0,
+                              backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%236355dc' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")",
+                              backgroundRepeat: 'no-repeat', backgroundPosition: 'right 7px center',
+                            }}>
+                            {cfg.qualities.map(q => (
+                              <option key={q.value} value={q.value}>{q.label}</option>
+                            ))}
+                          </select>
+                        );
+                      })()}
+
+                      {/* Resolution — only Nano Banana Pro */}
+                      {selectedModel.toUpperCase().replace(/-/g,'_') === 'NANO_BANANA_PRO' && (
+                        <select value={imageResolution} onChange={(e) => setImageResolution(e.target.value)}
+                          style={{
+                            padding: '5px 26px 5px 9px', borderRadius: 8, fontSize: 11.5, fontWeight: 700,
+                            border: '1.5px solid rgba(99,85,220,0.2)', background: '#fff', color: '#6355dc',
+                            cursor: 'pointer', appearance: 'none', fontFamily: 'inherit', flexShrink: 0,
+                            backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%236355dc' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")",
+                            backgroundRepeat: 'no-repeat', backgroundPosition: 'right 7px center',
+                          }}>
+                          <option value="2k">📐 2K — up to 2048px</option>
+                          <option value="4k">📐 4K — up to 4096px</option>
+                        </select>
+                      )}
+
+                      <div style={{ flex: 1 }} />
 
                       {/* Credits pill */}
                       <span style={{
                         fontSize: 11.5, fontWeight: 700, padding: '4px 10px', borderRadius: 999,
-                        background: 'rgba(99,85,220,0.08)', color: '#6355dc', whiteSpace: 'nowrap',
+                        background: 'rgba(99,85,220,0.08)', color: '#6355dc', whiteSpace: 'nowrap', flexShrink: 0,
                       }}>
                         ⚡ {isLoggedIn ? (imageUsage?.balance ?? '...') : 50} cr
-                        {(() => {
-                          const models = isLoggedIn && imageUsage?.availableModels ? imageUsage.availableModels
-                            : [{ id: 'stability-core', creditsPerImage: 3 }, { id: 'gpt-image-1-mini', creditsPerImage: 2 },
-                              { id: 'imagen-4-fast', creditsPerImage: 3 }, { id: 'flux-1-1-pro', creditsPerImage: 7 },
-                              { id: 'imagen-4-standard', creditsPerImage: 7 }, { id: 'gpt-image-1-medium', creditsPerImage: 12 }];
-                          const m = models.find((x: any) => x.id === selectedModel);
-                          return m ? ` · ${(m as any).creditsPerImage}cr/img` : '';
-                        })()}
+                        {' · '}{getCreditCost(selectedModel.toUpperCase().replace(/-/g,'_'), imageSize, imageQuality, imageResolution)}cr/img
                       </span>
 
                       {isLoggedIn && imageUsage && imageUsage.balance < 15 && imageUsage.balance > 0 && (
                         <a href="/pricing" style={{
                           fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 999,
                           background: 'linear-gradient(135deg, #f59e0b, #f97316)',
-                          color: '#fff', textDecoration: 'none', whiteSpace: 'nowrap',
+                          color: '#fff', textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0,
                         }}>Top up →</a>
                       )}
 
-                      {/* Spacer */}
-                      <div style={{ flex: 1 }} />
-
                       {/* char count */}
                       {promptCharCount > 0 && (
-                        <span style={{ fontSize: 10.5, color: promptCharCount > 1800 ? '#dc2626' : '#aaaacc', fontWeight: 600 }}>
+                        <span style={{ fontSize: 10.5, color: promptCharCount > 1800 ? '#dc2626' : '#aaaacc', fontWeight: 600, flexShrink: 0 }}>
                           {promptCharCount}/2k
                         </span>
                       )}
 
+                      {/* ── Advanced options button ── */}
+                      <button
+                        onClick={() => {
+                          const el = document.getElementById('neg-prompt-area');
+                          if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+                        }}
+                        style={{
+                          padding: '5px 10px', borderRadius: 8, fontSize: 11.5, fontWeight: 600,
+                          border: '1.5px solid rgba(99,85,220,0.2)', background: '#fff',
+                          color: '#8888bb', cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0,
+                        }}
+                      >⚙️</button>
+
                       {/* Generate button */}
                       {!isLoggedIn ? (
-                        <button
-                          onClick={() => setShowLoginModal(true)}
+                        <button onClick={() => setShowLoginModal(true)}
                           style={{
                             padding: '7px 18px', borderRadius: 10, border: 'none', cursor: 'pointer',
                             background: 'linear-gradient(135deg, #6355dc, #8b5cf6)', color: '#fff',
-                            fontWeight: 700, fontSize: 13, fontFamily: 'inherit', whiteSpace: 'nowrap',
-                          }}
-                        >🔒 Login — Free</button>
+                            fontWeight: 700, fontSize: 13, fontFamily: 'inherit', whiteSpace: 'nowrap', flexShrink: 0,
+                          }}>🔒 Login — Free</button>
                       ) : isLimitsExceeded() ? (
                         <a href="/pricing" style={{
                           padding: '7px 18px', borderRadius: 10,
                           background: 'linear-gradient(135deg, #059669, #10b981)', color: '#fff',
-                          fontWeight: 700, fontSize: 13, textDecoration: 'none', whiteSpace: 'nowrap',
+                          fontWeight: 700, fontSize: 13, textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0,
                         }}>🚀 Get Credits</a>
                       ) : (
                         <button
                           onClick={handleGenerateImage}
-                          disabled={!prompt.trim() || isGenerating || !selectedModel}
+                          disabled={!prompt.trim() || isGenerating || !selectedModel || (genMode === 'image' && !inputImageFile)}
                           style={{
                             padding: '7px 18px', borderRadius: 10, border: 'none', cursor: 'pointer',
-                            background: !prompt.trim() || isGenerating || !selectedModel
+                            background: !prompt.trim() || isGenerating || !selectedModel || (genMode === 'image' && !inputImageFile)
                               ? '#e2e2f0' : 'linear-gradient(135deg, #6355dc, #8b5cf6)',
-                            color: !prompt.trim() || isGenerating || !selectedModel ? '#aaa' : '#fff',
+                            color: !prompt.trim() || isGenerating || !selectedModel || (genMode === 'image' && !inputImageFile) ? '#aaa' : '#fff',
                             fontWeight: 700, fontSize: 13, fontFamily: 'inherit',
-                            display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap',
-                          }}
-                        >
+                            display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap', flexShrink: 0,
+                          }}>
                           {isGenerating ? (
-                            <>
-                              <span style={{
-                                width: 14, height: 14, border: '2px solid rgba(255,255,255,0.3)',
-                                borderTopColor: '#fff', borderRadius: '50%',
-                                animation: 'spin 0.75s linear infinite', display: 'inline-block',
-                              }} />
-                              Generating…
-                            </>
+                            <><span style={{ width: 14, height: 14, border: '2px solid rgba(255,255,255,0.3)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.75s linear infinite', display: 'inline-block' }} />Generating…</>
                           ) : '✨ Generate'}
                         </button>
                       )}
