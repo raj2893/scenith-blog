@@ -309,9 +309,14 @@ const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
   const [speedInput, setSpeedInput] = useState<string>('1');
 
   const hasSpeedAccess = useMemo(() => {
-    if (!isLoggedIn || !ttsUsage) return false;
-    return ttsUsage.isPaid;
-  }, [isLoggedIn, ttsUsage]); 
+  if (!isLoggedIn || !ttsUsage) return false;
+  return true; // All logged-in users get basic speed access
+}, [isLoggedIn, ttsUsage]);
+
+const hasFullSpeedAccess = useMemo(() => {
+  if (!isLoggedIn || !ttsUsage) return false;
+  return ttsUsage.isPaid;
+}, [isLoggedIn, ttsUsage]);
 
   useEffect(() => {
     if (!isLoggedIn || !ttsUsage) return;
@@ -714,10 +719,11 @@ const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
       return;
     }
 
-    if (selectedProvider !== 'GOOGLE' && !ttsUsage?.isPaid) {
+   // Only block OpenAI for free users — Azure is allowed
+    if (selectedProvider === 'OPENAI' && !ttsUsage?.isPaid) {
       window.location.href = '/pricing';
       return;
-    }    
+    }  
 
     if (!aiVoiceText.trim() || !selectedVoice) {
       setError('Please enter text and select a voice.');
@@ -760,7 +766,7 @@ const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
             text: aiVoiceText,
             voiceId: selectedVoice.voiceId || selectedVoice.voiceName,
             provider: selectedProvider,
-            speed: hasSpeedAccess ? speed : 1.0,
+            speed: (hasSpeedAccess || hasFullSpeedAccess) ? speed : 1.0,
           }
         : {
             text: aiVoiceText,
@@ -1382,31 +1388,33 @@ return (
                     background: '#fafafa', flexWrap: 'wrap',
                   }}>
                   
-                    {/* Speed — paid only, logged in only */}
+                    {/* Speed — free users up to 2x, paid users up to 4x */}
                     {isLoggedIn && (
                       <select
-                        value={hasSpeedAccess ? speed : 1.0}
+                        value={speed}
                         onChange={(e) => {
-                          if (!hasSpeedAccess) return;
                           const val = parseFloat(e.target.value);
+                          if (!hasFullSpeedAccess && val > 2.0) return; // block free users above 2x
                           setSpeed(val);
                           setSpeedInput(String(val));
                         }}
-                        disabled={!hasSpeedAccess}
-                        title={!hasSpeedAccess ? 'Speed control requires paid plan' : 'Playback speed'}
+                        title="Playback speed"
                         style={{
                           padding: '5px 28px 5px 10px', borderRadius: 8, fontSize: 12, fontWeight: 600,
                           border: '1.5px solid rgba(99,85,220,0.2)',
-                          background: hasSpeedAccess ? '#fff' : '#f4f4f8',
-                          color: hasSpeedAccess ? '#6355dc' : '#aaa',
-                          cursor: hasSpeedAccess ? 'pointer' : 'not-allowed',
-                          appearance: 'none', fontFamily: 'inherit',
+                          background: '#fff', color: '#6355dc',
+                          cursor: 'pointer', appearance: 'none', fontFamily: 'inherit',
                           backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%236355dc' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")",
                           backgroundRepeat: 'no-repeat', backgroundPosition: 'right 8px center',
                         }}
                       >
-                        {[0.5, 1.0, 1.25, 1.5, 1.75, 2.0, 3.0, 4.0].map(s => (
-                          <option key={s} value={s}>⚡ {s}x{!hasSpeedAccess && s !== 1.0 ? ' 👑' : ''}</option>
+                        {[0.5, 1.0, 1.25, 1.5, 1.75, 2.0].map(s => (
+                          <option key={s} value={s}>⚡ {s}x</option>
+                        ))}
+                        {[3.0, 4.0].map(s => (
+                          <option key={s} value={s} disabled={!hasFullSpeedAccess}>
+                            ⚡ {s}x{!hasFullSpeedAccess ? ' 👑' : ''}
+                          </option>
                         ))}
                       </select>
                     )}
@@ -1615,28 +1623,31 @@ return (
               <div className="fixed-header">
   <h3>Select a Voice</h3>
   {/* Provider tabs — kept for voice list context, synced with toolbar dropdown */}
-  <div className="provider-tabs">
-    {(['GOOGLE', 'OPENAI', 'AZURE'] as const).map(p => (
-      <button
-        key={p}
-        className={`provider-tab ${selectedProvider === p ? 'active' : ''} ${
-          p !== 'GOOGLE' && !ttsUsage?.isPaid ? 'locked' : ''
-        }`}
-        onClick={() => {
-          setSelectedProvider(p);
-          setSelectedVoice(null);
-        }}
-        title={p !== 'GOOGLE' && !ttsUsage?.isPaid ? 'Requires paid plan' : ''}
-      >
-        {p === 'GOOGLE' && '🔵 '}
-        {p === 'OPENAI' && '🟢 '}
-        {p === 'AZURE' && '🔷 '}
-        {p.charAt(0) + p.slice(1).toLowerCase()}
-        {p !== 'GOOGLE' && !ttsUsage?.isPaid && (
-          <span className="tab-lock">👑</span>
-        )}
-      </button>
-    ))}
+ <div className="provider-tabs">
+    {(['GOOGLE', 'OPENAI', 'AZURE'] as const).map(p => {
+      const isLocked = p === 'OPENAI' && !ttsUsage?.isPaid;
+      return (
+        <button
+          key={p}
+          className={`provider-tab ${selectedProvider === p ? 'active' : ''} ${isLocked ? 'locked' : ''}`}
+          onClick={() => {
+            if (isLocked) { window.location.href = '/pricing'; return; }
+            setSelectedProvider(p);
+            setSelectedVoice(null);
+          }}
+          title={isLocked ? 'OpenAI voices require paid plan' : p === 'AZURE' ? 'Azure voices — available on free plan' : ''}
+        >
+          {p === 'GOOGLE' && '🔵 '}
+          {p === 'OPENAI' && '🟢 '}
+          {p === 'AZURE' && '🔷 '}
+          {p.charAt(0) + p.slice(1).toLowerCase()}
+          {isLocked && <span className="tab-lock">👑</span>}
+          {p === 'AZURE' && !ttsUsage?.isPaid && (
+            <span style={{ fontSize: 9, marginLeft: 3, color: '#059669', fontWeight: 700 }}></span>
+          )}
+        </button>
+      );
+    })}
   </div>
   {/* Filters only for Google — compact, no label banner */}
   {selectedProvider === 'GOOGLE' && (
