@@ -265,6 +265,16 @@ const inputImageRef = useRef<HTMLInputElement>(null);
     fetchActivePlan();
   }, [isLoggedIn]);
 
+  useEffect(() => {
+    if (genMode !== 'image') return;
+    const modelKey = selectedModel.toUpperCase().replace(/-/g, '_');
+    if (!MODEL_CONFIG[modelKey]?.supportsImg2Img) {
+      // Auto-switch to first img2img-capable model
+      const firstSupported = Object.entries(MODEL_CONFIG).find(([, cfg]) => cfg.supportsImg2Img)?.[0];
+      if (firstSupported) setSelectedModel(firstSupported);
+    }
+  }, [genMode]);
+
   // Fetch image usage when user logs in
   useEffect(() => {
     const fetchImageUsage = async () => {
@@ -1112,7 +1122,11 @@ const startImagePolling = useCallback((jobId: number) => {
                               { id: 'NANO_BANANA_PRO',   displayName: 'Nano Banana Pro ✨' },
                               { id: 'GROK_AURORA',       displayName: 'Grok Aurora Pro ⚡' },
                             ]
-                        ).map((m: any) => (
+                        ).filter((m: any) => {
+                          if (genMode !== 'image') return true; // text mode: show all
+                          const cfg = MODEL_CONFIG[m.id?.toUpperCase?.().replace(/-/g,'_')];
+                          return cfg?.supportsImg2Img === true;
+                        }).map((m: any) => (
                           <option key={m.id} value={m.id}>{m.displayName}</option>
                         ))}
                       </select>

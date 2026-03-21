@@ -88,6 +88,7 @@ const STATIC_MODELS_PREVIEW = [
   { id: "kling-v2.6-pro",  name: "Kling 2.6 Pro",    res: "1080p", cr: 64  },
   { id: "veo3.1-fast",     name: "Veo 3.1 Fast",     res: "1080p", cr: 92  },
   { id: "veo3.1",          name: "Veo 3.1",          res: "1080p", cr: 186 },
+  { id: "grok-imagine",     name: "Grok Imagine 🎵",   res: "480p",  cr: 47 },
 ];
 const MODEL_RESOLUTIONS: Record<string, string[]> = {
   // Wan 2.5 variants
@@ -104,6 +105,9 @@ const MODEL_RESOLUTIONS: Record<string, string[]> = {
   "veo3.1":                    ["720p", "1080p"],
   "veo_3_1_fast":              ["720p", "1080p"],
   "veo_3_1":                   ["720p", "1080p"],
+  "grok-imagine":              ["480p", "720p"],
+  "grok_imagine":              ["480p", "720p"],
+  "grok-imagine-video":        ["480p", "720p"],
 };
 
 const getAvailableResolutions = (modelId: string): string[] => {
@@ -115,6 +119,7 @@ const getAvailableResolutions = (modelId: string): string[] => {
   if (id.includes("wan"))  return ["480p", "720p", "1080p"];
   if (id.includes("veo"))  return ["720p", "1080p"];
   if (id.includes("kling")) return ["1080p"];
+  if (id.includes("grok")) return ["480p", "720p"];
   return ["1080p"];
 };
 
@@ -1221,18 +1226,36 @@ const [resolution, setResolution] = useState("480p"); // default to cheapest
                   );
                 })()}                
                 
-                {/* Audio toggle — only if model supports it */}
-                {(isLoggedIn ? (models.find(m => m.id === effectiveModel)?.supportsAudio) : false) && (
-                  <label style={{ display: 'flex', alignItems: 'center', gap: 5, cursor: 'pointer', flexShrink: 0 }}
-                    title="AI-generated audio (2× credits)">
-                    <div className="vg-switch" style={{ width: 36, height: 20 }}>
-                      <input type="checkbox" checked={audioEnabled} onChange={(e) => setAudioEnabled(e.target.checked)} />
-                      <div className="vg-switch-track" />
-                      <div className="vg-switch-thumb" style={{ width: 14, height: 14, top: 2, left: 2 }} />
-                    </div>
-                    <span style={{ fontSize: 11, color: '#64748B', fontFamily: "'DM Sans', sans-serif" }}>🎵</span>
-                  </label>
-                )}
+               {/* Audio toggle — only if model supports it AND is not Grok (audio always on for Grok) */}
+                {(() => {
+                  const isGrok = (effectiveModel || '').toLowerCase().includes('grok');
+                  const modelSupportsAudio = isLoggedIn ? (models.find(m => m.id === effectiveModel)?.supportsAudio ?? false) : false;
+                  if (isGrok && modelSupportsAudio) {
+                    // Grok: show a fixed "audio always on" badge instead of toggle
+                    return (
+                      <span title="Audio is always included with Grok Imagine" style={{
+                        display: 'flex', alignItems: 'center', gap: 4,
+                        padding: '5px 9px', borderRadius: 8, flexShrink: 0,
+                        background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)',
+                        fontSize: 11, color: '#34D399', fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+                      }}>🎵 Audio ✓</span>
+                    );
+                  }
+                  if (!isGrok && modelSupportsAudio) {
+                    return (
+                      <label style={{ display: 'flex', alignItems: 'center', gap: 5, cursor: 'pointer', flexShrink: 0 }}
+                        title="AI-generated audio (2× credits)">
+                        <div className="vg-switch" style={{ width: 36, height: 20 }}>
+                          <input type="checkbox" checked={audioEnabled} onChange={(e) => setAudioEnabled(e.target.checked)} />
+                          <div className="vg-switch-track" />
+                          <div className="vg-switch-thumb" style={{ width: 14, height: 14, top: 2, left: 2 }} />
+                        </div>
+                        <span style={{ fontSize: 11, color: '#64748B', fontFamily: "'DM Sans', sans-serif" }}>🎵</span>
+                      </label>
+                    );
+                  }
+                  return null;
+                })()}
 
                 {/* Prompt suggestions button — moved into toolbar as a subtle icon */}
                 <div style={{ display: 'flex', gap: 4, overflowX: 'auto', scrollbarWidth: 'none', flexShrink: 1 }}>
@@ -1342,6 +1365,7 @@ const [resolution, setResolution] = useState("480p"); // default to cheapest
                       {selectedModel === 'wan2.5' ? (duration === 5 ? '46' : '92') :
                        selectedModel === 'kling-v2.5-turbo' ? (duration === 5 ? '64' : '130') :
                        selectedModel === 'kling-v2.6-pro' ? (duration === 5 ? '64' : '130') :
+                       selectedModel === 'grok-imagine' ? (duration === 5 ? '47' : '94') :
                        selectedModel === 'veo3.1-fast' ? (duration === 5 ? '92' : '186') :
                        selectedModel === 'veo3.1' ? (duration === 5 ? '186' : '370') :
                        duration === 5 ? '46' : '92'} cr
