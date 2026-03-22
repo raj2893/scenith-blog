@@ -38,6 +38,7 @@ interface Credits {
   planType: string;
   expiresAt: string | "N/A";
   creditCosts: any[];
+  freeVideoUsed: boolean;
 }
 
 interface VideoJob {
@@ -164,6 +165,7 @@ const [resolution, setResolution] = useState("480p"); // default to cheapest
   const upsellRef = useRef<HTMLDivElement>(null);
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
   const [demoVideos, setDemoVideos] = useState<string[]>([]);
+  const [showFreeVideoLimitModal, setShowFreeVideoLimitModal] = useState(false);
 
   useEffect(() => {
     fetch(`${API_BASE_URL}/api/public/gallery/videos`)
@@ -278,9 +280,9 @@ const [resolution, setResolution] = useState("480p"); // default to cheapest
           startPolling(inProgressJob.falRequestId);
         }
       })
-      .catch((err) => {
+       .catch((err) => {
         if (err.response?.status === 402) {
-          setCredits({ balance: 0, planType: 'FREE', expiresAt: 'N/A', creditCosts: [] });
+          setCredits({ balance: 0, planType: 'FREE', expiresAt: 'N/A', creditCosts: [], freeVideoUsed: false });
         }
       });
   }, [isLoggedIn, startPolling]);
@@ -394,7 +396,11 @@ const [resolution, setResolution] = useState("480p"); // default to cheapest
         jobCardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }, 100);      
     } catch (err: any) {
-      setError(err.response?.data || err.message || "Failed to submit generation.");
+      if (err.response?.data === "FREE_VIDEO_LIMIT_REACHED" || err.response?.status === 402) {
+        setShowFreeVideoLimitModal(true);
+      } else {
+        setError(err.response?.data || err.message || "Failed to submit generation.");
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -1300,7 +1306,7 @@ const [resolution, setResolution] = useState("480p"); // default to cheapest
                 ) : (
                   <button className="vg-generate-btn"
                     onClick={handleGenerate}
-                    disabled={isSubmitting || !prompt.trim() || (genType === "image" && !imageFile) || (credits?.balance === 0)  || (!!currentJob && (currentJob.status === 'PENDING' || currentJob.status === 'PROCESSING'))}
+                   disabled={isSubmitting || !prompt.trim() || (genType === "image" && !imageFile) || (credits?.balance === 0) || (credits?.planType === 'FREE' && credits?.freeVideoUsed) || (!!currentJob && (currentJob.status === 'PENDING' || currentJob.status === 'PROCESSING'))}
                     style={{ width: 'auto', padding: '8px 20px', fontSize: '0.9rem', borderRadius: 10, flexShrink: 0 }}>
                     {isSubmitting ? "Submitting…" : (currentJob && (currentJob.status === 'PENDING' || currentJob.status === 'PROCESSING')) ? "⏳ Generating…" : "✨ Generate"}
                   </button>
@@ -1452,6 +1458,22 @@ const [resolution, setResolution] = useState("480p"); // default to cheapest
                 <p style={{ textAlign: 'center', fontSize: 11.5, color: '#475569', marginTop: 8 }}>
                   Free account · 50 credits instantly · No credit card
                 </p>
+              )}
+              {isLoggedIn && credits?.planType === 'FREE' && credits?.freeVideoUsed && (
+                <div style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  padding: '7px 12px', background: 'rgba(239,68,68,0.07)',
+                  border: '1px solid rgba(239,68,68,0.2)', borderRadius: 8, marginTop: 8, gap: 10,
+                }}>
+                  <span style={{ fontSize: 11.5, color: '#FCA5A5' }}>🎬 Free video used</span>
+                  <button
+                    onClick={() => setShowFreeVideoLimitModal(true)}
+                    style={{
+                      fontSize: 11, fontWeight: 700, color: '#fff', padding: '3px 9px',
+                      borderRadius: 6, background: 'linear-gradient(135deg, #6366F1, #4F46E5)',
+                      border: 'none', cursor: 'pointer',
+                    }}>Upgrade →</button>
+                </div>
               )}
             </div>
           </div>
@@ -1768,6 +1790,96 @@ const [resolution, setResolution] = useState("480p"); // default to cheapest
               <div className="vg-divider">OR</div>
               <div id="googleSignInButtonVideo" style={{ display: "flex", justifyContent: "center" }} />
               <p className="vg-modal-link">New to Scenith? <a href="/signup">Create account →</a></p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      {/* ── Free Video Limit Modal ── */}
+      <AnimatePresence>
+        {showFreeVideoLimitModal && (
+          <motion.div
+            style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)', zIndex: 1001, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            onClick={(e) => { if (e.target === e.currentTarget) setShowFreeVideoLimitModal(false); }}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.88, y: 32 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.88, y: 32 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 28 }}
+              style={{ background: '#080B12', borderRadius: 24, maxWidth: 480, width: '96%', position: 'relative', border: '1px solid rgba(99,102,241,0.3)', boxShadow: '0 40px 120px rgba(0,0,0,0.75)', overflow: 'hidden' }}
+            >
+              {/* Top gradient bar */}
+              <div style={{ height: 4, background: 'linear-gradient(90deg, #6366F1, #8b5cf6, #34D399)' }} />
+
+              <div style={{ padding: '32px 28px 28px' }}>
+                <button onClick={() => setShowFreeVideoLimitModal(false)} style={{ position: 'absolute', top: 16, right: 16, background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, width: 32, height: 32, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6a6a8a' }}>
+                  <FaTimes size={11} />
+                </button>
+
+                {/* Icon + heading */}
+                <div style={{ textAlign: 'center', marginBottom: 24 }}>
+                  <div style={{ fontSize: 48, marginBottom: 12 }}>🎬</div>
+                  <h2 style={{ fontFamily: "'Syne', sans-serif", fontSize: 22, fontWeight: 900, color: '#E2E8F0', marginBottom: 8, lineHeight: 1.2 }}>
+                    You've Used Your Free AI Video
+                  </h2>
+                  <p style={{ fontSize: 13.5, color: '#64748B', lineHeight: 1.6, maxWidth: 360, margin: '0 auto' }}>
+                    Free accounts get <strong style={{ color: '#818CF8' }}>1 lifetime video</strong> to experience the magic. Loved it? Unlock unlimited AI video generation with a plan.
+                  </p>
+                </div>
+
+                {/* Feature comparison */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 22 }}>
+                  <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 14, padding: '16px 14px' }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: '#334155', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>🆓 Free Plan</div>
+                    {[
+                      { icon: '🎬', label: 'AI Videos', val: '1 lifetime only' },
+                      { icon: '🤖', label: 'Models', val: 'Limited' },
+                      { icon: '📥', label: 'Downloads', val: 'MP4 included' },
+                    ].map((item, i) => (
+                      <div key={i} style={{ marginBottom: i < 2 ? 10 : 0 }}>
+                        <div style={{ fontSize: 10, color: '#334155', marginBottom: 2 }}>{item.icon} {item.label}</div>
+                        <div style={{ fontSize: 12, color: '#475569', fontWeight: 600 }}>{item.val}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div style={{ background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.3)', borderRadius: 14, padding: '16px 14px', position: 'relative' }}>
+                    <div style={{ position: 'absolute', top: -11, left: '50%', transform: 'translateX(-50%)', background: 'linear-gradient(135deg, #6366F1, #8b5cf6)', color: '#fff', fontSize: 9, fontWeight: 800, letterSpacing: '0.08em', padding: '3px 12px', borderRadius: 999, whiteSpace: 'nowrap' }}>⭐ RECOMMENDED</div>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: '#6366F1', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>Creator Lite — $9/mo</div>
+                    {[
+                      { icon: '🎬', label: 'AI Videos', val: 'Unlimited ✓' },
+                      { icon: '🤖', label: 'Models', val: 'All 6 models ✓' },
+                      { icon: '💳', label: 'Credits', val: '300/mo included' },
+                    ].map((item, i) => (
+                      <div key={i} style={{ marginBottom: i < 2 ? 10 : 0 }}>
+                        <div style={{ fontSize: 10, color: '#6366F1', marginBottom: 2 }}>{item.icon} {item.label}</div>
+                        <div style={{ fontSize: 12, color: '#818CF8', fontWeight: 700 }}>{item.val}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* CTA */}
+                
+                <a  href="/pricing"
+                  onClick={() => setShowFreeVideoLimitModal(false)}
+                  style={{ display: 'block', width: '100%', padding: '14px 24px', background: 'linear-gradient(135deg, #6366F1 0%, #7C3AED 100%)', color: '#fff', borderRadius: 12, textDecoration: 'none', fontSize: 15, fontWeight: 700, boxShadow: '0 8px 28px rgba(99,102,241,0.4)', textAlign: 'center', marginBottom: 12 }}
+                >
+                  Unlock Unlimited AI Videos — $9/mo →
+                </a>
+
+                <p style={{ textAlign: 'center', fontSize: 11, color: '#334155' }}>
+                  Cancel anytime · Instant access · All models included
+                </p>
+
+                <button
+                  onClick={() => setShowFreeVideoLimitModal(false)}
+                  style={{ display: 'block', width: '100%', marginTop: 10, background: 'none', border: 'none', color: '#334155', fontSize: 11, cursor: 'pointer', textDecoration: 'underline' }}
+                >
+                  Maybe later
+                </button>
+              </div>
             </motion.div>
           </motion.div>
         )}
