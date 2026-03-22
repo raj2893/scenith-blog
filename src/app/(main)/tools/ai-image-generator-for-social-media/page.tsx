@@ -63,7 +63,7 @@ export const metadata: Metadata = {
 };
 
 const ctaUrl =
-  "https://scenith.in/tools/ai-image-generation?utm_source=social-media-lp&utm_medium=cta-button&utm_campaign=social-creators";
+  "https://scenith.in/create-ai-content?utm_source=social-media-lp&utm_medium=cta-button&utm_campaign=social-creators";
 
 const SocialMediaImageGeneratorPage = () => {
   return (

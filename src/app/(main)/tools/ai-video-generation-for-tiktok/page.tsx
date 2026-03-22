@@ -221,7 +221,7 @@ const TikTokVideoGenerationPage = () => {
               <meta itemProp="position" content="2" />
             </li>
             <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
-              <a href="/tools/ai-video-generation" itemProp="item"><span itemProp="name">AI Video Generator</span></a>
+              <a href="/create-ai-content" itemProp="item"><span itemProp="name">AI Video Generator</span></a>
               <meta itemProp="position" content="3" />
             </li>
             <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
@@ -1585,7 +1585,7 @@ const TikTokVideoGenerationPage = () => {
 
             <div className="ttv-final-links">
               <span>Also explore: </span>
-              <Link href="/tools/ai-video-generation" className="ttv-final-link">All AI Video Generation</Link>
+              <Link href="/create-ai-content" className="ttv-final-link">All AI Video Generation</Link>
               <span> • </span>
               <Link href="/tools/ai-voice-generation-hindi" className="ttv-final-link">Hindi AI Voices</Link>
               <span> • </span>

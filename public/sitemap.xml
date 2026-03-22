@@ -1988,4 +1988,10 @@
     <changefreq>weekly</changefreq>
     <lastmod>2026-03-20</lastmod>
   </url>
+  <url>
+    <loc>https://scenith.in/create-ai-content</loc>
+    <priority>1.0</priority>
+    <changefreq>daily</changefreq>
+    <lastmod>2026-03-22</lastmod>
+  </url>
 </urlset>

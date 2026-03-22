@@ -1434,7 +1434,6 @@ const startImagePolling = useCallback((jobId: number) => {
               </section>
             )}
 
-  {/* ── Demo marquee + rest of sections follow unchanged ── */}
             {/* ── DEMO IMAGE MARQUEE ── */}
             <section className="demo-marquee-section" aria-label="Example AI generated images">
               <div className="demo-marquee-header">

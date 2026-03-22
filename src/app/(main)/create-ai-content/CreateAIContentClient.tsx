@@ -1,0 +1,2075 @@
+"use client";
+
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  useMemo,
+} from "react";
+import axios from "axios";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaTimes, FaMoon, FaSun } from "react-icons/fa";
+import { API_BASE_URL, CDN_URL } from "@/app/config";
+import './create-ai-content.css';
+
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+type Tab = "voice" | "image" | "video";
+
+interface UserProfile {
+  email: string;
+  firstName: string;
+  lastName: string;
+  picture: string | null;
+  googleAuth: boolean;
+  role: string;
+}
+
+interface Voice {
+  voiceName: string;
+  humanName?: string;
+  language: string;
+  gender: string;
+  profileUrl: string;
+  languageCode: string;
+  voiceStyle?: string;
+  voiceId?: string;
+  provider?: string;
+}
+
+interface TtsUsage {
+  balance: number;
+  planType: string;
+  maxCharsPerRequest: number;
+  isPaid: boolean;
+  creditCostPer100Chars: number;
+  freeVoiceCharsUsed?: number;
+  freeVoiceCharsLimit?: number;
+}
+
+interface ImageUsage {
+  balance: number;
+  planType: string;
+  expiresAt: string | "N/A";
+  availableModels: {
+    id: string;
+    displayName: string;
+    creditsPerImage: number;
+    accessible: boolean;
+  }[];
+}
+
+interface VideoCredits {
+  balance: number;
+  planType: string;
+  expiresAt: string | "N/A";
+  creditCosts: any[];
+  freeVideoUsed: boolean;
+}
+
+interface VideoJob {
+  id: number;
+  falRequestId: string;
+  model: string;
+  modelDisplayName: string;
+  status: "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED";
+  prompt: string;
+  durationSeconds: number;
+  audioEnabled: boolean;
+  aspectRatio: string;
+  creditsUsed: number;
+  resolution: string;
+  videoUrl?: string | null;
+  createdAt: string;
+  completedAt: string | null;
+  errorMessage?: string;
+}
+
+interface GeneratedImage {
+  id: number;
+  imagePath: string;
+  prompt: string;
+  resolution: string;
+  createdAt: string;
+}
+
+// ─── Constants ────────────────────────────────────────────────────────────────
+
+const IMAGE_STYLE_PRESETS = [
+  { value: "realistic", label: "Realistic", icon: "📷" },
+  { value: "artistic", label: "Artistic", icon: "🎨" },
+  { value: "anime", label: "Anime", icon: "🎌" },
+  { value: "digital-art", label: "Digital Art", icon: "💻" },
+  { value: "3d-render", label: "3D Render", icon: "🎮" },
+  { value: "fantasy", label: "Fantasy", icon: "🧙" },
+  { value: "sci-fi", label: "Sci-Fi", icon: "🚀" },
+  { value: "vintage", label: "Vintage", icon: "📼" },
+];
+
+const IMAGE_MODEL_CONFIG: Record<
+  string,
+  {
+    sizes: { value: string; label: string; icon: string }[];
+    qualities: { value: string; label: string; creditsExtra: number }[];
+    supportsImg2Img: boolean;
+    flatPrice: boolean;
+  }
+> = {
+  GPT_IMAGE_1_MINI: {
+    flatPrice: false,
+    supportsImg2Img: true,
+    sizes: [
+      { value: "square", label: "Square (1:1)", icon: "⬛" },
+      { value: "portrait", label: "Portrait (9:16)", icon: "📱" },
+      { value: "landscape", label: "Landscape (16:9)", icon: "🖥️" },
+    ],
+    qualities: [
+      { value: "draft", label: "Draft", creditsExtra: 0 },
+      { value: "standard", label: "Standard", creditsExtra: 0 },
+      { value: "premium", label: "Premium", creditsExtra: 0 },
+    ],
+  },
+  GPT_IMAGE_1_MEDIUM: {
+    flatPrice: false,
+    supportsImg2Img: true,
+    sizes: [
+      { value: "square", label: "Square (1:1)", icon: "⬛" },
+      { value: "portrait", label: "Portrait (9:16)", icon: "📱" },
+      { value: "landscape", label: "Landscape (16:9)", icon: "🖥️" },
+    ],
+    qualities: [
+      { value: "draft", label: "Draft", creditsExtra: 0 },
+      { value: "standard", label: "Standard", creditsExtra: 0 },
+      { value: "premium", label: "Premium", creditsExtra: 0 },
+    ],
+  },
+  IMAGEN_4_FAST: {
+    flatPrice: true,
+    supportsImg2Img: false,
+    sizes: [
+      { value: "square", label: "Square (1:1)", icon: "⬛" },
+      { value: "landscape", label: "Landscape (16:9)", icon: "🖥️" },
+      { value: "portrait", label: "Portrait (9:16)", icon: "📱" },
+      { value: "standard", label: "Standard (4:3)", icon: "📺" },
+      { value: "tall", label: "Tall (3:4)", icon: "📄" },
+    ],
+    qualities: [{ value: "standard", label: "Fast Mode", creditsExtra: 0 }],
+  },
+  IMAGEN_4_STANDARD: {
+    flatPrice: true,
+    supportsImg2Img: false,
+    sizes: [
+      { value: "square", label: "Square (1:1)", icon: "⬛" },
+      { value: "landscape", label: "Landscape (16:9)", icon: "🖥️" },
+      { value: "portrait", label: "Portrait (9:16)", icon: "📱" },
+      { value: "standard", label: "Standard (4:3)", icon: "📺" },
+      { value: "tall", label: "Tall (3:4)", icon: "📄" },
+    ],
+    qualities: [{ value: "standard", label: "Full Quality", creditsExtra: 0 }],
+  },
+  FLUX_1_1_PRO: {
+    flatPrice: true,
+    supportsImg2Img: false,
+    sizes: [{ value: "square", label: "Square (1:1)", icon: "⬛" }],
+    qualities: [{ value: "standard", label: "Photorealism", creditsExtra: 0 }],
+  },
+  STABILITY_AI_CORE: {
+    flatPrice: true,
+    supportsImg2Img: true,
+    sizes: [{ value: "square", label: "Square (1:1)", icon: "⬛" }],
+    qualities: [{ value: "standard", label: "SDXL Art", creditsExtra: 0 }],
+  },
+  GROK_AURORA: {
+    flatPrice: true,
+    supportsImg2Img: true,
+    sizes: [
+      { value: "square", label: "Square (1:1)", icon: "⬛" },
+      { value: "landscape", label: "Landscape (16:9)", icon: "🖥️" },
+      { value: "portrait", label: "Portrait (9:16)", icon: "📱" },
+    ],
+    qualities: [
+      { value: "standard", label: "2K Photorealism", creditsExtra: 0 },
+    ],
+  },
+};
+
+const getImageCreditCost = (
+  modelId: string,
+  size: string,
+  quality: string
+): number => {
+  const nonSquare = size === "portrait" || size === "landscape";
+  const q = quality || "standard";
+  switch (modelId) {
+    case "GPT_IMAGE_1_MINI":
+      if (q === "draft") return 2;
+      if (q === "premium") return nonSquare ? 10 : 8;
+      return 3;
+    case "GPT_IMAGE_1_MEDIUM":
+      if (q === "draft") return nonSquare ? 5 : 4;
+      if (q === "premium") return nonSquare ? 47 : 31;
+      return nonSquare ? 16 : 12;
+    case "IMAGEN_4_FAST":
+      return 3;
+    case "IMAGEN_4_STANDARD":
+      return 7;
+    case "FLUX_1_1_PRO":
+      return 7;
+    case "STABILITY_AI_CORE":
+      return 3;
+    case "GROK_AURORA":
+      return 14;
+    default:
+      return 3;
+  }
+};
+
+const VIDEO_ASPECT_RATIOS = [
+  { value: "16:9", label: "16:9", icon: "🖥️" },
+  { value: "9:16", label: "9:16", icon: "📱" },
+  { value: "1:1", label: "1:1", icon: "⬛" },
+];
+
+const VIDEO_DURATION_OPTIONS = [
+  { value: 5, label: "5s" },
+  { value: 10, label: "10s" },
+];
+
+const STATIC_VIDEO_MODELS = [
+  { id: "wan2.5", name: "Wan 2.5", cr: 46 },
+  { id: "kling-v2.5-turbo", name: "Kling 2.5 Turbo", cr: 64 },
+  { id: "kling-v2.6-pro", name: "Kling 2.6 Pro", cr: 64 },
+  { id: "veo3.1-fast", name: "Veo 3.1 Fast", cr: 92 },
+  { id: "veo3.1", name: "Veo 3.1", cr: 186 },
+  { id: "grok-imagine", name: "Grok Imagine 🎵", cr: 47 },
+];
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+const PROMPT_SUGGESTIONS: Record<Tab, { label: string; prompt: string }[]> = {
+  voice: [
+    {
+      label: "🎬 YT Intro",
+      prompt:
+        "What's up everyone! Welcome back — today we're diving into something huge, so let's get into it!",
+    },
+    {
+      label: "📦 Product Ad",
+      prompt:
+        "Introducing the product that's changing everything. Sleek, powerful, and built for you. Try it today.",
+    },
+    {
+      label: "🧘 Meditation",
+      prompt:
+        "Close your eyes. Take a deep breath in. Hold it. Now slowly breathe out and let everything go.",
+    },
+    {
+      label: "💪 Motivation",
+      prompt:
+        "You have the power to change your story. Every single day is a new chance. So start right now.",
+    },
+    {
+      label: "🛍️ Flash Sale",
+      prompt:
+        "Hurry! Our biggest sale of the year ends tonight. Up to 70% off — don't miss out on these deals.",
+    },
+  ],
+  image: [
+    {
+      label: "🌆 Neon Tokyo",
+      prompt:
+        "Aerial neon-lit Tokyo streets at night, rain reflections, cinematic, 8K",
+    },
+    {
+      label: "👁️ Surreal portrait",
+      prompt:
+        "Hyper-realistic portrait of a woman with galaxy eyes, surreal, studio lighting",
+    },
+    {
+      label: "🐉 Fantasy dragon",
+      prompt:
+        "Majestic dragon perched on a cliff at sunset, epic fantasy, detailed scales",
+    },
+    {
+      label: "🤖 Cyber robot",
+      prompt:
+        "Futuristic humanoid robot in neon city rain, cyberpunk, ultra-detailed, 4K",
+    },
+    {
+      label: "🌊 Ocean cliff",
+      prompt:
+        "Dramatic ocean waves crashing on rocky cliffs, golden hour, cinematic photography",
+    },
+  ],
+  video: [
+    {
+      label: "🌆 Neon Tokyo",
+      prompt: "Aerial shot of neon-lit Tokyo streets at night, cinematic, 4K",
+    },
+    {
+      label: "🌊 Ocean drone",
+      prompt:
+        "Drone flying low over crystal blue ocean waves at golden hour, slow motion",
+    },
+    {
+      label: "🔥 Cinematic fire",
+      prompt:
+        "Close-up of fire embers floating upward in slow motion, dark background",
+    },
+    {
+      label: "🌸 Cherry blossom",
+      prompt:
+        "Cherry blossom petals falling in slow motion, soft sunlight, Japanese garden",
+    },
+    {
+      label: "⚡ Storm clouds",
+      prompt:
+        "Dramatic storm clouds forming over mountains with lightning, epic timelapse",
+    },
+  ],
+};
+
+// ─── Component ────────────────────────────────────────────────────────────────
+
+const CreateAIContentClient: React.FC = () => {
+  // ── Theme
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem('cac-theme') === 'dark';
+  });
+
+  useEffect(() => {
+    const theme = darkMode ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("cac-theme", theme);
+  }, [darkMode]);
+
+  // ── Auth
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [isPageLoading, setIsPageLoading] = useState(true);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [loginSuccess, setLoginSuccess] = useState("");
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+
+  // ── Active tab
+  const [activeTab, setActiveTab] = useState<Tab>("image");
+
+  // ── Shared prompt
+  const [prompt, setPrompt] = useState("");
+
+  // ── Error
+  const [error, setError] = useState<string | null>(null);
+
+  // ─────────────────── VOICE STATE ────────────────────────────────────────
+  const [voices, setVoices] = useState<Voice[]>([]);
+  const [selectedVoice, setSelectedVoice] = useState<Voice | null>(null);
+  const [filterLanguage, setFilterLanguage] = useState("");
+  const [filterGender, setFilterGender] = useState("");
+  const [uniqueLanguages, setUniqueLanguages] = useState<string[]>([]);
+  const [uniqueGenders, setUniqueGenders] = useState<string[]>([]);
+  const [ttsUsage, setTtsUsage] = useState<TtsUsage | null>(null);
+  const [isGeneratingVoice, setIsGeneratingVoice] = useState(false);
+  const [generatedAudio, setGeneratedAudio] = useState<string | null>(null);
+  const [playingDemo, setPlayingDemo] = useState<string | null>(null);
+  const demoAudioRef = useRef<HTMLAudioElement | null>(null);
+  const [voiceSpeed, setVoiceSpeed] = useState(1.0);
+  const [selectedVoiceProvider, setSelectedVoiceProvider] = useState<"GOOGLE" | "OPENAI" | "AZURE">("GOOGLE");
+  const [externalVoices, setExternalVoices] = useState<Voice[]>([]);
+
+  // ─────────────────── IMAGE STATE ────────────────────────────────────────
+  const [imageUsage, setImageUsage] = useState<ImageUsage | null>(null);
+  const [selectedImageModel, setSelectedImageModel] = useState("STABILITY_AI_CORE");
+  const [imageSize, setImageSize] = useState("square");
+  const [imageQuality, setImageQuality] = useState("standard");
+  const [imageStyle, setImageStyle] = useState("realistic");
+  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
+  const [generatedImages, setGeneratedImages] = useState<GeneratedImage[]>([]);
+  const [currentImageJob, setCurrentImageJob] = useState<{
+    id: number;
+    status: string;
+    imagePath?: string;
+    prompt?: string;
+    errorMessage?: string;
+  } | null>(null);
+  const imagePollingRef = useRef<NodeJS.Timeout | null>(null);
+
+  // ─────────────────── VIDEO STATE ────────────────────────────────────────
+  const [videoCredits, setVideoCredits] = useState<VideoCredits | null>(null);
+  const [videoModels, setVideoModels] = useState<any[]>([]);
+  const [selectedVideoModel, setSelectedVideoModel] = useState("wan2.5");
+  const [videoDuration, setVideoDuration] = useState(5);
+  const [videoAspectRatio, setVideoAspectRatio] = useState("16:9");
+  const [videoResolution, setVideoResolution] = useState("480p");
+  const [videoAudioEnabled, setVideoAudioEnabled] = useState(false);
+  const [isGeneratingVideo, setIsGeneratingVideo] = useState(false);
+  const [currentVideoJob, setCurrentVideoJob] = useState<VideoJob | null>(null);
+  const videoPollingRef = useRef<NodeJS.Timeout | null>(null);
+  const [showFreeVideoModal, setShowFreeVideoModal] = useState(false);
+
+  const resultRef = useRef<HTMLDivElement>(null);
+
+  const [demoImages, setDemoImages] = useState<string[]>([]);
+  const [demoVideos, setDemoVideos] = useState<string[]>([]);
+  // ─────────────────── AUTH ────────────────────────────────────────────────
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setIsPageLoading(false);
+      return;
+    }
+    axios
+      .get(`${API_BASE_URL}/auth/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        const parts = (res.data.name || "").trim().split(" ");
+        setUserProfile({
+          email: res.data.email || "",
+          firstName: parts[0] || "",
+          lastName: parts.slice(1).join(" "),
+          picture: res.data.picture || null,
+          googleAuth: res.data.googleAuth || false,
+          role: res.data.role || "BASIC",
+        });
+        setIsLoggedIn(true);
+      })
+      .catch(() => {
+        localStorage.removeItem("token");
+      })
+      .finally(() => setIsPageLoading(false));
+  }, []);
+
+  const handleLogin = async (email: string, password: string) => {
+    setIsLoggingIn(true);
+    setLoginError(null);
+    try {
+      const res = await axios.post(`${API_BASE_URL}/auth/login`, {
+        email,
+        password,
+      });
+      localStorage.setItem("token", res.data.token);
+      const meRes = await axios.get(`${API_BASE_URL}/auth/me`, {
+        headers: { Authorization: `Bearer ${res.data.token}` },
+      });
+      const parts = (meRes.data.name || "").trim().split(" ");
+      setUserProfile({
+        email: meRes.data.email,
+        firstName: parts[0],
+        lastName: parts.slice(1).join(" "),
+        picture: meRes.data.picture || null,
+        googleAuth: meRes.data.googleAuth || false,
+        role: meRes.data.role || "BASIC",
+      });
+      setIsLoggedIn(true);
+      setShowLoginModal(false);
+    } catch (err: any) {
+      setLoginError(
+        err.response?.data?.message || "Login failed. Check credentials."
+      );
+    } finally {
+      setIsLoggingIn(false);
+    }
+  };
+
+  const handleGoogleLogin = useCallback(async (credentialResponse: any) => {
+    setIsLoggingIn(true);
+    setLoginError(null);
+    try {
+      const res = await axios.post(`${API_BASE_URL}/auth/google`, {
+        token: credentialResponse.credential,
+      });
+      localStorage.setItem("token", res.data.token);
+      setTimeout(async () => {
+        const meRes = await axios.get(`${API_BASE_URL}/auth/me`, {
+          headers: { Authorization: `Bearer ${res.data.token}` },
+        });
+        const parts = (meRes.data.name || "").trim().split(" ");
+        setUserProfile({
+          email: meRes.data.email,
+          firstName: parts[0],
+          lastName: parts.slice(1).join(" "),
+          picture: meRes.data.picture || null,
+          googleAuth: true,
+          role: meRes.data.role || "BASIC",
+        });
+        setIsLoggedIn(true);
+        setShowLoginModal(false);
+        setIsLoggingIn(false);
+      }, 1000);
+    } catch (err: any) {
+      setIsLoggingIn(false);
+      setLoginError(err.response?.data?.message || "Google login failed.");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!showLoginModal) return;
+    const init = () => {
+      if (window.google?.accounts) {
+        window.google.accounts.id.initialize({
+          client_id:
+            "397321320139-tpd310sq9j8rdngqd9kdmhgegco52b3g.apps.googleusercontent.com",
+          callback: handleGoogleLogin,
+        });
+        const el = document.getElementById("cac-google-btn");
+        if (el)
+          window.google.accounts.id.renderButton(el, {
+            theme: "outline",
+            size: "large",
+            width: 300,
+          });
+      } else setTimeout(init, 100);
+    };
+    init();
+  }, [showLoginModal, handleGoogleLogin]);
+
+  // ─────────────────── DATA FETCH ───────────────────────────────────────────
+
+  useEffect(() => {
+    // Fetch only metadata for filter dropdowns
+    fetch(`${API_BASE_URL}/api/ai-voices/get-all-voices`)
+      .then((r) => r.json())
+      .then((data: Voice[]) => {
+        const langs = [...new Set(data.map((v) => v.language))];
+        const genders = [...new Set(data.map((v) => v.gender))];
+        setUniqueLanguages(langs as string[]);
+        setUniqueGenders(genders as string[]);
+        // Also pre-populate voices so the list isn't empty on first load
+        setVoices(data);
+      })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    const token = localStorage.getItem("token");
+    const h = { Authorization: `Bearer ${token}` };
+
+    // TTS usage
+    fetch(`${API_BASE_URL}/api/sole-tts/usage`, { headers: h })
+      .then((r) => r.json())
+      .then(setTtsUsage)
+      .catch(() => {});
+
+    // Image usage
+    fetch(`${API_BASE_URL}/api/sole-image-gen/usage`, { headers: h })
+      .then((r) => r.json())
+      .then(setImageUsage)
+      .catch(() => {});
+
+    // Video models + credits
+    Promise.all([
+      axios.get(`${API_BASE_URL}/api/video-gen/models`, { headers: h }),
+      axios.get(`${API_BASE_URL}/api/video-gen/credits`, { headers: h }),
+    ])
+      .then(([mRes, cRes]) => {
+        setVideoModels(mRes.data.models || []);
+        setVideoCredits(cRes.data);
+        const wan = (mRes.data.models || []).find((m: any) =>
+          m.id.toLowerCase().includes("wan")
+        );
+        if (wan) setSelectedVideoModel(wan.id);
+      })
+      .catch((err) => {
+        if (err.response?.status === 402) {
+          setVideoCredits({
+            balance: 0,
+            planType: "FREE",
+            expiresAt: "N/A",
+            creditCosts: [],
+            freeVideoUsed: false,
+          });
+        }
+      });
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    if (selectedVoiceProvider !== "GOOGLE") {
+      setVoices([]);
+      return;
+    }
+    let url = `${API_BASE_URL}/api/ai-voices/get-all-voices`;
+    if (filterLanguage && filterGender)
+      url = `${API_BASE_URL}/api/ai-voices/voices-by-language-and-gender?language=${encodeURIComponent(filterLanguage)}&gender=${encodeURIComponent(filterGender)}`;
+    else if (filterLanguage)
+      url = `${API_BASE_URL}/api/ai-voices/voices-by-language?language=${encodeURIComponent(filterLanguage)}`;
+    else if (filterGender)
+      url = `${API_BASE_URL}/api/ai-voices/voices-by-gender?gender=${encodeURIComponent(filterGender)}`;
+    const token = localStorage.getItem("token");
+    const opts = token ? { headers: { Authorization: `Bearer ${token}` } } : undefined;
+    fetch(url, opts)
+      .then((r) => r.json())
+      .then(setVoices)
+      .catch(() => {});
+  }, [filterLanguage, filterGender, selectedVoiceProvider]);  
+
+  useEffect(() => {
+    if (selectedVoiceProvider === "GOOGLE") return;
+    const token = localStorage.getItem("token");
+    fetch(
+      `${API_BASE_URL}/api/ai-voices/external-voices?provider=${selectedVoiceProvider}`,
+      token ? { headers: { Authorization: `Bearer ${token}` } } : undefined
+    )
+      .then((r) => r.json())
+      .then(setExternalVoices)
+      .catch(() => {});
+  }, [selectedVoiceProvider]);
+
+  // Cleanup
+  useEffect(
+    () => () => {
+      if (imagePollingRef.current) clearInterval(imagePollingRef.current);
+      if (videoPollingRef.current) clearInterval(videoPollingRef.current);
+      if (demoAudioRef.current) demoAudioRef.current.pause();
+    },
+    []
+  );
+
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/api/public/gallery/images`)
+      .then(r => r.json())
+      .then((paths: string[]) => setDemoImages(paths.map(p => `${CDN_URL}/${p}`)))
+      .catch(() => {});
+  }, []);
+  
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/api/public/gallery/videos`)
+      .then(r => r.json())
+      .then((paths: string[]) => setDemoVideos(paths.map(p => `${CDN_URL}/${p}`)))
+      .catch(() => {});
+  }, []);  
+
+  // ─────────────────── VOICE ACTIONS ───────────────────────────────────────
+
+  const handlePlayDemo = (voice: Voice) => {
+    const voiceId = `${voice.voiceName}-${voice.voiceStyle || "default"}`;
+    if (demoAudioRef.current) {
+      demoAudioRef.current.pause();
+      demoAudioRef.current.currentTime = 0;
+    }
+    if (playingDemo === voiceId) {
+      setPlayingDemo(null);
+      return;
+    }
+    let demoUrl: string;
+    if (voice.provider === "AZURE") {
+      demoUrl = `${CDN_URL}/AiVoicesDemo/Azure/${voice.gender.toUpperCase()}/${voice.humanName}.mp3`;
+    } else {
+      const genderFolder = voice.gender.toUpperCase();
+      const languageFolder = voice.language
+        .replace(/\s*\(.*?\)\s*/g, "")
+        .trim()
+        .replace(/\s+/g, "%20");
+      const demoFileName = voice.voiceStyle
+        ? `${voice.humanName?.split("-")[0] || voice.voiceName}-${voice.voiceStyle.charAt(0).toUpperCase() + voice.voiceStyle.slice(1)}.mp3`
+        : `${voice.humanName || voice.voiceName}.mp3`;
+      demoUrl = `${CDN_URL}/AiVoicesDemo/${languageFolder}/${genderFolder}/${demoFileName}`;
+    }
+    const audio = new Audio(demoUrl);
+    audio.playbackRate = voiceSpeed;
+    audio.play().catch(() => setPlayingDemo(null));
+    audio.onended = () => setPlayingDemo(null);
+    audio.onerror = () => setPlayingDemo(null);
+    demoAudioRef.current = audio;
+    setPlayingDemo(voiceId);
+  };
+
+  const handleGenerateVoice = async () => {
+    if (!isLoggedIn) {
+      setShowLoginModal(true);
+      return;
+    }
+    if (!prompt.trim() || !selectedVoice) {
+      setError("Please enter text and select a voice.");
+      return;
+    }
+    const maxChars = ttsUsage?.maxCharsPerRequest || 80;
+    if (prompt.length > maxChars) {
+      setError(`Text exceeds ${maxChars} characters limit.`);
+      return;
+    }
+    if (ttsUsage && !ttsUsage.isPaid) {
+      const remaining =
+        (ttsUsage.freeVoiceCharsLimit ?? 0) -
+        (ttsUsage.freeVoiceCharsUsed ?? 0);
+      if (prompt.length > remaining) {
+        setError(`Only ${remaining} free characters remaining.`);
+        return;
+      }
+    }
+    setIsGeneratingVoice(true);
+    setError(null);
+    setGeneratedAudio(null);
+    try {
+      const isExternal = selectedVoiceProvider !== "GOOGLE";
+      const body = isExternal
+        ? {
+            text: prompt,
+            voiceId: selectedVoice.voiceId || selectedVoice.voiceName,
+            provider: selectedVoiceProvider,
+            speed: voiceSpeed,
+          }
+        : {
+            text: prompt,
+            voiceName: selectedVoice.voiceName,
+            languageCode: selectedVoice.languageCode,
+            speed: voiceSpeed,
+          };
+      const endpoint = isExternal
+        ? `${API_BASE_URL}/api/sole-tts/generate-external`
+        : `${API_BASE_URL}/api/sole-tts/generate`;
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) throw new Error(await res.text());
+      const data = await res.json();
+      setGeneratedAudio(`${CDN_URL}/${data.audioPath}`);
+      setTimeout(() => {
+        resultRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 150);      
+      // Refresh usage
+      fetch(`${API_BASE_URL}/api/sole-tts/usage`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      })
+        .then((r) => r.json())
+        .then(setTtsUsage)
+        .catch(() => {});
+    } catch (err: any) {
+      setError(err.message || "Voice generation failed.");
+    } finally {
+      setIsGeneratingVoice(false);
+    }
+  };
+
+  // ─────────────────── IMAGE ACTIONS ───────────────────────────────────────
+
+  const startImagePolling = useCallback((jobId: number) => {
+    if (imagePollingRef.current) clearInterval(imagePollingRef.current);
+    imagePollingRef.current = setInterval(async () => {
+      try {
+        const res = await fetch(
+          `${API_BASE_URL}/api/sole-image-gen/status/${jobId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        if (!res.ok) return;
+        const job = await res.json();
+        setCurrentImageJob(job);
+        if (job.status === "COMPLETED" || job.status === "FAILED") {
+          clearInterval(imagePollingRef.current!);
+          imagePollingRef.current = null;
+          if (job.status === "COMPLETED" && job.imagePath) {
+            setGeneratedImages([
+              {
+                id: job.id,
+                imagePath: job.imagePath,
+                prompt: job.prompt || "",
+                resolution: job.resolution || "1024x1024",
+                createdAt: job.createdAt,
+              },
+            ]);
+            setTimeout(() => {
+              resultRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+            }, 150);            
+            // Refresh usage
+            fetch(`${API_BASE_URL}/api/sole-image-gen/usage`, {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            })
+              .then((r) => r.json())
+              .then(setImageUsage)
+              .catch(() => {});
+          }
+          setIsGeneratingImage(false);
+        }
+      } catch {}
+    }, 3000);
+  }, []);
+
+  const handleGenerateImage = async () => {
+    if (!isLoggedIn) {
+      setShowLoginModal(true);
+      return;
+    }
+    if (!prompt.trim()) {
+      setError("Please describe your image.");
+      return;
+    }
+    const modelKey = selectedImageModel.toUpperCase().replace(/-/g, "_");
+    const cost = getImageCreditCost(modelKey, imageSize, imageQuality);
+    if (imageUsage && imageUsage.balance < cost) {
+      setError(`Not enough credits. Need ${cost}, have ${imageUsage.balance}.`);
+      return;
+    }
+    setIsGeneratingImage(true);
+    setError(null);
+    setGeneratedImages([]);
+    setCurrentImageJob(null);
+    try {
+      let enhancedPrompt = prompt;
+      if (imageStyle !== "realistic")
+        enhancedPrompt = `${prompt}, ${imageStyle} style`;
+      const res = await fetch(
+        `${API_BASE_URL}/api/sole-image-gen/generate-async`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({
+            prompt: enhancedPrompt,
+            negativePrompt: "blurry, low quality, distorted",
+            model: selectedImageModel,
+            size: imageSize,
+            quality: imageQuality,
+            resolution: "2k",
+          }),
+        }
+      );
+      if (!res.ok) throw new Error(await res.text());
+      const { jobId } = await res.json();
+      setCurrentImageJob({ id: jobId, status: "PENDING" });
+      startImagePolling(jobId);
+    } catch (err: any) {
+      setError(err.message || "Image generation failed.");
+      setIsGeneratingImage(false);
+    }
+  };
+
+  // ─────────────────── VIDEO ACTIONS ───────────────────────────────────────
+
+  const startVideoPolling = useCallback((falRequestId: string) => {
+    if (videoPollingRef.current) clearInterval(videoPollingRef.current);
+    videoPollingRef.current = setInterval(async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axios.get(
+          `${API_BASE_URL}/api/video-gen/status/${falRequestId}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const job: VideoJob = res.data;
+        setCurrentVideoJob(job);
+        if (job.status === "COMPLETED" || job.status === "FAILED") {
+          clearInterval(videoPollingRef.current!);
+          videoPollingRef.current = null;
+          setIsGeneratingVideo(false);
+          // Refresh credits
+          axios
+            .get(`${API_BASE_URL}/api/video-gen/credits`, {
+              headers: { Authorization: `Bearer ${token}` },
+            })
+            .then((r) => setVideoCredits(r.data))
+            .catch(() => {});
+            setTimeout(() => {
+              resultRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+            }, 150);            
+        }
+      } catch {}
+    }, 5000);
+  }, []);
+
+  const handleGenerateVideo = async () => {
+    if (!isLoggedIn) {
+      setShowLoginModal(true);
+      return;
+    }
+    if (!prompt.trim()) {
+      setError("Please describe your video.");
+      return;
+    }
+    setIsGeneratingVideo(true);
+    setError(null);
+    setCurrentVideoJob(null);
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.post(
+        `${API_BASE_URL}/api/video-gen/text-to-video`,
+        {
+          model: selectedVideoModel,
+          prompt,
+          durationSeconds: videoDuration,
+          audioEnabled: videoAudioEnabled,
+          aspectRatio: videoAspectRatio,
+          resolution: videoResolution,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      const job: VideoJob = res.data;
+      setCurrentVideoJob(job);
+      startVideoPolling(job.falRequestId);
+    } catch (err: any) {
+      if (
+        err.response?.data === "FREE_VIDEO_LIMIT_REACHED" ||
+        err.response?.status === 402
+      ) {
+        setShowFreeVideoModal(true);
+      } else {
+        setError(err.response?.data || err.message || "Video generation failed.");
+      }
+      setIsGeneratingVideo(false);
+    }
+  };
+
+  // ─────────────────── DOWNLOAD HELPERS ────────────────────────────────────
+
+  const handleDownloadAudio = async () => {
+    if (!generatedAudio) return;
+    const res = await fetch(generatedAudio);
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `ai-voice-${Date.now()}.mp3`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleDownloadImage = async (imageUrl: string, id: number) => {
+    const res = await fetch(imageUrl);
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `ai-image-${id}.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  // ─────────────────── COMPUTED ─────────────────────────────────────────────
+
+  const isGenerating = isGeneratingVoice || isGeneratingImage || isGeneratingVideo;
+
+  const activeVoices =
+    selectedVoiceProvider === "GOOGLE" ? voices : externalVoices;
+
+  const imageCreditCost = getImageCreditCost(
+    selectedImageModel.toUpperCase().replace(/-/g, "_"),
+    imageSize,
+    imageQuality
+  );
+
+  const imageModelCfg =
+    IMAGE_MODEL_CONFIG[selectedImageModel.toUpperCase().replace(/-/g, "_")];
+
+  const availableImageModels = useMemo(() => {
+    if (isLoggedIn && imageUsage?.availableModels?.length)
+      return imageUsage.availableModels.map((m) => ({
+        id: m.id,
+        displayName: m.displayName,
+      }));
+    return [
+      { id: "STABILITY_AI_CORE", displayName: "Stability Core" },
+      { id: "GPT_IMAGE_1_MINI", displayName: "GPT Mini" },
+      { id: "IMAGEN_4_FAST", displayName: "Imagen 4 Fast" },
+      { id: "FLUX_1_1_PRO", displayName: "FLUX 1.1 Pro" },
+      { id: "IMAGEN_4_STANDARD", displayName: "Imagen 4" },
+      { id: "GPT_IMAGE_1_MEDIUM", displayName: "GPT Medium" },
+      { id: "GROK_AURORA", displayName: "Grok Aurora ⚡" },
+    ];
+  }, [isLoggedIn, imageUsage]);
+
+  // ─────────────────── RENDER ───────────────────────────────────────────────
+
+  if (isPageLoading) {
+    return (
+      <div className="cac-loading">
+        <div className="cac-spinner" />
+      </div>
+    );
+  }
+
+  return (
+    <>
+    <div className="cac-page" data-theme={darkMode ? "dark" : "light"}>
+
+      {/* ── Hero ── */}
+      <section className="cac-hero">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="cac-hero-inner"
+        >
+          <h1 className="cac-hero-title">
+            Create AI Content{" "}
+            <span className="cac-gradient-text">in Seconds</span>
+          </h1>
+          <p className="cac-hero-sub">
+            Voice · Image · Video — one page, zero friction.
+          </p>
+        </motion.div>
+      </section>
+
+      {/* ── Main Tool ── */}
+      <main className="cac-main">
+        {/* ─ Tabs ─ */}
+        <div className="cac-tabs">
+          {(["voice", "image", "video"] as Tab[]).map((t) => (
+            <button
+              key={t}
+              className={`cac-tab ${activeTab === t ? "active" : ""}`}
+              onClick={() => {
+                setActiveTab(t);
+                setPrompt("");
+                setError(null);
+              }}
+            >
+              {t === "voice" && "🎙️ Voice"}
+              {t === "image" && "🖼️ Image"}
+              {t === "video" && "🎬 Video"}
+            </button>
+          ))}
+        </div>
+
+        {/* ─ Prompt + Voice side-by-side for voice tab, full-width for others ─ */}
+        {activeTab === "voice" ? (
+          <div className="cac-voice-layout">
+            {/* LEFT: prompt card */}
+            <div className="cac-voice-layout-left">
+              <div className="cac-prompt-card">
+                <textarea
+                  className="cac-textarea"
+                  placeholder="Type your script here…"
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  disabled={isGenerating}
+                  maxLength={2000}
+                />
+                <div className="cac-options-row">
+                  {/* Provider toggle */}
+                  <div className="cac-toggle-group">
+                    {(["GOOGLE", "OPENAI", "AZURE"] as const).map((p) => (
+                      <button
+                        key={p}
+                        className={`cac-toggle-btn ${selectedVoiceProvider === p ? "active" : ""}`}
+                        onClick={() => {
+                          if (p === "OPENAI" && !ttsUsage?.isPaid) {
+                            window.location.href = "/pricing";
+                            return;
+                          }
+                          setSelectedVoiceProvider(p);
+                          setSelectedVoice(null);
+                        }}
+                      >
+                        {p === "GOOGLE" && "🔵 Google"}
+                        {p === "OPENAI" && (ttsUsage?.isPaid ? "🟢 OpenAI" : "🟢 OpenAI 👑")}
+                        {p === "AZURE" && "🔷 Azure"}
+                      </button>
+                    ))}
+                  </div>
+                  {/* Speed */}
+                  {isLoggedIn && (
+                    <select
+                      className="cac-select"
+                      value={voiceSpeed}
+                      onChange={(e) => {
+                        const val = parseFloat(e.target.value);
+                        if (!ttsUsage?.isPaid && val > 2.0) {
+                          window.location.href = "/pricing";
+                          return;
+                        }
+                        setVoiceSpeed(val);
+                      }}
+                    >
+                      {[0.5, 1.0, 1.25, 1.5, 1.75, 2.0].map((s) => (
+                        <option key={s} value={s}>⚡ {s}x</option>
+                      ))}
+                      {[3.0, 4.0].map((s) => (
+                        <option key={s} value={s} disabled={!ttsUsage?.isPaid}>
+                          ⚡ {s}x{!ttsUsage?.isPaid ? " 👑" : ""}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                  {/* Credits */}
+                  <span className="cac-credit-pill">
+                    {isLoggedIn
+                      ? ttsUsage?.isPaid
+                        ? `⚡ ${ttsUsage.balance} cr`
+                        : `⚡ ${((ttsUsage?.freeVoiceCharsLimit ?? 0) - (ttsUsage?.freeVoiceCharsUsed ?? 0)).toLocaleString()} chars`
+                      : "⚡ 50 free credits"}
+                  </span>
+                  {selectedVoice && (
+                    <span className="cac-selected-voice-pill">
+                      {selectedVoice.humanName || selectedVoice.voiceName} ✓
+                    </span>
+                  )}
+                </div>
+                <AnimatePresence>
+                  {error && (
+                    <motion.div
+                      className="cac-error"
+                      initial={{ opacity: 0, y: -6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                    >
+                      ⚠️ {error}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+                <div className="cac-cta-row">
+                  <select
+                    className="cac-chip-dropdown"
+                    onChange={(e) => {
+                      const found = PROMPT_SUGGESTIONS.voice.find(s => s.label === e.target.value);
+                      if (found) setPrompt(found.prompt);
+                      e.target.value = "";
+                    }}
+                    disabled={isGenerating}
+                    defaultValue=""
+                  >
+                    <option value="" disabled>💡 Try a prompt…</option>
+                    {PROMPT_SUGGESTIONS.voice.map((s) => (
+                      <option key={s.label} value={s.label}>{s.label}</option>
+                    ))}
+                  </select>
+                  <div style={{ flex: 1 }} />
+                  {!isLoggedIn ? (
+                    <button className="cac-generate-btn" onClick={() => setShowLoginModal(true)}>
+                      🔒 Sign Up Free & Generate
+                    </button>
+                  ) : (
+                    <button
+                      className="cac-generate-btn"
+                      onClick={handleGenerateVoice}
+                      disabled={isGeneratingVoice || !prompt.trim() || !selectedVoice}
+                    >
+                      {isGeneratingVoice ? (
+                        <><span className="cac-btn-spinner" />Generating…</>
+                      ) : "🎙️ Generate Voice"}
+                    </button>
+                  )}
+                  {isLoggedIn && (
+                    <a href="/pricing" className="cac-upgrade-link">Get More Credits →</a>
+                  )}
+                </div>
+              </div>
+              {/* Voice output below prompt on left side */}
+              {generatedAudio && (
+                <motion.div
+                  ref={resultRef}
+                  className="cac-result-card"
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                >
+                  <div className="cac-result-header">
+                    <span>🎙️ Your AI Voice</span>
+                    <a href="/pricing" className="cac-upgrade-badge">✨ Upgrade for more →</a>
+                  </div>
+                  <audio controls src={generatedAudio} className="cac-audio-player" />
+                  <div className="cac-result-actions">
+                    <button className="cac-action-btn primary" onClick={handleDownloadAudio}>
+                      📥 Download MP3
+                    </button>
+                    <button
+                      className="cac-action-btn secondary"
+                      onClick={() => { setGeneratedAudio(null); setPrompt(""); }}
+                    >
+                      🔄 New Voice
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </div>
+
+            {/* RIGHT: voice panel */}
+            <div className="cac-voice-layout-right">
+              <div className="cac-voice-panel">
+                <div className="cac-voice-panel-header">
+                  <span className="cac-panel-label">Select Voice</span>
+                  {selectedVoice && (
+                    <span className="cac-selected-voice-pill">
+                      {selectedVoice.humanName || selectedVoice.voiceName} ✓
+                    </span>
+                  )}
+                </div>
+                {/* Filters — Google only */}
+                {selectedVoiceProvider === "GOOGLE" && (
+                  <div style={{ display: "flex", gap: 6, padding: "8px 12px", borderBottom: "1px solid var(--cac-border-soft)" }}>
+                    <select
+                      className="cac-select"
+                      value={filterLanguage}
+                      onChange={(e) => setFilterLanguage(e.target.value)}
+                      style={{ flex: 1, minWidth: 0 }}
+                    >
+                      <option value="">🌍 All Languages</option>
+                      {uniqueLanguages.map((l) => (
+                        <option key={l} value={l}>{l}</option>
+                      ))}
+                    </select>
+                    <select
+                      className="cac-select"
+                      value={filterGender}
+                      onChange={(e) => setFilterGender(e.target.value)}
+                      style={{ flex: 1, minWidth: 0 }}
+                    >
+                      <option value="">👤 All Genders</option>
+                      {uniqueGenders.map((g) => (
+                        <option key={g} value={g}>{g}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+                <div className="cac-voice-list">
+                  {activeVoices.length === 0 ? (
+                    <p className="cac-empty">Loading voices…</p>
+                  ) : (
+                    activeVoices.map((v) => {
+                      const vid = `${v.voiceName}-${v.voiceStyle || "default"}`;
+                      const isSelected = selectedVoiceProvider === "GOOGLE"
+                        ? selectedVoice?.voiceName === v.voiceName &&
+                          selectedVoice?.voiceStyle === v.voiceStyle
+                        : selectedVoice?.voiceId === v.voiceId &&
+                          selectedVoice?.voiceId !== undefined;
+                      return (
+                        <div
+                          key={vid}
+                          className={`cac-voice-item ${isSelected ? "selected" : ""}`}
+                          onClick={() => setSelectedVoice(v)}
+                        >
+                          {v.profileUrl ? (
+                            <img src={v.profileUrl} alt="" className="cac-voice-avatar" />
+                          ) : (
+                            <div className="cac-voice-avatar-fallback">
+                              {v.gender === "Female" ? "👩" : "👨"}
+                            </div>
+                          )}
+                          <div className="cac-voice-info">
+                            <span className="cac-voice-name">
+                              {v.humanName || v.voiceName}
+                              {v.voiceStyle && (
+                                <span className="cac-voice-style-badge">{v.voiceStyle}</span>
+                              )}
+                            </span>
+                            <span className="cac-voice-meta">{v.language} · {v.gender}</span>
+                          </div>
+                          <button
+                            className="cac-demo-btn"
+                            onClick={(e) => { e.stopPropagation(); handlePlayDemo(v); }}
+                          >
+                            {playingDemo === vid ? "⏸️" : "▶️"}
+                          </button>
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          /* Image / Video tab — full width prompt card */
+          <div className="cac-prompt-card">
+            <textarea
+              className="cac-textarea"
+              placeholder={activeTab === "image" ? "Describe your image…" : "Describe your video…"}
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              disabled={isGenerating}
+              maxLength={2000}
+            />
+
+            {/* ── Image options ── */}
+            {activeTab === "image" && (
+              <div className="cac-options-row">
+                <select className="cac-select" value={imageStyle} onChange={(e) => setImageStyle(e.target.value)}>
+                  {IMAGE_STYLE_PRESETS.map((s) => (
+                    <option key={s.value} value={s.value}>{s.icon} {s.label}</option>
+                  ))}
+                </select>
+                <select className="cac-select" value={selectedImageModel}
+                  onChange={(e) => { setSelectedImageModel(e.target.value); setImageSize("square"); setImageQuality("standard"); }}>
+                  {availableImageModels.map((m) => (
+                    <option key={m.id} value={m.id}>{m.displayName}</option>
+                  ))}
+                </select>
+                {imageModelCfg && imageModelCfg.sizes.length > 1 && (
+                  <select className="cac-select" value={imageSize} onChange={(e) => setImageSize(e.target.value)}>
+                    {imageModelCfg.sizes.map((s) => (
+                      <option key={s.value} value={s.value}>{s.icon} {s.label}</option>
+                    ))}
+                  </select>
+                )}
+                {imageModelCfg && imageModelCfg.qualities.length > 1 && (
+                  <select className="cac-select" value={imageQuality} onChange={(e) => setImageQuality(e.target.value)}>
+                    {imageModelCfg.qualities.map((q) => (
+                      <option key={q.value} value={q.value}>{q.label}</option>
+                    ))}
+                  </select>
+                )}
+                <span className="cac-credit-pill">
+                  ⚡ {isLoggedIn ? imageUsage?.balance ?? "..." : 50} cr · {imageCreditCost}cr/img
+                </span>
+              </div>
+            )}
+
+            {/* ── Video options ── */}
+            {activeTab === "video" && (
+              <div className="cac-options-row">
+                <select className="cac-select" value={selectedVideoModel}
+                  onChange={(e) => setSelectedVideoModel(e.target.value)}
+                  style={{ flex: "1 1 auto", minWidth: 130, maxWidth: 200 }}>
+                  {(isLoggedIn && videoModels.length > 0
+                    ? videoModels
+                    : STATIC_VIDEO_MODELS.map((m) => ({
+                        id: m.id, displayName: m.name,
+                        creditCosts: [{ duration: 5, audio: false, credits: m.cr }],
+                      }))
+                  ).map((m: any) => (
+                    <option key={m.id} value={m.id}>{m.displayName}</option>
+                  ))}
+                </select>
+                <div className="cac-toggle-group">
+                  {VIDEO_DURATION_OPTIONS.map((d) => (
+                    <button
+                      key={d.value}
+                      className={`cac-toggle-btn ${videoDuration === d.value ? "active" : ""}`}
+                      onClick={() => setVideoDuration(d.value)}
+                    >{d.label}</button>
+                  ))}
+                </div>
+                <select className="cac-select" value={videoAspectRatio} onChange={(e) => setVideoAspectRatio(e.target.value)}>
+                  {VIDEO_ASPECT_RATIOS.map((ar) => (
+                    <option key={ar.value} value={ar.value}>{ar.icon} {ar.label}</option>
+                  ))}
+                </select>
+                <span className="cac-credit-pill">
+                  ⚡ {isLoggedIn ? videoCredits?.balance ?? "..." : 50} cr
+                </span>
+              </div>
+            )}
+
+            <AnimatePresence>
+              {error && (
+                <motion.div className="cac-error" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+                  ⚠️ {error}
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <div className="cac-cta-row">
+              <select
+                className="cac-chip-dropdown"
+                onChange={(e) => {
+                  const found = PROMPT_SUGGESTIONS[activeTab].find(s => s.label === e.target.value);
+                  if (found) setPrompt(found.prompt);
+                  e.target.value = "";
+                }}
+                disabled={isGenerating}
+                defaultValue=""
+              >
+                <option value="" disabled>💡 Try a prompt…</option>
+                {PROMPT_SUGGESTIONS[activeTab].map((s) => (
+                  <option key={s.label} value={s.label}>{s.label}</option>
+                ))}
+              </select>
+              <div style={{ flex: 1 }} />
+              {!isLoggedIn ? (
+                <button className="cac-generate-btn" onClick={() => setShowLoginModal(true)}>
+                  🔒 Sign Up Free & Generate
+                </button>
+              ) : activeTab === "image" ? (
+                <button className="cac-generate-btn" onClick={handleGenerateImage} disabled={isGeneratingImage || !prompt.trim()}>
+                  {isGeneratingImage ? (<><span className="cac-btn-spinner" />Generating…</>) : "🖼️ Generate Image"}
+                </button>
+              ) : (
+                <button className="cac-generate-btn" onClick={handleGenerateVideo}
+                  disabled={isGeneratingVideo || !prompt.trim() || (!!currentVideoJob && (currentVideoJob.status === "PENDING" || currentVideoJob.status === "PROCESSING"))}>
+                  {isGeneratingVideo || (currentVideoJob && (currentVideoJob.status === "PENDING" || currentVideoJob.status === "PROCESSING"))
+                    ? (<><span className="cac-btn-spinner" />Generating…</>) : "🎬 Generate Video"}
+                </button>
+              )}
+              {isLoggedIn && <a href="/pricing" className="cac-upgrade-link">Get More Credits →</a>}
+            </div>
+          </div>
+        )}        
+
+        {/* ── Image Job Status ── */}
+        {activeTab === "image" &&
+          currentImageJob &&
+          (currentImageJob.status === "PENDING" ||
+            currentImageJob.status === "PROCESSING") && (
+            <div className="cac-job-card">
+              <div className="cac-job-spinner" />
+              <div>
+                <strong>
+                  {currentImageJob.status === "PENDING"
+                    ? "Queued — starting soon…"
+                    : "Generating your image…"}
+                </strong>
+                <p>Takes 10–30 sec. You can safely stay on this tab.</p>
+              </div>
+            </div>
+          )}
+
+        {activeTab === "image" && currentImageJob?.status === "FAILED" && (
+          <div className="cac-error-card">
+            ⚠️ Generation failed.{" "}
+            {currentImageJob.errorMessage || "Credits refunded."}
+            <button onClick={() => setCurrentImageJob(null)}>Dismiss</button>
+          </div>
+        )}
+
+        {/* ── Image Output ── */}
+        {activeTab === "image" && generatedImages.length > 0 && (
+          <motion.div
+            ref={resultRef}
+            className="cac-result-card"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <div className="cac-result-header">
+              <span>🖼️ Your AI Image</span>
+              <a href="/pricing" className="cac-upgrade-badge">
+                ✨ Upgrade for more →
+              </a>
+            </div>
+            {generatedImages.map((img) => (
+              <div key={img.id} className="cac-image-result">
+                <img
+                  src={img.imagePath}
+                  alt={img.prompt}
+                  className="cac-result-image"
+                />
+                <div className="cac-result-actions">
+                  <button
+                    className="cac-action-btn primary"
+                    onClick={() =>
+                      handleDownloadImage(img.imagePath, img.id)
+                    }
+                  >
+                    📥 Download PNG
+                  </button>
+                  <button
+                    className="cac-action-btn secondary"
+                    onClick={() => {
+                      setGeneratedImages([]);
+                      setPrompt("");
+                    }}
+                  >
+                    🔄 New Image
+                  </button>
+                  <button
+                    className="cac-action-btn secondary"
+                    onClick={() =>
+                      navigator.clipboard.writeText(
+                        generatedImages[0]?.prompt || ""
+                      )
+                    }
+                  >
+                    📋 Copy Prompt
+                  </button>
+                </div>
+              </div>
+            ))}
+          </motion.div>
+        )}
+
+        {/* ── Video Job Card ── */}
+        {activeTab === "video" && currentVideoJob && (
+          <motion.div
+            ref={resultRef}
+            className="cac-result-card"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <div className="cac-result-header">
+              <span>🎬 Generation #{currentVideoJob.id}</span>
+              <span
+                className={`cac-status-badge cac-status-${currentVideoJob.status.toLowerCase()}`}
+              >
+                {currentVideoJob.status === "PENDING" && "⏳ Queued"}
+                {currentVideoJob.status === "PROCESSING" && "⚙️ Generating"}
+                {currentVideoJob.status === "COMPLETED" && "✅ Ready"}
+                {currentVideoJob.status === "FAILED" && "❌ Failed"}
+              </span>
+            </div>
+
+            {(currentVideoJob.status === "PENDING" ||
+              currentVideoJob.status === "PROCESSING") && (
+              <div className="cac-job-inline-processing">
+                <div className="cac-job-spinner" />
+                <p>
+                  {currentVideoJob.status === "PENDING"
+                    ? "Queued — starting soon…"
+                    : "Generating… usually 30–120 sec."}
+                </p>
+              </div>
+            )}
+
+            {currentVideoJob.status === "COMPLETED" && currentVideoJob.videoUrl && (
+              <>
+                <video
+                  controls
+                  autoPlay
+                  loop
+                  src={currentVideoJob.videoUrl}
+                  className="cac-result-video"
+                />
+                <div className="cac-result-actions">
+                  <a
+                    className="cac-action-btn primary"
+                    href={currentVideoJob.videoUrl}
+                    download={`scenith-video-${currentVideoJob.id}.mp4`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    📥 Download MP4
+                  </a>
+                  <button
+                    className="cac-action-btn secondary"
+                    onClick={() => {
+                      setCurrentVideoJob(null);
+                      setPrompt("");
+                    }}
+                  >
+                    🔄 New Video
+                  </button>
+                </div>
+                <div className="cac-upsell-strip">
+                  <span>Love this? Get more with Premium credits ✨</span>
+                  <a href="/pricing">View Plans →</a>
+                </div>
+              </>
+            )}
+
+            {currentVideoJob.status === "FAILED" && (
+              <div className="cac-error">
+                ⚠️{" "}
+                {currentVideoJob.errorMessage ||
+                  "Generation failed. Credits refunded."}
+              </div>
+            )}
+          </motion.div>
+        )}
+
+        {/* ── Demo Images Marquee (shown on image tab) ── */}
+        {activeTab === "image" && demoImages.length > 0 && (
+          <div style={{ marginBottom: 24, overflow: 'hidden' }}>
+            <p style={{
+              textAlign: 'center', fontSize: 12, color: 'var(--cac-text-2)',
+              marginBottom: 10,
+              background: 'rgba(99,85,220,0.06)', border: '1px solid rgba(99,85,220,0.15)',
+              borderRadius: 8, padding: '6px 14px', display: 'inline-block',
+            }}>
+              🔓 Images from <strong style={{ color: 'var(--cac-accent)' }}>Free plan</strong> users ·
+              🔒 <strong style={{ color: 'var(--cac-accent)' }}>Premium</strong> users' media is private
+            </p>
+            {(() => {
+              const row1 = demoImages.slice(0, Math.ceil(demoImages.length / 2));
+              const row2 = demoImages.slice(Math.ceil(demoImages.length / 2));
+              return (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  {[row1, row2].map((row, ri) => (
+                    <div key={ri} style={{ display: 'flex', gap: 10, animation: `${ri === 0 ? 'cac-scroll-left' : 'cac-scroll-right'} 240s linear infinite`, width: 'max-content' }}>
+                      {[...row, ...row].map((src, i) => (
+                        <div key={i} style={{ width: 160, height: 160, borderRadius: 12, overflow: 'hidden', flexShrink: 0, border: '1px solid var(--cac-border-soft)' }}>
+                          <img src={src} alt="AI generated" loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
+          </div>
+        )}
+
+        {/* ── Demo Videos Strip (shown on video tab) ── */}
+        {activeTab === "video" && demoVideos.length > 0 && (
+          <div style={{ marginBottom: 24 }}>
+            <p style={{
+              textAlign: 'center', fontSize: 12, color: 'var(--cac-text-2)',
+              marginBottom: 10,
+              background: 'rgba(99,85,220,0.06)', border: '1px solid rgba(99,85,220,0.15)',
+              borderRadius: 8, padding: '6px 14px', display: 'inline-block',
+            }}>
+              🔓 Videos from <strong style={{ color: 'var(--cac-accent)' }}>Free plan</strong> users ·
+              🔒 <strong style={{ color: 'var(--cac-accent)' }}>Premium</strong> users' media is private
+            </p>
+            <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 8, scrollSnapType: 'x mandatory', scrollbarWidth: 'thin', scrollbarColor: 'var(--cac-border) transparent' }}>
+              {demoVideos.map((url, i) => (
+                <div key={i} style={{ flexShrink: 0, scrollSnapAlign: 'start', width: 220, borderRadius: 14, overflow: 'hidden', border: '1px solid var(--cac-border)', background: '#000', position: 'relative' }}>
+                  <video src={url} autoPlay loop muted playsInline style={{ width: '100%', height: 160, objectFit: 'cover', display: 'block' }} />
+                  <div style={{ position: 'absolute', bottom: 6, left: '50%', transform: 'translateX(-50%)', background: 'rgba(0,0,0,0.6)', borderRadius: 999, padding: '2px 8px', fontSize: 10, color: '#fff', whiteSpace: 'nowrap' }}>
+                    🎬 Sample {i + 1}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}        
+
+        {/* ── Upsell Banner ── */}
+        {isLoggedIn && (
+          <div className="cac-upsell-banner">
+            <div className="cac-upsell-inner">
+              <div>
+                <strong>Need more credits?</strong>
+                <span>
+                  {" "}
+                  Creator Lite gives you 300cr/mo for voice, image & video — just
+                  $9/mo.
+                </span>
+              </div>
+              <a href="/pricing" className="cac-upsell-btn">
+                Upgrade →
+              </a>
+            </div>
+          </div>
+        )}
+
+        {/* ── SEO Section (minimal) ── */}
+        <section className="cac-seo-section">
+          <h2>One Platform for All Your AI Content</h2>
+          <div className="cac-seo-grid">
+            <div className="cac-seo-card">
+              <span className="cac-seo-icon">🎙️</span>
+              <h3>AI Voice</h3>
+              <p>
+                40+ natural voices, 20+ languages. Perfect for YouTube, podcasts,
+                and ads. Instant MP3 download.
+              </p>
+            </div>
+            <div className="cac-seo-card">
+              <span className="cac-seo-icon">🖼️</span>
+              <h3>AI Image</h3>
+              <p>
+                Text-to-image in 8 styles with 7 state-of-the-art models. High-res
+                PNG, commercial use included.
+              </p>
+            </div>
+            <div className="cac-seo-card">
+              <span className="cac-seo-icon">🎬</span>
+              <h3>AI Video</h3>
+              <p>
+                Cinematic text-to-video with Kling, Veo, Wan 2.5 and more. Up to
+                1080p, MP4 download.
+              </p>
+            </div>
+          </div>
+          <div className="cac-seo-faq">
+            <h3>Frequently Asked Questions</h3>
+            <details>
+              <summary>Is this free to use?</summary>
+              <p>
+                Yes — you get 50 free credits on sign-up, no card required. Credits
+                cover voice, image, and video generation.
+              </p>
+            </details>
+            <details>
+              <summary>Can I use the content commercially?</summary>
+              <p>
+                All content generated on Scenith comes with full commercial rights.
+                No attribution required.
+              </p>
+            </details>
+            <details>
+              <summary>How fast is generation?</summary>
+              <p>
+                Voice: ~3 sec · Image: 10–30 sec · Video: 30–120 sec depending on
+                model and duration.
+              </p>
+            </details>
+          </div>
+        </section>
+
+        {/* ── SEO Sections ── */}
+        <section className="cac-seo-section">
+
+          {/* ── What is this page ── */}
+          <div className="cac-seo-intro">
+            <h2>Free AI Content Creator — Voice, Image & Video in One Place</h2>
+            <p>
+              Scenith's AI Content Creator lets you generate professional-quality voices,
+              images, and videos from a single page — no switching tools, no wasted time.
+              Type a prompt, pick a mode, and your content is ready in seconds.
+              Used by YouTubers, marketers, indie developers, and educators worldwide.
+            </p>
+          </div>
+
+          {/* ── 3-col feature cards ── */}
+          <div className="cac-seo-grid">
+            <div className="cac-seo-card">
+              <span className="cac-seo-icon">🎙️</span>
+              <h3>AI Voice Generator</h3>
+              <p>
+                Convert text to speech with 40+ natural-sounding voices across 20+ languages.
+                Choose from Google, OpenAI, and Azure voices. Perfect for YouTube voiceovers,
+                podcast intros, e-learning narration, and ad scripts. Instant MP3 download,
+                commercial use included.
+              </p>
+            </div>
+            <div className="cac-seo-card">
+              <span className="cac-seo-icon">🖼️</span>
+              <h3>AI Image Generator</h3>
+              <p>
+                Turn any text description into a stunning image using GPT, Imagen 4, FLUX,
+                Grok Aurora, and Stability AI models. 8 artistic styles including realistic
+                photo, anime, digital art, and 3D render. High-res PNG output with full
+                commercial rights — no watermarks.
+              </p>
+            </div>
+            <div className="cac-seo-card">
+              <span className="cac-seo-icon">🎬</span>
+              <h3>AI Video Generator</h3>
+              <p>
+                Generate cinematic AI videos from text prompts using Kling 2.6, Veo 3.1,
+                Wan 2.5, and Grok Imagine. Up to 1080p resolution, 10-second clips,
+                16:9 / 9:16 / 1:1 aspect ratios. Download MP4 directly — no editing
+                software required.
+              </p>
+            </div>
+          </div>
+
+          {/* ── How it works ── */}
+          <div className="cac-seo-how">
+            <h2>How to Create AI Content in 3 Steps</h2>
+            <div className="cac-seo-steps">
+              <div className="cac-seo-step">
+                <span className="cac-seo-step-num">1</span>
+                <div>
+                  <h3>Choose your content type</h3>
+                  <p>Switch between Voice, Image, and Video using the tab bar at the top. Each mode loads its own set of AI models and settings instantly.</p>
+                </div>
+              </div>
+              <div className="cac-seo-step">
+                <span className="cac-seo-step-num">2</span>
+                <div>
+                  <h3>Write your prompt</h3>
+                  <p>Describe what you want in plain language. Use the quick-fill chips for inspiration, or paste your own script. The more specific your prompt, the better the result.</p>
+                </div>
+              </div>
+              <div className="cac-seo-step">
+                <span className="cac-seo-step-num">3</span>
+                <div>
+                  <h3>Generate and download</h3>
+                  <p>Hit Generate. Voice is ready in ~3 seconds. Images take 10–30 seconds. Videos take 30–120 seconds depending on model. Download your file instantly — MP3, PNG, or MP4.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* ── Use cases ── */}
+          <div className="cac-seo-usecases">
+            <h2>Who Uses Scenith AI Content Creator?</h2>
+            <div className="cac-seo-uc-grid">
+              <div className="cac-seo-uc-card">
+                <span>🎬</span>
+                <h3>YouTubers & Content Creators</h3>
+                <p>Generate voiceovers for faceless YouTube channels, create eye-catching thumbnails with AI images, and produce short video clips for Reels and Shorts — all without leaving this page.</p>
+              </div>
+              <div className="cac-seo-uc-card">
+                <span>📣</span>
+                <h3>Marketers & Ad Agencies</h3>
+                <p>Produce ad voiceovers in multiple languages, generate product visuals without a photoshoot, and create short video ads for social media campaigns in minutes.</p>
+              </div>
+              <div className="cac-seo-uc-card">
+                <span>📚</span>
+                <h3>Educators & Course Creators</h3>
+                <p>Narrate course modules with natural AI voices, generate illustrative images for lesson slides, and create explainer video clips without any recording equipment.</p>
+              </div>
+              <div className="cac-seo-uc-card">
+                <span>🛍️</span>
+                <h3>E-commerce & Product Teams</h3>
+                <p>Create professional product images from text descriptions, generate promotional voiceovers for product pages, and produce short demo videos at a fraction of traditional production cost.</p>
+              </div>
+              <div className="cac-seo-uc-card">
+                <span>🎮</span>
+                <h3>Game Developers & Indie Studios</h3>
+                <p>Design concept art and character visuals, generate character dialogue voiceovers, and produce atmospheric video cutscenes — all powered by state-of-the-art AI models.</p>
+              </div>
+              <div className="cac-seo-uc-card">
+                <span>🧑‍💼</span>
+                <h3>Businesses & Startups</h3>
+                <p>Produce pitch deck visuals, company intro voiceovers, and brand video content without hiring an agency. Full commercial rights on everything you generate.</p>
+              </div>
+            </div>
+          </div>
+
+          {/* ── Comparison table ── */}
+          <div className="cac-seo-compare">
+            <h2>Why Scenith vs Using Separate AI Tools?</h2>
+            <div className="cac-seo-compare-grid">
+              <div className="cac-seo-compare-col cac-compare-them">
+                <h3>❌ Using Separate Tools</h3>
+                <ul>
+                  <li>Different subscriptions for voice, image, and video</li>
+                  <li>Log in / out of multiple platforms</li>
+                  <li>Inconsistent credit systems and billing</li>
+                  <li>No unified history or workflow</li>
+                  <li>$30–$80+/mo across multiple tools</li>
+                </ul>
+              </div>
+              <div className="cac-seo-compare-col cac-compare-us">
+                <h3>✅ Scenith AI Content Creator</h3>
+                <ul>
+                  <li>Voice + Image + Video under one login</li>
+                  <li>Single credit balance works across all 3 modes</li>
+                  <li>One plan covers everything — from $9/mo</li>
+                  <li>7+ AI image models, 6 video models, 3 voice providers</li>
+                  <li>50 free credits on signup — no card required</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* ── Models ── */}
+          <div className="cac-seo-models">
+            <h2>Powered by the World's Best AI Models</h2>
+            <div className="cac-seo-model-tags">
+              {[
+                "GPT Image 1 (OpenAI)", "Imagen 4 (Google)", "FLUX 1.1 Pro",
+                "Grok Aurora (xAI)", "Stability AI Core", "Kling 2.6 Pro",
+                "Veo 3.1 (Google)", "Wan 2.5", "Grok Imagine (xAI)",
+                "Google TTS", "OpenAI TTS", "Azure Neural TTS"
+              ].map(m => (
+                <span key={m} className="cac-model-tag">{m}</span>
+              ))}
+            </div>
+          </div>
+            
+          {/* ── FAQ ── */}
+          <div className="cac-seo-faq">
+            <h2>Frequently Asked Questions</h2>
+            
+            <details>
+              <summary>Is Scenith AI Content Creator free to use?</summary>
+              <p>Yes — you get 50 free credits when you sign up, with no credit card required. Free credits work across voice, image, and video generation. Paid plans start at $9/month and include 300 credits plus access to all AI models.</p>
+            </details>
+            
+            <details>
+              <summary>Can I use AI-generated content commercially?</summary>
+              <p>Absolutely. All content generated on Scenith — voiceovers, images, and videos — comes with full commercial rights. You can use them in YouTube videos, ads, products, client work, and any commercial project without attribution.</p>
+            </details>
+            
+            <details>
+              <summary>What is the best AI model for realistic images?</summary>
+              <p>For photorealistic images, we recommend GPT Image 1 Medium (standard or premium quality) or Grok Aurora. For artistic styles and illustrations, FLUX 1.1 Pro and Stability AI Core produce excellent results. Imagen 4 Standard is ideal for high-detail prints.</p>
+            </details>
+            
+            <details>
+              <summary>Which AI video model is best for cinematic quality?</summary>
+              <p>Kling 2.6 Pro and Veo 3.1 produce the highest quality cinematic videos at 1080p. For faster generation at lower cost, Wan 2.5 and Kling 2.5 Turbo are great options. Grok Imagine is the only model that includes AI-generated audio.</p>
+            </details>
+            
+            <details>
+              <summary>How many languages does the AI voice generator support?</summary>
+              <p>The Google TTS provider supports 20+ languages including English (US, UK, Australian, Indian accents), Spanish, French, German, Mandarin, Hindi, Arabic, and more. Azure Neural TTS adds additional multilingual voices. OpenAI TTS voices are English-focused with very natural prosody.</p>
+            </details>
+            
+            <details>
+              <summary>How long does AI content generation take?</summary>
+              <p>Voice generation completes in approximately 2–4 seconds. Image generation takes 10–30 seconds depending on model. Video generation takes 30–120 seconds depending on model, duration, and resolution. All generations run in the background — you can stay on the page or close the tab for images and return.</p>
+            </details>
+            
+            <details>
+              <summary>What file formats are supported for download?</summary>
+              <p>AI Voice generates MP3 files. AI Image generates high-resolution PNG files. AI Video generates MP4 files. All files are downloaded directly to your device with no additional software required.</p>
+            </details>
+            
+            <details>
+              <summary>Do I need to install anything?</summary>
+              <p>No. Scenith AI Content Creator is entirely browser-based. It works on any device — desktop, tablet, or mobile — with no plugins, extensions, or software downloads required.</p>
+            </details>
+          </div>
+            
+        </section>        
+      </main>
+
+      {/* ── Login Modal ── */}
+      <AnimatePresence>
+        {showLoginModal && (
+          <motion.div
+            className="cac-modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setShowLoginModal(false);
+            }}
+          >
+            <motion.div
+              className="cac-modal"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+            >
+              <button
+                className="cac-modal-close"
+                onClick={() => setShowLoginModal(false)}
+              >
+                <FaTimes size={12} />
+              </button>
+              <h2 className="cac-modal-title">SCENITH</h2>
+              <p className="cac-modal-sub">
+                Login to generate AI content for free
+              </p>
+              {loginError && (
+                <div className="cac-error" style={{ marginBottom: 12 }}>
+                  ⚠️ {loginError}
+                </div>
+              )}
+              {isLoggingIn && (
+                <div style={{ textAlign: "center", margin: "16px 0" }}>
+                  <div className="cac-spinner" />
+                </div>
+              )}
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const fd = new FormData(e.currentTarget);
+                  handleLogin(
+                    fd.get("email") as string,
+                    fd.get("password") as string
+                  );
+                }}
+              >
+                <input
+                  name="email"
+                  type="email"
+                  className="cac-input"
+                  placeholder="Email address"
+                  required
+                  disabled={isLoggingIn}
+                />
+                <input
+                  name="password"
+                  type="password"
+                  className="cac-input"
+                  placeholder="Password"
+                  required
+                  disabled={isLoggingIn}
+                />
+                <button
+                  type="submit"
+                  className="cac-generate-btn"
+                  disabled={isLoggingIn}
+                  style={{ width: "100%", marginTop: 4 }}
+                >
+                  {isLoggingIn ? "Logging in…" : "Login"}
+                </button>
+              </form>
+              <div className="cac-modal-divider">OR</div>
+              <div
+                id="cac-google-btn"
+                style={{ display: "flex", justifyContent: "center" }}
+              />
+              <p className="cac-modal-link">
+                New to Scenith?{" "}
+                <a href="/signup" className="cac-link">
+                  Create account →
+                </a>
+              </p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Free Video Limit Modal ── */}
+      <AnimatePresence>
+        {showFreeVideoModal && (
+          <motion.div
+            className="cac-modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setShowFreeVideoModal(false);
+            }}
+          >
+            <motion.div
+              className="cac-modal"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+            >
+              <button
+                className="cac-modal-close"
+                onClick={() => setShowFreeVideoModal(false)}
+              >
+                <FaTimes size={12} />
+              </button>
+              <div style={{ textAlign: "center", padding: "8px 0 16px" }}>
+                <div style={{ fontSize: 40, marginBottom: 10 }}>🎬</div>
+                <h2 className="cac-modal-title">
+                  Free Video Limit Reached
+                </h2>
+                <p className="cac-modal-sub">
+                  Free accounts get 1 lifetime video. Upgrade to keep creating.
+                </p>
+              </div>
+              <a
+                href="/pricing"
+                className="cac-generate-btn"
+                style={{
+                  display: "block",
+                  textAlign: "center",
+                  textDecoration: "none",
+                  width: "100%",
+                }}
+                onClick={() => setShowFreeVideoModal(false)}
+              >
+                Unlock Unlimited Videos — $9/mo →
+              </a>
+              <button
+                onClick={() => setShowFreeVideoModal(false)}
+                style={{
+                  display: "block",
+                  width: "100%",
+                  marginTop: 10,
+                  background: "none",
+                  border: "none",
+                  color: "var(--cac-muted)",
+                  fontSize: 12,
+                  cursor: "pointer",
+                  textDecoration: "underline",
+                }}
+              >
+                Maybe later
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>     
+
+    </div>
+    <button
+      className="cac-darkmode-fab"
+      onClick={() => setDarkMode((d) => !d)}
+      aria-label="Toggle dark mode"
+    >
+      {darkMode ? <FaSun size={14} /> : <FaMoon size={14} />}
+    </button>
+
+    {isLoggedIn && userProfile?.role === "BASIC" && (
+      <div className="cac-floating-cta">
+        <a href="/pricing" className="cac-floating-btn">
+          ⚡ <strong>Get More Credits</strong>
+          <small>from $9/mo · 300cr included</small>
+        </a>
+      </div>
+    )}
+  </>        
+  );
+};
+
+export default CreateAIContentClient;

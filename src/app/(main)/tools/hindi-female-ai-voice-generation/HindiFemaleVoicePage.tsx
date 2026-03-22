@@ -18,7 +18,7 @@ interface Voice {
 }
 
 const HindiFemaleVoicePage = () => {
-  const ctaUrl = 'https://scenith.in/tools/ai-voice-generation?utm_source=hindi-female-voice-page&utm_medium=cta-button&utm_campaign=hindi-female-voice-traffic';
+  const ctaUrl = 'https://scenith.in/create-ai-content?utm_source=hindi-female-voice-page&utm_medium=cta-button&utm_campaign=hindi-female-voice-traffic';
 
   const [script, setScript] = useState('');
   const [copied, setCopied] = useState(false);
