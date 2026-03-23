@@ -16,8 +16,9 @@ const Footer = () => {
 
   const links = [
     // All Tools (new + existing)
-    { label: 'AI Voice Generator', path: '/tools/ai-voice-generation' },
-    { label: 'AI Image Generator', path: '/tools/ai-image-generation' },
+    { label: 'AI Video Generator', path: '/create-ai-content' },
+    { label: 'AI Voice Generator', path: '/create-ai-content' },
+    { label: 'AI Image Generator', path: '/create-ai-content' },
     { label: 'PDF Tools', path: '/tools/pdf-tools' },
     { label: 'SVG Library', path: '/svg-library' },
   /*  { label: 'AI Subtitle Generator', path: '/tools/add-subtitles-to-videos' },  */

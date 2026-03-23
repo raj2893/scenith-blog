@@ -335,9 +335,9 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
       isDropdown: true,
       icon: <FaTools />,
       dropdownItems: [
-        { label: 'AI Image Generator', href: '/tools/ai-image-generation' },
-        { label: 'AI Video Generator', href: '/tools/ai-video-generation' },
-        { label: 'AI Voice Generator', href: '/tools/ai-voice-generation' },
+        { label: 'AI Image Generator', href: '/create-ai-content' },
+        { label: 'AI Video Generator', href: '/create-ai-content' },
+        { label: 'AI Voice Generator', href: '/create-ai-content' },
         { label: 'AI Background Removal', href: '/tools/background-removal' },
         { label: 'AI Subtitle Generator', href: '/tools/add-subtitles-to-videos' },
       ],
