@@ -435,7 +435,7 @@ const toolsShowcase: ToolShowcase[] = [
     title: 'AI Video Generator',
     icon: FaPlay,  // or import FaFilm from 'react-icons/fa'
     description: 'Generate cinematic videos from text or images. Powered by Kling, Veo 3.1, and Wan 2.5.',
-    link: '/tools/ai-video-generation',
+    link: '/create-ai-content',
     color: '#f06cbe',
     badge: 'New',
     rank: 2   // right after AI Image
@@ -445,7 +445,7 @@ const toolsShowcase: ToolShowcase[] = [
     title: 'AI Voice Generator',
     icon: FaMicrophone,
     description: '40+ natural voices in 20+ languages. Transform text to lifelike speech instantly.',
-    link: '/tools/ai-voice-generation',
+    link: '/create-ai-content',
     color: '#FF6B6B',
     badge: '#1 Voice Tool',
     rank: 3
@@ -455,7 +455,7 @@ const toolsShowcase: ToolShowcase[] = [
     title: 'AI Image Generator',
     icon: FaPlay,
     description: 'Generate stunning images from text descriptions using advanced AI instantly.',
-    link: '/tools/ai-image-generation',
+    link: '/create-ai-content',
     color: '#9B59B6',
     badge: '🔥 Most Popular',
     rank: 1
@@ -533,9 +533,9 @@ const toolsShowcase: ToolShowcase[] = [
 ];
 
 const youtubeTutorials = [
-  { id: 'Yw549sO7RgE', title: 'AI Voice Generator Tutorial' },
-  { id: 'XNFJjzScSHU', title: 'Image Editor Quick Start' },
-  { id: 'qoQSktfHvZ8', title: 'AI Subtitles Made Easy' },
+  { id: 'dEeT7Z_b3bY', title: 'AI Voice Generator Tutorial' },
+  { id: 'oA6CDPqrjx0', title: 'AI Background Removal' },
+  { id: 'DyCA5u0iWeo', title: 'AI Subtitles Made Easy' },
 ];
 
 export default function LandingPageClient() {
@@ -825,7 +825,151 @@ export default function LandingPageClient() {
           <div className="floating-shape shape-1"></div>
           <div className="floating-shape shape-2"></div>
           <div className="floating-shape shape-3"></div>
-        </div>
+        </div>       
+
+        {/* Hero Section - Enhanced */}
+        <section className="hero-section" id="hero-section">
+          <motion.div
+            className="hero-content"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="hero-badge">
+              <FaStar className="star-icon" />
+              <span>Free credits every month — no card needed</span>
+            </div>
+
+            <h1>
+              Create AI Images, Videos<br />
+              & Voice in <span className="gradient-text">Seconds</span>
+            </h1>
+
+            <p className="hero-subtitle">
+              One platform. One credit balance. Unlimited creative tools.{' '}
+              <strong>Start free — no daily limits, no watermarks.</strong>
+            </p>
+
+            <div className="hero-features-grid">
+              <div className="hero-feature-item">
+                <FaCheckCircle className="check-icon" />
+                <span>AI Image Generation</span>
+              </div>
+              <div className="hero-feature-item">
+                <FaCheckCircle className="check-icon" />
+                <span>AI Video Generation</span>
+              </div>
+              <div className="hero-feature-item">
+                <FaCheckCircle className="check-icon" />
+                <span>40+ AI Voices</span>
+              </div>
+              <div className="hero-feature-item">
+                <FaCheckCircle className="check-icon" />
+                <span>Free Credits Monthly</span>
+              </div>
+            </div>
+
+            <div className="hero-cta-wrapper">
+              <Link href="/create-ai-content" className="cta-button cta-primary">
+                🎥 Generate Free — No Card Needed
+              </Link>
+              <Link href="/pricing" className="cta-button cta-secondary">
+                💵 See all Plans
+              </Link>
+            </div>
+
+            <p className="hero-no-credit">
+              50 free credits every month · Use on any tool
+            </p>
+          </motion.div>
+        </section>
+
+        {/* PROBLEM SECTION */}
+        <section style={{
+          maxWidth: '900px', margin: '0 auto 100px', padding: '0 20px', textAlign: 'center'
+        }}>
+          <span style={{
+            display: 'inline-block', padding: '5px 16px', borderRadius: '100px',
+            background: 'rgba(255,107,107,0.12)', border: '1px solid rgba(255,107,107,0.3)',
+            fontSize: '0.8rem', fontWeight: 700, color: '#ff6b6b',
+            letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '20px'
+          }}>
+            Sound Familiar?
+          </span>
+        
+          <h2 style={{
+            fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', fontWeight: 900,
+            color: '#1a202c', letterSpacing: '-0.02em', marginBottom: '20px'
+          }}>
+            You're Talented. But the Algorithm<br />
+            Doesn't Know You Exist.
+          </h2>
+        
+          <p style={{ fontSize: '1.15rem', color: '#4a5568', marginBottom: '50px', lineHeight: 1.8 }}>
+            You spend hours staring at a blank screen. You post something decent,
+            get 200 views, and wonder why faceless accounts with no personality
+            have 100k followers. The problem isn't your content — it's your system.
+          </p>
+        
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
+            {[
+              { emoji: '😩', pain: 'No Ideas', detail: 'Spending 2 hours thinking of what to post today' },
+              { emoji: '📉', pain: 'Inconsistency', detail: 'Posting 3x one week, then ghosting for 2 weeks' },
+              { emoji: '🪝', pain: 'Weak Hooks', detail: 'People scroll past in 0.3 seconds — you never grab them' },
+              { emoji: '🕐', pain: 'No Time', detail: 'Editing, scripting, captioning — it eats your whole day' },
+            ].map((item) => (
+              <div key={item.pain} style={{
+                background: 'rgba(255,255,255,0.9)',
+                border: '2px solid rgba(255,107,107,0.15)',
+                borderRadius: '20px', padding: '28px 20px', textAlign: 'left'
+              }}>
+                <div style={{ fontSize: '2rem', marginBottom: '10px' }}>{item.emoji}</div>
+                <div style={{ fontWeight: 800, color: '#1a202c', marginBottom: '6px', fontSize: '1rem' }}>{item.pain}</div>
+                <div style={{ color: '#718096', fontSize: '0.88rem', lineHeight: 1.6 }}>{item.detail}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Final CTA Section - Enhanced */}
+        <section className="final-cta-section">
+          <motion.div
+            className="final-cta-content"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <span className="cta-label">Your Last Excuse Just Ran Out</span>
+            <h2 className="final-cta-title">
+              Your First Viral Post is{' '}
+              <span className="gradient-text">One Click Away</span>
+            </h2>
+            <p className="final-cta-description">
+              Every day you don't post, someone in your niche does.
+              Start generating images and videos right now —
+              free, no card, no limits. Your audience is waiting.
+            </p>
+
+            <div className="final-cta-buttons">
+              <Link href="/create-ai-content" className="final-cta-primary">
+                🚀 Generate Viral Content — It's Free
+              </Link>
+              <Link href="/pricing" className="final-cta-secondary">
+                💳 See All Plans
+              </Link>
+            </div>
+
+            <div className="final-cta-features">
+              {['✅ Free to Start', '✅ No Daily Limits', '✅ Works for Any Niche', '✅ No Watermarks', '✅ Cancel Anytime'].map((benefit, i) => (
+                <span key={i} className="cta-feature-badge">{benefit}</span>
+              ))}
+            </div>
+            
+            <p className="final-cta-note">
+              Join 2,500+ creators already growing with Scenith
+            </p>
+          </motion.div>
+        </section>                
 
         {/* ── CREDIT EXPLAINER — insert after hero-section ── */}
         <section style={{
@@ -929,7 +1073,7 @@ export default function LandingPageClient() {
                 <div style={{ fontSize: '2rem', fontWeight: 900, color: '#4facfe' }}>0</div>
                 <div style={{ fontSize: '0.8rem', color: '#718096', fontWeight: 600 }}>Daily limits<br/>ever</div>
               </div>
-              <Link href="/tools/ai-image-generation" style={{
+              <Link href="/create-ai-content" style={{
                 padding: '12px 28px',
                 background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                 color: 'white', borderRadius: '12px',
@@ -941,74 +1085,17 @@ export default function LandingPageClient() {
               </Link>
             </div>
           </div>
-        </section>        
-
-        {/* Hero Section - Enhanced */}
-        <section className="hero-section" id="hero-section">
-          <motion.div
-            className="hero-content"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <div className="hero-badge">
-              <FaStar className="star-icon" />
-              <span>Free credits every month — no card needed</span>
-            </div>
-
-            <h1>
-              Create AI Images, Videos<br />
-              & Voice in <span className="gradient-text">Seconds</span>
-            </h1>
-
-            <p className="hero-subtitle">
-              One platform. One credit balance. Unlimited creative tools.{' '}
-              <strong>Start free — no daily limits, no watermarks.</strong>
-            </p>
-
-            <div className="hero-features-grid">
-              <div className="hero-feature-item">
-                <FaCheckCircle className="check-icon" />
-                <span>AI Image Generation</span>
-              </div>
-              <div className="hero-feature-item">
-                <FaCheckCircle className="check-icon" />
-                <span>AI Video Generation</span>
-              </div>
-              <div className="hero-feature-item">
-                <FaCheckCircle className="check-icon" />
-                <span>40+ AI Voices</span>
-              </div>
-              <div className="hero-feature-item">
-                <FaCheckCircle className="check-icon" />
-                <span>Free Credits Monthly</span>
-              </div>
-            </div>
-
-            <div className="hero-cta-wrapper">
-              <Link href="/tools/ai-image-generation" className="cta-button cta-primary">
-                🎨 Generate Free — No Card Needed
-              </Link>
-              <Link href="/tools/ai-voice-generation" className="cta-button cta-secondary">
-                🎙️ Try AI Voice
-              </Link>
-            </div>
-
-            <p className="hero-no-credit">
-              50 free credits every month · Use on any tool · Never expires
-            </p>
-          </motion.div>
-        </section>
+        </section>         
 
         {/* Top Tools Showcase - Featured */}
         <section className="featured-tools-section">
           <div className="section-header">
-            <span className="section-label">Most Popular</span>
-            <h2>AI Images, Videos & Voice — One Platform</h2>
+            <span className="section-label">The Solution</span>
+            <h2>Everything You Need to<br />Post Daily and Grow Fast</h2>
             <p className="section-subtitle">
-              Generate stunning visuals, cinematic videos, and natural voices.
-              All powered by one shared credit balance — start free today.
-            </p>            
+              Scenith generates your Videos, Thumbnails, and Voices —
+              so you spend 20 minutes creating what used to take you all day.
+            </p>       
           </div>
 
           <motion.div
@@ -1187,7 +1274,7 @@ export default function LandingPageClient() {
           </div>
             
           <div style={{ textAlign: 'center', marginTop: '36px' }}>
-            <Link href="/tools/ai-image-generation" style={{
+            <Link href="/create-ai-content" style={{
               display: 'inline-flex', alignItems: 'center', gap: '10px',
               padding: '14px 32px',
               background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -1201,7 +1288,73 @@ export default function LandingPageClient() {
               50 free credits on signup · No card required
             </p>
           </div>
-        </section>        
+        </section>    
+
+        {/* USE CASES */}
+        <section style={{
+          maxWidth: '1100px', margin: '0 auto 100px', padding: '0 20px'
+        }}>
+          <div className="section-header">
+            <span className="section-label">Who It's For</span>
+            <h2>Built for Creators Who Want Results</h2>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
+            {[
+              {
+                title: 'Growing Your Instagram',
+                emoji: '📱',
+                color: '#a78bfa',
+                points: [
+                  'Post daily Reels without burning out',
+                  'Hooks engineered to beat the algorithm',
+                  'From 0 to 10k followers in 90 days',
+                ]
+              },
+              {
+                title: 'Managing Client Content',
+                emoji: '💼',
+                color: '#4facfe',
+                points: [
+                  'Handle 10 clients with 1 person',
+                  'Deliver a month of content in a day',
+                  'Charge more, work less',
+                ]
+              },
+              {
+                title: 'Creating Daily YouTube Shorts',
+                emoji: '🎬',
+                color: '#f06cbe',
+                points: [
+                  'Video + Voiceover in minutes',
+                  'Never miss an upload day again',
+                  'Build a faceless channel that earns',
+                ]
+              },
+            ].map((uc) => (
+              <div key={uc.title} style={{
+                background: 'rgba(255,255,255,0.9)',
+                border: `2px solid ${uc.color}30`,
+                borderRadius: '24px', padding: '32px 28px',
+                boxShadow: '0 4px 20px rgba(0,0,0,0.06)'
+              }}>
+                <div style={{ fontSize: '2.2rem', marginBottom: '14px' }}>{uc.emoji}</div>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#1a202c', marginBottom: '16px' }}>{uc.title}</h3>
+                <ul style={{ listStyle: 'none', padding: 0 }}>
+                  {uc.points.map((p) => (
+                    <li key={p} style={{
+                      display: 'flex', alignItems: 'flex-start', gap: '10px',
+                      marginBottom: '10px', color: '#4a5568', fontSize: '0.92rem', lineHeight: 1.6
+                    }}>
+                      <span style={{ color: uc.color, fontWeight: 800, marginTop: '2px' }}>✓</span>
+                      {p}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </section>            
 
         {/* NEW: SVG Library Highlight Section */}
         <section className="svg-library-showcase">
@@ -1266,34 +1419,6 @@ export default function LandingPageClient() {
           </motion.div>
         </section>       
 
-        {/* Social Proof - Redesigned */}
-        <section className="social-proof-modern">
-          <motion.div
-            className="stats-container"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="stat-card">
-              <div className="stat-value">2k+</div>
-              <div className="stat-label">Active Creators</div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-value">2000+</div>
-              <div className="stat-label">Content Created</div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-value">40+</div>
-              <div className="stat-label">AI Voices</div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-value">4.9/5</div>
-              <div className="stat-label">User Rating</div>
-            </div>
-          </motion.div>
-        </section>
-
         {/* ── PRICING PREVIEW — replace detailed-comparison-section ── */}
         <section style={{
           maxWidth: '1100px', margin: '100px auto', padding: '0 20px', textAlign: 'center'
@@ -1324,22 +1449,22 @@ export default function LandingPageClient() {
               },
               {
                 name: 'Creator Spark',
-                price: isIndianUser ? '₹499' : '$12',
+                price: isIndianUser ? '₹1749' : '$19',
                 credits: '900 credits / mo',
                 cta: 'Get Spark →',
                 ctaLink: '/pricing',
                 highlight: true,
-                perks: ['~450 AI images', '~14 Kling 5s videos', '75K voice chars', 'Priority support'],
+                perks: ['~450 AI images', '~14 Kling 5s videos', '150K voice chars', 'Priority support'],
                 color: '#a899f5'
               },
               {
                 name: 'Creator Odyssey',
-                price: isIndianUser ? '₹999' : '$24',
+                price: isIndianUser ? '₹3599' : '$39',
                 credits: '2,500 credits / mo',
                 cta: 'Get Odyssey →',
                 ctaLink: '/pricing',
                 highlight: false,
-                perks: ['~1,250 AI images', '~39 Kling 5s videos', '250K voice chars', '4K export'],
+                perks: ['~1,250 AI images', '~39 Kling 5s videos', '400K voice chars', '4K export'],
                 color: '#f59e0b'
               },
             ].map((plan) => (
@@ -1623,46 +1748,6 @@ export default function LandingPageClient() {
               </motion.div>
             ))}
           </div>
-        </section>
-
-        {/* Final CTA Section - Enhanced */}
-        <section className="final-cta-section">
-          <motion.div
-            className="final-cta-content"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <span className="cta-label">Ready to Create?</span>
-            <h2 className="final-cta-title">
-              Your First AI Image is{' '}
-              <span className="gradient-text">Free Right Now</span>
-            </h2>
-            <p className="final-cta-description">
-              50 free credits every month. Generate AI images with FLUX & Imagen 4, 
-              create cinematic videos with Kling & Veo, and produce natural voiceovers — 
-              all from one dashboard. No card. No daily limits.
-            </p>
-
-            <div className="final-cta-buttons">
-              <Link href="/tools/ai-image-generation" className="final-cta-primary">
-                🎨 Generate Your First Image Free
-              </Link>
-              <Link href="/pricing" className="final-cta-secondary">
-                💳 See All Plans
-              </Link>
-            </div>
-
-            <div className="final-cta-features">
-              {['✅ 50 Free Credits', '✅ No Daily Limits', '✅ 7 Image Models', '✅ 5 Video Models', '✅ No Watermarks'].map((benefit, i) => (
-                <span key={i} className="cta-feature-badge">{benefit}</span>
-              ))}
-            </div>
-
-            <p className="final-cta-note">
-              Start free • Upgrade anytime • Cancel anytime
-            </p>
-          </motion.div>
         </section>
       </div>
     </>
