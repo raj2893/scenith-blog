@@ -355,7 +355,70 @@ const CreateAIContentClient: React.FC = () => {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   // ── Active tab
-  const [activeTab, setActiveTab] = useState<Tab>("image");
+  const [activeTab, setActiveTab] = useState<Tab>(() => {
+    if (typeof window === 'undefined') return 'image';
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get('tab');
+    if (tab === 'voice' || tab === 'image' || tab === 'video') return tab;
+    return 'image';
+  });
+
+  // Pre-fill prompt + video settings from micro-tool page redirects
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const text = params.get('text');
+    if (text) setPrompt(decodeURIComponent(text));
+    const duration = params.get('duration');
+    if (duration) setVideoDuration(Number(duration));
+    const aspect = params.get('aspect');
+    if (aspect) setVideoAspectRatio(aspect);
+    const model = params.get('model');
+    if (model) setSelectedVideoModel(model);
+  }, []);
+
+  // Restore img2img file from sessionStorage if coming from ai-image-generation
+  useEffect(() => {
+    try {
+      const preview = sessionStorage.getItem('cac_img2img_preview');
+      const name = sessionStorage.getItem('cac_img2img_name');
+      const type = sessionStorage.getItem('cac_img2img_type');
+      if (preview && name && type) {
+        sessionStorage.removeItem('cac_img2img_preview');
+        sessionStorage.removeItem('cac_img2img_name');
+        sessionStorage.removeItem('cac_img2img_type');
+        fetch(preview)
+          .then(r => r.blob())
+          .then(blob => {
+            const file = new File([blob], name, { type });
+            setInputImageFile(file);
+            setInputImagePreview(preview);
+            setImageGenMode('image');
+          });
+      }
+    } catch {}
+  }, []);
+
+  // Restore video image from sessionStorage if coming from ai-video-generation
+  useEffect(() => {
+    try {
+      const preview = sessionStorage.getItem('cac_video_img_preview');
+      const name = sessionStorage.getItem('cac_video_img_name');
+      const type = sessionStorage.getItem('cac_video_img_type');
+      if (preview && name && type) {
+        sessionStorage.removeItem('cac_video_img_preview');
+        sessionStorage.removeItem('cac_video_img_name');
+        sessionStorage.removeItem('cac_video_img_type');
+        fetch(preview)
+          .then(r => r.blob())
+          .then(blob => {
+            const file = new File([blob], name, { type });
+            setVideoInputFile(file);
+            setVideoInputPreview(preview);
+            setVideoGenMode('image');
+          });
+      }
+    } catch {}
+  }, []);
 
   // ── Shared prompt
   const [prompt, setPrompt] = useState("");
@@ -395,6 +458,10 @@ const CreateAIContentClient: React.FC = () => {
     errorMessage?: string;
   } | null>(null);
   const imagePollingRef = useRef<NodeJS.Timeout | null>(null);
+  const [imageGenMode, setImageGenMode] = useState<'text' | 'image'>('text');
+  const [inputImageFile, setInputImageFile] = useState<File | null>(null);
+  const [inputImagePreview, setInputImagePreview] = useState<string | null>(null);
+  const inputImageRef = useRef<HTMLInputElement>(null);
 
   // ─────────────────── VIDEO STATE ────────────────────────────────────────
   const [videoCredits, setVideoCredits] = useState<VideoCredits | null>(null);
@@ -407,7 +474,13 @@ const CreateAIContentClient: React.FC = () => {
   const [isGeneratingVideo, setIsGeneratingVideo] = useState(false);
   const [currentVideoJob, setCurrentVideoJob] = useState<VideoJob | null>(null);
   const videoPollingRef = useRef<NodeJS.Timeout | null>(null);
-  const [showFreeVideoModal, setShowFreeVideoModal] = useState(false);
+ const [showFreeVideoModal, setShowFreeVideoModal] = useState(false);
+  const [videoFromImageUrl, setVideoFromImageUrl] = useState<string | null>(null);
+  const videoFromImageRef = useRef<HTMLInputElement>(null);
+  const [videoGenMode, setVideoGenMode] = useState<'text' | 'image'>('text');
+  const [videoInputFile, setVideoInputFile] = useState<File | null>(null);
+  const [videoInputPreview, setVideoInputPreview] = useState<string | null>(null);
+  const videoInputRef = useRef<HTMLInputElement>(null);
 
   const resultRef = useRef<HTMLDivElement>(null);
 
@@ -808,6 +881,10 @@ const CreateAIContentClient: React.FC = () => {
       setError("Please describe your image.");
       return;
     }
+    if (imageGenMode === 'image' && !inputImageFile) {
+      setError("Please upload a reference image for image-to-image generation.");
+      return;
+    }
     const modelKey = selectedImageModel.toUpperCase().replace(/-/g, "_");
     const cost = getImageCreditCost(modelKey, imageSize, imageQuality);
     if (imageUsage && imageUsage.balance < cost) {
@@ -822,9 +899,25 @@ const CreateAIContentClient: React.FC = () => {
       let enhancedPrompt = prompt;
       if (imageStyle !== "realistic")
         enhancedPrompt = `${prompt}, ${imageStyle} style`;
-      const res = await fetch(
-        `${API_BASE_URL}/api/sole-image-gen/generate-async`,
-        {
+
+      let res: Response;
+
+      if (imageGenMode === 'image' && inputImageFile) {
+        const formData = new FormData();
+        formData.append('prompt', enhancedPrompt);
+        formData.append('negativePrompt', 'blurry, low quality, distorted');
+        formData.append('model', selectedImageModel);
+        formData.append('size', imageSize);
+        formData.append('quality', imageQuality);
+        formData.append('resolution', '2k');
+        formData.append('image', inputImageFile);
+        res = await fetch(`${API_BASE_URL}/api/sole-image-gen/generate-async`, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          body: formData,
+        });
+      } else {
+        res = await fetch(`${API_BASE_URL}/api/sole-image-gen/generate-async`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -838,8 +931,9 @@ const CreateAIContentClient: React.FC = () => {
             quality: imageQuality,
             resolution: "2k",
           }),
-        }
-      );
+        });
+      }
+
       if (!res.ok) throw new Error(await res.text());
       const { jobId } = await res.json();
       setCurrentImageJob({ id: jobId, status: "PENDING" });
@@ -867,6 +961,10 @@ const CreateAIContentClient: React.FC = () => {
           clearInterval(videoPollingRef.current!);
           videoPollingRef.current = null;
           setIsGeneratingVideo(false);
+          setVideoFromImageUrl(null);
+          setVideoInputFile(null);
+          setVideoInputPreview(null);
+          setVideoGenMode('text');
           // Refresh credits
           axios
             .get(`${API_BASE_URL}/api/video-gen/credits`, {
@@ -891,11 +989,48 @@ const CreateAIContentClient: React.FC = () => {
       setError("Please describe your video.");
       return;
     }
+    // Validate image-to-video requirements
+    if (videoGenMode === 'image' && !videoInputFile && !videoFromImageUrl) {
+      setError("Please upload a reference image for image-to-video generation.");
+      return;
+    }
     setIsGeneratingVideo(true);
     setError(null);
     setCurrentVideoJob(null);
     try {
       const token = localStorage.getItem("token");
+
+      // Image-to-video: either direct upload or from generated image
+      const hasImageSource = videoGenMode === 'image' && videoInputFile || videoFromImageUrl;
+      if (hasImageSource) {
+        let imgBlob: Blob;
+        let fileName: string;
+        if (videoFromImageUrl) {
+          imgBlob = await fetch(videoFromImageUrl).then(r => r.blob());
+          fileName = 'reference.jpg';
+        } else {
+          imgBlob = videoInputFile!;
+          fileName = videoInputFile!.name;
+        }
+        const formData = new FormData();
+        formData.append('model', selectedVideoModel);
+        formData.append('prompt', prompt);
+        formData.append('durationSeconds', String(videoDuration));
+        formData.append('audioEnabled', String(videoAudioEnabled));
+        formData.append('aspectRatio', videoAspectRatio);
+        formData.append('resolution', videoResolution);
+        formData.append('image', imgBlob, fileName);
+        const res = await axios.post(
+          `${API_BASE_URL}/api/video-gen/image-to-video`,
+          formData,
+          { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' } }
+        );
+        const job: VideoJob = res.data;
+        setCurrentVideoJob(job);
+        startVideoPolling(job.falRequestId);
+        return;
+      }
+
       const res = await axios.post(
         `${API_BASE_URL}/api/video-gen/text-to-video`,
         {
@@ -1030,6 +1165,15 @@ const CreateAIContentClient: React.FC = () => {
                 setActiveTab(t);
                 setPrompt("");
                 setError(null);
+                setImageGenMode('text');
+                setInputImageFile(null);
+                setInputImagePreview(null);
+                if (t !== 'video') {
+                  setVideoFromImageUrl(null);
+                  setVideoGenMode('text');
+                  setVideoInputFile(null);
+                  setVideoInputPreview(null);
+                }
               }}
             >
               {t === "voice" && "🎙️ Voice"}
@@ -1277,10 +1421,73 @@ const CreateAIContentClient: React.FC = () => {
           </div>
         ) : (
           /* Image / Video tab — full width prompt card */
-          <div className="cac-prompt-card">
+         <div className="cac-prompt-card">
+
+            {/* ── Image gen mode toggle ── */}
+            {activeTab === "image" && (
+              <div style={{ display: 'flex', gap: 2, padding: '10px 12px 0', borderBottom: '1px solid rgba(99,85,220,0.08)' }}>
+                {[
+                  { value: 'text', label: '✍️ Text to Image' },
+                  { value: 'image', label: '🖼️ Image to Image', disabled: !IMAGE_MODEL_CONFIG[selectedImageModel.toUpperCase().replace(/-/g, '_')]?.supportsImg2Img },
+                ].map(m => (
+                  <button key={m.value}
+                    onClick={() => { if (!m.disabled) { setImageGenMode(m.value as 'text' | 'image'); setInputImageFile(null); setInputImagePreview(null); } }}
+                    disabled={!!m.disabled}
+                    style={{
+                      padding: '5px 14px', borderRadius: 8, border: 'none',
+                      cursor: m.disabled ? 'not-allowed' : 'pointer',
+                      fontFamily: 'inherit', fontSize: 11.5, fontWeight: 700,
+                      background: imageGenMode === m.value ? 'linear-gradient(135deg, #6355dc, #8b5cf6)' : 'transparent',
+                      color: imageGenMode === m.value ? '#fff' : m.disabled ? 'var(--cac-muted)' : 'var(--cac-accent)',
+                      transition: 'all 0.15s',
+                    }}
+                  >{m.label}</button>
+                ))}
+              </div>
+            )}
+
+            {/* ── Image upload area for img2img ── */}
+            {activeTab === "image" && imageGenMode === 'image' && (
+              <div style={{ padding: '10px 12px 0' }}>
+                {!inputImagePreview ? (
+                  <div
+                    onClick={() => inputImageRef.current?.click()}
+                    style={{
+                      border: '2px dashed rgba(99,85,220,0.3)', borderRadius: 12,
+                      padding: '16px', textAlign: 'center', cursor: 'pointer',
+                      background: 'rgba(99,85,220,0.03)', transition: 'all 0.2s',
+                    }}
+                    onMouseEnter={e => (e.currentTarget.style.borderColor = '#6355dc')}
+                    onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(99,85,220,0.3)')}
+                  >
+                    <div style={{ fontSize: 22, marginBottom: 4 }}>🖼️</div>
+                    <p style={{ fontSize: 12, color: '#6355dc', fontWeight: 600, margin: 0 }}>
+                      Drop or click to upload reference image
+                    </p>
+                    <p style={{ fontSize: 11, color: '#aaa', margin: '2px 0 0' }}>PNG, JPG — up to 10MB</p>
+                    <input ref={inputImageRef} type="file" accept="image/*" style={{ display: 'none' }}
+                      onChange={e => {
+                        const f = e.target.files?.[0];
+                        if (f) { setInputImageFile(f); setInputImagePreview(URL.createObjectURL(f)); }
+                      }} />
+                  </div>
+                ) : (
+                  <div style={{ position: 'relative', borderRadius: 12, overflow: 'hidden', maxHeight: 120, display: 'flex', alignItems: 'center', background: '#f5f5ff' }}>
+                    <img src={inputImagePreview} alt="Reference" style={{ maxHeight: 120, maxWidth: '100%', objectFit: 'contain', display: 'block', margin: '0 auto' }} />
+                    <button onClick={() => { setInputImageFile(null); setInputImagePreview(null); }}
+                      style={{ position: 'absolute', top: 6, right: 6, background: 'rgba(0,0,0,0.6)', border: 'none', color: '#fff', borderRadius: '50%', width: 24, height: 24, cursor: 'pointer', fontSize: 11, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+                  </div>
+                )}
+              </div>
+            )}
+
             <textarea
               className="cac-textarea"
-              placeholder={activeTab === "image" ? "Describe your image…" : "Describe your video…"}
+              placeholder={
+                activeTab === "image"
+                  ? imageGenMode === 'image' ? "Describe how to transform your image…" : "Describe your image…"
+                  : "Describe your video…"
+              }
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               disabled={isGenerating}
@@ -1318,6 +1525,82 @@ const CreateAIContentClient: React.FC = () => {
                 <span className="cac-credit-pill">
                   ⚡ {isLoggedIn ? imageUsage?.balance ?? "..." : 50} cr · {imageCreditCost}cr/img
                 </span>
+              </div>
+            )}
+
+            {/* ── Video gen mode toggle ── */}
+            {activeTab === "video" && (
+              <div style={{ display: 'flex', gap: 2, padding: '10px 12px 0', borderBottom: '1px solid rgba(99,85,220,0.08)' }}>
+                {[
+                  { value: 'text', label: '✍️ Text to Video' },
+                  { value: 'image', label: '🖼️ Image to Video' },
+                ].map(m => (
+                  <button key={m.value}
+                    onClick={() => { setVideoGenMode(m.value as 'text' | 'image'); setVideoInputFile(null); setVideoInputPreview(null); setVideoFromImageUrl(null); }}
+                    style={{
+                      padding: '5px 14px', borderRadius: 8, border: 'none',
+                      cursor: 'pointer', fontFamily: 'inherit', fontSize: 11.5, fontWeight: 700,
+                      background: videoGenMode === m.value ? 'linear-gradient(135deg, #6355dc, #8b5cf6)' : 'transparent',
+                      color: videoGenMode === m.value ? '#fff' : 'var(--cac-accent)',
+                      transition: 'all 0.15s',
+                    }}
+                  >{m.label}</button>
+                ))}
+              </div>
+            )}
+
+            {/* ── Video image upload ── */}
+            {activeTab === "video" && videoGenMode === 'image' && !videoFromImageUrl && (
+              <div style={{ padding: '10px 12px 0' }}>
+                {!videoInputPreview ? (
+                  <div
+                    onClick={() => videoInputRef.current?.click()}
+                    style={{
+                      border: '2px dashed rgba(99,85,220,0.3)', borderRadius: 12,
+                      padding: '16px', textAlign: 'center', cursor: 'pointer',
+                      background: 'rgba(99,85,220,0.03)', transition: 'all 0.2s',
+                    }}
+                    onMouseEnter={e => (e.currentTarget.style.borderColor = '#6355dc')}
+                    onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(99,85,220,0.3)')}
+                  >
+                    <div style={{ fontSize: 22, marginBottom: 4 }}>🖼️</div>
+                    <p style={{ fontSize: 12, color: '#6355dc', fontWeight: 600, margin: 0 }}>
+                      Drop or click to upload reference image
+                    </p>
+                    <p style={{ fontSize: 11, color: '#aaa', margin: '2px 0 0' }}>PNG, JPG — used as the starting frame</p>
+                    <input ref={videoInputRef} type="file" accept="image/*" style={{ display: 'none' }}
+                      onChange={e => {
+                        const f = e.target.files?.[0];
+                        if (f) { setVideoInputFile(f); setVideoInputPreview(URL.createObjectURL(f)); }
+                      }} />
+                  </div>
+                ) : (
+                  <div style={{ position: 'relative', borderRadius: 12, overflow: 'hidden', maxHeight: 120, display: 'flex', alignItems: 'center', background: '#f5f5ff' }}>
+                    <img src={videoInputPreview} alt="Reference" style={{ maxHeight: 120, maxWidth: '100%', objectFit: 'contain', display: 'block', margin: '0 auto' }} />
+                    <button onClick={() => { setVideoInputFile(null); setVideoInputPreview(null); }}
+                      style={{ position: 'absolute', top: 6, right: 6, background: 'rgba(0,0,0,0.6)', border: 'none', color: '#fff', borderRadius: '50%', width: 24, height: 24, cursor: 'pointer', fontSize: 11, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* ── Video from image banner (from generated image) ── */}
+            {activeTab === "video" && videoFromImageUrl && (
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px',
+                background: 'linear-gradient(135deg, rgba(124,58,237,0.08), rgba(219,39,119,0.06))',
+                border: '1.5px solid rgba(124,58,237,0.25)', borderRadius: 12, margin: '0 0 8px',
+              }}>
+                <img src={videoFromImageUrl} alt="Reference" style={{ width: 48, height: 48, borderRadius: 8, objectFit: 'cover', flexShrink: 0 }} />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: '#7c3aed' }}>🎬 Animating your image</div>
+                  <div style={{ fontSize: 11, color: 'var(--cac-text-2)', marginTop: 2 }}>This image will be used as the video reference. Add a prompt to guide the motion.</div>
+                </div>
+                <button
+                  onClick={() => setVideoFromImageUrl(null)}
+                  style={{ background: 'none', border: 'none', color: 'var(--cac-muted)', cursor: 'pointer', fontSize: 16, flexShrink: 0, padding: 4 }}
+                  title="Remove reference image"
+                >✕</button>
               </div>
             )}
 
@@ -1387,12 +1670,18 @@ const CreateAIContentClient: React.FC = () => {
                   🔒 Sign Up Free & Generate
                 </button>
               ) : activeTab === "image" ? (
-                <button className="cac-generate-btn" onClick={handleGenerateImage} disabled={isGeneratingImage || !prompt.trim()}>
+                <button className="cac-generate-btn" onClick={handleGenerateImage}
+                  disabled={isGeneratingImage || !prompt.trim() || (imageGenMode === 'image' && !inputImageFile)}>
                   {isGeneratingImage ? (<><span className="cac-btn-spinner" />Generating…</>) : "🖼️ Generate Image"}
                 </button>
               ) : (
                 <button className="cac-generate-btn" onClick={handleGenerateVideo}
-                  disabled={isGeneratingVideo || !prompt.trim() || (!!currentVideoJob && (currentVideoJob.status === "PENDING" || currentVideoJob.status === "PROCESSING"))}>
+                  disabled={
+                    isGeneratingVideo ||
+                    !prompt.trim() ||
+                    (videoGenMode === 'image' && !videoInputFile && !videoFromImageUrl) ||
+                    (!!currentVideoJob && (currentVideoJob.status === "PENDING" || currentVideoJob.status === "PROCESSING"))
+                  }>
                   {isGeneratingVideo || (currentVideoJob && (currentVideoJob.status === "PENDING" || currentVideoJob.status === "PROCESSING"))
                     ? (<><span className="cac-btn-spinner" />Generating…</>) : "🎬 Generate Video"}
                 </button>
@@ -1476,6 +1765,20 @@ const CreateAIContentClient: React.FC = () => {
                     }
                   >
                     📋 Copy Prompt
+                  </button>
+                  <button
+                    className="cac-action-btn primary"
+                    style={{ background: 'linear-gradient(135deg, #7c3aed, #db2777)' }}
+                    onClick={() => {
+                      setVideoFromImageUrl(img.imagePath);
+                      setActiveTab('video');
+                      setPrompt(img.prompt || '');
+                      setTimeout(() => {
+                        resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }, 100);
+                    }}
+                  >
+                    🎬 Make Video from this Image
                   </button>
                 </div>
               </div>
