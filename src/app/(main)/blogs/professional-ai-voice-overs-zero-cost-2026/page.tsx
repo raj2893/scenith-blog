@@ -114,8 +114,8 @@ export default function ProfessionalAIVoiceoversZeroCost2026() {
 
           <p>
             The foundation of this guide is <strong>Scenith's Free AI Voice Generator</strong>, available at
-            <a href="https://scenith.in/tools/ai-voice-generation?utm_source=blog&utm_medium=intro&utm_campaign=zero_cost_voiceovers_2026" target="_blank" rel="noopener noreferrer">
-              https://scenith.in/tools/ai-voice-generation
+            <a href="https://scenith.in/create-ai-content?utm_source=blog&utm_medium=intro&utm_campaign=zero_cost_voiceovers_2026" target="_blank" rel="noopener noreferrer">
+              https://scenith.in/create-ai-content
             </a>. With 40+ natural voices, 20+ languages, instant generation, and free forever access, it's the perfect tool for creators building YouTube channels, podcasts, courses, and automation businesses.
           </p>
 
@@ -444,7 +444,7 @@ export default function ProfessionalAIVoiceoversZeroCost2026() {
             </p>
             <p style={{fontSize: '1.8rem', fontWeight: 900, margin: '3rem 0'}}>
               <a
-                href="https://scenith.in/tools/ai-voice-generation?utm_source=blog&utm_medium=final_cta&utm_campaign=zero_cost_voiceovers_2026"
+                href="https://scenith.in/create-ai-content?utm_source=blog&utm_medium=final_cta&utm_campaign=zero_cost_voiceovers_2026"
                 style={{ color: '#ffffff', textDecoration: 'none' }}
                 target="_blank" rel="noopener noreferrer"
               >

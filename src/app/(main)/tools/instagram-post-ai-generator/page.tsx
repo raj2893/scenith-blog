@@ -380,7 +380,7 @@ export default function InstagramPostAIGeneratorPage() {
           {/* ── MEGA CTA ── */}
           <div className="igpage__cta-block">
             <a
-              href="https://scenith.in/tools/ai-image-generation?utm_source=instagram_post_generator&utm_medium=hero_cta&utm_campaign=ig_tool_page&utm_content=primary_cta"
+              href="https://scenith.in/create-ai-content?utm_source=instagram_post_generator&utm_medium=hero_cta&utm_campaign=ig_tool_page&utm_content=primary_cta"
               className="igpage__cta-primary"
               aria-label="Open AI Image Generator to create Instagram posts"
             >
@@ -394,7 +394,7 @@ export default function InstagramPostAIGeneratorPage() {
 
             <div className="igpage__cta-secondary-row">
               <a
-                href="https://scenith.in/tools/ai-image-generation?utm_source=instagram_post_generator&utm_medium=secondary_cta&utm_campaign=ig_tool_page&utm_content=no_signup"
+                href="https://scenith.in/create-ai-content?utm_source=instagram_post_generator&utm_medium=secondary_cta&utm_campaign=ig_tool_page&utm_content=no_signup"
                 className="igpage__cta-secondary"
               >
                 🎨 Try With Demo Prompt
@@ -431,7 +431,7 @@ export default function InstagramPostAIGeneratorPage() {
             {STYLE_OPTIONS.map((s) => (
               <a
                 key={s.label}
-                href={`https://scenith.in/tools/ai-image-generation?utm_source=instagram_post_generator&utm_medium=style_card&utm_campaign=ig_tool_page&utm_content=style_${s.label.toLowerCase().replace(/ /g, '_')}`}
+                href={`https://scenith.in/create-ai-content?utm_source=instagram_post_generator&utm_medium=style_card&utm_campaign=ig_tool_page&utm_content=style_${s.label.toLowerCase().replace(/ /g, '_')}`}
                 className="igpage__style-card"
                 aria-label={`Generate ${s.label} style Instagram image`}
               >
@@ -551,7 +551,7 @@ export default function InstagramPostAIGeneratorPage() {
 
           <div className="igpage__how-cta">
             <a
-              href="https://scenith.in/tools/ai-image-generation?utm_source=instagram_post_generator&utm_medium=how_it_works_cta&utm_campaign=ig_tool_page"
+              href="https://scenith.in/create-ai-content?utm_source=instagram_post_generator&utm_medium=how_it_works_cta&utm_campaign=ig_tool_page"
               className="igpage__cta-primary igpage__cta-primary--inline"
             >
               <span>✨ Start Generating Now</span>
@@ -585,7 +585,7 @@ export default function InstagramPostAIGeneratorPage() {
                   ))}
                 </ul>
                 <a
-                  href={`https://scenith.in/tools/ai-image-generation?utm_source=instagram_post_generator&utm_medium=prompt_card&utm_campaign=ig_tool_page&utm_content=${niche.niche.replace(/[^a-z]/gi, '_').toLowerCase()}`}
+                  href={`https://scenith.in/create-ai-content?utm_source=instagram_post_generator&utm_medium=prompt_card&utm_campaign=ig_tool_page&utm_content=${niche.niche.replace(/[^a-z]/gi, '_').toLowerCase()}`}
                   className="igpage__prompt-cta"
                 >
                   Use These Prompts →
@@ -618,7 +618,7 @@ export default function InstagramPostAIGeneratorPage() {
                   ))}
                 </ul>
                 <a
-                  href={`https://scenith.in/tools/ai-image-generation?utm_source=instagram_post_generator&utm_medium=niche_card&utm_campaign=ig_tool_page&utm_content=${guide.title.toLowerCase().replace(/ /g, '_')}`}
+                  href={`https://scenith.in/create-ai-content?utm_source=instagram_post_generator&utm_medium=niche_card&utm_campaign=ig_tool_page&utm_content=${guide.title.toLowerCase().replace(/ /g, '_')}`}
                   className="igpage__niche-cta"
                 >
                   {guide.ctaText} →
@@ -863,7 +863,7 @@ export default function InstagramPostAIGeneratorPage() {
             </div>
             <div className="igpage__midcta-action">
               <a
-                href="https://scenith.in/tools/ai-image-generation?utm_source=instagram_post_generator&utm_medium=mid_page_cta&utm_campaign=ig_tool_page"
+                href="https://scenith.in/create-ai-content?utm_source=instagram_post_generator&utm_medium=mid_page_cta&utm_campaign=ig_tool_page"
                 className="igpage__cta-primary igpage__cta-primary--large"
               >
                 <span className="igpage__cta-icon">🚀</span>
@@ -982,7 +982,7 @@ export default function InstagramPostAIGeneratorPage() {
             </a>
 
             <a
-              href="https://scenith.in/tools/ai-voice-generation?utm_source=instagram_post_generator&utm_medium=related_tools&utm_campaign=ig_tool_page"
+              href="https://scenith.in/create-ai-content?utm_source=instagram_post_generator&utm_medium=related_tools&utm_campaign=ig_tool_page"
               className="igpage__related-card"
             >
               <span className="igpage__related-icon">🎤</span>
@@ -1024,7 +1024,7 @@ export default function InstagramPostAIGeneratorPage() {
               whether to start today or next month.
             </p>
             <a
-              href="https://scenith.in/tools/ai-image-generation?utm_source=instagram_post_generator&utm_medium=final_cta&utm_campaign=ig_tool_page&utm_content=bottom_of_page"
+              href="https://scenith.in/create-ai-content?utm_source=instagram_post_generator&utm_medium=final_cta&utm_campaign=ig_tool_page&utm_content=bottom_of_page"
               className="igpage__cta-primary igpage__cta-primary--xl"
               aria-label="Generate your first Instagram AI post for free"
             >

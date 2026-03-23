@@ -493,7 +493,7 @@ export default function TikTokVoiceGeneratorPage() {
               {/* Primary CTA */}
               <div className="tkvg-hero-cta-wrap">
                 <a
-                  href="https://scenith.in/tools/ai-voice-generation?utm_source=tiktok_voice_generator&utm_medium=hero_cta&utm_campaign=tkvg_landing"
+                  href="https://scenith.in/create-ai-content?utm_source=tiktok_voice_generator&utm_medium=hero_cta&utm_campaign=tkvg_landing"
                   className="tkvg-cta-btn tkvg-cta-btn--hero"
                   aria-label="Generate your TikTok voice for free"
                 >
@@ -595,7 +595,7 @@ export default function TikTokVoiceGeneratorPage() {
 
             <div className="tkvg-section-cta">
               <a
-                href="https://scenith.in/tools/ai-voice-generation?utm_source=tiktok_voice_generator&utm_medium=voice_styles_section&utm_campaign=tkvg_landing"
+                href="https://scenith.in/create-ai-content?utm_source=tiktok_voice_generator&utm_medium=voice_styles_section&utm_campaign=tkvg_landing"
                 className="tkvg-cta-btn tkvg-cta-btn--outline"
               >
                 Preview All 40+ Voices Free →
@@ -659,7 +659,7 @@ export default function TikTokVoiceGeneratorPage() {
 
             <div className="tkvg-howto-cta">
               <a
-                href="https://scenith.in/tools/ai-voice-generation?utm_source=tiktok_voice_generator&utm_medium=howto_section&utm_campaign=tkvg_landing"
+                href="https://scenith.in/create-ai-content?utm_source=tiktok_voice_generator&utm_medium=howto_section&utm_campaign=tkvg_landing"
                 className="tkvg-cta-btn tkvg-cta-btn--primary"
               >
                 <span aria-hidden="true">🎙️</span>
@@ -863,7 +863,7 @@ export default function TikTokVoiceGeneratorPage() {
 
             <div className="tkvg-section-cta">
               <a
-                href="https://scenith.in/tools/ai-voice-generation?utm_source=tiktok_voice_generator&utm_medium=growth_section&utm_campaign=tkvg_landing"
+                href="https://scenith.in/create-ai-content?utm_source=tiktok_voice_generator&utm_medium=growth_section&utm_campaign=tkvg_landing"
                 className="tkvg-cta-btn tkvg-cta-btn--primary"
               >
                 <span aria-hidden="true">🎙️</span>
@@ -886,7 +886,7 @@ export default function TikTokVoiceGeneratorPage() {
               </h2>
               <p>40+ voices. 20+ languages. 3 seconds. Zero cost. Zero watermark. The TikTok voice generator that works on every platform.</p>
               <a
-                href="https://scenith.in/tools/ai-voice-generation?utm_source=tiktok_voice_generator&utm_medium=mid_page_cta&utm_campaign=tkvg_landing"
+                href="https://scenith.in/create-ai-content?utm_source=tiktok_voice_generator&utm_medium=mid_page_cta&utm_campaign=tkvg_landing"
                 className="tkvg-cta-btn tkvg-cta-btn--hero tkvg-cta-btn--xl"
               >
                 <span aria-hidden="true">🎙️</span>
@@ -937,7 +937,7 @@ export default function TikTokVoiceGeneratorPage() {
 
               <div className="tkvg-final-actions">
                 <a
-                  href="https://scenith.in/tools/ai-voice-generation?utm_source=tiktok_voice_generator&utm_medium=final_cta&utm_campaign=tkvg_landing"
+                  href="https://scenith.in/create-ai-content?utm_source=tiktok_voice_generator&utm_medium=final_cta&utm_campaign=tkvg_landing"
                   className="tkvg-cta-btn tkvg-cta-btn--hero tkvg-cta-btn--xl"
                 >
                   <span aria-hidden="true">🎙️</span>

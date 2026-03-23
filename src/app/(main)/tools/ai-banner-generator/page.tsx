@@ -408,7 +408,7 @@ export default function AIBannerGeneratorPage() {
             </div>
 
             <a
-              href="https://scenith.in/tools/ai-image-generation?utm_source=ai_banner_generator&utm_medium=hero_cta&utm_campaign=banner_tool_page"
+              href="https://scenith.in/create-ai-content?utm_source=ai_banner_generator&utm_medium=hero_cta&utm_campaign=banner_tool_page"
               className="banner-main-cta-btn"
               aria-label="Open AI Image Generator to create banners"
             >
@@ -478,7 +478,7 @@ export default function AIBannerGeneratorPage() {
 
           <div className="usecase-cta-inline">
             <a
-              href="https://scenith.in/tools/ai-image-generation?utm_source=ai_banner_generator&utm_medium=usecases_section&utm_campaign=banner_tool_page"
+              href="https://scenith.in/create-ai-content?utm_source=ai_banner_generator&utm_medium=usecases_section&utm_campaign=banner_tool_page"
               className="inline-cta-btn"
             >
               Create Any Banner Format — Open AI Generator →
@@ -555,7 +555,7 @@ export default function AIBannerGeneratorPage() {
 
           <div className="howto-cta">
             <a
-              href="https://scenith.in/tools/ai-image-generation?utm_source=ai_banner_generator&utm_medium=howto_section&utm_campaign=banner_tool_page"
+              href="https://scenith.in/create-ai-content?utm_source=ai_banner_generator&utm_medium=howto_section&utm_campaign=banner_tool_page"
               className="banner-main-cta-btn"
               aria-label="Generate AI banner now"
             >
@@ -588,7 +588,7 @@ export default function AIBannerGeneratorPage() {
                 </div>
                 <p className="prompt-text">"{ex.prompt}"</p>
                 <a
-                  href={`https://scenith.in/tools/ai-image-generation?utm_source=ai_banner_generator&utm_medium=prompt_example&utm_campaign=banner_tool_page&utm_content=${encodeURIComponent(ex.category)}`}
+                  href={`https://scenith.in/create-ai-content?utm_source=ai_banner_generator&utm_medium=prompt_example&utm_campaign=banner_tool_page&utm_content=${encodeURIComponent(ex.category)}`}
                   className="prompt-try-btn"
                 >
                   Try this prompt →
@@ -629,7 +629,7 @@ export default function AIBannerGeneratorPage() {
 
           <div className="style-cta-inline">
             <a
-              href="https://scenith.in/tools/ai-image-generation?utm_source=ai_banner_generator&utm_medium=style_guide_section&utm_campaign=banner_tool_page"
+              href="https://scenith.in/create-ai-content?utm_source=ai_banner_generator&utm_medium=style_guide_section&utm_campaign=banner_tool_page"
               className="inline-cta-btn"
             >
               Explore All 8 Styles in the AI Generator →
@@ -713,7 +713,7 @@ export default function AIBannerGeneratorPage() {
               <div className="aside-card aside-cta-card">
                 <h4>Ready to try it?</h4>
                 <a
-                  href="https://scenith.in/tools/ai-image-generation?utm_source=ai_banner_generator&utm_medium=aside_cta&utm_campaign=banner_tool_page"
+                  href="https://scenith.in/create-ai-content?utm_source=ai_banner_generator&utm_medium=aside_cta&utm_campaign=banner_tool_page"
                   className="aside-cta-btn"
                 >
                   Open AI Banner Generator →
@@ -780,7 +780,7 @@ export default function AIBannerGeneratorPage() {
 
           <div className="workflow-cta">
             <a
-              href="https://scenith.in/tools/ai-image-generation?utm_source=ai_banner_generator&utm_medium=workflow_section&utm_campaign=banner_tool_page"
+              href="https://scenith.in/create-ai-content?utm_source=ai_banner_generator&utm_medium=workflow_section&utm_campaign=banner_tool_page"
               className="banner-main-cta-btn"
             >
               <span className="cta-btn-icon">🎨</span>
@@ -985,7 +985,7 @@ The AI handles the visual narrative; the editor adds course name, instructor bra
           </p>
 
           <a
-            href="https://scenith.in/tools/ai-image-generation?utm_source=ai_banner_generator&utm_medium=final_cta&utm_campaign=banner_tool_page"
+            href="https://scenith.in/create-ai-content?utm_source=ai_banner_generator&utm_medium=final_cta&utm_campaign=banner_tool_page"
             className="final-cta-btn"
             aria-label="Generate your AI banner for free"
           >

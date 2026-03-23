@@ -191,7 +191,7 @@ const schemaJsonLd = {
    STATIC DATA
 ───────────────────────────────────────────── */
 const TOOL_URL =
-  'https://scenith.in/tools/ai-voice-generation?utm_source=story_voice_page&utm_medium=cta&utm_campaign=story_genre_traffic';
+  'https://scenith.in/create-ai-content?utm_source=story_voice_page&utm_medium=cta&utm_campaign=story_genre_traffic';
 
 const GENRES = [
   {

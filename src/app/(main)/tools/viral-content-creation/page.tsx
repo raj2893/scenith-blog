@@ -86,8 +86,8 @@ export const metadata: Metadata = {
 };
 
 const VIDEO_CTA = "https://scenith.in/tools/ai-video-generation?utm_source=viral-content-page&utm_medium=cta&utm_campaign=viral-traffic";
-const VOICE_CTA = "https://scenith.in/tools/ai-voice-generation?utm_source=viral-content-page&utm_medium=cta&utm_campaign=viral-traffic";
-const IMAGE_CTA = "https://scenith.in/tools/ai-image-generation?utm_source=viral-content-page&utm_medium=cta&utm_campaign=viral-traffic";
+const VOICE_CTA = "https://scenith.in/create-ai-content?utm_source=viral-content-page&utm_medium=cta&utm_campaign=viral-traffic";
+const IMAGE_CTA = "https://scenith.in/create-ai-content?utm_source=viral-content-page&utm_medium=cta&utm_campaign=viral-traffic";
 
 const ViralContentCreationPage = () => {
   return (

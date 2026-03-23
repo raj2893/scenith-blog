@@ -1291,7 +1291,7 @@ const PDFToolsPage: React.FC = () => {
         </div>
         <div className="must-try-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '30px', maxWidth: '1000px', margin: '0 auto' }}>
           <a 
-            href="https://scenith.in/tools/ai-voice-generation?utm_source=pdf_tools_page&utm_medium=cross_tool_promotion" 
+            href="https://scenith.in/create-ai-content?utm_source=pdf_tools_page&utm_medium=cross_tool_promotion" 
             className="must-try-card"
             style={{ background: '#fff', borderRadius: '20px', padding: '35px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', border: '2px solid rgba(59, 130, 246, 0.1)', textDecoration: 'none', display: 'block', transition: 'all 0.3s ease' }}
             target="_blank"

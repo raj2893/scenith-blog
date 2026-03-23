@@ -381,7 +381,7 @@ export default function NarrationAIVoiceGeneratorPage() {
           {/* ─── PRIMARY CTA ─── */}
           <div className="hero-cta-block">
             <a
-              href="https://scenith.in/tools/ai-voice-generation?utm_source=narration_page&utm_medium=hero_cta&utm_campaign=narration_tool"
+              href="https://scenith.in/create-ai-content?utm_source=narration_page&utm_medium=hero_cta&utm_campaign=narration_tool"
               className="primary-cta"
               aria-label="Open AI Narration Voice Generator Tool"
             >
@@ -531,7 +531,7 @@ export default function NarrationAIVoiceGeneratorPage() {
               <p>Try any voice free — no signup required for your first preview</p>
             </div>
             <a
-              href="https://scenith.in/tools/ai-voice-generation?utm_source=narration_page&utm_medium=use_cases_cta&utm_campaign=narration_tool"
+              href="https://scenith.in/create-ai-content?utm_source=narration_page&utm_medium=use_cases_cta&utm_campaign=narration_tool"
               className="mid-cta-btn"
             >
               Try AI Narration Free →
@@ -722,7 +722,7 @@ export default function NarrationAIVoiceGeneratorPage() {
           {/* CTA after steps */}
           <div className="cta-center">
             <a
-              href="https://scenith.in/tools/ai-voice-generation?utm_source=narration_page&utm_medium=howto_cta&utm_campaign=narration_tool"
+              href="https://scenith.in/create-ai-content?utm_source=narration_page&utm_medium=howto_cta&utm_campaign=narration_tool"
               className="primary-cta"
             >
               <span className="cta-icon" aria-hidden="true">🎙️</span>
@@ -1030,7 +1030,7 @@ export default function NarrationAIVoiceGeneratorPage() {
           <div className="related-grid">
             {[
               {
-                href: 'https://scenith.in/tools/ai-voice-generation?utm_source=narration_page&utm_medium=related_tools&utm_campaign=narration_tool',
+                href: 'https://scenith.in/create-ai-content?utm_source=narration_page&utm_medium=related_tools&utm_campaign=narration_tool',
                 icon: '🎤',
                 title: 'AI Voice Generator',
                 desc: 'The full voice generation tool — 40+ voices, all emotion presets, speed control, and generation history.',
@@ -1044,7 +1044,7 @@ export default function NarrationAIVoiceGeneratorPage() {
                 tag: '🔥 Popular',
               },
               {
-                href: 'https://scenith.in/tools/ai-image-generation?utm_source=narration_page&utm_medium=related_tools&utm_campaign=narration_tool',
+                href: 'https://scenith.in/create-ai-content?utm_source=narration_page&utm_medium=related_tools&utm_campaign=narration_tool',
                 icon: '🖼️',
                 title: 'AI Image Generator',
                 desc: 'Create visuals that match your narration. Perfect for YouTube thumbnails and documentary stills.',
@@ -1084,7 +1084,7 @@ export default function NarrationAIVoiceGeneratorPage() {
             Free to start. No credit card. Instant results.
           </p>
           <a
-            href="https://scenith.in/tools/ai-voice-generation?utm_source=narration_page&utm_medium=final_cta&utm_campaign=narration_tool"
+            href="https://scenith.in/create-ai-content?utm_source=narration_page&utm_medium=final_cta&utm_campaign=narration_tool"
             className="primary-cta final-cta-btn"
           >
             <span className="cta-icon" aria-hidden="true">🎙️</span>

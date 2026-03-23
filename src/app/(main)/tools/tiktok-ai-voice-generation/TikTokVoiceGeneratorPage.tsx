@@ -8,7 +8,7 @@ import { API_BASE_URL, CDN_URL } from '../../../config';
 import '../../../../../styles/tools/TikTokVoiceGenerator.css';
 
 const MAIN_TOOL_URL =
-  'https://scenith.in/tools/ai-voice-generation?utm_source=tiktok-voice-page&utm_medium=cta&utm_campaign=tiktok-voice-2026';
+  'https://scenith.in/create-ai-content?utm_source=tiktok-voice-page&utm_medium=cta&utm_campaign=tiktok-voice-2026';
 
 // ─── TYPES ───
 interface Voice {

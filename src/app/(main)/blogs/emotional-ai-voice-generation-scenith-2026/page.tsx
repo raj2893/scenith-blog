@@ -114,8 +114,8 @@ export default function EmotionalAIVoiceGenerationScenith2026() {
 
           <p>
             Experience emotional AI voices now at <strong>Scenith AI Voice Generator</strong>:
-            <a href="https://scenith.in/tools/ai-voice-generation?utm_source=blog&utm_medium=intro&utm_campaign=emotional-ai-voice-2026" target="_blank" rel="noopener noreferrer">
-              https://scenith.in/tools/ai-voice-generation
+            <a href="https://scenith.in/create-ai-content?utm_source=blog&utm_medium=intro&utm_campaign=emotional-ai-voice-2026" target="_blank" rel="noopener noreferrer">
+              https://scenith.in/create-ai-content
             </a>
           </p>
 
@@ -539,7 +539,7 @@ export default function EmotionalAIVoiceGenerationScenith2026() {
             </p>
             <p style={{fontSize: '1.8rem', fontWeight: 900, margin: '3rem 0'}}>
               <a
-                href="https://scenith.in/tools/ai-voice-generation?utm_source=blog&utm_medium=final_cta&utm_campaign=emotional-ai-voice-2026"
+                href="https://scenith.in/create-ai-content?utm_source=blog&utm_medium=final_cta&utm_campaign=emotional-ai-voice-2026"
                 style={{ color: '#ffffff', textDecoration: 'none' }}
                 target="_blank" rel="noopener noreferrer"
               >

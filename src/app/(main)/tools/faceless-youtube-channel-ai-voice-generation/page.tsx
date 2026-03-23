@@ -73,7 +73,7 @@ export const metadata: Metadata = {
 
 const FacelessYouTubeVoicePage = () => {
   // This redirects to the main AI voice generation page with UTM parameters
-  const ctaUrl = 'https://scenith.in/tools/ai-voice-generation?utm_source=faceless-youtube-page&utm_medium=cta-button&utm_campaign=faceless-youtube-traffic&utm_content=2026';
+  const ctaUrl = 'https://scenith.in/create-ai-content?utm_source=faceless-youtube-page&utm_medium=cta-button&utm_campaign=faceless-youtube-traffic&utm_content=2026';
 
   return (
     <div className="fyv-page">

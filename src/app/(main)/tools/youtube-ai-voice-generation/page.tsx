@@ -62,7 +62,7 @@ export const metadata: Metadata = {
 };
 
 const YouTubeTextToSpeechPage = () => {
-  const mainToolUrl = 'https://scenith.in/tools/ai-voice-generation?utm_source=youtube-tts-page&utm_medium=cta-button&utm_campaign=youtube-voice-traffic';
+  const mainToolUrl = 'https://scenith.in/create-ai-content?utm_source=youtube-tts-page&utm_medium=cta-button&utm_campaign=youtube-voice-traffic';
 
   return (
     <div className="youtube-tts-page">

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import '../../../../../styles/tools/YouTubeThumbnailGenerator.css';
 
 const CTA_URL =
-  'https://scenith.in/tools/ai-image-generation?utm_source=youtube-thumbnail-page&utm_medium=cta-button&utm_campaign=thumbnail-tool-traffic';
+  'https://scenith.in/create-ai-content?utm_source=youtube-thumbnail-page&utm_medium=cta-button&utm_campaign=thumbnail-tool-traffic';
 
 const NICHE_DATA = [
   {
@@ -1043,7 +1043,7 @@ export default function YouTubeThumbnailClient() {
                     <small>Add text & effects to your thumbnail</small>
                   </div>
                 </a>
-                <a href="https://scenith.in/tools/ai-voice-generation" className="yt-cross-tool-card">
+                <a href="https://scenith.in/create-ai-content" className="yt-cross-tool-card">
                   <span>🎤</span>
                   <div>
                     <strong>AI Voice Generator</strong>

@@ -151,16 +151,16 @@ export default function AIPosterGeneratorPage() {
           </div>
 
           <div className="apgpage__cta-stack">
-            <a href="https://scenith.in/tools/ai-image-generation?utm_source=ai_poster_generator&utm_medium=hero_cta&utm_campaign=poster_tool_page&utm_content=primary_hero_cta" className="apgpage__cta-hero" aria-label="Open AI Image Generator to create posters">
+            <a href="https://scenith.in/create-ai-content?utm_source=ai_poster_generator&utm_medium=hero_cta&utm_campaign=poster_tool_page&utm_content=primary_hero_cta" className="apgpage__cta-hero" aria-label="Open AI Image Generator to create posters">
               <span className="apgpage__cta-hero-icon">🎨</span>
               <span className="apgpage__cta-hero-body"><strong>Generate My Poster — Free</strong><small>Opens Scenith AI Image Generator · No watermarks · Full commercial use</small></span>
               <span className="apgpage__cta-arrow">→</span>
             </a>
             <div className="apgpage__cta-secondaries">
-              <a href="https://scenith.in/tools/ai-image-generation?utm_source=ai_poster_generator&utm_medium=secondary_cta&utm_campaign=poster_tool_page&utm_content=event_poster" className="apgpage__cta-pill">🎪 Event Poster</a>
-              <a href="https://scenith.in/tools/ai-image-generation?utm_source=ai_poster_generator&utm_medium=secondary_cta&utm_campaign=poster_tool_page&utm_content=movie_art" className="apgpage__cta-pill">🎬 Movie Art</a>
-              <a href="https://scenith.in/tools/ai-image-generation?utm_source=ai_poster_generator&utm_medium=secondary_cta&utm_campaign=poster_tool_page&utm_content=motivation" className="apgpage__cta-pill">💪 Motivational</a>
-              <a href="https://scenith.in/tools/ai-image-generation?utm_source=ai_poster_generator&utm_medium=secondary_cta&utm_campaign=poster_tool_page&utm_content=sale_banner" className="apgpage__cta-pill">🛍️ Sale Banner</a>
+              <a href="https://scenith.in/create-ai-content?utm_source=ai_poster_generator&utm_medium=secondary_cta&utm_campaign=poster_tool_page&utm_content=event_poster" className="apgpage__cta-pill">🎪 Event Poster</a>
+              <a href="https://scenith.in/create-ai-content?utm_source=ai_poster_generator&utm_medium=secondary_cta&utm_campaign=poster_tool_page&utm_content=movie_art" className="apgpage__cta-pill">🎬 Movie Art</a>
+              <a href="https://scenith.in/create-ai-content?utm_source=ai_poster_generator&utm_medium=secondary_cta&utm_campaign=poster_tool_page&utm_content=motivation" className="apgpage__cta-pill">💪 Motivational</a>
+              <a href="https://scenith.in/create-ai-content?utm_source=ai_poster_generator&utm_medium=secondary_cta&utm_campaign=poster_tool_page&utm_content=sale_banner" className="apgpage__cta-pill">🛍️ Sale Banner</a>
             </div>
           </div>
 
@@ -211,7 +211,7 @@ export default function AIPosterGeneratorPage() {
                 <ul className="apgpage__type-examples">
                   {pt.examples.map((ex, i) => <li key={i}><span className="apgpage__ex-icon">📝</span><span>{ex}</span></li>)}
                 </ul>
-                <a href={`https://scenith.in/tools/ai-image-generation?utm_source=ai_poster_generator&utm_medium=type_card&utm_campaign=poster_tool_page&utm_content=${pt.title.toLowerCase().replace(/ /g,'_')}`} className="apgpage__type-cta">Generate {pt.title} →</a>
+                <a href={`https://scenith.in/create-ai-content?utm_source=ai_poster_generator&utm_medium=type_card&utm_campaign=poster_tool_page&utm_content=${pt.title.toLowerCase().replace(/ /g,'_')}`} className="apgpage__type-cta">Generate {pt.title} →</a>
               </article>
             ))}
           </div>
@@ -245,7 +245,7 @@ export default function AIPosterGeneratorPage() {
               <div className="apgpage__formula-example-label">🏆 Full Formula in Action:</div>
               <p className="apgpage__formula-example-text">"Annual college music festival poster, outdoor amphitheatre at night with colorful stage lighting, high-energy electrifying crowd atmosphere, deep purple and electric blue with gold accents, 80s retro concert poster style with modern neon elements, clear empty space at top third for title text, professional poster design, print quality, sharp edges"</p>
             </div>
-            <a href="https://scenith.in/tools/ai-image-generation?utm_source=ai_poster_generator&utm_medium=formula_cta&utm_campaign=poster_tool_page" className="apgpage__cta-hero apgpage__cta-hero--sm">
+            <a href="https://scenith.in/create-ai-content?utm_source=ai_poster_generator&utm_medium=formula_cta&utm_campaign=poster_tool_page" className="apgpage__cta-hero apgpage__cta-hero--sm">
               <span>🎨 Try This Formula Now</span><span className="apgpage__cta-arrow">→</span>
             </a>
           </div>
@@ -383,7 +383,7 @@ export default function AIPosterGeneratorPage() {
                 </div>
                 <ul className="apgpage__industry-list">{ind.usecases.map((uc, i) => <li key={i}>{uc}</li>)}</ul>
                 <div className="apgpage__industry-saving"><span>💰</span><span>{ind.saving}</span></div>
-                <a href={`https://scenith.in/tools/ai-image-generation?utm_source=ai_poster_generator&utm_medium=industry_card&utm_campaign=poster_tool_page&utm_content=${ind.headline.toLowerCase().replace(/ /g,'_')}`} className="apgpage__industry-cta">Generate Posters →</a>
+                <a href={`https://scenith.in/create-ai-content?utm_source=ai_poster_generator&utm_medium=industry_card&utm_campaign=poster_tool_page&utm_content=${ind.headline.toLowerCase().replace(/ /g,'_')}`} className="apgpage__industry-cta">Generate Posters →</a>
               </article>
             ))}
           </div>
@@ -400,7 +400,7 @@ export default function AIPosterGeneratorPage() {
             <ul className="apgpage__midcta-chips">
               {['✅ 8 poster style presets','✅ 7+ AI models including GPT Image 1 & FLUX 1.1 Pro','✅ Full commercial use rights on all plans','✅ No watermarks — ever','✅ Free Image Editor for adding text and resizing'].map(f=><li key={f}>{f}</li>)}
             </ul>
-            <a href="https://scenith.in/tools/ai-image-generation?utm_source=ai_poster_generator&utm_medium=mid_page_cta&utm_campaign=poster_tool_page" className="apgpage__cta-hero">
+            <a href="https://scenith.in/create-ai-content?utm_source=ai_poster_generator&utm_medium=mid_page_cta&utm_campaign=poster_tool_page" className="apgpage__cta-hero">
               <span className="apgpage__cta-hero-icon">🎨</span>
               <span className="apgpage__cta-hero-body"><strong>Create My Poster Now — Free</strong><small>Opens AI Image Generator · Plans from $9/month</small></span>
               <span className="apgpage__cta-arrow">→</span>
@@ -451,7 +451,7 @@ export default function AIPosterGeneratorPage() {
             <div className="apgpage__finalcta-bg" aria-hidden="true" />
             <h2 id="finalcta-title">Your Next Event Deserves<br /><span>a Poster Worth Looking At.</span></h2>
             <p>Describe your vision. Pick your style. Generate your artwork. Add your text. Post it, print it, share it. The entire workflow takes under 15 minutes — and the result is something no template could produce.</p>
-            <a href="https://scenith.in/tools/ai-image-generation?utm_source=ai_poster_generator&utm_medium=final_cta&utm_campaign=poster_tool_page&utm_content=bottom_final" className="apgpage__cta-hero apgpage__cta-hero--xl" aria-label="Generate your AI poster for free">
+            <a href="https://scenith.in/create-ai-content?utm_source=ai_poster_generator&utm_medium=final_cta&utm_campaign=poster_tool_page&utm_content=bottom_final" className="apgpage__cta-hero apgpage__cta-hero--xl" aria-label="Generate your AI poster for free">
               <span className="apgpage__cta-hero-icon">🎨</span>
               <span className="apgpage__cta-hero-body"><strong>Generate My Free AI Poster Now</strong><small>Opens Scenith AI Image Generator · No credit card · Free credits on signup</small></span>
               <span className="apgpage__cta-arrow">→</span>

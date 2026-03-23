@@ -78,7 +78,7 @@ export const metadata: Metadata = {
 
 const ReelsShortsVoicePage = () => {
   const ctaUrl =
-    'https://scenith.in/tools/ai-voice-generation?utm_source=reels-shorts-voice-page&utm_medium=cta-button&utm_campaign=reels-shorts-voice-traffic';
+    'https://scenith.in/create-ai-content?utm_source=reels-shorts-voice-page&utm_medium=cta-button&utm_campaign=reels-shorts-voice-traffic';
 
   return (
     <div className="rsv-page">

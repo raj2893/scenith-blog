@@ -1066,7 +1066,7 @@ export default function AIVideoGeneratorYouTubePage() {
             <h2 id="ytv-related-heading" className="ytv-section-h2">Complete Your YouTube Production Toolkit</h2>
             <p className="ytv-section-desc">AI video is step 2. Here is the full Scenith toolkit for end-to-end YouTube production.</p>
             <div className="ytv-related-grid">
-              <a href="https://scenith.in/tools/ai-voice-generation?utm_source=yt_video_page&utm_medium=related_tools&utm_campaign=cross_tool" className="ytv-related-card">
+              <a href="https://scenith.in/create-ai-content?utm_source=yt_video_page&utm_medium=related_tools&utm_campaign=cross_tool" className="ytv-related-card">
                 <span className="ytv-related-icon">🎙️</span>
                 <div>
                   <h3>AI Voice Generator</h3>
@@ -1074,7 +1074,7 @@ export default function AIVideoGeneratorYouTubePage() {
                 </div>
                 <span className="ytv-related-arrow">→</span>
               </a>
-              <a href="https://scenith.in/tools/ai-image-generation?utm_source=yt_video_page&utm_medium=related_tools&utm_campaign=cross_tool" className="ytv-related-card">
+              <a href="https://scenith.in/create-ai-content?utm_source=yt_video_page&utm_medium=related_tools&utm_campaign=cross_tool" className="ytv-related-card">
                 <span className="ytv-related-icon">🖼️</span>
                 <div>
                   <h3>AI Image Generator</h3>

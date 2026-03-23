@@ -436,7 +436,7 @@ export default function AudiobookAIVoiceGeneratorPage() {
 
           {/* ── MAIN CTA ── */}
           <Link
-            href="https://scenith.in/tools/ai-voice-generation?utm_source=audiobook_ai_voice_generator&utm_medium=hero_cta&utm_campaign=tool_landing_page&utm_content=hero_start_audiobook"
+            href="https://scenith.in/create-ai-content?utm_source=audiobook_ai_voice_generator&utm_medium=hero_cta&utm_campaign=tool_landing_page&utm_content=hero_start_audiobook"
             className="ab-hero-cta"
           >
             <div className="ab-cta-left">
@@ -543,7 +543,7 @@ export default function AudiobookAIVoiceGeneratorPage() {
             come alive in seconds. No commitment. No credit card. Just your manuscript and 30 seconds.
           </p>
           <Link
-            href="https://scenith.in/tools/ai-voice-generation?utm_source=audiobook_ai_voice_generator&utm_medium=mid_cta&utm_campaign=tool_landing_page&utm_content=mid_page_narrate_now"
+            href="https://scenith.in/create-ai-content?utm_source=audiobook_ai_voice_generator&utm_medium=mid_cta&utm_campaign=tool_landing_page&utm_content=mid_page_narrate_now"
             className="ab-mid-cta-btn"
           >
             🎙️ Narrate a Chapter Now — Free
@@ -1130,7 +1130,7 @@ export default function AudiobookAIVoiceGeneratorPage() {
           </p>
           <div className="ab-cta-pair">
             <Link
-              href="https://scenith.in/tools/ai-voice-generation?utm_source=audiobook_ai_voice_generator&utm_medium=bottom_cta&utm_campaign=tool_landing_page&utm_content=bottom_start_free"
+              href="https://scenith.in/create-ai-content?utm_source=audiobook_ai_voice_generator&utm_medium=bottom_cta&utm_campaign=tool_landing_page&utm_content=bottom_start_free"
               className="ab-bottom-cta-primary"
             >
               🎙️ Start Narrating — Free

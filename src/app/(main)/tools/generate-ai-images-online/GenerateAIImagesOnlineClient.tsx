@@ -562,7 +562,7 @@ export default function GenerateAIImagesOnlinePage() {
                 desc: 'Edit your AI-generated images — add text, filters, crop, and export at full resolution.',
               },
               {
-                href: 'https://scenith.in/tools/ai-voice-generation?utm_source=generate-ai-images-online&utm_medium=related_tools',
+                href: 'https://scenith.in/create-ai-content?utm_source=generate-ai-images-online&utm_medium=related_tools',
                 icon: '🎤',
                 title: 'AI Voice Generator',
                 desc: 'Add a professional voiceover to your visuals. 40+ natural voices in 20+ languages.',

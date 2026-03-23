@@ -208,7 +208,7 @@ const schemaJsonLd = {
    STATIC DATA
 ───────────────────────────────────────────── */
 const TOOL_URL =
-  'https://scenith.in/tools/ai-voice-generation?utm_source=documentary_voice_page&utm_medium=cta&utm_campaign=doc_genre_traffic';
+  'https://scenith.in/create-ai-content?utm_source=documentary_voice_page&utm_medium=cta&utm_campaign=doc_genre_traffic';
 
 const DOCUMENTARY_GENRES = [
   {
@@ -1303,7 +1303,7 @@ export default function DocumentaryAIVoiceGeneratorPage() {
                 icon: '🖼️',
                 name: 'AI Image Generator',
                 desc: 'Generate documentary thumbnails, historical recreations, and scene illustrations for your documentary.',
-                href: 'https://scenith.in/tools/ai-image-generation',
+                href: 'https://scenith.in/create-ai-content',
                 cta: 'Generate Images →',
               },
               {
