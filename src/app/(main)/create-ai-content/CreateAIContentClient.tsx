@@ -245,87 +245,139 @@ const STATIC_VIDEO_MODELS = [
   { id: "grok-imagine", name: "Grok Imagine 🎵", cr: 47 },
 ];
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
 const PROMPT_SUGGESTIONS: Record<Tab, { label: string; prompt: string }[]> = {
   voice: [
     {
       label: "🎬 YT Intro",
-      prompt:
-        "What's up everyone! Welcome back — today we're diving into something huge, so let's get into it!",
+      prompt: "What's up everyone! Welcome back to the channel — today we're uncovering something that's going to completely change the way you think. Stay until the end, you won't regret it.",
     },
     {
-      label: "📦 Product Ad",
-      prompt:
-        "Introducing the product that's changing everything. Sleek, powerful, and built for you. Try it today.",
+      label: "🚀 Startup Pitch",
+      prompt: "Every great company started with one bold idea. Ours is simpler than you think — and it's already changing how millions of people work, create, and connect.",
     },
     {
-      label: "🧘 Meditation",
-      prompt:
-        "Close your eyes. Take a deep breath in. Hold it. Now slowly breathe out and let everything go.",
+      label: "🧘 Sleep Meditation",
+      prompt: "Let your body sink into the ground beneath you. With every breath, feel the tension melt away. Tonight, you are safe. Tonight, you rest deeply.",
     },
     {
-      label: "💪 Motivation",
-      prompt:
-        "You have the power to change your story. Every single day is a new chance. So start right now.",
+      label: "📚 Audiobook Narrator",
+      prompt: "It was a cold Tuesday morning when Detective Reyes first noticed the pattern. Three cities. Three crimes. One impossible signature left behind each time.",
     },
     {
-      label: "🛍️ Flash Sale",
-      prompt:
-        "Hurry! Our biggest sale of the year ends tonight. Up to 70% off — don't miss out on these deals.",
+      label: "🎮 Game Trailer",
+      prompt: "In a world where the gods have fallen silent, one warrior carries the last ember of hope. The battle for the realm begins now. Are you ready?",
+    },
+    {
+      label: "📰 News Anchor",
+      prompt: "Good evening. Tonight's top stories — a breakthrough in quantum computing, rising tensions at the summit, and the unexpected discovery reshaping modern medicine.",
+    },
+    {
+      label: "💼 Corporate Training",
+      prompt: "Welcome to Day One. Over the next thirty minutes, you'll learn the three core principles that define how we work, why we exist, and what we expect from every team member.",
+    },
+    {
+      label: "🍕 Food Ad",
+      prompt: "Crispy on the outside. Melting on the inside. Made with ingredients you can actually pronounce. This isn't just food — this is the reason your taste buds exist.",
+    },
+    {
+      label: "🌍 Documentary",
+      prompt: "Deep beneath the Amazon rainforest, a species undiscovered for over a century has been found alive. What scientists saw next rewrote everything we thought we knew.",
+    },
+    {
+      label: "💪 Gym Hype",
+      prompt: "Nobody remembers the days you stayed comfortable. They remember the days you pushed past every limit. Get up. Show up. Go make it count.",
     },
   ],
   image: [
     {
       label: "🌆 Neon Tokyo",
-      prompt:
-        "Aerial neon-lit Tokyo streets at night, rain reflections, cinematic, 8K",
+      prompt: "Aerial cinematic view of neon-lit Tokyo streets at 2AM, rain-soaked roads reflecting purple and pink signs, fog rolling between skyscrapers, 8K ultra-detailed",
     },
     {
-      label: "👁️ Surreal portrait",
-      prompt:
-        "Hyper-realistic portrait of a woman with galaxy eyes, surreal, studio lighting",
+      label: "🧬 DNA City",
+      prompt: "Futuristic megacity built inside a giant DNA double helix structure, bioluminescent plants growing on glass platforms, god-ray lighting, hyperrealistic, 4K",
     },
     {
-      label: "🐉 Fantasy dragon",
-      prompt:
-        "Majestic dragon perched on a cliff at sunset, epic fantasy, detailed scales",
+      label: "🌊 Underwater Palace",
+      prompt: "Ancient Greek marble palace submerged deep underwater, rays of turquoise light filtering through broken columns, colorful fish swimming through archways, cinematic",
     },
     {
-      label: "🤖 Cyber robot",
-      prompt:
-        "Futuristic humanoid robot in neon city rain, cyberpunk, ultra-detailed, 4K",
+      label: "🐺 Arctic Wolf",
+      prompt: "Majestic white arctic wolf standing on a frozen glacier at golden hour, breath visible in cold air, fur detail perfect, National Geographic photography style",
     },
     {
-      label: "🌊 Ocean cliff",
-      prompt:
-        "Dramatic ocean waves crashing on rocky cliffs, golden hour, cinematic photography",
+      label: "🍄 Mushroom Forest",
+      prompt: "Enchanted forest of giant glowing mushrooms at night, tiny fairy lights between the caps, a small wooden cottage with warm amber windows, mist on the ground, fantasy art",
+    },
+    {
+      label: "🤖 Robot Samurai",
+      prompt: "Chrome and obsidian samurai robot standing in a burning feudal Japanese village at dusk, katana drawn, sparks flying, cinematic wide shot, ultra-detailed 8K",
+    },
+    {
+      label: "🪐 Alien Sunset",
+      prompt: "Double sunset on a lush alien planet with purple sky, two suns on the horizon, towering crystalline rock formations, exotic red foliage, cinematic wide angle",
+    },
+    {
+      label: "🏛️ Abandoned Library",
+      prompt: "Centuries-old abandoned gothic library, floor-to-ceiling bookshelves collapsing, vines growing through broken stained glass windows, golden dust in the air, dramatic lighting",
+    },
+    {
+      label: "👁️ Galaxy Portrait",
+      prompt: "Ultra close-up portrait of a woman's face, galaxy and nebula reflected in her eye, single tear rolling down her cheek, dark background, hyper-realistic studio lighting",
+    },
+    {
+      label: "🐉 Ice Dragon",
+      prompt: "Colossal ice dragon emerging from a frozen tundra storm, wings spanning the entire sky, lightning crackling around its horns, blizzard below, epic fantasy cinematic",
+    },
+    {
+      label: "☕ Café Morning",
+      prompt: "Cozy Parisian corner café on a rainy morning, steaming coffee on a marble table, raindrops on the window, soft warm bokeh lights, film photography aesthetic",
+    },
+    {
+      label: "🔬 Nano World",
+      prompt: "Microscopic world of human blood cells rendered as a vibrant alien city, red platelets glowing, white cells as skyscrapers, hyper-detailed scientific illustration",
     },
   ],
   video: [
     {
       label: "🌆 Neon Tokyo",
-      prompt: "Aerial shot of neon-lit Tokyo streets at night, cinematic, 4K",
+      prompt: "Slow cinematic aerial drone descending into neon-lit Tokyo streets at midnight, rain puddles reflecting signs, pedestrians with umbrellas, ultra-detailed 4K",
     },
     {
-      label: "🌊 Ocean drone",
-      prompt:
-        "Drone flying low over crystal blue ocean waves at golden hour, slow motion",
+      label: "🌋 Volcano Eruption",
+      prompt: "Dramatic wide-angle shot of a volcano erupting at night, massive lava flows streaming down dark mountainside, glowing orange against pitch black sky, slow motion",
     },
     {
-      label: "🔥 Cinematic fire",
-      prompt:
-        "Close-up of fire embers floating upward in slow motion, dark background",
+      label: "🦋 Forest Awakening",
+      prompt: "Time-lapse of a misty forest awakening at dawn, sunbeams cutting through ancient trees, butterflies emerging from chrysalises, dew drops on spider webs, ethereal",
     },
     {
-      label: "🌸 Cherry blossom",
-      prompt:
-        "Cherry blossom petals falling in slow motion, soft sunlight, Japanese garden",
+      label: "🚀 Space Launch",
+      prompt: "Cinematic rocket launch at dusk, enormous plume of fire and smoke billowing outward, rocket climbing into deep orange sky leaving a white streak, slow motion dramatic",
     },
     {
-      label: "⚡ Storm clouds",
-      prompt:
-        "Dramatic storm clouds forming over mountains with lightning, epic timelapse",
+      label: "🌊 Bioluminescent Bay",
+      prompt: "Drone flying low over a bioluminescent ocean bay at night, each wave crashing in electric blue light, stars reflected on the water surface, magical and cinematic",
+    },
+    {
+      label: "🏙️ City Timelapse",
+      prompt: "Epic city timelapse from rooftop at sunset to midnight — clouds racing, golden hour melting into blue hour, lights flickering on across the entire skyline, 4K",
+    },
+    {
+      label: "🐋 Deep Ocean",
+      prompt: "Cinematic deep ocean dive, a massive blue whale gliding silently through shafts of light, schools of silver fish parting around it, haunting and beautiful",
+    },
+    {
+      label: "❄️ Snowstorm Walk",
+      prompt: "Single figure walking through a heavy blizzard in slow motion, wind-driven snow swirling dramatically, the silhouette barely visible, cinematic and atmospheric",
+    },
+    {
+      label: "🌸 Petal Storm",
+      prompt: "Thousands of cherry blossom petals swirling in slow motion against a pale sky, a lone figure standing in the centre with eyes closed, soft diffused sunlight, dreamy",
+    },
+    {
+      label: "⚡ Supercell Storm",
+      prompt: "Timelapse of a massive rotating supercell thunderstorm forming over flat plains, lightning striking in every direction, dark teal and purple sky, cinematic wide shot",
     },
   ],
 };
@@ -1272,19 +1324,30 @@ const CreateAIContentClient: React.FC = () => {
                 <div className="cac-cta-row">
                   <select
                     className="cac-chip-dropdown"
+                    disabled={isGenerating}
+                    defaultValue=""
                     onChange={(e) => {
                       const found = PROMPT_SUGGESTIONS.voice.find(s => s.label === e.target.value);
                       if (found) setPrompt(found.prompt);
                       e.target.value = "";
                     }}
-                    disabled={isGenerating}
-                    defaultValue=""
                   >
                     <option value="" disabled>💡 Try a prompt…</option>
                     {PROMPT_SUGGESTIONS.voice.map((s) => (
-                      <option key={s.label} value={s.label}>{s.label}</option>
+                      <option key={s.label} value={s.label}>{s.label} — {s.prompt.slice(0, 38)}…</option>
                     ))}
                   </select>
+                  {/* Mobile: horizontal chip scroll */}
+                  <div className="cac-chips-mobile">
+                    {PROMPT_SUGGESTIONS.voice.map((s) => (
+                      <button
+                        key={s.label}
+                        disabled={isGenerating}
+                        onClick={() => setPrompt(s.prompt)}
+                        className="cac-chip-btn"
+                      >{s.label}</button>
+                    ))}
+                  </div>
                   <div style={{ flex: 1 }} />
                   {!isLoggedIn ? (
                     <button className="cac-generate-btn" onClick={() => setShowLoginModal(true)}>
@@ -1661,9 +1724,20 @@ const CreateAIContentClient: React.FC = () => {
               >
                 <option value="" disabled>💡 Try a prompt…</option>
                 {PROMPT_SUGGESTIONS[activeTab].map((s) => (
-                  <option key={s.label} value={s.label}>{s.label}</option>
+                  <option key={s.label} value={s.label}>{s.label} — {s.prompt.slice(0, 38)}…</option>
                 ))}
               </select>
+              {/* Mobile: horizontal chip scroll */}
+              <div className="cac-chips-mobile">
+                {PROMPT_SUGGESTIONS[activeTab].map((s) => (
+                  <button
+                    key={s.label}
+                    disabled={isGenerating}
+                    onClick={() => setPrompt(s.prompt)}
+                    className="cac-chip-btn"
+                  >{s.label}</button>
+                ))}
+              </div>
               <div style={{ flex: 1 }} />
               {!isLoggedIn ? (
                 <button className="cac-generate-btn" onClick={() => setShowLoginModal(true)}>
