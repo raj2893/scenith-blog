@@ -12,6 +12,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaTimes, FaMoon, FaSun } from "react-icons/fa";
 import { API_BASE_URL, CDN_URL } from "@/app/config";
 import './create-ai-content.css';
+import CustomDropdown from "./CustomDropdown";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -1322,32 +1323,20 @@ const CreateAIContentClient: React.FC = () => {
                   )}
                 </AnimatePresence>
                 <div className="cac-cta-row">
-                  <select
-                    className="cac-chip-dropdown"
+                  <CustomDropdown
+                    className="cac-chip-variant"
+                    placeholder="💡 Try a prompt…"
                     disabled={isGenerating}
-                    defaultValue=""
-                    onChange={(e) => {
-                      const found = PROMPT_SUGGESTIONS.voice.find(s => s.label === e.target.value);
+                    value=""
+                    options={PROMPT_SUGGESTIONS.voice.map(s => ({
+                      value: s.label,
+                      label: `${s.label} — ${s.prompt.slice(0, 42)}…`,
+                    }))}
+                    onChange={(val) => {
+                      const found = PROMPT_SUGGESTIONS.voice.find(s => s.label === val);
                       if (found) setPrompt(found.prompt);
-                      e.target.value = "";
                     }}
-                  >
-                    <option value="" disabled>💡 Try a prompt…</option>
-                    {PROMPT_SUGGESTIONS.voice.map((s) => (
-                      <option key={s.label} value={s.label}>{s.label} — {s.prompt.slice(0, 38)}…</option>
-                    ))}
-                  </select>
-                  {/* Mobile: horizontal chip scroll */}
-                  <div className="cac-chips-mobile">
-                    {PROMPT_SUGGESTIONS.voice.map((s) => (
-                      <button
-                        key={s.label}
-                        disabled={isGenerating}
-                        onClick={() => setPrompt(s.prompt)}
-                        className="cac-chip-btn"
-                      >{s.label}</button>
-                    ))}
-                  </div>
+                  />
                   <div style={{ flex: 1 }} />
                   {!isLoggedIn ? (
                     <button className="cac-generate-btn" onClick={() => setShowLoginModal(true)}>
@@ -1411,28 +1400,28 @@ const CreateAIContentClient: React.FC = () => {
                 {/* Filters — Google only */}
                 {selectedVoiceProvider === "GOOGLE" && (
                   <div style={{ display: "flex", gap: 6, padding: "8px 12px", borderBottom: "1px solid var(--cac-border-soft)" }}>
-                    <select
-                      className="cac-select"
+                    <CustomDropdown
+                      style={{ flex: 1, minWidth: 0 }}
+                      placeholder="🌍 All Languages"
                       value={filterLanguage}
-                      onChange={(e) => setFilterLanguage(e.target.value)}
+                      options={[
+                        { value: "", label: "🌍 All Languages" },
+                        ...uniqueLanguages.map(l => ({ value: l, label: l })),
+                      ]}
+                      onChange={setFilterLanguage}
+                      maxHeight={200}
+                    />
+                    <CustomDropdown
                       style={{ flex: 1, minWidth: 0 }}
-                    >
-                      <option value="">🌍 All Languages</option>
-                      {uniqueLanguages.map((l) => (
-                        <option key={l} value={l}>{l}</option>
-                      ))}
-                    </select>
-                    <select
-                      className="cac-select"
+                      placeholder="👤 All Genders"
                       value={filterGender}
-                      onChange={(e) => setFilterGender(e.target.value)}
-                      style={{ flex: 1, minWidth: 0 }}
-                    >
-                      <option value="">👤 All Genders</option>
-                      {uniqueGenders.map((g) => (
-                        <option key={g} value={g}>{g}</option>
-                      ))}
-                    </select>
+                      options={[
+                        { value: "", label: "👤 All Genders" },
+                        ...uniqueGenders.map(g => ({ value: g, label: g })),
+                      ]}
+                      onChange={setFilterGender}
+                      maxHeight={160}
+                    />
                   </div>
                 )}
                 <div className="cac-voice-list">
@@ -1679,10 +1668,55 @@ const CreateAIContentClient: React.FC = () => {
                         id: m.id, displayName: m.name,
                         creditCosts: [{ duration: 5, audio: false, credits: m.cr }],
                       }))
-                  ).map((m: any) => (
-                    <option key={m.id} value={m.id}>{m.displayName}</option>
-                  ))}
+                  ).map((m: any) => {
+                    const cost = m.creditCosts?.find(
+                      (c: any) => c.duration === videoDuration && c.audio === videoAudioEnabled
+                    )?.credits
+                    ?? m.creditCosts?.find(
+                      (c: any) => c.duration === videoDuration
+                    )?.credits
+                    ?? m.creditCosts?.[0]?.credits;
+                    return (
+                      <option key={m.id} value={m.id}>
+                        {m.displayName}{cost != null ? ` · ${cost}cr` : ''}
+                      </option>
+                    );
+                  })}
                 </select>
+                {(() => {
+                  const modelData = (isLoggedIn && videoModels.length > 0 ? videoModels : [])
+                    .find((m: any) => m.id === selectedVideoModel);
+                  const isGrok = selectedVideoModel?.toLowerCase().includes('grok');
+                  const supportsAudio = modelData?.supportsAudio ?? true;
+                
+                  if (isGrok && supportsAudio) {
+                    return (
+                      <span title="Audio always included with Grok Imagine" style={{
+                        display: 'flex', alignItems: 'center', gap: 4,
+                        padding: '5px 9px', borderRadius: 8, flexShrink: 0,
+                        background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)',
+                        fontSize: 11, color: 'var(--cac-green)', fontFamily: 'inherit', fontWeight: 600,
+                      }}>🎵 Audio ✓</span>
+                    );
+                  }
+                  if (!isGrok && supportsAudio) {
+                    return (
+                      <label style={{ display: 'flex', alignItems: 'center', gap: 5, cursor: 'pointer', flexShrink: 0 }}
+                        title="AI-generated audio (costs more credits)">
+                        <input
+                          type="checkbox"
+                          checked={videoAudioEnabled}
+                          onChange={(e) => setVideoAudioEnabled(e.target.checked)}
+                          style={{ accentColor: 'var(--cac-accent)', width: 14, height: 14 }}
+                        />
+                        <span style={{ fontSize: 11, color: 'var(--cac-text-2)', fontWeight: 600, whiteSpace: 'nowrap' }}>
+                          🎵 Audio
+                        </span>
+                      </label>
+                    );
+                  }
+                  return null;
+                })()}                 
                 <div className="cac-toggle-group">
                   {VIDEO_DURATION_OPTIONS.map((d) => (
                     <button
@@ -1696,7 +1730,7 @@ const CreateAIContentClient: React.FC = () => {
                   {VIDEO_ASPECT_RATIOS.map((ar) => (
                     <option key={ar.value} value={ar.value}>{ar.icon} {ar.label}</option>
                   ))}
-                </select>
+                </select>               
                 <span className="cac-credit-pill">
                   ⚡ {isLoggedIn ? videoCredits?.balance ?? "..." : 50} cr
                 </span>
@@ -1712,32 +1746,20 @@ const CreateAIContentClient: React.FC = () => {
             </AnimatePresence>
 
             <div className="cac-cta-row">
-              <select
-                className="cac-chip-dropdown"
-                onChange={(e) => {
-                  const found = PROMPT_SUGGESTIONS[activeTab].find(s => s.label === e.target.value);
-                  if (found) setPrompt(found.prompt);
-                  e.target.value = "";
-                }}
+              <CustomDropdown
+                className="cac-chip-variant"
+                placeholder="💡 Try a prompt…"
                 disabled={isGenerating}
-                defaultValue=""
-              >
-                <option value="" disabled>💡 Try a prompt…</option>
-                {PROMPT_SUGGESTIONS[activeTab].map((s) => (
-                  <option key={s.label} value={s.label}>{s.label} — {s.prompt.slice(0, 38)}…</option>
-                ))}
-              </select>
-              {/* Mobile: horizontal chip scroll */}
-              <div className="cac-chips-mobile">
-                {PROMPT_SUGGESTIONS[activeTab].map((s) => (
-                  <button
-                    key={s.label}
-                    disabled={isGenerating}
-                    onClick={() => setPrompt(s.prompt)}
-                    className="cac-chip-btn"
-                  >{s.label}</button>
-                ))}
-              </div>
+                value=""
+                options={PROMPT_SUGGESTIONS[activeTab].map(s => ({
+                  value: s.label,
+                  label: `${s.label} — ${s.prompt.slice(0, 42)}…`,
+                }))}
+                onChange={(val) => {
+                  const found = PROMPT_SUGGESTIONS[activeTab].find(s => s.label === val);
+                  if (found) setPrompt(found.prompt);
+                }}
+              />
               <div style={{ flex: 1 }} />
               {!isLoggedIn ? (
                 <button className="cac-generate-btn" onClick={() => setShowLoginModal(true)}>
