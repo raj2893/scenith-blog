@@ -1102,7 +1102,9 @@ const CreateAIContentClient: React.FC = () => {
     } catch (err: any) {
       if (
         err.response?.data === "FREE_VIDEO_LIMIT_REACHED" ||
-        err.response?.status === 402
+        err.response?.status === 402 ||
+        err.response?.status === 403 ||
+        (typeof err.response?.data === 'string' && err.response.data.includes("FREE LIMIT REACHED, PLEASE UPGRADE."))
       ) {
         setShowFreeVideoModal(true);
       } else {
@@ -1737,6 +1739,33 @@ const CreateAIContentClient: React.FC = () => {
               </div>
             )}
 
+            {activeTab === "video" && isLoggedIn && videoCredits?.planType === "FREE" && videoCredits?.freeVideoUsed && (
+              <div style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                gap: 12, padding: '10px 14px',
+                background: 'linear-gradient(135deg, rgba(124,58,237,0.10), rgba(219,39,119,0.08))',
+                border: '1.5px solid rgba(124,58,237,0.30)', borderRadius: 12,
+                margin: '0 0 4px',
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ fontSize: 20 }}>🎬</span>
+                  <div>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: '#7c3aed' }}>Free video generation used</div>
+                    <div style={{ fontSize: 11, color: 'var(--cac-text-2)', marginTop: 1 }}>
+                      Free accounts get 1 lifetime video. Upgrade to keep creating.
+                    </div>
+                  </div>
+                </div>
+                <a href="/pricing" style={{
+                  flexShrink: 0, padding: '6px 14px', borderRadius: 8, fontSize: 11, fontWeight: 700,
+                  background: 'linear-gradient(135deg, #6355dc, #8b5cf6)', color: '#fff',
+                  textDecoration: 'none', whiteSpace: 'nowrap',
+                }}>
+                  Upgrade →
+                </a>
+              </div>
+            )}
+
             <AnimatePresence>
               {error && (
                 <motion.div className="cac-error" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
@@ -1769,6 +1798,10 @@ const CreateAIContentClient: React.FC = () => {
                 <button className="cac-generate-btn" onClick={handleGenerateImage}
                   disabled={isGeneratingImage || !prompt.trim() || (imageGenMode === 'image' && !inputImageFile)}>
                   {isGeneratingImage ? (<><span className="cac-btn-spinner" />Generating…</>) : "🖼️ Generate Image"}
+                </button>
+              ) : activeTab === "video" && videoCredits?.planType === "FREE" && videoCredits?.freeVideoUsed ? (
+                <button className="cac-generate-btn" disabled style={{ opacity: 0.5, cursor: 'not-allowed' }}>
+                  🔒 1 Free Video Used
                 </button>
               ) : (
                 <button className="cac-generate-btn" onClick={handleGenerateVideo}
