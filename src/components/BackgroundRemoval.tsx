@@ -296,11 +296,12 @@ const [usageStats, setUsageStats] = useState<{
               setPreviewUrl(
                 `${CDN_URL}/image/standalone/${userId}/original/${image.originalFileName}`
               );
-              setProcessedImage(image);
+             setProcessedImage(image);
               setStatus('success');
               
               // Refresh usage stats after successful processing
               await fetchUsageStats();
+              window.dispatchEvent(new Event('creditsUpdated'));
             } else if (image.status === 'FAILED') {
               setStatus('error');
               setErrorMessage(image.errorMessage || 'Background removal failed.');

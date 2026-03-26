@@ -1270,6 +1270,7 @@ const ElementsLibraryClient: React.FC = () => {
           onClose={() => {
             setDownloadModalOpen(false);
             setSelectedElementForDownload(null);
+            window.dispatchEvent(new Event('creditsUpdated'));
           }}
           elementId={selectedElementForDownload.id}
           elementName={selectedElementForDownload.name}

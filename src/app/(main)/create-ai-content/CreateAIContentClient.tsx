@@ -288,6 +288,14 @@ const PROMPT_SUGGESTIONS: Record<Tab, { label: string; prompt: string }[]> = {
       label: "💪 Gym Hype",
       prompt: "Nobody remembers the days you stayed comfortable. They remember the days you pushed past every limit. Get up. Show up. Go make it count.",
     },
+    {
+      label: "🎓 E-Learning",
+      prompt: "In this lesson, we'll break down exactly how photosynthesis works — step by step, in plain English. By the end, you'll be able to explain it to anyone. Let's get started.",
+    },
+    {
+      label: "🎙️ Podcast Intro",
+      prompt: "Welcome back to another episode. I'm your host, and today we're sitting down with someone who's been quietly changing the way we think about productivity, creativity, and what it actually means to do your best work.",
+    },
   ],
   image: [
     {
@@ -338,6 +346,18 @@ const PROMPT_SUGGESTIONS: Record<Tab, { label: string; prompt: string }[]> = {
       label: "🔬 Nano World",
       prompt: "Microscopic world of human blood cells rendered as a vibrant alien city, red platelets glowing, white cells as skyscrapers, hyper-detailed scientific illustration",
     },
+    {
+      label: "👗 Fashion Portrait",
+      prompt: "High-fashion editorial portrait of a woman in a flowing silk gown, dramatic side lighting, black marble background, Vogue magazine style, sharp focus, ultra-detailed 4K",
+    },
+    {
+      label: "🏠 Interior Design",
+      prompt: "Luxury minimalist living room at golden hour, floor-to-ceiling windows overlooking a forest, warm oak furniture, cream linen sofas, architectural digest photography style",
+    },
+    {
+      label: "🍽️ Food Photography",
+      prompt: "Overhead flat lay of a rustic Italian pasta dish, fresh basil leaves, parmesan shavings, olive oil drizzle on weathered wood surface, warm natural light, food magazine style",
+    },
   ],
   video: [
     {
@@ -379,6 +399,18 @@ const PROMPT_SUGGESTIONS: Record<Tab, { label: string; prompt: string }[]> = {
     {
       label: "⚡ Supercell Storm",
       prompt: "Timelapse of a massive rotating supercell thunderstorm forming over flat plains, lightning striking in every direction, dark teal and purple sky, cinematic wide shot",
+    },
+    {
+      label: "🧍 Street Story",
+      prompt: "Slow motion close-up of a street musician playing violin in the rain, water droplets catching the light, blurred city traffic in the background, emotional and cinematic",
+    },
+    {
+      label: "📦 Product Showcase",
+      prompt: "Cinematic 360-degree rotation of a luxury perfume bottle on a reflective black surface, dramatic spotlight, smoke wisps curling around the base, ultra-detailed product photography style",
+    },
+    {
+      label: "🌀 Motion Art",
+      prompt: "Abstract fluid simulation of electric blue and gold ink dissolving in slow motion, swirling vortex patterns, dark background, macro lens, hypnotic and cinematic",
     },
   ],
 };
@@ -859,6 +891,7 @@ const CreateAIContentClient: React.FC = () => {
       if (!res.ok) throw new Error(await res.text());
       const data = await res.json();
       setGeneratedAudio(`${CDN_URL}/${data.audioPath}`);
+      window.dispatchEvent(new Event('creditsUpdated'));
       setTimeout(() => {
         resultRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
       }, 150);      
@@ -897,7 +930,7 @@ const CreateAIContentClient: React.FC = () => {
           clearInterval(imagePollingRef.current!);
           imagePollingRef.current = null;
           if (job.status === "COMPLETED" && job.imagePath) {
-            setGeneratedImages([
+           setGeneratedImages([
               {
                 id: job.id,
                 imagePath: job.imagePath,
@@ -906,6 +939,7 @@ const CreateAIContentClient: React.FC = () => {
                 createdAt: job.createdAt,
               },
             ]);
+            window.dispatchEvent(new Event('creditsUpdated'));
             setTimeout(() => {
               resultRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
             }, 150);            
@@ -1013,11 +1047,12 @@ const CreateAIContentClient: React.FC = () => {
         if (job.status === "COMPLETED" || job.status === "FAILED") {
           clearInterval(videoPollingRef.current!);
           videoPollingRef.current = null;
-          setIsGeneratingVideo(false);
+        setIsGeneratingVideo(false);
           setVideoFromImageUrl(null);
           setVideoInputFile(null);
           setVideoInputPreview(null);
           setVideoGenMode('text');
+          window.dispatchEvent(new Event('creditsUpdated'));
           // Refresh credits
           axios
             .get(`${API_BASE_URL}/api/video-gen/credits`, {
@@ -1304,7 +1339,7 @@ const CreateAIContentClient: React.FC = () => {
                       ? ttsUsage?.isPaid
                         ? `⚡ ${ttsUsage.balance} cr`
                         : `⚡ ${((ttsUsage?.freeVoiceCharsLimit ?? 0) - (ttsUsage?.freeVoiceCharsUsed ?? 0)).toLocaleString()} chars`
-                      : "⚡ 50 free credits"}
+                      : "⚡ 25 free credits"}
                   </span>
                   {selectedVoice && (
                     <span className="cac-selected-voice-pill">
@@ -1577,7 +1612,7 @@ const CreateAIContentClient: React.FC = () => {
                   </select>
                 )}
                 <span className="cac-credit-pill">
-                  ⚡ {isLoggedIn ? imageUsage?.balance ?? "..." : 50} cr · {imageCreditCost}cr/img
+                  ⚡ {isLoggedIn ? imageUsage?.balance ?? "..." : 25} cr · {imageCreditCost}cr/img
                 </span>
               </div>
             )}
@@ -1734,7 +1769,7 @@ const CreateAIContentClient: React.FC = () => {
                   ))}
                 </select>               
                 <span className="cac-credit-pill">
-                  ⚡ {isLoggedIn ? videoCredits?.balance ?? "..." : 50} cr
+                  ⚡ {isLoggedIn ? videoCredits?.balance ?? "..." : 25} cr
                 </span>
               </div>
             )}
@@ -2103,7 +2138,7 @@ const CreateAIContentClient: React.FC = () => {
             <details>
               <summary>Is this free to use?</summary>
               <p>
-                Yes — you get 50 free credits on sign-up, no card required. Credits
+                Yes — you get 25 free credits on sign-up, no card required. Credits
                 cover voice, image, and video generation.
               </p>
             </details>
@@ -2285,7 +2320,7 @@ const CreateAIContentClient: React.FC = () => {
             
             <details>
               <summary>Is Scenith AI Content Creator free to use?</summary>
-              <p>Yes — you get 50 free credits when you sign up, with no credit card required. Free credits work across voice, image, and video generation. Paid plans start at $9/month and include 300 credits plus access to all AI models.</p>
+              <p>Yes — you get 25 free credits when you sign up, with no credit card required. Free credits work across voice, image, and video generation. Paid plans start at $9/month and include 300 credits plus access to all AI models.</p>
             </details>
             
             <details>

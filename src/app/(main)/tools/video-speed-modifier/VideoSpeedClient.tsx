@@ -817,6 +817,7 @@ const getAvailableQualities = (role: string): string[] => {
                   headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
                 });
                 setPlanLimits(limitsResponse.data);
+                window.dispatchEvent(new Event('creditsUpdated'));
               } catch (e) {
                 console.error('Failed to refresh plan limits:', e);
               }

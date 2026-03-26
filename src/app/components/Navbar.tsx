@@ -50,7 +50,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
   const [loginSuccess, setLoginSuccess] = useState<string>('');
   const [navbarLoginTriggered, setNavbarLoginTriggered] = useState(false);
   const [isUtilitiesDropdownOpen, setIsUtilitiesDropdownOpen] = useState(false);
-  const [credits, setCredits] = useState<number>(50);
+  const [credits, setCredits] = useState<number>(25);
   const [isCreditsDropdownOpen, setIsCreditsDropdownOpen] = useState(false);
   const [isAdminUser, setIsAdminUser] = useState(false);
 
@@ -74,7 +74,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
             picture: response.data.picture || null,
           });
           setIsLoggedIn(true);
-          setCredits(response.data.creditBalance ?? 50);
+          setCredits(response.data.creditBalance ?? 25);
           setIsAdminUser(response.data.role === 'ADMIN');
         } catch (error) {
           console.error('Auth check failed:', error);
@@ -82,12 +82,12 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
           localStorage.removeItem('userProfile');
           setIsLoggedIn(false);
           setUserProfile(null);
-          setCredits(50);
+          setCredits(25);
         }
       } else {
         setIsLoggedIn(false);
         setUserProfile(null);
-        setCredits(50);
+        setCredits(25);
       }
     };
 
@@ -104,7 +104,8 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
     };
 
     window.addEventListener('userLoggedIn', handleLoginEvent);
-    window.addEventListener('storage', handleStorageChange);
+window.addEventListener('creditsUpdated', handleLoginEvent);  // ← add this
+window.addEventListener('storage', handleStorageChange);
 
     let pollInterval: NodeJS.Timeout | null = null;
 
@@ -134,10 +135,11 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
     }
 
     return () => {
-      window.removeEventListener('userLoggedIn', handleLoginEvent);
-      window.removeEventListener('storage', handleStorageChange);
-      stopPolling();
-    };
+  window.removeEventListener('userLoggedIn', handleLoginEvent);
+  window.removeEventListener('creditsUpdated', handleLoginEvent);  // ← add this
+  window.removeEventListener('storage', handleStorageChange);
+  stopPolling();
+};
   }, [isLoggedIn]);
 
   useEffect(() => {
