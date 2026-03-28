@@ -452,16 +452,54 @@ window.addEventListener('storage', handleStorageChange);
                 {isCreditsDropdownOpen && (
                   <div className="credits-dropdown">
                     <div className="credits-dropdown-header">Credit Balance</div>
-                    <div className="credits-dropdown-amount">⚡ {credits} remaining</div>
+                    <div className="credits-dropdown-amount">⚡ {credits > 9999 ? '9,999+' : credits.toLocaleString()} cr</div>
                     <div className="credits-dropdown-plan">
                       Plan: <strong>{isLoggedIn ? (userProfile ? 'Pro' : 'Free') : 'Free'}</strong>
                     </div>
+
+                    {/* Compact generation summary */}
+                    <div style={{ margin: '8px 0 6px', borderTop: '1px solid rgba(99,85,220,0.1)', paddingTop: 8 }}>
+                      {credits === 0 ? (
+                        <div style={{ fontSize: 11, color: '#ef4444', fontWeight: 600, textAlign: 'center' }}>
+                          😶 No credits — top up now
+                        </div>
+                      ) : (() => {
+                        const isHuge = credits > 500;
+                        const images = isHuge ? '99+' : String(Math.floor(credits / 10));
+                        const videos = Math.floor(credits / 46);
+                        const voiceStr = isHuge ? '99+' : `${Math.min(Math.floor(credits * 100 / 200), 999)}m`;
+                        return (
+                          <>
+                            <div style={{ display: 'flex', gap: 5, marginBottom: credits <= 50 ? 6 : 0 }}>
+                              <div style={{ flex: 1, textAlign: 'center', background: 'rgba(92,77,232,0.07)', borderRadius: 7, padding: '5px 4px' }}>
+                                <div style={{ fontSize: 14, fontWeight: 800, color: '#5c4de8' }}>{images}</div>
+                                <div style={{ fontSize: 9, color: '#7070a0' }}>🖼️ imgs</div>
+                              </div>
+                              <div style={{ flex: 1, textAlign: 'center', background: 'rgba(92,77,232,0.07)', borderRadius: 7, padding: '5px 4px' }}>
+                                <div style={{ fontSize: 14, fontWeight: 800, color: '#5c4de8' }}>{voiceStr}</div>
+                                <div style={{ fontSize: 9, color: '#7070a0' }}>🎙️ voice</div>
+                              </div>
+                              <div style={{ flex: 1, textAlign: 'center', background: videos >= 1 ? 'rgba(92,77,232,0.07)' : 'rgba(245,158,11,0.06)', borderRadius: 7, padding: '5px 4px' }}>
+                                <div style={{ fontSize: 14, fontWeight: 800, color: videos >= 1 ? '#5c4de8' : '#d97706' }}>{videos >= 1 ? (isHuge ? '99+' : videos) : '—'}</div>
+                                <div style={{ fontSize: 9, color: '#7070a0' }}>🎬 vids</div>
+                              </div>
+                            </div>
+                            {!isHuge && credits <= 50 && (
+                              <div style={{ fontSize: 10, color: '#7c3aed', fontWeight: 600, textAlign: 'center', background: 'rgba(124,58,237,0.06)', borderRadius: 6, padding: '3px 6px' }}>
+                                🔥 Low — upgrade for 300 cr/mo
+                              </div>
+                            )}
+                          </>
+                        );
+                      })()}
+                    </div>
+
                     <button
                       type="button"
                       className="credits-upgrade-cta"
                       onClick={() => navigate('/pricing')}
                     >
-                      Upgrade Plan
+                      Get More Credits →
                     </button>
                   </div>
                 )}
