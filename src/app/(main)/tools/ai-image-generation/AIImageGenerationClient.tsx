@@ -164,21 +164,21 @@ const getCreditCost = (modelId: string, size: string, quality: string, resolutio
   const r = resolution || '2k';
   switch (modelId) {
     case 'GPT_IMAGE_1_MINI':
-      if (q === 'draft')   return 2;
-      if (q === 'premium') return nonSquare ? 10 : 8;
-      return 3; // standard
+      if (q === 'draft')   return 10;
+      if (q === 'premium') return nonSquare ? 47 : 32;
+      return nonSquare ? 12 : 15; // standard
     case 'GPT_IMAGE_1_MEDIUM':
-      if (q === 'draft')   return nonSquare ? 5 : 4;
-      if (q === 'premium') return nonSquare ? 47 : 31;
-      return nonSquare ? 16 : 12; // standard
+      if (q === 'draft')   return 10;
+      if (q === 'premium') return nonSquare ? 47 : 32;
+      return nonSquare ? 12 : 15; // standard
     case 'NANO_BANANA_PRO':
-      return r === '4k' ? 45 : 25;
-    case 'IMAGEN_4_FAST':      return 3;
-    case 'IMAGEN_4_STANDARD':  return 7;
-    case 'FLUX_1_1_PRO':       return 7;
-    case 'STABILITY_AI_CORE':  return 3;
+      return r === '4k' ? 46 : 26;
+    case 'IMAGEN_4_FAST':      return 10;
+    case 'IMAGEN_4_STANDARD':  return 15;
+    case 'FLUX_1_1_PRO':       return 15;
+    case 'STABILITY_AI_CORE':  return 15;
     case 'GROK_AURORA':        return 14;
-    default: return 3;
+    default: return 15;
   }
 };
 

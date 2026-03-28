@@ -204,28 +204,27 @@ const getImageCreditCost = (
   const q = quality || "standard";
   switch (modelId) {
     case "GPT_IMAGE_1_MINI":
-      if (q === "draft") return 2;
-      if (q === "premium") return nonSquare ? 10 : 8;
-      return 3;
+      if (q === "draft") return 10;
+      if (q === "premium") return nonSquare ? 47 : 32;
+      return nonSquare ? 12 : 15;
     case "GPT_IMAGE_1_MEDIUM":
-      if (q === "draft") return nonSquare ? 5 : 4;
-      if (q === "premium") return nonSquare ? 47 : 31;
-      return nonSquare ? 16 : 12;
+      if (q === "draft") return 10;
+      if (q === "premium") return nonSquare ? 47 : 32;
+      return nonSquare ? 12 : 15;
     case "IMAGEN_4_FAST":
-      return 3;
+      return 10;
     case "IMAGEN_4_STANDARD":
-      return 7;
+      return 15;
     case "FLUX_1_1_PRO":
-      return 7;
+      return 15;
     case "STABILITY_AI_CORE":
-      return 3;
+      return 15;
     case "GROK_AURORA":
       return 14;
     default:
-      return 3;
+      return 15;
   }
 };
-
 const VIDEO_ASPECT_RATIOS = [
   { value: "16:9", label: "16:9", icon: "🖥️" },
   { value: "9:16", label: "9:16", icon: "📱" },
@@ -547,6 +546,9 @@ const CreateAIContentClient: React.FC = () => {
   const [inputImageFile, setInputImageFile] = useState<File | null>(null);
   const [inputImagePreview, setInputImagePreview] = useState<string | null>(null);
   const inputImageRef = useRef<HTMLInputElement>(null);
+  const [imageHistory, setImageHistory] = useState<GeneratedImage[]>([]);
+  const [showImageHistory, setShowImageHistory] = useState(false);
+  const [imageHistoryLoading, setImageHistoryLoading] = useState(false);
 
   // ─────────────────── VIDEO STATE ────────────────────────────────────────
   const [videoCredits, setVideoCredits] = useState<VideoCredits | null>(null);
@@ -718,6 +720,14 @@ const CreateAIContentClient: React.FC = () => {
       .then((r) => r.json())
       .then(setImageUsage)
       .catch(() => {});
+
+    // Image history
+    setImageHistoryLoading(true);
+    fetch(`${API_BASE_URL}/api/sole-image-gen/history`, { headers: h })
+      .then((r) => r.json())
+      .then(setImageHistory)
+      .catch(() => {})
+      .finally(() => setImageHistoryLoading(false));
 
     // Video models + credits
     Promise.all([
@@ -944,14 +954,13 @@ const CreateAIContentClient: React.FC = () => {
               resultRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
             }, 150);            
             // Refresh usage
+            const tok = localStorage.getItem("token");
             fetch(`${API_BASE_URL}/api/sole-image-gen/usage`, {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-            })
-              .then((r) => r.json())
-              .then(setImageUsage)
-              .catch(() => {});
+              headers: { Authorization: `Bearer ${tok}` },
+            }).then((r) => r.json()).then(setImageUsage).catch(() => {});
+            fetch(`${API_BASE_URL}/api/sole-image-gen/history`, {
+              headers: { Authorization: `Bearer ${tok}` },
+            }).then((r) => r.json()).then(setImageHistory).catch(() => {});
           }
           setIsGeneratingImage(false);
         }
@@ -1339,7 +1348,7 @@ const CreateAIContentClient: React.FC = () => {
                       ? ttsUsage?.isPaid
                         ? `⚡ ${ttsUsage.balance} cr`
                         : `⚡ ${((ttsUsage?.freeVoiceCharsLimit ?? 0) - (ttsUsage?.freeVoiceCharsUsed ?? 0)).toLocaleString()} chars`
-                      : "⚡ 25 free credits"}
+                      : "⚡ 50 free credits"}
                   </span>
                   {selectedVoice && (
                     <span className="cac-selected-voice-pill">
@@ -1612,7 +1621,7 @@ const CreateAIContentClient: React.FC = () => {
                   </select>
                 )}
                 <span className="cac-credit-pill">
-                  ⚡ {isLoggedIn ? imageUsage?.balance ?? "..." : 25} cr · {imageCreditCost}cr/img
+                  ⚡ {isLoggedIn ? imageUsage?.balance ?? "..." : 50} cr · {imageCreditCost}cr/img
                 </span>
               </div>
             )}
@@ -1769,7 +1778,7 @@ const CreateAIContentClient: React.FC = () => {
                   ))}
                 </select>               
                 <span className="cac-credit-pill">
-                  ⚡ {isLoggedIn ? videoCredits?.balance ?? "..." : 25} cr
+                  ⚡ {isLoggedIn ? videoCredits?.balance ?? "..." : 50} cr
                 </span>
               </div>
             )}
@@ -2026,6 +2035,117 @@ const CreateAIContentClient: React.FC = () => {
               </div>
             )}
           </motion.div>
+        )}
+
+        {/* ── Image History ── */}
+        {activeTab === "image" && isLoggedIn && (
+          <div style={{ marginBottom: 24 }}>
+            <button
+              onClick={() => setShowImageHistory(v => !v)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 8,
+                padding: '10px 16px', borderRadius: 10, border: '1.5px solid var(--cac-border)',
+                background: 'var(--cac-surface)', color: 'var(--cac-accent)',
+                fontSize: 13, fontWeight: 700, cursor: 'pointer', width: '100%',
+                justifyContent: 'space-between',
+              }}
+            >
+              <span>🖼️ Your Past Generations {imageHistory.length > 0 ? `(${imageHistory.length})` : ''}</span>
+              <span>{showImageHistory ? '▲ Hide' : '▼ Show'}</span>
+            </button>
+
+            {showImageHistory && (
+              <div style={{ marginTop: 12 }}>
+                {imageHistoryLoading ? (
+                  <div style={{ textAlign: 'center', padding: 24, color: 'var(--cac-muted)' }}>
+                    <div className="cac-spinner" style={{ margin: '0 auto 8px' }} />
+                    Loading history…
+                  </div>
+                ) : imageHistory.length === 0 ? (
+                  <div style={{ textAlign: 'center', padding: 24, color: 'var(--cac-muted)', fontSize: 13 }}>
+                    No images generated yet. Create your first one above!
+                  </div>
+                ) : (
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+                    gap: 12,
+                  }}>
+                    {imageHistory.map((img) => (
+                      <div key={img.id} style={{
+                        borderRadius: 12, overflow: 'hidden',
+                        border: '1px solid var(--cac-border)',
+                        background: 'var(--cac-surface)',
+                      }}>
+                        <div style={{ position: 'relative', aspectRatio: '1', overflow: 'hidden' }}>
+                          <img
+                            src={img.imagePath}
+                            alt={img.prompt}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                            loading="lazy"
+                          />
+                        </div>
+                        <div style={{ padding: '8px 10px' }}>
+                          <p style={{
+                            fontSize: 11, color: 'var(--cac-text-2)', margin: '0 0 8px',
+                            overflow: 'hidden', textOverflow: 'ellipsis',
+                            display: '-webkit-box', WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical' as const,
+                          }}>
+                            {img.prompt}
+                          </p>
+                          <div style={{ display: 'flex', gap: 6, flexDirection: 'column' }}>
+                            <button
+                              onClick={() => {
+                                setVideoFromImageUrl(img.imagePath);
+                                setActiveTab('video');
+                                setPrompt(img.prompt || '');
+                                setShowImageHistory(false);
+                                setTimeout(() => {
+                                  resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                }, 100);
+                              }}
+                              style={{
+                                padding: '6px 10px', borderRadius: 8, border: 'none',
+                                background: 'linear-gradient(135deg, #7c3aed, #db2777)',
+                                color: '#fff', fontSize: 11, fontWeight: 700,
+                                cursor: 'pointer', width: '100%',
+                              }}
+                            >
+                              🎬 Make Video →
+                            </button>
+                            <button
+                              onClick={async () => {
+                                const res = await fetch(img.imagePath);
+                                const blob = await res.blob();
+                                const url = URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = `ai-image-${img.id}.png`;
+                                document.body.appendChild(a);
+                                a.click();
+                                document.body.removeChild(a);
+                                URL.revokeObjectURL(url);
+                              }}
+                              style={{
+                                padding: '6px 10px', borderRadius: 8,
+                                border: '1px solid var(--cac-border)',
+                                background: 'transparent', color: 'var(--cac-accent)',
+                                fontSize: 11, fontWeight: 600,
+                                cursor: 'pointer', width: '100%',
+                              }}
+                            >
+                              📥 Download
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         )}
 
         {/* ── Demo Images Marquee (shown on image tab) ── */}

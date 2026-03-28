@@ -631,7 +631,7 @@ const FAQ = [
 ───────────────────────────────────────────────────────────────────── */
 const CREDIT_USES = [
   { icon: '🎙️', count: '1 cr', unit: 'per 100 chars', label: 'AI Voice Generation' },
-  { icon: '🖼️', count: '2 cr', unit: 'per image', label: 'AI Image (standard)' },
+  { icon: '🖼️', count: '10–15 cr', unit: 'per image', label: 'AI Image (standard)' },
   { icon: '🎬', count: '50–100 cr', unit: 'per video', label: 'AI Video Generation' },
   { icon: '✂️', count: '10 cr', unit: 'per image', label: 'Background Removal' },
   { icon: '⚡', count: '10 cr', unit: 'per video', label: 'Speed Video' },
@@ -828,7 +828,7 @@ export default function PricingPageClient() {
   const getPlans = (): PricingPlan[] => {
     if (isIndianUser === null) {
       return [
-        { name: 'Starter Forge', role: 'BASIC', price: 0, currency: 'FREE', ttsLimit: 600, tagline: 'Try every tool, no card required.', features: ['25 credits/mo', '600 voice chars/mo', '5 speed videos + 5 BG removals', '10 SVG downloads', '720p export with watermark'], outcomes: [{ icon: '🎙️', label: 'Voice (600 chars)' }, { icon: '✂️', label: '5 BG removals' }] },
+        { name: 'Starter Forge', role: 'BASIC', price: 0, currency: 'FREE', ttsLimit: 600, tagline: 'Try every tool, no card required.', features: ['50 credits/mo', '600 voice chars/mo', '5 speed videos + 5 BG removals', '10 SVG downloads', '720p export with watermark'], outcomes: [{ icon: '🎙️', label: 'Voice (600 chars)' }, { icon: '✂️', label: '5 BG removals' }] },
         { name: 'Creator Lite', role: 'CREATOR_LITE', price: 0, currency: 'LOADING', ttsLimit: 50000, tagline: 'Your first real creative toolkit.', features: ['300 credits/mo · 50,000 voice chars', 'All AI models unlocked', '1080p · No watermark', '30 speed videos · 100 BG removals', 'Unlimited SVGs · Topups available'], outcomes: [{ icon: '🎙️', label: '~500 voice segments' }, { icon: '🖼️', label: '~150 AI images' }, { icon: '🎬', label: '3–6 AI videos' }] },
         { name: 'Creator Spark', role: 'CREATOR', price: 0, currency: 'LOADING', ttsLimit: 150000, popular: true, tagline: 'Everything you need to go pro.', features: ['900 credits/mo · 150,000 voice chars', 'All AI models · 1440p export', '60 speed videos · 500 BG removals', 'Unlimited SVGs · Priority support', 'Topups available'], outcomes: [{ icon: '🎙️', label: '~1,500 voice segments' }, { icon: '🖼️', label: '~450 AI images' }, { icon: '🎬', label: '9–18 AI videos' }] },
         { name: 'Creator Odyssey', role: 'STUDIO', price: 0, currency: 'LOADING', ttsLimit: 400000, tagline: 'Unlimited power for serious creators.', features: ['2,500 credits/mo · 400,000 voice chars', 'All AI models · 4K export', 'Unlimited speed videos + BG removals', 'Fastest queue · Dedicated support', 'Topups available'], outcomes: [{ icon: '🎙️', label: '~4,000 voice segments' }, { icon: '🖼️', label: '~1,250 AI images' }, { icon: '🎬', label: '25–50 AI videos' }] },
@@ -1169,11 +1169,11 @@ export default function PricingPageClient() {
               </thead>
               <tbody>
                 {[
-                  ['Monthly Credits',          '25',       '300',            '900',             '2,500'],
+                  ['Monthly Credits',          '50',       '300',            '900',             '2,500'],
                   ['Voice Characters / mo',    '600',      '50,000',         '150,000',         '400,000'],
                   ['Chars per Request',        '200',      '4,000',          '4,000',           '6,000'],
-                  ['AI Video Generation',      '✗',        '✓ All models',   '✓ All models',    '✓ All models'],
-                  ['AI Image Generation',      '✗',        '✓ All models',   '✓ All models',    '✓ All models'],
+                  ['AI Video Generation',      '✓', '✓ All models',   '✓ All models',    '✓ All models'],
+                  ['AI Image Generation',      '✓', '✓ All models',   '✓ All models',    '✓ All models'],
                   ['Speed Videos / mo',        '5',        '30',             '60',              'Unlimited'],
                   ['Background Removals / mo', '5',        '100',            '500',             '1,500'],
                   ['SVG Downloads',            '10/mo',    'Unlimited',      'Unlimited',       'Unlimited'],
@@ -1182,15 +1182,19 @@ export default function PricingPageClient() {
                   ['Credit Topups',            '✗',        '✓',              '✓',               '✓'],
                   ['Commercial Use',           '✓',        '✓',              '✓',               '✓'],
                   ['Priority Support',         '✗',        '✗',              '✓',               '✓ Dedicated'],
-                ].map(([feat, free, lite, creator, studio], i) => (
-                  <tr key={i}>
-                    <td>{feat}</td>
-                    <td className={free==='✓'||free==='✓ Yes'?'sy':free==='✗'?'sn':''}>{free}</td>
-                    <td className={lite==='✓'||lite.startsWith('✓')?'sy':lite==='✗'?'sn':''}>{lite}</td>
-                    <td className={`hl${creator==='✓'||creator.startsWith('✓')?'sy':creator==='✗'?' sn':''}`}>{creator}</td>
-                    <td className={studio==='✓'||studio.startsWith('✓')?'sy':studio==='✗'?'sn':''}>{studio}</td>
-                  </tr>
-                ))}
+                ].map(([feat, free, lite, creator, studio], i) => {
+                  const hlClass = (val: string) =>
+                    val === '✓' || val.startsWith('✓') ? 'sy' : val === '✗' ? 'sn' : '';
+                  return (
+                    <tr key={i}>
+                      <td>{feat}</td>
+                      <td className={hlClass(free)}>{free}</td>
+                      <td className={hlClass(lite)}>{lite}</td>
+                      <td className={['hl', hlClass(creator)].filter(Boolean).join(' ')}>{creator}</td>
+                      <td className={hlClass(studio)}>{studio}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

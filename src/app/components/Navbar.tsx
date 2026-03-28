@@ -50,7 +50,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
   const [loginSuccess, setLoginSuccess] = useState<string>('');
   const [navbarLoginTriggered, setNavbarLoginTriggered] = useState(false);
   const [isUtilitiesDropdownOpen, setIsUtilitiesDropdownOpen] = useState(false);
-  const [credits, setCredits] = useState<number>(25);
+  const [credits, setCredits] = useState<number>(50);
   const [isCreditsDropdownOpen, setIsCreditsDropdownOpen] = useState(false);
   const [isAdminUser, setIsAdminUser] = useState(false);
 
@@ -74,7 +74,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
             picture: response.data.picture || null,
           });
           setIsLoggedIn(true);
-          setCredits(response.data.creditBalance ?? 25);
+          setCredits(response.data.creditBalance ?? 50);
           setIsAdminUser(response.data.role === 'ADMIN');
         } catch (error) {
           console.error('Auth check failed:', error);
@@ -82,12 +82,12 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
           localStorage.removeItem('userProfile');
           setIsLoggedIn(false);
           setUserProfile(null);
-          setCredits(25);
+          setCredits(50);
         }
       } else {
         setIsLoggedIn(false);
         setUserProfile(null);
-        setCredits(25);
+        setCredits(50);
       }
     };
 
