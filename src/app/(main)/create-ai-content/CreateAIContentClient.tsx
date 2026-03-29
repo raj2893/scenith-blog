@@ -2258,7 +2258,7 @@ const CreateAIContentClient: React.FC = () => {
             <details>
               <summary>Is this free to use?</summary>
               <p>
-                Yes — you get 25 free credits on sign-up, no card required. Credits
+                Yes — you get 50 free credits on sign-up, no card required. Credits
                 cover voice, image, and video generation.
               </p>
             </details>
@@ -2440,7 +2440,7 @@ const CreateAIContentClient: React.FC = () => {
             
             <details>
               <summary>Is Scenith AI Content Creator free to use?</summary>
-              <p>Yes — you get 25 free credits when you sign up, with no credit card required. Free credits work across voice, image, and video generation. Paid plans start at $9/month and include 300 credits plus access to all AI models.</p>
+              <p>Yes — you get 50 free credits when you sign up, with no credit card required. Free credits work across voice, image, and video generation. Paid plans start at $9/month and include 300 credits plus access to all AI models.</p>
             </details>
             
             <details>
