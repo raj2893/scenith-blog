@@ -76,7 +76,7 @@ export const metadata: Metadata = {
 };
 
 const HindiMaleVoicePage = () => {
-  const ctaUrl = 'https://scenith.in/tools/ai-voice-generation?utm_source=hindi-male-voice-page&utm_medium=cta-button&utm_campaign=hindi-male-voice-traffic';
+  const ctaUrl = 'https://scenith.in/create-ai-content?utm_source=hindi-male-voice-page&utm_medium=cta-button&utm_campaign=hindi-male-voice-traffic';
 
   return (
     <div className="hmv-page">

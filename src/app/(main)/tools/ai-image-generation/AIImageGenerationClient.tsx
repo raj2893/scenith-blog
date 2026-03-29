@@ -164,21 +164,21 @@ const getCreditCost = (modelId: string, size: string, quality: string, resolutio
   const r = resolution || '2k';
   switch (modelId) {
     case 'GPT_IMAGE_1_MINI':
-      if (q === 'draft')   return 2;
-      if (q === 'premium') return nonSquare ? 10 : 8;
-      return 3; // standard
+      if (q === 'draft')   return 10;
+      if (q === 'premium') return nonSquare ? 47 : 32;
+      return nonSquare ? 12 : 15; // standard
     case 'GPT_IMAGE_1_MEDIUM':
-      if (q === 'draft')   return nonSquare ? 5 : 4;
-      if (q === 'premium') return nonSquare ? 47 : 31;
-      return nonSquare ? 16 : 12; // standard
+      if (q === 'draft')   return 10;
+      if (q === 'premium') return nonSquare ? 47 : 32;
+      return nonSquare ? 12 : 15; // standard
     case 'NANO_BANANA_PRO':
-      return r === '4k' ? 45 : 25;
-    case 'IMAGEN_4_FAST':      return 3;
-    case 'IMAGEN_4_STANDARD':  return 7;
-    case 'FLUX_1_1_PRO':       return 7;
-    case 'STABILITY_AI_CORE':  return 3;
+      return r === '4k' ? 46 : 26;
+    case 'IMAGEN_4_FAST':      return 10;
+    case 'IMAGEN_4_STANDARD':  return 15;
+    case 'FLUX_1_1_PRO':       return 15;
+    case 'STABILITY_AI_CORE':  return 15;
     case 'GROK_AURORA':        return 14;
-    default: return 3;
+    default: return 15;
   }
 };
 
@@ -1260,33 +1260,40 @@ const startImagePolling = useCallback((jobId: number) => {
 
                       {/* Generate button */}
                       {!isLoggedIn ? (
-                        <button onClick={() => setShowLoginModal(true)}
-                          style={{
-                            padding: '7px 18px', borderRadius: 10, border: 'none', cursor: 'pointer',
-                            background: 'linear-gradient(135deg, #6355dc, #8b5cf6)', color: '#fff',
-                            fontWeight: 700, fontSize: 13, fontFamily: 'inherit', whiteSpace: 'nowrap', flexShrink: 0,
-                          }}>🔒 Login — Free</button>
-                      ) : isLimitsExceeded() ? (
-                        <a href="/pricing" style={{
-                          padding: '7px 18px', borderRadius: 10,
-                          background: 'linear-gradient(135deg, #059669, #10b981)', color: '#fff',
-                          fontWeight: 700, fontSize: 13, textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0,
-                        }}>🚀 Get Credits</a>
+                        <button ></button>
                       ) : (
                         <button
-                          onClick={handleGenerateImage}
-                          disabled={!prompt.trim() || isGenerating || !selectedModel || (genMode === 'image' && !inputImageFile)}
+                          onClick={() => {
+                            const params = new URLSearchParams();
+                            params.set('tab', 'image');
+                            if (prompt.trim()) params.set('text', prompt);
+
+                            // For img2img: store file in sessionStorage as base64
+                            // so create-ai-content can pick it up on load
+                            if (genMode === 'image' && inputImageFile) {
+                              const reader = new FileReader();
+                              reader.onload = () => {
+                                try {
+                                  sessionStorage.setItem('cac_img2img_preview', reader.result as string);
+                                  sessionStorage.setItem('cac_img2img_name', inputImageFile.name);
+                                  sessionStorage.setItem('cac_img2img_type', inputImageFile.type);
+                                } catch {}
+                                window.location.href = `/create-ai-content?${params.toString()}`;
+                              };
+                              reader.readAsDataURL(inputImageFile);
+                            } else {
+                              window.location.href = `/create-ai-content?${params.toString()}`;
+                            }
+                          }}
+                          disabled={!prompt.trim() || (genMode === 'image' && !inputImageFile)}
                           style={{
                             padding: '7px 18px', borderRadius: 10, border: 'none', cursor: 'pointer',
-                            background: !prompt.trim() || isGenerating || !selectedModel || (genMode === 'image' && !inputImageFile)
-                              ? '#e2e2f0' : 'linear-gradient(135deg, #6355dc, #8b5cf6)',
-                            color: !prompt.trim() || isGenerating || !selectedModel || (genMode === 'image' && !inputImageFile) ? '#aaa' : '#fff',
+                            background: (!prompt.trim() || (genMode === 'image' && !inputImageFile)) ? '#e2e2f0' : 'linear-gradient(135deg, #6355dc, #8b5cf6)',
+                            color: (!prompt.trim() || (genMode === 'image' && !inputImageFile)) ? '#aaa' : '#fff',
                             fontWeight: 700, fontSize: 13, fontFamily: 'inherit',
                             display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap', flexShrink: 0,
                           }}>
-                          {isGenerating ? (
-                            <><span style={{ width: 14, height: 14, border: '2px solid rgba(255,255,255,0.3)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.75s linear infinite', display: 'inline-block' }} />Generating…</>
-                          ) : '✨ Generate'}
+                          ✨ Generate Image →
                         </button>
                       )}
                     </div>
@@ -1306,8 +1313,8 @@ const startImagePolling = useCallback((jobId: number) => {
                       />
                     </div>
                   </div>
-
-                  {/* ── Job status cards ── */}
+                  {/* MICRO-TOOL: job status cards disabled
+                  
                   {currentImageJob && (currentImageJob.status === 'PENDING' || currentImageJob.status === 'PROCESSING') && (
                     <div className="image-job-status-card" style={{
                       background: 'rgba(99,85,220,0.06)', border: '1.5px solid rgba(99,85,220,0.2)',
@@ -1347,11 +1354,11 @@ const startImagePolling = useCallback((jobId: number) => {
                       }}>Dismiss</button>
                     </div>
                   )}
-
+                generation redirects to create-ai-content */}
               </div>
             </div>
 
-            {/* ── Generated image result ── */}
+            {/* MICRO-TOOL: generated image results disabled 
             {generatedImages.length > 0 && (
               <section className="image-results-section" role="region" aria-labelledby="results-title">
                 <motion.div
@@ -1433,6 +1440,7 @@ const startImagePolling = useCallback((jobId: number) => {
                 </motion.div>
               </section>
             )}
+               generation redirects to create-ai-content */}
 
             {/* ── DEMO IMAGE MARQUEE ── */}
             <section className="demo-marquee-section" aria-label="Example AI generated images">
@@ -1983,19 +1991,13 @@ const startImagePolling = useCallback((jobId: number) => {
         <div className="container">
           <h2 id="cta-title">Ready to Create Stunning Images?</h2>
           <p>Join thousands of creators using AI to bring their ideas to life. Start generating professional images today - completely free!</p>
-          <button
+          <a href="/create-ai-content?tab=image"
             className="cta-button"
-            onClick={() => {
-              if (!isLoggedIn) {
-                setShowLoginModal(true);
-              } else {
-                scrollToSection('hero');
-              }
-            }}
             aria-label="Start using the free AI image generator"
+            style={{ display: 'inline-block', textDecoration: 'none' }}
           >
-            {isLoggedIn ? 'Generate Images Now - Free!' : 'Login to Start Creating'}
-          </button>
+            🖼️ Generate Images Free →
+          </a>
           <div className="cta-features">
             <span>⚡ Instant generation</span>
             <span>🔒 Secure & private</span>

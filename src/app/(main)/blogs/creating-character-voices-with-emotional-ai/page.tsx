@@ -93,7 +93,7 @@ export default function EmotionalCharacterVoicesGuide() {
           </p>
 
           <p>
-            This definitive guide covers emotional AI TTS for character creation: core technology, voice/emotion selection, advanced prompt engineering (with dozens of examples), real-world use cases, best practices, step-by-step creation, and optimization. Begin immediately with <strong>Scenith's free AI voice generator</strong> — <a href="https://scenith.in/tools/ai-voice-generation?utm_source=blog&utm_medium=intro&utm_campaign=emotional_character_voices" target="_blank" rel="noopener noreferrer">https://scenith.in/tools/ai-voice-generation</a> — 40+ lifelike voices, emotion-aware delivery, 100+ languages, instant MP3 export, no signup, full commercial rights.
+            This definitive guide covers emotional AI TTS for character creation: core technology, voice/emotion selection, advanced prompt engineering (with dozens of examples), real-world use cases, best practices, step-by-step creation, and optimization. Begin immediately with <strong>Scenith's free AI voice generator</strong> — <a href="https://scenith.in/create-ai-content?utm_source=blog&utm_medium=intro&utm_campaign=emotional_character_voices" target="_blank" rel="noopener noreferrer">https://scenith.in/create-ai-content</a> — 40+ lifelike voices, emotion-aware delivery, 100+ languages, instant MP3 export, no signup, full commercial rights.
           </p>
 
           <div className={styles.warningBox}>
@@ -300,7 +300,7 @@ export default function EmotionalCharacterVoicesGuide() {
 
             <ol className={styles.stepList}>
               <li><strong>Define Character:</strong> Write 1–2 sentence bio (age, personality, accent, mood).</li>
-              <li><strong>Visit Scenith:</strong> Go to <a href="https://scenith.in/tools/ai-voice-generation?utm_source=blog&utm_medium=step1&utm_campaign=emotional_character_voices" target="_blank" rel="noopener noreferrer">Scenith AI Voice Generator</a>.</li>
+              <li><strong>Visit Scenith:</strong> Go to <a href="https://scenith.in/create-ai-content?utm_source=blog&utm_medium=step1&utm_campaign=emotional_character_voices" target="_blank" rel="noopener noreferrer">Scenith AI Voice Generator</a>.</li>
               <li><strong>Select Base Voice:</strong> Pick closest match (e.g., deep male for villain).</li>
               <li><strong>Craft Prompt:</strong> Paste script + emotion tags + description.</li>
               <li><strong>Generate & Listen:</strong> Create sample; adjust emotion/pace if needed.</li>
@@ -381,7 +381,7 @@ export default function EmotionalCharacterVoicesGuide() {
           <div className={styles.finalCta}>
             <h3>Start Generating Emotional Character Voices Now</h3>
             <p>
-              Experience powerful, expressive AI narration at <a href="https://scenith.in/tools/ai-voice-generation?utm_source=blog&utm_medium=conclusion&utm_campaign=emotional_character_voices" target="_blank" rel="noopener noreferrer" style={{color: 'white', textDecoration: 'underline', fontWeight: 'bold'}}>Scenith AI Voice Generator</a>.
+              Experience powerful, expressive AI narration at <a href="https://scenith.in/create-ai-content?utm_source=blog&utm_medium=conclusion&utm_campaign=emotional_character_voices" target="_blank" rel="noopener noreferrer" style={{color: 'white', textDecoration: 'underline', fontWeight: 'bold'}}>Scenith AI Voice Generator</a>.
             </p>
             <p>
               40+ natural voices • Emotion-rich delivery • 100+ languages • Instant MP3 • Full commercial rights — no signup, no limits, no watermarks. Create your first character in under 5 minutes.

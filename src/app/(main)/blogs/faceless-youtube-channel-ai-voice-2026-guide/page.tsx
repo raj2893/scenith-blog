@@ -110,8 +110,8 @@ export default function FacelessYouTubeAIVoice2026() {
 
           <p>
             At the heart of this strategy is <strong>Scenith's free AI voice generator</strong> — available at
-            <a href="https://scenith.in/tools/ai-voice-generation?utm_source=blog&utm_medium=intro&utm_campaign=faceless_youtube_2026" target="_blank" rel="noopener noreferrer">
-              https://scenith.in/tools/ai-voice-generation
+            <a href="https://scenith.in/create-ai-content?utm_source=blog&utm_medium=intro&utm_campaign=faceless_youtube_2026" target="_blank" rel="noopener noreferrer">
+              https://scenith.in/create-ai-content
             </a>. With 40+ natural voices across 20+ languages, 5,000 free characters/month (BASIC plan), and instant MP3 downloads, it's the perfect tool for faceless creators.
           </p>
 
@@ -409,7 +409,7 @@ export default function FacelessYouTubeAIVoice2026() {
             </p>
             <p style={{fontSize: '1.8rem', fontWeight: 900, margin: '3rem 0'}}>
               <a
-                href="https://scenith.in/tools/ai-voice-generation?utm_source=blog&utm_medium=final_cta&utm_campaign=faceless_youtube_2026"
+                href="https://scenith.in/create-ai-content?utm_source=blog&utm_medium=final_cta&utm_campaign=faceless_youtube_2026"
                 style={{ color: '#ffffff', textDecoration: 'none' }}
                 target="_blank" rel="noopener noreferrer"
               >

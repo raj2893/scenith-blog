@@ -114,7 +114,7 @@ export default function EmotionalAIVoiceGuide() {
           </p>
 
           <p>
-            Ready to make your next video, podcast, course, or ad <em>feel</em> alive? Jump straight to the tool: <a href="https://scenith.in/tools/ai-voice-generation?utm_source=blog&utm_medium=intro&utm_campaign=ai_voice_emotion_2026" target="_blank" rel="noopener noreferrer">Scenith AI Voice Generator with Emotion Control</a>.
+            Ready to make your next video, podcast, course, or ad <em>feel</em> alive? Jump straight to the tool: <a href="https://scenith.in/create-ai-content?utm_source=blog&utm_medium=intro&utm_campaign=ai_voice_emotion_2026" target="_blank" rel="noopener noreferrer">Scenith AI Voice Generator with Emotion Control</a>.
           </p>
 
           <div className={styles.warningBox}>
@@ -462,7 +462,7 @@ export default function EmotionalAIVoiceGuide() {
           <h2>Step-by-Step: Using Emotion Control Today </h2>
 
           <ol className={styles.stepList}>
-            <li>Go to <a href="https://scenith.in/tools/ai-voice-generation?utm_source=blog&utm_medium=getting_started&utm_campaign=ai_voice_emotion_2026" target="_blank" rel="noopener noreferrer">Scenith AI Voice Generator</a></li>
+            <li>Go to <a href="https://scenith.in/create-ai-content?utm_source=blog&utm_medium=getting_started&utm_campaign=ai_voice_emotion_2026" target="_blank" rel="noopener noreferrer">Scenith AI Voice Generator</a></li>
             <li>Login (Google or email — 30 sec)</li>
             <li>Paste or type your script</li>
             <li>Pick any voice from 40+ options</li>
@@ -524,7 +524,7 @@ export default function EmotionalAIVoiceGuide() {
               Emotion isn't a luxury anymore — it's expected. Turn flat narration into content that connects, retains, and converts.
             </p>
             <p>
-              <a href="https://scenith.in/tools/ai-voice-generation?utm_source=blog&utm_medium=final_cta&utm_campaign=ai_voice_emotion_2026"
+              <a href="https://scenith.in/create-ai-content?utm_source=blog&utm_medium=final_cta&utm_campaign=ai_voice_emotion_2026"
                  className={styles.ctaButton}
                  target="_blank" rel="noopener noreferrer">
                 Try Emotion Control Right Now →

@@ -420,7 +420,7 @@ const EDITING_WORKFLOWS = [
 ───────────────────────────────────────────── */
 export default function ReelsAIVoiceGeneratorPage() {
   const TARGET_URL =
-    'https://scenith.in/tools/ai-voice-generation?utm_source=reels_voice_page&utm_medium=cta_button&utm_campaign=reels_micro_tool';
+    'https://scenith.in/create-ai-content?utm_source=reels_voice_page&utm_medium=cta_button&utm_campaign=reels_micro_tool';
 
   return (
     <>
@@ -914,7 +914,7 @@ export default function ReelsAIVoiceGeneratorPage() {
                 </div>
                 <span className="related-arrow">→</span>
               </a>
-              <a href="https://scenith.in/tools/ai-image-generation?utm_source=reels_voice_page&utm_medium=related_tools&utm_campaign=cross_tool" className="related-card">
+              <a href="https://scenith.in/create-ai-content?utm_source=reels_voice_page&utm_medium=related_tools&utm_campaign=cross_tool" className="related-card">
                 <span className="related-icon">🖼️</span>
                 <div>
                   <h3>AI Image Generator</h3>

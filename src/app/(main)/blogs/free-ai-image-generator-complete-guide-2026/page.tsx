@@ -116,7 +116,7 @@ export default function AIImageGeneratorGuide() {
           </p>
 
           <p>
-            At the forefront of accessible AI image technology is <strong>Scenith's free AI image generator</strong>, available at <a href="https://scenith.in/tools/ai-image-generation?utm_source=blog&utm_medium=intro&utm_campaign=ai_image_guide" target="_blank" rel="noopener noreferrer">https://scenith.in/tools/ai-image-generation</a>. This platform demonstrates how advanced neural networks now enable anyone to create professional-quality visuals without financial barriers, technical expertise, or design skills.
+            At the forefront of accessible AI image technology is <strong>Scenith's free AI image generator</strong>, available at <a href="https://scenith.in/create-ai-content?utm_source=blog&utm_medium=intro&utm_campaign=ai_image_guide" target="_blank" rel="noopener noreferrer">https://scenith.in/create-ai-content</a>. This platform demonstrates how advanced neural networks now enable anyone to create professional-quality visuals without financial barriers, technical expertise, or design skills.
           </p>
 
           <div className={styles.warningBox}>
@@ -175,7 +175,7 @@ export default function AIImageGeneratorGuide() {
           </p>
 
           <p>
-            Modern platforms like <a href="https://scenith.in/tools/ai-image-generation?utm_source=blog&utm_medium=what_is_section&utm_campaign=ai_image_guide" target="_blank" rel="noopener noreferrer">Scenith's AI image generator</a> make this technology accessible to everyone. No design knowledge required—simply describe what you want, select from 8 artistic styles, and download high-resolution images in seconds. The democratization of image creation enables anyone to produce professional visuals previously exclusive to designers and photographers.
+            Modern platforms like <a href="https://scenith.in/create-ai-content?utm_source=blog&utm_medium=what_is_section&utm_campaign=ai_image_guide" target="_blank" rel="noopener noreferrer">Scenith's AI image generator</a> make this technology accessible to everyone. No design knowledge required—simply describe what you want, select from 8 artistic styles, and download high-resolution images in seconds. The democratization of image creation enables anyone to produce professional visuals previously exclusive to designers and photographers.
           </p>
 
           <div className={styles.statsGrid}>
@@ -287,7 +287,7 @@ export default function AIImageGeneratorGuide() {
             <div className={styles.editingCard}>
               <h3>💰 Massive Cost Savings</h3>
               <p><strong>Traditional Cost Structure:</strong> Stock photo subscriptions cost $30-100 monthly for limited downloads. Custom design services charge $50-500 per image. Designer hourly rates run $25-150. Commercial licenses add premiums.</p>
-              <p><strong>AI Image Generation:</strong> Completely free with platforms like <a href="https://scenith.in/tools/ai-image-generation?utm_source=blog&utm_medium=benefits_section&utm_campaign=ai_image_guide" target="_blank" rel="noopener noreferrer">Scenith</a>. Unlimited iterations, infinite variations, no per-image charges. Access professional quality at zero cost with full commercial rights.</p>
+              <p><strong>AI Image Generation:</strong> Completely free with platforms like <a href="https://scenith.in/create-ai-content?utm_source=blog&utm_medium=benefits_section&utm_campaign=ai_image_guide" target="_blank" rel="noopener noreferrer">Scenith</a>. Unlimited iterations, infinite variations, no per-image charges. Access professional quality at zero cost with full commercial rights.</p>
               <div className={styles.example}>
                 <strong>Real Savings Example:</strong> Social media manager needing 20 custom images monthly. Stock photos: $40-100/month ($480-1,200/year). Custom design: $1,000-10,000/month ($12,000-120,000/year). AI generation: $0. Annual savings: $500-120,000 reinvested in marketing or content.
               </div>
@@ -738,7 +738,7 @@ export default function AIImageGeneratorGuide() {
 
             <h4>Phase 3: Generation and Selection (1 minute)</h4>
             <ol className={styles.stepList} start={8}>
-              <li><strong>Access Platform:</strong> Navigate to <a href="https://scenith.in/tools/ai-image-generation?utm_source=blog&utm_medium=tutorial_section&utm_campaign=ai_image_guide" target="_blank" rel="noopener noreferrer">Scenith AI Image Generator</a></li>
+              <li><strong>Access Platform:</strong> Navigate to <a href="https://scenith.in/create-ai-content?utm_source=blog&utm_medium=tutorial_section&utm_campaign=ai_image_guide" target="_blank" rel="noopener noreferrer">Scenith AI Image Generator</a></li>
               <li><strong>Login:</strong> Use Google or email authentication (30 seconds)</li>
               <li><strong>Enter Prompt:</strong> Paste or type your detailed description</li>
               <li><strong>Select Style:</strong> Choose from 8 artistic styles dropdown</li>
@@ -952,7 +952,7 @@ export default function AIImageGeneratorGuide() {
               Stop letting budget constraints limit your visual content. Stop settling for generic stock photos because "custom design is too expensive." Modern AI makes professional image creation accessible to everyone—free, instant, unlimited creativity.
             </p>
             <p>
-              Experience the future at <a href="https://scenith.in/tools/ai-image-generation?utm_source=blog&utm_medium=conclusion_cta&utm_campaign=ai_image_guide"
+              Experience the future at <a href="https://scenith.in/create-ai-content?utm_source=blog&utm_medium=conclusion_cta&utm_campaign=ai_image_guide"
               style={{color: 'white', textDecoration: 'underline', fontWeight: 'bold'}}
               target="_blank" rel="noopener noreferrer">
               SCENITH'S FREE AI IMAGE GENERATOR

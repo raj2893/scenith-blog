@@ -83,7 +83,7 @@ export const metadata: Metadata = {
 const VIDEO_CTA =
   "https://scenith.in/tools/ai-video-generation?utm_source=content-creation-combo&utm_medium=cta-button&utm_campaign=combo-video-cta";
 const VOICE_CTA =
-  "https://scenith.in/tools/ai-voice-generation?utm_source=content-creation-combo&utm_medium=cta-button&utm_campaign=combo-voice-cta";
+  "https://scenith.in/create-ai-content?utm_source=content-creation-combo&utm_medium=cta-button&utm_campaign=combo-voice-cta";
 
 /* ─────────────────────────────────────────────
    PAGE COMPONENT

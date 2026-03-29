@@ -114,7 +114,7 @@ export default function AIVoiceGeneratorGuide() {
           </p>
 
           <p>
-            At the forefront of accessible AI voice technology is <strong>Scenith's free AI voice generator</strong>, available at <a href="https://scenith.in/tools/ai-voice-generation?utm_source=blog&utm_medium=intro&utm_campaign=ai_voice_guide" target="_blank" rel="noopener noreferrer">https://scenith.in/tools/ai-voice-generation</a>. This platform demonstrates how sophisticated neural networks now enable anyone to create professional-quality voiceovers without financial barriers or technical expertise.
+            At the forefront of accessible AI voice technology is <strong>Scenith's free AI voice generator</strong>, available at <a href="https://scenith.in/create-ai-content?utm_source=blog&utm_medium=intro&utm_campaign=ai_voice_guide" target="_blank" rel="noopener noreferrer">https://scenith.in/create-ai-content</a>. This platform demonstrates how sophisticated neural networks now enable anyone to create professional-quality voiceovers without financial barriers or technical expertise.
           </p>
 
           <div className={styles.warningBox}>
@@ -174,7 +174,7 @@ export default function AIVoiceGeneratorGuide() {
           </p>
 
           <p>
-            Modern platforms like <a href="https://scenith.in/tools/ai-voice-generation?utm_source=blog&utm_medium=what_is_section&utm_campaign=ai_voice_guide" target="_blank" rel="noopener noreferrer">Scenith's AI voice generator</a> make this technology accessible to everyone. No technical knowledge required—simply type your text, select from 40+ natural-sounding voices, and generate professional audio in seconds. The democratization of voice technology enables anyone to create broadcast-quality voiceovers previously exclusive to well-funded productions.
+            Modern platforms like <a href="https://scenith.in/create-ai-content?utm_source=blog&utm_medium=what_is_section&utm_campaign=ai_voice_guide" target="_blank" rel="noopener noreferrer">Scenith's AI voice generator</a> make this technology accessible to everyone. No technical knowledge required—simply type your text, select from 40+ natural-sounding voices, and generate professional audio in seconds. The democratization of voice technology enables anyone to create broadcast-quality voiceovers previously exclusive to well-funded productions.
           </p>
 
           <div className={styles.statsGrid}>
@@ -286,7 +286,7 @@ export default function AIVoiceGeneratorGuide() {
             <div className={styles.editingCard}>
               <h3>💰 Massive Cost Savings</h3>
               <p><strong>Traditional Cost Structure:</strong> Professional voice actors charge $100-500 per recording session plus studio rental ($150-300/hour). Revisions require additional fees. Multiple voice styles or languages multiply costs dramatically.</p>
-              <p><strong>AI Voice Generation:</strong> Completely free with platforms like <a href="https://scenith.in/tools/ai-voice-generation?utm_source=blog&utm_medium=benefits_section&utm_campaign=ai_voice_guide" target="_blank" rel="noopener noreferrer">Scenith</a>. Unlimited generations, infinite revisions, no per-minute charges. Access 40+ voices and 20+ languages at zero cost.</p>
+              <p><strong>AI Voice Generation:</strong> Completely free with platforms like <a href="https://scenith.in/create-ai-content?utm_source=blog&utm_medium=benefits_section&utm_campaign=ai_voice_guide" target="_blank" rel="noopener noreferrer">Scenith</a>. Unlimited generations, infinite revisions, no per-minute charges. Access 40+ voices and 20+ languages at zero cost.</p>
               <div className={styles.example}>
                 <strong>Real Savings Example:</strong> Podcast producing 4 episodes monthly with 15-minute narration each. Traditional cost: $400-800/month ($4,800-9,600/year). AI voice generation: $0. Annual savings: $5,000-10,000+ that can be reinvested in equipment, marketing, or simply higher profit margins.
               </div>
@@ -372,7 +372,7 @@ export default function AIVoiceGeneratorGuide() {
           <div className={styles.proTip}>
             <h3>Voice Selection Best Practices</h3>
             <ul>
-              <li><strong>Test Multiple Options:</strong> Generate short samples with 3-5 different voices before committing to full content. What sounds good in your head may differ from actual audio. Platform like <a href="https://scenith.in/tools/ai-voice-generation?utm_source=blog&utm_medium=voice_selection&utm_campaign=ai_voice_guide" target="_blank" rel="noopener noreferrer">Scenith</a> offers voice previews—use them extensively.</li>
+              <li><strong>Test Multiple Options:</strong> Generate short samples with 3-5 different voices before committing to full content. What sounds good in your head may differ from actual audio. Platform like <a href="https://scenith.in/create-ai-content?utm_source=blog&utm_medium=voice_selection&utm_campaign=ai_voice_guide" target="_blank" rel="noopener noreferrer">Scenith</a> offers voice previews—use them extensively.</li>
               <li><strong>Consider Your Audience:</strong> Voice preferences vary by demographics. Younger audiences often prefer conversational, energetic voices. Professional audiences expect measured, authoritative delivery. Survey target audience if possible to identify preferences.</li>
               <li><strong>Match Brand Personality:</strong> Voice becomes part of brand identity. Tech startups might choose modern, energetic voices. Luxury brands prefer sophisticated, measured tones. Financial services need trustworthy, professional delivery. Ensure voice alignment with overall brand positioning.</li>
               <li><strong>Evaluate Across Platforms:</strong> Test voice on actual playback devices—phone speakers, laptop audio, car stereo, headphones. Some voices that sound excellent on quality speakers lose clarity on phone speakers. Ensure voice remains effective across all consumption contexts.</li>
@@ -673,7 +673,7 @@ export default function AIVoiceGeneratorGuide() {
                 <span>Cost: $0/month forever</span>
                 <span>Best For: Most users</span>
               </div>
-              <p><strong>Example: <a href="https://scenith.in/tools/ai-voice-generation?utm_source=blog&utm_medium=comparison_section&utm_campaign=ai_voice_guide" target="_blank" rel="noopener noreferrer">Scenith AI Voice Generator</a></strong></p>
+              <p><strong>Example: <a href="https://scenith.in/create-ai-content?utm_source=blog&utm_medium=comparison_section&utm_campaign=ai_voice_guide" target="_blank" rel="noopener noreferrer">Scenith AI Voice Generator</a></strong></p>
               <ul>
                 <li>✅ 40+ natural-sounding voices</li>
                 <li>✅ 20+ language support</li>
@@ -768,7 +768,7 @@ export default function AIVoiceGeneratorGuide() {
 
             <h4>Phase 2: Voice Generation Setup (1-2 minutes)</h4>
             <ol className={styles.stepList} start={6}>
-              <li><strong>Access Platform:</strong> Navigate to <a href="https://scenith.in/tools/ai-voice-generation?utm_source=blog&utm_medium=tutorial_section&utm_campaign=ai_voice_guide" target="_blank" rel="noopener noreferrer">Scenith AI Voice Generator</a></li>
+              <li><strong>Access Platform:</strong> Navigate to <a href="https://scenith.in/create-ai-content?utm_source=blog&utm_medium=tutorial_section&utm_campaign=ai_voice_guide" target="_blank" rel="noopener noreferrer">Scenith AI Voice Generator</a></li>
               <li><strong>Sign In:</strong> Create free account or sign in with Google (takes 30 seconds)</li>
               <li><strong>Open Text Editor:</strong> Click in text input area where you'll paste your script</li>
               <li><strong>Paste Script:</strong> Copy script from your document and paste into text area</li>
@@ -974,7 +974,7 @@ export default function AIVoiceGeneratorGuide() {
               Stop letting audio costs limit your content ambitions. Stop waiting to create that podcast, video series, audiobook, or online course because "professional voiceovers are too expensive." Modern AI voice technology makes broadcast-quality audio accessible to everyone—free, instant, professional quality.
             </p>
             <p>
-              Experience the future of voice technology at <a href="https://scenith.in/tools/ai-voice-generation?utm_source=blog&utm_medium=conclusion_cta&utm_campaign=ai_voice_guide" 
+              Experience the future of voice technology at <a href="https://scenith.in/create-ai-content?utm_source=blog&utm_medium=conclusion_cta&utm_campaign=ai_voice_guide" 
               style={{color: 'white', textDecoration: 'underline', fontWeight: 'bold'}}
               target="_blank" rel="noopener noreferrer">
               SCENITH'S FREE AI VOICE GENERATOR

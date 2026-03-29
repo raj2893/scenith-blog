@@ -77,7 +77,7 @@ export const metadata: Metadata = {
 };
 
 const AmericanAIVoicePage = () => {
-  const ctaUrl = 'https://scenith.in/tools/ai-voice-generation?utm_source=american-voice-page&utm_medium=cta-button&utm_campaign=american-voice-traffic';
+  const ctaUrl = 'https://scenith.in/create-ai-content?utm_source=american-voice-page&utm_medium=cta-button&utm_campaign=american-voice-traffic';
 
   return (
     <div className="aav-page">

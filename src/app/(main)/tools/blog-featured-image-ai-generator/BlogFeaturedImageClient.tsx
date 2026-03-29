@@ -324,7 +324,7 @@ export default function BlogFeaturedImagePage() {
           </div>
 
           <a
-            href="https://scenith.in/tools/ai-image-generation?utm_source=blog_featured_image_page&utm_medium=hero_cta&utm_campaign=blog_seo_tool"
+            href="https://scenith.in/create-ai-content?utm_source=blog_featured_image_page&utm_medium=hero_cta&utm_campaign=blog_seo_tool"
             className="bfig-main-cta"
             aria-label="Generate your blog featured image with AI — free"
             target="_blank"
@@ -493,7 +493,7 @@ export default function BlogFeaturedImagePage() {
           </div>
 
           <a
-            href="https://scenith.in/tools/ai-image-generation?utm_source=blog_featured_image_page&utm_medium=size_guide_cta&utm_campaign=blog_seo_tool"
+            href="https://scenith.in/create-ai-content?utm_source=blog_featured_image_page&utm_medium=size_guide_cta&utm_campaign=blog_seo_tool"
             className="bfig-secondary-cta"
             target="_blank"
             rel="noopener"
@@ -595,7 +595,7 @@ export default function BlogFeaturedImagePage() {
                   <span className="bfig-ex-result">{ex.result}</span>
                 </div>
                 <a
-                  href={`https://scenith.in/tools/ai-image-generation?utm_source=blog_featured_image_page&utm_medium=example_${i + 1}&utm_campaign=blog_seo_tool`}
+                  href={`https://scenith.in/create-ai-content?utm_source=blog_featured_image_page&utm_medium=example_${i + 1}&utm_campaign=blog_seo_tool`}
                   className="bfig-try-prompt-btn"
                   target="_blank"
                   rel="noopener"
@@ -666,7 +666,7 @@ export default function BlogFeaturedImagePage() {
           </div>
 
           <a
-            href="https://scenith.in/tools/ai-image-generation?utm_source=blog_featured_image_page&utm_medium=howto_cta&utm_campaign=blog_seo_tool"
+            href="https://scenith.in/create-ai-content?utm_source=blog_featured_image_page&utm_medium=howto_cta&utm_campaign=blog_seo_tool"
             className="bfig-main-cta bfig-howto-cta"
             target="_blank"
             rel="noopener"
@@ -952,7 +952,7 @@ export default function BlogFeaturedImagePage() {
           </div>
 
           <a
-            href="https://scenith.in/tools/ai-image-generation?utm_source=blog_featured_image_page&utm_medium=final_cta&utm_campaign=blog_seo_tool"
+            href="https://scenith.in/create-ai-content?utm_source=blog_featured_image_page&utm_medium=final_cta&utm_campaign=blog_seo_tool"
             className="bfig-main-cta bfig-final-btn"
             target="_blank"
             rel="noopener"
@@ -981,7 +981,7 @@ export default function BlogFeaturedImagePage() {
                 icon: '🎨',
                 title: 'AI Image Generator',
                 desc: 'The full-featured tool behind this page. Generate images for any use case — not just blogs.',
-                href: 'https://scenith.in/tools/ai-image-generation?utm_source=blog_featured_image_page&utm_medium=related_tool&utm_campaign=blog_seo_tool',
+                href: 'https://scenith.in/create-ai-content?utm_source=blog_featured_image_page&utm_medium=related_tool&utm_campaign=blog_seo_tool',
                 badge: 'Core Tool',
               },
               {
@@ -995,7 +995,7 @@ export default function BlogFeaturedImagePage() {
                 icon: '🎤',
                 title: 'AI Voice Generator',
                 desc: 'Turn your blog posts into podcast-style audio with natural AI voiceovers in 20+ languages.',
-                href: 'https://scenith.in/tools/ai-voice-generation?utm_source=blog_featured_image_page&utm_medium=related_tool&utm_campaign=blog_seo_tool',
+                href: 'https://scenith.in/create-ai-content?utm_source=blog_featured_image_page&utm_medium=related_tool&utm_campaign=blog_seo_tool',
                 badge: 'New',
               },
             ].map((tool, i) => (

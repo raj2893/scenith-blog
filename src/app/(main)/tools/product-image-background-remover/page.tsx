@@ -897,7 +897,7 @@ export default function ProductImageBackgroundRemoverPage() {
               <span className="pbrpage__related-arr">→</span>
             </a>
             <a
-              href="https://scenith.in/tools/ai-image-generation?utm_source=product_bg_remover&utm_medium=related_tools&utm_campaign=product_bg_page"
+              href="https://scenith.in/create-ai-content?utm_source=product_bg_remover&utm_medium=related_tools&utm_campaign=product_bg_page"
               className="pbrpage__related-card"
             >
               <span className="pbrpage__related-icon">✨</span>

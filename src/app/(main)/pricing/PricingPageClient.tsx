@@ -631,7 +631,7 @@ const FAQ = [
 ───────────────────────────────────────────────────────────────────── */
 const CREDIT_USES = [
   { icon: '🎙️', count: '1 cr', unit: 'per 100 chars', label: 'AI Voice Generation' },
-  { icon: '🖼️', count: '2 cr', unit: 'per image', label: 'AI Image (standard)' },
+  { icon: '🖼️', count: '10–15 cr', unit: 'per image', label: 'AI Image (standard)' },
   { icon: '🎬', count: '50–100 cr', unit: 'per video', label: 'AI Video Generation' },
   { icon: '✂️', count: '10 cr', unit: 'per image', label: 'Background Removal' },
   { icon: '⚡', count: '10 cr', unit: 'per video', label: 'Speed Video' },
@@ -1172,8 +1172,8 @@ export default function PricingPageClient() {
                   ['Monthly Credits',          '50',       '300',            '900',             '2,500'],
                   ['Voice Characters / mo',    '600',      '50,000',         '150,000',         '400,000'],
                   ['Chars per Request',        '200',      '4,000',          '4,000',           '6,000'],
-                  ['AI Video Generation',      '✗',        '✓ All models',   '✓ All models',    '✓ All models'],
-                  ['AI Image Generation',      '✗',        '✓ All models',   '✓ All models',    '✓ All models'],
+                  ['AI Video Generation',      '✓', '✓ All models',   '✓ All models',    '✓ All models'],
+                  ['AI Image Generation',      '✓', '✓ All models',   '✓ All models',    '✓ All models'],
                   ['Speed Videos / mo',        '5',        '30',             '60',              'Unlimited'],
                   ['Background Removals / mo', '5',        '100',            '500',             '1,500'],
                   ['SVG Downloads',            '10/mo',    'Unlimited',      'Unlimited',       'Unlimited'],
@@ -1182,15 +1182,19 @@ export default function PricingPageClient() {
                   ['Credit Topups',            '✗',        '✓',              '✓',               '✓'],
                   ['Commercial Use',           '✓',        '✓',              '✓',               '✓'],
                   ['Priority Support',         '✗',        '✗',              '✓',               '✓ Dedicated'],
-                ].map(([feat, free, lite, creator, studio], i) => (
-                  <tr key={i}>
-                    <td>{feat}</td>
-                    <td className={free==='✓'||free==='✓ Yes'?'sy':free==='✗'?'sn':''}>{free}</td>
-                    <td className={lite==='✓'||lite.startsWith('✓')?'sy':lite==='✗'?'sn':''}>{lite}</td>
-                    <td className={`hl${creator==='✓'||creator.startsWith('✓')?'sy':creator==='✗'?' sn':''}`}>{creator}</td>
-                    <td className={studio==='✓'||studio.startsWith('✓')?'sy':studio==='✗'?'sn':''}>{studio}</td>
-                  </tr>
-                ))}
+                ].map(([feat, free, lite, creator, studio], i) => {
+                  const hlClass = (val: string) =>
+                    val === '✓' || val.startsWith('✓') ? 'sy' : val === '✗' ? 'sn' : '';
+                  return (
+                    <tr key={i}>
+                      <td>{feat}</td>
+                      <td className={hlClass(free)}>{free}</td>
+                      <td className={hlClass(lite)}>{lite}</td>
+                      <td className={['hl', hlClass(creator)].filter(Boolean).join(' ')}>{creator}</td>
+                      <td className={hlClass(studio)}>{studio}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

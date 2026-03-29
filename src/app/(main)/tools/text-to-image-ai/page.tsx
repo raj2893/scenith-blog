@@ -82,7 +82,7 @@ export const metadata: Metadata = {
 };
 
 const ctaUrl =
-  'https://scenith.in/tools/ai-image-generation?utm_source=text-to-image-ai-page&utm_medium=cta-button&utm_campaign=tti-traffic';
+  'https://scenith.in/create-ai-content?utm_source=text-to-image-ai-page&utm_medium=cta-button&utm_campaign=tti-traffic';
 
 const TextToImageAIPage = () => {
   return (

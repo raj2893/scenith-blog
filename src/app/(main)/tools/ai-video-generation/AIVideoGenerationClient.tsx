@@ -1043,33 +1043,180 @@ const [resolution, setResolution] = useState("480p"); // default to cheapest
           </div>
         </details>
 
-        {/* ── Main tool card ── */}
-        {(
-          <div className="vg-card">
-            <div className="vg-card-inner">
+        {/* ── MICRO-TOOL: Main tool card — redirects to create-ai-content ── */}
+        <div className="vg-card">
+          <div className="vg-card-inner">
 
-              {/* Prompt textarea */}
-              <textarea
-                className="vg-textarea"
-                placeholder={
-                  genType === "text"
-                    ? "e.g. A golden retriever running through a sunlit meadow, cinematic slow motion..."
-                    : "e.g. The character slowly turns toward the camera, dramatic lighting shifts..."
-                }
-                value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-                disabled={!isLoggedIn || isSubmitting}
-                maxLength={2000}
-                style={{ minHeight: 90, marginBottom: 0 }}
-              />
+            {/* Gen type toggle */}
+            <div style={{ display: 'flex', background: 'rgba(0,0,0,0.3)', borderRadius: 10, padding: 2, border: '1px solid rgba(99,102,241,0.15)', width: 'fit-content', marginBottom: 12 }}>
+              {GENERATION_TYPES.map((t) => (
+                <button
+                  key={t.value}
+                  onClick={() => { setGenType(t.value as "text" | "image"); setImageFile(null); setImagePreview(null); }}
+                  style={{
+                    padding: '6px 14px', borderRadius: 8, border: 'none', cursor: 'pointer',
+                    fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600,
+                    background: genType === t.value ? 'linear-gradient(135deg, #6366F1, #4F46E5)' : 'transparent',
+                    color: genType === t.value ? '#fff' : '#64748B',
+                    transition: 'all 0.2s',
+                  }}
+                >
+                  {t.icon} {t.label}
+                </button>
+              ))}
+            </div>
 
-              {/* ── Compact toolbar ── */}
-              <div style={{
-                display: 'flex', alignItems: 'center', gap: 6, marginTop: 8,
-                flexWrap: 'wrap',
-              }}>
+            {/* Image upload — for image-to-video */}
+            {genType === "image" && (
+              <div style={{ marginBottom: 12 }}>
+                {!imagePreview ? (
+                  <div className="vg-dropzone" ref={dropRef}
+                    onDragOver={(e) => { e.preventDefault(); dropRef.current?.classList.add("drag-over"); }}
+                    onDragLeave={() => dropRef.current?.classList.remove("drag-over")}
+                    onDrop={(e) => { dropRef.current?.classList.remove("drag-over"); handleImageDrop(e); }}
+                    onClick={() => fileInputRef.current?.click()}
+                    style={{ padding: '20px 16px' }}>
+                    <div className="vg-dropzone-icon" style={{ fontSize: '1.8rem' }}>🖼️</div>
+                    <p>Drop image or <span style={{ color: "#6366F1" }}>click to browse</span></p>
+                    <small>PNG, JPG, WEBP — up to 10MB · Used as video starting frame</small>
+                    <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageSelect} style={{ display: "none" }} />
+                  </div>
+                ) : (
+                  <div className="vg-img-preview">
+                    <img src={imagePreview} alt="Reference" />
+                    <button className="vg-img-remove" onClick={() => { setImageFile(null); setImagePreview(null); }}>✕</button>
+                  </div>
+                )}
+              </div>
+            )}
+
+           {/* Prompt textarea */}
+            <textarea
+              className="vg-textarea"
+              placeholder={
+                genType === "text"
+                  ? "e.g. A golden retriever running through a sunlit meadow, cinematic slow motion..."
+                  : "e.g. The character slowly turns toward the camera, dramatic lighting shifts..."
+              }
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              maxLength={2000}
+              style={{ minHeight: 90, marginBottom: 0 }}
+            />
+
+            {/* ── Compact toolbar ── */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 8, flexWrap: 'wrap' }}>
+
+              {/* Duration */}
+              <div style={{ display: 'flex', background: 'rgba(0,0,0,0.3)', borderRadius: 10, padding: 2, border: '1px solid rgba(99,102,241,0.15)', flexShrink: 0 }}>
+                {DURATION_OPTIONS.map((d) => (
+                  <button key={d.value} onClick={() => setDuration(d.value)}
+                    style={{
+                      padding: '6px 12px', borderRadius: 8, border: 'none', cursor: 'pointer',
+                      fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600,
+                      background: duration === d.value ? 'rgba(99,102,241,0.3)' : 'transparent',
+                      color: duration === d.value ? '#818CF8' : '#64748B', transition: 'all 0.2s',
+                    }}>{d.label}</button>
+                ))}
+              </div>
+
+              {/* Aspect ratio */}
+              <select value={aspectRatio} onChange={(e) => setAspectRatio(e.target.value)}
+                style={{
+                  padding: '7px 28px 7px 10px', borderRadius: 10,
+                  background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(99,102,241,0.2)',
+                  color: '#CBD5E1', fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600,
+                  cursor: 'pointer', appearance: 'none', flexShrink: 0,
+                  backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%236366F1' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")",
+                  backgroundRepeat: 'no-repeat', backgroundPosition: 'right 8px center',
+                }}>
+                {ASPECT_RATIOS.map((ar) => (
+                  <option key={ar.value} value={ar.value} style={{ background: '#0F172A' }}>
+                    {ar.icon} {ar.label} — {ar.desc.split(' ')[0]}
+                  </option>
+                ))}
+              </select>
+
+              {/* Model */}
+              <select value={selectedModel || 'wan2.5'} onChange={(e) => setSelectedModel(e.target.value)}
+                style={{
+                  padding: '7px 28px 7px 10px', borderRadius: 10,
+                  background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(99,102,241,0.2)',
+                  color: '#CBD5E1', fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600,
+                  cursor: 'pointer', appearance: 'none', flex: '1 1 auto', minWidth: 140, maxWidth: 220,
+                  backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%236366F1' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")",
+                  backgroundRepeat: 'no-repeat', backgroundPosition: 'right 8px center',
+                }}>
+                {STATIC_MODELS_PREVIEW.map((m) => (
+                  <option key={m.id} value={m.id} style={{ background: '#0F172A' }}>
+                    {m.name} · {m.cr}cr
+                  </option>
+                ))}
+              </select>
+
+              {/* Prompt chips */}
+              <div style={{ display: 'flex', gap: 4, overflowX: 'auto', scrollbarWidth: 'none', flexShrink: 1 }}>
+                {[
+                  { label: '🌆 Neon Tokyo', prompt: 'Aerial shot of neon-lit Tokyo streets at night, cinematic drone view, 4K' },
+                  { label: '🌊 Ocean drone', prompt: 'Drone flying low over crystal blue ocean waves at golden hour, slow motion' },
+                  { label: '🔥 Cinematic fire', prompt: 'Close-up of fire embers floating upward in slow motion, dark background, cinematic' },
+                  { label: '🌸 Cherry blossom', prompt: 'Cherry blossom petals falling in slow motion, soft sunlight, Japanese garden' },
+                  { label: '⚡ Storm clouds', prompt: 'Dramatic storm clouds forming over mountains with lightning, epic timelapse' },
+                ].map((s, i) => (
+                  <button key={i} onClick={() => setPrompt(s.prompt)}
+                    style={{
+                      padding: '5px 9px', borderRadius: 999, border: '1px solid rgba(99,102,241,0.2)',
+                      background: 'rgba(99,102,241,0.07)', color: '#6366F1',
+                      fontSize: 10.5, fontWeight: 500, cursor: 'pointer',
+                      fontFamily: "'DM Sans', sans-serif", whiteSpace: 'nowrap', flexShrink: 0,
+                    }}>{s.label}</button>
+                ))}
+              </div>
+
+              <div style={{ flex: 1 }} />
+
+              {/* Generate → redirect button */}
+              <button
+                className="vg-generate-btn"
+                disabled={!prompt.trim() || (genType === 'image' && !imageFile)}
+                onClick={() => {
+                  const params = new URLSearchParams();
+                  params.set('tab', 'video');
+                  if (prompt.trim()) params.set('text', prompt);
+                  params.set('duration', String(duration));
+                  params.set('aspect', aspectRatio);
+                  params.set('model', selectedModel || 'wan2.5');
+
+                  if (genType === 'image' && imageFile) {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                      try {
+                        sessionStorage.setItem('cac_video_img_preview', reader.result as string);
+                        sessionStorage.setItem('cac_video_img_name', imageFile.name);
+                        sessionStorage.setItem('cac_video_img_type', imageFile.type);
+                      } catch {}
+                      window.location.href = `/create-ai-content?${params.toString()}`;
+                    };
+                    reader.readAsDataURL(imageFile);
+                  } else {
+                    window.location.href = `/create-ai-content?${params.toString()}`;
+                  }
+                }}
+                style={{ width: 'auto', padding: '8px 20px', fontSize: '0.9rem', borderRadius: 10, flexShrink: 0 }}
+              >
+                {genType === 'image' && !imageFile ? '🖼️ Upload image first' : '✨ Generate Free →'}
+              </button>
+            </div>
+
+            <p style={{ textAlign: 'center', fontSize: 11.5, color: '#475569', marginTop: 8 }}>
+              Free account · 50 credits instantly · No credit card required
+            </p>
+          </div>
+       </div>
+        
+        {/* ── ORPHANED TOOLBAR BLOCK — commented out, logic moved to MICRO-TOOL card above ── */}
+        {/*
               
-                {/* Gen type */}
                 <div style={{ display: 'flex', background: 'rgba(0,0,0,0.3)', borderRadius: 10, padding: 2, border: '1px solid rgba(99,102,241,0.15)', flexShrink: 0 }}>
                   {GENERATION_TYPES.map((t) => (
                     <button
@@ -1088,7 +1235,7 @@ const [resolution, setResolution] = useState("480p"); // default to cheapest
                   ))}
                 </div>
                 
-                {/* Duration */}
+
                 <div style={{ display: 'flex', background: 'rgba(0,0,0,0.3)', borderRadius: 10, padding: 2, border: '1px solid rgba(99,102,241,0.15)', flexShrink: 0 }}>
                   {DURATION_OPTIONS.map((d) => (
                     <button
@@ -1108,7 +1255,6 @@ const [resolution, setResolution] = useState("480p"); // default to cheapest
                   ))}
                 </div>
                 
-                {/* Aspect ratio dropdown */}
                 <select
                   value={aspectRatio}
                   onChange={(e) => setAspectRatio(e.target.value)}
@@ -1129,7 +1275,6 @@ const [resolution, setResolution] = useState("480p"); // default to cheapest
                   ))}
                 </select>
 
-                {/* Resolution dropdown — only show when model has choices */}
                 {(() => {
                   const available = getAvailableResolutions(effectiveModel);
                   const isLocked = available.length <= 1;
@@ -1170,7 +1315,6 @@ const [resolution, setResolution] = useState("480p"); // default to cheapest
                   );
                 })()}
                 
-                {/* Model dropdown */}
                 <select
                   value={modelAuto ? '__auto__' : effectiveModel}
                   onChange={(e) => {
@@ -1242,7 +1386,6 @@ const [resolution, setResolution] = useState("480p"); // default to cheapest
                   );
                 })()}                
                 
-               {/* Audio toggle — only if model supports it AND is not Grok (audio always on for Grok) */}
                 {(() => {
                   const isGrok = (effectiveModel || '').toLowerCase().includes('grok');
                   const modelSupportsAudio = isLoggedIn ? (models.find(m => m.id === effectiveModel)?.supportsAudio ?? false) : false;
@@ -1273,7 +1416,6 @@ const [resolution, setResolution] = useState("480p"); // default to cheapest
                   return null;
                 })()}
 
-                {/* Prompt suggestions button — moved into toolbar as a subtle icon */}
                 <div style={{ display: 'flex', gap: 4, overflowX: 'auto', scrollbarWidth: 'none', flexShrink: 1 }}>
                   {[
                     { label: '🌆 Neon Tokyo', prompt: 'Aerial shot of neon-lit Tokyo streets at night, cinematic drone view, 4K' },
@@ -1294,10 +1436,9 @@ const [resolution, setResolution] = useState("480p"); // default to cheapest
                   ))}
                 </div>
                 
-                {/* Spacer */}
+
                 <div style={{ flex: 1 }} />
                 
-                {/* Generate button — compact */}
                 {!isLoggedIn ? (
                   <button className="vg-generate-btn" onClick={() => setShowLoginModal(true)}
                     style={{ width: 'auto', padding: '8px 20px', fontSize: '0.9rem', borderRadius: 10, flexShrink: 0 }}>
@@ -1313,7 +1454,6 @@ const [resolution, setResolution] = useState("480p"); // default to cheapest
                 )}
               </div>
               
-              {/* Image upload — for image-to-video (kept below toolbar) */}
               {genType === "image" && (
                 <div style={{ marginTop: 12 }}>
                   {!imagePreview ? (
@@ -1337,7 +1477,7 @@ const [resolution, setResolution] = useState("480p"); // default to cheapest
                 </div>
               )}
 
-              {/* Advanced options */}
+
               <details style={{ marginTop: 10 }}>
                 <summary className="vg-advanced-toggle" style={{ marginBottom: 0 }}>
                   <span>⚙️ Advanced options</span>
@@ -1352,7 +1492,6 @@ const [resolution, setResolution] = useState("480p"); // default to cheapest
                 </div>
               </details>
             
-              {/* Credits / status strip */}
               {isLoggedIn && credits && hasPlan && (
                 <div style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -1390,7 +1529,6 @@ const [resolution, setResolution] = useState("480p"); // default to cheapest
                 </div>
               )}
 
-              {/* Low credits warning */}
               {isLoggedIn && credits && credits.balance < 100 && credits.balance > 0 && (
                 <div style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -1406,7 +1544,6 @@ const [resolution, setResolution] = useState("480p"); // default to cheapest
                 </div>
               )}
 
-              {/* Out of credits */}
               {isLoggedIn && credits && credits.balance === 0 && (
                 <div style={{
                   background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)',
@@ -1421,7 +1558,6 @@ const [resolution, setResolution] = useState("480p"); // default to cheapest
                 </div>
               )}
 
-              {/* Error */}
               <AnimatePresence>
                 {error && (
                   <motion.div className="vg-error" style={{ marginTop: 10, marginBottom: 0 }}
@@ -1430,7 +1566,6 @@ const [resolution, setResolution] = useState("480p"); // default to cheapest
                   </motion.div>
                 )}
               </AnimatePresence>
-              {/* Scroll to history nudge — shown when job is processing or history exists */}
               {isLoggedIn && (currentJob || history.length > 0) && (
                 <button
                   onClick={() => historyRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
@@ -1477,7 +1612,8 @@ const [resolution, setResolution] = useState("480p"); // default to cheapest
               )}
             </div>
           </div>
-        )}     
+        */}
+        {/* ── END ORPHANED TOOLBAR BLOCK ── */}
 
         {/* ── Demo Videos ── */}
         {demoVideos.length > 0 && (
@@ -1554,31 +1690,30 @@ const [resolution, setResolution] = useState("480p"); // default to cheapest
           </div>
         )}
 
-        {/* ── Current job card ── */}
-        <AnimatePresence>
-          {currentJob && (
+        {/* MICRO-TOOL: job card, history, upsell disabled — generation on create-ai-content */}
+        {false && currentJob && (() => { const job = currentJob!; return (
             <motion.div ref={jobCardRef} className="vg-job-card" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
               <div className="vg-job-header">
                 <div>
-                  <div className="vg-job-title">Generation {currentJob.id}</div>
-                  <div className="vg-job-prompt">"{currentJob.prompt}"</div>
+                  <div className="vg-job-title">Generation {job.id}</div>
+                  <div className="vg-job-prompt">"{job.prompt}"</div>
                   <div className="vg-job-meta">
-                    <span className="vg-job-tag">{currentJob.modelDisplayName}</span>
-                    <span className="vg-job-tag">{currentJob.durationSeconds}s</span>
-                    <span className="vg-job-tag">{currentJob.aspectRatio}</span>
-                    <span className="vg-job-tag">{currentJob.creditsUsed} credits</span>
+                    <span className="vg-job-tag">{job.modelDisplayName}</span>
+                    <span className="vg-job-tag">{job.durationSeconds}s</span>
+                    <span className="vg-job-tag">{job.aspectRatio}</span>
+                    <span className="vg-job-tag">{job.creditsUsed} credits</span>
                   </div>
                 </div>
-                <StatusBadge status={currentJob.status} />
+                <StatusBadge status={job.status} />
               </div>
 
               {/* Processing */}
-              {(currentJob.status === "PENDING" || currentJob.status === "PROCESSING") && (
+              {(job.status === "PENDING" || job.status === "PROCESSING") && (
                 <div className="vg-processing">
                   <div className="vg-processing-ring" />
                   <div>
                     <strong>
-                      {currentJob.status === "PENDING" ? "Queued — starting soon" : "Generating your video…"}
+                      {job.status === "PENDING" ? "Queued — starting soon" : "Generating your video…"}
                     </strong>
                     <p>This usually takes 30–120 seconds. We're checking every 5 seconds.</p>
                   </div>
@@ -1586,18 +1721,18 @@ const [resolution, setResolution] = useState("480p"); // default to cheapest
               )}
 
               {/* Completed */}
-              {currentJob.status === "COMPLETED" && currentJob.videoUrl && (
+             {job.status === "COMPLETED" && job.videoUrl && (() => { const videoUrl = job.videoUrl as string; return (
                 <>
                   <div className="vg-video-wrap">
-                    <video controls autoPlay loop src={currentJob.videoUrl} />
+                    <video controls autoPlay loop src={videoUrl} />
                   </div>
                   <div className="vg-video-actions">
-                    <a
+                    
                       className="vg-video-btn primary"
-                      href={currentJob.videoUrl} 
-                      download={`scenith-video-${currentJob.id}.mp4`}
+                    <a  href={videoUrl}
+                      download={`scenith-video-${job.id}.mp4`}
                       target="_blank"
-                      rel="noopener noreferrer" 
+                      rel="noopener noreferrer"
                     >
                       📥 Download MP4
                     </a>
@@ -1628,15 +1763,15 @@ const [resolution, setResolution] = useState("480p"); // default to cheapest
                     }}>View Plans →</a>
                   </div>                  
                 </>
-              )}
+              ); })()}
 
               {/* Failed */}
-              {currentJob.status === "FAILED" && (
+              {job.status === "FAILED" && (
                 <>
                   <div className="vg-error" style={{ marginTop: 0 }}>
                     <span>⚠️</span>
                     <div>
-                      <strong>Generation failed.</strong> {currentJob.errorMessage || "Something went wrong on our end. Your credits have been refunded."}
+                      <strong>Generation failed.</strong> {job.errorMessage || "Something went wrong on our end. Your credits have been refunded."}
                     </div>
                   </div>
                   <button
@@ -1649,11 +1784,11 @@ const [resolution, setResolution] = useState("480p"); // default to cheapest
                 </>
               )}
             </motion.div>
-          )}
-        </AnimatePresence>
+        ); })()}
+        {/* </AnimatePresence> */}
 
-        {/* ── History ── */}
-        {isLoggedIn && history.length > 0 && (
+        {/* MICRO-TOOL: history disabled */}
+        {false && isLoggedIn && history.length > 0 && (
           <>
             <button ref={historyRef} className="vg-history-toggle" onClick={() => setShowHistory(!showHistory)}>
               <span>🕒 Generation History ({history.length})</span>

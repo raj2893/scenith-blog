@@ -190,7 +190,7 @@ export default function WhyContentIsntViral() {
             </p>
             <ol className={styles.stepList}>
               <li><strong>Use Background Removal:</strong> Apply <Link href="https://scenith.in/tools/background-removal">AI Background Removal</Link> for clean visuals.</li>
-              <li><strong>Add Voiceovers:</strong> Use <Link href="https://scenith.in/tools/ai-voice-generation">AI Voice Generation</Link> for narration.</li>
+              <li><strong>Add Voiceovers:</strong> Use <Link href="https://scenith.in/create-ai-content">AI Voice Generation</Link> for narration.</li>
               <li><strong>Optimize Speed:</strong> Apply <Link href="https://scenith.in/tools/video-speed-modifier">speed effects</Link> for engagement.</li>
             </ol>
 

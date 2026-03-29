@@ -44,6 +44,7 @@ interface LoginFormData {
   password: string;
 }
 
+/* MICRO-TOOL: CustomAudioPlayer disabled
 const CustomAudioPlayer = ({ src }: { src: string }) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -131,6 +132,7 @@ const CustomAudioPlayer = ({ src }: { src: string }) => {
     </div>
   );
 };
+MICRO-TOOL END */
 
 const SCRIPT_TEMPLATES = [
   {
@@ -1232,66 +1234,9 @@ return (
         </p>
         <div className="hero-cta-section">
           <div className="main-content">
+            {/* MICRO-TOOL: text input + voice explorer retained, generate redirects to create-ai-content */}
             <div className="text-input-section">
-              <div style={{ textAlign: 'center', marginBottom: '16px' }}>
-                <button
-                  onClick={() => {
-                    const el = document.querySelector('.user-generated-showcase');
-                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  }}
-                  style={{
-                    padding: '10px 22px',
-                    background: 'linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.1))',
-                    border: '2px solid rgba(59,130,246,0.3)',
-                    borderRadius: '20px',
-                    color: '#3B82F6',
-                    fontSize: '0.9rem',
-                    fontWeight: '600',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    fontFamily: "'Montserrat', sans-serif",
-                  }}
-                  onMouseEnter={e => {
-                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(59,130,246,0.15), rgba(139,92,246,0.15))';
-                    e.currentTarget.style.borderColor = 'rgba(59,130,246,0.5)';
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                  }}
-                  onMouseLeave={e => {
-                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.1))';
-                    e.currentTarget.style.borderColor = 'rgba(59,130,246,0.3)';
-                    e.currentTarget.style.transform = 'translateY(0)';
-                  }}
-                >
-                  🎬 Full AI Content Creation Flow... →
-                </button>
-              </div> 
-              {/* Sticky credit display */}
-              {isLoggedIn && ttsUsage && (
-                <div style={{
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  padding: '10px 16px', marginBottom: '16px',
-                  background: 'linear-gradient(135deg, rgba(99,85,220,0.05), rgba(139,92,246,0.05))',
-                  border: '1px solid rgba(99,85,220,0.15)', borderRadius: '12px',
-                }}>
-                  <div style={{display:'flex', alignItems:'center', gap:'8px', fontSize:'0.875rem', fontWeight:600, color:'#3d3d6b'}}>
-                    <span>💳</span>
-                    {ttsUsage.isPaid
-                      ? <span><strong style={{color:'#6355dc'}}>{ttsUsage.balance}</strong> credits remaining</span>
-                      : <span><strong style={{color:'#059669'}}>{(ttsUsage.freeVoiceCharsLimit ?? 0) - (ttsUsage.freeVoiceCharsUsed ?? 0)}</strong> free chars left this month</span>
-                    }
-                  </div>
-                  {!ttsUsage.isPaid && (
-                    <a href="/pricing" style={{
-                      fontSize:'0.75rem', fontWeight:700, color:'#6355dc',
-                      textDecoration:'none', padding:'4px 12px',
-                      background:'rgba(99,85,220,0.08)', borderRadius:'20px',
-                      border:'1px solid rgba(99,85,220,0.2)'
-                    }}>Upgrade →</a>
-                  )}
-                </div>
-              )}
-
-              {/* Viral prompt chips — above textarea */}
+              {/* Prompt chips */}
               <div style={{ display: 'flex', gap: 5, marginBottom: 8, overflowX: 'auto', scrollbarWidth: 'none' }}>
                 {[
                   { label: '🎬 YT Intro', prompt: "What's up everyone! Welcome back — today we're diving into something huge, so let's get into it!" },
@@ -1303,427 +1248,151 @@ return (
                   <button
                     key={s.label}
                     onClick={() => setAiVoiceText(s.prompt)}
-                    disabled={limitsExceeded}
                     style={{
                       padding: '4px 10px', borderRadius: 999, border: '1.5px solid rgba(99,85,220,0.2)',
                       background: 'rgba(99,85,220,0.05)', color: '#6355dc',
                       fontSize: 11, fontWeight: 600, cursor: 'pointer',
                       whiteSpace: 'nowrap', flexShrink: 0, fontFamily: 'inherit',
-                      opacity: limitsExceeded ? 0.4 : 1,
                     }}
                   >{s.label}</button>
                 ))}
-              </div>              
-              
-              {/* Non-logged-in users: hide credit bar, show nothing — CTA is inside the box */}                        
+              </div>
+
+              <div style={{
+                border: '1.5px solid rgba(99,85,220,0.25)', borderRadius: 16,
+                background: '#fff', overflow: 'hidden',
+                boxShadow: '0 2px 12px rgba(99,85,220,0.08)', marginBottom: 12,
+              }}>
+                <textarea
+                  value={aiVoiceText}
+                  onChange={(e) => setAiVoiceText(e.target.value)}
+                  placeholder="✨ Type or paste your script here..."
+                  aria-label="Text input for AI voice generation"
+                  style={{
+                    width: '100%', minHeight: 100, maxHeight: 180,
+                    padding: '14px 16px 8px', resize: 'none', border: 'none', outline: 'none',
+                    background: 'transparent', color: '#2d2d5e',
+                    fontSize: 14, lineHeight: 1.6, fontFamily: 'inherit',
+                    boxSizing: 'border-box',
+                  }}
+                />
                 <div style={{
-                  border: '1.5px solid rgba(99,85,220,0.25)', borderRadius: 16,
-                  background: '#fff', overflow: 'hidden',
-                  boxShadow: '0 2px 12px rgba(99,85,220,0.08)', marginBottom: 12,
-                  position: 'relative',
+                  display: 'flex', alignItems: 'center', gap: 6,
+                  padding: '8px 12px', borderTop: '1px solid rgba(99,85,220,0.1)',
+                  background: '#fafafa', flexWrap: 'wrap',
                 }}>
-                  {/* Textarea */}
-                  <div style={{ position: 'relative' }}>
-                    <textarea
-                      value={aiVoiceText}
-                      onChange={handleTextChange}
-                      placeholder="✨ Type or paste your script here..."
-                      className={`ai-voice-textarea ${characterCount > maxCharsPerRequest ? 'limit-exceeded' : ''}`}
-                      disabled={limitsExceeded}
-                      aria-label="Text input for AI voice generation"
-                      style={{
-                        width: '100%', minHeight: 100, maxHeight: 180,
-                        padding: '14px 16px 8px', resize: 'none', border: 'none', outline: 'none',
-                        background: 'transparent', color: '#2d2d5e',
-                        fontSize: 14, lineHeight: 1.6, fontFamily: 'inherit',
-                        boxSizing: 'border-box',
-                      }}
-                    />
-
-                    {!isLoggedIn && (
-                      <div style={{
-                        position: 'absolute', inset: 0, zIndex: 10,
-                        background: 'linear-gradient(135deg, #6355dc, #8b5cf6)',
-                        borderRadius: 16,
-                        display: 'flex', flexDirection: 'column',
-                        alignItems: 'center', justifyContent: 'center',
-                        gap: 10, padding: '28px 24px', textAlign: 'center',
-                      }}>
-                        <span style={{ fontSize: 32 }}>🎤</span>
-                        <h4 style={{ color: '#fff', fontSize: 18, fontWeight: 800, margin: 0 }}>
-                          Try AI Voice Generation Free
-                        </h4>
-                        <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: 13, margin: 0 }}>
-                          Sign up for 50 free credits — no card needed
-                        </p>
-                      </div>
-                    )}
-
-                    {isLoggedIn && limitsExceeded && (
-                      <div className="textarea-overlay">
-                        <div className="overlay-content">
-                          <span className="lock-icon">⚠️</span>
-                          <h4>Character Limit Reached</h4>
-                          <p>You've used all your {userProfile.role} plan characters</p>
-                          <a href="/pricing" className="overlay-login-btn">Upgrade Now</a>
-                        </div>
-                      </div>
-                    )}
-
-                    {isLoggedIn && characterCount > maxCharsPerRequest && (
-                      <div style={{
-                        margin: '0 14px 6px', padding: '6px 10px', borderRadius: 8,
-                        background: 'rgba(220,38,38,0.06)', border: '1px solid rgba(220,38,38,0.2)',
-                        fontSize: 12, color: '#dc2626', display: 'flex', alignItems: 'center', gap: 6,
-                      }}>
-                        ⚠️ Exceeds limit by {(characterCount - maxCharsPerRequest).toLocaleString()} chars
-                      </div>
-                    )}
-                  </div>
-
-                  {/* ── Bottom toolbar ── */}
-                  <div style={{
-                    display: 'flex', alignItems: 'center', gap: 6,
-                    padding: '8px 12px', borderTop: '1px solid rgba(99,85,220,0.1)',
-                    background: '#fafafa', flexWrap: 'wrap',
-                  }}>
-                  
-                    {/* Speed — free users up to 2x, paid users up to 4x */}
-                    {isLoggedIn && (
-                      <select
-                        value={speed}
-                        onChange={(e) => {
-                          const val = parseFloat(e.target.value);
-                          if (!hasFullSpeedAccess && val > 2.0) return; // block free users above 2x
-                          setSpeed(val);
-                          setSpeedInput(String(val));
-                        }}
-                        title="Playback speed"
-                        style={{
-                          padding: '5px 28px 5px 10px', borderRadius: 8, fontSize: 12, fontWeight: 600,
-                          border: '1.5px solid rgba(99,85,220,0.2)',
-                          background: '#fff', color: '#6355dc',
-                          cursor: 'pointer', appearance: 'none', fontFamily: 'inherit',
-                          backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%236355dc' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")",
-                          backgroundRepeat: 'no-repeat', backgroundPosition: 'right 8px center',
-                        }}
-                      >
-                        {[0.5, 1.0, 1.25, 1.5, 1.75, 2.0].map(s => (
-                          <option key={s} value={s}>⚡ {s}x</option>
-                        ))}
-                        {[3.0, 4.0].map(s => (
-                          <option key={s} value={s} disabled={!hasFullSpeedAccess}>
-                            ⚡ {s}x{!hasFullSpeedAccess ? ' 👑' : ''}
-                          </option>
-                        ))}
-                      </select>
-                    )}
-
-                    {/* Templates — logged in only */}
-                    {isLoggedIn && (
-                      <button
-                        onClick={() => {
-                          scrollToSection('script-templates');
-                          toggleScriptTemplates();
-                        }}
-                        style={{
-                          padding: '5px 10px', borderRadius: 8, fontSize: 12, fontWeight: 600,
-                          border: '1.5px solid rgba(99,85,220,0.2)', background: '#fff',
-                          color: '#8888bb', cursor: 'pointer', whiteSpace: 'nowrap',
-                        }}
-                      >
-                        📝 Templates
-                      </button>
-                    )}
-
-                    {/* Credits pill */}
-                    <span style={{
-                      fontSize: 11.5, fontWeight: 700, padding: '4px 10px', borderRadius: 999,
-                      background: 'rgba(99,85,220,0.08)', color: '#6355dc', whiteSpace: 'nowrap',
-                    }}>
-                      {isLoggedIn
-                        ? ttsUsage?.isPaid
-                          ? `⚡ ${ttsUsage.balance} cr · ${Math.ceil(aiVoiceText.length / 100)}cr/req`
-                          : `⚡ ${((ttsUsage?.freeVoiceCharsLimit ?? 0) - (ttsUsage?.freeVoiceCharsUsed ?? 0)).toLocaleString()} chars left`
-                        : '⚡ 50 free credits on signup'
-                      }
+                  {aiVoiceText.length > 0 && (
+                    <span style={{ fontSize: 10.5, color: '#aaaacc', fontWeight: 600 }}>
+                      {aiVoiceText.length} chars
                     </span>
-                    
-                    {/* char count — only when typing */}
-                    {characterCount > 0 && (
-                      <span style={{
-                        fontSize: 10.5, color: characterCount > maxCharsPerRequest ? '#dc2626' : '#aaaacc',
-                        fontWeight: 600, whiteSpace: 'nowrap',
-                      }}>
-                        {characterCount}/{maxCharsPerRequest}
-                      </span>
-                    )}
-
-                    {/* Spacer */}
-                    <div style={{ flex: 1 }} />
-                  
-                    {/* Selected voice pill — shown when a voice is picked */}
-                    {selectedVoice && (
-                      <div style={{
-                        display: 'flex', alignItems: 'center', gap: 5, padding: '4px 8px',
-                        borderRadius: 8, background: 'rgba(16,185,129,0.08)',
-                        border: '1px solid rgba(16,185,129,0.2)', fontSize: 11.5, color: '#059669',
-                        fontWeight: 600, whiteSpace: 'nowrap',
-                      }}>
-                        {selectedVoice.profileUrl && (
-                          <img src={selectedVoice.profileUrl} alt="" width={18} height={18}
-                            style={{ borderRadius: '50%', objectFit: 'cover' }} />
-                        )}
-                        {selectedVoice.humanName || selectedVoice.voiceName} ✓
-                      </div>
-                    )}
-
-                    {/* Not logged in — single CTA */}
-                    {!isLoggedIn && (
-                      <button
-                        onClick={() => setShowLoginModal(true)}
-                        style={{
-                          padding: '7px 18px', borderRadius: 10, border: 'none', cursor: 'pointer',
-                          background: 'linear-gradient(135deg, #6355dc, #8b5cf6)', color: '#fff',
-                          fontWeight: 700, fontSize: 13, fontFamily: 'inherit', whiteSpace: 'nowrap',
-                        }}
-                      >
-                        ✨ Sign Up Free & Generate
-                      </button>
-                    )}
-
-                    {/* Logged in — generate or upgrade */}
-                    {isLoggedIn && (
-                      isLimitsExceeded() ? (
-                        <a href="https://scenith.in/pricing" style={{
-                          padding: '7px 16px', borderRadius: 10,
-                          background: 'linear-gradient(135deg, #059669, #10b981)', color: '#fff',
-                          fontWeight: 700, fontSize: 12, textDecoration: 'none', whiteSpace: 'nowrap',
-                        }}>🚀 Upgrade</a>
-                      ) : (
-                        <button
-                          onClick={handleGenerateAiAudio}
-                          disabled={
-                            !aiVoiceText.trim() || !selectedVoice || isGenerating ||
-                            characterCount > maxCharsPerRequest || wouldExceedLimits
-                          }
-                          style={{
-                            padding: '7px 18px', borderRadius: 10, border: 'none', cursor: 'pointer',
-                            background: (!aiVoiceText.trim() || !selectedVoice || isGenerating || characterCount > maxCharsPerRequest || wouldExceedLimits)
-                              ? '#e2e2f0' : 'linear-gradient(135deg, #6355dc, #8b5cf6)',
-                            color: (!aiVoiceText.trim() || !selectedVoice || isGenerating || characterCount > maxCharsPerRequest || wouldExceedLimits)
-                              ? '#aaa' : '#fff',
-                            fontWeight: 700, fontSize: 13, fontFamily: 'inherit',
-                            display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap',
-                          }}
-                        >
-                          {isGenerating ? (
-                            <>
-                              <span style={{
-                                width: 14, height: 14, border: '2px solid rgba(255,255,255,0.3)',
-                                borderTopColor: '#fff', borderRadius: '50%',
-                                animation: 'spin 0.75s linear infinite', display: 'inline-block',
-                              }} />
-                              Generating…
-                            </>
-                          ) : '🎙️ Generate Voice'}
-                        </button>
-                      )
-                    )}
-                  </div>
-                  
-                  {/* Inline upgrade banner below toolbar */}
-                  {isLoggedIn && !ttsUsage?.isPaid && (
+                  )}
+                  {selectedVoice && (
                     <div style={{
-                      padding: '8px 14px',
-                      borderTop: '1px solid rgba(99,85,220,0.08)',
-                      background: 'linear-gradient(90deg, rgba(99,85,220,0.04), rgba(139,92,246,0.04))',
-                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                      gap: 8,
+                      display: 'flex', alignItems: 'center', gap: 5, padding: '4px 8px',
+                      borderRadius: 8, background: 'rgba(16,185,129,0.08)',
+                      border: '1px solid rgba(16,185,129,0.2)', fontSize: 11.5, color: '#059669',
+                      fontWeight: 600, whiteSpace: 'nowrap',
                     }}>
-                      <span style={{ fontSize: 12, color: '#8888bb' }}>
-                        ⚡ Free plan · <strong style={{ color: '#6355dc' }}>83× more characters</strong> on Creator Lite
-                      </span>
-                      <a href="/pricing" style={{
-                        fontSize: 11.5, fontWeight: 700, color: '#fff',
-                        padding: '4px 12px', borderRadius: 6, whiteSpace: 'nowrap',
-                        background: 'linear-gradient(135deg, #6355dc, #8b5cf6)',
-                        textDecoration: 'none',
-                      }}>
-                        Upgrade →
-                      </a>
+                      {selectedVoice.profileUrl && (
+                        <img src={selectedVoice.profileUrl} alt="" width={18} height={18}
+                          style={{ borderRadius: '50%', objectFit: 'cover' }} />
+                      )}
+                      {selectedVoice.humanName || selectedVoice.voiceName} ✓
                     </div>
                   )}
-
-                  {!isLoggedIn && (
-                    <div style={{
-                      padding: '8px 14px',
-                      borderTop: '1px solid rgba(99,85,220,0.08)',
-                      background: 'linear-gradient(90deg, rgba(99,85,220,0.04), rgba(139,92,246,0.04))',
-                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                      gap: 8,
-                    }}>
-                      <span style={{ fontSize: 12, color: '#8888bb' }}>
-                        ✨ <strong style={{ color: '#6355dc' }}>50 free credits</strong> on signup — no card needed
-                      </span>
-                      <a href="/signup" style={{
-                        fontSize: 11.5, fontWeight: 700, color: '#fff',
-                        padding: '4px 12px', borderRadius: 6, whiteSpace: 'nowrap',
-                        background: 'linear-gradient(135deg, #6355dc, #8b5cf6)',
-                        textDecoration: 'none',
-                      }}>
-                        Sign Up Free →
-                      </a>
-                    </div>
-                  )}
-                  {/* Low credits warning inline */}
-                  {isLoggedIn && ttsUsage && !ttsUsage.isPaid &&
-                    ((ttsUsage.freeVoiceCharsUsed ?? 0) / (ttsUsage.freeVoiceCharsLimit ?? 1)) >= 0.80 && (
-                    <div style={{
-                      padding: '8px 14px', borderTop: '1px solid rgba(245,158,11,0.15)',
-                      background: 'rgba(245,158,11,0.04)', fontSize: 12, color: '#92400e',
-                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    }}>
-                      <span>⚠️ Almost out of free chars</span>
-                      <a href="/pricing" style={{
-                        fontSize: 11, fontWeight: 700, color: '#f59e0b', textDecoration: 'none',
-                        padding: '3px 8px', borderRadius: 6, background: 'rgba(245,158,11,0.12)',
-                      }}>Upgrade →</a>
-                    </div>
-                  )}
-
-                  {/* Limit modal inline */}
-                  {showLimitModal && (
-                    <div style={{
-                      padding: '12px 14px', borderTop: '1px solid rgba(245,158,11,0.2)',
-                      background: 'rgba(245,158,11,0.05)',
-                      display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10,
-                    }}>
-                      <span style={{ fontSize: 12.5, color: '#92400e', fontWeight: 600 }}>
-                        ⚠️ {Math.round(((ttsUsage?.freeVoiceCharsUsed ?? 0) / (ttsUsage?.freeVoiceCharsLimit ?? 1)) * 100)}% of free limit used
-                      </span>
-                      <div style={{ display: 'flex', gap: 6 }}>
-                        <a href="/pricing" style={{
-                          fontSize: 12, fontWeight: 700, padding: '4px 12px', borderRadius: 8,
-                          background: 'linear-gradient(135deg, #6355dc, #8b5cf6)', color: '#fff',
-                          textDecoration: 'none',
-                        }}>Upgrade</a>
-                        <button onClick={() => setShowLimitModal(false)} style={{
-                          fontSize: 12, fontWeight: 600, padding: '4px 10px', borderRadius: 8,
-                          border: '1px solid rgba(0,0,0,0.1)', background: '#fff', cursor: 'pointer',
-                          color: '#666',
-                        }}>Dismiss</button>
-                      </div>
-                    </div>
-                  )}
-                </div>                               
+                  <div style={{ flex: 1 }} />
+                  <button
+                    onClick={() => {
+                      const dest = new URL('https://scenith.in/create-ai-content');
+                      dest.searchParams.set('tab', 'voice');
+                      if (aiVoiceText.trim()) dest.searchParams.set('text', aiVoiceText);
+                      window.location.href = dest.toString();
+                    }}
+                    style={{
+                      padding: '7px 18px', borderRadius: 10, border: 'none', cursor: 'pointer',
+                      background: 'linear-gradient(135deg, #6355dc, #8b5cf6)',
+                      color: '#fff', fontWeight: 700, fontSize: 13, fontFamily: 'inherit',
+                      display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap',
+                    }}
+                  >
+                    🎙️ Generate Voice →
+                  </button>
+                </div>
+              </div>
             </div>
 
             <div className="voice-list-section">
               <div className="fixed-header">
-  <h3>Select a Voice</h3>
-  {/* Provider tabs — kept for voice list context, synced with toolbar dropdown */}
- <div className="provider-tabs">
-    {(['GOOGLE', 'OPENAI', 'AZURE'] as const).map(p => {
-      const isLocked = p === 'OPENAI' && !ttsUsage?.isPaid;
-      return (
-        <button
-          key={p}
-          className={`provider-tab ${selectedProvider === p ? 'active' : ''} ${isLocked ? 'locked' : ''}`}
-          onClick={() => {
-            if (isLocked) { window.location.href = '/pricing'; return; }
-            setSelectedProvider(p);
-            setSelectedVoice(null);
-          }}
-          title={isLocked ? 'OpenAI voices require paid plan' : p === 'AZURE' ? 'Azure voices — available on free plan' : ''}
-        >
-          {p === 'GOOGLE' && '🔵 '}
-          {p === 'OPENAI' && '🟢 '}
-          {p === 'AZURE' && '🔷 '}
-          {p.charAt(0) + p.slice(1).toLowerCase()}
-          {isLocked && <span className="tab-lock">👑</span>}
-          {p === 'AZURE' && !ttsUsage?.isPaid && (
-            <span style={{ fontSize: 9, marginLeft: 3, color: '#059669', fontWeight: 700 }}></span>
-          )}
-        </button>
-      );
-    })}
-  </div>
-  {/* Filters only for Google — compact, no label banner */}
-  {selectedProvider === 'GOOGLE' && (
-  <div style={{
-    display: 'flex', gap: 6, padding: '6px 12px 10px',
-    boxSizing: 'border-box', width: '100%',
-  }}>
-    <select
-      value={filterLanguage}
-      onChange={(e) => setFilterLanguage(e.target.value)}
-      aria-label="Filter voices by language"
-      style={{
-        flex: 1, minWidth: 0, boxSizing: 'border-box',
-        padding: '6px 8px', borderRadius: 8, fontSize: 11,
-        fontWeight: 600, border: '1.5px solid rgba(99,85,220,0.25)',
-        background: '#fff', color: '#2d2d5e',
-        cursor: 'pointer', appearance: 'none',
-        backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 12 12'%3E%3Cpath fill='%236355dc' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")",
-        backgroundRepeat: 'no-repeat', backgroundPosition: 'right 6px center',
-        paddingRight: 22, overflow: 'hidden', textOverflow: 'ellipsis',
-      }}
-    >
-      <option value="">🌍 Language</option>
-      {uniqueLanguages.map((lang) => (
-        <option key={lang} value={lang}>{lang}</option>
-      ))}
-    </select>
-    <select
-      value={filterGender}
-      onChange={(e) => setFilterGender(e.target.value)}
-      aria-label="Filter voices by gender"
-      style={{
-        flex: 1, minWidth: 0, boxSizing: 'border-box',
-        padding: '6px 8px', borderRadius: 8, fontSize: 11,
-        fontWeight: 600, border: '1.5px solid rgba(99,85,220,0.25)',
-        background: '#fff', color: '#2d2d5e',
-        cursor: 'pointer', appearance: 'none',
-        backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 12 12'%3E%3Cpath fill='%236355dc' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")",
-        backgroundRepeat: 'no-repeat', backgroundPosition: 'right 6px center',
-        paddingRight: 22, overflow: 'hidden', textOverflow: 'ellipsis',
-      }}
-    >
-      <option value="">👤 Gender</option>
-      {uniqueGenders.map((gen) => (
-        <option key={gen} value={gen}>{gen}</option>
-      ))}
-    </select>
-  </div>
-)}
-</div>
+                <h3>Select a Voice</h3>
+                <div className="provider-tabs">
+                  {(['GOOGLE', 'OPENAI', 'AZURE'] as const).map(p => (
+                    <button
+                      key={p}
+                      className={`provider-tab ${selectedProvider === p ? 'active' : ''}`}
+                      onClick={() => { setSelectedProvider(p); setSelectedVoice(null); }}
+                    >
+                      {p === 'GOOGLE' && '🔵 '}
+                      {p === 'OPENAI' && '🟢 '}
+                      {p === 'AZURE' && '🔷 '}
+                      {p.charAt(0) + p.slice(1).toLowerCase()}
+                    </button>
+                  ))}
+                </div>
+                {selectedProvider === 'GOOGLE' && (
+                  <div style={{ display: 'flex', gap: 6, padding: '6px 12px 10px', boxSizing: 'border-box', width: '100%' }}>
+                    <select
+                      value={filterLanguage}
+                      onChange={(e) => setFilterLanguage(e.target.value)}
+                      aria-label="Filter voices by language"
+                      style={{
+                        flex: 1, minWidth: 0, padding: '6px 8px', borderRadius: 8, fontSize: 11,
+                        fontWeight: 600, border: '1.5px solid rgba(99,85,220,0.25)',
+                        background: '#fff', color: '#2d2d5e', cursor: 'pointer', appearance: 'none',
+                        backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 12 12'%3E%3Cpath fill='%236355dc' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")",
+                        backgroundRepeat: 'no-repeat', backgroundPosition: 'right 6px center', paddingRight: 22,
+                      }}
+                    >
+                      <option value="">🌍 Language</option>
+                      {uniqueLanguages.map((lang) => <option key={lang} value={lang}>{lang}</option>)}
+                    </select>
+                    <select
+                      value={filterGender}
+                      onChange={(e) => setFilterGender(e.target.value)}
+                      aria-label="Filter voices by gender"
+                      style={{
+                        flex: 1, minWidth: 0, padding: '6px 8px', borderRadius: 8, fontSize: 11,
+                        fontWeight: 600, border: '1.5px solid rgba(99,85,220,0.25)',
+                        background: '#fff', color: '#2d2d5e', cursor: 'pointer', appearance: 'none',
+                        backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 12 12'%3E%3Cpath fill='%236355dc' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")",
+                        backgroundRepeat: 'no-repeat', backgroundPosition: 'right 6px center', paddingRight: 22,
+                      }}
+                    >
+                      <option value="">👤 Gender</option>
+                      {uniqueGenders.map((gen) => <option key={gen} value={gen}>{gen}</option>)}
+                    </select>
+                  </div>
+                )}
+              </div>
 
               {selectedVoice && (
                 <div style={{
-                  margin: '0 20px 0', padding: '8px 14px',
+                  margin: '0 20px 8px', padding: '8px 14px',
                   background: 'linear-gradient(135deg, rgba(99,85,220,0.08), rgba(139,92,246,0.06))',
                   border: '1px solid rgba(99,85,220,0.2)', borderRadius: '10px',
                   display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.825rem',
                 }}>
-                  <img
-                    src={selectedVoice.profileUrl || ''}
-                    alt="" width={28} height={28}
-                    style={{borderRadius:'50%', objectFit:'cover'}}
-                  />
-                  <span style={{fontWeight:600, color:'#2d2d5e'}}>
-                    {selectedVoice.humanName || selectedVoice.voiceName}
-                  </span>
-                  <span style={{color:'#9999bb'}}>·</span>
-                  <span style={{color:'#9999bb'}}>{selectedVoice.language}</span>
+                  <img src={selectedVoice.profileUrl || ''} alt="" width={28} height={28} style={{ borderRadius: '50%', objectFit: 'cover' }} />
+                  <span style={{ fontWeight: 600, color: '#2d2d5e' }}>{selectedVoice.humanName || selectedVoice.voiceName}</span>
+                  <span style={{ color: '#9999bb' }}>·</span>
+                  <span style={{ color: '#9999bb' }}>{selectedVoice.language}</span>
                   <span style={{
-                    marginLeft:'auto', color:'#059669', fontWeight:700,
-                    fontSize:'0.75rem', background:'rgba(16,185,129,0.08)',
-                    padding:'2px 8px', borderRadius:'12px', border:'1px solid rgba(16,185,129,0.2)'
+                    marginLeft: 'auto', color: '#059669', fontWeight: 700, fontSize: '0.75rem',
+                    background: 'rgba(16,185,129,0.08)', padding: '2px 8px', borderRadius: '12px',
+                    border: '1px solid rgba(16,185,129,0.2)',
                   }}>✓ Selected</span>
                 </div>
-              )}              
-              
+              )}
+
               <div className="scrollable-voices">
                 {selectedProvider === 'GOOGLE' ? (
                   voices.length === 0 ? (
@@ -1733,35 +1402,23 @@ return (
                       {voices.map((voice) => (
                         <div
                           key={`${voice.voiceName}-${voice.voiceStyle || 'default'}`}
-                          className={`voice-item ${
-                            selectedVoice?.voiceName === voice.voiceName &&
-                            selectedVoice?.voiceStyle === voice.voiceStyle ? 'selected' : ''
-                          }`}
-                          role="button"
-                          tabIndex={0}
+                          className={`voice-item ${selectedVoice?.voiceName === voice.voiceName && selectedVoice?.voiceStyle === voice.voiceStyle ? 'selected' : ''}`}
+                          role="button" tabIndex={0}
                           aria-label={`Select voice ${voice.humanName || voice.voiceName}`}
                         >
-                          <img
-                            src={voice.profileUrl}
-                            alt={`${voice.humanName || voice.voiceName} profile`}
-                            className="voice-profile-image"
-                            onClick={() => handleVoiceSelect(voice)}
-                          />
+                          <img src={voice.profileUrl} alt={`${voice.humanName || voice.voiceName} profile`}
+                            className="voice-profile-image" onClick={() => handleVoiceSelect(voice)} />
                           <div className="voice-details" onClick={() => handleVoiceSelect(voice)}>
                             <div className="voice-title">
                               {voice.humanName || voice.voiceName}
-                              {voice.voiceStyle && (
-                                <span className="voice-style-badge">{voice.voiceStyle}</span>
-                              )}
+                              {voice.voiceStyle && <span className="voice-style-badge">{voice.voiceStyle}</span>}
                             </div>
                             <div className="voice-info">{`${voice.language} (${voice.gender})`}</div>
                           </div>
-                          <button
-                            className="demo-button"
+                          <button className="demo-button"
                             onClick={(e) => { e.stopPropagation(); handlePlayDemo(voice); }}
-                            aria-label={`Play demo for ${voice.humanName || voice.voiceName}`}
-                          >
-                            {playingDemo === voice.voiceName ? '⏸️' : '▶️'}
+                            aria-label={`Play demo for ${voice.humanName || voice.voiceName}`}>
+                            {playingDemo === `${voice.voiceName}-${voice.voiceStyle || 'default'}` ? '⏸️' : '▶️'}
                           </button>
                         </div>
                       ))}
@@ -1777,36 +1434,23 @@ return (
                       {externalVoices.map((voice) => (
                         <div
                           key={`${voice.provider}-${voice.voiceId}`}
-                          className={`voice-item ${
-                            selectedVoice?.voiceId === voice.voiceId ? 'selected' : ''
-                          }`}
-                          role="button"
-                          tabIndex={0}
+                          className={`voice-item ${selectedVoice?.voiceId === voice.voiceId ? 'selected' : ''}`}
+                          role="button" tabIndex={0}
                           aria-label={`Select voice ${voice.humanName}`}
                         >
-                          <div
-                            className="voice-avatar-placeholder"
-                            onClick={() => handleVoiceSelect(voice as Voice)}
-                          >
+                          <div className="voice-avatar-placeholder" onClick={() => handleVoiceSelect(voice as Voice)}>
                             {voice.gender === 'Female' ? '👩' : voice.gender === 'Male' ? '👨' : '🧑'}
                           </div>
                           <div className="voice-details" onClick={() => handleVoiceSelect(voice as Voice)}>
                             <div className="voice-title">{voice.humanName}</div>
                             <div className="voice-info">
                               {voice.language} · {voice.gender}
-                              {(voice as any).description && (
-                                <span className="voice-description"> · {(voice as any).description}</span>
-                              )}
+                              {(voice as any).description && <span className="voice-description"> · {(voice as any).description}</span>}
                             </div>
                           </div>
-                          <button
-                            className="demo-button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handlePlayDemo(voice as Voice);
-                            }}
-                            aria-label={`Play demo for ${voice.humanName}`}
-                          >
+                          <button className="demo-button"
+                            onClick={(e) => { e.stopPropagation(); handlePlayDemo(voice as Voice); }}
+                            aria-label={`Play demo for ${voice.humanName}`}>
                             {playingDemo === `${voice.voiceName}-${voice.voiceStyle || 'default'}` ? '⏸️' : '▶️'}
                           </button>
                         </div>
@@ -1818,8 +1462,9 @@ return (
             </div>
           </div>
 
+         {/* MICRO-TOOL: audio output disabled
           {generatedAudio && (
-            <section className="audio-output-section" role="region" aria-labelledby="audio-output-title">
+            <section className="audio-output-section"
               <motion.div
                 className="container"
                 initial={{ opacity: 0, y: 50 }}
@@ -1899,11 +1544,12 @@ return (
                     </div>
                   </motion.div>
                 )}
-              </motion.div>
+             </motion.div>
             </section>
-          )}     
+          )}
+MICRO-TOOL END */}
 
-          {/* Script Templates Section */}
+           { /* MICRO-TOOL: Script templates disabled
           {isLoggedIn && (
             <section className="script-templates-section" id="script-templates" role="region" aria-labelledby="templates-title">
               <div className="container">
@@ -1978,8 +1624,9 @@ return (
               </div>
             </section>
           )}
-          
-          {/* Past Generations History Section */}
+          MICRO-TOOL END */}
+
+          {/* Past Generations History Section 
           {isLoggedIn && (
             <section className="history-section" id="history" role="region" aria-labelledby="history-title">
               <div className="container">
@@ -2061,8 +1708,9 @@ return (
                 )}
               </div>
             </section>
-          )}         
-              
+          )} */}
+          
+
           <div className="demo-video-section">
             <h3 className="demo-video-title">See AI Voice Generation in Action</h3>
             <div className="youtube-video-wrapper">
@@ -2266,19 +1914,13 @@ return (
       <div className="container">
         <h2 id="cta-title">Ready to Create Stunning Audio?</h2>
         <p>Join over 1500+ creators who trust our AI voice generator. Start producing professional voiceovers for your videos, podcasts, and projects today - completely free!</p>
-        <button
+       <a href="https://scenith.in/create-ai-content?tab=voice"
           className="cta-button"
-          onClick={() => {
-            if (!isLoggedIn) {
-              setShowLoginModal(true);
-            } else {
-              scrollToSection('hero');
-            }
-          }}
           aria-label="Start using the free AI voice generator tool"
+          style={{ display: 'inline-block', textDecoration: 'none' }}
         >
-          {isLoggedIn ? 'Generate Voice Now - Free!' : 'Login to Start Generating'}
-        </button>
+          🎙️ Generate AI Voice Free →
+        </a>
         <div className="cta-features">
           <span>⚡ Instant generation</span>
           <span>🔒 Secure & private</span>
@@ -2522,6 +2164,7 @@ return (
         </div>
       )}          
 
+     {/* MICRO-TOOL: Floating upgrade CTA disabled
       {isLoggedIn && userProfile.role === 'BASIC' && (
         <div className="floating-upgrade-cta">
           <button
@@ -2534,8 +2177,9 @@ return (
               <small>Starter from $9/mo · 300 credits included</small>
             </span>
           </button>
-        </div>
-      )}    
+          </div>
+      )}
+      MICRO-TOOL END */}
     </div>
   );
 };

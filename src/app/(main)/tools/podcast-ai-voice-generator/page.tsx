@@ -64,10 +64,10 @@ export const metadata: Metadata = {
 };
 
 const UTM_LINK =
-  'https://scenith.in/tools/ai-voice-generation?utm_source=podcast_tool_page&utm_medium=cta_button&utm_campaign=podcast_voice_generator';
+  'https://scenith.in/create-ai-content?utm_source=podcast_tool_page&utm_medium=cta_button&utm_campaign=podcast_voice_generator';
 
 const SECONDARY_UTM =
-  'https://scenith.in/tools/ai-voice-generation?utm_source=podcast_tool_page&utm_medium=inline_link&utm_campaign=podcast_voice_generator';
+  'https://scenith.in/create-ai-content?utm_source=podcast_tool_page&utm_medium=inline_link&utm_campaign=podcast_voice_generator';
 
 export default function PodcastAIVoiceGeneratorPage() {
   const jsonLd = {
@@ -1153,7 +1153,7 @@ export default function PodcastAIVoiceGeneratorPage() {
                 <strong>AI Video Generator</strong>
                 <span>Turn prompts into cinematic AI videos in seconds</span>
               </a>
-              <a href="https://scenith.in/tools/ai-image-generation" className="pvg-related__card">
+              <a href="https://scenith.in/create-ai-content" className="pvg-related__card">
                 <span aria-hidden="true">🖼️</span>
                 <strong>AI Image Generator</strong>
                 <span>Create stunning visuals for podcast cover art</span>

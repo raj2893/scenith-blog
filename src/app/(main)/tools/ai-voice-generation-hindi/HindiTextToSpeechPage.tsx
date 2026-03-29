@@ -17,7 +17,7 @@ interface Voice {
 }
 
 const HindiTextToSpeechPage = () => {
-  const ctaUrl = 'https://scenith.in/tools/ai-voice-generation?utm_source=hindi-tts-page&utm_medium=cta-button&utm_campaign=hindi-voice-traffic';
+  const ctaUrl = 'https://scenith.in/create-ai-content?utm_source=hindi-tts-page&utm_medium=cta-button&utm_campaign=hindi-voice-traffic';
 
   const [script, setScript] = useState('');
   const [copied, setCopied] = useState(false);

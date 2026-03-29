@@ -1064,6 +1064,7 @@ const handleDeleteConfirm = async () => {
                 });
                 setPlanLimits(limitsRes.data);
                 setCreditBalance(limitsRes.data.balance);
+                window.dispatchEvent(new Event('creditsUpdated'));
               } catch (_) {}
               const outputSection = document.querySelector('.video-output-section');
               if (outputSection) {

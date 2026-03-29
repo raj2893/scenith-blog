@@ -9,7 +9,7 @@ import { Variants } from "framer-motion";
 
 // UTM-tagged destination
 const TOOL_URL =
-  "https://scenith.in/tools/ai-image-generation?utm_source=ai-image-generator-free&utm_medium=cta&utm_campaign=satellite-page&utm_content=text-to-image";
+  "https://scenith.in/create-ai-content?utm_source=ai-image-generator-free&utm_medium=cta&utm_campaign=satellite-page&utm_content=text-to-image";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 

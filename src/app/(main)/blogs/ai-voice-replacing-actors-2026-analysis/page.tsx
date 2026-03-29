@@ -110,8 +110,8 @@ export default function AIVoiceReplacingActors2026() {
 
           <p>
             At the forefront of accessible AI voice technology is <strong>Scenith's free AI voice generator</strong>, available at
-            <a href="https://scenith.in/tools/ai-voice-generation?utm_source=blog&utm_medium=intro&utm_campaign=replacing_actors_2026" target="_blank" rel="noopener noreferrer">
-              https://scenith.in/tools/ai-voice-generation
+            <a href="https://scenith.in/create-ai-content?utm_source=blog&utm_medium=intro&utm_campaign=replacing_actors_2026" target="_blank" rel="noopener noreferrer">
+              https://scenith.in/create-ai-content
             </a>.
             This platform demonstrates how 40+ natural voices across 20+ languages can replace traditional recording for most applications — completely free, instant, and unlimited (5,000 characters/month on BASIC plan).
           </p>
@@ -530,7 +530,7 @@ export default function AIVoiceReplacingActors2026() {
             </p>
             <p style={{fontSize: '1.8rem', fontWeight: 900, margin: '3rem 0'}}>
               <a
-                href="https://scenith.in/tools/ai-voice-generation?utm_source=blog&utm_medium=final_cta&utm_campaign=replacing_actors_2026"
+                href="https://scenith.in/create-ai-content?utm_source=blog&utm_medium=final_cta&utm_campaign=replacing_actors_2026"
                 style={{ color: '#ffffff', textDecoration: 'none' }}
                 target="_blank"
                 rel="noopener noreferrer"

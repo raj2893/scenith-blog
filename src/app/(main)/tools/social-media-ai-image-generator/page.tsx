@@ -387,7 +387,7 @@ export default function SocialMediaAIImageGeneratorPage() {
 
           {/* ── HERO CTA ── */}
           <Link
-            href="https://scenith.in/tools/ai-image-generation?utm_source=social_media_ai_image_generator&utm_medium=hero_cta&utm_campaign=tool_landing_page&utm_content=hero_generate_button"
+            href="https://scenith.in/create-ai-content?utm_source=social_media_ai_image_generator&utm_medium=hero_cta&utm_campaign=tool_landing_page&utm_content=hero_generate_button"
             className="smig-hero-cta"
           >
             <span className="smig-cta-icon">✨</span>
@@ -540,7 +540,7 @@ export default function SocialMediaAIImageGeneratorPage() {
                 </div>
 
                 <Link
-                  href={`https://scenith.in/tools/ai-image-generation?utm_source=social_media_ai_image_generator&utm_medium=platform_card&utm_campaign=tool_landing_page&utm_content=${platform.name.toLowerCase().replace(/\//g, '_')}_cta`}
+                  href={`https://scenith.in/create-ai-content?utm_source=social_media_ai_image_generator&utm_medium=platform_card&utm_campaign=tool_landing_page&utm_content=${platform.name.toLowerCase().replace(/\//g, '_')}_cta`}
                   className="smig-platform-cta"
                 >
                   Generate {platform.name} Images →
@@ -1057,7 +1057,7 @@ export default function SocialMediaAIImageGeneratorPage() {
 
           <div className="smig-cta-buttons">
             <Link
-              href="https://scenith.in/tools/ai-image-generation?utm_source=social_media_ai_image_generator&utm_medium=bottom_cta&utm_campaign=tool_landing_page&utm_content=bottom_generate_free"
+              href="https://scenith.in/create-ai-content?utm_source=social_media_ai_image_generator&utm_medium=bottom_cta&utm_campaign=tool_landing_page&utm_content=bottom_generate_free"
               className="smig-bottom-cta-primary"
             >
               ✨ Generate Images Free — No Signup Required

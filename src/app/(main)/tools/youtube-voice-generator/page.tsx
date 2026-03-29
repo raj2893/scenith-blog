@@ -318,7 +318,7 @@ export default function YouTubeVoiceGeneratorPage() {
           {/* Primary CTA */}
           <div className="yvg-hero-cta-wrap">
             <Link
-              href="https://scenith.in/tools/ai-voice-generation?utm_source=youtube_voice_generator&utm_medium=hero_cta&utm_campaign=yvg_landing"
+              href="https://scenith.in/create-ai-content?utm_source=youtube_voice_generator&utm_medium=hero_cta&utm_campaign=yvg_landing"
               className="yvg-cta-primary"
               aria-label="Generate your YouTube voice for free"
             >
@@ -397,7 +397,7 @@ export default function YouTubeVoiceGeneratorPage() {
 
             <div className="yvg-section-cta">
               <Link
-                href="https://scenith.in/tools/ai-voice-generation?utm_source=youtube_voice_generator&utm_medium=voice_styles_section&utm_campaign=yvg_landing"
+                href="https://scenith.in/create-ai-content?utm_source=youtube_voice_generator&utm_medium=voice_styles_section&utm_campaign=yvg_landing"
                 className="yvg-cta-secondary"
               >
                 Preview All 40+ Voices →
@@ -464,7 +464,7 @@ export default function YouTubeVoiceGeneratorPage() {
             {/* Main CTA after How-To */}
             <div className="yvg-howto-cta">
               <Link
-                href="https://scenith.in/tools/ai-voice-generation?utm_source=youtube_voice_generator&utm_medium=howto_section&utm_campaign=yvg_landing"
+                href="https://scenith.in/create-ai-content?utm_source=youtube_voice_generator&utm_medium=howto_section&utm_campaign=yvg_landing"
                 className="yvg-cta-primary yvg-cta-primary--large"
                 aria-label="Try the YouTube voice generator for free"
               >
@@ -500,7 +500,7 @@ export default function YouTubeVoiceGeneratorPage() {
                     ))}
                   </ul>
                   <Link
-                    href={`https://scenith.in/tools/ai-voice-generation?utm_source=youtube_voice_generator&utm_medium=niche_${niche.niche.toLowerCase().replace(/\s+/g, '_')}&utm_campaign=yvg_landing`}
+                    href={`https://scenith.in/create-ai-content?utm_source=youtube_voice_generator&utm_medium=niche_${niche.niche.toLowerCase().replace(/\s+/g, '_')}&utm_campaign=yvg_landing`}
                     className="yvg-niche-cta"
                     aria-label={`${niche.cta} using Scenith AI Voice Generator`}
                   >
@@ -549,7 +549,7 @@ export default function YouTubeVoiceGeneratorPage() {
             <div className="yvg-section-cta">
               <p className="yvg-section-cta-lead">Have your script ready? Generate the voice now:</p>
               <Link
-                href="https://scenith.in/tools/ai-voice-generation?utm_source=youtube_voice_generator&utm_medium=script_formulas_section&utm_campaign=yvg_landing"
+                href="https://scenith.in/create-ai-content?utm_source=youtube_voice_generator&utm_medium=script_formulas_section&utm_campaign=yvg_landing"
                 className="yvg-cta-primary"
               >
                 <span className="yvg-cta-icon" aria-hidden="true">🎙️</span>
@@ -685,7 +685,7 @@ export default function YouTubeVoiceGeneratorPage() {
                   <p className="yvg-aside-cta-headline">Start Your Faceless Channel Today</p>
                   <p className="yvg-aside-cta-sub">Your first AI voice is free. No card. No catch.</p>
                   <Link
-                    href="https://scenith.in/tools/ai-voice-generation?utm_source=youtube_voice_generator&utm_medium=faceless_aside_cta&utm_campaign=yvg_landing"
+                    href="https://scenith.in/create-ai-content?utm_source=youtube_voice_generator&utm_medium=faceless_aside_cta&utm_campaign=yvg_landing"
                     className="yvg-cta-primary yvg-cta-primary--full"
                     aria-label="Generate your faceless YouTube channel voice"
                   >
@@ -792,7 +792,7 @@ export default function YouTubeVoiceGeneratorPage() {
                 40+ voices. 20+ languages. MP3 in 3 seconds. No credit card to start. Commercial use on day one.
               </p>
               <Link
-                href="https://scenith.in/tools/ai-voice-generation?utm_source=youtube_voice_generator&utm_medium=mid_page_cta&utm_campaign=yvg_landing"
+                href="https://scenith.in/create-ai-content?utm_source=youtube_voice_generator&utm_medium=mid_page_cta&utm_campaign=yvg_landing"
                 className="yvg-cta-primary yvg-cta-primary--xl"
                 aria-label="Generate YouTube AI voice for free on Scenith"
               >
@@ -958,7 +958,7 @@ export default function YouTubeVoiceGeneratorPage() {
 
               <div className="yvg-final-cta-actions">
                 <Link
-                  href="https://scenith.in/tools/ai-voice-generation?utm_source=youtube_voice_generator&utm_medium=final_cta&utm_campaign=yvg_landing"
+                  href="https://scenith.in/create-ai-content?utm_source=youtube_voice_generator&utm_medium=final_cta&utm_campaign=yvg_landing"
                   className="yvg-cta-primary yvg-cta-primary--xl"
                   aria-label="Generate your YouTube AI voice for free on Scenith"
                 >

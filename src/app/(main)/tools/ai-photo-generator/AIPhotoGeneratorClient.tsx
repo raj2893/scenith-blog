@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import '../../../../../styles/tools/AIPhotoGenerator.css';
 
 const GENERATE_URL =
-  'https://scenith.in/tools/ai-image-generation?utm_source=ai_photo_generator&utm_medium=cta_button&utm_campaign=photo_to_image_crosslink';
+  'https://scenith.in/create-ai-content?utm_source=ai_photo_generator&utm_medium=cta_button&utm_campaign=photo_to_image_crosslink';
 
 const USE_CASES = [
   {
@@ -774,7 +774,7 @@ export default function AIPhotoGeneratorClient() {
           </a>
 
           
-        <a    href="https://scenith.in/tools/ai-voice-generation?utm_source=ai_photo_gen&utm_medium=must_try&utm_campaign=cross_tool"
+        <a    href="https://scenith.in/create-ai-content?utm_source=ai_photo_gen&utm_medium=must_try&utm_campaign=cross_tool"
             className="must-try-card"
             aria-label="AI Voice Generator"
             target="_blank"

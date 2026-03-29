@@ -93,7 +93,7 @@ const YT_SCRIPT_TEMPLATES = [
 // ──────────────────────────────────────
 const YouTubeVoiceGeneratorPage: React.FC = () => {
   const ctaUrl =
-    'https://scenith.in/tools/ai-voice-generation?utm_source=youtube-voice-generator&utm_medium=cta&utm_campaign=yt-voice-page-2026';
+    'https://scenith.in/create-ai-content?utm_source=youtube-voice-generator&utm_medium=cta&utm_campaign=yt-voice-page-2026';
 
   // ── State ──
   const [script, setScript] = useState('');
