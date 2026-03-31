@@ -301,7 +301,7 @@ const injectStyles = () => {
       background: var(--surface);
       border: 1.5px solid var(--border);
       border-radius: var(--radius);
-      padding: 28px 22px 22px;
+      padding: 22px 16px 18px;
       transition: border-color 0.22s, box-shadow 0.22s;
     }
     .v3-card:hover { border-color: var(--border2); box-shadow: 0 10px 36px rgba(92,77,232,0.09); }
@@ -358,7 +358,7 @@ const injectStyles = () => {
     .v3-price-sym { font-size: 18px; font-weight: 600; color: var(--violet); margin-right: 1px; }
     .v3-price-num {
       font-family: 'Instrument Serif', Georgia, serif;
-      font-size: 46px; font-weight: 400; line-height: 1; color: var(--ink);
+      font-size: 38px; font-weight: 400; line-height: 1; color: var(--ink);
       letter-spacing: -0.04em;
     }
     .v3-price-per { font-size: 13px; color: var(--muted2); margin-left: 4px; }
@@ -390,7 +390,7 @@ const injectStyles = () => {
 
     /* features */
     .v3-feats { list-style: none; flex: 1; display: flex; flex-direction: column; gap: 8px; margin-top: 18px; }
-    .v3-feat { display: flex; align-items: flex-start; gap: 8px; font-size: 12.5px; color: var(--muted); line-height: 1.45; }
+    .v3-feat { display: flex; align-items: flex-start; gap: 6px; font-size: 12px; color: var(--ink2); line-height: 1.4; font-weight: 500; }
     .v3-feat-hl { color: var(--ink2); font-weight: 500; }
     .v3-feat-ico { flex-shrink: 0; margin-top: 1px; }
     .v3-feat-ico.y { color: var(--green); }
@@ -1003,8 +1003,8 @@ export default function PricingPageClient() {
                     {/* features */}
                     <ul className="v3-feats">
                       {plan.features.map((feat, i) => (
-                        <li key={i} className={`v3-feat${i < 2 ? ' v3-feat-hl' : ''}`}>
-                          <span className={`v3-feat-ico ${isFree ? 'y' : 'v'}`}>{isFree ? '✓' : '✦'}</span>
+                        <li key={i} className="v3-feat v3-feat-hl">
+                          <span className={`v3-feat-ico ${isFree ? 'y' : 'v'}`}>✓</span>
                           {feat}
                         </li>
                       ))}
