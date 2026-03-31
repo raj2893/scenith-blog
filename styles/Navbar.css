@@ -141,9 +141,9 @@
   border-radius: 2px;
 }
 .nav-link:hover {
-  color: #fff;
-  -webkit-text-fill-color: #fff;
-  background: rgba(255,255,255,0.06);
+  color: var(--accent);
+  -webkit-text-fill-color: var(--accent);
+  background: rgba(92, 77, 232, 0.07);
 }
 .nav-link:hover::after, .nav-link.active::after { width: 60%; }
 
@@ -597,8 +597,8 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: rgba(255,255,255,0.45);
-  -webkit-text-fill-color: rgba(255,255,255,0.45);
+  color: rgba(92, 77, 232, 0.7);
+  -webkit-text-fill-color: rgba(92, 77, 232, 0.7);
 }
 
 /* Credits dropdown */
