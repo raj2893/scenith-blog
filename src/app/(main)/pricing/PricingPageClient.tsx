@@ -289,7 +289,7 @@ const injectStyles = () => {
     .v3-plans-wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
     .v3-plans-row {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 14px; align-items: stretch;
     }
     @media(max-width: 900px) { .v3-plans-row { grid-template-columns: repeat(2, 1fr); } }
@@ -303,6 +303,7 @@ const injectStyles = () => {
       border-radius: var(--radius);
       padding: 22px 16px 18px;
       transition: border-color 0.22s, box-shadow 0.22s;
+      height: 100%;
     }
     .v3-card:hover { border-color: var(--border2); box-shadow: 0 10px 36px rgba(92,77,232,0.09); }
     .v3-card.v3-card-pop {
@@ -353,8 +354,8 @@ const injectStyles = () => {
     .v3-plan-tagline { font-size: 12.5px; color: var(--muted); margin-bottom: 20px; line-height: 1.5; }
 
     .v3-price-area { margin-bottom: 6px; }
-    .v3-price-strike { font-size: 13px; color: var(--muted2); text-decoration: line-through; margin-bottom: 3px; }
-    .v3-price-row { display: flex; align-items: baseline; gap: 2px; }
+    .v3-price-strike { font-size: 13px; color: var(--muted2); text-decoration: line-through; margin-bottom: 3px; text-align: center; display: block; }
+    .v3-price-row { display: flex; align-items: baseline; gap: 2px; justify-content: center; }
     .v3-price-sym { font-size: 18px; font-weight: 600; color: var(--violet); margin-right: 1px; }
     .v3-price-num {
       font-family: 'Instrument Serif', Georgia, serif;
@@ -389,8 +390,8 @@ const injectStyles = () => {
     .v3-outcome-count { font-size: 12.5px; color: var(--violet); font-weight: 700; margin-left: auto; white-space: nowrap; }
 
     /* features */
-    .v3-feats { list-style: none; flex: 1; display: flex; flex-direction: column; gap: 8px; margin-top: 18px; }
-    .v3-feat { display: flex; align-items: flex-start; gap: 6px; font-size: 12px; color: var(--ink2); line-height: 1.4; font-weight: 500; }
+    .v3-feats { list-style: none; flex: 1; display: flex; flex-direction: column; gap: 8px; margin-top: 18px; min-height: 0; }
+    .v3-feat { display: flex; align-items: flex-start; gap: 6px; font-size: 12px; color: var(--ink2); line-height: 1.4; font-weight: 500; text-align: left; }
     .v3-feat-hl { color: var(--ink2); font-weight: 500; }
     .v3-feat-ico { flex-shrink: 0; margin-top: 1px; }
     .v3-feat-ico.y { color: var(--green); }
@@ -401,20 +402,25 @@ const injectStyles = () => {
       width: 100%; padding: 13px 16px; border-radius: 12px; border: none;
       font-family: 'DM Sans', sans-serif; font-size: 13.5px; font-weight: 700;
       cursor: pointer; transition: all 0.2s;
+      margin-top: auto;
     }
     .v3-btn:disabled { opacity: 0.42; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
     .v3-btn-plain { background: rgba(92,77,232,0.06); border: 1.5px solid rgba(92,77,232,0.13); color: var(--muted); }
     .v3-btn-plain:hover:not(:disabled) { color: var(--violet); border-color: var(--violet); background: rgba(92,77,232,0.09); }
     .v3-btn-primary {
       background: linear-gradient(135deg, var(--violet) 0%, #8b5cf6 100%);
-      color: #fff; box-shadow: 0 6px 22px rgba(92,77,232,0.32);
+      color: #fff; box-shadow: 0 8px 28px rgba(92,77,232,0.45);
+      font-size: 14px; letter-spacing: 0.02em; padding: 15px 16px;
+      border: 2px solid rgba(255,255,255,0.15);
     }
-    .v3-btn-primary:hover:not(:disabled) { box-shadow: 0 10px 32px rgba(92,77,232,0.5); transform: translateY(-1px); }
+    .v3-btn-primary:hover:not(:disabled) { box-shadow: 0 14px 40px rgba(92,77,232,0.65); transform: translateY(-2px); filter: brightness(1.08); }
     .v3-btn-gold {
       background: linear-gradient(135deg, var(--gold) 0%, #f97316 100%);
-      color: #fff; box-shadow: 0 6px 22px rgba(245,158,11,0.28);
+      color: #fff; box-shadow: 0 8px 28px rgba(245,158,11,0.42);
+      font-size: 14px; letter-spacing: 0.02em; padding: 15px 16px;
+      border: 2px solid rgba(255,255,255,0.15);
     }
-    .v3-btn-gold:hover:not(:disabled) { box-shadow: 0 10px 32px rgba(245,158,11,0.44); transform: translateY(-1px); }
+    .v3-btn-gold:hover:not(:disabled) { box-shadow: 0 14px 40px rgba(245,158,11,0.6); transform: translateY(-2px); filter: brightness(1.08); }
     .v3-btn-green { background: rgba(16,185,129,0.07); border: 1.5px solid rgba(16,185,129,0.25); color: #059669; }
     .v3-btn-block { background: rgba(239,68,68,0.06); border: 1.5px solid rgba(239,68,68,0.2); color: #ef4444; }
 
@@ -911,8 +917,8 @@ export default function PricingPageClient() {
             One unified credit pool for every AI tool. Start free — upgrade when you're ready to create more.
           </motion.p>
           <div className="v3-plans-wrap">
-            <div className="v3-plans-row">
-              {plans.map((plan, idx) => {
+           <div className="v3-plans-row">
+              {plans.filter(plan => plan.role !== 'BASIC').map((plan, idx) => {
                 const isFree = plan.price === 0;
                 const isPopular = plan.role === 'CREATOR';
                 const isStudio = plan.role === 'STUDIO';
@@ -1002,12 +1008,23 @@ export default function PricingPageClient() {
 
                     {/* features */}
                     <ul className="v3-feats">
-                      {plan.features.map((feat, i) => (
-                        <li key={i} className="v3-feat v3-feat-hl">
-                          <span className={`v3-feat-ico ${isFree ? 'y' : 'v'}`}>✓</span>
-                          {feat}
-                        </li>
-                      ))}
+                      {plan.features.map((feat, i) => {
+                        const boldified = feat
+                          .replace(
+                            /(\d[\d,]*(?:\s?(?:credits?|cr|chars?|characters?|videos?|images?|SVGs?|removals?|K|p))(?:\/mo)?)/gi,
+                            '<strong>$1</strong>'
+                          )
+                          .replace(
+                            /\b(\d[\d,]+)\b/g,
+                            '<strong>$1</strong>'
+                          );
+                        return (
+                          <li key={i} className="v3-feat v3-feat-hl">
+                            <span className={`v3-feat-ico ${isFree ? 'y' : 'v'}`}>✓</span>
+                            <span dangerouslySetInnerHTML={{ __html: boldified }} />
+                          </li>
+                        );
+                      })}
                     </ul>
                     {!isFree && plan.currency !== 'LOADING' && (
                       <div className="v3-outcomes">
@@ -1095,9 +1112,55 @@ export default function PricingPageClient() {
                 );
               })}
             </div>
-          </div>
-        </div>         
-        <div className="v3-hero-inner">  
+         </div>
+        </div>
+
+        {/* ══ FREE PLAN HIGHLIGHT ══ */}
+        {(() => {
+          const freePlan = plans.find(p => p.role === 'BASIC')!;
+          const isCurrent = currentPlan === freePlan.role;
+          return (
+            <div style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 48px' }}>
+              <p className="v3-section-label" style={{ textAlign: 'center', marginBottom: 10 }}>Not ready to commit?</p>
+              <motion.div
+                className={`v3-card${isCurrent ? ' v3-card-current' : ''}`}
+                style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 24, padding: '28px 32px' }}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.44 }}
+              >
+                {isCurrent && <div className="v3-card-ribbon v3-ribbon-current">✓ Active Plan</div>}
+                <div style={{ flex: '1 1 260px' }}>
+                  <span className="v3-card-plan-badge v3-badge-free">🌱 Free Forever</span>
+                  <h2 className="v3-plan-name">{freePlan.name}</h2>
+                  <p className="v3-plan-tagline">{freePlan.tagline}</p>
+                  <div className="v3-price-free" style={{ marginTop: 4 }}>Free</div>
+                  <div className="v3-price-forever">No credit card required · Always free</div>
+                </div>
+                <ul className="v3-feats" style={{ flex: '1 1 240px', marginTop: 0 }}>
+                  {freePlan.features.map((feat, i) => (
+                    <li key={i} className="v3-feat v3-feat-hl">
+                      <span className="v3-feat-ico y">✓</span>
+                      {feat}
+                    </li>
+                  ))}
+                </ul>
+                <div style={{ flex: '0 0 180px' }}>
+                  <button
+                    className="v3-btn v3-btn-plain"
+                    disabled={isCurrent}
+                    style={{ width: '100%' }}
+                  >
+                    {isCurrent ? '✓ Your Current Plan' : 'Free Forever'}
+                  </button>
+                </div>
+              </motion.div>
+            </div>
+          );
+        })()}
+
+        <div className="v3-hero-inner">
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.22 }}>
             <div className="v3-hero-cta">
               {!isLoggedIn ? (
