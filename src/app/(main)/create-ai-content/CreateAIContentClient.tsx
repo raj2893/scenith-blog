@@ -1304,7 +1304,7 @@ const CreateAIContentClient: React.FC = () => {
                         key={p}
                         className={`cac-toggle-btn ${selectedVoiceProvider === p ? "active" : ""}`}
                         onClick={() => {
-                          if (p === "OPENAI" && !ttsUsage?.isPaid) {
+                          if ((p === "OPENAI" || p === "AZURE") && !ttsUsage?.isPaid) {
                             window.location.href = "/pricing";
                             return;
                           }
@@ -1314,7 +1314,7 @@ const CreateAIContentClient: React.FC = () => {
                       >
                         {p === "GOOGLE" && "🔵 Google"}
                         {p === "OPENAI" && (ttsUsage?.isPaid ? "🟢 OpenAI" : "🟢 OpenAI 👑")}
-                        {p === "AZURE" && "🔷 Azure"}
+                        {p === "AZURE" && (ttsUsage?.isPaid ? "🔷 Azure" : "🔷 Azure 👑")}
                       </button>
                     ))}
                   </div>

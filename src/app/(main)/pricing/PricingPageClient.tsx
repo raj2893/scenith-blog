@@ -13,7 +13,7 @@ import React from 'react';
 ───────────────────────────────────────────────────────────────────── */
 interface PricingPlan {
   name: string;
-  role: 'BASIC' | 'CREATOR_LITE' | 'CREATOR' | 'STUDIO';
+  role: 'BASIC' | 'MICRO' | 'CREATOR_LITE' | 'CREATOR' | 'STUDIO';
   price: number;
   originalPrice?: number;
   currency: string;
@@ -289,11 +289,11 @@ const injectStyles = () => {
     .v3-plans-wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
     .v3-plans-row {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 14px; align-items: stretch;
     }
-    @media(max-width: 900px) { .v3-plans-row { grid-template-columns: repeat(2, 1fr); } }
-    @media(max-width: 560px) { .v3-plans-row { grid-template-columns: 1fr; } }
+    @media(max-width: 1100px) { .v3-plans-row { grid-template-columns: repeat(2, 1fr); } }
+    @media(max-width: 560px)  { .v3-plans-row { grid-template-columns: 1fr; } }
 
     /* ── PLAN CARD ── */
     .v3-card {
@@ -649,7 +649,7 @@ const CREDIT_USES = [
 ───────────────────────────────────────────────────────────────────── */
 export default function PricingPageClient() {
   const router = useRouter();
-  const [currentPlan, setCurrentPlan] = useState<'BASIC' | 'CREATOR_LITE' | 'CREATOR' | 'STUDIO' | 'ADMIN'>('BASIC');
+  const [currentPlan, setCurrentPlan] = useState<'BASIC' | 'MICRO' | 'CREATOR_LITE' | 'CREATOR' | 'STUDIO' | 'ADMIN'>('BASIC');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState<string | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -677,6 +677,7 @@ export default function PricingPageClient() {
         if (activePlans.includes('STUDIO')) setCurrentPlan('STUDIO');
         else if (activePlans.includes('CREATOR')) setCurrentPlan('CREATOR');
         else if (activePlans.includes('CREATOR_LITE')) setCurrentPlan('CREATOR_LITE');
+        else if (activePlans.includes('MICRO')) setCurrentPlan('MICRO');
         else if (res.data.role === 'ADMIN') setCurrentPlan('ADMIN');
         else setCurrentPlan('BASIC');
         setIsLoggedIn(true);
@@ -835,6 +836,7 @@ export default function PricingPageClient() {
     if (isIndianUser === null) {
       return [
         { name: 'Starter Forge', role: 'BASIC', price: 0, currency: 'FREE', ttsLimit: 600, tagline: 'Try every tool, no card required.', features: ['50 credits/mo', '600 voice chars/mo', '5 speed videos + 5 BG removals', '10 SVG downloads', '720p export with watermark'], outcomes: [{ icon: '🎙️', label: 'Voice (600 chars)' }, { icon: '✂️', label: '5 BG removals' }] },
+        { name: 'Starter Pack', role: 'MICRO', price: 0, currency: 'LOADING', ttsLimit: 10000, tagline: 'Dip your toes in — low commitment.', features: ['150 credits/mo', '10,000 voice chars/mo', 'All tools unlocked', '1080p · No watermark', 'Topups available'], outcomes: [{ icon: '🎙️', label: '~100 voice segments' }, { icon: '🖼️', label: '~10 AI images' }] },
         { name: 'Creator Lite', role: 'CREATOR_LITE', price: 0, currency: 'LOADING', ttsLimit: 50000, tagline: 'Your first real creative toolkit.', features: ['500 credits/mo · 50,000 voice chars', 'All AI models unlocked', '1080p · No watermark', '30 speed videos · 100 BG removals', 'Unlimited SVGs · Topups available'], outcomes: [{ icon: '🎙️', label: '~500 voice segments' }, { icon: '🖼️', label: '~150 AI images' }, { icon: '🎬', label: '3–6 AI videos' }] },
         { name: 'Creator Spark', role: 'CREATOR', price: 0, currency: 'LOADING', ttsLimit: 150000, popular: true, tagline: 'Everything you need to go pro.', features: ['1,000 credits/mo · 150,000 voice chars', 'All AI models · 1440p export', '60 speed videos · 500 BG removals', 'Unlimited SVGs · Priority support', 'Topups available'], outcomes: [{ icon: '🎙️', label: '~1,500 voice segments' }, { icon: '🖼️', label: '~450 AI images' }, { icon: '🎬', label: '9–18 AI videos' }] },
         { name: 'Creator Odyssey', role: 'STUDIO', price: 0, currency: 'LOADING', ttsLimit: 400000, tagline: 'Unlimited power for serious creators.', features: ['2,500 credits/mo · 400,000 voice chars', 'All AI models · 4K export', 'Unlimited speed videos + BG removals', 'Fastest queue · Dedicated support', 'Topups available'], outcomes: [{ icon: '🎙️', label: '~4,000 voice segments' }, { icon: '🖼️', label: '~1,250 AI images' }, { icon: '🎬', label: '25–50 AI videos' }] },
@@ -846,6 +848,7 @@ export default function PricingPageClient() {
     const o = { lite: Math.round(p.lite / 0.75), creator: Math.round(p.creator / 0.75), studio: Math.round(p.studio / 0.75) };
     return [
       { name: 'Starter Forge', role: 'BASIC', price: 0, currency: 'FREE', ttsLimit: 600, tagline: 'Try every tool, no card required.', features: ['50 credits/mo', '600 voice chars/mo', '5 speed videos + 5 BG removals', '10 SVG downloads', '720p export with watermark'], outcomes: [{ icon: '🎙️', label: 'Voice (600 chars)' }, { icon: '✂️', label: '5 BG removals' }] },
+      { name: 'Starter Pack', role: 'MICRO', price: isIndianUser ? 150 : 3, originalPrice: isIndianUser ? 200 : 4, currency: cur, symbol: sym, ttsLimit: 10000, tagline: 'Dip your toes in — low commitment.', features: ['150 credits/mo', '10,000 voice chars/mo', 'All tools unlocked', '1080p · No watermark', 'Topups available'], outcomes: [{ icon: '🎙️', label: '~100 voice segments' }, { icon: '🖼️', label: '~10 AI images' }] },
       { name: 'Creator Lite', role: 'CREATOR_LITE', price: p.lite, originalPrice: o.lite, currency: cur, symbol: sym, ttsLimit: 50000, tagline: 'Your first real creative toolkit.', features: ['500 credits/mo · 50,000 voice chars', 'All AI models unlocked', '1080p · No watermark', '30 speed videos · 100 BG removals', 'Unlimited SVGs · Topups available'], outcomes: [{ icon: '🎙️', label: '~500 voice segments' }, { icon: '🖼️', label: '~150 AI images' }, { icon: '🎬', label: '3–6 AI videos' }] },
       { name: 'Creator Spark', role: 'CREATOR', price: p.creator, originalPrice: o.creator, currency: cur, symbol: sym, ttsLimit: 150000, popular: true, tagline: 'Everything you need to go pro.', features: ['1,000 credits/mo · 150,000 voice chars', 'All AI models · 1440p export', '60 speed videos · 500 BG removals', 'Unlimited SVGs · Priority support', 'Topups available'], outcomes: [{ icon: '🎙️', label: '~1,500 voice segments' }, { icon: '🖼️', label: '~450 AI images' }, { icon: '🎬', label: '9–18 AI videos' }] },
       { name: 'Creator Odyssey', role: 'STUDIO', price: p.studio, originalPrice: o.studio, currency: cur, symbol: sym, ttsLimit: 400000, tagline: 'Unlimited power for serious creators.', features: ['2,500 credits/mo · 400,000 voice chars', 'All AI models · 4K export', 'Unlimited speed videos + BG removals', 'Fastest queue · Dedicated support', 'Topups available'], outcomes: [{ icon: '🎙️', label: '~4,000 voice segments' }, { icon: '🖼️', label: '~1,250 AI images' }, { icon: '🎬', label: '25–50 AI videos' }] },
@@ -921,13 +924,15 @@ export default function PricingPageClient() {
               {plans.filter(plan => plan.role !== 'BASIC').map((plan, idx) => {
                 const isFree = plan.price === 0;
                 const isPopular = plan.role === 'CREATOR';
-                const isStudio = plan.role === 'STUDIO';
+                const isStudio  = plan.role === 'STUDIO';
+                const isStarter = plan.role === 'MICRO';
                 const isCurrent = currentPlan === plan.role;
                 const isDowngradeBlocked =
-                  (currentPlan === 'STUDIO' && (plan.role === 'CREATOR' || plan.role === 'CREATOR_LITE')) ||
-                  (currentPlan === 'CREATOR' && plan.role === 'CREATOR_LITE');
-
+                  (currentPlan === 'STUDIO' && (plan.role === 'CREATOR' || plan.role === 'CREATOR_LITE' || plan.role === 'MICRO')) ||
+                  (currentPlan === 'CREATOR' && (plan.role === 'CREATOR_LITE' || plan.role === 'MICRO')) ||
+                  (currentPlan === 'CREATOR_LITE' && plan.role === 'MICRO');
                 const badgeClass = () => {
+                  if (plan.role === 'MICRO') return 'v3-card-plan-badge v3-badge-free';
                   if (plan.role === 'CREATOR_LITE') return 'v3-card-plan-badge v3-badge-lite';
                   if (isPopular) return 'v3-card-plan-badge v3-badge-creator';
                   if (isStudio) return 'v3-card-plan-badge v3-badge-studio';
@@ -935,6 +940,7 @@ export default function PricingPageClient() {
                 };
                 const badgeLabel = () => {
                   if (plan.role === 'BASIC') return '🌱 Free';
+                  if (plan.role === 'MICRO') return '🌟 Starter';
                   if (plan.role === 'CREATOR_LITE') return '⚡ Lite';
                   if (isPopular) return '⭐ Most Popular';
                   return '👑 Pro';
@@ -1225,6 +1231,7 @@ export default function PricingPageClient() {
                 <tr>
                   <th>Feature</th>
                   <th>Free</th>
+                  <th>Starter Pack</th>
                   <th>Creator Lite</th>
                   <th className="hl">Creator Spark ⭐</th>
                   <th>Creator Odyssey</th>
@@ -1232,26 +1239,27 @@ export default function PricingPageClient() {
               </thead>
               <tbody>
                 {[
-                  ['Monthly Credits',          '50',       '500',            '1,000',             '2,500'],
-                  ['Voice Characters / mo',    '600',      '50,000',         '150,000',         '400,000'],
-                  ['Chars per Request',        '200',      '4,000',          '4,000',           '6,000'],
-                  ['AI Video Generation',      '✓', '✓ All models',   '✓ All models',    '✓ All models'],
-                  ['AI Image Generation',      '✓', '✓ All models',   '✓ All models',    '✓ All models'],
-                  ['Speed Videos / mo',        '5',        '30',             '60',              'Unlimited'],
-                  ['Background Removals / mo', '5',        '100',            '500',             '1,500'],
-                  ['SVG Downloads',            '10/mo',    'Unlimited',      'Unlimited',       'Unlimited'],
-                  ['Watermark on Exports',     '✓ Yes',    '✗ None',         '✗ None',          '✗ None'],
-                  ['Max Export Quality',       '720p',     '1080p',          '1440p',           '4K'],
-                  ['Credit Topups',            '✗',        '✓',              '✓',               '✓'],
-                  ['Commercial Use',           '✓',        '✓',              '✓',               '✓'],
-                  ['Priority Support',         '✗',        '✗',              '✓',               '✓ Dedicated'],
-                ].map(([feat, free, lite, creator, studio], i) => {
+                  ['Monthly Credits',          '50',    '150',       '500',         '1,000',        '2,500'],
+                  ['Voice Characters / mo',    '600',   '10,000',       '50,000',       '150,000',      '400,000'],
+                  ['Chars per Request',        '200',   '700',          '700',        '4,000',        '6,000'],
+                  ['AI Video Generation',      '✓',     '✓ All models', '✓ All models', '✓ All models', '✓ All models'],
+                  ['AI Image Generation',      '✓',     '✓ All models', '✓ All models', '✓ All models', '✓ All models'],
+                  ['Speed Videos / mo',        '5',     '10',           '30',           '60',           'Unlimited'],
+                  ['Background Removals / mo', '5',     '20',           '100',          '500',          '1,500'],
+                  ['SVG Downloads',            '10/mo', 'Unlimited',    'Unlimited',    'Unlimited',    'Unlimited'],
+                  ['Watermark on Exports',     '✓ Yes', '✗ None',       '✗ None',       '✗ None',       '✗ None'],
+                  ['Max Export Quality',       '720p',  '1080p',        '1080p',        '1440p',        '4K'],
+                  ['Credit Topups',            '✗',     '✓',            '✓',            '✓',            '✓'],
+                  ['Commercial Use',           '✓',     '✓',            '✓',            '✓',            '✓'],
+                  ['Priority Support',         '✗',     '✗',            '✗',            '✓',            '✓ Dedicated'],
+                ].map(([feat, free, starter, lite, creator, studio], i) => {
                   const hlClass = (val: string) =>
                     val === '✓' || val.startsWith('✓') ? 'sy' : val === '✗' ? 'sn' : '';
                   return (
                     <tr key={i}>
                       <td>{feat}</td>
                       <td className={hlClass(free)}>{free}</td>
+                      <td className={hlClass(starter)}>{starter}</td>
                       <td className={hlClass(lite)}>{lite}</td>
                       <td className={['hl', hlClass(creator)].filter(Boolean).join(' ')}>{creator}</td>
                       <td className={hlClass(studio)}>{studio}</td>
