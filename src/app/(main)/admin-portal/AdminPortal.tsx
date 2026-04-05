@@ -336,6 +336,7 @@ const TABS = [
   { id: "tools",         label: "🛠️ Tool Usage"     },
   { id: "subscriptions", label: "🔑 Subscriptions"  },
   { id: "videojobs",     label: "🎬 Video Jobs"      },
+  { id: "ttsstats",      label: "🎙️ TTS Analytics"  },
 ];
 
 export default function AdminPortal() {
@@ -358,6 +359,7 @@ export default function AdminPortal() {
   const [expiring, setExpiring]     = useState<ExpiringSoon[]>([]);
   const [topUsers, setTopUsers]     = useState<TopUser[]>([]);
   const [activeSubs, setActiveSubs] = useState<{ subscriptions: any[]; total: number }>({ subscriptions: [], total: 0 });
+  const [ttsStats, setTtsStats] = useState<any>(null);
 
   // pagination
   const [payPage, setPayPage]     = useState(0);
@@ -436,6 +438,14 @@ export default function AdminPortal() {
         .then(setActiveSubs).catch(console.error);
     }
   }, [tab, subPage, api]);
+
+  useEffect(() => {
+    if (tab === "ttsstats") {
+      api("/api/admin/tts-stats", { from, to })
+        .then(setTtsStats).catch(console.error);
+    }
+  }, [tab, from, to, api]);
+  
 
   // ── STYLES ─────────────────────────────────────────────────────────────────
   useEffect(() => {
@@ -895,6 +905,119 @@ export default function AdminPortal() {
                 />
                 <Paginator page={vidPage} size={30} total={videoJobs.total} onChange={p => setVidPage(p)} />
               </div>
+          </motion.div>
+          )}
+
+          {/* ════════════════════ TTS ANALYTICS ════════════════════ */}
+          {tab === "ttsstats" && (
+            <motion.div key="ttsstats" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.25 }}>
+
+              {!ttsStats && <div style={{ textAlign: "center", padding: 48, color: "#9ca3af", fontSize: 14 }}>⏳ Loading TTS analytics…</div>}
+
+              {ttsStats && (
+                <>
+                  {/* KPI row */}
+                  <div className="ap-grid4" style={{ marginBottom: 22 }}>
+                    <KpiCard icon="🎙️" label="Total Generations"       value={fmt(ttsStats.totals.totalJobs)}                color="#f59e0b" />
+                    <KpiCard icon="⚡" label="Credits Consumed"        value={fmt(ttsStats.totals.totalCreditsSpent)}        color="#ef4444" />
+                    <KpiCard icon="👥" label="Unique Paid Users"       value={fmt(ttsStats.totals.uniqueUsers)}              color="#6355dc" />
+                    <KpiCard icon="🔵" label="Google Voices"           value={fmt(ttsStats.totals.googleJobs)}               color="#3b82f6" />
+                    <KpiCard icon="🟢" label="OpenAI Voices"           value={fmt(ttsStats.totals.openAiJobs)}               color="#10b981" />
+                    <KpiCard icon="🔷" label="Azure Voices"            value={fmt(ttsStats.totals.azureJobs)}                color="#0ea5e9" />
+                    <KpiCard icon="🆓" label="Free Users w/ Voice"     value={fmt(ttsStats.totals.freeUsersWithVoiceUsage)}  color="#8b5cf6" sub={`of ${fmt(ttsStats.totals.totalFreeTierUsers)} free users`} />
+                    <KpiCard icon="🚫" label="Hit 600-char Limit"      value={fmt(ttsStats.totals.freeUsersAtLimit)}         color="#ef4444" sub="upgrade candidates this month" />
+                    <KpiCard icon="📝" label="Free Chars Used (mo)"    value={fmt(ttsStats.totals.totalFreeCharsThisMonth)}  color="#f97316" sub={`${fmt(ttsStats.totals.freeCharsRemainingForActive)} left for active users`} />
+                  </div>
+
+                  {/* Provider breakdown */}
+                  <div className="ap-card" style={{ marginBottom: 22 }}>
+                    <p className="ap-section-title">Provider Distribution</p>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                      {ttsStats.providerBreakdown.map((p: any) => {
+                        const colors: Record<string, string> = { GOOGLE: "#3b82f6", OPENAI: "#10b981", AZURE: "#0ea5e9" };
+                        const icons: Record<string, string>  = { GOOGLE: "🔵", OPENAI: "🟢", AZURE: "🔷" };
+                        const c = colors[p.provider] ?? "#6355dc";
+                        return (
+                          <div key={p.provider} style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                            <span style={{ fontSize: 16, width: 24 }}>{icons[p.provider]}</span>
+                            <span style={{ fontSize: 13, fontWeight: 700, color: "#374151", width: 70 }}>{p.provider}</span>
+                            <div style={{ flex: 1, height: 10, background: "#f3f4f6", borderRadius: 99, overflow: "hidden" }}>
+                              <div style={{ width: `${p.pct}%`, height: "100%", background: c, borderRadius: 99, transition: "width 0.8s ease" }} />
+                            </div>
+                            <span style={{ fontSize: 13, fontWeight: 800, color: c, width: 50, textAlign: "right" }}>{fmt(p.jobs)}</span>
+                            <span style={{ fontSize: 11, color: "#9ca3af", width: 36, textAlign: "right" }}>{p.pct}%</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Daily chart */}
+                  {ttsStats.dailyChart.length > 0 && (
+                    <div className="ap-card" style={{ marginBottom: 22 }}>
+                      <p className="ap-section-title">Daily TTS Generations</p>
+                      <MiniBarChart
+                        data={ttsStats.dailyChart.map((d: any) => ({ date: d.date, signups: d.jobs }))}
+                        valueKey="signups"
+                        color="#f59e0b"
+                        label="Daily Jobs"
+                      />
+                    </div>
+                  )}
+
+                  {/* Top paid users table */}
+                  <div className="ap-card" style={{ marginBottom: 22 }}>
+                    <p className="ap-section-title">🏆 Top TTS Users by Credits Spent</p>
+                    <Table
+                      cols={[
+                        { key: "userEmail",   label: "Email" },
+                        { key: "userName",    label: "Name" },
+                        { key: "planType",    label: "Plan",     render: v => <StatusBadge status={String(v)} /> },
+                        { key: "jobCount",    label: "Jobs",     render: v => <span style={{ fontWeight: 700, color: "#f59e0b" }}>{fmt(Number(v))}</span> },
+                        { key: "creditsUsed", label: "Credits",  render: v => <span style={{ fontWeight: 800, color: "#ef4444" }}>{fmt(Number(v))}</span> },
+                      ]}
+                      rows={ttsStats.topUsers}
+                      emptyMsg="No TTS usage in selected range"
+                    />
+                  </div>
+
+                  {/* Free tier voice char usage */}
+                  <div className="ap-card">
+                    <p className="ap-section-title">🆓 Free Tier Voice Usage — This Month</p>
+                    <p style={{ fontSize: 12, color: "#9ca3af", marginBottom: 16 }}>
+                      Free users get 600 chars/month. Resets on the 1st. 🔴 = hit limit (upgrade candidates). Data always reflects the current calendar month.
+                    </p>
+                    <Table
+                      cols={[
+                        { key: "userEmail",  label: "Email" },
+                        { key: "userName",   label: "Name" },
+                        { key: "resetMonth", label: "Month" },
+                        { key: "hitLimit",   label: "Status", render: v => v
+                          ? <span style={{ background: "#fee2e2", color: "#991b1b", padding: "2px 8px", borderRadius: 99, fontSize: 11, fontWeight: 700 }}>🚫 Limit Hit</span>
+                          : <span style={{ background: "#dcfce7", color: "#15803d", padding: "2px 8px", borderRadius: 99, fontSize: 11, fontWeight: 700 }}>✓ Active</span>
+                        },
+                        { key: "charsUsed",  label: "Chars Used",  render: v => <span style={{ fontWeight: 800, color: "#f97316" }}>{Number(v).toLocaleString()}</span> },
+                        { key: "charsLimit", label: "Limit",       render: v => <span style={{ color: "#9ca3af" }}>{Number(v).toLocaleString()}</span> },
+                        { key: "pctUsed",    label: "% Used",      render: v => (
+                          <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 120 }}>
+                            <div style={{ flex: 1, height: 7, background: "#f3f4f6", borderRadius: 99, overflow: "hidden" }}>
+                              <div style={{
+                                width: `${Math.min(Number(v), 100)}%`, height: "100%", borderRadius: 99,
+                                background: Number(v) >= 90 ? "#ef4444" : Number(v) >= 60 ? "#f97316" : "#10b981",
+                                transition: "width 0.6s ease"
+                              }} />
+                            </div>
+                            <span style={{ fontSize: 11, fontWeight: 700, color: Number(v) >= 90 ? "#ef4444" : Number(v) >= 60 ? "#f97316" : "#10b981", width: 32 }}>{v}%</span>
+                          </div>
+                        )},
+                      ]}
+                      rows={ttsStats.topFreeVoiceUsers ?? []}
+                      emptyMsg="No free users have used voice this month"
+                    />
+                  </div>
+                </>
+              )}
             </motion.div>
           )}
 
