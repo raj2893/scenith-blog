@@ -288,13 +288,41 @@ const injectStyles = () => {
 
     .v3-plans-wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
     .v3-plans-row {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 14px; align-items: stretch;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
     }
-    @media(max-width: 1300px) { .v3-plans-row { grid-template-columns: repeat(3, 1fr); } }
-    @media(max-width: 1100px) { .v3-plans-row { grid-template-columns: repeat(2, 1fr); } }
-    @media(max-width: 560px)  { .v3-plans-row { grid-template-columns: 1fr; } }
+    .v3-plans-row-top {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      max-width: 680px;
+      margin: 0 auto;
+      width: 100%;
+      align-items: start;
+    }
+    .v3-plans-row-bottom {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+    .v3-plans-row-divider {
+      display: flex; align-items: center; gap: 16px;
+      margin: 8px 0 4px;
+    }
+    .v3-plans-row-divider::before,
+    .v3-plans-row-divider::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+    }
+    .v3-plans-row-divider-label {
+      font-size: 10.5px; font-weight: 700; letter-spacing: 0.13em;
+      text-transform: uppercase; color: var(--muted2);
+      white-space: nowrap; padding: 0 4px;
+    }
+    @media(max-width: 860px) { .v3-plans-row-bottom { grid-template-columns: repeat(2, 1fr); } }
+    @media(max-width: 560px) { .v3-plans-row-top, .v3-plans-row-bottom { grid-template-columns: 1fr; max-width: 100%; } }
 
     /* ── PLAN CARD ── */
     .v3-card {
@@ -304,7 +332,6 @@ const injectStyles = () => {
       border-radius: var(--radius);
       padding: 22px 16px 18px;
       transition: border-color 0.22s, box-shadow 0.22s;
-      height: 100%;
     }
     .v3-card:hover { border-color: var(--border2); box-shadow: 0 10px 36px rgba(92,77,232,0.09); }
     .v3-card.v3-card-pop {
@@ -924,8 +951,10 @@ export default function PricingPageClient() {
             One unified credit pool for every AI tool. Start free — upgrade when you're ready to create more.
           </motion.p>
           <div className="v3-plans-wrap">
-           <div className="v3-plans-row">
-              {plans.filter(plan => plan.role !== 'BASIC').map((plan, idx) => {
+          <div className="v3-plans-row">
+              {/* ── Top row: Spark + Micro ── */}
+              <div className="v3-plans-row-top">
+              {plans.filter(plan => plan.role === 'SPARK' || plan.role === 'MICRO').map((plan, idx) => {
                 const isFree = plan.price === 0;
                 const isPopular = plan.role === 'CREATOR';
                 const isStudio  = plan.role === 'STUDIO';
@@ -1062,6 +1091,140 @@ export default function PricingPageClient() {
                   </motion.div>
                 );
               })}
+              </div>
+              <div className="v3-plans-row-divider">
+                <span className="v3-plans-row-divider-label">↑ Entry plans · Professional plans ↓</span>
+              </div>
+              {/* ── Bottom row: Creator Lite, Creator Spark, Creator Odyssey ── */}
+              <div className="v3-plans-row-bottom">
+              {plans.filter(plan => plan.role === 'CREATOR_LITE' || plan.role === 'CREATOR' || plan.role === 'STUDIO').map((plan, idx) => {
+                const isFree = plan.price === 0;
+                const isPopular = plan.role === 'CREATOR';
+                const isStudio  = plan.role === 'STUDIO';
+                const isStarter = plan.role === 'MICRO' || plan.role === 'SPARK';
+                const isCurrent = currentPlan === plan.role;
+                const isDowngradeBlocked =
+                  (currentPlan === 'STUDIO' && (plan.role === 'CREATOR' || plan.role === 'CREATOR_LITE' || plan.role === 'MICRO' || plan.role === 'SPARK')) ||
+                  (currentPlan === 'CREATOR' && (plan.role === 'CREATOR_LITE' || plan.role === 'MICRO' || plan.role === 'SPARK')) ||
+                  (currentPlan === 'CREATOR_LITE' && (plan.role === 'MICRO' || plan.role === 'SPARK')) ||
+                  (currentPlan === 'MICRO' && plan.role === 'SPARK');
+                const badgeClass = () => {
+                  if (plan.role === 'SPARK') return 'v3-card-plan-badge v3-badge-free';
+                  if (plan.role === 'MICRO') return 'v3-card-plan-badge v3-badge-free';
+                  if (plan.role === 'CREATOR_LITE') return 'v3-card-plan-badge v3-badge-lite';
+                  if (isPopular) return 'v3-card-plan-badge v3-badge-creator';
+                  if (isStudio) return 'v3-card-plan-badge v3-badge-studio';
+                  return 'v3-card-plan-badge v3-badge-free';
+                };
+                const badgeLabel = () => {
+                  if (plan.role === 'SPARK') return '✨ Spark';
+                  if (plan.role === 'MICRO') return '🌟 Starter';
+                  if (plan.role === 'CREATOR_LITE') return '⚡ Lite';
+                  if (isPopular) return '⭐ Most Popular';
+                  return '👑 Pro';
+                };
+                const btnClass = () => {
+                  if (isCurrent) return 'v3-btn v3-btn-green';
+                  if (isDowngradeBlocked) return 'v3-btn v3-btn-block';
+                  if (isFree) return 'v3-btn v3-btn-plain';
+                  if (isStudio) return 'v3-btn v3-btn-gold';
+                  return 'v3-btn v3-btn-primary';
+                };
+                const btnLabel = () => {
+                  if (loading === plan.role) return 'Processing...';
+                  if (isCurrent) return '✓ Your Current Plan';
+                  if (isDowngradeBlocked) return 'Downgrade Not Available';
+                  if (isFree) return 'Free Forever';
+                  return `Get ${plan.name} →`;
+                };
+                return (
+                  <motion.div
+                    key={plan.role}
+                    className={`v3-card${isPopular ? ' v3-card-pop' : ''}${isCurrent ? ' v3-card-current' : ''}`}
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.44, delay: idx * 0.07 }}
+                  >
+                    {isPopular && !isCurrent && !isDowngradeBlocked && <div className="v3-card-ribbon v3-ribbon-pop">⭐ Most Popular</div>}
+                    {isStudio && !isCurrent && !isDowngradeBlocked && <div className="v3-card-ribbon v3-ribbon-gold">👑 Best Value</div>}
+                    {isCurrent && <div className="v3-card-ribbon v3-ribbon-current">✓ Active Plan</div>}
+                    {isDowngradeBlocked && <div className="v3-card-ribbon v3-ribbon-block">Downgrade Not Available</div>}
+                    <span className={badgeClass()}>{badgeLabel()}</span>
+                    <h2 className="v3-plan-name">{plan.name}</h2>
+                    <p className="v3-plan-tagline">{plan.tagline}</p>
+                    {plan.currency === 'LOADING' ? (
+                      <div className="v3-price-area"><span className="v3-price-loading">Loading price...</span></div>
+                    ) : isFree ? (
+                      <div className="v3-price-area">
+                        <div className="v3-price-free">Free</div>
+                        <div className="v3-price-forever">Always free, no card needed</div>
+                      </div>
+                    ) : (
+                      <div className="v3-price-area">
+                        {plan.originalPrice && <div className="v3-price-strike">{plan.symbol}{plan.originalPrice}/mo</div>}
+                        <div className="v3-price-row">
+                          <span className="v3-price-sym">{plan.symbol}</span>
+                          <span className="v3-price-num">{plan.price}</span>
+                          <span className="v3-price-per">/mo</span>
+                        </div>
+                        <span className="v3-price-save">✓ 25% introductory discount</span>
+                      </div>
+                    )}
+                    {isFree && (
+                      <div className="v3-outcomes">
+                        <div className="v3-outcomes-title">Try every tool free</div>
+                        {plan.outcomes.map((o, i) => (
+                          <div key={i} className="v3-outcome-row">
+                            <span className="v3-outcome-icon">{o.icon}</span>
+                            <span className="v3-outcome-label">{o.label}</span>
+                            <span className="v3-outcome-count">/ mo</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    <ul className="v3-feats">
+                      {plan.features.map((feat, i) => {
+                        const boldified = feat
+                          .replace(
+                            /(\d[\d,]*(?:\s?(?:credits?|cr|chars?|characters?|videos?|images?|SVGs?|removals?|K|p))(?:\/mo)?)/gi,
+                            '<strong>$1</strong>'
+                          )
+                          .replace(
+                            /\b(\d[\d,]+)\b/g,
+                            '<strong>$1</strong>'
+                          );
+                        return (
+                          <li key={i} className="v3-feat v3-feat-hl">
+                            <span className={`v3-feat-ico ${isFree ? 'y' : 'v'}`}>✓</span>
+                            <span dangerouslySetInnerHTML={{ __html: boldified }} />
+                          </li>
+                        );
+                      })}
+                    </ul>
+                    {!isFree && plan.currency !== 'LOADING' && (
+                      <div className="v3-outcomes">
+                        <div className="v3-outcomes-title">With this plan you can create</div>
+                        {plan.outcomes.map((o, i) => (
+                          <div key={i} className="v3-outcome-row">
+                            <span className="v3-outcome-icon">{o.icon}</span>
+                            <span className="v3-outcome-label">{o.label}</span>
+                            <span className="v3-outcome-count">/ mo</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    <button
+                      className={btnClass()}
+                      onClick={() => handleUpgrade(plan)}
+                      disabled={loading !== null || isFree || isCurrent || isDowngradeBlocked}
+                    >
+                      {btnLabel()}
+                    </button>
+                  </motion.div>
+                );
+              })}
+              </div>
             </div>
 
             {/* urgency bar */}
