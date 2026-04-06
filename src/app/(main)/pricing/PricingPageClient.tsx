@@ -788,7 +788,7 @@ export default function PricingPageClient() {
               setIsPaymentInProgress(false);
               alert(`🎉 Successfully upgraded to ${plan.name}!`);
               setCurrentPlan(plan.role);
-              router.push('/tools/ai-voice-generation');
+              router.push('/create-ai-content');
             } catch { setIsPaymentInProgress(false); alert('Payment verification failed. Please contact support.'); }
           },
           prefill: { email: userProfile?.email || '', name: userProfile ? `${userProfile.firstName} ${userProfile.lastName}`.trim() : '' },
@@ -801,7 +801,7 @@ export default function PricingPageClient() {
         if (!container) { container = document.createElement('div'); container.id = 'paypal-button-container'; container.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1000;background:white;padding:20px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.3)'; document.body.appendChild(container); }
         container.innerHTML = '';
         // @ts-ignore
-        paypal.Buttons({ createOrder: () => gatewayOrderId, onApprove: async (data: any) => { setIsPaymentInProgress(true); try { await axios.post(`${API_BASE_URL}/api/payments/capture-paypal`, { internalOrderId, paypalOrderId: data.orderID }, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }); setIsPaymentInProgress(false); alert(`🎉 Successfully upgraded to ${plan.name} via PayPal!`); setCurrentPlan(plan.role); router.push('/tools/ai-voice-generation'); } catch { setIsPaymentInProgress(false); alert('Error capturing payment.'); } finally { if (container) document.body.removeChild(container); } }, onCancel: () => { if (container) document.body.removeChild(container); }, onError: (err: any) => { console.error(err); if (container) document.body.removeChild(container); } }).render('#paypal-button-container');
+        paypal.Buttons({ createOrder: () => gatewayOrderId, onApprove: async (data: any) => { setIsPaymentInProgress(true); try { await axios.post(`${API_BASE_URL}/api/payments/capture-paypal`, { internalOrderId, paypalOrderId: data.orderID }, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }); setIsPaymentInProgress(false); alert(`🎉 Successfully upgraded to ${plan.name} via PayPal!`); setCurrentPlan(plan.role); router.push('/create-ai-content'); } catch { setIsPaymentInProgress(false); alert('Error capturing payment.'); } finally { if (container) document.body.removeChild(container); } }, onCancel: () => { if (container) document.body.removeChild(container); }, onError: (err: any) => { console.error(err); if (container) document.body.removeChild(container); } }).render('#paypal-button-container');
       }
     } catch (error: any) { setIsPaymentInProgress(false); alert('Error: ' + (error.response?.data || error.message)); }
     finally { setLoading(null); }

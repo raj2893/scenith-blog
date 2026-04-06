@@ -236,6 +236,18 @@ const VIDEO_DURATION_OPTIONS = [
   { value: 10, label: "10s" },
 ];
 
+const VIDEO_RESOLUTION_OPTIONS: Record<string, { value: string; label: string; icon: string }[]> = {
+  wan: [
+    { value: "480p",  label: "480p",  icon: "📱" },
+    { value: "720p",  label: "720p",  icon: "💻" },
+    { value: "1080p", label: "1080p", icon: "🖥️" },
+  ],
+  grok: [
+    { value: "480p", label: "480p", icon: "📱" },
+    { value: "720p", label: "720p", icon: "💻" },
+  ],
+};
+
 const STATIC_VIDEO_MODELS = [
   { id: "wan2.5", name: "Wan 2.5", cr: 46 },
   { id: "kling-v2.5-turbo", name: "Kling 2.5 Turbo", cr: 64 },
@@ -244,6 +256,45 @@ const STATIC_VIDEO_MODELS = [
   { id: "veo3.1", name: "Veo 3.1", cr: 186 },
   { id: "grok-imagine", name: "Grok Imagine 🎵", cr: 47 },
 ];
+
+/**
+ * Mirrors VideoGenModel.calculateCredits() from backend.
+ * Used to show live credit cost in the UI before submitting.
+ */
+const calcVideoCredits = (
+  modelId: string,
+  durationSeconds: number,
+  audioOn: boolean,
+  resolution: string
+): number => {
+  const is10s = durationSeconds > 5;
+  const res = resolution?.toLowerCase() || "480p";
+
+  if (modelId?.toLowerCase().includes("wan")) {
+    const base5s = res === "480p" ? 46 : res === "720p" ? 92 : 138;
+    return is10s ? base5s * 2 : base5s;
+  }
+  if (modelId?.toLowerCase().includes("kling-v2.5") || modelId?.toLowerCase().includes("kling-2.5")) {
+    return is10s ? 130 : 64;
+  }
+  if (modelId?.toLowerCase().includes("kling-v2.6") || modelId?.toLowerCase().includes("kling-2.6")) {
+    const base5s = audioOn ? 130 : 64;
+    return is10s ? base5s * 2 : base5s;
+  }
+  if (modelId?.toLowerCase().includes("veo3.1-fast") || modelId?.toLowerCase().includes("veo 3.1 fast")) {
+    if (!is10s) return audioOn ? 138 : 92;
+    return audioOn ? 278 : 186;
+  }
+  if (modelId?.toLowerCase().includes("veo3.1") || modelId?.toLowerCase().includes("veo 3.1")) {
+    if (!is10s) return audioOn ? 370 : 186;
+    return audioOn ? 740 : 370;
+  }
+  if (modelId?.toLowerCase().includes("grok")) {
+    const base5s = res === "720p" ? 66 : 47;
+    return is10s ? base5s * 2 : base5s;
+  }
+  return 46; // fallback
+};
 
 const PROMPT_SUGGESTIONS: Record<Tab, { label: string; prompt: string }[]> = {
   voice: [
@@ -557,6 +608,7 @@ const CreateAIContentClient: React.FC = () => {
   const [videoDuration, setVideoDuration] = useState(5);
   const [videoAspectRatio, setVideoAspectRatio] = useState("16:9");
   const [videoResolution, setVideoResolution] = useState("480p");
+  const [prevVideoModel, setPrevVideoModel] = useState("wan2.5");
   const [videoAudioEnabled, setVideoAudioEnabled] = useState(false);
   const [isGeneratingVideo, setIsGeneratingVideo] = useState(false);
   const [currentVideoJob, setCurrentVideoJob] = useState<VideoJob | null>(null);
@@ -568,6 +620,18 @@ const CreateAIContentClient: React.FC = () => {
   const [videoInputFile, setVideoInputFile] = useState<File | null>(null);
   const [videoInputPreview, setVideoInputPreview] = useState<string | null>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
+  // Auto-set resolution when model changes
+  useEffect(() => {
+    const isWan = selectedVideoModel?.toLowerCase().includes('wan');
+    const isGrok = selectedVideoModel?.toLowerCase().includes('grok');
+    if (!isWan && !isGrok) {
+      setVideoResolution("1080p");
+    } else if (isWan) {
+      setVideoResolution("480p");
+    } else if (isGrok) {
+      setVideoResolution("480p");
+    }
+  }, [selectedVideoModel]);
 
   const resultRef = useRef<HTMLDivElement>(null);
 
@@ -1715,13 +1779,7 @@ const CreateAIContentClient: React.FC = () => {
                         creditCosts: [{ duration: 5, audio: false, credits: m.cr }],
                       }))
                   ).map((m: any) => {
-                    const cost = m.creditCosts?.find(
-                      (c: any) => c.duration === videoDuration && c.audio === videoAudioEnabled
-                    )?.credits
-                    ?? m.creditCosts?.find(
-                      (c: any) => c.duration === videoDuration
-                    )?.credits
-                    ?? m.creditCosts?.[0]?.credits;
+                    const cost = calcVideoCredits(m.id, videoDuration, videoAudioEnabled, videoResolution);
                     return (
                       <option key={m.id} value={m.id}>
                         {m.displayName}{cost != null ? ` · ${cost}cr` : ''}
@@ -1729,12 +1787,35 @@ const CreateAIContentClient: React.FC = () => {
                     );
                   })}
                 </select>
+                {/* ── Resolution selector (only for Wan 2.5 and Grok) ── */}
+                {(() => {
+                  const isWan  = selectedVideoModel?.toLowerCase().includes('wan');
+                  const isGrok = selectedVideoModel?.toLowerCase().includes('grok');
+                  const resOptions = isWan ? VIDEO_RESOLUTION_OPTIONS.wan : isGrok ? VIDEO_RESOLUTION_OPTIONS.grok : null;
+                  if (!resOptions) return null;
+                  return (
+                    <div className="cac-toggle-group">
+                      {resOptions.map((r) => (
+                        <button
+                          key={r.value}
+                          className={`cac-toggle-btn ${videoResolution === r.value ? "active" : ""}`}
+                          onClick={() => setVideoResolution(r.value)}
+                          title={`${r.label} — ${calcVideoCredits(selectedVideoModel, videoDuration, videoAudioEnabled, r.value)}cr`}
+                        >
+                          {r.icon} {r.label}
+                        </button>
+                      ))}
+                    </div>
+                  );
+                })()}
+
+                {/* ── Audio toggle ── */}
                 {(() => {
                   const modelData = (isLoggedIn && videoModels.length > 0 ? videoModels : [])
                     .find((m: any) => m.id === selectedVideoModel);
                   const isGrok = selectedVideoModel?.toLowerCase().includes('grok');
                   const supportsAudio = modelData?.supportsAudio ?? true;
-                
+
                   if (isGrok && supportsAudio) {
                     return (
                       <span title="Audio always included with Grok Imagine" style={{
@@ -1778,7 +1859,7 @@ const CreateAIContentClient: React.FC = () => {
                   ))}
                 </select>               
                 <span className="cac-credit-pill">
-                  ⚡ {isLoggedIn ? videoCredits?.balance ?? "..." : 50} cr
+                  ⚡ {isLoggedIn ? videoCredits?.balance ?? "..." : 50} cr · {calcVideoCredits(selectedVideoModel, videoDuration, videoAudioEnabled, videoResolution)}cr/vid
                 </span>
               </div>
             )}
