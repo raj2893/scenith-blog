@@ -6,6 +6,7 @@ import { createPortal } from "react-dom";
 interface Option {
   value: string;
   label: string;
+  logo?: string;
 }
 
 interface CustomDropdownProps {
@@ -136,9 +137,25 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
         onClick={handleTriggerClick}
         disabled={disabled}
       >
-        <span className="cac-dropdown-value">
+        <span className="cac-dropdown-value" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           {selected ? (
-            selected.label
+            <>
+              {selected.logo && (
+                <img
+                  src={selected.logo}
+                  alt=""
+                  style={{
+                    width: 15,
+                    height: 15,
+                    objectFit: "contain",
+                    objectPosition: "center",
+                    borderRadius: 3,
+                    flexShrink: 0,
+                  }}
+                />
+              )}
+              {selected.label}
+            </>
           ) : (
             <span className="cac-dropdown-placeholder">{placeholder}</span>
           )}
@@ -183,6 +200,21 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
                 }`}
                 onClick={() => handleSelect(opt.value)}
               >
+                {opt.logo && (
+                  <img
+                    src={opt.logo}
+                    alt=""
+                    style={{
+                      width: 15,
+                      height: 15,
+                      objectFit: "contain",
+                      objectPosition: "center",
+                      borderRadius: 3,
+                      flexShrink: 0,
+                      marginRight: 7,
+                    }}
+                  />
+                )}
                 <span style={{ flex: 1 }}>{opt.label}</span>
                 {opt.value === value && (
                   <svg
