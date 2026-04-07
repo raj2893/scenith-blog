@@ -194,6 +194,49 @@ const IMAGE_MODEL_CONFIG: Record<
     ],
   },
 };
+const MODEL_LOGOS: Record<string, string> = {
+  // Image models
+  GPT_IMAGE_1_MINI:     "https://cdn.scenith.in/brand-logos/Chatgpt%20logo.webp",
+  GPT_IMAGE_1_MEDIUM:   "https://cdn.scenith.in/brand-logos/Chatgpt%20logo.webp",
+  IMAGEN_4_FAST:        "https://cdn.scenith.in/brand-logos/Google%20Logo.webp",
+  IMAGEN_4_STANDARD:    "https://cdn.scenith.in/brand-logos/Google%20Logo.webp",
+  FLUX_1_1_PRO:         "https://cdn.scenith.in/brand-logos/Flux%20logo.png",
+  STABILITY_AI_CORE:    "https://cdn.scenith.in/brand-logos/Stability%20logo.png",
+  GROK_AURORA:          "https://cdn.scenith.in/brand-logos/Grok.png",
+  NANO_BANANA_PRO:      "https://cdn.scenith.in/brand-logos/Google%20Logo.webp",
+  // Video models — keys match exact API IDs
+  WAN_2_5:              "https://cdn.scenith.in/brand-logos/WanNew%20ai%20logo.png",
+  KLING_2_5_TURBO:      "https://cdn.scenith.in/brand-logos/Kling%20logo.webp",
+  KLING_2_6_PRO:        "https://cdn.scenith.in/brand-logos/Kling%20logo.webp",
+  VEO_3_1_FAST:         "https://cdn.scenith.in/brand-logos/Google%20Logo.webp",
+  VEO_3_1:              "https://cdn.scenith.in/brand-logos/Google%20Logo.webp",
+  GROK_IMAGINE:         "https://cdn.scenith.in/brand-logos/Grok.png",
+  // Voice providers
+  GOOGLE:               "https://cdn.scenith.in/brand-logos/Google%20Logo.webp",
+  OPENAI:               "https://cdn.scenith.in/brand-logos/Chatgpt%20logo.webp",
+  AZURE:                "https://cdn.scenith.in/brand-logos/Azure%20logo.png",
+};
+
+const ModelLogo: React.FC<{ modelKey: string; size?: number }> = ({ modelKey, size = 15 }) => {
+  const src = MODEL_LOGOS[modelKey];
+  if (!src) return null;
+  return (
+    <img
+      src={src}
+      alt=""
+      style={{
+        width: size,
+        height: size,
+        objectFit: "contain",
+        objectPosition: "center",
+        borderRadius: 3,
+        flexShrink: 0,
+        display: "inline-block",
+        pointerEvents: "none",
+      }}
+    />
+  );
+};
 
 const getImageCreditCost = (
   modelId: string,
@@ -1375,10 +1418,12 @@ const CreateAIContentClient: React.FC = () => {
                           setSelectedVoiceProvider(p);
                           setSelectedVoice(null);
                         }}
+                        style={{ display: 'flex', alignItems: 'center', gap: 5 }}
                       >
-                        {p === "GOOGLE" && "🔵 Google"}
-                        {p === "OPENAI" && (ttsUsage?.isPaid ? "🟢 OpenAI" : "🟢 OpenAI 👑")}
-                        {p === "AZURE" && (ttsUsage?.isPaid ? "🔷 Azure" : "🔷 Azure 👑")}
+                        <ModelLogo modelKey={p} size={13} />
+                        {p === "GOOGLE" && "Google"}
+                        {p === "OPENAI" && <>OpenAI{!ttsUsage?.isPaid && " 👑"}</>}
+                        {p === "AZURE"  && <>Azure{!ttsUsage?.isPaid  && " 👑"}</>}
                       </button>
                     ))}
                   </div>
@@ -1664,12 +1709,16 @@ const CreateAIContentClient: React.FC = () => {
                     <option key={s.value} value={s.value}>{s.icon} {s.label}</option>
                   ))}
                 </select>
-                <select className="cac-select" value={selectedImageModel}
-                  onChange={(e) => { setSelectedImageModel(e.target.value); setImageSize("square"); setImageQuality("standard"); }}>
-                  {availableImageModels.map((m) => (
-                    <option key={m.id} value={m.id}>{m.displayName}</option>
-                  ))}
-                </select>
+                <CustomDropdown
+                  value={selectedImageModel}
+                  onChange={(val) => { setSelectedImageModel(val); setImageSize("square"); setImageQuality("standard"); }}
+                  options={availableImageModels.map((m) => ({
+                    value: m.id,
+                    label: m.displayName,
+                    logo: MODEL_LOGOS[m.id.toUpperCase().replace(/-/g, '_')],
+                  }))}
+                  style={{ minWidth: 140 }}
+                />
                 {imageModelCfg && imageModelCfg.sizes.length > 1 && (
                   <select className="cac-select" value={imageSize} onChange={(e) => setImageSize(e.target.value)}>
                     {imageModelCfg.sizes.map((s) => (
@@ -1769,10 +1818,10 @@ const CreateAIContentClient: React.FC = () => {
             {/* ── Video options ── */}
             {activeTab === "video" && (
               <div className="cac-options-row">
-                <select className="cac-select" value={selectedVideoModel}
-                  onChange={(e) => setSelectedVideoModel(e.target.value)}
-                  style={{ flex: "1 1 auto", minWidth: 130, maxWidth: 200 }}>
-                  {(isLoggedIn && videoModels.length > 0
+                <CustomDropdown
+                  value={selectedVideoModel}
+                  onChange={(val) => setSelectedVideoModel(val)}
+                  options={(isLoggedIn && videoModels.length > 0
                     ? videoModels
                     : STATIC_VIDEO_MODELS.map((m) => ({
                         id: m.id, displayName: m.name,
@@ -1780,13 +1829,14 @@ const CreateAIContentClient: React.FC = () => {
                       }))
                   ).map((m: any) => {
                     const cost = calcVideoCredits(m.id, videoDuration, videoAudioEnabled, videoResolution);
-                    return (
-                      <option key={m.id} value={m.id}>
-                        {m.displayName}{cost != null ? ` · ${cost}cr` : ''}
-                      </option>
-                    );
+                  return {
+                      value: m.id,
+                      label: `${m.displayName}${cost != null ? ` · ${cost}cr` : ''}`,
+                      logo: MODEL_LOGOS[m.id] ?? undefined,
+                    };
                   })}
-                </select>
+                  style={{ flex: "1 1 auto", minWidth: 130, maxWidth: 200 }}
+                />
                 {/* ── Resolution selector (only for Wan 2.5 and Grok) ── */}
                 {(() => {
                   const isWan  = selectedVideoModel?.toLowerCase().includes('wan');
@@ -2082,14 +2132,23 @@ const CreateAIContentClient: React.FC = () => {
                   className="cac-result-video"
                 />
                 <div className="cac-result-actions">
-                  <a
+                  
                     className="cac-action-btn primary"
-                    href={currentVideoJob.videoUrl}
+                  <a  href={currentVideoJob.videoUrl}
                     download={`scenith-video-${currentVideoJob.id}.mp4`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     📥 Download MP4
+                  </a>
+                  
+                    className="cac-action-btn primary"
+                  <a  href="https://scenith.in/tools/add-subtitles-to-videos"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ background: 'linear-gradient(135deg, #7c3aed, #db2777)' }}
+                  >
+                    💬 Add Subtitles
                   </a>
                   <button
                     className="cac-action-btn secondary"
