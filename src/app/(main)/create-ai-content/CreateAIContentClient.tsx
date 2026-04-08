@@ -1139,7 +1139,9 @@ const CreateAIContentClient: React.FC = () => {
       setCurrentImageJob({ id: jobId, status: "PENDING" });
       startImagePolling(jobId);
     } catch (err: any) {
-      setError(err.message || "Image generation failed.");
+      setError(err.message?.includes("Unexpected error")
+        ? "The AI model ran into an issue — please try again. Your credits were not charged."
+        : err.message || "The AI model ran into an issue — please try again.");
       setIsGeneratingImage(false);
     }
   };
@@ -1256,7 +1258,11 @@ const CreateAIContentClient: React.FC = () => {
       ) {
         setShowFreeVideoModal(true);
       } else {
-        setError(err.response?.data || err.message || "Video generation failed.");
+         setError(
+          typeof err.response?.data === 'string' && err.response.data.length < 200
+            ? `AI model error: ${err.response.data}`
+            : err.message || "The AI model ran into an issue — please try again."
+        );
       }
       setIsGeneratingVideo(false);
     }
@@ -1983,9 +1989,15 @@ const CreateAIContentClient: React.FC = () => {
 
         {activeTab === "image" && currentImageJob?.status === "FAILED" && (
           <div className="cac-error-card">
-            ⚠️ Generation failed.{" "}
-            {currentImageJob.errorMessage || "Credits refunded."}
-            <button onClick={() => setCurrentImageJob(null)}>Dismiss</button>
+            <div style={{ marginBottom: 6 }}>
+              ⚠️ <strong>The AI model ran into an issue</strong> — this issue is from model's end, not Scenith.
+            </div>
+            <div style={{ fontSize: 12, color: 'var(--cac-muted)', marginBottom: 10 }}>
+              {currentImageJob.errorMessage
+                ? `Model error: ${currentImageJob.errorMessage}`
+                : "The model returned an unexpected response. Your credits have been refunded."}
+            </div>
+            <button onClick={() => setCurrentImageJob(null)}>Dismiss & Try Again</button>
           </div>
         )}
 
@@ -2137,9 +2149,14 @@ const CreateAIContentClient: React.FC = () => {
 
             {currentVideoJob.status === "FAILED" && (
               <div className="cac-error">
-                ⚠️{" "}
-                {currentVideoJob.errorMessage ||
-                  "Generation failed. Credits refunded."}
+                <div style={{ marginBottom: 4 }}>
+                  ⚠️ <strong>The AI model ran into an issue</strong> — this issue is from model's end, not Scenith.
+                </div>
+                <div style={{ fontSize: 12, opacity: 0.8 }}>
+                  {currentVideoJob.errorMessage
+                    ? `Model error: ${currentVideoJob.errorMessage}`
+                    : "The model returned an unexpected response. Your credits have been refunded."}
+                </div>
               </div>
             )}
           </motion.div>

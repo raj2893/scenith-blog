@@ -664,7 +664,6 @@ const FAQ = [
    CREDIT EXPLAINER DATA
 ───────────────────────────────────────────────────────────────────── */
 const CREDIT_USES = [
-  { icon: '🎙️', count: '1 cr', unit: 'per 100 chars', label: 'AI Voice Generation' },
   { icon: '🖼️', count: '10–15 cr', unit: 'per image', label: 'AI Image (standard)' },
   { icon: '🎬', count: '50–100 cr', unit: 'per video', label: 'AI Video Generation' },
   { icon: '✂️', count: '10 cr', unit: 'per image', label: 'Background Removal' },
@@ -1411,7 +1410,7 @@ export default function PricingPageClient() {
               <tbody>
                 {[
                   ['Monthly Credits',          '50',    '50',           '150',          '500',         '1,000',        '2,500'],
-                  ['Voice Characters / mo',    '600',   '500',      '10,000',       '50,000',       '150,000',      '400,000'],
+                  ['Voice Characters / mo',    '600',   '3,000',      '10,000',       '50,000',       '150,000',      '400,000'],
                   ['Chars per Request',        '200',   '500',          '700',          '700',          '4,000',        '6,000'],
                   ['AI Video Generation',      '✓',     '✓ All models', '✓ All models', '✓ All models', '✓ All models', '✓ All models'],
                   ['AI Image Generation',      '✓',     '✓ All models', '✓ All models', '✓ All models', '✓ All models', '✓ All models'],

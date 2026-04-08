@@ -2162,4 +2162,28 @@
     <changefreq>weekly</changefreq>
     <lastmod>2026-04-05</lastmod>
   </url>
+  <url>
+    <loc>https://scenith.in/tools/ai-storyboard-and-voiceover-generator</loc>
+    <priority>1.0</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-04-06</lastmod>
+  </url>
+  <url>
+    <loc>https://scenith.in/tools/ai-ad-content-generator</loc>
+    <priority>1.0</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-04-07</lastmod>
+  </url>
+  <url>
+    <loc>https://scenith.in/tools/ai-brand-content-generator</loc>
+    <priority>1.0</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-04-07</lastmod>
+  </url>
+  <url>
+    <loc>https://scenith.in/tools/ai-social-media-content-generator</loc>
+    <priority>1.0</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-04-08</lastmod>
+  </url>
 </urlset>
