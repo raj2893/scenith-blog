@@ -1139,7 +1139,9 @@ const CreateAIContentClient: React.FC = () => {
       setCurrentImageJob({ id: jobId, status: "PENDING" });
       startImagePolling(jobId);
     } catch (err: any) {
-      setError(err.message || "Image generation failed.");
+      setError(err.message?.includes("Unexpected error")
+        ? "The AI model ran into an issue — please try again. Your credits were not charged."
+        : err.message || "The AI model ran into an issue — please try again.");
       setIsGeneratingImage(false);
     }
   };
@@ -1256,7 +1258,11 @@ const CreateAIContentClient: React.FC = () => {
       ) {
         setShowFreeVideoModal(true);
       } else {
-        setError(err.response?.data || err.message || "Video generation failed.");
+         setError(
+          typeof err.response?.data === 'string' && err.response.data.length < 200
+            ? `AI model error: ${err.response.data}`
+            : err.message || "The AI model ran into an issue — please try again."
+        );
       }
       setIsGeneratingVideo(false);
     }
@@ -1909,33 +1915,6 @@ const CreateAIContentClient: React.FC = () => {
               </div>
             )}
 
-            {activeTab === "video" && isLoggedIn && videoCredits?.planType === "FREE" && videoCredits?.freeVideoUsed && (
-              <div style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                gap: 12, padding: '10px 14px',
-                background: 'linear-gradient(135deg, rgba(124,58,237,0.10), rgba(219,39,119,0.08))',
-                border: '1.5px solid rgba(124,58,237,0.30)', borderRadius: 12,
-                margin: '0 0 4px',
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ fontSize: 20 }}>🎬</span>
-                  <div>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: '#7c3aed' }}>Free video generation used</div>
-                    <div style={{ fontSize: 11, color: 'var(--cac-text-2)', marginTop: 1 }}>
-                      Free accounts get 1 lifetime video. Upgrade to keep creating.
-                    </div>
-                  </div>
-                </div>
-                <a href="/pricing" style={{
-                  flexShrink: 0, padding: '6px 14px', borderRadius: 8, fontSize: 11, fontWeight: 700,
-                  background: 'linear-gradient(135deg, #6355dc, #8b5cf6)', color: '#fff',
-                  textDecoration: 'none', whiteSpace: 'nowrap',
-                }}>
-                  Upgrade →
-                </a>
-              </div>
-            )}
-
             <AnimatePresence>
               {error && (
                 <motion.div className="cac-error" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
@@ -1969,9 +1948,9 @@ const CreateAIContentClient: React.FC = () => {
                   disabled={isGeneratingImage || !prompt.trim() || (imageGenMode === 'image' && !inputImageFile)}>
                   {isGeneratingImage ? (<><span className="cac-btn-spinner" />Generating…</>) : "🖼️ Generate Image"}
                 </button>
-              ) : activeTab === "video" && videoCredits?.planType === "FREE" && videoCredits?.freeVideoUsed ? (
-                <button className="cac-generate-btn" disabled style={{ opacity: 0.5, cursor: 'not-allowed' }}>
-                  🔒 1 Free Video Used
+              ) : activeTab === "video" && isLoggedIn && (!videoCredits || videoCredits?.planType === "FREE") ? (
+                <button className="cac-generate-btn" onClick={() => setShowFreeVideoModal(true)}>
+                  🎬 Generate Video
                 </button>
               ) : (
                 <button className="cac-generate-btn" onClick={handleGenerateVideo}
@@ -2010,9 +1989,15 @@ const CreateAIContentClient: React.FC = () => {
 
         {activeTab === "image" && currentImageJob?.status === "FAILED" && (
           <div className="cac-error-card">
-            ⚠️ Generation failed.{" "}
-            {currentImageJob.errorMessage || "Credits refunded."}
-            <button onClick={() => setCurrentImageJob(null)}>Dismiss</button>
+            <div style={{ marginBottom: 6 }}>
+              ⚠️ <strong>The AI model ran into an issue</strong> — this issue is from model's end, not Scenith.
+            </div>
+            <div style={{ fontSize: 12, color: 'var(--cac-muted)', marginBottom: 10 }}>
+              {currentImageJob.errorMessage
+                ? `Model error: ${currentImageJob.errorMessage}`
+                : "The model returned an unexpected response. Your credits have been refunded."}
+            </div>
+            <button onClick={() => setCurrentImageJob(null)}>Dismiss & Try Again</button>
           </div>
         )}
 
@@ -2164,9 +2149,14 @@ const CreateAIContentClient: React.FC = () => {
 
             {currentVideoJob.status === "FAILED" && (
               <div className="cac-error">
-                ⚠️{" "}
-                {currentVideoJob.errorMessage ||
-                  "Generation failed. Credits refunded."}
+                <div style={{ marginBottom: 4 }}>
+                  ⚠️ <strong>The AI model ran into an issue</strong> — this issue is from model's end, not Scenith.
+                </div>
+                <div style={{ fontSize: 12, opacity: 0.8 }}>
+                  {currentVideoJob.errorMessage
+                    ? `Model error: ${currentVideoJob.errorMessage}`
+                    : "The model returned an unexpected response. Your credits have been refunded."}
+                </div>
               </div>
             )}
           </motion.div>
@@ -2731,13 +2721,52 @@ const CreateAIContentClient: React.FC = () => {
                 <FaTimes size={12} />
               </button>
               <div style={{ textAlign: "center", padding: "8px 0 16px" }}>
-                <div style={{ fontSize: 40, marginBottom: 10 }}>🎬</div>
-                <h2 className="cac-modal-title">
-                  Free Video Limit Reached
-                </h2>
+                {/* Model logos strip */}
+                <div style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  gap: 10, flexWrap: 'wrap', marginBottom: '30px'
+                }}>
+                  {[
+                    { key: 'WAN_2_5',        label: 'Wan 2.5' },
+                    { key: 'KLING_2_5_TURBO', label: 'Kling' },
+                    { key: 'VEO_3_1_FAST',   label: 'Veo 3.1' },
+                    { key: 'GROK_IMAGINE',   label: 'Grok' },
+                  ].map(m => (
+                    <div key={m.key} style={{
+                      display: 'flex', alignItems: 'center', gap: 5,
+                      padding: '4px 10px', borderRadius: 999,
+                      background: 'rgba(99,85,220,0.07)',
+                      border: '1px solid rgba(99,85,220,0.15)',
+                      fontSize: 11, fontWeight: 600, color: 'var(--cac-text-2)',
+                    }}>
+                      <ModelLogo modelKey={m.key} size={14} />
+                      {m.label}
+                    </div>
+                  ))}
+                </div>
+                <h2 className="cac-modal-title">Unlock AI Video</h2>
                 <p className="cac-modal-sub">
-                  Free accounts get 1 lifetime video. Upgrade to keep creating.
+                  Video generation is for paid users only. Pick any plan to start.
                 </p>
+                
+                {/* Spark plan temptation */}
+                <div style={{
+                  margin: '16px 0 4px',
+                  padding: '12px 14px',
+                  borderRadius: 12,
+                  background: 'linear-gradient(135deg, rgba(99,85,220,0.08), rgba(139,92,246,0.06))',
+                  border: '1.5px solid rgba(99,85,220,0.20)',
+                  textAlign: 'left',
+                }}>
+                  <div style={{ fontSize: 12, fontWeight: 800, color: 'var(--cac-accent)', marginBottom: 6 }}>
+                    ✨ Start with Spark — from just ₹50/$1
+                  </div>
+                  <div style={{ fontSize: 11.5, color: 'var(--cac-text-2)', lineHeight: 1.6 }}>
+                    You already have <strong style={{ color: 'var(--cac-text)' }}>50 free credits</strong>. The Spark plan adds 50 more —
+                    giving you <strong style={{ color: 'var(--cac-text)' }}>100 credits total</strong> and enough to generate
+                    <strong style={{ color: 'var(--cac-accent)' }}> 2 AI videos</strong> instantly.
+                  </div>
+                </div>
               </div>
               <a
                 href="/pricing"
@@ -2750,7 +2779,7 @@ const CreateAIContentClient: React.FC = () => {
                 }}
                 onClick={() => setShowFreeVideoModal(false)}
               >
-                Unlock Unlimited Videos — $9/mo →
+                Unlock AI Video — from $1/mo →
               </a>
               <button
                 onClick={() => setShowFreeVideoModal(false)}
