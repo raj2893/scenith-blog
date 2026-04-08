@@ -44,9 +44,8 @@ interface TtsUsage {
   planType: string;
   maxCharsPerRequest: number;
   isPaid: boolean;
-  creditCostPer100Chars: number;
-  freeVoiceCharsUsed?: number;
-  freeVoiceCharsLimit?: number;
+  voiceCharsUsed: number;
+  voiceCharsLimit: number;
 }
 
 interface ImageUsage {
@@ -967,15 +966,13 @@ const CreateAIContentClient: React.FC = () => {
       setError(`Text exceeds ${maxChars} characters limit.`);
       return;
     }
-    if (ttsUsage && !ttsUsage.isPaid) {
-      const remaining =
-        (ttsUsage.freeVoiceCharsLimit ?? 0) -
-        (ttsUsage.freeVoiceCharsUsed ?? 0);
-      if (prompt.length > remaining) {
-        setError(`Only ${remaining} free characters remaining.`);
-        return;
+    if (ttsUsage) {
+        const remaining = (ttsUsage.voiceCharsLimit ?? 0) - (ttsUsage.voiceCharsUsed ?? 0);
+        if (prompt.length > remaining) {
+          setError(`Only ${remaining} voice characters remaining this month.`);
+          return;
+        }
       }
-    }
     setIsGeneratingVoice(true);
     setError(null);
     setGeneratedAudio(null);
@@ -1454,10 +1451,8 @@ const CreateAIContentClient: React.FC = () => {
                   {/* Credits */}
                   <span className="cac-credit-pill">
                     {isLoggedIn
-                      ? ttsUsage?.isPaid
-                        ? `⚡ ${ttsUsage.balance} cr`
-                        : `⚡ ${((ttsUsage?.freeVoiceCharsLimit ?? 0) - (ttsUsage?.freeVoiceCharsUsed ?? 0)).toLocaleString()} chars`
-                      : "⚡ 50 free credits"}
+                      ? `🎙️ ${((ttsUsage?.voiceCharsLimit ?? 0) - (ttsUsage?.voiceCharsUsed ?? 0)).toLocaleString()} chars left`
+                      : "🎙️ 600 chars free"}
                   </span>
                   {selectedVoice && (
                     <span className="cac-selected-voice-pill">
