@@ -106,7 +106,7 @@ export default function MakePromotionalVideo() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, promotional videos have seen a 30% increase in conversions and a 25% boost in shares. Let’s explore the steps.
+            With over 3,500 creators using Scenith, promotional videos have seen a 30% increase in conversions and a 25% boost in shares. Let’s explore the steps.
           </p>
         </section>
 

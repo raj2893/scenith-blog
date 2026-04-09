@@ -106,7 +106,7 @@ export default function CompressVideoOnlineFreeTool() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, compressed videos have shown a 20% increase in upload speed and a 15% improvement in storage efficiency. Let’s explore how to leverage this free tool.
+            With over 3,500 creators using Scenith, compressed videos have shown a 20% increase in upload speed and a 15% improvement in storage efficiency. Let’s explore how to leverage this free tool.
           </p>
         </section>
 

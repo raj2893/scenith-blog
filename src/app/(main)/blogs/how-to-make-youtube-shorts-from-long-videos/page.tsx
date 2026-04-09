@@ -107,7 +107,7 @@ export default function MakeYouTubeShortsFromLongVideos() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, Shorts derived from long videos have seen a 35% increase in views and a 20% rise in subscriber growth. Let’s explore how to master this conversion process.
+            With over 3,500 creators using Scenith, Shorts derived from long videos have seen a 35% increase in views and a 20% rise in subscriber growth. Let’s explore how to master this conversion process.
           </p>
         </section>
 

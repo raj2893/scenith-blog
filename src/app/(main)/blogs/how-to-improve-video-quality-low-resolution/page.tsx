@@ -106,7 +106,7 @@ export default function ImproveVideoQualityLowResolution() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, upscaled videos have seen a 22% increase in engagement and a 15% boost in viewer satisfaction. Let’s dive into the steps.
+            With over 3,500 creators using Scenith, upscaled videos have seen a 22% increase in engagement and a 15% boost in viewer satisfaction. Let’s dive into the steps.
           </p>
         </section>
 

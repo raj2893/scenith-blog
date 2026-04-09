@@ -97,7 +97,7 @@ export default function ViewersWithoutSound() {
           </div>
 
           <p>
-            Did you know that <strong>90% of social media videos are watched on mute</strong>? With <strong>over 50,000 creators using Scenith</strong>, its AI-powered subtitles make it easy to captivate silent viewers on platforms like Instagram, YouTube, and TikTok.
+            Did you know that <strong>90% of social media videos are watched on mute</strong>? With <strong>over 3,500 creators using Scenith</strong>, its AI-powered subtitles make it easy to captivate silent viewers on platforms like Instagram, YouTube, and TikTok.
           </p>
 
           <p>
@@ -301,7 +301,7 @@ export default function ViewersWithoutSound() {
             With 90% of viewers watching videos on mute, Scenith’s AI subtitles help you create accessible, engaging content in seconds. Its intuitive tools make it the best choice for creators targeting silent audiences.
           </p>
           <p>
-            Compared to manual or other tools, Scenith offers unmatched speed and simplicity. Start adding subtitles today and join over 50,000 creators using Scenith.
+            Compared to manual or other tools, Scenith offers unmatched speed and simplicity. Start adding subtitles today and join over 3,500 creators using Scenith.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Engage Silent Viewers?</h3>

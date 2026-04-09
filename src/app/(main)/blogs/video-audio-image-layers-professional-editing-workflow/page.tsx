@@ -94,7 +94,7 @@ export default function VideoAudioImageLayers() {
           </div>
 
           <p>
-            In the fast-paced world of video content creation, where <strong>over 500 hours of video are uploaded to YouTube every minute</strong>, a professional editing workflow is essential for standing out. Layering video, audio, and images enables creators to build complex, engaging narratives without chaos. Scenith’s AI-powered platform, used by over <strong>50,000 creators</strong>, streamlines this process with multi-layer timelines, non-destructive editing, and integrated controls, boosting productivity by up to 50% and engagement by 30%.
+            In the fast-paced world of video content creation, where <strong>over 500 hours of video are uploaded to YouTube every minute</strong>, a professional editing workflow is essential for standing out. Layering video, audio, and images enables creators to build complex, engaging narratives without chaos. Scenith’s AI-powered platform, used by over <strong>3,500 creators</strong>, streamlines this process with multi-layer timelines, non-destructive editing, and integrated controls, boosting productivity by up to 50% and engagement by 30%.
           </p>
 
           <p>
@@ -329,7 +329,7 @@ export default function VideoAudioImageLayers() {
             Mastering layers for video, audio, and images is key to professional editing workflows. Scenith’s tools streamline organization, balancing, and compositing, saving time and enhancing quality for dynamic content.
           </p>
           <p>
-            With over 50,000 creators using Scenith, its intuitive layers make pro results accessible. Start layering today for engaging videos on YouTube, TikTok, or Instagram.
+            With over 3,500 creators using Scenith, its intuitive layers make pro results accessible. Start layering today for engaging videos on YouTube, TikTok, or Instagram.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready for Pro Layered Edits?</h3>

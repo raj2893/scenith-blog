@@ -98,7 +98,7 @@ export default function HowToUploadAndOrganizeMedia() {
           </div>
 
           <p>
-            A well-organized media library is the foundation of a smooth video editing process. With <strong>over 50,000 creators using Scenith</strong>, its beginner-friendly Media Panel makes uploading and organizing media effortless for YouTube, Instagram, or TikTok projects.
+            A well-organized media library is the foundation of a smooth video editing process. With <strong>over 3,500 creators using Scenith</strong>, its beginner-friendly Media Panel makes uploading and organizing media effortless for YouTube, Instagram, or TikTok projects.
           </p>
 
           <p>
@@ -337,7 +337,7 @@ export default function HowToUploadAndOrganizeMedia() {
             Uploading and organizing media in Scenith is fast, intuitive, and perfect for creators of all levels. With a user-friendly Media Panel and drag-and-drop functionality, you can streamline your workflow in under 3 minutes.
           </p>
           <p>
-            While professional software offers advanced features, Scenith’s simplicity and free tier make it the best choice for most creators. Start uploading today and join over 50,000 creators using Scenith.
+            While professional software offers advanced features, Scenith’s simplicity and free tier make it the best choice for most creators. Start uploading today and join over 3,500 creators using Scenith.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Streamline Your Video Workflow?</h3>

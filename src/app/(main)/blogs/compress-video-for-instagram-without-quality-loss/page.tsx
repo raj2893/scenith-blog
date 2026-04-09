@@ -106,7 +106,7 @@ export default function CompressVideoForInstagram() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, compressed Instagram videos have seen a 22% increase in views and a 15% boost in interaction rates. Let’s explore how to achieve this balance.
+            With over 3,500 creators using Scenith, compressed Instagram videos have seen a 22% increase in views and a 15% boost in interaction rates. Let’s explore how to achieve this balance.
           </p>
         </section>
 

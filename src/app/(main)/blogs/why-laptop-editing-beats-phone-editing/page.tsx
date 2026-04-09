@@ -93,7 +93,7 @@ export default function LaptopVsPhoneEditing() {
           </div>
 
           <p>
-            While phone editing is convenient, laptops provide unmatched power and flexibility for video editing. With <strong>over 50,000 creators using Scenith</strong>, its web-based platform delivers professional results for YouTube, Instagram, and TikTok.
+            While phone editing is convenient, laptops provide unmatched power and flexibility for video editing. With <strong>over 3,500 creators using Scenith</strong>, its web-based platform delivers professional results for YouTube, Instagram, and TikTok.
           </p>
 
           <p>
@@ -293,7 +293,7 @@ export default function LaptopVsPhoneEditing() {
             Laptop editing with Scenith offers superior control and flexibility compared to phone apps, making it ideal for professional videos on YouTube, Instagram, and TikTok.
           </p>
           <p>
-            With a 4.9/5 user rating, Scenith’s web-based platform is the best choice for creators. Start editing on your laptop today and join over 50,000 creators using Scenith.
+            With a 4.9/5 user rating, Scenith’s web-based platform is the best choice for creators. Start editing on your laptop today and join over 3,500 creators using Scenith.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready for Pro-Level Editing?</h3>

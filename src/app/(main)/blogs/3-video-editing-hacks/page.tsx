@@ -98,7 +98,7 @@ export default function ThreeVideoEditingHacks() {
           </div>
 
           <p>
-            Polished videos can increase engagement by 40% on platforms like Instagram and TikTok, where <strong>85% of videos are watched without sound</strong>. Scenith’s AI tools make these hacks effortless, helping over 50,000 creators daily.
+            Polished videos can increase engagement by 40% on platforms like Instagram and TikTok, where <strong>85% of videos are watched without sound</strong>. Scenith’s AI tools make these hacks effortless, helping over 3,500 creators daily.
           </p>
 
           <p>
@@ -324,7 +324,7 @@ export default function ThreeVideoEditingHacks() {
             These three video editing hacks—fast cuts, AI subtitles, and background removal—can boost engagement by 40% with Scenith’s AI tools. They’re fast, beginner-friendly, and perfect for viral content on Instagram, TikTok, and YouTube.
           </p>
           <p>
-            Manual methods are slow and skill-intensive. Join over 50,000 creators using Scenith to create polished videos in seconds and skyrocket your social media growth.
+            Manual methods are slow and skill-intensive. Join over 3,500 creators using Scenith to create polished videos in seconds and skyrocket your social media growth.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Make Your Videos Go Viral?</h3>

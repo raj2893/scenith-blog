@@ -106,7 +106,7 @@ export default function StartVideoEditingSideHustle() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, freelancers have seen a 25% increase in client inquiries and a 20% boost in earnings. Let’s explore the steps.
+            With over 3,500 creators using Scenith, freelancers have seen a 25% increase in client inquiries and a 20% boost in earnings. Let’s explore the steps.
           </p>
         </section>
 

@@ -94,7 +94,7 @@ export default function BackgroundVsTransparentSubtitles() {
           </div>
 
           <p>
-            With <strong>90% of social media videos watched on mute</strong>, subtitles are critical for engaging viewers on platforms like Instagram, TikTok, and YouTube. Choosing between colored backgrounds and transparent subtitles can make or break readability, especially against busy or bright video backdrops. Scenith’s AI-powered tools, trusted by over <strong>50,000 creators</strong>, allow you to test and apply the best option in seconds, enhancing engagement by up to 30% and ensuring accessibility for all viewers.
+            With <strong>90% of social media videos watched on mute</strong>, subtitles are critical for engaging viewers on platforms like Instagram, TikTok, and YouTube. Choosing between colored backgrounds and transparent subtitles can make or break readability, especially against busy or bright video backdrops. Scenith’s AI-powered tools, trusted by over <strong>3,500 creators</strong>, allow you to test and apply the best option in seconds, enhancing engagement by up to 30% and ensuring accessibility for all viewers.
           </p>
 
           <p>
@@ -336,7 +336,7 @@ export default function BackgroundVsTransparentSubtitles() {
             Choosing between colored and transparent subtitle backgrounds is key to maximizing readability and engagement. Scenith’s AI tools make it easy to test and apply the best option, outperforming manual methods and enhancing accessibility for diverse audiences.
           </p>
           <p>
-            Join over 50,000 creators using Scenith to craft readable subtitles for TikTok, Instagram, and YouTube. Whether you’re a beauty influencer or a brand, Scenith delivers professional results in seconds. Start today to boost watch time and captivate silent viewers.
+            Join over 3,500 creators using Scenith to craft readable subtitles for TikTok, Instagram, and YouTube. Whether you’re a beauty influencer or a brand, Scenith delivers professional results in seconds. Start today to boost watch time and captivate silent viewers.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Optimize Subtitle Readability?</h3>

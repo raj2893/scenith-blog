@@ -106,7 +106,7 @@ export default function CreateYouTubeIntroInMinutes() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, videos with custom intros have seen a 28% increase in retention and a 20% boost in subscriber growth. Let’s get started.
+            With over 3,500 creators using Scenith, videos with custom intros have seen a 28% increase in retention and a 20% boost in subscriber growth. Let’s get started.
           </p>
         </section>
 

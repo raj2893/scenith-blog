@@ -106,7 +106,7 @@ export default function LinkedInVideoSpecifications() {
           </p>
 
           <p>
-            With over 50,000 creators utilizing Scenith, videos optimized for LinkedIn specifications have demonstrated a 25% increase in engagement rates among professional networks. Let’s dive into the details of crafting content that excels on this platform.
+            With over 3,500 creators utilizing Scenith, videos optimized for LinkedIn specifications have demonstrated a 25% increase in engagement rates among professional networks. Let’s dive into the details of crafting content that excels on this platform.
           </p>
         </section>
 

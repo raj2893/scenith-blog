@@ -106,7 +106,7 @@
            </p>
 
            <p>
-             With over 50,000 creators using Scenith, speed ramping has increased viewer engagement by up to 35%. Let’s explore how to use this technique effectively.
+             With over 3,500 creators using Scenith, speed ramping has increased viewer engagement by up to 35%. Let’s explore how to use this technique effectively.
            </p>
          </section>
 

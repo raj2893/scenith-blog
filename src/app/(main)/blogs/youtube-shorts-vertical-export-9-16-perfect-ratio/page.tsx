@@ -106,7 +106,7 @@ export default function YouTubeShortsVerticalExport() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, videos exported in the 9:16 ratio have achieved a 25% increase in view counts and a 20% rise in subscriber growth on YouTube Shorts. Let’s explore how to leverage Scenith for flawless vertical exports.
+            With over 3,500 creators using Scenith, videos exported in the 9:16 ratio have achieved a 25% increase in view counts and a 20% rise in subscriber growth on YouTube Shorts. Let’s explore how to leverage Scenith for flawless vertical exports.
           </p>
         </section>
 

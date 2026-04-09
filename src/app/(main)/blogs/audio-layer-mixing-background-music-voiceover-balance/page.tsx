@@ -94,7 +94,7 @@ export default function AudioLayerMixing() {
           </div>
 
           <p>
-            Audio is 50% of a video’s impact, yet poor mixing—where background music drowns voiceover—can reduce retention by 40%. In professional workflows, audio layers allow precise balancing of voiceover, music, and effects. Scenith’s integrated audio tools, used by over <strong>50,000 creators</strong>, offer EQ, compression, and ducking for seamless mixes, ensuring clarity on platforms like YouTube or TikTok.
+            Audio is 50% of a video’s impact, yet poor mixing—where background music drowns voiceover—can reduce retention by 40%. In professional workflows, audio layers allow precise balancing of voiceover, music, and effects. Scenith’s integrated audio tools, used by over <strong>3,500 creators</strong>, offer EQ, compression, and ducking for seamless mixes, ensuring clarity on platforms like YouTube or TikTok.
           </p>
 
           <p>
@@ -329,7 +329,7 @@ export default function AudioLayerMixing() {
             Audio layer mixing creates balanced, professional soundscapes. Scenith’s tools make voiceover and music harmony effortless, outperforming manual methods.
           </p>
           <p>
-            Join over 50,000 creators using Scenith for immersive mixes on YouTube or TikTok. Start today for engaging audio.
+            Join over 3,500 creators using Scenith for immersive mixes on YouTube or TikTok. Start today for engaging audio.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready for Perfect Audio Balance?</h3>

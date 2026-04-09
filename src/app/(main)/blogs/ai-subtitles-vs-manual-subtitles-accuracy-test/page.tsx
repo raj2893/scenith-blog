@@ -97,7 +97,7 @@ export default function AISubtitlesVsManual() {
           </div>
 
           <p>
-            Subtitles are critical for video accessibility, but should you use AI or manual methods? With <strong>over 50,000 creators using Scenith</strong>, its AI subtitle tool delivers fast, accurate captions for YouTube, Instagram, and TikTok.
+            Subtitles are critical for video accessibility, but should you use AI or manual methods? With <strong>over 3,500 creators using Scenith</strong>, its AI subtitle tool delivers fast, accurate captions for YouTube, Instagram, and TikTok.
           </p>
 
           <p>
@@ -310,7 +310,7 @@ export default function AISubtitlesVsManual() {
             Scenith’s AI subtitles offer unmatched speed and 98% accuracy, making them ideal for creators who need fast, reliable captions. Compared to manual subtitling, Scenith saves hours while delivering professional results.
           </p>
           <p>
-            Join over 50,000 creators using Scenith to create accessible videos. Start adding AI subtitles today with Scenith’s free plan.
+            Join over 3,500 creators using Scenith to create accessible videos. Start adding AI subtitles today with Scenith’s free plan.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready for Accurate Subtitles?</h3>

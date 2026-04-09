@@ -96,7 +96,7 @@ export default function VoiceoverMistakesBeginners() {
           </div>
 
           <p>
-            Beginner voiceover mistakes can ruin video engagement, but <strong>over 50,000 creators using Scenith</strong> rely on its AI voice tools to create clear, professional narration for YouTube, Instagram, and TikTok.
+            Beginner voiceover mistakes can ruin video engagement, but <strong>over 3,500 creators using Scenith</strong> rely on its AI voice tools to create clear, professional narration for YouTube, Instagram, and TikTok.
           </p>
 
           <p>
@@ -288,7 +288,7 @@ export default function VoiceoverMistakesBeginners() {
             Avoiding voiceover mistakes is easy with Scenith’s AI voice tools, delivering professional narration for beginners in minutes. With a 4.9/5 rating, it’s ideal for YouTube, Instagram, and TikTok.
           </p>
           <p>
-            Compared to manual voiceovers, Scenith offers speed and quality. Start creating voiceovers today and join over 50,000 creators using Scenith.
+            Compared to manual voiceovers, Scenith offers speed and quality. Start creating voiceovers today and join over 3,500 creators using Scenith.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready for Professional Voiceovers?</h3>

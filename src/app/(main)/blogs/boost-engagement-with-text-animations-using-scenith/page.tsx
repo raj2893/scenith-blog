@@ -97,7 +97,7 @@ export default function TextAnimations() {
           </div>
 
           <p>
-            Text animations grab viewers’ attention and boost engagement on social media. With <strong>over 50,000 creators using Scenith</strong>, its text animation tools make it easy to create captivating videos for YouTube, Instagram, or TikTok.
+            Text animations grab viewers’ attention and boost engagement on social media. With <strong>over 3,500 creators using Scenith</strong>, its text animation tools make it easy to create captivating videos for YouTube, Instagram, or TikTok.
           </p>
 
           <p>
@@ -324,7 +324,7 @@ export default function TextAnimations() {
             Scenith’s text animation tools make it easy to create engaging videos that stand out on YouTube, Instagram, and TikTok. With its intuitive interface and free tier, it’s perfect for creators of all levels.
           </p>
           <p>
-            While professional software offers advanced controls, Scenith’s speed and simplicity make it the best choice for most creators. Start adding text animations today and join over 50,000 creators using Scenith.
+            While professional software offers advanced controls, Scenith’s speed and simplicity make it the best choice for most creators. Start adding text animations today and join over 3,500 creators using Scenith.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Boost Video Engagement?</h3>

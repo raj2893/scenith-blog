@@ -97,7 +97,7 @@ export default function AccessibleVideosDeafCommunity() {
           </div>
 
           <p>
-            Accessibility is crucial for inclusive content, and <strong>over 50,000 creators using Scenith</strong> rely on its AI subtitle tools to make videos accessible for the deaf community on YouTube, Instagram, and TikTok.
+            Accessibility is crucial for inclusive content, and <strong>over 3,500 creators using Scenith</strong> rely on its AI subtitle tools to make videos accessible for the deaf community on YouTube, Instagram, and TikTok.
           </p>
 
           <p>
@@ -296,7 +296,7 @@ export default function AccessibleVideosDeafCommunity() {
             Creating accessible videos for the deaf community is easy with Scenith’s AI subtitles and caption styling tools, ensuring inclusivity and engagement in minutes.
           </p>
           <p>
-            Compared to other methods, Scenith offers speed, accuracy, and simplicity. Start making accessible videos today and join over 50,000 creators using Scenith.
+            Compared to other methods, Scenith offers speed, accuracy, and simplicity. Start making accessible videos today and join over 3,500 creators using Scenith.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Make Inclusive Videos?</h3>

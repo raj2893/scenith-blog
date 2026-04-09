@@ -106,7 +106,7 @@ export default function EditVideosOnLaptop() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, laptop-edited videos have shown a 28% increase in engagement and a 20% boost in production efficiency. Let’s dive into the essentials of laptop video editing.
+            With over 3,500 creators using Scenith, laptop-edited videos have shown a 28% increase in engagement and a 20% boost in production efficiency. Let’s dive into the essentials of laptop video editing.
           </p>
         </section>
 

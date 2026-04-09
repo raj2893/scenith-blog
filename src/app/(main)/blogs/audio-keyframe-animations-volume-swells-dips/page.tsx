@@ -106,7 +106,7 @@ export default function AudioKeyframeAnimations() {
           </p>
 
           <p>
-            With over 50,000 creators relying on Scenith, these tools have proven to enhance viewer retention by up to 30% through dynamic sound design. Let’s dive into how you can harness audio keyframes for professional results.
+            With over 3,500 creators relying on Scenith, these tools have proven to enhance viewer retention by up to 30% through dynamic sound design. Let’s dive into how you can harness audio keyframes for professional results.
           </p>
         </section>
 

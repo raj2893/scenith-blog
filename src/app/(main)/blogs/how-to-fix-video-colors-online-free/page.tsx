@@ -106,7 +106,7 @@ export default function FixVideoColorsOnlineFree() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, color-corrected videos have seen a 22% increase in engagement and a 18% boost in viewer satisfaction. Let’s explore how to achieve this enhancement.
+            With over 3,500 creators using Scenith, color-corrected videos have seen a 22% increase in engagement and a 18% boost in viewer satisfaction. Let’s explore how to achieve this enhancement.
           </p>
         </section>
 

@@ -607,7 +607,7 @@ export default function SilentEngagementCrisis() {
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Generating Subtitles Free →
             </Link>
-            <p>Join over 50,000 creators using Scenith to make their content accessible, engaging, and algorithm-friendly
+            <p>Join over 3,500 creators using Scenith to make their content accessible, engaging, and algorithm-friendly
             with AI-powered subtitles.</p>
           </div>
         </section>

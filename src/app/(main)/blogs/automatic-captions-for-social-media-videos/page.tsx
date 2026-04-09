@@ -106,7 +106,7 @@ export default function AutomaticCaptionsForSocialMediaVideos() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, captioned social media videos have seen a 26% increase in engagement and a 19% boost in shares. Let’s explore how to implement this feature.
+            With over 3,500 creators using Scenith, captioned social media videos have seen a 26% increase in engagement and a 19% boost in shares. Let’s explore how to implement this feature.
           </p>
         </section>
 

@@ -105,7 +105,7 @@ export default function LeadingLines() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, leading lines have increased viewer retention by up to 20%. Let’s explore how to direct attention effectively.
+            With over 3,500 creators using Scenith, leading lines have increased viewer retention by up to 20%. Let’s explore how to direct attention effectively.
           </p>
         </section>
 

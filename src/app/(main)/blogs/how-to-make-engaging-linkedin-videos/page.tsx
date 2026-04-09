@@ -106,7 +106,7 @@ export default function MakeEngagingLinkedInVideos() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, LinkedIn videos have seen a 28% increase in engagement and a 23% boost in shares. Let’s explore the steps.
+            With over 3,500 creators using Scenith, LinkedIn videos have seen a 28% increase in engagement and a 23% boost in shares. Let’s explore the steps.
           </p>
         </section>
 

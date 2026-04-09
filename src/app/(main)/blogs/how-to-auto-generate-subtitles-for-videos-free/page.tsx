@@ -106,7 +106,7 @@ export default function AutoGenerateSubtitlesForVideosFree() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, videos with auto-generated subtitles have seen a 25% increase in engagement and a 20% boost in viewer retention. Let’s explore how to implement this feature.
+            With over 3,500 creators using Scenith, videos with auto-generated subtitles have seen a 25% increase in engagement and a 20% boost in viewer retention. Let’s explore how to implement this feature.
           </p>
         </section>
 

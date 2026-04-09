@@ -291,7 +291,7 @@ export default function ViralVideoAnatomy() {
             Understanding the anatomy of a viral video is key to creating engaging content. Scenith’s AI tools make it easy to analyze and replicate viral elements, saving time compared to manual methods.
           </p>
           <p>
-            Join over 50,000 creators using Scenith to craft viral videos. Start today to boost your content’s reach.
+            Join over 3,500 creators using Scenith to craft viral videos. Start today to boost your content’s reach.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Create Viral Videos?</h3>

@@ -297,7 +297,7 @@ export default function TikTokTrendingTransitions() {
             Recreating TikTok’s trending transitions is easy with Scenith’s AI-powered tools, letting you craft viral videos in minutes. Compared to manual editing or other tools, Scenith offers speed, simplicity, and customization.
           </p>
           <p>
-            Join over 50,000 creators using Scenith to create engaging TikTok content. Start today and make your videos stand out.
+            Join over 3,500 creators using Scenith to create engaging TikTok content. Start today and make your videos stand out.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Go Viral on TikTok?</h3>

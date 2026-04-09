@@ -94,7 +94,7 @@ export default function BorderWidthScience() {
           </div>
 
           <p>
-            With <strong>90% of social media videos watched on mute</strong>, subtitles are essential for engaging viewers on platforms like TikTok, YouTube, and Twitch. The width of subtitle borders significantly impacts visibility, especially against complex backgrounds like gameplay or outdoor scenes. Scenith’s AI-powered border optimization tools, trusted by over <strong>50,000 creators</strong>, ensure captions stand out with optimal border widths, improving retention by up to 20% in seconds.
+            With <strong>90% of social media videos watched on mute</strong>, subtitles are essential for engaging viewers on platforms like TikTok, YouTube, and Twitch. The width of subtitle borders significantly impacts visibility, especially against complex backgrounds like gameplay or outdoor scenes. Scenith’s AI-powered border optimization tools, trusted by over <strong>3,500 creators</strong>, ensure captions stand out with optimal border widths, improving retention by up to 20% in seconds.
           </p>
 
           <p>
@@ -336,7 +336,7 @@ export default function BorderWidthScience() {
             Subtitle border width is a science that impacts visibility and engagement. Scenith’s AI-powered tools make it easy to apply optimal widths (2-4px for mobile, 1-2px for desktops), outperforming manual methods in speed and precision while enhancing accessibility for diverse audiences.
           </p>
           <p>
-            Join over 50,000 creators using Scenith to craft visible subtitles for TikTok, YouTube, and Twitch. Whether you’re a gamer or educator, Scenith delivers professional results in seconds. Start today to boost engagement and make your content accessible to all.
+            Join over 3,500 creators using Scenith to craft visible subtitles for TikTok, YouTube, and Twitch. Whether you’re a gamer or educator, Scenith delivers professional results in seconds. Start today to boost engagement and make your content accessible to all.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Optimize Subtitle Visibility?</h3>

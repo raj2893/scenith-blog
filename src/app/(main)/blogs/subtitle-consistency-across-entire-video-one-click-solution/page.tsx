@@ -94,7 +94,7 @@ export default function SubtitleConsistencyOneClick() {
           </div>
 
           <p>
-            With <strong>90% of social media videos watched on mute</strong>, subtitles are crucial for engaging viewers on platforms like Instagram, TikTok, and YouTube. Inconsistent subtitles—varying fonts, colors, or sizes—can distract viewers and reduce professionalism, leading to a <strong>25% drop in viewer retention</strong>. Scenith’s one-click subtitle styling tool, used by over <strong>50,000 creators</strong>, ensures uniformity across all captions, boosting engagement by up to 40% and saving hours of tedious work.
+            With <strong>90% of social media videos watched on mute</strong>, subtitles are crucial for engaging viewers on platforms like Instagram, TikTok, and YouTube. Inconsistent subtitles—varying fonts, colors, or sizes—can distract viewers and reduce professionalism, leading to a <strong>25% drop in viewer retention</strong>. Scenith’s one-click subtitle styling tool, used by over <strong>3,500 creators</strong>, ensures uniformity across all captions, boosting engagement by up to 40% and saving hours of tedious work.
           </p>
 
           <p>
@@ -336,7 +336,7 @@ export default function SubtitleConsistencyOneClick() {
             Consistent subtitles are essential for professional, engaging, and accessible videos. Scenith’s one-click styling tool saves hours while delivering uniform captions that boost viewer retention and align with your brand. Compared to manual methods, Scenith offers unmatched speed and simplicity.
           </p>
           <p>
-            Join over 50,000 creators using Scenith to create polished subtitles for TikTok, Instagram, and YouTube. Whether you’re a beginner or a pro, Scenith’s AI tools make subtitle consistency effortless. Start today to elevate your videos and captivate silent viewers worldwide.
+            Join over 3,500 creators using Scenith to create polished subtitles for TikTok, Instagram, and YouTube. Whether you’re a beginner or a pro, Scenith’s AI tools make subtitle consistency effortless. Start today to elevate your videos and captivate silent viewers worldwide.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready for Polished Subtitles?</h3>

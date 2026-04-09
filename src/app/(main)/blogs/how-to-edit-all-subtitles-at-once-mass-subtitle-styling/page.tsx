@@ -94,7 +94,7 @@ export default function MassSubtitleStyling() {
           </div>
 
           <p>
-            Did you know that <strong>90% of social media videos are watched on mute</strong>, making subtitles critical for engagement? Manually styling subtitles for a 5-minute video can take <strong>2-3 hours</strong>, but Scenith’s AI-powered mass subtitle styling tool streamlines this process, ensuring consistency across platforms like YouTube, Instagram, and TikTok. With <strong>over 50,000 creators</strong> using Scenith, its intuitive interface delivers professional captions that boost viewer retention by up to 40%.
+            Did you know that <strong>90% of social media videos are watched on mute</strong>, making subtitles critical for engagement? Manually styling subtitles for a 5-minute video can take <strong>2-3 hours</strong>, but Scenith’s AI-powered mass subtitle styling tool streamlines this process, ensuring consistency across platforms like YouTube, Instagram, and TikTok. With <strong>over 3,500 creators</strong> using Scenith, its intuitive interface delivers professional captions that boost viewer retention by up to 40%.
           </p>
 
           <p>
@@ -332,7 +332,7 @@ export default function MassSubtitleStyling() {
             Mass subtitle styling saves hours while ensuring your captions are consistent, readable, and engaging. Scenith’s AI-powered tool outperforms manual methods, offering speed, accuracy, and customization for creators targeting silent viewers on social media.
           </p>
           <p>
-            With over 50,000 creators trusting Scenith, its mass styling feature is perfect for YouTube vlogs, Instagram Reels, or TikTok videos. Whether you’re styling captions for a 30-second clip or a 10-minute tutorial, Scenith delivers professional results in seconds. Start today to elevate your video content and captivate your audience.
+            With over 3,500 creators trusting Scenith, its mass styling feature is perfect for YouTube vlogs, Instagram Reels, or TikTok videos. Whether you’re styling captions for a 30-second clip or a 10-minute tutorial, Scenith delivers professional results in seconds. Start today to elevate your video content and captivate your audience.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Style Subtitles Like a Pro?</h3>

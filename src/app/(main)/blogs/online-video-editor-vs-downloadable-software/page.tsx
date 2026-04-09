@@ -106,7 +106,7 @@ export default function OnlineVideoEditorVsSoftware() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, online editors have seen a 30% increase in adoption for their ease and affordability. Let’s explore the comparison.
+            With over 3,500 creators using Scenith, online editors have seen a 30% increase in adoption for their ease and affordability. Let’s explore the comparison.
           </p>
         </section>
 

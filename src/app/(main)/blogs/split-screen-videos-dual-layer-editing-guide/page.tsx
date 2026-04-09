@@ -94,7 +94,7 @@ export default function SplitScreenVideos() {
           </div>
 
           <p>
-            Split screen videos, using dual layers for side-by-side views, boost engagement by 35% in reactions and tutorials. Popular on <strong>TikTok and YouTube</strong>, they require precise cropping and positioning. Scenith’s layer tools, used by over <strong>50,000 creators</strong>, enable easy dual-layer edits for pro results.
+            Split screen videos, using dual layers for side-by-side views, boost engagement by 35% in reactions and tutorials. Popular on <strong>TikTok and YouTube</strong>, they require precise cropping and positioning. Scenith’s layer tools, used by over <strong>3,500 creators</strong>, enable easy dual-layer edits for pro results.
           </p>
 
           <p>
@@ -326,7 +326,7 @@ export default function SplitScreenVideos() {
             Split screen videos with dual layers create dynamic content. Scenith’s tools make editing easy, outperforming manual methods.
           </p>
           <p>
-            Join over 50,000 creators using Scenith for splits on TikTok or YouTube. Start today for multi-view videos.
+            Join over 3,500 creators using Scenith for splits on TikTok or YouTube. Start today for multi-view videos.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready for Split Screen Edits?</h3>

@@ -107,7 +107,7 @@ export default function ProfessionalVideosAtHome() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, home-produced videos have seen a 30% increase in engagement and a 25% boost in viewer retention. Let’s explore how to transform your home into a professional video studio.
+            With over 3,500 creators using Scenith, home-produced videos have seen a 30% increase in engagement and a 25% boost in viewer retention. Let’s explore how to transform your home into a professional video studio.
           </p>
         </section>
 

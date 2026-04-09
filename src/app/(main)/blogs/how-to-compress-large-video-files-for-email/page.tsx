@@ -106,7 +106,7 @@ export default function CompressLargeVideoFilesForEmail() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, compressed videos have seen a 25% increase in successful email deliveries and a 15% improvement in recipient engagement. Let’s explore how to achieve this.
+            With over 3,500 creators using Scenith, compressed videos have seen a 25% increase in successful email deliveries and a 15% improvement in recipient engagement. Let’s explore how to achieve this.
           </p>
         </section>
 

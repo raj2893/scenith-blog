@@ -649,7 +649,7 @@ export default function ZeroStudioSetup() {
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Start Creating Professional Videos Free →
             </Link>
-            <p>Join over 50,000 creators who chose content over equipment and built successful channels with $0 invested in gear.
+            <p>Join over 3,500 creators who chose content over equipment and built successful channels with $0 invested in gear.
             Your smartphone and Scenith's AI tools are all you need.</p>
           </div>
         </section>
