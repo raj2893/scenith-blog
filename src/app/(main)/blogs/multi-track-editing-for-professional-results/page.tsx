@@ -94,7 +94,7 @@ export default function MultiTrackEditing() {
           </div>
 
           <p>
-            Multi-track editing is the key to creating complex, polished videos. With <strong>over 50,000 creators using Scenith</strong>, its web-based multi-track timeline delivers professional results for YouTube, Instagram, and TikTok.
+            Multi-track editing is the key to creating complex, polished videos. With <strong>over 3,500 creators using Scenith</strong>, its web-based multi-track timeline delivers professional results for YouTube, Instagram, and TikTok.
           </p>
 
           <p>
@@ -292,7 +292,7 @@ export default function MultiTrackEditing() {
             Multi-track editing in Scenith creates professional, complex videos with ease, perfect for YouTube, Instagram, and TikTok. Its intuitive timeline outshines other software.
           </p>
           <p>
-            With a 4.9/5 user rating, Scenith is the best choice for creators. Start multi-track editing today and join over 50,000 creators using Scenith.
+            With a 4.9/5 user rating, Scenith is the best choice for creators. Start multi-track editing today and join over 3,500 creators using Scenith.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready for Professional Videos?</h3>

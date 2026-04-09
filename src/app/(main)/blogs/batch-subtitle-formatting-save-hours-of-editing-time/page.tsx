@@ -94,7 +94,7 @@ export default function BatchSubtitleFormatting() {
           </div>
 
           <p>
-            With <strong>90% of social media videos watched on mute</strong>, subtitles are a must for engaging viewers on platforms like YouTube, Instagram, and TikTok. Manually formatting subtitles for a single 10-minute video can take <strong>3-4 hours</strong>, especially for creators managing multiple clips or series. Scenith’s batch subtitle formatting tool, trusted by over <strong>50,000 creators</strong>, streamlines this process, applying uniform fonts, colors, and effects instantly, boosting engagement by up to 40% and ensuring a professional look.
+            With <strong>90% of social media videos watched on mute</strong>, subtitles are a must for engaging viewers on platforms like YouTube, Instagram, and TikTok. Manually formatting subtitles for a single 10-minute video can take <strong>3-4 hours</strong>, especially for creators managing multiple clips or series. Scenith’s batch subtitle formatting tool, trusted by over <strong>3,500 creators</strong>, streamlines this process, applying uniform fonts, colors, and effects instantly, boosting engagement by up to 40% and ensuring a professional look.
           </p>
 
           <p>
@@ -336,7 +336,7 @@ export default function BatchSubtitleFormatting() {
             Batch subtitle formatting saves hours while delivering consistent, professional captions that boost engagement and accessibility. Scenith’s AI-powered tool outperforms manual methods, offering speed, scalability, and customization for creators managing single videos or entire series.
           </p>
           <p>
-            Join over 50,000 creators using Scenith to streamline subtitle workflows for YouTube, Instagram, and TikTok. Whether you’re formatting a single Reel or a multi-video series, Scenith delivers polished results in seconds. Start today to save time and captivate your audience.
+            Join over 3,500 creators using Scenith to streamline subtitle workflows for YouTube, Instagram, and TikTok. Whether you’re formatting a single Reel or a multi-video series, Scenith delivers polished results in seconds. Start today to save time and captivate your audience.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Save Hours on Subtitles?</h3>

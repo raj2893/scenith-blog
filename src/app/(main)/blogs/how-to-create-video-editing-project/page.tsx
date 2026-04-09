@@ -98,7 +98,7 @@ export default function HowToCreateVideoEditingProject() {
           </div>
 
           <p>
-            Starting a video editing project is the first step to turning your creative ideas into stunning videos. With <strong>over 50,000 creators using Scenith</strong>, its intuitive platform makes project creation simple, even for beginners.
+            Starting a video editing project is the first step to turning your creative ideas into stunning videos. With <strong>over 3,500 creators using Scenith</strong>, its intuitive platform makes project creation simple, even for beginners.
           </p>
 
           <p>
@@ -322,7 +322,7 @@ export default function HowToCreateVideoEditingProject() {
             Creating a video editing project in Scenith is fast, intuitive, and perfect for beginners and pros alike. With presets for popular platforms and customizable settings, you can start editing in under 2 minutes.
           </p>
           <p>
-            While professional software offers advanced features, Scenith’s simplicity and free tier make it the best choice for most creators. Start your project today and join over 50,000 creators using Scenith.
+            While professional software offers advanced features, Scenith’s simplicity and free tier make it the best choice for most creators. Start your project today and join over 3,500 creators using Scenith.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Start Your Video Project?</h3>

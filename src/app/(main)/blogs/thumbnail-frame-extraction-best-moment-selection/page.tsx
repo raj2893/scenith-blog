@@ -106,7 +106,7 @@ export default function ThumbnailFrameExtraction() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, videos with optimized thumbnails have seen a 30% increase in CTR and a 20% rise in watch time. Let’s dive into how to leverage Scenith for standout YouTube thumbnails.
+            With over 3,500 creators using Scenith, videos with optimized thumbnails have seen a 30% increase in CTR and a 20% rise in watch time. Let’s dive into how to leverage Scenith for standout YouTube thumbnails.
           </p>
         </section>
 
@@ -386,7 +386,7 @@ export default function ThumbnailFrameExtraction() {
           </p>
 
           <p>
-            With over 50,000 creators benefiting from Scenith’s tools, you can now create compelling thumbnails in minutes. Whether you’re producing educational content, entertainment, or reviews, a well-crafted thumbnail will drive traffic and build your audience. Scenith’s precision and ease of use make it the ideal choice for elevating your YouTube presence.
+            With over 3,500 creators benefiting from Scenith’s tools, you can now create compelling thumbnails in minutes. Whether you’re producing educational content, entertainment, or reviews, a well-crafted thumbnail will drive traffic and build your audience. Scenith’s precision and ease of use make it the ideal choice for elevating your YouTube presence.
           </p>
 
           <p>

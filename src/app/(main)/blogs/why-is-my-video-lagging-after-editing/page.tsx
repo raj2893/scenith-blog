@@ -106,7 +106,7 @@ export default function WhyIsMyVideoLaggingAfterEditing() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, optimized videos have seen a 20% reduction in lagging issues and a 15% increase in viewer satisfaction. Let’s identify and fix the causes.
+            With over 3,500 creators using Scenith, optimized videos have seen a 20% reduction in lagging issues and a 15% increase in viewer satisfaction. Let’s identify and fix the causes.
           </p>
         </section>
 

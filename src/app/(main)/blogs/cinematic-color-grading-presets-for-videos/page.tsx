@@ -106,7 +106,7 @@ export default function CinematicColorGradingPresets() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, videos with cinematic presets have seen a 25% increase in engagement and a 20% boost in viewer satisfaction. Let’s dive into how to use these powerful tools.
+            With over 3,500 creators using Scenith, videos with cinematic presets have seen a 25% increase in engagement and a 20% boost in viewer satisfaction. Let’s dive into how to use these powerful tools.
           </p>
         </section>
 

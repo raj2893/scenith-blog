@@ -94,7 +94,7 @@ export default function ImageOverlayTechniques() {
           </div>
 
           <p>
-            Image overlays for logos, watermarks, and graphics protect and brand your videos, increasing recognition by 25%. In a world where <strong>video theft costs creators millions annually</strong>, overlays are essential. Scenith’s layer system, used by over <strong>50,000 creators</strong>, allows easy positioning, transparency, and animation for professional results on YouTube or Instagram.
+            Image overlays for logos, watermarks, and graphics protect and brand your videos, increasing recognition by 25%. In a world where <strong>video theft costs creators millions annually</strong>, overlays are essential. Scenith’s layer system, used by over <strong>3,500 creators</strong>, allows easy positioning, transparency, and animation for professional results on YouTube or Instagram.
           </p>
 
           <p>
@@ -328,7 +328,7 @@ export default function ImageOverlayTechniques() {
             Image overlays brand and protect videos effectively. Scenith’s tools make techniques simple, outperforming manual methods.
           </p>
           <p>
-            Join over 50,000 creators using Scenith for professional overlays. Start today for branded content.
+            Join over 3,500 creators using Scenith for professional overlays. Start today for branded content.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready for Branded Overlays?</h3>

@@ -106,7 +106,7 @@ export default function InstagramStoryVsReel() {
           </p>
 
           <p>
-            With over 50,000 creators leveraging Scenith, properly optimized exports have been shown to increase viewer interaction by up to 30% on Instagram. Let’s explore the detailed differences and how to apply them effectively using Scenith.
+            With over 3,500 creators leveraging Scenith, properly optimized exports have been shown to increase viewer interaction by up to 30% on Instagram. Let’s explore the detailed differences and how to apply them effectively using Scenith.
           </p>
         </section>
 

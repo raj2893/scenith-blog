@@ -276,7 +276,7 @@ export default function TikTokToInstagramTrends() {
             Migrating TikTok trends to Instagram Reels boosts your reach and engagement. Scenith’s AI tools make this process fast and effective, outpacing manual methods.
           </p>
           <p>
-            Join over 50,000 creators using Scenith to adapt trends. Start today for viral-ready Reels.
+            Join over 3,500 creators using Scenith to adapt trends. Start today for viral-ready Reels.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Go Viral on Instagram?</h3>

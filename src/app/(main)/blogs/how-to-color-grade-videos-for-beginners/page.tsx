@@ -106,7 +106,7 @@ export default function ColorGradeVideosForBeginners() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, color-graded videos have seen a 22% increase in engagement and a 18% boost in viewer retention. Let’s explore how to get started with this essential technique.
+            With over 3,500 creators using Scenith, color-graded videos have seen a 22% increase in engagement and a 18% boost in viewer retention. Let’s explore how to get started with this essential technique.
           </p>
         </section>
 

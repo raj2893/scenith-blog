@@ -93,7 +93,7 @@ export default function KeyboardShortcutsVideoEditing() {
           </div>
 
           <p>
-            Keyboard shortcuts are a game-changer for video editors, saving hours on repetitive tasks. With <strong>over 50,000 creators using Scenith</strong>, its web-based platform supports shortcuts for fast, professional editing.
+            Keyboard shortcuts are a game-changer for video editors, saving hours on repetitive tasks. With <strong>over 3,500 creators using Scenith</strong>, its web-based platform supports shortcuts for fast, professional editing.
           </p>
 
           <p>
@@ -291,7 +291,7 @@ export default function KeyboardShortcutsVideoEditing() {
             Keyboard shortcuts in Scenith streamline video editing, saving time and boosting productivity for professional results on YouTube, Instagram, and TikTok.
           </p>
           <p>
-            Compared to other software, Scenith’s shortcuts are intuitive and free. Start using shortcuts today and join over 50,000 creators using Scenith.
+            Compared to other software, Scenith’s shortcuts are intuitive and free. Start using shortcuts today and join over 3,500 creators using Scenith.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Edit Faster?</h3>

@@ -94,7 +94,7 @@ export default function LayerPriorityManagement() {
           </div>
 
           <p>
-            Layer priority determines visibility in edits, with top layers overlaying lower ones—essential for compositing in <strong>80% of professional videos</strong>. Misplaced priority can hide key elements, reducing impact. Scenith’s timeline, used by over <strong>50,000 creators</strong>, allows easy reordering and blending for seamless results on YouTube or TikTok.
+            Layer priority determines visibility in edits, with top layers overlaying lower ones—essential for compositing in <strong>80% of professional videos</strong>. Misplaced priority can hide key elements, reducing impact. Scenith’s timeline, used by over <strong>3,500 creators</strong>, allows easy reordering and blending for seamless results on YouTube or TikTok.
           </p>
 
           <p>
@@ -327,7 +327,7 @@ export default function LayerPriorityManagement() {
             Layer priority management controls visibility for pro compositing. Scenith’s tools make it intuitive, outperforming manual methods.
           </p>
           <p>
-            Join over 50,000 creators using Scenith for layered edits. Start today for seamless videos.
+            Join over 3,500 creators using Scenith for layered edits. Start today for seamless videos.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Manage Layer Priority?</h3>

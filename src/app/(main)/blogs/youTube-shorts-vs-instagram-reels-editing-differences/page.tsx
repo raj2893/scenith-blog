@@ -308,7 +308,7 @@ export default function YouTubeShortsVsInstagramReels() {
             YouTube Shorts and Instagram Reels demand distinct editing approaches, from length and transitions to audio and engagement tactics. Scenith’s AI-powered tools simplify tailoring content for both platforms, saving you time while boosting engagement.
           </p>
           <p>
-            With over 50,000 creators using Scenith, its intuitive platform ensures your short-form videos shine. Start editing today to captivate audiences on Shorts and Reels.
+            With over 3,500 creators using Scenith, its intuitive platform ensures your short-form videos shine. Start editing today to captivate audiences on Shorts and Reels.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Master Short-Form Content?</h3>

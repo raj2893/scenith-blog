@@ -105,7 +105,7 @@ export default function SpeedRampingTutorialDramaticEffects() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, speed-ramped videos have seen a 30% increase in engagement and a 20% boost in viewer retention. Let’s explore how to implement this dramatic effect.
+            With over 3,500 creators using Scenith, speed-ramped videos have seen a 30% increase in engagement and a 20% boost in viewer retention. Let’s explore how to implement this dramatic effect.
           </p>
         </section>
 

@@ -106,7 +106,7 @@ export default function ColorGradeLikeProfessionalFilmmaker() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, professionally graded videos have seen a 25% increase in engagement and a 20% boost in viewer satisfaction. Let’s explore how to achieve this cinematic excellence.
+            With over 3,500 creators using Scenith, professionally graded videos have seen a 25% increase in engagement and a 20% boost in viewer satisfaction. Let’s explore how to achieve this cinematic excellence.
           </p>
         </section>
 

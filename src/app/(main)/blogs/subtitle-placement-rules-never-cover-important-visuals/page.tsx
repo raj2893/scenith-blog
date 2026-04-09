@@ -94,7 +94,7 @@ export default function SubtitlePlacementRules() {
           </div>
 
           <p>
-            With <strong>90% of social media videos watched on mute</strong>, subtitles are crucial for engaging viewers on platforms like TikTok, YouTube, and Instagram. Poor subtitle placement, like covering faces or product shots, can frustrate viewers and reduce engagement by 25%. Scenith’s AI-powered placement tools, trusted by over <strong>50,000 creators</strong>, ensure captions enhance, not obscure, key visuals, improving retention by up to 20% in seconds.
+            With <strong>90% of social media videos watched on mute</strong>, subtitles are crucial for engaging viewers on platforms like TikTok, YouTube, and Instagram. Poor subtitle placement, like covering faces or product shots, can frustrate viewers and reduce engagement by 25%. Scenith’s AI-powered placement tools, trusted by over <strong>3,500 creators</strong>, ensure captions enhance, not obscure, key visuals, improving retention by up to 20% in seconds.
           </p>
 
           <p>
@@ -336,7 +336,7 @@ export default function SubtitlePlacementRules() {
             Strategic subtitle placement ensures captions enhance your video’s key visuals, boosting engagement and accessibility. Scenith’s AI-powered placement tools outperform manual methods, offering speed, precision, and platform-specific optimization for creators targeting silent viewers.
           </p>
           <p>
-            Join over 50,000 creators using Scenith to craft perfectly placed subtitles for TikTok, YouTube, and Instagram. Whether you’re a cooking channel or fitness brand, Scenith delivers professional results in seconds. Start today to enhance your content and captivate your audience.
+            Join over 3,500 creators using Scenith to craft perfectly placed subtitles for TikTok, YouTube, and Instagram. Whether you’re a cooking channel or fitness brand, Scenith delivers professional results in seconds. Start today to enhance your content and captivate your audience.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Perfect Subtitle Placement?</h3>

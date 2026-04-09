@@ -84,7 +84,7 @@ export const metadata: Metadata = {
 };
 
 const ctaUrl =
-  "https://scenith.in/tools/ai-video-generation?utm_source=tiktok-ai-video-page&utm_medium=cta-button&utm_campaign=tiktok-video-traffic";
+  "https://scenith.in/create-ai-content?utm_source=tiktok-ai-video-page&utm_medium=cta-button&utm_campaign=tiktok-video-traffic";
 
 const TikTokAIVideoPage = () => {
   return (

@@ -106,7 +106,7 @@ export default function MakeSlowMotionVideosForInstagram() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, slow-motion videos have seen a 30% increase in engagement and a 20% boost in shares. Let’s explore how to create this captivating effect.
+            With over 3,500 creators using Scenith, slow-motion videos have seen a 30% increase in engagement and a 20% boost in shares. Let’s explore how to create this captivating effect.
           </p>
         </section>
 

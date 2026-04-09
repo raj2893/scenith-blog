@@ -106,7 +106,7 @@ export default function VideoSpeedControllerOnlineTool() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, speed-controlled videos have seen a 28% increase in engagement and a 20% boost in viewer satisfaction. Let’s dive into how to use this powerful tool.
+            With over 3,500 creators using Scenith, speed-controlled videos have seen a 28% increase in engagement and a 20% boost in viewer satisfaction. Let’s dive into how to use this powerful tool.
           </p>
         </section>
 

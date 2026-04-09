@@ -99,7 +99,7 @@ export default function ConvertVideoFormat() {
           </p>
 
           <p>
-            Scenith's free video converter eliminates this headache completely. Convert between MP4, MOV, AVI, WebM, MKV, FLV, WMV, and 20+ other formats in one click. Over 150,000 creators use it daily to ensure their videos work everywhere—no more "format not supported" errors.
+            Scenith's free video converter eliminates this headache completely. Convert between MP4, MOV, AVI, WebM, MKV, FLV, WMV, and 20+ other formats in one click. Over 13,500 creators use it daily to ensure their videos work everywhere—no more "format not supported" errors.
           </p>
         </section>
 
@@ -444,7 +444,7 @@ export default function ConvertVideoFormat() {
           </p>
 
           <p>
-            Over 150,000 creators use Scenith's converter daily to ensure their videos work everywhere. With one-click simplicity and zero cost, there's no reason to struggle with incompatible formats ever again.
+            Over 13,500 creators use Scenith's converter daily to ensure their videos work everywhere. With one-click simplicity and zero cost, there's no reason to struggle with incompatible formats ever again.
           </p>
 
           <div className={styles.finalCta}>

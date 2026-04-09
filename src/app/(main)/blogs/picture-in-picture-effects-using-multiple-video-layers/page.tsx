@@ -94,7 +94,7 @@ export default function PictureInPictureEffects() {
           </div>
 
           <p>
-            Picture-in-picture (PIP) effects layer small videos over main footage, increasing engagement by 30% in tutorials and reactions. Used in <strong>40% of educational videos</strong>, PIP requires multiple layers. Scenith’s tools, used by over <strong>50,000 creators</strong>, enable easy stacking, resizing, and positioning for pro results on TikTok or YouTube.
+            Picture-in-picture (PIP) effects layer small videos over main footage, increasing engagement by 30% in tutorials and reactions. Used in <strong>40% of educational videos</strong>, PIP requires multiple layers. Scenith’s tools, used by over <strong>3,500 creators</strong>, enable easy stacking, resizing, and positioning for pro results on TikTok or YouTube.
           </p>
 
           <p>
@@ -327,7 +327,7 @@ export default function PictureInPictureEffects() {
             PIP effects with layers add depth to videos. Scenith’s tools make creation easy, outperforming manual methods.
           </p>
           <p>
-            Join over 50,000 creators using Scenith for PIP on TikTok or YouTube. Start today for engaging content.
+            Join over 3,500 creators using Scenith for PIP on TikTok or YouTube. Start today for engaging content.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready for PIP Effects?</h3>

@@ -106,7 +106,7 @@ export default function ReduceVideoSizeForWhatsApp() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, compressed WhatsApp videos have seen a 20% increase in successful shares and a 15% boost in recipient engagement. Let’s dive into the steps to achieve this efficiency.
+            With over 3,500 creators using Scenith, compressed WhatsApp videos have seen a 20% increase in successful shares and a 15% boost in recipient engagement. Let’s dive into the steps to achieve this efficiency.
           </p>
         </section>
 

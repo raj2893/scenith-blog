@@ -106,7 +106,7 @@ export default function BlurFaceInVideo() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, videos with blurred faces have seen a 20% increase in viewer trust and a 15% boost in shares. Let’s dive into the steps.
+            With over 3,500 creators using Scenith, videos with blurred faces have seen a 20% increase in viewer trust and a 15% boost in shares. Let’s dive into the steps.
           </p>
         </section>
 

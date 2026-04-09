@@ -97,7 +97,7 @@ export default function AIVoiceVsHumanNarrator() {
           </div>
 
           <p>
-            Can AI voices match the emotional depth of human narrators? With <strong>over 50,000 creators using Scenith</strong>, its AI voice tool delivers realistic narration that rivals human voices for YouTube, Instagram, and TikTok content.
+            Can AI voices match the emotional depth of human narrators? With <strong>over 3,500 creators using Scenith</strong>, its AI voice tool delivers realistic narration that rivals human voices for YouTube, Instagram, and TikTok content.
           </p>
 
           <p>
@@ -287,7 +287,7 @@ export default function AIVoiceVsHumanNarrator() {
             Scenith’s AI voices rival human narrators in quality and speed, making them perfect for creators needing fast, professional voiceovers. With a 4.9/5 rating, Scenith is the go-to choice for YouTube, Instagram, and TikTok content.
           </p>
           <p>
-            Compared to hiring narrators, Scenith offers unmatched efficiency. Start using AI voices today and join over 50,000 creators using Scenith.
+            Compared to hiring narrators, Scenith offers unmatched efficiency. Start using AI voices today and join over 3,500 creators using Scenith.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready for Pro Voiceovers?</h3>

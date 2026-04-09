@@ -95,7 +95,7 @@ export default function GlobalSubtitleChanges() {
           </div>
 
           <p>
-            With <strong>90% of social media videos watched on mute</strong>, subtitles are essential for capturing viewer attention on platforms like YouTube, Instagram, and TikTok. Manually adjusting fonts, colors, or backgrounds for each subtitle segment can take <strong>3-4 hours</strong> for a 10-minute video, but Scenith’s global subtitle styling tool, trusted by over <strong>50,000 creators</strong>, streamlines this process, delivering polished captions in under 30 seconds. This saves time and enhances engagement by up to 40%.
+            With <strong>90% of social media videos watched on mute</strong>, subtitles are essential for capturing viewer attention on platforms like YouTube, Instagram, and TikTok. Manually adjusting fonts, colors, or backgrounds for each subtitle segment can take <strong>3-4 hours</strong> for a 10-minute video, but Scenith’s global subtitle styling tool, trusted by over <strong>3,500 creators</strong>, streamlines this process, delivering polished captions in under 30 seconds. This saves time and enhances engagement by up to 40%.
           </p>
 
           <p>
@@ -337,7 +337,7 @@ export default function GlobalSubtitleChanges() {
             Global subtitle changes save hours while delivering consistent, professional captions that enhance engagement and accessibility. Scenith’s AI-powered tool outperforms manual methods, offering speed, customization, and platform-specific optimization for creators targeting silent viewers.
           </p>
           <p>
-            Join over 50,000 creators using Scenith to craft polished subtitles for YouTube, Instagram, and TikTok. Whether you’re styling captions for a single Reel or a multi-video series, Scenith delivers results in seconds. Start today to elevate your content and captivate your audience.
+            Join over 3,500 creators using Scenith to craft polished subtitles for YouTube, Instagram, and TikTok. Whether you’re styling captions for a single Reel or a multi-video series, Scenith delivers results in seconds. Start today to elevate your content and captivate your audience.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready for Professional Subtitles?</h3>

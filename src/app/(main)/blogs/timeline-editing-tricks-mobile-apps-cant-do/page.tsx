@@ -94,7 +94,7 @@ export default function TimelineEditingTricks() {
           </div>
 
           <p>
-            Mobile apps are limited for complex video editing, but Scenith’s web-based timeline offers pro-level tricks. With <strong>over 50,000 creators using Scenith</strong>, it’s perfect for YouTube, Instagram, and TikTok.
+            Mobile apps are limited for complex video editing, but Scenith’s web-based timeline offers pro-level tricks. With <strong>over 3,500 creators using Scenith</strong>, it’s perfect for YouTube, Instagram, and TikTok.
           </p>
 
           <p>
@@ -293,7 +293,7 @@ export default function TimelineEditingTricks() {
             Scenith’s advanced timeline tricks like multi-track layering and keyframes create professional videos that mobile apps can’t match, perfect for YouTube, Instagram, and TikTok.
           </p>
           <p>
-            With a 4.9/5 user rating, Scenith is the go-to for creators. Start mastering timeline editing today and join over 50,000 creators using Scenith.
+            With a 4.9/5 user rating, Scenith is the go-to for creators. Start mastering timeline editing today and join over 3,500 creators using Scenith.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready for Pro Timeline Editing?</h3>

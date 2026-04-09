@@ -107,7 +107,7 @@ export default function YouTube1080pVs1440p() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, videos exported in optimized resolutions have shown a 20% increase in watch time and a 15% boost in subscriber growth. Let’s explore the nuances of 1080p versus 1440p exports to elevate your YouTube channel.
+            With over 3,500 creators using Scenith, videos exported in optimized resolutions have shown a 20% increase in watch time and a 15% boost in subscriber growth. Let’s explore the nuances of 1080p versus 1440p exports to elevate your YouTube channel.
           </p>
         </section>
 
@@ -387,7 +387,7 @@ export default function YouTube1080pVs1440p() {
           </p>
 
           <p>
-            With over 50,000 creators benefiting from Scenith’s tools, you can now export optimized videos in minutes. Whether you’re building a tutorial channel or a cinematic series, selecting the right resolution will drive watch time, subscriber growth, and overall channel success. Leveraging Scenith’s precision ensures your content meets YouTube’s evolving standards.
+            With over 3,500 creators benefiting from Scenith’s tools, you can now export optimized videos in minutes. Whether you’re building a tutorial channel or a cinematic series, selecting the right resolution will drive watch time, subscriber growth, and overall channel success. Leveraging Scenith’s precision ensures your content meets YouTube’s evolving standards.
           </p>
 
           <p>

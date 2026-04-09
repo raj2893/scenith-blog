@@ -98,7 +98,7 @@ export default function HowToUseLayersInVideoEditing() {
           </div>
 
           <p>
-            Layers are the secret to creating dynamic, professional-looking videos that keep viewers hooked. With <strong>over 50,000 creators using Scenith</strong>, its intuitive timeline and Transform panel make layering accessible for beginners and pros alike.
+            Layers are the secret to creating dynamic, professional-looking videos that keep viewers hooked. With <strong>over 3,500 creators using Scenith</strong>, its intuitive timeline and Transform panel make layering accessible for beginners and pros alike.
           </p>
 
           <p>
@@ -321,7 +321,7 @@ export default function HowToUseLayersInVideoEditing() {
             Using layers in Scenith is fast, intuitive, and perfect for creating engaging videos for YouTube, Instagram, or TikTok. With the Transform panel and timeline, you can stack elements like a pro in under 5 minutes.
           </p>
           <p>
-            While professional software offers advanced features, Scenith’s simplicity and free tier make it the best choice for most creators. Start layering today and join over 50,000 creators using Scenith.
+            While professional software offers advanced features, Scenith’s simplicity and free tier make it the best choice for most creators. Start layering today and join over 3,500 creators using Scenith.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Create Pro-Level Videos?</h3>

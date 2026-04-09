@@ -97,7 +97,7 @@ export default function MultilingualContentAIVoices() {
           </div>
 
           <p>
-            Reaching global audiences is easier with multilingual content. With <strong>over 50,000 creators using Scenith</strong>, its AI voice tool supports multiple languages to create engaging videos for YouTube, Instagram, and TikTok.
+            Reaching global audiences is easier with multilingual content. With <strong>over 3,500 creators using Scenith</strong>, its AI voice tool supports multiple languages to create engaging videos for YouTube, Instagram, and TikTok.
           </p>
 
           <p>
@@ -288,7 +288,7 @@ export default function MultilingualContentAIVoices() {
             Scenith’s AI voices make creating multilingual content fast and easy, helping you reach global audiences in minutes. With a 4.9/5 user rating, it’s perfect for YouTube, Instagram, and TikTok.
           </p>
           <p>
-            Compared to traditional methods, Scenith offers speed and affordability. Start creating multilingual videos today and join over 50,000 creators using Scenith.
+            Compared to traditional methods, Scenith offers speed and affordability. Start creating multilingual videos today and join over 3,500 creators using Scenith.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Go Global?</h3>

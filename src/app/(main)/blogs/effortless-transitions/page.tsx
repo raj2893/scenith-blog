@@ -97,7 +97,7 @@ export default function EffortlessTransitions() {
           </div>
 
           <p>
-            Transitions are the key to making your videos flow smoothly and look professional. With <strong>over 50,000 creators using Scenith</strong>, its user-friendly timeline and transition library make cinematic editing accessible to everyone.
+            Transitions are the key to making your videos flow smoothly and look professional. With <strong>over 3,500 creators using Scenith</strong>, its user-friendly timeline and transition library make cinematic editing accessible to everyone.
           </p>
 
           <p>
@@ -324,7 +324,7 @@ export default function EffortlessTransitions() {
             Scenith makes cinematic transitions effortless, helping you create professional videos for YouTube, Instagram, or TikTok in minutes. With its intuitive timeline and free tier, it’s the go-to choice for creators.
           </p>
           <p>
-            While professional software offers advanced controls, Scenith’s simplicity and speed make it ideal for most creators. Start adding transitions today and join over 50,000 creators using Scenith.
+            While professional software offers advanced controls, Scenith’s simplicity and speed make it ideal for most creators. Start adding transitions today and join over 3,500 creators using Scenith.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Create Cinematic Videos?</h3>

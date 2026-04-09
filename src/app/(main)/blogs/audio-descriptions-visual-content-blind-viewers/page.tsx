@@ -106,7 +106,7 @@ export default function AudioDescriptions() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, audio descriptions have increased accessibility reach by up to 40%. Let’s dive into how to make your content inclusive.
+            With over 3,500 creators using Scenith, audio descriptions have increased accessibility reach by up to 40%. Let’s dive into how to make your content inclusive.
           </p>
         </section>
 

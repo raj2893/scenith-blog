@@ -94,7 +94,7 @@ export default function LayerOrganizationTips() {
           </div>
 
           <p>
-            Complex video projects, with dozens of layers for video, audio, and images, can quickly become overwhelming, leading to errors and inefficiency. Proper layer organization is key to maintaining creativity and workflow, especially as <strong>video projects grow 30% more complex annually</strong>. Scenith’s intuitive tools, used by over <strong>50,000 creators</strong>, offer color-coding, grouping, and timeline management to streamline edits, boosting productivity by 40% and ensuring professional results.
+            Complex video projects, with dozens of layers for video, audio, and images, can quickly become overwhelming, leading to errors and inefficiency. Proper layer organization is key to maintaining creativity and workflow, especially as <strong>video projects grow 30% more complex annually</strong>. Scenith’s intuitive tools, used by over <strong>3,500 creators</strong>, offer color-coding, grouping, and timeline management to streamline edits, boosting productivity by 40% and ensuring professional results.
           </p>
 
           <p>
@@ -327,7 +327,7 @@ export default function LayerOrganizationTips() {
             Layer organization is vital for complex video projects, keeping timelines manageable and creativity flowing. Scenith’s tools make it simple, outperforming manual methods with AI and cloud features.
           </p>
           <p>
-            Join over 50,000 creators using Scenith for organized edits on YouTube or TikTok. Start today for efficient, pro-level workflows.
+            Join over 3,500 creators using Scenith for organized edits on YouTube or TikTok. Start today for efficient, pro-level workflows.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Organize Your Layers?</h3>

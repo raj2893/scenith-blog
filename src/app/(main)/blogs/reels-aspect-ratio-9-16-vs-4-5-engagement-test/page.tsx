@@ -107,7 +107,7 @@ export default function ReelsAspectRatioTest() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, Reels with tested aspect ratios have shown a 22% increase in engagement rates. Let’s dive into how to conduct this test and elevate your Instagram presence.
+            With over 3,500 creators using Scenith, Reels with tested aspect ratios have shown a 22% increase in engagement rates. Let’s dive into how to conduct this test and elevate your Instagram presence.
           </p>
         </section>
 

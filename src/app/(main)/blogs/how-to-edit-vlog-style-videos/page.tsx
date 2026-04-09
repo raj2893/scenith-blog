@@ -106,7 +106,7 @@ export default function EditVlogStyleVideos() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, edited vlogs have seen a 25% increase in engagement and a 18% boost in shares. Let’s explore the process.
+            With over 3,500 creators using Scenith, edited vlogs have seen a 25% increase in engagement and a 18% boost in shares. Let’s explore the process.
           </p>
         </section>
 

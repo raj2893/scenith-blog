@@ -102,7 +102,7 @@ export default function ScenithAI() {
           </p>
 
           <p>
-            Whether you're crafting viral Reels, educational YouTube tutorials, or professional TikTok content, Scenith's three core AI features address the biggest pain points: isolating subjects with background removal, engaging silent viewers with AI subtitles, and adding natural narration via text-to-speech. With <strong>over 50,000 creators using Scenith</strong>, these tools have proven to boost engagement by up to 40% and cut production time in half. This comprehensive guide will walk you through each feature, from setup to advanced tips, so you can hit the ground running.
+            Whether you're crafting viral Reels, educational YouTube tutorials, or professional TikTok content, Scenith's three core AI features address the biggest pain points: isolating subjects with background removal, engaging silent viewers with AI subtitles, and adding natural narration via text-to-speech. With <strong>over 3,500 creators using Scenith</strong>, these tools have proven to boost engagement by up to 40% and cut production time in half. This comprehensive guide will walk you through each feature, from setup to advanced tips, so you can hit the ground running.
           </p>
 
           <p>

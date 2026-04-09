@@ -106,7 +106,7 @@ export default function VideoEditingJobsForBeginners() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, beginners have seen a 28% increase in job inquiries and a 22% boost in freelance earnings. Let’s dive into the steps.
+            With over 3,500 creators using Scenith, beginners have seen a 28% increase in job inquiries and a 22% boost in freelance earnings. Let’s dive into the steps.
           </p>
         </section>
 

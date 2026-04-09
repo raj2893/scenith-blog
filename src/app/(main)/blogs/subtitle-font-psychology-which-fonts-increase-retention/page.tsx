@@ -94,7 +94,7 @@ export default function SubtitleFontPsychology() {
           </div>
 
           <p>
-            With <strong>90% of social media videos watched on mute</strong>, subtitles are vital for engaging viewers on platforms like YouTube, TikTok, and Instagram. The font you choose for your subtitles isn’t just about aesthetics—it influences viewer psychology and retention. Scenith’s AI-powered font selection tools, trusted by over <strong>50,000 creators</strong>, make it easy to select fonts that enhance clarity, convey emotion, and boost watch time by up to 25%.
+            With <strong>90% of social media videos watched on mute</strong>, subtitles are vital for engaging viewers on platforms like YouTube, TikTok, and Instagram. The font you choose for your subtitles isn’t just about aesthetics—it influences viewer psychology and retention. Scenith’s AI-powered font selection tools, trusted by over <strong>3,500 creators</strong>, make it easy to select fonts that enhance clarity, convey emotion, and boost watch time by up to 25%.
           </p>
 
           <p>
@@ -336,7 +336,7 @@ export default function SubtitleFontPsychology() {
             Font psychology plays a critical role in boosting viewer retention and engagement. Scenith’s AI-powered font tools make it easy to select fonts that resonate emotionally, enhance readability, and align with your brand, outperforming manual methods in speed and ease.
           </p>
           <p>
-            Join over 50,000 creators using Scenith to craft impactful subtitles for TikTok, Instagram, and YouTube. Whether you’re a travel vlogger or a fitness brand, Scenith delivers professional results in seconds. Start today to increase retention and captivate silent viewers.
+            Join over 3,500 creators using Scenith to craft impactful subtitles for TikTok, Instagram, and YouTube. Whether you’re a travel vlogger or a fitness brand, Scenith delivers professional results in seconds. Start today to increase retention and captivate silent viewers.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Boost Retention with Fonts?</h3>

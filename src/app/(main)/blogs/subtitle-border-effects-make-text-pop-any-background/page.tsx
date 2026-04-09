@@ -94,7 +94,7 @@ export default function SubtitleBorderEffects() {
           </div>
 
           <p>
-            With <strong>90% of social media videos watched on mute</strong>, subtitles are critical for capturing viewer attention on platforms like Instagram, TikTok, and YouTube. Without proper border effects, captions can blend into busy backgrounds, reducing readability and engagement. Scenith’s AI-powered border tools, used by over <strong>50,000 creators</strong>, apply effects like shadows, outlines, or glows instantly, ensuring your text pops against any backdrop, from bright outdoor scenes to dark indoor shots.
+            With <strong>90% of social media videos watched on mute</strong>, subtitles are critical for capturing viewer attention on platforms like Instagram, TikTok, and YouTube. Without proper border effects, captions can blend into busy backgrounds, reducing readability and engagement. Scenith’s AI-powered border tools, used by over <strong>3,500 creators</strong>, apply effects like shadows, outlines, or glows instantly, ensuring your text pops against any backdrop, from bright outdoor scenes to dark indoor shots.
           </p>
 
           <p>
@@ -336,7 +336,7 @@ export default function SubtitleBorderEffects() {
             Subtitle border effects ensure your captions are readable and engaging against any background. Scenith’s AI-powered tools make it easy to apply shadows, outlines, or glows in seconds, outperforming manual methods and enhancing accessibility for diverse audiences.
           </p>
           <p>
-            Join over 50,000 creators using Scenith to craft standout subtitles for TikTok, Instagram, and YouTube. Whether you’re a travel vlogger or a brand, Scenith delivers professional results instantly. Start today to boost engagement and make your content accessible to all.
+            Join over 3,500 creators using Scenith to craft standout subtitles for TikTok, Instagram, and YouTube. Whether you’re a travel vlogger or a brand, Scenith delivers professional results instantly. Start today to boost engagement and make your content accessible to all.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Make Subtitles Pop?</h3>

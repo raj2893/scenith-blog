@@ -106,7 +106,7 @@ export default function RotateVideo90Degrees() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, properly oriented videos have seen a 22% increase in engagement and a 17% boost in shares. Let’s explore the steps.
+            With over 3,500 creators using Scenith, properly oriented videos have seen a 22% increase in engagement and a 17% boost in shares. Let’s explore the steps.
           </p>
         </section>
 

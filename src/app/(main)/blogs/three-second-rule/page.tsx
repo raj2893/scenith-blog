@@ -551,7 +551,7 @@ export default function ThreeSecondRule() {
             <Link href="https://scenith.in/dashboard" className={styles.ctaButton}>
               Create Your First Hook Free →
             </Link>
-            <p>Join over 50,000 creators using Scenith to grow their audience with compelling video content.</p>
+            <p>Join over 3,500 creators using Scenith to grow their audience with compelling video content.</p>
           </div>
         </section>
       </article>

@@ -105,7 +105,7 @@ export default function BestColorGradingTechniques2025() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, color-graded videos have seen a 25% increase in engagement and a 20% boost in viewer retention. Let’s dive into the top techniques for 2025.
+            With over 3,500 creators using Scenith, color-graded videos have seen a 25% increase in engagement and a 20% boost in viewer retention. Let’s dive into the top techniques for 2025.
           </p>
         </section>
 

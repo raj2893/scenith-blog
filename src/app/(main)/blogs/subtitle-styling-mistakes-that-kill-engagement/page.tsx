@@ -97,7 +97,7 @@ export default function SubtitleStylingMistakes() {
           </div>
 
           <p>
-            Poor subtitle styling can drive viewers away, but <strong>over 50,000 creators using Scenith</strong> rely on its intuitive subtitle tools to create readable, engaging captions for social media videos.
+            Poor subtitle styling can drive viewers away, but <strong>over 3,500 creators using Scenith</strong> rely on its intuitive subtitle tools to create readable, engaging captions for social media videos.
           </p>
 
           <p>
@@ -298,7 +298,7 @@ export default function SubtitleStylingMistakes() {
             Avoiding subtitle styling mistakes is key to engaging viewers, and Scenith’s intuitive tools make it easy to create readable, professional captions in minutes.
           </p>
           <p>
-            Compared to complex software, Scenith offers speed and simplicity for creators. Start styling subtitles today and join over 50,000 creators using Scenith.
+            Compared to complex software, Scenith offers speed and simplicity for creators. Start styling subtitles today and join over 3,500 creators using Scenith.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Style Subtitles Like a Pro?</h3>

@@ -1,0 +1,1056 @@
+/* ═══════════════════════════════════════════════════════════════════
+   AI MARKETING ASSET GENERATOR — Page Styles
+   Typefaces: 'Syne' (display) + 'DM Sans' (body)
+   Palette: Obsidian #0a0a10 · Volt #c8ff00 · Signal #ff3d6b · Ink #1a1a2e
+   ═══════════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap');
+
+/* ── Reset & Root ─────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --obsidian:   #0a0a10;
+  --ink:        #12121e;
+  --surface:    #181828;
+  --surface-2:  #1f1f32;
+  --border:     rgba(255,255,255,0.07);
+  --border-2:   rgba(255,255,255,0.12);
+  --volt:       #c8ff00;
+  --volt-dim:   rgba(200,255,0,0.12);
+  --signal:     #ff3d6b;
+  --signal-dim: rgba(255,61,107,0.12);
+  --electric:   #4d9fff;
+  --electric-dim: rgba(77,159,255,0.12);
+  --text:       #f0f0f8;
+  --text-2:     #9090a8;
+  --text-3:     #5a5a72;
+  --radius-sm:  8px;
+  --radius-md:  14px;
+  --radius-lg:  22px;
+  --radius-xl:  32px;
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --gutter: clamp(20px, 5vw, 60px);
+  --max-w: 1080px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--obsidian);
+  color: var(--text);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Utilities ───────────────────────────────────────────────────── */
+.amag-container {
+  width: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+.amag-volt     { color: var(--volt); }
+.amag-signal   { color: var(--signal); }
+.amag-electric { color: var(--electric); }
+.amag-muted    { color: var(--text-2); }
+
+/* ── Noise Grain Overlay ─────────────────────────────────────────── */
+.amag-page::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+.amag-page { position: relative; z-index: 1; overflow-x: hidden; }
+
+/* ── Top Nav Bar ─────────────────────────────────────────────────── */
+.amag-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10,10,16,0.85);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px var(--gutter);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.amag-nav-logo {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.amag-nav-logo span { color: var(--volt); }
+
+.amag-nav-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 18px;
+  background: var(--volt);
+  color: var(--obsidian);
+  font-family: var(--font-display);
+  font-size: 12.5px;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+.amag-nav-cta:hover { opacity: 0.88; transform: translateY(-1px); }
+
+/* ── Hero ────────────────────────────────────────────────────────── */
+.amag-hero {
+  position: relative;
+  padding: clamp(60px, 10vw, 120px) var(--gutter) clamp(50px, 8vw, 100px);
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Radial glow blobs */
+.amag-hero::before,
+.amag-hero::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.amag-hero::before {
+  width: 500px; height: 500px;
+  top: -120px; left: 50%;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, rgba(200,255,0,0.18) 0%, transparent 70%);
+  animation: amag-blob-pulse 6s ease-in-out infinite alternate;
+}
+
+.amag-hero::after {
+  width: 400px; height: 400px;
+  bottom: -80px; right: 0;
+  background: radial-gradient(circle, rgba(255,61,107,0.14) 0%, transparent 70%);
+  animation: amag-blob-pulse 8s ease-in-out 2s infinite alternate;
+}
+
+@keyframes amag-blob-pulse {
+  from { transform: translateX(-50%) scale(1); opacity: 0.8; }
+  to   { transform: translateX(-50%) scale(1.15); opacity: 1; }
+}
+
+/* eyebrow badge */
+.amag-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  background: rgba(200,255,0,0.1);
+  border: 1px solid rgba(200,255,0,0.25);
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--volt);
+  margin-bottom: 24px;
+  font-family: var(--font-display);
+}
+
+.amag-eyebrow-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--volt);
+  animation: amag-blink 1.4s ease-in-out infinite;
+}
+
+@keyframes amag-blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+.amag-h1 {
+  font-family: var(--font-display);
+  font-size: clamp(38px, 7vw, 82px);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  max-width: 900px;
+  margin: 0 auto 24px;
+}
+
+.amag-h1 em {
+  font-style: normal;
+  color: transparent;
+  background: linear-gradient(120deg, var(--volt) 0%, #a8ff38 50%, var(--electric) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.amag-hero-sub {
+  font-size: clamp(16px, 2.2vw, 20px);
+  color: var(--text-2);
+  max-width: 620px;
+  margin: 0 auto 40px;
+  font-weight: 300;
+  line-height: 1.7;
+}
+
+/* ── MEGA CTA ────────────────────────────────────────────────────── */
+.amag-mega-cta-wrap {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 20px;
+}
+
+.amag-mega-cta-glow {
+  position: absolute;
+  inset: -12px;
+  border-radius: 28px;
+  background: radial-gradient(ellipse, rgba(200,255,0,0.35) 0%, transparent 70%);
+  filter: blur(18px);
+  animation: amag-glow-pulse 2.4s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes amag-glow-pulse {
+  from { opacity: 0.6; transform: scale(0.96); }
+  to   { opacity: 1;   transform: scale(1.02); }
+}
+
+.amag-mega-cta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 42px;
+  background: var(--volt);
+  color: var(--obsidian);
+  font-family: var(--font-display);
+  font-size: clamp(16px, 2.4vw, 22px);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  border-radius: var(--radius-xl);
+  text-decoration: none;
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s;
+  box-shadow: 0 8px 32px rgba(200,255,0,0.3), 0 2px 8px rgba(0,0,0,0.4);
+}
+
+.amag-mega-cta:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 16px 48px rgba(200,255,0,0.4), 0 4px 16px rgba(0,0,0,0.5);
+}
+
+.amag-mega-cta:active {
+  transform: translateY(0) scale(0.99);
+}
+
+.amag-mega-cta-arrow {
+  font-size: 20px;
+  transition: transform 0.2s;
+}
+
+.amag-mega-cta:hover .amag-mega-cta-arrow {
+  transform: translateX(4px);
+}
+
+.amag-hero-trust {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 32px;
+}
+
+.amag-trust-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 13px;
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  border-radius: 999px;
+  font-size: 11.5px;
+  color: var(--text-2);
+  font-weight: 500;
+}
+
+.amag-trust-pill strong { color: var(--text); }
+
+/* ── Asset Type Ticker ───────────────────────────────────────────── */
+.amag-ticker-wrap {
+  padding: 18px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  margin-bottom: 80px;
+}
+
+.amag-ticker-track {
+  display: flex;
+  width: max-content;
+  animation: amag-ticker 30s linear infinite;
+  gap: 0;
+}
+
+.amag-ticker-track:hover { animation-play-state: paused; }
+
+@keyframes amag-ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.amag-ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 28px;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  font-family: var(--font-display);
+}
+
+.amag-ticker-sep {
+  color: var(--volt);
+  font-size: 16px;
+}
+
+/* ── Section Heading ─────────────────────────────────────────────── */
+.amag-section {
+  padding: clamp(48px, 7vw, 96px) var(--gutter);
+}
+
+.amag-section-eyebrow {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--volt);
+  margin-bottom: 14px;
+}
+
+.amag-h2 {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 4.5vw, 48px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 18px;
+}
+
+.amag-section-lead {
+  font-size: clamp(15px, 1.8vw, 17px);
+  color: var(--text-2);
+  max-width: 640px;
+  line-height: 1.75;
+  margin-bottom: 48px;
+  font-weight: 300;
+}
+
+/* ── Asset Cards Grid ────────────────────────────────────────────── */
+.amag-asset-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 56px;
+}
+
+.amag-asset-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.2s;
+  cursor: default;
+}
+
+.amag-asset-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.amag-asset-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-2);
+}
+
+.amag-asset-card:hover::before { opacity: 1; }
+
+/* Per-card accent colors */
+.amag-asset-card[data-accent="volt"]     { --card-accent: var(--volt); }
+.amag-asset-card[data-accent="signal"]   { --card-accent: var(--signal); }
+.amag-asset-card[data-accent="electric"] { --card-accent: var(--electric); }
+.amag-asset-card[data-accent="purple"]   { --card-accent: #b97aff; }
+.amag-asset-card[data-accent="orange"]   { --card-accent: #ff8c42; }
+.amag-asset-card[data-accent="teal"]     { --card-accent: #3fffd2; }
+
+.amag-asset-card:hover { border-color: var(--card-accent); }
+
+.amag-asset-card::before {
+  background: radial-gradient(ellipse at top left, rgba(var(--card-accent-rgb, 200,255,0), 0.06) 0%, transparent 70%);
+}
+
+.amag-asset-icon {
+  font-size: 30px;
+  margin-bottom: 14px;
+  display: block;
+}
+
+.amag-asset-card h3 {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.amag-asset-card p {
+  font-size: 13.5px;
+  color: var(--text-2);
+  line-height: 1.65;
+}
+
+.amag-asset-tag {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: color-mix(in srgb, var(--card-accent) 14%, transparent);
+  color: var(--card-accent);
+  border: 1px solid color-mix(in srgb, var(--card-accent) 28%, transparent);
+}
+
+/* ── Inline CTA Banner ───────────────────────────────────────────── */
+.amag-inline-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  background: linear-gradient(120deg, rgba(200,255,0,0.07) 0%, rgba(77,159,255,0.07) 100%);
+  border: 1px solid rgba(200,255,0,0.18);
+  border-radius: var(--radius-lg);
+  padding: 28px 32px;
+  margin: 48px 0;
+  flex-wrap: wrap;
+}
+
+.amag-inline-cta-text {
+  font-family: var(--font-display);
+  font-size: clamp(16px, 2.5vw, 20px);
+  font-weight: 700;
+  max-width: 520px;
+  line-height: 1.4;
+}
+
+.amag-inline-cta-text span {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  font-weight: 300;
+  color: var(--text-2);
+  margin-top: 4px;
+}
+
+.amag-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: var(--volt);
+  color: var(--obsidian);
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 800;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: transform 0.15s, opacity 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.amag-cta-btn:hover { transform: translateY(-2px); opacity: 0.9; }
+.amag-cta-btn.signal { background: var(--signal); color: #fff; }
+.amag-cta-btn.electric { background: var(--electric); color: var(--obsidian); }
+
+/* ── Comparison Table ────────────────────────────────────────────── */
+.amag-compare-section {
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  margin-bottom: 48px;
+}
+
+.amag-compare-header {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+}
+
+.amag-compare-header div {
+  padding: 16px 24px;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.amag-compare-header div:last-child {
+  color: var(--volt);
+}
+
+.amag-compare-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+
+.amag-compare-row:last-child { border-bottom: none; }
+.amag-compare-row:hover { background: rgba(255,255,255,0.02); }
+
+.amag-compare-row div {
+  padding: 14px 24px;
+  font-size: 13.5px;
+  color: var(--text-2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.amag-compare-row div:first-child { color: var(--text); font-weight: 500; }
+.amag-compare-row div:last-child  { color: var(--volt); font-weight: 600; }
+
+.amag-check  { color: var(--volt);   font-size: 15px; }
+.amag-cross  { color: var(--signal); font-size: 15px; }
+.amag-partial{ color: #ff8c42;       font-size: 13px; }
+
+/* ── Process Steps ───────────────────────────────────────────────── */
+.amag-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 24px;
+  margin-bottom: 48px;
+  counter-reset: step;
+}
+
+.amag-step {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  position: relative;
+  counter-increment: step;
+}
+
+.amag-step::before {
+  content: counter(step);
+  position: absolute;
+  top: -14px;
+  left: 24px;
+  width: 28px;
+  height: 28px;
+  background: var(--volt);
+  color: var(--obsidian);
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 800;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.amag-step h3 {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-top: 6px;
+}
+
+.amag-step p {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.6;
+}
+
+/* ── Use Case Cards ──────────────────────────────────────────────── */
+.amag-usecase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 18px;
+  margin-bottom: 48px;
+}
+
+.amag-usecase-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.amag-usecase-card:hover {
+  border-color: var(--border-2);
+  transform: translateY(-2px);
+}
+
+.amag-usecase-card h3 {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  margin: 10px 0 8px;
+}
+
+.amag-usecase-card p {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.65;
+}
+
+.amag-usecase-emoji { font-size: 26px; }
+
+/* ── Asset Type Deep-Dives ───────────────────────────────────────── */
+.amag-deep-section {
+  border-top: 1px solid var(--border);
+  padding: clamp(40px, 6vw, 80px) var(--gutter);
+}
+
+.amag-deep-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: start;
+  max-width: var(--max-w);
+  margin: 0 auto;
+}
+
+@media (max-width: 720px) {
+  .amag-deep-inner { grid-template-columns: 1fr; gap: 32px; }
+}
+
+.amag-deep-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  background: var(--signal-dim);
+  color: var(--signal);
+  border: 1px solid rgba(255,61,107,0.25);
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-family: var(--font-display);
+  margin-bottom: 14px;
+}
+
+.amag-deep-tag.volt-tag {
+  background: var(--volt-dim);
+  color: var(--volt);
+  border-color: rgba(200,255,0,0.25);
+}
+
+.amag-deep-tag.electric-tag {
+  background: var(--electric-dim);
+  color: var(--electric);
+  border-color: rgba(77,159,255,0.25);
+}
+
+.amag-deep-h {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 3.5vw, 32px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  margin-bottom: 14px;
+}
+
+.amag-deep-body {
+  font-size: 14.5px;
+  color: var(--text-2);
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+.amag-deep-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.amag-deep-list li {
+  font-size: 13.5px;
+  color: var(--text-2);
+  padding-left: 20px;
+  position: relative;
+  line-height: 1.6;
+}
+
+.amag-deep-list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--volt);
+  font-size: 12px;
+}
+
+.amag-deep-visual {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.amag-mockup-label {
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 4px;
+}
+
+.amag-mockup-asset {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  font-size: 12.5px;
+  color: var(--text-2);
+  line-height: 1.6;
+}
+
+.amag-mockup-asset strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 5px;
+}
+
+.amag-mockup-badge {
+  align-self: flex-start;
+  padding: 3px 9px;
+  background: rgba(200,255,0,0.12);
+  color: var(--volt);
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 999px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── Prompt Engineering Tips ─────────────────────────────────────── */
+.amag-tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.amag-tip-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--volt);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: 20px;
+}
+
+.amag-tip-card h4 {
+  font-family: var(--font-display);
+  font-size: 13.5px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+
+.amag-tip-card p {
+  font-size: 12.5px;
+  color: var(--text-2);
+  line-height: 1.65;
+}
+
+/* ── FAQ ─────────────────────────────────────────────────────────── */
+.amag-faq {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 48px;
+  max-width: 780px;
+}
+
+.amag-faq details {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.amag-faq details[open] {
+  border-color: var(--border-2);
+}
+
+.amag-faq summary {
+  padding: 18px 22px;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--text);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+}
+
+.amag-faq summary::-webkit-details-marker { display: none; }
+
+.amag-faq summary::after {
+  content: '+';
+  font-size: 20px;
+  font-weight: 300;
+  color: var(--text-2);
+  transition: transform 0.2s;
+  flex-shrink: 0;
+  margin-left: 12px;
+}
+
+.amag-faq details[open] summary::after {
+  transform: rotate(45deg);
+}
+
+.amag-faq details > div {
+  padding: 0 22px 18px;
+  font-size: 14px;
+  color: var(--text-2);
+  line-height: 1.75;
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+}
+
+/* ── Bottom Hero CTA ─────────────────────────────────────────────── */
+.amag-bottom-cta {
+  background: linear-gradient(135deg, rgba(200,255,0,0.08) 0%, rgba(77,159,255,0.08) 50%, rgba(255,61,107,0.06) 100%);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: clamp(60px, 9vw, 120px) var(--gutter);
+  text-align: center;
+}
+
+.amag-bottom-cta-inner {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.amag-bottom-h {
+  font-family: var(--font-display);
+  font-size: clamp(30px, 5.5vw, 58px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 18px;
+}
+
+.amag-bottom-sub {
+  font-size: clamp(15px, 1.8vw, 17px);
+  color: var(--text-2);
+  margin-bottom: 36px;
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+.amag-cta-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.amag-secondary-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 24px;
+  background: transparent;
+  color: var(--text-2);
+  font-family: var(--font-display);
+  font-size: 13.5px;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  border: 1px solid var(--border-2);
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.amag-secondary-cta:hover { color: var(--text); border-color: var(--text-2); }
+
+/* ── Stat Bar ────────────────────────────────────────────────────── */
+.amag-stat-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 56px;
+}
+
+.amag-stat {
+  background: var(--surface);
+  padding: 28px 24px;
+  text-align: center;
+}
+
+.amag-stat-num {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 5vw, 42px);
+  font-weight: 800;
+  color: var(--volt);
+  line-height: 1;
+  margin-bottom: 6px;
+  letter-spacing: -0.02em;
+}
+
+.amag-stat-label {
+  font-size: 12px;
+  color: var(--text-2);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+/* ── Platform Section ────────────────────────────────────────────── */
+.amag-platforms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+  margin-bottom: 40px;
+}
+
+.amag-platform-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: border-color 0.2s;
+}
+
+.amag-platform-card:hover { border-color: var(--border-2); }
+
+.amag-platform-icon { font-size: 22px; flex-shrink: 0; }
+
+.amag-platform-info { flex: 1; min-width: 0; }
+
+.amag-platform-info strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.amag-platform-info span {
+  font-size: 11.5px;
+  color: var(--text-3);
+}
+
+/* ── Footer ──────────────────────────────────────────────────────── */
+.amag-footer {
+  padding: 32px var(--gutter);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.amag-footer-logo {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.amag-footer-logo span { color: var(--volt); }
+
+.amag-footer-links {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.amag-footer-links a {
+  font-size: 13px;
+  color: var(--text-3);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.amag-footer-links a:hover { color: var(--text-2); }
+
+.amag-footer-copy {
+  font-size: 12px;
+  color: var(--text-3);
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--obsidian); }
+::-webkit-scrollbar-thumb { background: var(--surface-2); border-radius: 3px; }
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .amag-compare-header,
+  .amag-compare-row { grid-template-columns: 1fr 1fr; }
+  .amag-compare-header div:nth-child(2),
+  .amag-compare-row div:nth-child(2) { display: none; }
+  .amag-inline-cta { flex-direction: column; align-items: flex-start; }
+  .amag-footer { flex-direction: column; align-items: flex-start; }
+  .amag-nav-logo { font-size: 15px; }
+  .amag-mega-cta { padding: 16px 28px; }
+}

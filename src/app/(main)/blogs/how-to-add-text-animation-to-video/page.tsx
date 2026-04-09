@@ -106,7 +106,7 @@ export default function AddTextAnimationToVideo() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, videos with text animations have seen a 27% increase in engagement and a 19% boost in shares. Let’s dive into the steps.
+            With over 3,500 creators using Scenith, videos with text animations have seen a 27% increase in engagement and a 19% boost in shares. Let’s dive into the steps.
           </p>
         </section>
 

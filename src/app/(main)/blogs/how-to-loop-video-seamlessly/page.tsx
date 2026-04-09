@@ -106,7 +106,7 @@ export default function LoopVideoSeamlessly() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, looped videos have seen a 28% increase in watch time and a 20% boost in shares. Let’s dive into the steps.
+            With over 3,500 creators using Scenith, looped videos have seen a 28% increase in watch time and a 20% boost in shares. Let’s dive into the steps.
           </p>
         </section>
 

@@ -281,7 +281,7 @@ export default function AspectRatioGuide() {
             Mastering aspect ratios ensures your videos look professional across YouTube, Instagram, TikTok, and more. Scenith’s AI templates make this process seamless, saving you time and boosting engagement.
           </p>
           <p>
-            Join over 50,000 creators using Scenith to optimize their videos. Start today for platform-perfect content.
+            Join over 3,500 creators using Scenith to optimize their videos. Start today for platform-perfect content.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Optimize Your Videos?</h3>

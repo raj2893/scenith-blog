@@ -106,7 +106,7 @@ export default function CreateVideoAdsForFacebook() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, Facebook video ads have seen a 30% increase in clicks and a 25% boost in conversions. Let’s dive into the steps.
+            With over 3,500 creators using Scenith, Facebook video ads have seen a 30% increase in clicks and a 25% boost in conversions. Let’s dive into the steps.
           </p>
         </section>
 

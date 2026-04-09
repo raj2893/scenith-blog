@@ -106,7 +106,7 @@ export default function MakeYouTubeVideosThatGetViews() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, optimized videos have seen a 30% increase in views and a 25% boost in subscriber growth. Let’s explore the strategies.
+            With over 3,500 creators using Scenith, optimized videos have seen a 30% increase in views and a 25% boost in subscriber growth. Let’s explore the strategies.
           </p>
         </section>
 

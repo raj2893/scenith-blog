@@ -290,7 +290,7 @@ export default function ExposureLockTechniques() {
             Consistent lighting makes your Reels look professional and engaging. Scenith’s AI exposure tools simplify the process, outperforming manual methods.
           </p>
           <p>
-            Join over 50,000 creators using Scenith for flawless Reels. Start today for professional lighting.
+            Join over 3,500 creators using Scenith for flawless Reels. Start today for professional lighting.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready for Perfectly Lit Reels?</h3>

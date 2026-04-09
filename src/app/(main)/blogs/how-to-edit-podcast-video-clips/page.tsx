@@ -106,7 +106,7 @@ export default function EditPodcastVideoClips() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, podcast video clips have seen a 26% increase in engagement and a 21% boost in shares. Let’s dive into the steps.
+            With over 3,500 creators using Scenith, podcast video clips have seen a 26% increase in engagement and a 21% boost in shares. Let’s dive into the steps.
           </p>
         </section>
 

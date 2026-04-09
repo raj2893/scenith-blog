@@ -297,7 +297,7 @@ export default function FourK30FPSSettings() {
             4K at 30FPS delivers stunning Reels that captivate viewers. Scenith’s AI tools make setting up and exporting in 4K simple, outpacing complex alternatives.
           </p>
           <p>
-            Join over 50,000 creators using Scenith for high-quality Reels. Start today for crisp, professional videos.
+            Join over 3,500 creators using Scenith for high-quality Reels. Start today for crisp, professional videos.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready for Stunning Reels?</h3>

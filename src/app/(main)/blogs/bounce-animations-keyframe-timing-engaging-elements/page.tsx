@@ -105,7 +105,7 @@ export default function BounceAnimations() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, bounce animations have been shown to improve viewer retention by up to 25%. Let’s dive into how you can leverage keyframe timing to elevate your edits.
+            With over 3,500 creators using Scenith, bounce animations have been shown to improve viewer retention by up to 25%. Let’s dive into how you can leverage keyframe timing to elevate your edits.
           </p>
         </section>
 

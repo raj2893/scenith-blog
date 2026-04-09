@@ -101,7 +101,7 @@ export default function AIVoiceGenerationFree() {
           </p>
 
           <p>
-            Over 50,000 creators have used Scenith's AI voice generation to produce professional content, saving an average of $3,000 annually on voice talent. Whether you're creating YouTube videos, podcasts, educational content, or social media clips, this tool delivers studio-quality results instantly.
+            Over 3,500 creators have used Scenith's AI voice generation to produce professional content, saving an average of $3,000 annually on voice talent. Whether you're creating YouTube videos, podcasts, educational content, or social media clips, this tool delivers studio-quality results instantly.
           </p>
         </section>
 
@@ -435,7 +435,7 @@ export default function AIVoiceGenerationFree() {
           </p>
 
           <p>
-            Over 50,000 creators have already made the switch to Scenith's AI voice generation, saving millions in production costs while scaling their content output. The question isn't whether to use AI voices—it's why you haven't started yet.
+            Over 3,500 creators have already made the switch to Scenith's AI voice generation, saving millions in production costs while scaling their content output. The question isn't whether to use AI voices—it's why you haven't started yet.
           </p>
 
           <div className={styles.finalCta}>

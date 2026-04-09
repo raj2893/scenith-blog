@@ -290,7 +290,7 @@ export default function AvoidInstagramAppEditing() {
             Instagram’s in-app editor is convenient but limits quality and creativity. Scenith’s desktop platform delivers professional Reels with advanced tools and AI features, boosting engagement.
           </p>
           <p>
-            Join over 50,000 creators using Scenith for standout Reels. Start editing today for professional results.
+            Join over 3,500 creators using Scenith for standout Reels. Start editing today for professional results.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready for Professional Reels?</h3>

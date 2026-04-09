@@ -106,7 +106,7 @@ export default function EditTestimonialVideos() {
           </p>
 
           <p>
-            With over 50,000 creators using Scenith, testimonial videos have seen a 27% increase in viewer trust and a 22% boost in conversions. Let’s dive into the steps.
+            With over 3,500 creators using Scenith, testimonial videos have seen a 27% increase in viewer trust and a 22% boost in conversions. Let’s dive into the steps.
           </p>
         </section>
 

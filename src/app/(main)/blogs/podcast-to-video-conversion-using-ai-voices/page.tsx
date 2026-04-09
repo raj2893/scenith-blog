@@ -97,7 +97,7 @@ export default function PodcastToVideoAIVoices() {
           </div>
 
           <p>
-            Turning podcasts into videos (vodcasts) boosts engagement on platforms like YouTube. With <strong>over 50,000 creators using Scenith</strong>, its AI voice and editing tools make this process seamless.
+            Turning podcasts into videos (vodcasts) boosts engagement on platforms like YouTube. With <strong>over 3,500 creators using Scenith</strong>, its AI voice and editing tools make this process seamless.
           </p>
 
           <p>
@@ -288,7 +288,7 @@ export default function PodcastToVideoAIVoices() {
             Scenith’s AI voices and editing tools make podcast-to-video conversion fast and professional, perfect for engaging audiences on YouTube and social media.
           </p>
           <p>
-            Compared to traditional methods, Scenith offers speed and simplicity. Start creating vodcasts today and join over 50,000 creators using Scenith.
+            Compared to traditional methods, Scenith offers speed and simplicity. Start creating vodcasts today and join over 3,500 creators using Scenith.
           </p>
           <div className={styles.finalCta}>
             <h3>Ready to Create Vodcasts?</h3>
