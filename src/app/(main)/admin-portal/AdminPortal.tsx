@@ -384,6 +384,27 @@ export default function AdminPortal() {
     if (params) Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, String(v)));
     return axios.get(url.toString(), { headers: headers() }).then(r => r.data);
   }, [headers]);
+  const [ttsUserChart, setTtsUserChart] = useState<any>(null);
+  const [ttsUserChartLoading, setTtsUserChartLoading] = useState(false);
+  const [expandedTtsUserId, setExpandedTtsUserId] = useState<number | null>(null);
+
+  const loadTtsUserChart = useCallback(async (userId: number) => {
+  if (expandedTtsUserId === userId) {
+    setExpandedTtsUserId(null);
+    setTtsUserChart(null);
+    return;
+  }
+  setExpandedTtsUserId(userId);
+  setTtsUserChartLoading(true);
+  try {
+    const data = await api("/api/admin/tts-user-chart", { userId, from, to });
+    setTtsUserChart(data);
+  } catch (e) {
+    console.error(e);
+  } finally {
+    setTtsUserChartLoading(false);
+  }
+}, [expandedTtsUserId, from, to, api]);
 
   // Fetch overview + charts on date change
   useEffect(() => {
@@ -956,19 +977,192 @@ export default function AdminPortal() {
                   {/* Daily chart */}
                   {ttsStats.dailyChart.length > 0 && (
                     <div className="ap-card" style={{ marginBottom: 22 }}>
-                      <p className="ap-section-title">Daily TTS Generations</p>
-                      <MiniBarChart
-                        data={ttsStats.dailyChart.map((d: any) => ({ date: d.date, signups: d.jobs }))}
-                        valueKey="signups"
-                        color="#f59e0b"
-                        label="Daily Jobs"
-                      />
+                      <p className="ap-section-title">Daily TTS Generations (all users)</p>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 12 }}>
+                        <span style={{ fontSize: 12, color: "#9ca3af", fontWeight: 700 }}>Daily Jobs by Provider</span>
+                        <span style={{ fontSize: 22, fontWeight: 900, color: "#f59e0b", letterSpacing: "-0.04em" }}>
+                          {fmt(ttsStats.dailyChart.reduce((s: number, d: any) => s + Number(d.jobs), 0))}
+                        </span>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "flex-end", gap: 3, height: 64 }}>
+                        {ttsStats.dailyChart.slice(-30).map((d: any, i: number) => {
+                          const total = Number(d.jobs) || 0;
+                          const maxTotal = Math.max(...ttsStats.dailyChart.slice(-30).map((x: any) => Number(x.jobs)), 1);
+                          const barH = Math.max(4, (total / maxTotal) * 64);
+                          const gPct = total > 0 ? ((d.GOOGLE || 0) / total) * 100 : 0;
+                          const oPct = total > 0 ? ((d.OPENAI || 0) / total) * 100 : 0;
+                          const aPct = total > 0 ? ((d.AZURE  || 0) / total) * 100 : 0;
+                          return (
+                            <div key={i} title={`${d.date}: ${total} (G:${d.GOOGLE??0} O:${d.OPENAI??0} A:${d.AZURE??0})`}
+                              style={{ flex: 1, height: barH, minWidth: 4, borderRadius: "3px 3px 0 0",
+                                overflow: "hidden", display: "flex", flexDirection: "column", cursor: "default" }}>
+                              {gPct > 0 && <div style={{ height: `${gPct}%`, background: "#3b82f6" }} />}
+                              {oPct > 0 && <div style={{ height: `${oPct}%`, background: "#10b981" }} />}
+                              {aPct > 0 && <div style={{ height: `${aPct}%`, background: "#0ea5e9" }} />}
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginTop: 4, marginBottom: 8 }}>
+                        <span style={{ fontSize: 10, color: "#d1d5db" }}>{ttsStats.dailyChart[0]?.date}</span>
+                        <span style={{ fontSize: 10, color: "#d1d5db" }}>Today</span>
+                      </div>
+                      <div style={{ display: "flex", gap: 14 }}>
+                        {[["#3b82f6","Google"],["#10b981","OpenAI"],["#0ea5e9","Azure"]].map(([c,l]) => (
+                          <div key={l} style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                            <div style={{ width: 8, height: 8, borderRadius: 2, background: c }} />
+                            <span style={{ fontSize: 11, color: "#6b7280" }}>{l}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   )}
+
+                  {/* All users who used voice in selected date range */}
+                  <div className="ap-card" style={{ marginBottom: 22 }}>
+                    <p className="ap-section-title">
+                      👥 Voice Users in Selected Range
+                      {ttsStats.voiceUsersByRange?.length > 0 &&
+                        <span style={{ fontSize: 12, fontWeight: 400, color: "#9ca3af", marginLeft: 8 }}>
+                          {ttsStats.voiceUsersByRange.length} users · {ttsStats.voiceUsersByRange.reduce((s: number, u: any) => s + Number(u.chars), 0).toLocaleString()} total chars
+                        </span>
+                      }
+                    </p>
+                    {(!ttsStats.voiceUsersByRange || ttsStats.voiceUsersByRange.length === 0) ? (
+                      <div style={{ textAlign: "center", padding: 24, color: "#9ca3af", fontSize: 13 }}>
+                        No voice usage in selected date range
+                      </div>
+                    ) : (
+                      <Table
+                        cols={[
+                          { key: "userEmail", label: "Email" },
+                          { key: "userName",  label: "Name" },
+                          { key: "planType",  label: "Plan",  render: v => <StatusBadge status={String(v)} /> },
+                          { key: "jobs",      label: "Jobs",  render: v => <span style={{ fontWeight: 700, color: "#f59e0b" }}>{fmt(Number(v))}</span> },
+                          { key: "chars",     label: "Chars Used", render: v => <span style={{ fontWeight: 800, color: "#6355dc" }}>{Number(v).toLocaleString()}</span> },
+                          { key: "GOOGLE",    label: "🔵 Google", render: v => Number(v) > 0 ? <span style={{ color: "#3b82f6", fontWeight: 600 }}>{fmt(Number(v))}</span> : <span style={{ color: "#d1d5db" }}>—</span> },
+                          { key: "OPENAI",    label: "🟢 OpenAI", render: v => Number(v) > 0 ? <span style={{ color: "#10b981", fontWeight: 600 }}>{fmt(Number(v))}</span> : <span style={{ color: "#d1d5db" }}>—</span> },
+                          { key: "AZURE",     label: "🔷 Azure",  render: v => Number(v) > 0 ? <span style={{ color: "#0ea5e9", fontWeight: 600 }}>{fmt(Number(v))}</span> : <span style={{ color: "#d1d5db" }}>—</span> },
+                          { key: "userId",    label: "Daily", render: (v) => (
+                            <button
+                              onClick={() => loadTtsUserChart(v)}
+                              style={{
+                                padding: "4px 10px", borderRadius: 7, border: "1px solid #e5e7eb",
+                                background: expandedTtsUserId === v ? "linear-gradient(135deg,#1e1b4b,#4c1d95)" : "#f9fafb",
+                                color: expandedTtsUserId === v ? "#fff" : "#6b7280",
+                                fontSize: 11, fontWeight: 700, cursor: "pointer", fontFamily: "inherit"
+                              }}
+                            >
+                              {expandedTtsUserId === v ? "▲ Hide" : "📈 Chart"}
+                            </button>
+                          )},
+                        ]}
+                        rows={ttsStats.voiceUsersByRange}
+                        emptyMsg="No voice usage in range"
+                      />
+                    )}
+
+                    {/* Inline per-user chart — same drill-down as before */}
+                    {expandedTtsUserId && (
+                      <div style={{
+                        marginTop: 16, padding: "16px 18px", borderRadius: 12,
+                        background: "#f9fafb", border: "1px solid #e5e7eb"
+                      }}>
+                        {ttsUserChartLoading ? (
+                          <div style={{ textAlign: "center", padding: 24, color: "#9ca3af", fontSize: 13 }}>⏳ Loading…</div>
+                        ) : ttsUserChart ? (
+                          <>
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 4 }}>
+                              <span style={{ fontSize: 13, fontWeight: 800, color: "#374151" }}>
+                                🎙️ {ttsUserChart.userEmail}
+                              </span>
+                              <div style={{ display: "flex", gap: 16 }}>
+                                <span style={{ fontSize: 12, color: "#9ca3af" }}>
+                                  <strong style={{ color: "#f59e0b" }}>{ttsUserChart.totalJobs}</strong> jobs
+                                </span>
+                                <span style={{ fontSize: 12, color: "#9ca3af" }}>
+                                  <strong style={{ color: "#6355dc" }}>{Number(ttsUserChart.totalChars).toLocaleString()}</strong> chars total
+                                </span>
+                              </div>
+                            </div>
+                            <div style={{ fontSize: 11, color: "#9ca3af", marginBottom: 12 }}>
+                              Daily character usage · bars = chars · color = provider
+                            </div>
+                            {ttsUserChart.chart.length === 0 ? (
+                              <div style={{ textAlign: "center", color: "#9ca3af", fontSize: 12, padding: "12px 0" }}>No voice jobs in selected range</div>
+                            ) : (
+                              <>
+                                <div style={{ display: "flex", alignItems: "flex-end", gap: 3, height: 80, marginBottom: 4 }}>
+                                  {ttsUserChart.chart.map((d: any, i: number) => {
+                                    const total = Number(d.totalChars) || 0;
+                                    const maxChars = Math.max(...ttsUserChart.chart.map((x: any) => Number(x.totalChars)), 1);
+                                    const barH = Math.max(4, (total / maxChars) * 80);
+                                    const gc = Number(d.GOOGLE_chars) || 0;
+                                    const oc = Number(d.OPENAI_chars) || 0;
+                                    const ac = Number(d.AZURE_chars)  || 0;
+                                    const gPct = total > 0 ? (gc / total) * 100 : 0;
+                                    const oPct = total > 0 ? (oc / total) * 100 : 0;
+                                    const aPct = total > 0 ? (ac / total) * 100 : 0;
+                                    return (
+                                      <div key={i}
+                                        title={`${d.date}\n${total.toLocaleString()} chars · ${d.totalJobs} jobs\nGoogle: ${gc.toLocaleString()}\nOpenAI: ${oc.toLocaleString()}\nAzure: ${ac.toLocaleString()}`}
+                                        style={{ flex: 1, height: barH, minWidth: 4, borderRadius: "3px 3px 0 0",
+                                          overflow: "hidden", display: "flex", flexDirection: "column", cursor: "default" }}>
+                                        {gPct > 0 && <div style={{ height: `${gPct}%`, background: "#3b82f6", flexShrink: 0 }} />}
+                                        {oPct > 0 && <div style={{ height: `${oPct}%`, background: "#10b981", flexShrink: 0 }} />}
+                                        {aPct > 0 && <div style={{ height: `${aPct}%`, background: "#0ea5e9", flexShrink: 0 }} />}
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
+                                  <span style={{ fontSize: 10, color: "#d1d5db" }}>{ttsUserChart.chart[0]?.date}</span>
+                                  <span style={{ fontSize: 10, color: "#d1d5db" }}>{ttsUserChart.chart[ttsUserChart.chart.length - 1]?.date}</span>
+                                </div>
+                                <div style={{ overflowX: "auto" }}>
+                                  <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11.5 }}>
+                                    <thead>
+                                      <tr style={{ borderBottom: "1px solid #e5e7eb" }}>
+                                        {["Date","Total Chars","Jobs","🔵 Google","🟢 OpenAI","🔷 Azure"].map(h => (
+                                          <th key={h} style={{ padding: "6px 10px", textAlign: "left", color: "#9ca3af",
+                                            fontWeight: 700, fontSize: 10, textTransform: "uppercase", whiteSpace: "nowrap" }}>{h}</th>
+                                        ))}
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {ttsUserChart.chart.map((d: any, i: number) => (
+                                        <tr key={i} style={{ borderBottom: "1px solid #f9fafb" }}>
+                                          <td style={{ padding: "6px 10px", color: "#374151", fontWeight: 600 }}>{d.date}</td>
+                                          <td style={{ padding: "6px 10px", fontWeight: 800, color: "#6355dc" }}>{Number(d.totalChars).toLocaleString()}</td>
+                                          <td style={{ padding: "6px 10px", color: "#f59e0b", fontWeight: 700 }}>{d.totalJobs}</td>
+                                          <td style={{ padding: "6px 10px", color: "#3b82f6" }}>{Number(d.GOOGLE_chars) > 0 ? `${Number(d.GOOGLE_chars).toLocaleString()} (${d.GOOGLE_jobs}j)` : "—"}</td>
+                                          <td style={{ padding: "6px 10px", color: "#10b981" }}>{Number(d.OPENAI_chars) > 0 ? `${Number(d.OPENAI_chars).toLocaleString()} (${d.OPENAI_jobs}j)` : "—"}</td>
+                                          <td style={{ padding: "6px 10px", color: "#0ea5e9" }}>{Number(d.AZURE_chars) > 0 ? `${Number(d.AZURE_chars).toLocaleString()} (${d.AZURE_jobs}j)` : "—"}</td>
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                </div>
+                                <div style={{ display: "flex", gap: 14, marginTop: 10 }}>
+                                  {[["#3b82f6","Google"],["#10b981","OpenAI"],["#0ea5e9","Azure"]].map(([c,l]) => (
+                                    <div key={l} style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                                      <div style={{ width: 8, height: 8, borderRadius: 2, background: c }} />
+                                      <span style={{ fontSize: 11, color: "#6b7280" }}>{l}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </>
+                            )}
+                          </>
+                        ) : null}
+                      </div>
+                    )}
+                  </div>
 
                   {/* Top paid users table */}
                   <div className="ap-card" style={{ marginBottom: 22 }}>
                     <p className="ap-section-title">🏆 Top TTS Users by Credits Spent</p>
+
                     <Table
                       cols={[
                         { key: "userEmail",   label: "Email" },
@@ -976,44 +1170,22 @@ export default function AdminPortal() {
                         { key: "planType",    label: "Plan",     render: v => <StatusBadge status={String(v)} /> },
                         { key: "jobCount",    label: "Jobs",     render: v => <span style={{ fontWeight: 700, color: "#f59e0b" }}>{fmt(Number(v))}</span> },
                         { key: "creditsUsed", label: "Credits",  render: v => <span style={{ fontWeight: 800, color: "#ef4444" }}>{fmt(Number(v))}</span> },
+                        { key: "userId",      label: "Daily",    render: (v) => (
+                          <button
+                            onClick={() => loadTtsUserChart(v)}
+                            style={{
+                              padding: "4px 10px", borderRadius: 7, border: "1px solid #e5e7eb",
+                              background: expandedTtsUserId === v ? "linear-gradient(135deg,#1e1b4b,#4c1d95)" : "#f9fafb",
+                              color: expandedTtsUserId === v ? "#fff" : "#6b7280",
+                              fontSize: 11, fontWeight: 700, cursor: "pointer", fontFamily: "inherit"
+                            }}
+                          >
+                            {expandedTtsUserId === v ? "▲ Hide" : "📈 Chart"}
+                          </button>
+                        )},
                       ]}
                       rows={ttsStats.topUsers}
                       emptyMsg="No TTS usage in selected range"
-                    />
-                  </div>
-
-                  {/* Free tier voice char usage */}
-                  <div className="ap-card">
-                    <p className="ap-section-title">🆓 Free Tier Voice Usage — This Month</p>
-                    <p style={{ fontSize: 12, color: "#9ca3af", marginBottom: 16 }}>
-                      Free users get 600 chars/month. Resets on the 1st. 🔴 = hit limit (upgrade candidates). Data always reflects the current calendar month.
-                    </p>
-                    <Table
-                      cols={[
-                        { key: "userEmail",  label: "Email" },
-                        { key: "userName",   label: "Name" },
-                        { key: "resetMonth", label: "Month" },
-                        { key: "hitLimit",   label: "Status", render: v => v
-                          ? <span style={{ background: "#fee2e2", color: "#991b1b", padding: "2px 8px", borderRadius: 99, fontSize: 11, fontWeight: 700 }}>🚫 Limit Hit</span>
-                          : <span style={{ background: "#dcfce7", color: "#15803d", padding: "2px 8px", borderRadius: 99, fontSize: 11, fontWeight: 700 }}>✓ Active</span>
-                        },
-                        { key: "charsUsed",  label: "Chars Used",  render: v => <span style={{ fontWeight: 800, color: "#f97316" }}>{Number(v).toLocaleString()}</span> },
-                        { key: "charsLimit", label: "Limit",       render: v => <span style={{ color: "#9ca3af" }}>{Number(v).toLocaleString()}</span> },
-                        { key: "pctUsed",    label: "% Used",      render: v => (
-                          <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 120 }}>
-                            <div style={{ flex: 1, height: 7, background: "#f3f4f6", borderRadius: 99, overflow: "hidden" }}>
-                              <div style={{
-                                width: `${Math.min(Number(v), 100)}%`, height: "100%", borderRadius: 99,
-                                background: Number(v) >= 90 ? "#ef4444" : Number(v) >= 60 ? "#f97316" : "#10b981",
-                                transition: "width 0.6s ease"
-                              }} />
-                            </div>
-                            <span style={{ fontSize: 11, fontWeight: 700, color: Number(v) >= 90 ? "#ef4444" : Number(v) >= 60 ? "#f97316" : "#10b981", width: 32 }}>{v}%</span>
-                          </div>
-                        )},
-                      ]}
-                      rows={ttsStats.topFreeVoiceUsers ?? []}
-                      emptyMsg="No free users have used voice this month"
                     />
                   </div>
                 </>

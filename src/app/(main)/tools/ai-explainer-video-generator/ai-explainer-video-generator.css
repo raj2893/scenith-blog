@@ -1,0 +1,1255 @@
+/* app/tools/ai-explainer-video-generator/ai-explainer-video-generator.css */
+/* ────────────────────────────────────────────────────────────────────────────
+   AI Explainer Video Generator — Complete Styles
+   Dark/light adaptive, cinematic aesthetics, high readability.
+   Designed for engagement: smooth animations, film grain, scanlines.
+   ────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Light theme (default) */
+  --evg-bg: #f8fafc;
+  --evg-surface: #ffffff;
+  --evg-surface-elevated: #ffffff;
+  --evg-text: #0f172a;
+  --evg-text-2: #334155;
+  --evg-text-muted: #64748b;
+  --evg-border: #e2e8f0;
+  --evg-border-soft: #f1f5f9;
+  --evg-accent: #7c3aed;
+  --evg-accent-glow: rgba(124, 58, 237, 0.4);
+  --evg-accent-soft: #ede9fe;
+  --evg-card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+  --evg-glow-opacity: 0.4;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --evg-bg: #030014;
+    --evg-surface: #0f0b1a;
+    --evg-surface-elevated: #1a1528;
+    --evg-text: #f1f5f9;
+    --evg-text-2: #cbd5e1;
+    --evg-text-muted: #94a3b8;
+    --evg-border: #2d2a3a;
+    --evg-border-soft: #1e1b2a;
+    --evg-accent-soft: #2d1a4a;
+    --evg-card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+    --evg-glow-opacity: 0.6;
+  }
+}
+
+/* Base */
+.evg-root {
+  background: var(--evg-bg);
+  color: var(--evg-text);
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Grain texture overlay */
+.evg-grain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+/* Breadcrumb */
+.evg-breadcrumb {
+  padding: 1rem 1.5rem;
+  font-size: 0.75rem;
+  color: var(--evg-text-muted);
+  background: transparent;
+  position: relative;
+  z-index: 20;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.evg-breadcrumb a {
+  color: var(--evg-text-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.evg-breadcrumb a:hover {
+  color: var(--evg-accent);
+}
+
+.evg-breadcrumb span {
+  margin: 0 0.4rem;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   HERO SECTION
+   ────────────────────────────────────────────────────────────────────────── */
+.evg-hero {
+  position: relative;
+  padding: 3rem 1.5rem 5rem;
+  overflow: hidden;
+  text-align: center;
+}
+
+.evg-hero-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.evg-hero-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: var(--evg-glow-opacity);
+}
+
+.evg-glow-1 {
+  width: 60vw;
+  height: 60vw;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.4), transparent);
+  top: -30vw;
+  left: -20vw;
+}
+
+.evg-glow-2 {
+  width: 50vw;
+  height: 50vw;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.3), transparent);
+  bottom: -20vw;
+  right: -10vw;
+}
+
+.evg-glow-3 {
+  width: 40vw;
+  height: 40vw;
+  background: radial-gradient(circle, rgba(219, 39, 119, 0.2), transparent);
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.evg-scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.03) 0px, rgba(0, 0, 0, 0.03) 1px, transparent 1px, transparent 2px);
+  pointer-events: none;
+}
+
+.evg-hero-inner {
+  position: relative;
+  z-index: 15;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.evg-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--evg-accent-soft);
+  border: 1px solid var(--evg-border);
+  border-radius: 100px;
+  padding: 0.35rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--evg-accent);
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(4px);
+}
+
+.evg-badge-dot {
+  width: 6px;
+  height: 6px;
+  background: #10b981;
+  border-radius: 50%;
+  display: inline-block;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.2); }
+}
+
+.evg-hero-title {
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+}
+
+.evg-title-line {
+  display: block;
+}
+
+.evg-title-line-1 {
+  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.evg-title-line-2 {
+  background: linear-gradient(135deg, #f1f5f9, #cbd5e1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@media (prefers-color-scheme: dark) {
+  .evg-title-line-2 {
+    background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+}
+
+.evg-title-sub {
+  font-size: clamp(1rem, 4vw, 1.5rem);
+  font-weight: 500;
+  color: var(--evg-text-2);
+  margin-top: 0.5rem;
+}
+
+.evg-hero-desc {
+  font-size: 1.125rem;
+  color: var(--evg-text-2);
+  max-width: 800px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+}
+
+/* PRIMARY CTA BUTTON — HUGE, CINEMATIC */
+.evg-hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  background: linear-gradient(135deg, #7c3aed, #db2777);
+  padding: 1rem 2rem;
+  border-radius: 60px;
+  text-decoration: none;
+  color: white;
+  font-weight: 700;
+  font-size: 1.25rem;
+  transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+  box-shadow: 0 15px 35px -10px rgba(124, 58, 237, 0.4);
+  margin: 1rem 0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.evg-hero-cta:hover {
+  transform: scale(1.02);
+  box-shadow: 0 20px 40px -12px rgba(124, 58, 237, 0.6);
+  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+}
+
+.evg-cta-icon {
+  font-size: 1.5rem;
+  filter: drop-shadow(0 0 4px rgba(0,0,0,0.2));
+}
+
+.evg-cta-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.3;
+}
+
+.evg-cta-text small {
+  font-size: 0.7rem;
+  font-weight: 400;
+  opacity: 0.8;
+}
+
+.evg-cta-arrow {
+  font-size: 1.25rem;
+  transition: transform 0.2s;
+}
+
+.evg-hero-cta:hover .evg-cta-arrow {
+  transform: translateX(4px);
+}
+
+.evg-hero-trust {
+  font-size: 0.8rem;
+  color: var(--evg-text-muted);
+  margin-top: 1rem;
+}
+
+/* Stats strip */
+.evg-stats-strip {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 3rem;
+  flex-wrap: wrap;
+}
+
+.evg-stat {
+  text-align: center;
+}
+
+.evg-stat-value {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--evg-accent);
+}
+
+.evg-stat-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--evg-text-muted);
+}
+
+/* Film strip decoration */
+.evg-film-strip {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0 1rem;
+  pointer-events: none;
+  z-index: 12;
+}
+
+.evg-film-frame {
+  flex: 1;
+  position: relative;
+  height: 8px;
+  background: rgba(124, 58, 237, 0.2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.evg-film-perf {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--evg-accent);
+  opacity: 0.4;
+}
+
+.evg-film-perf.top { top: 0; }
+.evg-film-perf.bottom { bottom: 0; }
+
+.evg-film-content {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, var(--evg-accent), transparent);
+  animation: filmScan 8s linear infinite;
+  opacity: 0.5;
+}
+
+@keyframes filmScan {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   MAIN CONTENT SECTIONS
+   ────────────────────────────────────────────────────────────────────────── */
+.evg-main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1.5rem 4rem;
+  position: relative;
+  z-index: 20;
+}
+
+.evg-section {
+  margin-bottom: 6rem;
+}
+
+.evg-section-title {
+  font-size: clamp(1.8rem, 5vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, var(--evg-text), var(--evg-text-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.evg-section-title.evg-centered {
+  text-align: center;
+}
+
+.evg-section-sub {
+  text-align: center;
+  color: var(--evg-text-2);
+  max-width: 800px;
+  margin: 0 auto 3rem;
+  font-size: 1.1rem;
+}
+
+/* Two column layout */
+.evg-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .evg-two-col {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+.evg-col-text p {
+  margin-bottom: 1rem;
+  color: var(--evg-text-2);
+}
+
+/* Terminal visual */
+.evg-terminal {
+  background: #0a0a0f;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #2d2a3a;
+  box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.4);
+}
+
+.evg-terminal-bar {
+  background: #1e1b2a;
+  padding: 0.6rem 1rem;
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 1px solid #2d2a3a;
+}
+
+.evg-term-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.evg-term-dot.red { background: #ff5f56; }
+.evg-term-dot.yellow { background: #ffbd2e; }
+.evg-term-dot.green { background: #27c93f; }
+
+.evg-term-title {
+  margin-left: auto;
+  font-size: 0.7rem;
+  color: #94a3b8;
+  font-family: monospace;
+}
+
+.evg-terminal-body {
+  padding: 1.5rem;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.8rem;
+}
+
+.evg-term-line {
+  margin-bottom: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.evg-term-prompt {
+  color: #10b981;
+}
+
+.evg-term-cmd {
+  color: #e2e8f0;
+}
+
+.evg-term-accent {
+  color: #8b5cf6;
+}
+
+.evg-term-generating {
+  color: #f59e0b;
+  animation: blink 1.5s step-end infinite;
+}
+
+.evg-term-dots {
+  animation: dots 1.5s step-end infinite;
+}
+
+@keyframes dots {
+  0%, 20% { content: "."; }
+  40% { content: ".."; }
+  60%, 100% { content: "..."; }
+}
+
+.evg-term-progress {
+  margin: 1rem 0;
+}
+
+.evg-progress-bar {
+  width: 100%;
+  height: 4px;
+  background: #2d2a3a;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.evg-progress-fill {
+  width: 65%;
+  height: 100%;
+  background: linear-gradient(90deg, #7c3aed, #db2777);
+  border-radius: 4px;
+  animation: progress 2s ease-out;
+}
+
+@keyframes progress {
+  from { width: 0%; }
+  to { width: 65%; }
+}
+
+.evg-term-success {
+  color: #10b981;
+}
+
+/* Steps */
+.evg-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.evg-step {
+  display: flex;
+  gap: 1.5rem;
+  position: relative;
+}
+
+.evg-step-num {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--evg-accent);
+  opacity: 0.5;
+  min-width: 60px;
+}
+
+.evg-step-body h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.evg-step-body p {
+  color: var(--evg-text-2);
+}
+
+.evg-step-line {
+  position: absolute;
+  left: 30px;
+  top: 50px;
+  bottom: -2rem;
+  width: 2px;
+  background: var(--evg-border);
+}
+
+.evg-step:last-child .evg-step-line {
+  display: none;
+}
+
+.evg-steps-cta {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.evg-mid-cta {
+  display: inline-block;
+  background: transparent;
+  border: 2px solid var(--evg-accent);
+  color: var(--evg-accent);
+  padding: 0.75rem 2rem;
+  border-radius: 40px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.evg-mid-cta:hover {
+  background: var(--evg-accent);
+  color: white;
+}
+
+/* Models grid */
+.evg-models-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.evg-model-card {
+  background: var(--evg-surface);
+  border-radius: 20px;
+  padding: 1.5rem;
+  border: 1px solid var(--evg-border);
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.evg-model-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--evg-card-shadow);
+}
+
+.evg-model-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 0.7rem;
+  background: var(--evg-accent-soft);
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  color: var(--evg-accent);
+}
+
+.evg-model-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.evg-model-desc {
+  color: var(--evg-text-2);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.evg-model-spec {
+  font-size: 0.7rem;
+  color: var(--evg-text-muted);
+  font-family: monospace;
+}
+
+.evg-models-note {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--evg-text-muted);
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--evg-accent-soft);
+  border-radius: 12px;
+}
+
+/* Use cases grid */
+.evg-usecases-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.evg-usecase-card {
+  background: var(--evg-surface);
+  border-radius: 20px;
+  padding: 1.5rem;
+  border: 1px solid var(--evg-border);
+  transition: all 0.2s;
+}
+
+.evg-usecase-card:hover {
+  border-color: var(--evg-accent);
+}
+
+.evg-uc-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.evg-usecase-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.75rem;
+}
+
+.evg-usecase-card p {
+  color: var(--evg-text-2);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.evg-uc-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.evg-uc-tag {
+  font-size: 0.7rem;
+  background: var(--evg-accent-soft);
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  color: var(--evg-accent);
+}
+
+/* Prompt guide */
+.evg-guide-section {
+  background: var(--evg-surface-elevated);
+  border-radius: 32px;
+  padding: 2rem;
+  margin-bottom: 4rem;
+}
+
+.evg-guide-intro {
+  font-size: 1.1rem;
+  color: var(--evg-text-2);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.evg-guide-blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.evg-guide-block {
+  display: flex;
+  gap: 1.5rem;
+  border-left: 3px solid var(--evg-accent);
+  padding-left: 1.5rem;
+}
+
+.evg-guide-num {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--evg-accent);
+  min-width: 40px;
+}
+
+.evg-guide-block h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.evg-guide-block p {
+  color: var(--evg-text-2);
+  margin-bottom: 0.75rem;
+}
+
+.evg-guide-example {
+  background: var(--evg-surface);
+  border-radius: 12px;
+  padding: 0.75rem;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+.evg-guide-bad {
+  color: #ef4444;
+}
+
+.evg-guide-good {
+  color: #10b981;
+}
+
+.evg-guide-list {
+  padding-left: 1.5rem;
+  color: var(--evg-text-2);
+}
+
+.evg-guide-list li {
+  margin-bottom: 0.5rem;
+}
+
+/* Mid CTA section */
+.evg-mid-cta-section {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(219, 39, 119, 0.05));
+  border-radius: 40px;
+  padding: 3rem 2rem;
+  text-align: center;
+  margin-bottom: 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.evg-mid-cta-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(124, 58, 237, 0.2), transparent);
+}
+
+.evg-mid-cta-inner {
+  position: relative;
+  z-index: 2;
+}
+
+.evg-mid-cta-inner h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.evg-mid-cta-inner p {
+  color: var(--evg-text-2);
+  margin-bottom: 1.5rem;
+}
+
+.evg-cta-alt {
+  background: linear-gradient(135deg, #1e1b2a, #2d2a3a);
+  box-shadow: none;
+}
+
+/* Comparison table */
+.evg-compare-table {
+  background: var(--evg-surface);
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid var(--evg-border);
+}
+
+.evg-compare-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  background: var(--evg-accent-soft);
+  padding: 1rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.evg-compare-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 1rem;
+  border-bottom: 1px solid var(--evg-border);
+  text-align: center;
+}
+
+.evg-compare-aspect {
+  font-weight: 600;
+  text-align: left;
+}
+
+.evg-compare-x {
+  color: #ef4444;
+  margin-right: 0.5rem;
+}
+
+.evg-compare-check {
+  color: #10b981;
+  margin-right: 0.5rem;
+}
+
+/* Testimonials */
+.evg-testimonials {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.evg-testimonial {
+  background: var(--evg-surface);
+  border-radius: 24px;
+  padding: 1.5rem;
+  border: 1px solid var(--evg-border);
+  transition: all 0.2s;
+}
+
+.evg-testimonial-stars {
+  color: #fbbf24;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.evg-testimonial-quote {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--evg-text-2);
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
+.evg-testimonial-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.evg-testimonial-footer strong {
+  font-size: 0.9rem;
+}
+
+.evg-testimonial-footer span {
+  font-size: 0.75rem;
+  color: var(--evg-text-muted);
+}
+
+/* Deep content (long-form) */
+.evg-deep-section {
+  background: linear-gradient(180deg, transparent, rgba(124, 58, 237, 0.02));
+  padding: 2rem;
+  border-radius: 32px;
+}
+
+.evg-deep-content h3 {
+  font-size: 1.4rem;
+  margin: 1.5rem 0 0.75rem;
+  color: var(--evg-accent);
+}
+
+.evg-deep-content p {
+  margin-bottom: 1rem;
+  line-height: 1.7;
+  color: var(--evg-text-2);
+}
+
+/* Prompts grid */
+.evg-prompts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.evg-prompt-card {
+  background: var(--evg-surface);
+  border-radius: 20px;
+  padding: 1.25rem;
+  border: 1px solid var(--evg-border);
+  transition: all 0.2s;
+}
+
+.evg-prompt-label {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--evg-accent);
+}
+
+.evg-prompt-text {
+  font-size: 0.85rem;
+  color: var(--evg-text-2);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  font-family: monospace;
+}
+
+.evg-prompt-use {
+  font-size: 0.75rem;
+  color: var(--evg-accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.evg-prompt-use:hover {
+  text-decoration: underline;
+}
+
+/* FAQ */
+.evg-faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.evg-faq-item {
+  background: var(--evg-surface);
+  border-radius: 16px;
+  border: 1px solid var(--evg-border);
+  overflow: hidden;
+}
+
+.evg-faq-item summary {
+  padding: 1.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+  transition: background 0.2s;
+}
+
+.evg-faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.evg-faq-item summary::before {
+  content: "▶";
+  display: inline-block;
+  margin-right: 0.75rem;
+  font-size: 0.7rem;
+  color: var(--evg-accent);
+  transition: transform 0.2s;
+}
+
+.evg-faq-item[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.evg-faq-item p {
+  padding: 0 1.25rem 1.25rem;
+  color: var(--evg-text-2);
+  line-height: 1.6;
+  border-top: 1px solid var(--evg-border);
+  margin-top: 0;
+}
+
+/* Final CTA section */
+.evg-final-cta-section {
+  position: relative;
+  border-radius: 48px;
+  overflow: hidden;
+  margin: 4rem 0;
+}
+
+.evg-final-cta-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #7c3aed, #db2777);
+  opacity: 0.15;
+  border-radius: 48px;
+}
+
+.evg-final-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(124, 58, 237, 0.4), transparent);
+}
+
+.evg-final-cta-inner {
+  position: relative;
+  z-index: 2;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.evg-final-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+  padding: 0.3rem 1rem;
+  border-radius: 100px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 1.5rem;
+}
+
+.evg-final-title {
+  font-size: clamp(1.8rem, 6vw, 3rem);
+  font-weight: 800;
+  color: white;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.evg-final-accent {
+  background: linear-gradient(135deg, #fbbf24, #f97316);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.evg-final-sub {
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 600px;
+  margin: 0 auto 2rem;
+}
+
+.evg-final-hero-cta {
+  background: white;
+  color: #0f172a;
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.3);
+}
+
+.evg-final-hero-cta:hover {
+  transform: scale(1.02);
+  background: #f8fafc;
+}
+
+.evg-final-trust-row {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Related tools */
+.evg-related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.evg-related-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--evg-surface);
+  border-radius: 20px;
+  padding: 1.25rem;
+  border: 1px solid var(--evg-border);
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.evg-related-card:hover {
+  border-color: var(--evg-accent);
+  transform: translateX(4px);
+}
+
+.evg-related-icon {
+  font-size: 1.8rem;
+}
+
+.evg-related-card div {
+  display: flex;
+  flex-direction: column;
+}
+
+.evg-related-card strong {
+  color: var(--evg-text);
+  font-size: 1rem;
+}
+
+.evg-related-card span {
+  font-size: 0.75rem;
+  color: var(--evg-text-muted);
+}
+
+/* Footer */
+.evg-footer {
+  text-align: center;
+  padding: 2rem;
+  border-top: 1px solid var(--evg-border);
+  font-size: 0.75rem;
+  color: var(--evg-text-muted);
+}
+
+.evg-footer a {
+  color: var(--evg-text-muted);
+  text-decoration: none;
+}
+
+.evg-footer a:hover {
+  color: var(--evg-accent);
+}
+
+/* Ticker */
+.evg-ticker-section {
+  margin-bottom: 4rem;
+  overflow: hidden;
+}
+
+.evg-ticker-label {
+  text-align: center;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--evg-text-muted);
+  margin-bottom: 1rem;
+}
+
+.evg-ticker-track {
+  overflow: hidden;
+  width: 100%;
+}
+
+.evg-ticker-inner {
+  display: flex;
+  gap: 1rem;
+  width: max-content;
+  animation: tickerScroll 60s linear infinite;
+}
+
+@keyframes tickerScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.evg-ticker-chip {
+  display: inline-flex;
+  gap: 0.5rem;
+  background: var(--evg-surface);
+  border: 1px solid var(--evg-border);
+  border-radius: 100px;
+  padding: 0.4rem 1rem;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.evg-ticker-chip span:first-child {
+  font-weight: 600;
+  color: var(--evg-accent);
+}
+
+.evg-ticker-text {
+  color: var(--evg-text-2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .evg-main {
+    padding: 0 1rem 2rem;
+  }
+  
+  .evg-section {
+    margin-bottom: 3rem;
+  }
+  
+  .evg-hero-cta {
+    flex-direction: column;
+    text-align: center;
+    padding: 1rem 1.5rem;
+  }
+  
+  .evg-cta-text {
+    align-items: center;
+  }
+  
+  .evg-stats-strip {
+    gap: 1rem;
+  }
+  
+  .evg-guide-block {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .evg-step {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .evg-step-line {
+    display: none;
+  }
+  
+  .evg-compare-header, .evg-compare-row {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    text-align: left;
+  }
+  
+  .evg-compare-aspect {
+    font-weight: 800;
+  }
+  
+  .evg-final-trust-row {
+    gap: 0.75rem;
+  }
+}
+
+/* Animations */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
