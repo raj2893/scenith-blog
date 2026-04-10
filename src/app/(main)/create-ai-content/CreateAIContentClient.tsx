@@ -177,8 +177,29 @@ const IMAGE_MODEL_CONFIG: Record<
   STABILITY_AI_CORE: {
     flatPrice: true,
     supportsImg2Img: true,
-    sizes: [{ value: "square", label: "Square (1:1)", icon: "⬛" }],
+    sizes: [
+      { value: "square",    label: "Square (1:1)",    icon: "⬛" },
+      { value: "landscape", label: "Landscape (16:9)", icon: "🖥️" },
+      { value: "portrait",  label: "Portrait (9:16)",  icon: "📱" },
+      { value: "wide",      label: "Wide (3:2)",       icon: "🌄" },
+      { value: "tall",      label: "Tall (2:3)",       icon: "📄" },
+    ],
     qualities: [{ value: "standard", label: "SDXL Art", creditsExtra: 0 }],
+  },
+  NANO_BANANA_PRO: {
+    flatPrice: false,  // cost varies by resolution (2K vs 4K), not AR
+    supportsImg2Img: true,
+    sizes: [
+      { value: "square",    label: "Square (1:1)",    icon: "⬛" },
+      { value: "landscape", label: "Landscape (16:9)", icon: "🖥️" },
+      { value: "portrait",  label: "Portrait (9:16)",  icon: "📱" },
+      { value: "wide",      label: "Wide (3:2)",       icon: "🌄" },
+      { value: "tall",      label: "Tall (2:3)",       icon: "📄" },
+    ],
+    qualities: [
+      { value: "standard", label: "2K Premium", creditsExtra: 0 },
+      { value: "4k",       label: "4K Ultra",   creditsExtra: 0 },
+    ],
   },
   GROK_AURORA: {
     flatPrice: true,
@@ -253,6 +274,8 @@ const getImageCreditCost = (
       if (q === "draft") return 10;
       if (q === "premium") return nonSquare ? 47 : 32;
       return nonSquare ? 12 : 15;
+    case "NANO_BANANA_PRO":
+      return q === "4k" ? 46 : 26;  // AR has zero cost impact
     case "IMAGEN_4_FAST":
       return 10;
     case "IMAGEN_4_STANDARD":
