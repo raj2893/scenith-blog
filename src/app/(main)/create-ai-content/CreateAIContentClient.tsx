@@ -644,7 +644,7 @@ const CreateAIContentClient: React.FC = () => {
 
   // ─────────────────── IMAGE STATE ────────────────────────────────────────
   const [imageUsage, setImageUsage] = useState<ImageUsage | null>(null);
-  const [selectedImageModel, setSelectedImageModel] = useState("STABILITY_AI_CORE");
+  const [selectedImageModel, setSelectedImageModel] = useState("NANO_BANANA_PRO");
   const [imageSize, setImageSize] = useState("square");
   const [imageQuality, setImageQuality] = useState("standard");
   const [imageStyle, setImageStyle] = useState("realistic");
@@ -658,13 +658,30 @@ const CreateAIContentClient: React.FC = () => {
     errorMessage?: string;
   } | null>(null);
   const imagePollingRef = useRef<NodeJS.Timeout | null>(null);
-  const [imageGenMode, setImageGenMode] = useState<'text' | 'image'>('text');
+  const [imageGenMode, setImageGenMode] = useState<'text' | 'image' | 'carousel'>('text');
   const [inputImageFile, setInputImageFile] = useState<File | null>(null);
   const [inputImagePreview, setInputImagePreview] = useState<string | null>(null);
   const inputImageRef = useRef<HTMLInputElement>(null);
   const [imageHistory, setImageHistory] = useState<GeneratedImage[]>([]);
   const [showImageHistory, setShowImageHistory] = useState(false);
   const [imageHistoryLoading, setImageHistoryLoading] = useState(false);
+  // ─────────────────── CAROUSEL STATE ────────────────────────────────────────
+  const [carouselPrompts, setCarouselPrompts] = useState<[string, string, string]>(["", "", ""]);
+  const [carouselFiles, setCarouselFiles] = useState<[File | null, File | null, File | null]>([null, null, null]);
+  const [carouselPreviews, setCarouselPreviews] = useState<[string | null, string | null, string | null]>([null, null, null]);
+  const [carouselImages, setCarouselImages] = useState<(GeneratedImage | null)[]>([null, null, null]);
+  const [carouselProgress, setCarouselProgress] = useState<number>(0);
+  const [carouselError, setCarouselError] = useState<string | null>(null); // may accumulate multiple slide errors
+  const [carouselSlide, setCarouselSlide] = useState<number>(0);
+  const [isGeneratingCarousel, setIsGeneratingCarousel] = useState(false);
+  const carouselInputRef0 = useRef<HTMLInputElement>(null);
+  const carouselInputRef1 = useRef<HTMLInputElement>(null);
+  const carouselInputRef2 = useRef<HTMLInputElement>(null);
+  const carouselInputRefs = [carouselInputRef0, carouselInputRef1, carouselInputRef2];
+  const [carouselSharedFile, setCarouselSharedFile] = useState<File | null>(null);
+  const [carouselSharedPreview, setCarouselSharedPreview] = useState<string | null>(null);
+  const [carouselUseSharedImage, setCarouselUseSharedImage] = useState(false);
+  const carouselSharedInputRef = useRef<HTMLInputElement>(null);
 
   // ─────────────────── VIDEO STATE ────────────────────────────────────────
   const [videoCredits, setVideoCredits] = useState<VideoCredits | null>(null);
@@ -1169,6 +1186,119 @@ const CreateAIContentClient: React.FC = () => {
     }
   };
 
+  const handleGenerateCarousel = async () => {
+    if (!isLoggedIn) { setShowLoginModal(true); return; }
+    const filledCount = carouselPrompts.filter(p => p.trim()).length;
+    if (filledCount < 2) {
+      setCarouselError("Please fill at least 2 slide prompts.");
+      return;
+    }
+    const modelKey = selectedImageModel.toUpperCase().replace(/-/g, "_");
+    const costPerSlide = getImageCreditCost(modelKey, imageSize, imageQuality);
+    const totalCost = costPerSlide * filledCount;
+    if (imageUsage && imageUsage.balance < totalCost) {
+      setCarouselError(`Not enough credits. Need ${totalCost} (${costPerSlide}cr × ${filledCount} slides), have ${imageUsage.balance}.`);
+      return;
+    }
+
+    setIsGeneratingCarousel(true);
+    setCarouselError(null);
+    setCarouselImages([null, null, null]);
+    setCarouselProgress(0);
+
+    const pollJob = (jobId: number): Promise<GeneratedImage> => new Promise((resolve, reject) => {
+      const interval = setInterval(async () => {
+        try {
+          const res = await fetch(`${API_BASE_URL}/api/sole-image-gen/status/${jobId}`, {
+            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          });
+          if (!res.ok) return;
+          const job = await res.json();
+          if (job.status === "COMPLETED" && job.imagePath) {
+            clearInterval(interval);
+            resolve({ id: job.id, imagePath: job.imagePath, prompt: job.prompt || "", resolution: job.resolution || "1024x1024", createdAt: job.createdAt });
+          } else if (job.status === "FAILED") {
+            clearInterval(interval);
+            reject(new Error(job.errorMessage || "Slide generation failed. Credits refunded."));
+          }
+        } catch (e) { clearInterval(interval); reject(e); }
+      }, 3000);
+    });
+
+    try {
+      for (let i = 0; i < 3; i++) {
+        const slidePrompt = carouselPrompts[i]?.trim();
+        if (!slidePrompt) continue;
+        setCarouselProgress(i + 1);
+
+        const enhancedPrompt = imageStyle !== "realistic" ? `${slidePrompt}, ${imageStyle} style` : slidePrompt;
+        const slideFile = carouselUseSharedImage ? carouselSharedFile : carouselFiles[i];
+        let res: Response;
+
+        if (slideFile) {
+          const formData = new FormData();
+          formData.append('prompt', enhancedPrompt);
+          formData.append('negativePrompt', 'blurry, low quality, distorted');
+          formData.append('model', selectedImageModel);
+          formData.append('size', imageSize);
+          formData.append('quality', imageQuality);
+          formData.append('resolution', '2k');
+          formData.append('image', slideFile);
+          res = await fetch(`${API_BASE_URL}/api/sole-image-gen/generate-async`, {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+            body: formData,
+          });
+        } else {
+          res = await fetch(`${API_BASE_URL}/api/sole-image-gen/generate-async`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("token")}` },
+            body: JSON.stringify({ prompt: enhancedPrompt, negativePrompt: "blurry, low quality, distorted", model: selectedImageModel, size: imageSize, quality: imageQuality, resolution: "2k" }),
+          });
+        }
+
+        if (!res.ok) {
+          const errText = await res.text();
+          setCarouselImages(prev => {
+            const next = [...prev] as (GeneratedImage | null)[];
+            next[i] = { id: -1, imagePath: '', prompt: `Slide ${i + 1} failed: ${errText}`, resolution: '', createdAt: '' };
+            return next;
+          });
+          continue;
+        }
+        const { jobId } = await res.json();
+        try {
+          const generated = await pollJob(jobId);
+          setCarouselImages(prev => { const next = [...prev] as (GeneratedImage | null)[]; next[i] = generated; return next; });
+        } catch (slideErr: any) {
+          setCarouselImages(prev => {
+            const next = [...prev] as (GeneratedImage | null)[];
+            next[i] = null;
+            return next;
+          });
+          setCarouselError(prev => {
+            const msg = `Slide ${i + 1} failed — credits refunded.`;
+            return prev ? `${prev} ${msg}` : msg;
+          });
+        }
+      }
+
+      window.dispatchEvent(new Event('creditsUpdated'));
+      const tok = localStorage.getItem("token");
+      fetch(`${API_BASE_URL}/api/sole-image-gen/usage`, { headers: { Authorization: `Bearer ${tok}` } })
+        .then(r => r.json()).then(setImageUsage).catch(() => {});
+      fetch(`${API_BASE_URL}/api/sole-image-gen/history`, { headers: { Authorization: `Bearer ${tok}` } })
+        .then(r => r.json()).then(setImageHistory).catch(() => {});
+      setCarouselSlide(0);
+      setTimeout(() => { resultRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }); }, 150);
+    } catch (err: any) {
+      setCarouselError(err.message || "Carousel generation failed.");
+    } finally {
+      setIsGeneratingCarousel(false);
+      setCarouselProgress(0);
+    }
+  };
+
   // ─────────────────── VIDEO ACTIONS ───────────────────────────────────────
 
   const startVideoPolling = useCallback((falRequestId: string) => {
@@ -1405,6 +1535,14 @@ const CreateAIContentClient: React.FC = () => {
                   setVideoGenMode('text');
                   setVideoInputFile(null);
                   setVideoInputPreview(null);
+                }
+                setCarouselError(null);
+                if (t !== 'image') {
+                  setImageGenMode('text');
+                  setCarouselPrompts(["", "", ""]);
+                  setCarouselFiles([null, null, null]);
+                  setCarouselPreviews([null, null, null]);
+                  setCarouselImages([null, null, null]);
                 }
               }}
             >
@@ -1658,11 +1796,28 @@ const CreateAIContentClient: React.FC = () => {
             {activeTab === "image" && (
               <div style={{ display: 'flex', gap: 2, padding: '10px 12px 0', borderBottom: '1px solid rgba(99,85,220,0.08)' }}>
                 {[
-                  { value: 'text', label: '✍️ Text to Image' },
+                  { value: 'text', label: '✍️ Text to Image', disabled: false },
                   { value: 'image', label: '🖼️ Image to Image', disabled: !IMAGE_MODEL_CONFIG[selectedImageModel.toUpperCase().replace(/-/g, '_')]?.supportsImg2Img },
+                  { value: 'carousel', label: '🎠 Carousel', disabled: false },
                 ].map(m => (
                   <button key={m.value}
-                    onClick={() => { if (!m.disabled) { setImageGenMode(m.value as 'text' | 'image'); setInputImageFile(null); setInputImagePreview(null); } }}
+                    onClick={() => {
+                      if (!m.disabled) {
+                        setImageGenMode(m.value as 'text' | 'image' | 'carousel');
+                        setInputImageFile(null);
+                        setInputImagePreview(null);
+                        if (m.value !== 'carousel') {
+                          setCarouselPrompts(["", "", ""]);
+                          setCarouselFiles([null, null, null]);
+                          setCarouselPreviews([null, null, null]);
+                          setCarouselImages([null, null, null]);
+                          setCarouselError(null);
+                          setCarouselSharedFile(null);
+                          setCarouselSharedPreview(null);
+                          setCarouselUseSharedImage(false);
+                        }
+                      }
+                    }}
                     disabled={!!m.disabled}
                     style={{
                       padding: '5px 14px', borderRadius: 8, border: 'none',
@@ -1674,6 +1829,193 @@ const CreateAIContentClient: React.FC = () => {
                     }}
                   >{m.label}</button>
                 ))}
+              </div>
+            )}
+
+            {/* ── Carousel UI ── */}
+            {activeTab === "image" && imageGenMode === 'carousel' && (
+              <div style={{ padding: '12px 12px 0' }}>
+                {/* Shared image toggle */}
+                <div style={{ marginBottom: 10, padding: '10px 12px', background: 'rgba(99,85,220,0.04)', borderRadius: 10, border: '1px solid rgba(99,85,220,0.12)' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', marginBottom: carouselUseSharedImage ? 10 : 0 }}>
+                    <input
+                      type="checkbox"
+                      checked={carouselUseSharedImage}
+                      onChange={e => {
+                        setCarouselUseSharedImage(e.target.checked);
+                        if (!e.target.checked) { setCarouselSharedFile(null); setCarouselSharedPreview(null); }
+                      }}
+                      disabled={isGeneratingCarousel}
+                      style={{ accentColor: 'var(--cac-accent)', width: 14, height: 14 }}
+                    />
+                    <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--cac-accent)' }}>
+                      🔗 Use same reference image for all slides
+                    </span>
+                  </label>
+                  {carouselUseSharedImage && (
+                    !carouselSharedPreview ? (
+                      <div
+                        onClick={() => !isGeneratingCarousel && carouselSharedInputRef.current?.click()}
+                        style={{
+                          border: '1.5px dashed rgba(99,85,220,0.3)', borderRadius: 8,
+                          padding: '10px', textAlign: 'center',
+                          cursor: isGeneratingCarousel ? 'not-allowed' : 'pointer',
+                          background: 'rgba(99,85,220,0.02)', transition: 'all 0.2s',
+                        }}
+                        onMouseEnter={e => { if (!isGeneratingCarousel) e.currentTarget.style.borderColor = '#6355dc'; }}
+                        onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(99,85,220,0.3)'; }}
+                      >
+                        <p style={{ fontSize: 11.5, color: '#6355dc', fontWeight: 600, margin: 0 }}>
+                          📎 Upload shared reference image (applied to all 3 slides)
+                        </p>
+                        <input
+                          ref={carouselSharedInputRef}
+                          type="file" accept="image/*" style={{ display: 'none' }}
+                          onChange={e => {
+                            const f = e.target.files?.[0];
+                            if (f) { setCarouselSharedFile(f); setCarouselSharedPreview(URL.createObjectURL(f)); }
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <div style={{ position: 'relative', borderRadius: 8, overflow: 'hidden', height: 64 }}>
+                        <img src={carouselSharedPreview} alt="Shared reference" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(0,0,0,0.3), transparent)', display: 'flex', alignItems: 'center', padding: '0 10px' }}>
+                          <span style={{ fontSize: 11, color: '#fff', fontWeight: 600 }}>✓ Shared across all slides</span>
+                        </div>
+                        {!isGeneratingCarousel && (
+                          <button onClick={() => { setCarouselSharedFile(null); setCarouselSharedPreview(null); }}
+                            style={{ position: 'absolute', top: 4, right: 4, background: 'rgba(0,0,0,0.6)', border: 'none', color: '#fff', borderRadius: '50%', width: 20, height: 20, cursor: 'pointer', fontSize: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+                        )}
+                      </div>
+                    )
+                  )}
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 10, marginBottom: 10 }}>
+                  {([0, 1, 2] as const).map(i => (
+                    <div key={i} style={{
+                      border: `1.5px solid ${carouselImages[i] ? '#10b981' : carouselProgress === i + 1 ? '#f59e0b' : 'rgba(99,85,220,0.18)'}`,
+                      borderRadius: 12, overflow: 'hidden', background: 'var(--cac-surface)',
+                      transition: 'border-color 0.2s',
+                    }}>
+                      {/* Slide header */}
+                      <div style={{
+                        padding: '7px 12px', borderBottom: '1px solid rgba(99,85,220,0.08)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                        background: 'rgba(99,85,220,0.03)',
+                      }}>
+                        <span style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--cac-accent)' }}>Slide {i + 1}</span>
+                        {carouselProgress === i + 1 && isGeneratingCarousel && (
+                          <span style={{ fontSize: 10.5, color: '#f59e0b', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}>
+                            <span className="cac-btn-spinner" style={{ width: 10, height: 10, borderWidth: 1.5 }} />Generating…
+                          </span>
+                        )}
+                        {carouselImages[i] && !isGeneratingCarousel && (
+                          <span style={{ fontSize: 10.5, color: '#10b981', fontWeight: 700 }}>✓ Done</span>
+                        )}
+                      </div>
+
+                      {/* Prompt textarea */}
+                      <textarea
+                        className="cac-textarea"
+                        placeholder={`Describe slide ${i + 1}…`}
+                        value={carouselPrompts[i]}
+                        onChange={e => {
+                          const next: [string, string, string] = [...carouselPrompts] as [string, string, string];
+                          next[i] = e.target.value;
+                          setCarouselPrompts(next);
+                        }}
+                        disabled={isGeneratingCarousel}
+                        maxLength={2000}
+                        style={{ minHeight: 72, borderRadius: 0, border: 'none', borderBottom: '1px solid rgba(99,85,220,0.08)', resize: 'vertical', fontSize: 12 }}
+                      />
+
+                      {/* Image upload for this slide — hidden when shared image is active */}
+                      <div style={{ padding: '8px 10px', borderBottom: '1px solid rgba(99,85,220,0.06)', display: carouselUseSharedImage ? 'none' : 'block' }}>
+                        {!carouselPreviews[i] ? (
+                          <div
+                            onClick={() => !isGeneratingCarousel && carouselInputRefs[i].current?.click()}
+                            style={{
+                              border: '1.5px dashed rgba(99,85,220,0.25)', borderRadius: 8,
+                              padding: '8px', textAlign: 'center',
+                              cursor: isGeneratingCarousel ? 'not-allowed' : 'pointer',
+                              background: 'rgba(99,85,220,0.02)', transition: 'all 0.2s',
+                              opacity: isGeneratingCarousel ? 0.5 : 1,
+                            }}
+                            onMouseEnter={e => { if (!isGeneratingCarousel) e.currentTarget.style.borderColor = '#6355dc'; }}
+                            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(99,85,220,0.25)'; }}
+                          >
+                            <p style={{ fontSize: 11, color: '#6355dc', fontWeight: 600, margin: 0 }}>
+                              📎 Add reference image (optional)
+                            </p>
+                            <input
+                            ref={carouselInputRefs[i]}
+                              type="file" accept="image/*" style={{ display: 'none' }}
+                              onChange={e => {
+                                const f = e.target.files?.[0];
+                                if (f) {
+                                  const next = [...carouselFiles] as [File | null, File | null, File | null];
+                                  next[i] = f;
+                                  setCarouselFiles(next);
+                                  const prevNext = [...carouselPreviews] as [string | null, string | null, string | null];
+                                  prevNext[i] = URL.createObjectURL(f);
+                                  setCarouselPreviews(prevNext);
+                                }
+                              }}
+                            />
+                          </div>
+                        ) : (
+                          <div style={{ position: 'relative', borderRadius: 8, overflow: 'hidden', height: 56 }}>
+                            <img src={carouselPreviews[i]!} alt="Reference" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                            {!isGeneratingCarousel && (
+                              <button onClick={() => {
+                                const fn = [...carouselFiles] as [File | null, File | null, File | null]; fn[i] = null; setCarouselFiles(fn);
+                                const pn = [...carouselPreviews] as [string | null, string | null, string | null]; pn[i] = null; setCarouselPreviews(pn);
+                              }} style={{ position: 'absolute', top: 4, right: 4, background: 'rgba(0,0,0,0.6)', border: 'none', color: '#fff', borderRadius: '50%', width: 20, height: 20, cursor: 'pointer', fontSize: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+                            )}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Generated thumbnail */}
+                      {carouselImages[i] && (
+                        <div style={{ position: 'relative' }}>
+                          <img src={carouselImages[i]!.imagePath} alt={`Slide ${i + 1} result`}
+                            style={{ width: '100%', height: 100, objectFit: 'cover', display: 'block' }} />
+                          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.4), transparent)', display: 'flex', alignItems: 'flex-end', padding: 6 }}>
+                            <button
+                              onClick={() => handleDownloadImage(carouselImages[i]!.imagePath, carouselImages[i]!.id)}
+                              style={{ background: 'rgba(255,255,255,0.9)', border: 'none', borderRadius: 6, padding: '3px 8px', fontSize: 10.5, fontWeight: 700, cursor: 'pointer', color: '#374151' }}
+                            >📥 Download</button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Progress bar */}
+                {isGeneratingCarousel && (
+                  <div style={{ marginBottom: 8 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+                      <span style={{ fontSize: 11.5, color: 'var(--cac-muted)', fontWeight: 600 }}>
+                        Generating slide {carouselProgress} of {carouselPrompts.filter(p => p.trim()).length}…
+                      </span>
+                      <span style={{ fontSize: 11, color: 'var(--cac-muted)' }}>
+                        {Math.round((carouselProgress - 1) / Math.max(carouselPrompts.filter(p => p.trim()).length, 1) * 100)}%
+                      </span>
+                    </div>
+                    <div style={{ height: 4, background: 'rgba(99,85,220,0.12)', borderRadius: 999, overflow: 'hidden' }}>
+                      <div style={{
+                        height: '100%', borderRadius: 999,
+                        background: 'linear-gradient(90deg, #6355dc, #8b5cf6)',
+                        width: `${((carouselProgress - 1) / Math.max(carouselPrompts.filter(p => p.trim()).length, 1)) * 100}%`,
+                        transition: 'width 0.4s ease',
+                      }} />
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
@@ -1716,9 +2058,12 @@ const CreateAIContentClient: React.FC = () => {
               className="cac-textarea"
               placeholder={
                 activeTab === "image"
-                  ? imageGenMode === 'image' ? "Describe how to transform your image…" : "Describe your image…"
+                  ? imageGenMode === 'image' ? "Describe how to transform your image…"
+                  : imageGenMode === 'carousel' ? "Shared style prompt (optional — individual slide prompts above take priority)…"
+                  : "Describe your image…"
                   : "Describe your video…"
               }
+              style={imageGenMode === 'carousel' ? { minHeight: 48, fontSize: 12, opacity: 0.75 } : undefined}
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               disabled={isGenerating}
@@ -1758,7 +2103,9 @@ const CreateAIContentClient: React.FC = () => {
                   </select>
                 )}
                 <span className="cac-credit-pill">
-                  ⚡ {isLoggedIn ? imageUsage?.balance ?? "..." : 50} cr · {imageCreditCost}cr/img
+                  ⚡ {isLoggedIn ? imageUsage?.balance ?? "..." : 50} cr · {imageGenMode === 'carousel'
+                    ? `${imageCreditCost * carouselPrompts.filter(p => p.trim()).length || imageCreditCost * 3}cr total`
+                    : `${imageCreditCost}cr/img`}
                 </span>
               </div>
             )}
@@ -1939,9 +2286,9 @@ const CreateAIContentClient: React.FC = () => {
             )}
 
             <AnimatePresence>
-              {error && (
+              {(error || carouselError) && (
                 <motion.div className="cac-error" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-                  ⚠️ {error}
+                  ⚠️ {error || carouselError}
                 </motion.div>
               )}
             </AnimatePresence>
@@ -1967,10 +2314,19 @@ const CreateAIContentClient: React.FC = () => {
                   🔒 Sign Up Free & Generate
                 </button>
               ) : activeTab === "image" ? (
+                imageGenMode === 'carousel' ? (
+                  <button className="cac-generate-btn" onClick={handleGenerateCarousel}
+                    disabled={isGeneratingCarousel || carouselPrompts.filter(p => p.trim()).length < 2}>
+                    {isGeneratingCarousel
+                      ? <><span className="cac-btn-spinner" />Slide {carouselProgress} of {carouselPrompts.filter(p => p.trim()).length}…</>
+                      : `🎠 Generate Carousel (${carouselPrompts.filter(p => p.trim()).length || 3} slides)`}
+                  </button>
+                ) : (
                 <button className="cac-generate-btn" onClick={handleGenerateImage}
                   disabled={isGeneratingImage || !prompt.trim() || (imageGenMode === 'image' && !inputImageFile)}>
                   {isGeneratingImage ? (<><span className="cac-btn-spinner" />Generating…</>) : "🖼️ Generate Image"}
                 </button>
+                )
               ) : activeTab === "video" && isLoggedIn && (!videoCredits || videoCredits?.planType === "FREE") ? (
                 <button className="cac-generate-btn" onClick={() => setShowFreeVideoModal(true)}>
                   🎬 Generate Video
@@ -2090,6 +2446,116 @@ const CreateAIContentClient: React.FC = () => {
                 </div>
               </div>
             ))}
+          </motion.div>
+        )}
+
+        {/* ── Carousel Output ── */}
+        {activeTab === "image" && imageGenMode === 'carousel' && carouselImages.some(img => img !== null) && (
+          <motion.div ref={resultRef} className="cac-result-card" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
+            <div className="cac-result-header">
+              <span>🎠 Your Carousel</span>
+              <span style={{ fontSize: 12, color: 'var(--cac-muted)' }}>
+                {carouselImages.filter(Boolean).length} / {carouselPrompts.filter(p => p.trim()).length} slides ready
+              </span>
+            </div>
+
+            {/* Main slide viewer */}
+            <div style={{ position: 'relative', borderRadius: 12, overflow: 'hidden', background: '#f5f5ff', marginBottom: 12 }}>
+              {carouselImages[carouselSlide] ? (
+                <img
+                  src={carouselImages[carouselSlide]!.imagePath}
+                  alt={`Slide ${carouselSlide + 1}`}
+                  style={{ width: '100%', maxHeight: 400, objectFit: 'contain', display: 'block', margin: '0 auto' }}
+                />
+              ) : (
+                <div style={{ height: 180, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, color: 'var(--cac-muted)', fontSize: 13 }}>
+                  <span className="cac-btn-spinner" />Generating…
+                </div>
+              )}
+              {/* Prev arrow */}
+              {carouselSlide > 0 && (
+                <button onClick={() => setCarouselSlide(s => s - 1)} style={{
+                  position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)',
+                  background: 'rgba(0,0,0,0.45)', border: 'none', color: '#fff',
+                  borderRadius: '50%', width: 34, height: 34, cursor: 'pointer', fontSize: 18,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>‹</button>
+              )}
+              {/* Next arrow */}
+              {carouselSlide < 2 && carouselPrompts[carouselSlide + 1]?.trim() && (
+                <button onClick={() => setCarouselSlide(s => s + 1)} style={{
+                  position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)',
+                  background: 'rgba(0,0,0,0.45)', border: 'none', color: '#fff',
+                  borderRadius: '50%', width: 34, height: 34, cursor: 'pointer', fontSize: 18,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>›</button>
+              )}
+              {/* Dots */}
+              <div style={{ position: 'absolute', bottom: 10, left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: 6 }}>
+                {[0, 1, 2].map(i => carouselPrompts[i]?.trim() ? (
+                  <div key={i} onClick={() => setCarouselSlide(i)} style={{
+                    width: 8, height: 8, borderRadius: '50%', cursor: 'pointer',
+                    background: carouselSlide === i ? '#fff' : 'rgba(255,255,255,0.45)',
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.35)', transition: 'background 0.2s',
+                  }} />
+                ) : null)}
+              </div>
+            </div>
+
+            {/* Caption */}
+            {carouselImages[carouselSlide] && (
+              <p style={{ fontSize: 11.5, color: 'var(--cac-muted)', marginBottom: 12, padding: '0 2px', fontStyle: 'italic' }}>
+                {carouselImages[carouselSlide]!.prompt}
+              </p>
+            )}
+
+            {/* Thumbnail strip */}
+            <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
+              {[0, 1, 2].map(i => carouselPrompts[i]?.trim() ? (
+                <div key={i} onClick={() => setCarouselSlide(i)} style={{
+                  flex: 1, aspectRatio: '1', borderRadius: 8, overflow: 'hidden',
+                  border: `2px solid ${carouselSlide === i ? 'var(--cac-accent)' : 'var(--cac-border)'}`,
+                  cursor: 'pointer', background: '#f5f5ff', transition: 'border-color 0.2s',
+                }}>
+                  {carouselImages[i] ? (
+                    <img src={carouselImages[i]!.imagePath} alt={`Slide ${i + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  ) : (
+                    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
+                      {carouselProgress === i + 1
+                        ? <span className="cac-btn-spinner" style={{ width: 14, height: 14 }} />
+                        : <span style={{ fontSize: 10, color: 'var(--cac-muted)' }}>Slide {i + 1}</span>}
+                    </div>
+                  )}
+                </div>
+              ) : null)}
+            </div>
+
+            {/* Actions */}
+            <div className="cac-result-actions" style={{ flexWrap: 'wrap' }}>
+              {carouselImages.map((img, i) => img ? (
+                <button key={i} className="cac-action-btn primary" onClick={() => handleDownloadImage(img.imagePath, img.id)} style={{ fontSize: 12 }}>
+                  📥 Slide {i + 1}
+                </button>
+              ) : null)}
+              <button className="cac-action-btn primary" style={{ background: 'linear-gradient(135deg, #7c3aed, #db2777)', fontSize: 12 }}
+                onClick={() => {
+                  const active = carouselImages[carouselSlide];
+                  if (!active) return;
+                  setVideoFromImageUrl(active.imagePath);
+                  setActiveTab('video' as Tab);
+                  setPrompt(active.prompt || '');
+                  setTimeout(() => { resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
+                }}
+                disabled={!carouselImages[carouselSlide]}
+              >🎬 Animate Slide {carouselSlide + 1}</button>
+              <button className="cac-action-btn secondary" onClick={() => {
+                setCarouselImages([null, null, null]);
+                setCarouselPrompts(["", "", ""]);
+                setCarouselFiles([null, null, null]);
+                setCarouselPreviews([null, null, null]);
+                setCarouselSlide(0);
+              }}>🔄 New Carousel</button>
+            </div>
           </motion.div>
         )}
 
