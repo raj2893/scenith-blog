@@ -796,11 +796,28 @@ export default function PricingPageClient() {
         // @ts-ignore
         new window.Razorpay(opts).open();
       } else if (gateway === 'paypal') {
-        let container = document.getElementById('paypal-button-container');
-        if (!container) { container = document.createElement('div'); container.id = 'paypal-button-container'; container.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1000;background:white;padding:20px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.3)'; document.body.appendChild(container); }
-        container.innerHTML = '';
+        let overlay = document.getElementById('paypal-overlay');
+        if (!overlay) {
+          overlay = document.createElement('div');
+          overlay.id = 'paypal-overlay';
+          overlay.style.cssText = 'position:fixed;inset:0;z-index:10000;background:rgba(10,5,30,0.65);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:16px;';
+          document.body.appendChild(overlay);
+        }
+        overlay.innerHTML = `
+          <div style="background:#fff;border-radius:20px;padding:32px 28px 28px;width:100%;max-width:420px;box-shadow:0 32px 80px rgba(92,77,232,0.22);position:relative;font-family:'DM Sans',sans-serif;">
+            <button id="paypal-modal-close" style="position:absolute;top:14px;right:14px;background:#f7f6ff;border:1px solid rgba(99,85,220,0.15);border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:#7070a0;line-height:1;">✕</button>
+            <div style="text-align:center;margin-bottom:6px;font-family:'Instrument Serif',Georgia,serif;font-size:26px;background:linear-gradient(120deg,#5c4de8,#e040a0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Scenith</div>
+            <p style="text-align:center;font-size:13px;color:#7070a0;margin-bottom:4px;">Upgrading to <strong style="color:#1e1e30;">${plan.name}</strong></p>
+            <p style="text-align:center;font-size:22px;font-weight:700;color:#5c4de8;margin-bottom:20px;">${plan.symbol}${plan.price}<span style="font-size:13px;font-weight:400;color:#a0a0c0;">/mo</span></p>
+            <div id="paypal-button-container" style="min-height:48px;"></div>
+            <p style="text-align:center;font-size:11px;color:#a0a0c0;margin-top:14px;">🔒 Secured by PayPal · Cancel anytime</p>
+          </div>`;
+        document.getElementById('paypal-modal-close')?.addEventListener('click', () => {
+          if (overlay && document.body.contains(overlay)) document.body.removeChild(overlay);
+          setLoading(null);
+        });
         // @ts-ignore
-        paypal.Buttons({ createOrder: () => gatewayOrderId, onApprove: async (data: any) => { setIsPaymentInProgress(true); try { await axios.post(`${API_BASE_URL}/api/payments/capture-paypal`, { internalOrderId, paypalOrderId: data.orderID }, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }); setIsPaymentInProgress(false); alert(`🎉 Successfully upgraded to ${plan.name} via PayPal!`); setCurrentPlan(plan.role); router.push('/create-ai-content'); } catch { setIsPaymentInProgress(false); alert('Error capturing payment.'); } finally { if (container) document.body.removeChild(container); } }, onCancel: () => { if (container) document.body.removeChild(container); }, onError: (err: any) => { console.error(err); if (container) document.body.removeChild(container); } }).render('#paypal-button-container');
+        paypal.Buttons({ createOrder: () => gatewayOrderId, onApprove: async (data: any) => { setIsPaymentInProgress(true); try { await axios.post(`${API_BASE_URL}/api/payments/capture-paypal`, { internalOrderId, paypalOrderId: data.orderID }, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }); setIsPaymentInProgress(false); alert(`🎉 Successfully upgraded to ${plan.name} via PayPal!`); setCurrentPlan(plan.role); router.push('/create-ai-content'); } catch { setIsPaymentInProgress(false); alert('Error capturing payment.'); } finally { if (overlay && document.body.contains(overlay)) document.body.removeChild(overlay); } }, onCancel: () => { if (overlay && document.body.contains(overlay)) document.body.removeChild(overlay); }, onError: (err: any) => { console.error(err); if (overlay && document.body.contains(overlay)) document.body.removeChild(overlay); } }).render('#paypal-button-container');
       }
     } catch (error: any) { setIsPaymentInProgress(false); alert('Error: ' + (error.response?.data || error.message)); }
     finally { setLoading(null); }
@@ -849,11 +866,28 @@ export default function PricingPageClient() {
         // @ts-ignore
         new window.Razorpay(opts).open();
       } else if (gateway === 'paypal') {
-        let container = document.getElementById('paypal-button-container');
-        if (!container) { container = document.createElement('div'); container.id = 'paypal-button-container'; container.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1000;background:white;padding:20px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.3)'; document.body.appendChild(container); }
-        container.innerHTML = '';
+        let overlay = document.getElementById('paypal-overlay');
+        if (!overlay) {
+          overlay = document.createElement('div');
+          overlay.id = 'paypal-overlay';
+          overlay.style.cssText = 'position:fixed;inset:0;z-index:10000;background:rgba(10,5,30,0.65);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:16px;';
+          document.body.appendChild(overlay);
+        }
+        overlay.innerHTML = `
+          <div style="background:#fff;border-radius:20px;padding:32px 28px 28px;width:100%;max-width:420px;box-shadow:0 32px 80px rgba(92,77,232,0.22);position:relative;font-family:'DM Sans',sans-serif;">
+            <button id="paypal-modal-close" style="position:absolute;top:14px;right:14px;background:#f7f6ff;border:1px solid rgba(99,85,220,0.15);border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:#7070a0;line-height:1;">✕</button>
+            <div style="text-align:center;margin-bottom:6px;font-family:'Instrument Serif',Georgia,serif;font-size:26px;background:linear-gradient(120deg,#5c4de8,#e040a0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Scenith</div>
+            <p style="text-align:center;font-size:13px;color:#7070a0;margin-bottom:4px;">Purchasing <strong style="color:#1e1e30;">${pack.name}</strong></p>
+            <p style="text-align:center;font-size:22px;font-weight:700;color:#5c4de8;margin-bottom:20px;">${pack.symbol}${pack.price}<span style="font-size:13px;font-weight:400;color:#a0a0c0;"> one-time</span></p>
+            <div id="paypal-button-container" style="min-height:48px;"></div>
+            <p style="text-align:center;font-size:11px;color:#a0a0c0;margin-top:14px;">🔒 Secured by PayPal · ${pack.credits.toLocaleString()} credits added instantly</p>
+          </div>`;
+        document.getElementById('paypal-modal-close')?.addEventListener('click', () => {
+          if (overlay && document.body.contains(overlay)) document.body.removeChild(overlay);
+          setLoading(null);
+        });
         // @ts-ignore
-        paypal.Buttons({ createOrder: () => gatewayOrderId, onApprove: async (data: any) => { setIsPaymentInProgress(true); try { await axios.post(`${API_BASE_URL}/api/payments/capture-paypal`, { internalOrderId, paypalOrderId: data.orderID }, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }); setIsPaymentInProgress(false); alert(`🎉 ${pack.credits} credits added!`); } catch { setIsPaymentInProgress(false); alert('Error.'); } finally { if (container) document.body.removeChild(container); } }, onCancel: () => { if (container) document.body.removeChild(container); }, onError: (err: any) => { console.error(err); if (container) document.body.removeChild(container); } }).render('#paypal-button-container');
+        paypal.Buttons({ createOrder: () => gatewayOrderId, onApprove: async (data: any) => { setIsPaymentInProgress(true); try { await axios.post(`${API_BASE_URL}/api/payments/capture-paypal`, { internalOrderId, paypalOrderId: data.orderID }, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }); setIsPaymentInProgress(false); alert(`🎉 ${pack.credits} credits added!`); } catch { setIsPaymentInProgress(false); alert('Error.'); } finally { if (overlay && document.body.contains(overlay)) document.body.removeChild(overlay); } }, onCancel: () => { if (overlay && document.body.contains(overlay)) document.body.removeChild(overlay); }, onError: (err: any) => { console.error(err); if (overlay && document.body.contains(overlay)) document.body.removeChild(overlay); } }).render('#paypal-button-container');
       }
     } catch (error: any) { setIsPaymentInProgress(false); alert('Error: ' + (error.response?.data || error.message)); }
     finally { setLoading(null); }

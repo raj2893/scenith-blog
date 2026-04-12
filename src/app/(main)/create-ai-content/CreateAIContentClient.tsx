@@ -1798,7 +1798,7 @@ const CreateAIContentClient: React.FC = () => {
                 {[
                   { value: 'text', label: '✍️ Text to Image', disabled: false },
                   { value: 'image', label: '🖼️ Image to Image', disabled: !IMAGE_MODEL_CONFIG[selectedImageModel.toUpperCase().replace(/-/g, '_')]?.supportsImg2Img },
-                  { value: 'carousel', label: '🎠 Carousel', disabled: false },
+                  { value: 'carousel', label: '🎠 Carousel', disabled: false, isNew: true },
                 ].map(m => (
                   <button key={m.value}
                     onClick={() => {
@@ -1826,8 +1826,22 @@ const CreateAIContentClient: React.FC = () => {
                       background: imageGenMode === m.value ? 'linear-gradient(135deg, #6355dc, #8b5cf6)' : 'transparent',
                       color: imageGenMode === m.value ? '#fff' : m.disabled ? 'var(--cac-muted)' : 'var(--cac-accent)',
                       transition: 'all 0.15s',
+                      position: 'relative',
                     }}
-                  >{m.label}</button>
+                  >
+                    {m.label}
+                    {(m as any).isNew && (
+                      <span style={{
+                        position: 'absolute', top: -6, right: -4,
+                        background: 'linear-gradient(135deg, #f59e0b, #f97316)',
+                        color: '#fff', fontSize: 8, fontWeight: 800,
+                        letterSpacing: '0.06em', textTransform: 'uppercase',
+                        padding: '1px 5px', borderRadius: 999,
+                        boxShadow: '0 2px 6px rgba(245,158,11,0.45)',
+                        pointerEvents: 'none',
+                      }}>NEW</span>
+                    )}
+                  </button>
                 ))}
               </div>
             )}
