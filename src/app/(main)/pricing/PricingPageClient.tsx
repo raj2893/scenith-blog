@@ -800,7 +800,7 @@ export default function PricingPageClient() {
         if (!overlay) {
           overlay = document.createElement('div');
           overlay.id = 'paypal-overlay';
-          overlay.style.cssText = 'position:fixed;inset:0;z-index:10000;background:rgba(10,5,30,0.65);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:16px;';
+          overlay.style.cssText = 'position:fixed;inset:0;z-index:10000;background:rgba(10,5,30,0.65);backdrop-filter:blur(10px);display:flex;align-items:flex-start;justify-content:center;padding:24px 16px;overflow-y:auto;';
           document.body.appendChild(overlay);
         }
         overlay.innerHTML = `
@@ -870,11 +870,11 @@ export default function PricingPageClient() {
         if (!overlay) {
           overlay = document.createElement('div');
           overlay.id = 'paypal-overlay';
-          overlay.style.cssText = 'position:fixed;inset:0;z-index:10000;background:rgba(10,5,30,0.65);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:16px;';
+          overlay.style.cssText = 'position:fixed;inset:0;z-index:10000;background:rgba(10,5,30,0.65);backdrop-filter:blur(10px);display:flex;align-items:flex-start;justify-content:center;padding:24px 16px;overflow-y:auto;';
           document.body.appendChild(overlay);
         }
         overlay.innerHTML = `
-          <div style="background:#fff;border-radius:20px;padding:32px 28px 28px;width:100%;max-width:420px;box-shadow:0 32px 80px rgba(92,77,232,0.22);position:relative;font-family:'DM Sans',sans-serif;">
+          <div style="background:#fff;border-radius:20px;padding:32px 28px 28px;width:100%;max-width:420px;box-shadow:0 32px 80px rgba(92,77,232,0.22);position:relative;font-family:'DM Sans',sans-serif;margin:auto;">
             <button id="paypal-modal-close" style="position:absolute;top:14px;right:14px;background:#f7f6ff;border:1px solid rgba(99,85,220,0.15);border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:#7070a0;line-height:1;">✕</button>
             <div style="text-align:center;margin-bottom:6px;font-family:'Instrument Serif',Georgia,serif;font-size:26px;background:linear-gradient(120deg,#5c4de8,#e040a0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Scenith</div>
             <p style="text-align:center;font-size:13px;color:#7070a0;margin-bottom:4px;">Purchasing <strong style="color:#1e1e30;">${pack.name}</strong></p>
