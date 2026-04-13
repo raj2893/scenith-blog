@@ -1,0 +1,1128 @@
+/* app/tools/prompt-to-carousel-generator/prompt-to-carousel.css */
+
+/* ─────────────────────────────────────────────────────────────
+   1. CSS VARIABLES & RESET
+   ───────────────────────────────────────────────────────────── */
+:root {
+  --ptc-bg: #fafbff;
+  --ptc-surface: #ffffff;
+  --ptc-surface-soft: #f8f9fc;
+  --ptc-text: #111827;
+  --ptc-text-2: #4b5563;
+  --ptc-muted: #6b7280;
+  --ptc-accent: #8b5cf6;
+  --ptc-accent-glow: rgba(139, 92, 246, 0.25);
+  --ptc-accent-light: #a78bfa;
+  --ptc-accent-dark: #7c3aed;
+  --ptc-border: #e5e7eb;
+  --ptc-border-soft: #f0f2f5;
+  --ptc-success: #10b981;
+  --ptc-warning: #f59e0b;
+  --ptc-error: #ef4444;
+  --ptc-card-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --ptc-glow: radial-gradient(circle at 30% 20%, rgba(139, 92, 246, 0.08) 0%, transparent 60%);
+  --ptc-font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+}
+
+[data-theme="dark"] {
+  --ptc-bg: #0a0a12;
+  --ptc-surface: #13131f;
+  --ptc-surface-soft: #1a1a2a;
+  --ptc-text: #f3f4f6;
+  --ptc-text-2: #9ca3af;
+  --ptc-muted: #6b7280;
+  --ptc-accent: #a78bfa;
+  --ptc-accent-glow: rgba(139, 92, 246, 0.2);
+  --ptc-border: #2d2d3a;
+  --ptc-border-soft: #20202a;
+  --ptc-card-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.4);
+  --ptc-glow: radial-gradient(circle at 30% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 60%);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.ptc-page {
+  font-family: var(--ptc-font-sans);
+  background: var(--ptc-bg);
+  color: var(--ptc-text);
+  position: relative;
+  overflow-x: hidden;
+  line-height: 1.5;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   2. AMBIENT BACKGROUND & BLOBS
+   ───────────────────────────────────────────────────────────── */
+.ptc-ambient {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.ptc-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.3;
+  animation: ptc-blob-float 24s infinite alternate ease-in-out;
+}
+
+.ptc-blob-1 {
+  width: 60vw;
+  height: 60vw;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.3), rgba(167, 139, 250, 0.1));
+  top: -20vh;
+  left: -20vw;
+  animation-duration: 28s;
+}
+
+.ptc-blob-2 {
+  width: 50vw;
+  height: 50vw;
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.25), rgba(139, 92, 246, 0.08));
+  bottom: -15vh;
+  right: -15vw;
+  animation-duration: 32s;
+  animation-direction: alternate-reverse;
+}
+
+.ptc-blob-3 {
+  width: 40vw;
+  height: 40vw;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.12), rgba(167, 139, 250, 0.05));
+  top: 40vh;
+  left: 30vw;
+  animation-duration: 36s;
+}
+
+@keyframes ptc-blob-float {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(5%, 8%) scale(1.08); }
+}
+
+.ptc-grid-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(var(--ptc-border-soft) 1px, transparent 1px),
+    linear-gradient(90deg, var(--ptc-border-soft) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+  opacity: 0.3;
+  z-index: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   3. NAVIGATION
+   ───────────────────────────────────────────────────────────── */
+.ptc-nav {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--ptc-border-soft);
+}
+
+[data-theme="dark"] .ptc-nav {
+  background: rgba(10, 10, 18, 0.7);
+}
+
+.ptc-nav-logo {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  background: linear-gradient(135deg, var(--ptc-text), var(--ptc-accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.ptc-nav-logo span {
+  background: linear-gradient(135deg, var(--ptc-accent), var(--ptc-accent-light));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.ptc-nav-links {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  list-style: none;
+}
+
+.ptc-nav-links a {
+  text-decoration: none;
+  color: var(--ptc-text-2);
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.ptc-nav-links a:hover {
+  color: var(--ptc-accent);
+}
+
+.ptc-nav-cta {
+  background: linear-gradient(135deg, var(--ptc-accent), var(--ptc-accent-light));
+  padding: 0.5rem 1.2rem;
+  border-radius: 40px;
+  color: white !important;
+  font-weight: 600 !important;
+  transition: transform 0.2s, box-shadow 0.2s !important;
+}
+
+.ptc-nav-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px var(--ptc-accent-glow);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   4. MAIN CONTENT LAYOUT
+   ───────────────────────────────────────────────────────────── */
+.ptc-content {
+  position: relative;
+  z-index: 2;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem 2rem 4rem;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   5. HERO SECTION
+   ───────────────────────────────────────────────────────────── */
+.ptc-hero {
+  text-align: center;
+  padding: 3rem 1rem 4rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.ptc-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(139, 92, 246, 0.08);
+  padding: 0.4rem 1rem;
+  border-radius: 40px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--ptc-accent);
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(4px);
+}
+
+.ptc-eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--ptc-accent);
+  border-radius: 50%;
+  animation: ptc-pulse 1.5s infinite;
+}
+
+@keyframes ptc-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.2); }
+}
+
+.ptc-hero-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--ptc-text), var(--ptc-text-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 1.5rem;
+}
+
+.ptc-highlight {
+  background: linear-gradient(135deg, var(--ptc-accent), var(--ptc-accent-light), #f59e0b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  position: relative;
+  display: inline-block;
+}
+
+.ptc-hero-sub {
+  font-size: 1.2rem;
+  color: var(--ptc-text-2);
+  max-width: 700px;
+  margin: 0 auto 2rem;
+  line-height: 1.5;
+}
+
+/* CTA Block */
+.ptc-cta-block {
+  margin: 2rem 0 1.5rem;
+}
+
+.ptc-cta-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: linear-gradient(135deg, var(--ptc-accent), var(--ptc-accent-light));
+  padding: 1rem 2rem;
+  border-radius: 60px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: white;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  box-shadow: 0 8px 20px var(--ptc-accent-glow);
+}
+
+.ptc-cta-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px var(--ptc-accent-glow);
+}
+
+.ptc-cta-arrow {
+  transition: transform 0.2s;
+}
+
+.ptc-cta-primary:hover .ptc-cta-arrow {
+  transform: translateX(5px);
+}
+
+.ptc-cta-note {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: var(--ptc-muted);
+  flex-wrap: wrap;
+}
+
+/* Trust Badges */
+.ptc-trust-badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.ptc-badge {
+  background: var(--ptc-surface);
+  border: 1px solid var(--ptc-border);
+  padding: 0.5rem 1rem;
+  border-radius: 40px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--ptc-text-2);
+  backdrop-filter: blur(8px);
+}
+
+.ptc-badge-icon {
+  margin-right: 0.4rem;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   6. MOCKUP SECTION
+   ───────────────────────────────────────────────────────────── */
+.ptc-mockup-section {
+  margin: 4rem 0;
+}
+
+.ptc-section-label {
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--ptc-accent);
+  margin-bottom: 1rem;
+}
+
+.ptc-mockup-wrapper {
+  position: relative;
+  margin: 2rem auto;
+  max-width: 1100px;
+}
+
+.ptc-mockup-glow {
+  position: absolute;
+  inset: -2rem;
+  background: radial-gradient(circle, var(--ptc-accent-glow) 0%, transparent 70%);
+  opacity: 0.4;
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+.ptc-mockup-frame {
+  background: var(--ptc-surface);
+  border-radius: 24px;
+  border: 1px solid var(--ptc-border);
+  overflow: hidden;
+  box-shadow: var(--ptc-card-shadow);
+  position: relative;
+  backdrop-filter: blur(4px);
+}
+
+.ptc-mockup-topbar {
+  background: var(--ptc-surface-soft);
+  padding: 0.8rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--ptc-border);
+}
+
+.ptc-dot-red { width: 12px; height: 12px; background: #ff5f56; border-radius: 50%; }
+.ptc-dot-yellow { width: 12px; height: 12px; background: #ffbd2e; border-radius: 50%; }
+.ptc-dot-green { width: 12px; height: 12px; background: #27c93f; border-radius: 50%; }
+
+.ptc-mockup-url {
+  font-size: 0.75rem;
+  color: var(--ptc-muted);
+  background: var(--ptc-bg);
+  padding: 0.2rem 0.8rem;
+  border-radius: 20px;
+  margin-left: 0.5rem;
+}
+
+.ptc-mockup-body {
+  display: flex;
+  gap: 2rem;
+  padding: 2rem;
+  background: var(--ptc-glow);
+  flex-wrap: wrap;
+}
+
+.ptc-prompt-col {
+  flex: 1;
+  min-width: 240px;
+  background: var(--ptc-surface-soft);
+  border-radius: 20px;
+  padding: 1.2rem;
+  border: 1px solid var(--ptc-border);
+}
+
+.ptc-prompt-header {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--ptc-border);
+}
+
+.ptc-prompt-avatar {
+  font-size: 2rem;
+}
+
+.ptc-prompt-title {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.ptc-prompt-type {
+  font-size: 0.7rem;
+  color: var(--ptc-muted);
+}
+
+.ptc-prompt-line {
+  display: flex;
+  gap: 0.8rem;
+  font-size: 0.85rem;
+  color: var(--ptc-text-2);
+  margin-bottom: 0.8rem;
+}
+
+.ptc-prompt-num {
+  font-weight: 700;
+  color: var(--ptc-accent);
+  min-width: 28px;
+}
+
+.ptc-prompt-connector {
+  height: 20px;
+  border-left: 2px dashed var(--ptc-border);
+  margin-left: 14px;
+  margin-bottom: 0.8rem;
+}
+
+.ptc-mockup-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+.ptc-arrow-line {
+  width: 40px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--ptc-accent), transparent);
+  position: relative;
+}
+
+.ptc-arrow-icon {
+  position: absolute;
+  right: -12px;
+  top: -8px;
+  font-size: 1rem;
+  color: var(--ptc-accent);
+}
+
+.ptc-arrow-label {
+  font-size: 0.7rem;
+  color: var(--ptc-accent);
+  font-weight: 600;
+}
+
+.ptc-carousel-col {
+  flex: 1;
+  min-width: 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.ptc-carousel-slide {
+  background: var(--ptc-surface);
+  border-radius: 16px;
+  padding: 1rem;
+  border: 1px solid var(--ptc-border);
+  transition: all 0.2s;
+}
+
+.ptc-slide-active {
+  border-color: var(--ptc-accent);
+  box-shadow: 0 0 0 2px var(--ptc-accent-glow);
+}
+
+.ptc-slide-num {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--ptc-accent);
+  font-weight: 700;
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.ptc-slide-emoji {
+  font-size: 1.4rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.ptc-slide-title {
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
+}
+
+.ptc-slide-body {
+  font-size: 0.75rem;
+  color: var(--ptc-text-2);
+  margin-bottom: 0.6rem;
+}
+
+.ptc-slide-bar {
+  height: 3px;
+  background: linear-gradient(90deg, var(--ptc-accent), var(--ptc-accent-light));
+  width: 40%;
+  border-radius: 3px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   7. STEPS SECTION
+   ───────────────────────────────────────────────────────────── */
+.ptc-section {
+  margin: 4rem 0;
+}
+
+.ptc-section-title {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 1rem;
+}
+
+.ptc-section-sub {
+  text-align: center;
+  color: var(--ptc-text-2);
+  max-width: 600px;
+  margin: 0 auto 2.5rem;
+}
+
+.ptc-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.ptc-step {
+  display: flex;
+  gap: 1.5rem;
+  background: var(--ptc-surface);
+  border-radius: 24px;
+  padding: 1.8rem;
+  border: 1px solid var(--ptc-border);
+  transition: transform 0.2s;
+}
+
+.ptc-step:hover {
+  transform: translateX(8px);
+}
+
+.ptc-step-num {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--ptc-accent);
+  opacity: 0.5;
+  line-height: 1;
+  min-width: 60px;
+}
+
+.ptc-step-content h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+}
+
+.ptc-step-content p {
+  color: var(--ptc-text-2);
+  margin-bottom: 0.8rem;
+  line-height: 1.5;
+}
+
+.ptc-step-badge {
+  display: inline-block;
+  background: var(--ptc-accent-glow);
+  padding: 0.2rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--ptc-accent);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   8. STATS ROW
+   ───────────────────────────────────────────────────────────── */
+.ptc-stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin: 3rem 0;
+}
+
+.ptc-stat-card {
+  background: var(--ptc-surface);
+  border: 1px solid var(--ptc-border);
+  border-radius: 24px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.ptc-stat-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--ptc-accent);
+}
+
+.ptc-stat-num {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--ptc-accent), var(--ptc-accent-light));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 0.5rem;
+}
+
+.ptc-stat-label {
+  font-size: 0.85rem;
+  color: var(--ptc-text-2);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   9. INLINE CTA
+   ───────────────────────────────────────────────────────────── */
+.ptc-inline-cta {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(167, 139, 250, 0.04));
+  border: 1px solid var(--ptc-border);
+  border-radius: 32px;
+  padding: 2.5rem;
+  text-align: center;
+  margin: 3rem 0;
+}
+
+.ptc-inline-cta h3 {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.ptc-inline-cta p {
+  color: var(--ptc-text-2);
+  margin-bottom: 1.5rem;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   10. FEATURES GRID
+   ───────────────────────────────────────────────────────────── */
+.ptc-features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.ptc-feature-card {
+  background: var(--ptc-surface);
+  border: 1px solid var(--ptc-border);
+  border-radius: 24px;
+  padding: 1.5rem;
+  transition: all 0.2s;
+}
+
+.ptc-feature-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--ptc-accent);
+}
+
+.ptc-feature-icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.ptc-feature-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.ptc-feature-card p {
+  font-size: 0.85rem;
+  color: var(--ptc-text-2);
+  line-height: 1.5;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   11. LONG-FORM PROSE (SEO CONTENT)
+   ───────────────────────────────────────────────────────────── */
+.ptc-prose {
+  max-width: 900px;
+  margin: 0 auto;
+  background: var(--ptc-surface);
+  border-radius: 32px;
+  padding: 2.5rem;
+  border: 1px solid var(--ptc-border);
+}
+
+.ptc-prose h2 {
+  font-size: 1.8rem;
+  margin: 1.5rem 0 1rem;
+}
+
+.ptc-prose h3 {
+  font-size: 1.3rem;
+  margin: 1.2rem 0 0.8rem;
+  color: var(--ptc-accent);
+}
+
+.ptc-prose p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+  color: var(--ptc-text-2);
+}
+
+.ptc-prose ul, .ptc-prose ol {
+  margin: 1rem 0 1rem 1.8rem;
+  color: var(--ptc-text-2);
+}
+
+.ptc-prose li {
+  margin-bottom: 0.4rem;
+}
+
+.ptc-highlight-box {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(167, 139, 250, 0.04));
+  border-left: 4px solid var(--ptc-accent);
+  padding: 1.2rem 1.5rem;
+  border-radius: 16px;
+  margin: 1.5rem 0;
+  font-style: italic;
+  color: var(--ptc-text);
+}
+
+/* Tags scroll */
+.ptc-tag-scroll {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 1.5rem 0;
+}
+
+.ptc-tag {
+  background: var(--ptc-surface-soft);
+  border: 1px solid var(--ptc-border);
+  padding: 0.4rem 1rem;
+  border-radius: 40px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--ptc-text-2);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   12. USE CASES GRID
+   ───────────────────────────────────────────────────────────── */
+.ptc-usecases-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.ptc-uc-card {
+  background: var(--ptc-surface);
+  border: 1px solid var(--ptc-border);
+  border-radius: 24px;
+  padding: 1.5rem;
+  transition: all 0.2s;
+}
+
+.ptc-uc-card:hover {
+  transform: translateY(-3px);
+}
+
+.ptc-uc-emoji {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 0.8rem;
+}
+
+.ptc-uc-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.ptc-uc-card p {
+  font-size: 0.85rem;
+  color: var(--ptc-text-2);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.ptc-uc-tag {
+  display: inline-block;
+  background: var(--ptc-accent-glow);
+  padding: 0.2rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--ptc-accent);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   13. COMPARISON TABLE
+   ───────────────────────────────────────────────────────────── */
+.ptc-compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--ptc-surface);
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--ptc-border);
+}
+
+.ptc-compare-table th,
+.ptc-compare-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--ptc-border);
+  font-size: 0.85rem;
+}
+
+.ptc-compare-table th {
+  background: var(--ptc-surface-soft);
+  font-weight: 700;
+  color: var(--ptc-text);
+}
+
+.ptc-col-highlight {
+  background: rgba(139, 92, 246, 0.05);
+}
+
+.ptc-yes { color: var(--ptc-success); font-weight: 700; }
+.ptc-no { color: var(--ptc-error); opacity: 0.7; }
+.ptc-maybe { color: var(--ptc-warning); }
+
+/* ─────────────────────────────────────────────────────────────
+   14. TIPS LIST
+   ───────────────────────────────────────────────────────────── */
+.ptc-tips-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin: 2rem 0;
+}
+
+.ptc-tip {
+  display: flex;
+  gap: 1rem;
+  background: var(--ptc-surface);
+  border: 1px solid var(--ptc-border);
+  border-radius: 20px;
+  padding: 1.2rem;
+}
+
+.ptc-tip-icon {
+  font-size: 1.6rem;
+  min-width: 48px;
+}
+
+.ptc-tip h4 {
+  font-size: 1rem;
+  margin-bottom: 0.3rem;
+}
+
+.ptc-tip p {
+  font-size: 0.85rem;
+  color: var(--ptc-text-2);
+  line-height: 1.5;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   15. FAQ SECTION
+   ───────────────────────────────────────────────────────────── */
+.ptc-faq {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.ptc-faq-item {
+  background: var(--ptc-surface);
+  border: 1px solid var(--ptc-border);
+  border-radius: 20px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.ptc-faq-q {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 1.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+  transition: background 0.2s;
+}
+
+.ptc-faq-q::-webkit-details-marker {
+  display: none;
+}
+
+.ptc-faq-q:hover {
+  background: var(--ptc-surface-soft);
+}
+
+.ptc-faq-chevron {
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+  color: var(--ptc-accent);
+}
+
+details[open] .ptc-faq-chevron {
+  transform: rotate(180deg);
+}
+
+.ptc-faq-a {
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  color: var(--ptc-text-2);
+  border-top: 1px solid var(--ptc-border);
+  line-height: 1.6;
+}
+
+.ptc-faq-a p {
+  margin-top: 1rem;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   16. RELATED TOOLS GRID
+   ───────────────────────────────────────────────────────────── */
+.ptc-related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.2rem;
+  margin: 2rem 0;
+}
+
+.ptc-related-card {
+  background: var(--ptc-surface);
+  border: 1px solid var(--ptc-border);
+  border-radius: 20px;
+  padding: 1.2rem;
+  text-decoration: none;
+  transition: all 0.2s;
+  display: block;
+}
+
+.ptc-related-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--ptc-accent);
+}
+
+.ptc-related-icon {
+  font-size: 1.6rem;
+  display: block;
+  margin-bottom: 0.6rem;
+}
+
+.ptc-related-card h4 {
+  font-size: 1rem;
+  color: var(--ptc-text);
+  margin-bottom: 0.3rem;
+}
+
+.ptc-related-card p {
+  font-size: 0.75rem;
+  color: var(--ptc-text-2);
+  line-height: 1.4;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   17. FOOTER CTA
+   ───────────────────────────────────────────────────────────── */
+.ptc-footer-cta {
+  text-align: center;
+  background: linear-gradient(135deg, var(--ptc-surface), var(--ptc-surface-soft));
+  border: 1px solid var(--ptc-border);
+  border-radius: 48px;
+  padding: 3rem 2rem;
+  margin-top: 4rem;
+}
+
+.ptc-footer-cta h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.ptc-footer-cta p {
+  color: var(--ptc-text-2);
+  max-width: 500px;
+  margin: 0 auto 1.5rem;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   18. RESPONSIVE
+   ───────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .ptc-nav {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .ptc-nav-links {
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .ptc-content {
+    padding: 1rem;
+  }
+  
+  .ptc-hero-title {
+    font-size: 2.2rem;
+  }
+  
+  .ptc-hero-sub {
+    font-size: 1rem;
+  }
+  
+  .ptc-mockup-body {
+    flex-direction: column;
+  }
+  
+  .ptc-mockup-arrow {
+    flex-direction: row;
+    justify-content: center;
+    transform: rotate(90deg);
+    margin: 0.5rem 0;
+  }
+  
+  .ptc-step {
+    flex-direction: column;
+  }
+  
+  .ptc-step-num {
+    min-width: auto;
+  }
+  
+  .ptc-section-title {
+    font-size: 1.8rem;
+  }
+  
+  .ptc-prose {
+    padding: 1.5rem;
+  }
+  
+  .ptc-prose h2 {
+    font-size: 1.5rem;
+  }
+  
+  .ptc-inline-cta h3 {
+    font-size: 1.3rem;
+  }
+  
+  .ptc-footer-cta h2 {
+    font-size: 1.6rem;
+  }
+  
+  .ptc-compare-table th,
+  .ptc-compare-table td {
+    padding: 0.75rem;
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ptc-trust-badges {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .ptc-cta-note {
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  
+  .ptc-stats-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .ptc-features-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .ptc-usecases-grid {
+    grid-template-columns: 1fr;
+  }
+}
