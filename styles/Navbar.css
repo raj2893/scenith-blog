@@ -893,3 +893,14 @@
     font-size: 0.95rem;
   }
 }
+
+.profile-dropdown .tools-dropdown-item {
+  color: rgba(255, 255, 255, 0.75);
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.75);
+}
+
+.profile-dropdown .tools-dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
+}
