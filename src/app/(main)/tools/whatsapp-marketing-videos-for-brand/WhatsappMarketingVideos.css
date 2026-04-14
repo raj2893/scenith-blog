@@ -1,0 +1,1903 @@
+/* app/styles/tools/WhatsappMarketingVideos.css */
+
+/* ────────────────────────────────────────────────────────────────────────────
+   TABLE OF CONTENTS
+   1. CSS Variables & Theme
+   2. Base & Reset
+   3. Ambient Background Effects
+   4. Particles Animation
+   5. Breadcrumb
+   6. Hero Section
+   7. Demo Video & Phone Mockup
+   8. Screenshot Section
+   9. Why WhatsApp Section
+   10. Formats Section
+   11. Use Cases Section
+   12. How It Works Section
+   13. Prompt Engineering Section
+   14. Mid CTA Section
+   15. Integration Section
+   16. Best Practices Section
+   17. Comparison Table Section
+   18. FAQ Section
+   19. People Also Ask Section
+   20. Final CTA Section
+   21. Responsive Styles
+   ──────────────────────────────────────────────────────────────────────────── */
+
+/* ────────────────────────────────────────────────────────────────────────────
+   1. CSS Variables & Theme
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.wmv-page {
+  --wmv-bg-dark: #0a0a0a;
+  --wmv-bg-card: rgba(18, 18, 24, 0.7);
+  --wmv-bg-card-solid: #121218;
+  --wmv-border: rgba(255, 255, 255, 0.08);
+  --wmv-border-light: rgba(255, 255, 255, 0.12);
+  --wmv-text: #ffffff;
+  --wmv-text-secondary: #a1a1aa;
+  --wmv-text-muted: #71717a;
+  --wmv-accent: #25D366;
+  --wmv-accent-dark: #20b859;
+  --wmv-accent-glow: rgba(37, 211, 102, 0.25);
+  --wmv-accent-gradient: linear-gradient(135deg, #25D366, #128C7E);
+  --wmv-purple: #8b5cf6;
+  --wmv-purple-dark: #7c3aed;
+  --wmv-pink: #ec4899;
+  --wmv-orange: #f59e0b;
+  --wmv-font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', system-ui, sans-serif;
+  --wmv-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   2. Base & Reset
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.wmv-page {
+  position: relative;
+  background: var(--wmv-bg-dark);
+  color: var(--wmv-text);
+  font-family: var(--wmv-font-sans);
+  overflow-x: hidden;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.wmv-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+  position: relative;
+  z-index: 10;
+}
+
+@media (max-width: 768px) {
+  .wmv-container {
+    padding: 0 20px;
+  }
+}
+
+/* Typography */
+.wmv-section-eyebrow {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  color: var(--wmv-accent);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.wmv-section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #fff, var(--wmv-text-secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: -0.02em;
+}
+
+@media (max-width: 768px) {
+  .wmv-section-title {
+    font-size: 1.75rem;
+  }
+}
+
+.wmv-section-desc {
+  text-align: center;
+  color: var(--wmv-text-secondary);
+  max-width: 700px;
+  margin: 0 auto 3rem auto;
+  font-size: 1.125rem;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   3. Ambient Background Effects
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.wmv-ambient {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.wmv-mesh-1 {
+  position: absolute;
+  top: -20%;
+  right: -10%;
+  width: 60%;
+  height: 60%;
+  background: radial-gradient(circle, rgba(37, 211, 102, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(80px);
+  animation: wmv-meshFloat 20s ease-in-out infinite;
+}
+
+.wmv-mesh-2 {
+  position: absolute;
+  bottom: -20%;
+  left: -10%;
+  width: 55%;
+  height: 55%;
+  background: radial-gradient(circle, rgba(18, 140, 126, 0.12) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(80px);
+  animation: wmv-meshFloat 25s ease-in-out infinite reverse;
+}
+
+@keyframes wmv-meshFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(3%, 3%) scale(1.05); }
+}
+
+.wmv-scanlines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0) 0px,
+    rgba(0, 0, 0, 0) 1px,
+    rgba(0, 0, 0, 0.03) 1px,
+    rgba(0, 0, 0, 0.03) 2px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.wmv-vignette {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.4) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   4. Particles Animation
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.wmv-particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.wmv-particle {
+  position: absolute;
+  background: rgba(37, 211, 102, 0.4);
+  border-radius: 50%;
+  filter: blur(4px);
+  animation: wmv-particleFloat linear infinite;
+}
+
+@keyframes wmv-particleFloat {
+  0% {
+    transform: translateY(100vh) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.6;
+  }
+  90% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(-20vh) translateX(100px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.wmv-particle-1 { width: 4px; height: 4px; left: 10%; animation-duration: 12s; animation-delay: 0s; }
+.wmv-particle-2 { width: 6px; height: 6px; left: 20%; animation-duration: 15s; animation-delay: 2s; }
+.wmv-particle-3 { width: 3px; height: 3px; left: 35%; animation-duration: 10s; animation-delay: 1s; }
+.wmv-particle-4 { width: 5px; height: 5px; left: 50%; animation-duration: 18s; animation-delay: 4s; }
+.wmv-particle-5 { width: 7px; height: 7px; left: 65%; animation-duration: 14s; animation-delay: 0.5s; }
+.wmv-particle-6 { width: 4px; height: 4px; left: 80%; animation-duration: 11s; animation-delay: 3s; }
+.wmv-particle-7 { width: 8px; height: 8px; left: 15%; animation-duration: 20s; animation-delay: 5s; }
+.wmv-particle-8 { width: 3px; height: 3px; left: 45%; animation-duration: 9s; animation-delay: 1.5s; }
+.wmv-particle-9 { width: 5px; height: 5px; left: 70%; animation-duration: 16s; animation-delay: 2.5s; }
+.wmv-particle-10 { width: 6px; height: 6px; left: 90%; animation-duration: 13s; animation-delay: 0s; }
+.wmv-particle-11 { width: 4px; height: 4px; left: 25%; animation-duration: 17s; animation-delay: 3.5s; }
+.wmv-particle-12 { width: 7px; height: 7px; left: 55%; animation-duration: 19s; animation-delay: 1s; }
+.wmv-particle-13 { width: 3px; height: 3px; left: 75%; animation-duration: 8s; animation-delay: 4.5s; }
+.wmv-particle-14 { width: 5px; height: 5px; left: 5%; animation-duration: 22s; animation-delay: 2s; }
+.wmv-particle-15 { width: 6px; height: 6px; left: 40%; animation-duration: 14s; animation-delay: 0s; }
+.wmv-particle-16 { width: 4px; height: 4px; left: 60%; animation-duration: 11s; animation-delay: 3s; }
+.wmv-particle-17 { width: 8px; height: 8px; left: 85%; animation-duration: 24s; animation-delay: 1.5s; }
+.wmv-particle-18 { width: 3px; height: 3px; left: 30%; animation-duration: 10s; animation-delay: 2s; }
+
+/* ────────────────────────────────────────────────────────────────────────────
+   5. Breadcrumb
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.wmv-breadcrumb {
+  position: relative;
+  z-index: 20;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--wmv-border);
+  background: rgba(10, 10, 10, 0.8);
+  backdrop-filter: blur(10px);
+}
+
+.wmv-breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--wmv-text-secondary);
+}
+
+.wmv-breadcrumb a {
+  color: var(--wmv-text-secondary);
+  text-decoration: none;
+  transition: var(--wmv-transition);
+}
+
+.wmv-breadcrumb a:hover {
+  color: var(--wmv-accent);
+}
+
+.wmv-bc-sep {
+  color: var(--wmv-text-muted);
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   6. Hero Section
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.wmv-hero {
+  position: relative;
+  z-index: 10;
+  padding: 4rem 0 6rem 0;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .wmv-hero {
+    padding: 2rem 0 4rem 0;
+  }
+}
+
+.wmv-hero-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.wmv-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 1rem;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--wmv-border);
+  color: var(--wmv-text-secondary);
+}
+
+.wmv-tag-primary {
+  background: rgba(37, 211, 102, 0.1);
+  border-color: rgba(37, 211, 102, 0.3);
+  color: var(--wmv-accent);
+}
+
+.wmv-tag-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--wmv-accent);
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.wmv-tag-fire {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.3);
+  color: var(--wmv-orange);
+}
+
+.wmv-tag-free {
+  background: rgba(139, 92, 246, 0.1);
+  border-color: rgba(139, 92, 246, 0.3);
+  color: var(--wmv-purple);
+}
+
+.wmv-tag-format {
+  background: rgba(236, 72, 153, 0.1);
+  border-color: rgba(236, 72, 153, 0.3);
+  color: var(--wmv-pink);
+}
+
+.wmv-hero-h1 {
+  text-align: center;
+  font-size: 4rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
+}
+
+@media (max-width: 768px) {
+  .wmv-hero-h1 {
+    font-size: 2.5rem;
+  }
+}
+
+.wmv-h1-pre {
+  display: block;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--wmv-text-secondary);
+  margin-bottom: 0.5rem;
+  letter-spacing: normal;
+}
+
+.wmv-h1-main {
+  display: block;
+  background: linear-gradient(135deg, #fff, var(--wmv-text-secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.wmv-h1-accent {
+  background: linear-gradient(135deg, var(--wmv-accent), var(--wmv-accent-dark));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.wmv-h1-sub {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--wmv-text-secondary);
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .wmv-h1-sub {
+    font-size: 1.25rem;
+  }
+}
+
+.wmv-hero-desc {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 2rem auto;
+  font-size: 1.125rem;
+  color: var(--wmv-text-secondary);
+  line-height: 1.6;
+}
+
+.wmv-hero-desc strong {
+  color: var(--wmv-accent);
+  font-weight: 600;
+}
+
+.wmv-hero-cta {
+  display: block;
+  max-width: 550px;
+  margin: 0 auto 2rem auto;
+  text-decoration: none;
+  position: relative;
+}
+
+.wmv-cta-glow {
+  position: absolute;
+  inset: -2px;
+  background: var(--wmv-accent-gradient);
+  border-radius: 60px;
+  filter: blur(12px);
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+.wmv-hero-cta:hover .wmv-cta-glow {
+  opacity: 0.8;
+}
+
+.wmv-cta-content {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--wmv-bg-card-solid);
+  border: 1px solid var(--wmv-border-light);
+  border-radius: 60px;
+  padding: 1rem 1.75rem;
+  backdrop-filter: blur(10px);
+  transition: var(--wmv-transition);
+}
+
+.wmv-hero-cta:hover .wmv-cta-content {
+  border-color: var(--wmv-accent);
+  transform: scale(1.02);
+}
+
+.wmv-cta-icon {
+  font-size: 1.75rem;
+  margin-right: 1rem;
+}
+
+.wmv-cta-words {
+  flex: 1;
+}
+
+.wmv-cta-words strong {
+  display: block;
+  font-size: 1.125rem;
+  color: var(--wmv-text);
+  margin-bottom: 0.25rem;
+}
+
+.wmv-cta-words small {
+  font-size: 0.75rem;
+  color: var(--wmv-text-muted);
+}
+
+.wmv-cta-arrow {
+  font-size: 1.5rem;
+  color: var(--wmv-accent);
+  transition: transform 0.3s ease;
+}
+
+.wmv-hero-cta:hover .wmv-cta-arrow {
+  transform: translateX(4px);
+}
+
+.wmv-hero-trust {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  font-size: 0.875rem;
+  color: var(--wmv-text-muted);
+}
+
+.wmv-trust-div {
+  width: 1px;
+  height: 1rem;
+  background: var(--wmv-border);
+}
+
+.wmv-hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 48px;
+  border: 1px solid var(--wmv-border);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.wmv-stat {
+  text-align: center;
+}
+
+.wmv-stat-val {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--wmv-accent);
+}
+
+.wmv-stat-lab {
+  font-size: 0.75rem;
+  color: var(--wmv-text-muted);
+}
+
+.wmv-stat-div {
+  width: 1px;
+  background: var(--wmv-border);
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   7. Demo Video & Phone Mockup
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.wmv-demo-wrap {
+  margin-top: 4rem;
+  text-align: center;
+}
+
+.wmv-demo-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 1rem;
+  background: rgba(37, 211, 102, 0.1);
+  border-radius: 100px;
+  font-size: 0.75rem;
+  color: var(--wmv-accent);
+  margin-bottom: 1.5rem;
+}
+
+.wmv-demo-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--wmv-accent);
+  border-radius: 50%;
+  animation: wmv-pulse 1.5s infinite;
+}
+
+@keyframes wmv-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.2); }
+}
+
+.wmv-demo-phone {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.wmv-phone-bezel {
+  position: relative;
+  background: #1a1a1a;
+  border-radius: 48px;
+  padding: 12px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.wmv-phone-square {
+  border-radius: 32px;
+  width: 380px;
+}
+
+@media (max-width: 480px) {
+  .wmv-phone-square {
+    width: 300px;
+  }
+}
+
+.wmv-phone-notch {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 24px;
+  background: #0a0a0a;
+  border-radius: 0 0 16px 16px;
+  z-index: 5;
+}
+
+.wmv-phone-screen {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  background: #000;
+}
+
+.wmv-screen-square {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+}
+
+.wmv-wa-ui {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 12px;
+}
+
+.wmv-wa-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent);
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.wmv-wa-back, .wmv-wa-menu {
+  opacity: 0.8;
+}
+
+.wmv-wa-title {
+  font-weight: 600;
+}
+
+.wmv-wa-catalog {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wmv-wa-product-card {
+  background: rgba(255,255,255,0.95);
+  border-radius: 20px;
+  padding: 16px;
+  width: 80%;
+  text-align: center;
+  backdrop-filter: blur(4px);
+}
+
+.wmv-wa-product-badge {
+  background: var(--wmv-accent);
+  color: #000;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.wmv-wa-product-price {
+  font-size: 20px;
+  font-weight: 700;
+  color: #000;
+}
+
+.wmv-wa-bottombar {
+  display: flex;
+  justify-content: space-around;
+  padding: 12px;
+  background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+  border-radius: 16px;
+  font-size: 20px;
+}
+
+.wmv-demo-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.wmv-demo-caption {
+  font-size: 0.875rem;
+  color: var(--wmv-text-muted);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   8. Screenshot Section
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.wmv-screenshot-section {
+  padding: 4rem 0;
+  position: relative;
+  z-index: 10;
+}
+
+.wmv-screenshot-wrap {
+  margin: 2rem 0;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid var(--wmv-border);
+  background: rgba(0,0,0,0.3);
+}
+
+.wmv-browser-chrome {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: rgba(0,0,0,0.5);
+  border-bottom: 1px solid var(--wmv-border);
+}
+
+.wmv-chrome-dots {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.wmv-cd {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.wmv-cd-r { background: #ff5f56; }
+.wmv-cd-y { background: #ffbd2e; }
+.wmv-cd-g { background: #27c93f; }
+
+.wmv-chrome-url {
+  flex: 1;
+  background: rgba(255,255,255,0.1);
+  padding: 0.375rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  color: var(--wmv-text-muted);
+  text-align: center;
+}
+
+.wmv-screenshot-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.wmv-screenshot-callouts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.wmv-callout {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--wmv-text-secondary);
+  background: rgba(255,255,255,0.05);
+  padding: 0.5rem 1rem;
+  border-radius: 40px;
+}
+
+.wmv-callout-num {
+  color: var(--wmv-accent);
+  font-weight: 700;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   9. Why WhatsApp Section
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.wmv-why-section {
+  padding: 4rem 0;
+  position: relative;
+  z-index: 10;
+}
+
+.wmv-why-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.wmv-why-card {
+  background: var(--wmv-bg-card);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--wmv-border);
+  border-radius: 24px;
+  padding: 1.75rem;
+  transition: var(--wmv-transition);
+}
+
+.wmv-why-card:hover {
+  border-color: rgba(37, 211, 102, 0.3);
+  transform: translateY(-4px);
+}
+
+.wmv-why-featured {
+  grid-column: span 2;
+  background: linear-gradient(135deg, rgba(37, 211, 102, 0.05), rgba(18, 140, 126, 0.05));
+  border-color: rgba(37, 211, 102, 0.2);
+}
+
+@media (max-width: 768px) {
+  .wmv-why-featured {
+    grid-column: span 1;
+  }
+}
+
+.wmv-why-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.wmv-why-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: rgba(37, 211, 102, 0.15);
+  border-radius: 100px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--wmv-accent);
+  margin-bottom: 1rem;
+}
+
+.wmv-why-card h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.wmv-why-card p {
+  color: var(--wmv-text-secondary);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+.wmv-why-metrics {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--wmv-border);
+}
+
+.wmv-wm {
+  text-align: center;
+}
+
+.wmv-wm strong {
+  display: block;
+  font-size: 1.25rem;
+  color: var(--wmv-accent);
+}
+
+.wmv-wm span {
+  font-size: 0.75rem;
+  color: var(--wmv-text-muted);
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   10. Formats Section
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.wmv-formats-section {
+  padding: 4rem 0;
+  position: relative;
+  z-index: 10;
+}
+
+.wmv-formats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.wmv-format-card {
+  background: var(--wmv-bg-card);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--wmv-border);
+  border-radius: 24px;
+  padding: 1.75rem;
+  transition: var(--wmv-transition);
+}
+
+.wmv-format-featured {
+  border-color: rgba(37, 211, 102, 0.3);
+  background: linear-gradient(135deg, rgba(37, 211, 102, 0.05), transparent);
+}
+
+.wmv-format-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.wmv-format-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: rgba(37, 211, 102, 0.15);
+  border-radius: 100px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--wmv-accent);
+  margin-bottom: 0.75rem;
+}
+
+.wmv-format-card h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.wmv-format-card p {
+  color: var(--wmv-text-secondary);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.wmv-format-specs {
+  background: rgba(255,255,255,0.03);
+  border-radius: 16px;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.wmv-format-specs div {
+  font-size: 0.8125rem;
+  color: var(--wmv-text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.wmv-format-specs strong {
+  color: var(--wmv-text-secondary);
+}
+
+.wmv-format-prompt {
+  background: rgba(37, 211, 102, 0.05);
+  border-left: 3px solid var(--wmv-accent);
+  padding: 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8125rem;
+  color: var(--wmv-text-secondary);
+  margin-top: 1rem;
+}
+
+.wmv-fp-label {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--wmv-accent);
+  margin-bottom: 0.25rem;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   11. Use Cases Section
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.wmv-usecases-section {
+  padding: 4rem 0;
+  position: relative;
+  z-index: 10;
+}
+
+.wmv-usecases-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.wmv-usecase-card {
+  background: var(--wmv-bg-card);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--wmv-border);
+  border-radius: 24px;
+  padding: 1.5rem;
+  transition: var(--wmv-transition);
+}
+
+.wmv-usecase-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(37, 211, 102, 0.2);
+}
+
+.wmv-usecase-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.wmv-usecase-card h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.wmv-usecase-card p {
+  color: var(--wmv-text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.wmv-usecase-prompt {
+  background: rgba(0,0,0,0.3);
+  border-radius: 12px;
+  padding: 0.75rem;
+  font-size: 0.75rem;
+  font-family: monospace;
+  color: var(--wmv-accent);
+  border: 1px solid var(--wmv-border);
+}
+
+.wmv-usecase-prompt strong {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--wmv-text-muted);
+  margin-bottom: 0.25rem;
+  font-family: var(--wmv-font-sans);
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   12. How It Works Section
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.wmv-how-section {
+  padding: 4rem 0;
+  position: relative;
+  z-index: 10;
+}
+
+.wmv-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.wmv-step {
+  display: flex;
+  position: relative;
+}
+
+.wmv-step-connector {
+  position: absolute;
+  left: 24px;
+  top: 60px;
+  bottom: -40px;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--wmv-accent), transparent);
+}
+
+.wmv-step:last-child .wmv-step-connector {
+  display: none;
+}
+
+.wmv-step-node {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--wmv-accent), var(--wmv-accent-dark));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1.5rem;
+  position: relative;
+  z-index: 5;
+}
+
+.wmv-step-num {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #000;
+}
+
+.wmv-step-content {
+  flex: 1;
+  background: var(--wmv-bg-card);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--wmv-border);
+  border-radius: 24px;
+  padding: 1.5rem;
+}
+
+.wmv-step-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.wmv-step-content h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.wmv-step-content p {
+  color: var(--wmv-text-secondary);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.wmv-step-example {
+  background: rgba(37, 211, 102, 0.05);
+  border-left: 3px solid var(--wmv-accent);
+  padding: 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8125rem;
+  color: var(--wmv-text-secondary);
+  margin: 1rem 0;
+}
+
+.wmv-step-time {
+  font-size: 0.75rem;
+  color: var(--wmv-text-muted);
+}
+
+.wmv-total-box {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.wmv-total-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  background: linear-gradient(135deg, rgba(37, 211, 102, 0.1), rgba(18, 140, 126, 0.1));
+  border: 1px solid rgba(37, 211, 102, 0.2);
+  border-radius: 60px;
+  padding: 0.75rem 1.5rem;
+}
+
+.wmv-total-icon {
+  font-size: 1.5rem;
+}
+
+.wmv-total-inner div {
+  text-align: left;
+}
+
+.wmv-total-inner strong {
+  display: block;
+  font-size: 1rem;
+  color: var(--wmv-accent);
+}
+
+.wmv-total-inner span {
+  font-size: 0.75rem;
+  color: var(--wmv-text-muted);
+}
+
+.wmv-total-cta {
+  background: var(--wmv-accent);
+  color: #000;
+  text-decoration: none;
+  padding: 0.5rem 1.25rem;
+  border-radius: 40px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: var(--wmv-transition);
+}
+
+.wmv-total-cta:hover {
+  background: var(--wmv-accent-dark);
+  transform: scale(1.05);
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   13. Prompt Engineering Section
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.wmv-prompts-section {
+  padding: 4rem 0;
+  position: relative;
+  z-index: 10;
+}
+
+.wmv-prompt-framework {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.wmv-pf-card {
+  background: var(--wmv-bg-card);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--wmv-border);
+  border-radius: 20px;
+  padding: 1.5rem;
+}
+
+.wmv-pf-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--wmv-accent);
+  margin-bottom: 0.5rem;
+}
+
+.wmv-pf-card h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.wmv-pf-card p {
+  color: var(--wmv-text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.wmv-pf-example {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: rgba(0,0,0,0.3);
+  border-radius: 12px;
+  padding: 0.75rem;
+  font-size: 0.75rem;
+}
+
+.wmv-pfe-weak {
+  color: #f87171;
+}
+
+.wmv-pfe-strong {
+  color: #4ade80;
+}
+
+.wmv-prompt-templates {
+  margin-top: 2rem;
+}
+
+.wmv-prompt-templates h3 {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.wmv-templates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.wmv-template-card {
+  background: var(--wmv-bg-card);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--wmv-border);
+  border-radius: 20px;
+  padding: 1.25rem;
+}
+
+.wmv-template-category {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--wmv-accent);
+  margin-bottom: 0.75rem;
+}
+
+.wmv-template-formula {
+  background: rgba(0,0,0,0.4);
+  border-radius: 12px;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.wmv-tf-label {
+  font-size: 0.65rem;
+  color: var(--wmv-text-muted);
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.wmv-template-formula code {
+  font-size: 0.75rem;
+  color: var(--wmv-text-secondary);
+  font-family: monospace;
+  word-break: break-word;
+  white-space: normal;
+}
+
+.wmv-template-example {
+  font-size: 0.75rem;
+  color: var(--wmv-text-muted);
+}
+
+.wmv-te-label {
+  display: block;
+  font-size: 0.65rem;
+  color: var(--wmv-text-muted);
+  margin-bottom: 0.25rem;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   14. Mid CTA Section
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.wmv-mid-cta-section {
+  padding: 3rem 0;
+  position: relative;
+  z-index: 10;
+}
+
+.wmv-mid-cta-inner {
+  background: linear-gradient(135deg, rgba(37, 211, 102, 0.1), rgba(18, 140, 126, 0.05));
+  border: 1px solid rgba(37, 211, 102, 0.2);
+  border-radius: 48px;
+  padding: 3rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.wmv-mid-cta-glow {
+  position: absolute;
+  top: -50%;
+  left: -20%;
+  width: 140%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(37, 211, 102, 0.15), transparent);
+  pointer-events: none;
+}
+
+.wmv-mid-cta-inner h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.wmv-mid-cta-inner p {
+  color: var(--wmv-text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.wmv-mid-cta-btn {
+  display: inline-block;
+  background: var(--wmv-accent);
+  color: #000;
+  text-decoration: none;
+  padding: 0.875rem 2rem;
+  border-radius: 60px;
+  font-weight: 600;
+  transition: var(--wmv-transition);
+}
+
+.wmv-mid-cta-btn:hover {
+  background: var(--wmv-accent-dark);
+  transform: scale(1.02);
+}
+
+@media (max-width: 768px) {
+  .wmv-mid-cta-inner {
+    padding: 2rem;
+  }
+  .wmv-mid-cta-inner h2 {
+    font-size: 1.25rem;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   15. Integration Section
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.wmv-integration-section {
+  padding: 4rem 0;
+  position: relative;
+  z-index: 10;
+}
+
+.wmv-integration-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.wmv-integration-card {
+  background: var(--wmv-bg-card);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--wmv-border);
+  border-radius: 20px;
+  padding: 1.5rem;
+  transition: var(--wmv-transition);
+}
+
+.wmv-integration-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(37, 211, 102, 0.2);
+}
+
+.wmv-int-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.wmv-integration-card h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.wmv-integration-card p {
+  color: var(--wmv-text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   16. Best Practices Section
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.wmv-practices-section {
+  padding: 4rem 0;
+  position: relative;
+  z-index: 10;
+}
+
+.wmv-practices-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.wmv-practice-card {
+  background: var(--wmv-bg-card);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--wmv-border);
+  border-radius: 20px;
+  padding: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  transition: var(--wmv-transition);
+}
+
+.wmv-practice-card:hover {
+  transform: translateY(-4px);
+}
+
+.wmv-practice-icon {
+  font-size: 1.75rem;
+  flex-shrink: 0;
+}
+
+.wmv-practice-content h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.wmv-practice-content p {
+  color: var(--wmv-text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   17. Comparison Table Section
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.wmv-comparison-section {
+  padding: 4rem 0;
+  position: relative;
+  z-index: 10;
+}
+
+.wmv-comp-scroll {
+  overflow-x: auto;
+  border-radius: 20px;
+  border: 1px solid var(--wmv-border);
+}
+
+.wmv-comp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  min-width: 700px;
+}
+
+.wmv-comp-table th,
+.wmv-comp-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--wmv-border);
+}
+
+.wmv-comp-table th {
+  background: rgba(37, 211, 102, 0.05);
+  font-weight: 600;
+  color: var(--wmv-text);
+}
+
+.wmv-comp-table td {
+  color: var(--wmv-text-secondary);
+}
+
+.wmv-col-scenith {
+  background: rgba(37, 211, 102, 0.03);
+  color: var(--wmv-accent) !important;
+  font-weight: 500;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   18. FAQ Section
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.wmv-faq-section {
+  padding: 4rem 0;
+  position: relative;
+  z-index: 10;
+}
+
+.wmv-faq-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.wmv-faq-item {
+  background: var(--wmv-bg-card);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--wmv-border);
+  border-radius: 20px;
+  padding: 1.5rem;
+  transition: var(--wmv-transition);
+}
+
+.wmv-faq-item:hover {
+  border-color: rgba(37, 211, 102, 0.2);
+}
+
+.wmv-faq-item h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--wmv-text);
+}
+
+.wmv-faq-item p {
+  color: var(--wmv-text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   19. People Also Ask Section
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.wmv-paa-section {
+  padding: 4rem 0;
+  position: relative;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.wmv-paa-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.wmv-paa-item {
+  background: var(--wmv-bg-card);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--wmv-border);
+  border-radius: 20px;
+  padding: 1.5rem;
+}
+
+.wmv-paa-item h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--wmv-text);
+}
+
+.wmv-paa-item p {
+  color: var(--wmv-text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   20. Final CTA Section
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.wmv-final-section {
+  padding: 5rem 0;
+  position: relative;
+  z-index: 10;
+}
+
+.wmv-final-inner {
+  background: linear-gradient(135deg, rgba(37, 211, 102, 0.08), rgba(18, 140, 126, 0.04));
+  border: 1px solid rgba(37, 211, 102, 0.2);
+  border-radius: 64px;
+  padding: 4rem 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.wmv-final-glow-1,
+.wmv-final-glow-2 {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+.wmv-final-glow-1 {
+  top: -100px;
+  left: -100px;
+  background: radial-gradient(circle, rgba(37, 211, 102, 0.3), transparent);
+}
+
+.wmv-final-glow-2 {
+  bottom: -100px;
+  right: -100px;
+  background: radial-gradient(circle, rgba(18, 140, 126, 0.3), transparent);
+}
+
+.wmv-final-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 1rem;
+  background: rgba(37, 211, 102, 0.1);
+  border-radius: 100px;
+  font-size: 0.75rem;
+  color: var(--wmv-accent);
+  margin-bottom: 1.5rem;
+}
+
+.wmv-final-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--wmv-accent);
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.wmv-final-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .wmv-final-title {
+    font-size: 1.75rem;
+  }
+}
+
+.wmv-final-title-accent {
+  background: linear-gradient(135deg, var(--wmv-accent), var(--wmv-accent-dark));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.wmv-final-desc {
+  max-width: 600px;
+  margin: 0 auto 2rem auto;
+  color: var(--wmv-text-secondary);
+}
+
+.wmv-final-cta-btn {
+  display: block;
+  max-width: 550px;
+  margin: 0 auto 2rem auto;
+  text-decoration: none;
+  position: relative;
+}
+
+.wmv-final-btn-glow {
+  position: absolute;
+  inset: -2px;
+  background: var(--wmv-accent-gradient);
+  border-radius: 60px;
+  filter: blur(12px);
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+.wmv-final-cta-btn:hover .wmv-final-btn-glow {
+  opacity: 0.8;
+}
+
+.wmv-final-btn-content {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--wmv-bg-card-solid);
+  border: 1px solid var(--wmv-border-light);
+  border-radius: 60px;
+  padding: 1rem 1.75rem;
+  backdrop-filter: blur(10px);
+  transition: var(--wmv-transition);
+}
+
+.wmv-final-cta-btn:hover .wmv-final-btn-content {
+  border-color: var(--wmv-accent);
+  transform: scale(1.02);
+}
+
+.wmv-final-icon {
+  font-size: 1.75rem;
+  margin-right: 1rem;
+}
+
+.wmv-final-btn-text {
+  flex: 1;
+}
+
+.wmv-final-btn-text strong {
+  display: block;
+  font-size: 1.125rem;
+  color: var(--wmv-text);
+  margin-bottom: 0.25rem;
+}
+
+.wmv-final-btn-text small {
+  font-size: 0.75rem;
+  color: var(--wmv-text-muted);
+}
+
+.wmv-final-arrow {
+  font-size: 1.5rem;
+  color: var(--wmv-accent);
+  transition: transform 0.3s ease;
+}
+
+.wmv-final-cta-btn:hover .wmv-final-arrow {
+  transform: translateX(4px);
+}
+
+.wmv-final-trust-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 0.75rem;
+  color: var(--wmv-text-muted);
+  margin-bottom: 1.5rem;
+}
+
+.wmv-final-links {
+  font-size: 0.75rem;
+  color: var(--wmv-text-muted);
+}
+
+.wmv-flink {
+  color: var(--wmv-accent);
+  text-decoration: none;
+}
+
+.wmv-flink:hover {
+  text-decoration: underline;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   21. Responsive Styles
+   ──────────────────────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .wmv-hero-stats {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    border-radius: 32px;
+  }
+
+  .wmv-stat-div {
+    display: none;
+  }
+
+  .wmv-step {
+    flex-direction: column;
+  }
+
+  .wmv-step-node {
+    margin-bottom: 1rem;
+  }
+
+  .wmv-step-connector {
+    left: 24px;
+    top: 48px;
+    bottom: -30px;
+  }
+
+  .wmv-final-trust-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .wmv-final-btn-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+  }
+
+  .wmv-final-icon {
+    margin-right: 0;
+  }
+
+  .wmv-cta-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+  }
+
+  .wmv-cta-icon {
+    margin-right: 0;
+  }
+
+  .wmv-total-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .wmv-container {
+    padding: 0 16px;
+  }
+
+  .wmv-section-title {
+    font-size: 1.5rem;
+  }
+
+  .wmv-prompt-framework,
+  .wmv-templates-grid,
+  .wmv-usecases-grid,
+  .wmv-faq-grid,
+  .wmv-paa-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .wmv-why-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .wmv-practice-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .wmv-final-inner {
+    padding: 2rem 1rem;
+  }
+}
+
+/* Utility */
+.wmv-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

@@ -1,0 +1,1278 @@
+/* app/tools/small-business-whatsapp-ad-video-maker/whatsapp-ad-video.css */
+
+/* ────────────────────────────────────────────────────────────────────────────
+   CSS Variables & Reset
+   ────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --wav-bg-dark: #0a0a0f;
+  --wav-bg-card: rgba(18, 18, 24, 0.7);
+  --wav-border: rgba(37, 211, 102, 0.15);
+  --wav-border-light: rgba(37, 211, 102, 0.08);
+  --wav-accent: #25D366;
+  --wav-accent-dark: #128C7E;
+  --wav-accent-glow: rgba(37, 211, 102, 0.25);
+  --wav-text: #ffffff;
+  --wav-text-secondary: #a1a1aa;
+  --wav-text-muted: #71717a;
+  --wav-surface: rgba(255, 255, 255, 0.03);
+  --wav-surface-hover: rgba(255, 255, 255, 0.06);
+  --wav-radius-sm: 8px;
+  --wav-radius-md: 16px;
+  --wav-radius-lg: 24px;
+  --wav-radius-xl: 32px;
+  --wav-font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--wav-bg-dark);
+  color: var(--wav-text);
+  font-family: var(--wav-font-sans);
+  overflow-x: hidden;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Ambient Background
+   ────────────────────────────────────────────────────────────────────────── */
+
+.wav-page {
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.wav-ambient {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.wav-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.4;
+  animation: wav-blob-float 20s ease-in-out infinite;
+}
+
+.wav-blob-1 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, #25D36620, transparent);
+  top: -150px;
+  right: -150px;
+  animation-delay: 0s;
+}
+
+.wav-blob-2 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, #128C7E20, transparent);
+  bottom: -100px;
+  left: -100px;
+  animation-delay: -5s;
+}
+
+.wav-blob-3 {
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, #075E5420, transparent);
+  top: 40%;
+  left: 30%;
+  animation-delay: -10s;
+}
+
+@keyframes wav-blob-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -30px) scale(1.05); }
+  66% { transform: translate(-20px, 20px) scale(0.95); }
+}
+
+.wav-grid-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(rgba(37, 211, 102, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(37, 211, 102, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Navigation
+   ────────────────────────────────────────────────────────────────────────── */
+
+.wav-nav {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 32px;
+  max-width: 1400px;
+  margin: 0 auto;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--wav-border);
+}
+
+.wav-nav-logo {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  background: linear-gradient(135deg, #fff, #25D366);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.wav-nav-logo span {
+  background: linear-gradient(135deg, #25D366, #128C7E);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.wav-nav-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+  align-items: center;
+}
+
+.wav-nav-links a {
+  text-decoration: none;
+  color: var(--wav-text-secondary);
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.wav-nav-links a:hover {
+  color: var(--wav-accent);
+}
+
+.wav-nav-cta {
+  background: linear-gradient(135deg, #25D366, #128C7E);
+  padding: 8px 20px;
+  border-radius: 100px;
+  color: white !important;
+  font-weight: 600 !important;
+}
+
+.wav-nav-cta:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Main Content
+   ────────────────────────────────────────────────────────────────────────── */
+
+.wav-content {
+  position: relative;
+  z-index: 5;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Hero Section
+   ────────────────────────────────────────────────────────────────────────── */
+
+.wav-hero {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.wav-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(37, 211, 102, 0.1);
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--wav-accent);
+  margin-bottom: 24px;
+  backdrop-filter: blur(4px);
+  border: 1px solid var(--wav-border);
+}
+
+.wav-eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--wav-accent);
+  border-radius: 50%;
+  display: inline-block;
+  animation: wav-pulse 1.5s infinite;
+}
+
+@keyframes wav-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.2); }
+}
+
+.wav-hero-title {
+  font-size: 3.8rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #ffffff 30%, #25D366 70%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 24px;
+}
+
+.wav-highlight {
+  background: linear-gradient(135deg, #25D366, #128C7E);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  position: relative;
+  display: inline-block;
+}
+
+.wav-highlight::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: linear-gradient(90deg, #25D36640, transparent);
+  border-radius: 4px;
+}
+
+.wav-hero-sub {
+  font-size: 1.2rem;
+  color: var(--wav-text-secondary);
+  max-width: 700px;
+  margin: 0 auto 32px;
+  line-height: 1.6;
+}
+
+/* ── MASSIVE CTA BUTTON ── */
+
+.wav-cta-block {
+  margin: 32px 0 24px;
+}
+
+.wav-cta-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #25D366, #128C7E);
+  padding: 18px 42px;
+  border-radius: 100px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: white;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 28px rgba(37, 211, 102, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.wav-cta-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(37, 211, 102, 0.45);
+  gap: 16px;
+}
+
+.wav-cta-icon {
+  font-size: 1.5rem;
+}
+
+.wav-cta-arrow {
+  transition: transform 0.2s ease;
+}
+
+.wav-cta-primary:hover .wav-cta-arrow {
+  transform: translateX(5px);
+}
+
+.wav-cta-note {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  font-size: 0.8rem;
+  color: var(--wav-text-muted);
+}
+
+.wav-trust-badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.wav-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--wav-surface);
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  color: var(--wav-text-secondary);
+  border: 1px solid var(--wav-border);
+}
+
+.wav-badge-icon {
+  font-size: 0.9rem;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Mockup Section
+   ────────────────────────────────────────────────────────────────────────── */
+
+.wav-mockup-section {
+  margin: 60px 0;
+}
+
+.wav-section-label {
+  text-align: center;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--wav-accent);
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.wav-mockup-wrapper {
+  position: relative;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.wav-mockup-glow {
+  position: absolute;
+  inset: -20px;
+  background: radial-gradient(ellipse at center, rgba(37, 211, 102, 0.15), transparent);
+  filter: blur(40px);
+  border-radius: 60px;
+  pointer-events: none;
+}
+
+.wav-mockup-frame {
+  background: rgba(10, 10, 15, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: var(--wav-radius-lg);
+  border: 1px solid var(--wav-border);
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.wav-mockup-topbar {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--wav-border);
+}
+
+.wav-dot-red, .wav-dot-yellow, .wav-dot-green {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.wav-dot-red { background: #ff5f56; }
+.wav-dot-yellow { background: #ffbd2e; }
+.wav-dot-green { background: #27c93f; }
+
+.wav-mockup-url {
+  margin-left: 12px;
+  font-size: 0.75rem;
+  color: var(--wav-text-muted);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.wav-mockup-body {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 32px;
+  gap: 32px;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Product Column */
+.wav-product-col {
+  flex: 1;
+  min-width: 240px;
+  background: var(--wav-surface);
+  border-radius: var(--wav-radius-md);
+  padding: 20px;
+  border: 1px solid var(--wav-border-light);
+}
+
+.wav-product-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.wav-product-avatar {
+  width: 40px;
+  height: 40px;
+  background: rgba(37, 211, 102, 0.15);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.wav-product-title {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.wav-product-type {
+  font-size: 0.7rem;
+  color: var(--wav-text-muted);
+}
+
+.wav-product-image-mock {
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  border-radius: var(--wav-radius-md);
+  padding: 24px;
+  text-align: center;
+  margin-bottom: 16px;
+  border: 1px solid var(--wav-border-light);
+}
+
+.wav-product-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 2rem;
+  color: var(--wav-text-muted);
+}
+
+.wav-product-line {
+  display: flex;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--wav-border-light);
+  font-size: 0.8rem;
+  color: var(--wav-text-secondary);
+}
+
+.wav-prompt-num {
+  opacity: 0.6;
+}
+
+.wav-product-connector {
+  height: 1px;
+  background: linear-gradient(90deg, var(--wav-accent), transparent);
+  margin: 8px 0;
+}
+
+/* Arrow */
+.wav-mockup-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.wav-arrow-line {
+  background: var(--wav-border);
+  width: 60px;
+  height: 2px;
+  position: relative;
+}
+
+.wav-arrow-icon {
+  position: absolute;
+  right: -10px;
+  top: -8px;
+  font-size: 1rem;
+  color: var(--wav-accent);
+}
+
+.wav-arrow-label {
+  font-size: 0.7rem;
+  color: var(--wav-text-muted);
+  margin-top: 8px;
+}
+
+/* WhatsApp Phone Mock */
+.wav-whatsapp-col {
+  flex: 1;
+  min-width: 240px;
+}
+
+.wav-phone-mock {
+  background: #0a0a0f;
+  border-radius: 32px;
+  border: 1px solid var(--wav-border);
+  overflow: hidden;
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.4);
+}
+
+.wav-phone-notch {
+  width: 140px;
+  height: 28px;
+  background: #0a0a0f;
+  margin: 0 auto;
+  border-radius: 0 0 20px 20px;
+  position: relative;
+  top: -1px;
+}
+
+.wav-phone-status {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 20px;
+  font-size: 0.7rem;
+  color: var(--wav-text-muted);
+}
+
+.wav-phone-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background: rgba(37, 211, 102, 0.08);
+  border-bottom: 1px solid var(--wav-border-light);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.wav-phone-video {
+  background: #000;
+  aspect-ratio: 9 / 16;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.wav-video-thumb {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1a1a2e, #0a0a0f);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.wav-play-icon {
+  font-size: 3rem;
+  color: white;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  opacity: 0.8;
+}
+
+.wav-video-badge {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: rgba(37, 211, 102, 0.9);
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 0.6rem;
+  font-weight: 600;
+}
+
+.wav-phone-caption {
+  padding: 12px 16px;
+  background: rgba(37, 211, 102, 0.05);
+  font-size: 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid var(--wav-border-light);
+}
+
+.wav-phone-footer {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 16px;
+  color: var(--wav-text-muted);
+  font-size: 0.7rem;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Stats Row
+   ────────────────────────────────────────────────────────────────────────── */
+
+.wav-stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin: 48px 0;
+}
+
+.wav-stat-card {
+  background: var(--wav-surface);
+  border-radius: var(--wav-radius-md);
+  padding: 24px 20px;
+  text-align: center;
+  border: 1px solid var(--wav-border-light);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.wav-stat-card:hover {
+  border-color: var(--wav-accent);
+  transform: translateY(-4px);
+}
+
+.wav-stat-num {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #fff, var(--wav-accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 8px;
+}
+
+.wav-stat-label {
+  font-size: 0.8rem;
+  color: var(--wav-text-secondary);
+  line-height: 1.4;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Steps Section
+   ────────────────────────────────────────────────────────────────────────── */
+
+.wav-section {
+  margin: 60px 0;
+}
+
+.wav-section-title {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.wav-section-sub {
+  text-align: center;
+  color: var(--wav-text-secondary);
+  max-width: 600px;
+  margin: 0 auto 40px;
+}
+
+.wav-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.wav-step {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  background: var(--wav-surface);
+  border-radius: var(--wav-radius-md);
+  padding: 24px;
+  border: 1px solid var(--wav-border-light);
+  transition: all 0.2s ease;
+}
+
+.wav-step:hover {
+  border-color: var(--wav-accent);
+  transform: translateX(8px);
+}
+
+.wav-step-num {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--wav-accent);
+  opacity: 0.6;
+  min-width: 60px;
+}
+
+.wav-step-content h3 {
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+}
+
+.wav-step-content p {
+  color: var(--wav-text-secondary);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.wav-step-badge {
+  display: inline-block;
+  background: rgba(37, 211, 102, 0.1);
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 0.7rem;
+  color: var(--wav-accent);
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Inline CTA
+   ────────────────────────────────────────────────────────────────────────── */
+
+.wav-inline-cta {
+  background: linear-gradient(135deg, rgba(37, 211, 102, 0.08), rgba(18, 140, 126, 0.05));
+  border-radius: var(--wav-radius-lg);
+  padding: 48px 32px;
+  text-align: center;
+  margin: 48px 0;
+  border: 1px solid var(--wav-border);
+}
+
+.wav-inline-cta h3 {
+  font-size: 1.8rem;
+  margin-bottom: 12px;
+}
+
+.wav-inline-cta p {
+  color: var(--wav-text-secondary);
+  margin-bottom: 24px;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Features Grid
+   ────────────────────────────────────────────────────────────────────────── */
+
+.wav-features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin: 40px 0;
+}
+
+.wav-feature-card {
+  background: var(--wav-surface);
+  border-radius: var(--wav-radius-md);
+  padding: 28px 24px;
+  border: 1px solid var(--wav-border-light);
+  transition: all 0.2s ease;
+}
+
+.wav-feature-card:hover {
+  border-color: var(--wav-accent);
+  transform: translateY(-4px);
+  background: var(--wav-surface-hover);
+}
+
+.wav-feature-icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.wav-feature-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.wav-feature-card p {
+  font-size: 0.85rem;
+  color: var(--wav-text-secondary);
+  line-height: 1.5;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Prose / Long-form Content
+   ────────────────────────────────────────────────────────────────────────── */
+
+.wav-prose {
+  background: var(--wav-surface);
+  border-radius: var(--wav-radius-lg);
+  padding: 48px;
+  border: 1px solid var(--wav-border-light);
+}
+
+.wav-prose h2 {
+  font-size: 1.8rem;
+  margin: 32px 0 16px;
+}
+
+.wav-prose h2:first-child {
+  margin-top: 0;
+}
+
+.wav-prose h3 {
+  font-size: 1.3rem;
+  margin: 24px 0 12px;
+  color: var(--wav-accent);
+}
+
+.wav-prose p {
+  color: var(--wav-text-secondary);
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+.wav-prose ul, .wav-prose ol {
+  margin: 16px 0 24px;
+  padding-left: 24px;
+  color: var(--wav-text-secondary);
+  line-height: 1.6;
+}
+
+.wav-prose li {
+  margin: 8px 0;
+}
+
+.wav-highlight-box {
+  background: rgba(37, 211, 102, 0.08);
+  border-left: 4px solid var(--wav-accent);
+  padding: 20px 24px;
+  margin: 24px 0;
+  border-radius: var(--wav-radius-sm);
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Use Cases Grid
+   ────────────────────────────────────────────────────────────────────────── */
+
+.wav-usecases-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin: 40px 0;
+}
+
+.wav-uc-card {
+  background: var(--wav-surface);
+  border-radius: var(--wav-radius-md);
+  padding: 24px;
+  border: 1px solid var(--wav-border-light);
+  transition: all 0.2s ease;
+}
+
+.wav-uc-card:hover {
+  border-color: var(--wav-accent);
+  transform: translateY(-4px);
+}
+
+.wav-uc-emoji {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.wav-uc-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.wav-uc-card p {
+  font-size: 0.85rem;
+  color: var(--wav-text-secondary);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.wav-uc-tag {
+  display: inline-block;
+  background: rgba(37, 211, 102, 0.1);
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 0.7rem;
+  color: var(--wav-accent);
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Comparison Table
+   ────────────────────────────────────────────────────────────────────────── */
+
+.wav-compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--wav-surface);
+  border-radius: var(--wav-radius-md);
+  overflow: hidden;
+  border: 1px solid var(--wav-border-light);
+}
+
+.wav-compare-table th,
+.wav-compare-table td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--wav-border-light);
+  font-size: 0.85rem;
+}
+
+.wav-compare-table th {
+  background: rgba(37, 211, 102, 0.05);
+  font-weight: 600;
+  color: var(--wav-accent);
+}
+
+.wav-compare-table tr:last-child td {
+  border-bottom: none;
+}
+
+.wav-col-highlight {
+  background: rgba(37, 211, 102, 0.03);
+}
+
+.wav-yes {
+  color: #10b981;
+  font-weight: 600;
+}
+
+.wav-no {
+  color: var(--wav-text-muted);
+}
+
+.wav-maybe {
+  color: #f59e0b;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Tips List
+   ────────────────────────────────────────────────────────────────────────── */
+
+.wav-tips-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 40px 0;
+}
+
+.wav-tip {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  background: var(--wav-surface);
+  border-radius: var(--wav-radius-md);
+  padding: 20px;
+  border: 1px solid var(--wav-border-light);
+}
+
+.wav-tip-icon {
+  font-size: 1.8rem;
+  min-width: 48px;
+}
+
+.wav-tip h4 {
+  font-size: 1rem;
+  margin-bottom: 6px;
+}
+
+.wav-tip p {
+  font-size: 0.85rem;
+  color: var(--wav-text-secondary);
+  line-height: 1.5;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   FAQ Section
+   ────────────────────────────────────────────────────────────────────────── */
+
+.wav-faq {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.wav-faq-item {
+  background: var(--wav-surface);
+  border-radius: var(--wav-radius-md);
+  border: 1px solid var(--wav-border-light);
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.wav-faq-item:hover {
+  border-color: var(--wav-accent);
+}
+
+.wav-faq-q {
+  padding: 18px 24px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  list-style: none;
+}
+
+.wav-faq-q::-webkit-details-marker {
+  display: none;
+}
+
+.wav-faq-chevron {
+  font-size: 0.7rem;
+  transition: transform 0.2s ease;
+  color: var(--wav-accent);
+}
+
+details[open] .wav-faq-chevron {
+  transform: rotate(180deg);
+}
+
+.wav-faq-a {
+  padding: 0 24px 20px 24px;
+  color: var(--wav-text-secondary);
+  line-height: 1.6;
+  font-size: 0.85rem;
+  border-top: 1px solid var(--wav-border-light);
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Related Tools Grid
+   ────────────────────────────────────────────────────────────────────────── */
+
+.wav-related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin: 32px 0;
+}
+
+.wav-related-card {
+  background: var(--wav-surface);
+  border-radius: var(--wav-radius-md);
+  padding: 24px;
+  text-decoration: none;
+  border: 1px solid var(--wav-border-light);
+  transition: all 0.2s ease;
+  display: block;
+}
+
+.wav-related-card:hover {
+  border-color: var(--wav-accent);
+  transform: translateY(-4px);
+}
+
+.wav-related-icon {
+  font-size: 1.8rem;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.wav-related-card h4 {
+  color: var(--wav-text);
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+
+.wav-related-card p {
+  font-size: 0.8rem;
+  color: var(--wav-text-secondary);
+  line-height: 1.4;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Footer CTA
+   ────────────────────────────────────────────────────────────────────────── */
+
+.wav-footer-cta {
+  text-align: center;
+  background: linear-gradient(135deg, rgba(37, 211, 102, 0.1), rgba(18, 140, 126, 0.05));
+  border-radius: var(--wav-radius-lg);
+  padding: 64px 32px;
+  margin-top: 60px;
+  border: 1px solid var(--wav-border);
+}
+
+.wav-footer-cta h2 {
+  font-size: 2.2rem;
+  margin-bottom: 16px;
+}
+
+.wav-footer-cta p {
+  color: var(--wav-text-secondary);
+  margin-bottom: 32px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Animations
+   ────────────────────────────────────────────────────────────────────────── */
+
+@keyframes wav-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.wav-hero, .wav-mockup-section, .wav-section {
+  animation: wav-fade-up 0.6s ease-out forwards;
+}
+
+.wav-mockup-section {
+  animation-delay: 0.1s;
+}
+
+.wav-section:nth-of-type(1) {
+  animation-delay: 0.2s;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Responsive Design
+   ────────────────────────────────────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .wav-nav {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px 20px;
+  }
+  
+  .wav-nav-links {
+    gap: 20px;
+  }
+  
+  .wav-content {
+    padding: 24px 16px 60px;
+  }
+  
+  .wav-hero-title {
+    font-size: 2.2rem;
+  }
+  
+  .wav-hero-sub {
+    font-size: 1rem;
+  }
+  
+  .wav-cta-primary {
+    padding: 14px 28px;
+    font-size: 1rem;
+  }
+  
+  .wav-cta-note {
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .wav-section-title {
+    font-size: 1.6rem;
+  }
+  
+  .wav-mockup-body {
+    flex-direction: column;
+  }
+  
+  .wav-mockup-arrow {
+    transform: rotate(90deg);
+  }
+  
+  .wav-step {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .wav-step-num {
+    min-width: auto;
+  }
+  
+  .wav-prose {
+    padding: 24px;
+  }
+  
+  .wav-prose h2 {
+    font-size: 1.4rem;
+  }
+  
+  .wav-prose h3 {
+    font-size: 1.1rem;
+  }
+  
+  .wav-footer-cta h2 {
+    font-size: 1.6rem;
+  }
+  
+  .wav-features-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .wav-usecases-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .wav-stats-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .wav-stats-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .wav-nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .wav-compare-table th,
+  .wav-compare-table td {
+    padding: 10px 12px;
+    font-size: 0.7rem;
+  }
+  
+  .wav-tip {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .wav-tip-icon {
+    font-size: 1.5rem;
+  }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--wav-bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--wav-accent);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--wav-accent-dark);
+}
