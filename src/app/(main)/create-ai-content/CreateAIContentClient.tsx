@@ -59,7 +59,6 @@ interface ImageUsage {
     accessible: boolean;
   }[];
 }
-
 interface VideoCredits {
   balance: number;
   planType: string;
@@ -644,7 +643,7 @@ const CreateAIContentClient: React.FC = () => {
 
   // ─────────────────── IMAGE STATE ────────────────────────────────────────
   const [imageUsage, setImageUsage] = useState<ImageUsage | null>(null);
-  const [selectedImageModel, setSelectedImageModel] = useState("NANO_BANANA_PRO");
+  const [selectedImageModel, setSelectedImageModel] = useState("STABILITY_AI_CORE");
   const [imageSize, setImageSize] = useState("square");
   const [imageQuality, setImageQuality] = useState("standard");
   const [imageStyle, setImageStyle] = useState("realistic");
@@ -658,6 +657,7 @@ const CreateAIContentClient: React.FC = () => {
     errorMessage?: string;
   } | null>(null);
   const imagePollingRef = useRef<NodeJS.Timeout | null>(null);
+  const imageUsageRef = useRef<ImageUsage | null>(null);
   const [imageGenMode, setImageGenMode] = useState<'text' | 'image' | 'carousel'>('text');
   const [inputImageFile, setInputImageFile] = useState<File | null>(null);
   const [inputImagePreview, setInputImagePreview] = useState<string | null>(null);
@@ -695,7 +695,9 @@ const CreateAIContentClient: React.FC = () => {
   const [isGeneratingVideo, setIsGeneratingVideo] = useState(false);
   const [currentVideoJob, setCurrentVideoJob] = useState<VideoJob | null>(null);
   const videoPollingRef = useRef<NodeJS.Timeout | null>(null);
- const [showFreeVideoModal, setShowFreeVideoModal] = useState(false);
+  const [showFreeVideoModal, setShowFreeVideoModal] = useState(false);
+  const [showImageUpgradeModal, setShowImageUpgradeModal] = useState(false);
+  const [pendingImageGenerate, setPendingImageGenerate] = useState(false);
   const [videoFromImageUrl, setVideoFromImageUrl] = useState<string | null>(null);
   const videoFromImageRef = useRef<HTMLInputElement>(null);
   const [videoGenMode, setVideoGenMode] = useState<'text' | 'image'>('text');
@@ -864,7 +866,7 @@ const CreateAIContentClient: React.FC = () => {
     // Image usage
     fetch(`${API_BASE_URL}/api/sole-image-gen/usage`, { headers: h })
       .then((r) => r.json())
-      .then(setImageUsage)
+      .then((data) => { setImageUsage(data); imageUsageRef.current = data; })
       .catch(() => {});
 
     // Image history
@@ -1112,9 +1114,21 @@ const CreateAIContentClient: React.FC = () => {
     }, 3000);
   }, []);
 
-  const handleGenerateImage = async () => {
+  const handleGenerateImage = async (skipUpgradeCheck = false) => {
     if (!isLoggedIn) {
       setShowLoginModal(true);
+      return;
+    }
+    const planType = imageUsageRef.current?.planType ?? imageUsage?.planType ?? "FREE";
+    const currentlyFreeUser = planType === "FREE";
+    // Locked model → already handled by button (routes to /pricing), but safety net here too
+    if (currentlyFreeUser && selectedImageModel !== "STABILITY_AI_CORE" && !skipUpgradeCheck) {
+      window.location.href = "/pricing";
+      return;
+    }
+    // Free user using Stability — show upgrade nudge (unless they dismissed it)
+    if (currentlyFreeUser && selectedImageModel === "STABILITY_AI_CORE" && !skipUpgradeCheck) {
+      setShowImageUpgradeModal(true);
       return;
     }
     if (!prompt.trim()) {
@@ -1466,12 +1480,32 @@ const CreateAIContentClient: React.FC = () => {
   const imageModelCfg =
     IMAGE_MODEL_CONFIG[selectedImageModel.toUpperCase().replace(/-/g, "_")];
 
+  const isFreeUser = !isLoggedIn || !imageUsage || imageUsage.planType === "FREE";
+
   const availableImageModels = useMemo(() => {
-    if (isLoggedIn && imageUsage?.availableModels?.length)
+    if (isLoggedIn && imageUsage?.availableModels?.length) {
+      if (isFreeUser) {
+        return imageUsage.availableModels.map((m) => ({
+          id: m.id,
+          displayName: m.id === "STABILITY_AI_CORE" ? m.displayName : `${m.displayName} 🔒`,
+        }));
+      }
       return imageUsage.availableModels.map((m) => ({
         id: m.id,
         displayName: m.displayName,
       }));
+    }
+    if (isFreeUser) {
+      return [
+        { id: "STABILITY_AI_CORE", displayName: "Stability Core" },
+        { id: "GPT_IMAGE_1_MINI", displayName: "GPT Mini 🔒" },
+        { id: "IMAGEN_4_FAST", displayName: "Imagen 4 Fast 🔒" },
+        { id: "FLUX_1_1_PRO", displayName: "FLUX 1.1 Pro 🔒" },
+        { id: "IMAGEN_4_STANDARD", displayName: "Imagen 4 🔒" },
+        { id: "GPT_IMAGE_1_MEDIUM", displayName: "GPT Medium 🔒" },
+        { id: "GROK_AURORA", displayName: "Grok Aurora 🔒" },
+      ];
+    }
     return [
       { id: "STABILITY_AI_CORE", displayName: "Stability Core" },
       { id: "GPT_IMAGE_1_MINI", displayName: "GPT Mini" },
@@ -1481,7 +1515,7 @@ const CreateAIContentClient: React.FC = () => {
       { id: "GPT_IMAGE_1_MEDIUM", displayName: "GPT Medium" },
       { id: "GROK_AURORA", displayName: "Grok Aurora ⚡" },
     ];
-  }, [isLoggedIn, imageUsage]);
+  }, [isLoggedIn, imageUsage, isFreeUser]);
 
   // ─────────────────── RENDER ───────────────────────────────────────────────
 
@@ -2094,7 +2128,18 @@ const CreateAIContentClient: React.FC = () => {
                 </select>
                 <CustomDropdown
                   value={selectedImageModel}
-                  onChange={(val) => { setSelectedImageModel(val); setImageSize("square"); setImageQuality("standard"); }}
+                  onChange={(val) => {
+                    const currentlyFree = !imageUsage || imageUsage.planType === "FREE";
+                    if (currentlyFree && val !== "STABILITY_AI_CORE") {
+                      setSelectedImageModel(val); // allow selection so modal fires on generate
+                      setImageSize("square");
+                      setImageQuality("standard");
+                    } else {
+                      setSelectedImageModel(val);
+                      setImageSize("square");
+                      setImageQuality("standard");
+                    }
+                  }}
                   options={availableImageModels.map((m) => ({
                     value: m.id,
                     label: m.displayName,
@@ -2336,9 +2381,25 @@ const CreateAIContentClient: React.FC = () => {
                       : `🎠 Generate Carousel (${carouselPrompts.filter(p => p.trim()).length || 3} slides)`}
                   </button>
                 ) : (
-                <button className="cac-generate-btn" onClick={handleGenerateImage}
+                <button className="cac-generate-btn"
+                  onClick={() => {
+                    const currentlyFree = !imageUsageRef.current && !imageUsage || 
+                      (imageUsageRef.current?.planType ?? imageUsage?.planType ?? "FREE") === "FREE";
+                    if (currentlyFree && selectedImageModel !== "STABILITY_AI_CORE") {
+                      window.location.href = "/pricing";
+                      return;
+                    }
+                    handleGenerateImage(false);
+                  }}
                   disabled={isGeneratingImage || !prompt.trim() || (imageGenMode === 'image' && !inputImageFile)}>
-                  {isGeneratingImage ? (<><span className="cac-btn-spinner" />Generating…</>) : "🖼️ Generate Image"}
+                  {isGeneratingImage ? (<><span className="cac-btn-spinner" />Generating…</>) : (
+                    (() => {
+                      const currentlyFree = (imageUsageRef.current?.planType ?? imageUsage?.planType ?? "FREE") === "FREE";
+                      return currentlyFree && selectedImageModel !== "STABILITY_AI_CORE"
+                        ? "🔒 Unlock This Model →"
+                        : "🖼️ Generate Image";
+                    })()
+                  )}
                 </button>
                 )
               ) : activeTab === "video" && isLoggedIn && (!videoCredits || videoCredits?.planType === "FREE") ? (
@@ -3313,6 +3374,103 @@ const CreateAIContentClient: React.FC = () => {
     >
       {darkMode ? <FaSun size={14} /> : <FaMoon size={14} />}
     </button>
+
+    {/* ── Image Upgrade Modal ── */}
+      <AnimatePresence>
+        {showImageUpgradeModal && (
+          <motion.div
+            className="cac-modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setShowImageUpgradeModal(false);
+            }}
+          >
+            <motion.div
+              className="cac-modal"
+              initial={{ scale: 0.92, opacity: 0, y: 16 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.92, opacity: 0, y: 16 }}
+              transition={{ duration: 0.18 }}
+              style={{ maxWidth: 340, width: '100%', padding: 'clamp(18px, 5vw, 28px) clamp(16px, 5vw, 24px) 22px' }}
+            >
+              <button className="cac-modal-close" onClick={() => setShowImageUpgradeModal(false)}>
+                <FaTimes size={11} />
+              </button>
+
+              {/* Icon + headline */}
+              <div style={{ textAlign: 'center', marginBottom: 16 }}>
+                <div style={{ fontSize: 32, marginBottom: 8 }}>🖼️</div>
+                <h2 style={{ fontFamily: 'inherit', fontSize: 17, fontWeight: 800, color: 'var(--cac-text)', marginBottom: 6, lineHeight: 1.3 }}>
+                  You're leaving quality on the table
+                </h2>
+                <p style={{ fontSize: 12.5, color: 'var(--cac-muted)', lineHeight: 1.6, margin: 0 }}>
+                  You've got access to <strong style={{ color: 'var(--cac-accent)' }}>better models</strong> — upgrade at just{' '}
+                  <strong style={{ color: 'var(--cac-accent)' }}>₹50 / $1</strong> and generate with GPT, Imagen 4, Nano Banana &amp; more.
+                </p>
+              </div>
+
+              {/* Model pills */}
+              <div style={{ display: 'flex', gap: 6, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 18 }}>
+                {[
+                  { key: 'GPT_IMAGE_1_MEDIUM', label: 'GPT Medium' },
+                  { key: 'IMAGEN_4_STANDARD', label: 'Imagen 4' },
+                  { key: 'NANO_BANANA_PRO', label: 'Nano Banana ✨' },
+                  { key: 'GROK_AURORA', label: 'Grok Aurora' },
+                  { key: 'FLUX_1_1_PRO', label: 'FLUX Pro' },
+                ].map(m => (
+                  <div key={m.key} style={{
+                    display: 'flex', alignItems: 'center', gap: 4,
+                    padding: '3px 9px', borderRadius: 999,
+                    background: m.key === 'NANO_BANANA_PRO'
+                      ? 'linear-gradient(135deg, rgba(99,85,220,0.12), rgba(139,92,246,0.12))'
+                      : 'rgba(99,85,220,0.07)',
+                    border: m.key === 'NANO_BANANA_PRO'
+                      ? '1px solid rgba(99,85,220,0.35)'
+                      : '1px solid rgba(99,85,220,0.18)',
+                    fontSize: 11, fontWeight: 700, color: 'var(--cac-accent)',
+                  }}>
+                    <ModelLogo modelKey={m.key} size={12} />
+                    {m.label}
+                  </div>
+                ))}
+              </div>
+
+              {/* Primary CTA */}
+              
+              <a  href="/pricing"
+                className="cac-generate-btn"
+                style={{
+                  display: 'block', textAlign: 'center', textDecoration: 'none',
+                  width: '100%', marginBottom: 10, fontSize: 14, fontWeight: 800,
+                  padding: '13px 16px',
+                }}
+                onClick={() => setShowImageUpgradeModal(false)}
+              >
+                ✨ Unlock Better Models — from ₹50
+              </a>
+
+              {/* Secondary — continue with Stability */}
+              <button
+                onClick={() => {
+                  setShowImageUpgradeModal(false);
+                  handleGenerateImage(true);
+                }}
+                style={{
+                  display: 'block', width: '100%',
+                  background: 'none', border: 'none',
+                  color: 'var(--cac-muted)', fontSize: 12,
+                  cursor: 'pointer', textDecoration: 'underline',
+                  padding: '4px 0',
+                }}
+              >
+                Continue with Stability Core
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
     {isLoggedIn && userProfile?.role === "BASIC" && (
       <div className="cac-floating-cta">
