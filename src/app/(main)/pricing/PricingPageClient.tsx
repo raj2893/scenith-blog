@@ -687,6 +687,7 @@ export default function PricingPageClient() {
   const [isPricingReady, setIsPricingReady] = useState(false);
   const [isPaymentInProgress, setIsPaymentInProgress] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [showProPlans, setShowProPlans] = useState(false);
 
   const plansRef = useRef<HTMLDivElement>(null);
   const scrollToPlans = () => plansRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -984,293 +985,391 @@ export default function PricingPageClient() {
             One unified credit pool for every AI tool. Start free — upgrade when you're ready to create more.
           </motion.p>
           <div className="v3-plans-wrap">
-          <div className="v3-plans-row">
-              {/* ── Top row: Spark + Micro ── */}
-              <div className="v3-plans-row-top">
-              {plans.filter(plan => plan.role === 'SPARK' || plan.role === 'MICRO').map((plan, idx) => {
-                const isFree = plan.price === 0;
-                const isPopular = plan.role === 'CREATOR';
-                const isStudio  = plan.role === 'STUDIO';
-                const isStarter = plan.role === 'MICRO' || plan.role === 'SPARK';
-                const isCurrent = currentPlan === plan.role;
-                const isDowngradeBlocked =
-                  (currentPlan === 'STUDIO' && (plan.role === 'CREATOR' || plan.role === 'CREATOR_LITE' || plan.role === 'MICRO' || plan.role === 'SPARK')) ||
-                  (currentPlan === 'CREATOR' && (plan.role === 'CREATOR_LITE' || plan.role === 'MICRO' || plan.role === 'SPARK')) ||
-                  (currentPlan === 'CREATOR_LITE' && (plan.role === 'MICRO' || plan.role === 'SPARK')) ||
-                  (currentPlan === 'MICRO' && plan.role === 'SPARK');
-                const badgeClass = () => {
-                  if (plan.role === 'SPARK') return 'v3-card-plan-badge v3-badge-free';
-                  if (plan.role === 'MICRO') return 'v3-card-plan-badge v3-badge-free';
-                  if (plan.role === 'CREATOR_LITE') return 'v3-card-plan-badge v3-badge-lite';
-                  if (isPopular) return 'v3-card-plan-badge v3-badge-creator';
-                  if (isStudio) return 'v3-card-plan-badge v3-badge-studio';
-                  return 'v3-card-plan-badge v3-badge-free';
-                };
-                const badgeLabel = () => {
-                  if (plan.role === 'BASIC') return '🌱 Free';
-                  if (plan.role === 'SPARK') return '✨ Spark';
-                  if (plan.role === 'MICRO') return '🌟 Starter';
-                  if (plan.role === 'CREATOR_LITE') return '⚡ Lite';
-                  if (isPopular) return '⭐ Most Popular';
-                  return '👑 Pro';
-                };
-                const btnClass = () => {
-                  if (isCurrent) return 'v3-btn v3-btn-green';
-                  if (isDowngradeBlocked) return 'v3-btn v3-btn-block';
-                  if (isFree) return 'v3-btn v3-btn-plain';
-                  if (isStudio) return 'v3-btn v3-btn-gold';
-                  return 'v3-btn v3-btn-primary';
-                };
-                const btnLabel = () => {
-                  if (loading === plan.role) return 'Processing...';
-                  if (isCurrent) return '✓ Your Current Plan';
-                  if (isDowngradeBlocked) return 'Downgrade Not Available';
-                  if (isFree) return 'Free Forever';
-                  return `Get ${plan.name} →`;
-                };
-
-                return (
-                  <motion.div
-                    key={plan.role}
-                    className={`v3-card${isPopular ? ' v3-card-pop' : ''}${isCurrent ? ' v3-card-current' : ''}`}
-                    initial={{ opacity: 0, y: 40 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.44, delay: idx * 0.07 }}
+            <div className="v3-plans-row">
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 16,
+                marginBottom: 28,
+                flexWrap: 'wrap'
+              }}>
+                {/* Entry ↔ Pro Plans Toggle */}
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  background: 'white',
+                  padding: '12px 28px',
+                  borderRadius: '999px',
+                  boxShadow: '0 8px 30px rgba(92,77,232,0.12)',
+                  border: '1px solid var(--border2)',
+                  width: 'fit-content'
+                }}>
+                  <span style={{
+                    fontSize: 15,
+                    fontWeight: 700,
+                    color: !showProPlans ? 'var(--violet)' : 'var(--muted)',
+                    transition: 'color 0.25s',
+                    letterSpacing: '-0.01em',
+                    marginRight: 16
+                  }}>
+                    Entry Plans
+                  </span>
+                
+                  <button
+                    onClick={() => setShowProPlans(p => !p)}
+                    style={{
+                      width: 68,
+                      height: 34,
+                      borderRadius: 999,
+                      border: 'none',
+                      cursor: 'pointer',
+                      background: showProPlans
+                        ? 'linear-gradient(135deg, var(--violet), #8b5cf6)'
+                        : 'linear-gradient(135deg, #e0e0ff, #c4c4ff)',
+                      position: 'relative',
+                      transition: 'background 0.3s ease',
+                      boxShadow: showProPlans 
+                        ? '0 6px 20px rgba(92,77,232,0.45)' 
+                        : '0 4px 12px rgba(0,0,0,0.1)',
+                      marginRight: 16
+                    }}
+                    aria-label="Toggle plan tier"
                   >
-                    {/* top ribbon */}
-                    {isPopular && !isCurrent && !isDowngradeBlocked && <div className="v3-card-ribbon v3-ribbon-pop">⭐ Most Popular</div>}
-                    {isStudio && !isCurrent && !isDowngradeBlocked && <div className="v3-card-ribbon v3-ribbon-gold">👑 Best Value</div>}
-                    {isCurrent && <div className="v3-card-ribbon v3-ribbon-current">✓ Active Plan</div>}
-                    {isDowngradeBlocked && <div className="v3-card-ribbon v3-ribbon-block">Downgrade Not Available</div>}
-
-                    <span className={badgeClass()}>{badgeLabel()}</span>
-                    <h2 className="v3-plan-name">{plan.name}</h2>
-                    <p className="v3-plan-tagline">{plan.tagline}</p>
-
-                    {/* price */}
-                    {plan.currency === 'LOADING' ? (
-                      <div className="v3-price-area"><span className="v3-price-loading">Loading price...</span></div>
-                    ) : isFree ? (
-                      <div className="v3-price-area">
-                        <div className="v3-price-free">Free</div>
-                        <div className="v3-price-forever">Always free, no card needed</div>
-                      </div>
-                    ) : (
-                      <div className="v3-price-area">
-                        {plan.originalPrice && <div className="v3-price-strike">{plan.symbol}{plan.originalPrice}/mo</div>}
-                        <div className="v3-price-row">
-                          <span className="v3-price-sym">{plan.symbol}</span>
-                          <span className="v3-price-num">{plan.price}</span>
-                          <span className="v3-price-per">/mo</span>
-                        </div>
-                        <span className="v3-price-save">✓ 25% introductory discount</span>
-                      </div>
-                    )}
-
-                    {isFree && (
-                      <div className="v3-outcomes">
-                        <div className="v3-outcomes-title">Try every tool free</div>
-                        {plan.outcomes.map((o, i) => (
-                          <div key={i} className="v3-outcome-row">
-                            <span className="v3-outcome-icon">{o.icon}</span>
-                            <span className="v3-outcome-label">{o.label}</span>
-                            <span className="v3-outcome-count">/ mo</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-
-                    {/* features */}
-                    <ul className="v3-feats">
-                      {plan.features.map((feat, i) => {
-                        const boldified = feat
-                          .replace(
-                            /(\d[\d,]*(?:\s?(?:credits?|cr|chars?|characters?|videos?|images?|SVGs?|removals?|K|p))(?:\/mo)?)/gi,
-                            '<strong>$1</strong>'
-                          )
-                          .replace(
-                            /\b(\d[\d,]+)\b/g,
-                            '<strong>$1</strong>'
-                          );
-                        return (
-                          <li key={i} className="v3-feat v3-feat-hl">
-                            <span className={`v3-feat-ico ${isFree ? 'y' : 'v'}`}>✓</span>
-                            <span dangerouslySetInnerHTML={{ __html: boldified }} />
-                          </li>
-                        );
-                      })}
-                    </ul>
-                    {!isFree && plan.currency !== 'LOADING' && (
-                      <div className="v3-outcomes">
-                        <div className="v3-outcomes-title">With this plan you can create</div>
-                        {plan.outcomes.map((o, i) => (
-                          <div key={i} className="v3-outcome-row">
-                            <span className="v3-outcome-icon">{o.icon}</span>
-                            <span className="v3-outcome-label">{o.label}</span>
-                            <span className="v3-outcome-count">/ mo</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}                    
-
-                    <button
-                      className={btnClass()}
-                      onClick={() => handleUpgrade(plan)}
-                      disabled={loading !== null || isFree || isCurrent || isDowngradeBlocked}
-                    >
-                      {btnLabel()}
-                    </button>
-                  </motion.div>
-                );
-              })}
-              </div>
-              <div className="v3-plans-row-divider">
-                <span className="v3-plans-row-divider-label">↑ Entry plans · Professional plans ↓</span>
-              </div>
-              {/* ── Bottom row: Creator Lite, Creator Spark, Creator Odyssey ── */}
-              <div className="v3-plans-row-bottom">
-              {plans.filter(plan => plan.role === 'CREATOR_LITE' || plan.role === 'CREATOR' || plan.role === 'STUDIO').map((plan, idx) => {
-                const isFree = plan.price === 0;
-                const isPopular = plan.role === 'CREATOR';
-                const isStudio  = plan.role === 'STUDIO';
-                const isStarter = plan.role === 'MICRO' || plan.role === 'SPARK';
-                const isCurrent = currentPlan === plan.role;
-                const isDowngradeBlocked =
-                  (currentPlan === 'STUDIO' && (plan.role === 'CREATOR' || plan.role === 'CREATOR_LITE' || plan.role === 'MICRO' || plan.role === 'SPARK')) ||
-                  (currentPlan === 'CREATOR' && (plan.role === 'CREATOR_LITE' || plan.role === 'MICRO' || plan.role === 'SPARK')) ||
-                  (currentPlan === 'CREATOR_LITE' && (plan.role === 'MICRO' || plan.role === 'SPARK')) ||
-                  (currentPlan === 'MICRO' && plan.role === 'SPARK');
-                const badgeClass = () => {
-                  if (plan.role === 'SPARK') return 'v3-card-plan-badge v3-badge-free';
-                  if (plan.role === 'MICRO') return 'v3-card-plan-badge v3-badge-free';
-                  if (plan.role === 'CREATOR_LITE') return 'v3-card-plan-badge v3-badge-lite';
-                  if (isPopular) return 'v3-card-plan-badge v3-badge-creator';
-                  if (isStudio) return 'v3-card-plan-badge v3-badge-studio';
-                  return 'v3-card-plan-badge v3-badge-free';
-                };
-                const badgeLabel = () => {
-                  if (plan.role === 'SPARK') return '✨ Spark';
-                  if (plan.role === 'MICRO') return '🌟 Starter';
-                  if (plan.role === 'CREATOR_LITE') return '⚡ Lite';
-                  if (isPopular) return '⭐ Most Popular';
-                  return '👑 Pro';
-                };
-                const btnClass = () => {
-                  if (isCurrent) return 'v3-btn v3-btn-green';
-                  if (isDowngradeBlocked) return 'v3-btn v3-btn-block';
-                  if (isFree) return 'v3-btn v3-btn-plain';
-                  if (isStudio) return 'v3-btn v3-btn-gold';
-                  return 'v3-btn v3-btn-primary';
-                };
-                const btnLabel = () => {
-                  if (loading === plan.role) return 'Processing...';
-                  if (isCurrent) return '✓ Your Current Plan';
-                  if (isDowngradeBlocked) return 'Downgrade Not Available';
-                  if (isFree) return 'Free Forever';
-                  return `Get ${plan.name} →`;
-                };
-                return (
+                    <span style={{
+                      position: 'absolute',
+                      top: 4,
+                      left: showProPlans ? 36 : 4,
+                      width: 26,
+                      height: 26,
+                      borderRadius: '50%',
+                      background: '#fff',
+                      transition: 'left 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                      boxShadow: '0 3px 10px rgba(0,0,0,0.2)',
+                    }} />
+                  </button>
+                  
+                  <span style={{
+                    fontSize: 15,
+                    fontWeight: 700,
+                    color: showProPlans ? 'var(--violet)' : 'var(--muted)',
+                    transition: 'color 0.25s',
+                    letterSpacing: '-0.01em'
+                  }}>
+                    Pro Plans
+                  </span>
+                </div>
+                
+                {/* Topups Button */}
+                <button
+                  onClick={() => {
+                    const topupsSection = document.querySelector('.v3-topups');
+                    if (topupsSection) {
+                      topupsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }}
+                  style={{
+                    padding: '12px 24px',
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: 'var(--violet)',
+                    background: 'white',
+                    border: '1.5px solid var(--border2)',
+                    borderRadius: '999px',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 8,
+                    boxShadow: '0 4px 15px rgba(92,77,232,0.08)',
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--violet)';
+                    e.currentTarget.style.background = 'rgba(92,77,232,0.04)';
+                    e.currentTarget.style.transform = 'translateY(-1px)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--border2)';
+                    e.currentTarget.style.background = 'white';
+                    e.currentTarget.style.transform = 'none';
+                  }}
+                >
+                  💳 Quick Top-ups
+                </button>
+              </div>          
+                
+              <AnimatePresence mode="wait">
+                {!showProPlans ? (
                   <motion.div
-                    key={plan.role}
-                    className={`v3-card${isPopular ? ' v3-card-pop' : ''}${isCurrent ? ' v3-card-current' : ''}`}
-                    initial={{ opacity: 0, y: 40 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.44, delay: idx * 0.07 }}
+                    key="entry"
+                    className="v3-plans-row-top"
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -12 }}
+                    transition={{ duration: 0.22 }}
                   >
-                    {isPopular && !isCurrent && !isDowngradeBlocked && <div className="v3-card-ribbon v3-ribbon-pop">⭐ Most Popular</div>}
-                    {isStudio && !isCurrent && !isDowngradeBlocked && <div className="v3-card-ribbon v3-ribbon-gold">👑 Best Value</div>}
-                    {isCurrent && <div className="v3-card-ribbon v3-ribbon-current">✓ Active Plan</div>}
-                    {isDowngradeBlocked && <div className="v3-card-ribbon v3-ribbon-block">Downgrade Not Available</div>}
-                    <span className={badgeClass()}>{badgeLabel()}</span>
-                    <h2 className="v3-plan-name">{plan.name}</h2>
-                    <p className="v3-plan-tagline">{plan.tagline}</p>
-                    {plan.currency === 'LOADING' ? (
-                      <div className="v3-price-area"><span className="v3-price-loading">Loading price...</span></div>
-                    ) : isFree ? (
-                      <div className="v3-price-area">
-                        <div className="v3-price-free">Free</div>
-                        <div className="v3-price-forever">Always free, no card needed</div>
-                      </div>
-                    ) : (
-                      <div className="v3-price-area">
-                        {plan.originalPrice && <div className="v3-price-strike">{plan.symbol}{plan.originalPrice}/mo</div>}
-                        <div className="v3-price-row">
-                          <span className="v3-price-sym">{plan.symbol}</span>
-                          <span className="v3-price-num">{plan.price}</span>
-                          <span className="v3-price-per">/mo</span>
-                        </div>
-                        <span className="v3-price-save">✓ 25% introductory discount</span>
-                      </div>
-                    )}
-                    {isFree && (
-                      <div className="v3-outcomes">
-                        <div className="v3-outcomes-title">Try every tool free</div>
-                        {plan.outcomes.map((o, i) => (
-                          <div key={i} className="v3-outcome-row">
-                            <span className="v3-outcome-icon">{o.icon}</span>
-                            <span className="v3-outcome-label">{o.label}</span>
-                            <span className="v3-outcome-count">/ mo</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                    <ul className="v3-feats">
-                      {plan.features.map((feat, i) => {
-                        const boldified = feat
-                          .replace(
-                            /(\d[\d,]*(?:\s?(?:credits?|cr|chars?|characters?|videos?|images?|SVGs?|removals?|K|p))(?:\/mo)?)/gi,
-                            '<strong>$1</strong>'
-                          )
-                          .replace(
-                            /\b(\d[\d,]+)\b/g,
-                            '<strong>$1</strong>'
-                          );
-                        return (
-                          <li key={i} className="v3-feat v3-feat-hl">
-                            <span className={`v3-feat-ico ${isFree ? 'y' : 'v'}`}>✓</span>
-                            <span dangerouslySetInnerHTML={{ __html: boldified }} />
-                          </li>
-                        );
-                      })}
-                    </ul>
-                    {!isFree && plan.currency !== 'LOADING' && (
-                      <div className="v3-outcomes">
-                        <div className="v3-outcomes-title">With this plan you can create</div>
-                        {plan.outcomes.map((o, i) => (
-                          <div key={i} className="v3-outcome-row">
-                            <span className="v3-outcome-icon">{o.icon}</span>
-                            <span className="v3-outcome-label">{o.label}</span>
-                            <span className="v3-outcome-count">/ mo</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                    <button
-                      className={btnClass()}
-                      onClick={() => handleUpgrade(plan)}
-                      disabled={loading !== null || isFree || isCurrent || isDowngradeBlocked}
-                    >
-                      {btnLabel()}
-                    </button>
+                    {plans.filter(plan => plan.role === 'SPARK' || plan.role === 'MICRO').map((plan, idx) => {
+                      const isFree = plan.price === 0;
+                      const isPopular = plan.role === 'CREATOR';
+                      const isStudio  = plan.role === 'STUDIO';
+                      const isCurrent = currentPlan === plan.role;
+                      const isDowngradeBlocked =
+                        (currentPlan === 'STUDIO' && (plan.role === 'CREATOR' || plan.role === 'CREATOR_LITE' || plan.role === 'MICRO' || plan.role === 'SPARK')) ||
+                        (currentPlan === 'CREATOR' && (plan.role === 'CREATOR_LITE' || plan.role === 'MICRO' || plan.role === 'SPARK')) ||
+                        (currentPlan === 'CREATOR_LITE' && (plan.role === 'MICRO' || plan.role === 'SPARK')) ||
+                        (currentPlan === 'MICRO' && plan.role === 'SPARK');
+                      const badgeClass = () => {
+                        if (plan.role === 'SPARK') return 'v3-card-plan-badge v3-badge-free';
+                        if (plan.role === 'MICRO') return 'v3-card-plan-badge v3-badge-free';
+                        if (plan.role === 'CREATOR_LITE') return 'v3-card-plan-badge v3-badge-lite';
+                        if (isPopular) return 'v3-card-plan-badge v3-badge-creator';
+                        if (isStudio) return 'v3-card-plan-badge v3-badge-studio';
+                        return 'v3-card-plan-badge v3-badge-free';
+                      };
+                      const badgeLabel = () => {
+                        if (plan.role === 'BASIC') return '🌱 Free';
+                        if (plan.role === 'SPARK') return '✨ Spark';
+                        if (plan.role === 'MICRO') return '🌟 Starter';
+                        if (plan.role === 'CREATOR_LITE') return '⚡ Lite';
+                        if (isPopular) return '⭐ Most Popular';
+                        return '👑 Pro';
+                      };
+                      const btnClass = () => {
+                        if (isCurrent) return 'v3-btn v3-btn-green';
+                        if (isDowngradeBlocked) return 'v3-btn v3-btn-block';
+                        if (isFree) return 'v3-btn v3-btn-plain';
+                        if (isStudio) return 'v3-btn v3-btn-gold';
+                        return 'v3-btn v3-btn-primary';
+                      };
+                      const btnLabel = () => {
+                        if (loading === plan.role) return 'Processing...';
+                        if (isCurrent) return '✓ Your Current Plan';
+                        if (isDowngradeBlocked) return 'Downgrade Not Available';
+                        if (isFree) return 'Free Forever';
+                        return `Get ${plan.name} →`;
+                      };
+                      return (
+                        <motion.div
+                          key={plan.role}
+                          className={`v3-card${isPopular ? ' v3-card-pop' : ''}${isCurrent ? ' v3-card-current' : ''}`}
+                          initial={{ opacity: 0, y: 40 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.44, delay: idx * 0.07 }}
+                        >
+                          {isPopular && !isCurrent && !isDowngradeBlocked && <div className="v3-card-ribbon v3-ribbon-pop">⭐ Most Popular</div>}
+                          {isStudio && !isCurrent && !isDowngradeBlocked && <div className="v3-card-ribbon v3-ribbon-gold">👑 Best Value</div>}
+                          {isCurrent && <div className="v3-card-ribbon v3-ribbon-current">✓ Active Plan</div>}
+                          {isDowngradeBlocked && <div className="v3-card-ribbon v3-ribbon-block">Downgrade Not Available</div>}
+                          <span className={badgeClass()}>{badgeLabel()}</span>
+                          <h2 className="v3-plan-name">{plan.name}</h2>
+                          <p className="v3-plan-tagline">{plan.tagline}</p>
+                          {plan.currency === 'LOADING' ? (
+                            <div className="v3-price-area"><span className="v3-price-loading">Loading price...</span></div>
+                          ) : isFree ? (
+                            <div className="v3-price-area">
+                              <div className="v3-price-free">Free</div>
+                              <div className="v3-price-forever">Always free, no card needed</div>
+                            </div>
+                          ) : (
+                            <div className="v3-price-area">
+                              {plan.originalPrice && <div className="v3-price-strike">{plan.symbol}{plan.originalPrice}/mo</div>}
+                              <div className="v3-price-row">
+                                <span className="v3-price-sym">{plan.symbol}</span>
+                                <span className="v3-price-num">{plan.price}</span>
+                                <span className="v3-price-per">/mo</span>
+                              </div>
+                              <span className="v3-price-save">✓ 25% introductory discount</span>
+                            </div>
+                          )}
+                          {isFree && (
+                            <div className="v3-outcomes">
+                              <div className="v3-outcomes-title">Try every tool free</div>
+                              {plan.outcomes.map((o, i) => (
+                                <div key={i} className="v3-outcome-row">
+                                  <span className="v3-outcome-icon">{o.icon}</span>
+                                  <span className="v3-outcome-label">{o.label}</span>
+                                  <span className="v3-outcome-count">/ mo</span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          <ul className="v3-feats">
+                            {plan.features.map((feat, i) => {
+                              const boldified = feat
+                                .replace(
+                                  /(\d[\d,]*(?:\s?(?:credits?|cr|chars?|characters?|videos?|images?|SVGs?|removals?|K|p))(?:\/mo)?)/gi,
+                                  '<strong>$1</strong>'
+                                )
+                                .replace(/\b(\d[\d,]+)\b/g, '<strong>$1</strong>');
+                              return (
+                                <li key={i} className="v3-feat v3-feat-hl">
+                                  <span className={`v3-feat-ico ${isFree ? 'y' : 'v'}`}>✓</span>
+                                  <span dangerouslySetInnerHTML={{ __html: boldified }} />
+                                </li>
+                              );
+                            })}
+                          </ul>
+                          {!isFree && plan.currency !== 'LOADING' && (
+                            <div className="v3-outcomes">
+                              <div className="v3-outcomes-title">With this plan you can create</div>
+                              {plan.outcomes.map((o, i) => (
+                                <div key={i} className="v3-outcome-row">
+                                  <span className="v3-outcome-icon">{o.icon}</span>
+                                  <span className="v3-outcome-label">{o.label}</span>
+                                  <span className="v3-outcome-count">/ mo</span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          <button
+                            className={btnClass()}
+                            onClick={() => handleUpgrade(plan)}
+                            disabled={loading !== null || isFree || isCurrent || isDowngradeBlocked}
+                          >
+                            {btnLabel()}
+                          </button>
+                        </motion.div>
+                      );
+                    })}
                   </motion.div>
-                );
-              })}
-              </div>
+                ) : (
+                  <motion.div
+                    key="pro"
+                    className="v3-plans-row-bottom"
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -12 }}
+                    transition={{ duration: 0.22 }}
+                  >
+                    {plans.filter(plan => plan.role === 'CREATOR_LITE' || plan.role === 'CREATOR' || plan.role === 'STUDIO').map((plan, idx) => {
+                      const isFree = plan.price === 0;
+                      const isPopular = plan.role === 'CREATOR';
+                      const isStudio  = plan.role === 'STUDIO';
+                      const isCurrent = currentPlan === plan.role;
+                      const isDowngradeBlocked =
+                        (currentPlan === 'STUDIO' && (plan.role === 'CREATOR' || plan.role === 'CREATOR_LITE' || plan.role === 'MICRO' || plan.role === 'SPARK')) ||
+                        (currentPlan === 'CREATOR' && (plan.role === 'CREATOR_LITE' || plan.role === 'MICRO' || plan.role === 'SPARK')) ||
+                        (currentPlan === 'CREATOR_LITE' && (plan.role === 'MICRO' || plan.role === 'SPARK')) ||
+                        (currentPlan === 'MICRO' && plan.role === 'SPARK');
+                      const badgeClass = () => {
+                        if (plan.role === 'SPARK') return 'v3-card-plan-badge v3-badge-free';
+                        if (plan.role === 'MICRO') return 'v3-card-plan-badge v3-badge-free';
+                        if (plan.role === 'CREATOR_LITE') return 'v3-card-plan-badge v3-badge-lite';
+                        if (isPopular) return 'v3-card-plan-badge v3-badge-creator';
+                        if (isStudio) return 'v3-card-plan-badge v3-badge-studio';
+                        return 'v3-card-plan-badge v3-badge-free';
+                      };
+                      const badgeLabel = () => {
+                        if (plan.role === 'SPARK') return '✨ Spark';
+                        if (plan.role === 'MICRO') return '🌟 Starter';
+                        if (plan.role === 'CREATOR_LITE') return '⚡ Lite';
+                        if (isPopular) return '⭐ Most Popular';
+                        return '👑 Pro';
+                      };
+                      const btnClass = () => {
+                        if (isCurrent) return 'v3-btn v3-btn-green';
+                        if (isDowngradeBlocked) return 'v3-btn v3-btn-block';
+                        if (isFree) return 'v3-btn v3-btn-plain';
+                        if (isStudio) return 'v3-btn v3-btn-gold';
+                        return 'v3-btn v3-btn-primary';
+                      };
+                      const btnLabel = () => {
+                        if (loading === plan.role) return 'Processing...';
+                        if (isCurrent) return '✓ Your Current Plan';
+                        if (isDowngradeBlocked) return 'Downgrade Not Available';
+                        if (isFree) return 'Free Forever';
+                        return `Get ${plan.name} →`;
+                      };
+                      return (
+                        <motion.div
+                          key={plan.role}
+                          className={`v3-card${isPopular ? ' v3-card-pop' : ''}${isCurrent ? ' v3-card-current' : ''}`}
+                          initial={{ opacity: 0, y: 40 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.44, delay: idx * 0.07 }}
+                        >
+                          {isPopular && !isCurrent && !isDowngradeBlocked && <div className="v3-card-ribbon v3-ribbon-pop">⭐ Most Popular</div>}
+                          {isStudio && !isCurrent && !isDowngradeBlocked && <div className="v3-card-ribbon v3-ribbon-gold">👑 Best Value</div>}
+                          {isCurrent && <div className="v3-card-ribbon v3-ribbon-current">✓ Active Plan</div>}
+                          {isDowngradeBlocked && <div className="v3-card-ribbon v3-ribbon-block">Downgrade Not Available</div>}
+                          <span className={badgeClass()}>{badgeLabel()}</span>
+                          <h2 className="v3-plan-name">{plan.name}</h2>
+                          <p className="v3-plan-tagline">{plan.tagline}</p>
+                          {plan.currency === 'LOADING' ? (
+                            <div className="v3-price-area"><span className="v3-price-loading">Loading price...</span></div>
+                          ) : isFree ? (
+                            <div className="v3-price-area">
+                              <div className="v3-price-free">Free</div>
+                              <div className="v3-price-forever">Always free, no card needed</div>
+                            </div>
+                          ) : (
+                            <div className="v3-price-area">
+                              {plan.originalPrice && <div className="v3-price-strike">{plan.symbol}{plan.originalPrice}/mo</div>}
+                              <div className="v3-price-row">
+                                <span className="v3-price-sym">{plan.symbol}</span>
+                                <span className="v3-price-num">{plan.price}</span>
+                                <span className="v3-price-per">/mo</span>
+                              </div>
+                              <span className="v3-price-save">✓ 25% introductory discount</span>
+                            </div>
+                          )}
+                          {isFree && (
+                            <div className="v3-outcomes">
+                              <div className="v3-outcomes-title">Try every tool free</div>
+                              {plan.outcomes.map((o, i) => (
+                                <div key={i} className="v3-outcome-row">
+                                  <span className="v3-outcome-icon">{o.icon}</span>
+                                  <span className="v3-outcome-label">{o.label}</span>
+                                  <span className="v3-outcome-count">/ mo</span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          <ul className="v3-feats">
+                            {plan.features.map((feat, i) => {
+                              const boldified = feat
+                                .replace(
+                                  /(\d[\d,]*(?:\s?(?:credits?|cr|chars?|characters?|videos?|images?|SVGs?|removals?|K|p))(?:\/mo)?)/gi,
+                                  '<strong>$1</strong>'
+                                )
+                                .replace(/\b(\d[\d,]+)\b/g, '<strong>$1</strong>');
+                              return (
+                                <li key={i} className="v3-feat v3-feat-hl">
+                                  <span className={`v3-feat-ico ${isFree ? 'y' : 'v'}`}>✓</span>
+                                  <span dangerouslySetInnerHTML={{ __html: boldified }} />
+                                </li>
+                              );
+                            })}
+                          </ul>
+                          {!isFree && plan.currency !== 'LOADING' && (
+                            <div className="v3-outcomes">
+                              <div className="v3-outcomes-title">With this plan you can create</div>
+                              {plan.outcomes.map((o, i) => (
+                                <div key={i} className="v3-outcome-row">
+                                  <span className="v3-outcome-icon">{o.icon}</span>
+                                  <span className="v3-outcome-label">{o.label}</span>
+                                  <span className="v3-outcome-count">/ mo</span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          <button
+                            className={btnClass()}
+                            onClick={() => handleUpgrade(plan)}
+                            disabled={loading !== null || isFree || isCurrent || isDowngradeBlocked}
+                          >
+                            {btnLabel()}
+                          </button>
+                        </motion.div>
+                      );
+                    })}
+                  </motion.div>
+                )}
+              </AnimatePresence>              
             </div>
-
-            {/* urgency bar */}
-            <div className="v3-urgency">
-              <div className="v3-urgency-inner">
-                <span className="v3-urgency-icon">⏰</span>
-                <p className="v3-urgency-text">
-                  <strong>Introductory pricing for early users.</strong> These rates are locked in for existing subscribers when prices increase. New users after this period will pay the standard rate.
-                </p>
-                <span className="v3-urgency-badge">Lock in your rate →</span>
-              </div>
-            </div>
-          </div>
+          </div>     
         </div>
 
         {/* ══ TOPUPS ══ */}
