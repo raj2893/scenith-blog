@@ -1,0 +1,1152 @@
+/* app/tools/amazon-product-listing-video-generator/amazon-video.css */
+
+/* ─────────────────────────────────────────────────────────────
+   1. CSS VARIABLES & RESET
+   ───────────────────────────────────────────────────────────── */
+:root {
+  --apv-bg: #fafbfc;
+  --apv-surface: #ffffff;
+  --apv-surface-2: #f8f9fc;
+  --apv-text: #1a2a3a;
+  --apv-text-2: #4a5b6e;
+  --apv-muted: #7c8b9e;
+  --apv-border: #e5e9f0;
+  --apv-border-soft: rgba(59, 130, 246, 0.12);
+  --apv-accent: #2563eb;
+  --apv-accent-dark: #1e40af;
+  --apv-accent-glow: rgba(37, 99, 235, 0.25);
+  --apv-gradient-start: #2563eb;
+  --apv-gradient-end: #3b82f6;
+  --apv-success: #10b981;
+  --apv-warning: #f59e0b;
+  --apv-error: #ef4444;
+  --apv-radius-sm: 8px;
+  --apv-radius-md: 14px;
+  --apv-radius-lg: 20px;
+  --apv-radius-xl: 28px;
+  --apv-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --apv-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.06);
+  --apv-shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.08);
+  --apv-shadow-glow: 0 0 40px rgba(37, 99, 235, 0.15);
+  --apv-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+}
+
+/* Dark mode variables (user preference based) */
+[data-theme="dark"] {
+  --apv-bg: #0a0f1a;
+  --apv-surface: #111827;
+  --apv-surface-2: #1a2332;
+  --apv-text: #f0f4fa;
+  --apv-text-2: #b0c4de;
+  --apv-muted: #6c7f8f;
+  --apv-border: #1f2a3a;
+  --apv-border-soft: rgba(59, 130, 246, 0.15);
+  --apv-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --apv-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --apv-shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--apv-font-sans);
+  background: var(--apv-bg);
+  color: var(--apv-text);
+  line-height: 1.5;
+  scroll-behavior: smooth;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   2. PAGE CONTAINER & BACKGROUND EFFECTS
+   ───────────────────────────────────────────────────────────── */
+.apv-page {
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: var(--apv-bg);
+}
+
+.apv-ambient {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.apv-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.4;
+  animation: apv-blob-float 20s ease-in-out infinite;
+}
+
+.apv-blob-1 {
+  width: 50vw;
+  height: 50vw;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.2), transparent);
+  top: -20%;
+  right: -10%;
+  animation-delay: 0s;
+}
+
+.apv-blob-2 {
+  width: 40vw;
+  height: 40vw;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.15), transparent);
+  bottom: -10%;
+  left: -15%;
+  animation-delay: -5s;
+}
+
+.apv-blob-3 {
+  width: 30vw;
+  height: 30vw;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.1), transparent);
+  top: 40%;
+  right: 20%;
+  animation-delay: -10s;
+}
+
+@keyframes apv-blob-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -40px) scale(1.05); }
+  66% { transform: translate(-20px, 30px) scale(0.98); }
+}
+
+.apv-grid-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(var(--apv-border-soft) 1px, transparent 1px),
+    linear-gradient(90deg, var(--apv-border-soft) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   3. NAVIGATION
+   ───────────────────────────────────────────────────────────── */
+.apv-nav {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid var(--apv-border-soft);
+}
+
+[data-theme="dark"] .apv-nav {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.apv-nav-logo {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  background: linear-gradient(135deg, var(--apv-gradient-start), var(--apv-gradient-end));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.apv-nav-logo span {
+  background: none;
+  -webkit-background-clip: unset;
+  background-clip: unset;
+  color: var(--apv-accent);
+}
+
+.apv-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  list-style: none;
+}
+
+.apv-nav-links a {
+  text-decoration: none;
+  color: var(--apv-text-2);
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+
+.apv-nav-links a:hover {
+  color: var(--apv-accent);
+}
+
+.apv-nav-cta {
+  background: linear-gradient(135deg, var(--apv-gradient-start), var(--apv-gradient-end));
+  padding: 8px 18px;
+  border-radius: 40px;
+  color: white !important;
+  font-weight: 600 !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   4. MAIN CONTENT
+   ───────────────────────────────────────────────────────────── */
+.apv-content {
+  position: relative;
+  z-index: 5;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   5. HERO SECTION
+   ───────────────────────────────────────────────────────────── */
+.apv-hero {
+  text-align: center;
+  padding: 60px 20px 40px;
+}
+
+.apv-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(37, 99, 235, 0.08);
+  padding: 6px 16px;
+  border-radius: 100px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--apv-accent);
+  margin-bottom: 24px;
+  border: 1px solid var(--apv-border-soft);
+}
+
+.apv-eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--apv-accent);
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.apv-hero-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+  color: var(--apv-text);
+}
+
+.apv-highlight {
+  background: linear-gradient(135deg, var(--apv-gradient-start), var(--apv-gradient-end));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.apv-hero-sub {
+  font-size: 1.2rem;
+  color: var(--apv-text-2);
+  max-width: 700px;
+  margin: 0 auto 32px;
+  line-height: 1.6;
+}
+
+/* HUGE CTA BUTTON */
+.apv-cta-block {
+  margin: 32px 0 24px;
+}
+
+.apv-cta-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, var(--apv-gradient-start), var(--apv-gradient-end));
+  padding: 18px 42px;
+  border-radius: 60px;
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.2rem;
+  transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+  box-shadow: 0 8px 28px rgba(37, 99, 235, 0.3);
+  border: none;
+  cursor: pointer;
+}
+
+.apv-cta-primary:hover {
+  transform: scale(1.02);
+  box-shadow: 0 12px 36px rgba(37, 99, 235, 0.4);
+}
+
+.apv-cta-arrow {
+  font-size: 1.3rem;
+  transition: transform 0.2s;
+}
+
+.apv-cta-primary:hover .apv-cta-arrow {
+  transform: translateX(5px);
+}
+
+.apv-cta-note {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 0.8rem;
+  color: var(--apv-muted);
+}
+
+.apv-cta-note span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Trust badges */
+.apv-trust-badges {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 32px;
+}
+
+.apv-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--apv-surface-2);
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--apv-text-2);
+  border: 1px solid var(--apv-border);
+}
+
+.apv-badge-icon {
+  font-size: 0.9rem;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   6. MOCKUP SECTION
+   ───────────────────────────────────────────────────────────── */
+.apv-mockup-section {
+  margin: 60px 0;
+}
+
+.apv-section-label {
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  font-weight: 700;
+  color: var(--apv-accent);
+  margin-bottom: 16px;
+}
+
+.apv-mockup-wrapper {
+  position: relative;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.apv-mockup-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  height: 90%;
+  background: radial-gradient(ellipse, var(--apv-accent-glow), transparent);
+  filter: blur(60px);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.apv-mockup-frame {
+  background: var(--apv-surface);
+  border-radius: var(--apv-radius-xl);
+  border: 1px solid var(--apv-border);
+  overflow: hidden;
+  box-shadow: var(--apv-shadow-lg);
+  position: relative;
+}
+
+.apv-mockup-topbar {
+  background: var(--apv-surface-2);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--apv-border);
+}
+
+.apv-dot-red, .apv-dot-yellow, .apv-dot-green {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.apv-dot-red { background: #ff5f56; }
+.apv-dot-yellow { background: #ffbd2e; }
+.apv-dot-green { background: #27c93f; }
+
+.apv-mockup-url {
+  margin-left: 12px;
+  font-size: 0.75rem;
+  color: var(--apv-muted);
+  background: var(--apv-bg);
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.apv-mockup-body {
+  display: flex;
+  padding: 32px;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.apv-prompt-col {
+  flex: 2;
+  min-width: 200px;
+}
+
+.apv-prompt-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.apv-prompt-avatar {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--apv-gradient-start), var(--apv-gradient-end));
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.apv-prompt-title {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.apv-prompt-type {
+  font-size: 0.7rem;
+  color: var(--apv-muted);
+}
+
+.apv-prompt-line {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  background: var(--apv-surface-2);
+  border-radius: var(--apv-radius-sm);
+  margin-bottom: 12px;
+  font-size: 0.8rem;
+  border-left: 3px solid var(--apv-accent);
+}
+
+.apv-prompt-num {
+  font-size: 1rem;
+}
+
+.apv-prompt-connector {
+  width: 2px;
+  height: 20px;
+  background: var(--apv-border);
+  margin-left: 18px;
+  margin-bottom: 8px;
+}
+
+.apv-mockup-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: 0.5;
+}
+
+.apv-arrow-line {
+  background: var(--apv-border);
+  height: 2px;
+  width: 60px;
+  position: relative;
+}
+
+.apv-arrow-icon {
+  position: absolute;
+  right: -10px;
+  top: -8px;
+  font-size: 1rem;
+  color: var(--apv-accent);
+}
+
+.apv-arrow-label {
+  font-size: 0.7rem;
+  color: var(--apv-accent);
+  font-weight: 600;
+  background: rgba(37, 99, 235, 0.1);
+  padding: 4px 8px;
+  border-radius: 20px;
+}
+
+.apv-preview-col {
+  flex: 2;
+  min-width: 200px;
+}
+
+.apv-video-mockup {
+  background: #000;
+  border-radius: var(--apv-radius-md);
+  overflow: hidden;
+}
+
+.apv-video-thumb {
+  aspect-ratio: 16/9;
+  background: linear-gradient(135deg, #1a2a3a, #0f1a24);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 600;
+  position: relative;
+}
+
+.apv-play-badge {
+  width: 40px;
+  height: 40px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.apv-duration {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: rgba(0,0,0,0.6);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.6rem;
+}
+
+.apv-mockup-caption {
+  padding: 12px;
+  background: var(--apv-surface-2);
+  font-size: 0.7rem;
+  display: flex;
+  justify-content: space-between;
+  color: var(--apv-text-2);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   7. STATS SECTION
+   ───────────────────────────────────────────────────────────── */
+.apv-section {
+  margin: 70px 0;
+}
+
+.apv-section-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 16px;
+  letter-spacing: -0.01em;
+}
+
+.apv-section-sub {
+  text-align: center;
+  color: var(--apv-text-2);
+  max-width: 650px;
+  margin: 0 auto 40px;
+}
+
+.apv-stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+}
+
+.apv-stat-card {
+  background: var(--apv-surface);
+  border-radius: var(--apv-radius-lg);
+  padding: 28px 20px;
+  text-align: center;
+  border: 1px solid var(--apv-border);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.apv-stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--apv-shadow-md);
+}
+
+.apv-stat-num {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--apv-gradient-start), var(--apv-gradient-end));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 12px;
+}
+
+.apv-stat-label {
+  font-size: 0.85rem;
+  color: var(--apv-text-2);
+  line-height: 1.4;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   8. USE CASES GRID
+   ───────────────────────────────────────────────────────────── */
+.apv-usecases-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.apv-uc-card {
+  background: var(--apv-surface);
+  border-radius: var(--apv-radius-lg);
+  padding: 24px;
+  border: 1px solid var(--apv-border);
+  transition: all 0.2s;
+}
+
+.apv-uc-card:hover {
+  border-color: var(--apv-accent);
+  box-shadow: var(--apv-shadow-md);
+}
+
+.apv-uc-emoji {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.apv-uc-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+}
+
+.apv-uc-card p {
+  font-size: 0.85rem;
+  color: var(--apv-text-2);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.apv-uc-tag {
+  font-size: 0.7rem;
+  background: rgba(37, 99, 235, 0.08);
+  padding: 4px 10px;
+  border-radius: 20px;
+  display: inline-block;
+  color: var(--apv-accent);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   9. STEPS SECTION
+   ───────────────────────────────────────────────────────────── */
+.apv-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.apv-step {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.apv-step-num {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--apv-accent);
+  opacity: 0.5;
+  min-width: 60px;
+}
+
+.apv-step-content h3 {
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+}
+
+.apv-step-content p {
+  color: var(--apv-text-2);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.apv-step-badge {
+  font-size: 0.7rem;
+  background: var(--apv-surface-2);
+  padding: 4px 12px;
+  border-radius: 20px;
+  display: inline-block;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   10. INLINE CTA
+   ───────────────────────────────────────────────────────────── */
+.apv-inline-cta {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(59, 130, 246, 0.02));
+  border-radius: var(--apv-radius-xl);
+  padding: 48px 32px;
+  text-align: center;
+  margin: 60px 0;
+  border: 1px solid var(--apv-border-soft);
+}
+
+.apv-inline-cta h3 {
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+}
+
+.apv-inline-cta p {
+  color: var(--apv-text-2);
+  max-width: 500px;
+  margin: 0 auto 24px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   11. FEATURES GRID
+   ───────────────────────────────────────────────────────────── */
+.apv-features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.apv-feature-card {
+  background: var(--apv-surface);
+  border-radius: var(--apv-radius-lg);
+  padding: 28px;
+  border: 1px solid var(--apv-border);
+  transition: all 0.2s;
+}
+
+.apv-feature-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--apv-shadow-md);
+}
+
+.apv-feature-icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.apv-feature-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+}
+
+.apv-feature-card p {
+  font-size: 0.85rem;
+  color: var(--apv-text-2);
+  line-height: 1.5;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   12. LONG-FORM PROSE SECTION
+   ───────────────────────────────────────────────────────────── */
+.apv-prose {
+  max-width: 850px;
+  margin: 0 auto;
+}
+
+.apv-prose h2 {
+  font-size: 1.8rem;
+  margin: 48px 0 20px;
+}
+
+.apv-prose h3 {
+  font-size: 1.3rem;
+  margin: 32px 0 16px;
+  color: var(--apv-accent);
+}
+
+.apv-prose h4 {
+  font-size: 1.1rem;
+  margin: 24px 0 12px;
+}
+
+.apv-prose p {
+  margin-bottom: 20px;
+  color: var(--apv-text-2);
+  line-height: 1.7;
+}
+
+.apv-prose ul, .apv-prose ol {
+  margin: 20px 0 20px 28px;
+  color: var(--apv-text-2);
+  line-height: 1.7;
+}
+
+.apv-prose li {
+  margin-bottom: 8px;
+}
+
+.apv-prose strong {
+  color: var(--apv-text);
+}
+
+.apv-highlight-box {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(59, 130, 246, 0.04));
+  border-left: 4px solid var(--apv-accent);
+  padding: 24px 28px;
+  border-radius: var(--apv-radius-md);
+  margin: 32px 0;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   13. COMPARISON TABLE
+   ───────────────────────────────────────────────────────────── */
+.apv-compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--apv-surface);
+  border-radius: var(--apv-radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--apv-border);
+}
+
+.apv-compare-table th,
+.apv-compare-table td {
+  padding: 16px 20px;
+  text-align: left;
+  border-bottom: 1px solid var(--apv-border);
+  font-size: 0.85rem;
+}
+
+.apv-compare-table th {
+  background: var(--apv-surface-2);
+  font-weight: 700;
+}
+
+.apv-col-highlight {
+  background: rgba(37, 99, 235, 0.05);
+}
+
+.apv-yes {
+  color: var(--apv-success);
+  font-weight: 600;
+}
+
+.apv-no {
+  color: var(--apv-error);
+}
+
+.apv-maybe {
+  color: var(--apv-warning);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   14. FAQ SECTION
+   ───────────────────────────────────────────────────────────── */
+.apv-faq {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.apv-faq-item {
+  background: var(--apv-surface);
+  border: 1px solid var(--apv-border);
+  border-radius: var(--apv-radius-md);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.apv-faq-q {
+  padding: 20px 24px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  list-style: none;
+}
+
+.apv-faq-q::-webkit-details-marker {
+  display: none;
+}
+
+.apv-faq-chevron {
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+  color: var(--apv-muted);
+}
+
+details[open] .apv-faq-chevron {
+  transform: rotate(180deg);
+}
+
+.apv-faq-a {
+  padding: 0 24px 24px;
+  color: var(--apv-text-2);
+  line-height: 1.6;
+  border-top: 1px solid var(--apv-border);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   15. RELATED TOOLS GRID
+   ───────────────────────────────────────────────────────────── */
+.apv-related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.apv-related-card {
+  background: var(--apv-surface);
+  border-radius: var(--apv-radius-lg);
+  padding: 24px;
+  text-decoration: none;
+  border: 1px solid var(--apv-border);
+  transition: all 0.2s;
+  display: block;
+}
+
+.apv-related-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--apv-accent);
+  box-shadow: var(--apv-shadow-md);
+}
+
+.apv-related-icon {
+  font-size: 1.8rem;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.apv-related-card h4 {
+  font-size: 1rem;
+  margin-bottom: 8px;
+  color: var(--apv-text);
+}
+
+.apv-related-card p {
+  font-size: 0.75rem;
+  color: var(--apv-text-2);
+  line-height: 1.4;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   16. FOOTER CTA
+   ───────────────────────────────────────────────────────────── */
+.apv-footer-cta {
+  text-align: center;
+  padding: 60px 20px;
+  background: linear-gradient(135deg, var(--apv-surface), var(--apv-surface-2));
+  border-radius: var(--apv-radius-xl);
+  margin-top: 60px;
+  border: 1px solid var(--apv-border);
+}
+
+.apv-footer-cta h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.apv-footer-cta p {
+  max-width: 550px;
+  margin: 0 auto 28px;
+  color: var(--apv-text-2);
+}
+
+.apv-footer-small {
+  font-size: 0.7rem;
+  color: var(--apv-muted);
+  margin-top: 24px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   17. RESPONSIVE DESIGN
+   ───────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .apv-nav {
+    padding: 16px 24px;
+  }
+  
+  .apv-nav-links {
+    gap: 20px;
+  }
+  
+  .apv-hero-title {
+    font-size: 2.2rem;
+  }
+  
+  .apv-hero-sub {
+    font-size: 1rem;
+  }
+  
+  .apv-cta-primary {
+    padding: 14px 32px;
+    font-size: 1rem;
+  }
+  
+  .apv-mockup-body {
+    flex-direction: column;
+  }
+  
+  .apv-mockup-arrow {
+    flex-direction: row;
+    justify-content: center;
+  }
+  
+  .apv-arrow-line {
+    width: 80px;
+  }
+  
+  .apv-section-title {
+    font-size: 1.6rem;
+  }
+  
+  .apv-step {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .apv-compare-table th,
+  .apv-compare-table td {
+    padding: 10px 12px;
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .apv-content {
+    padding: 0 16px 60px;
+  }
+  
+  .apv-nav {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .apv-nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+  }
+  
+  .apv-hero-title {
+    font-size: 1.8rem;
+  }
+  
+  .apv-cta-note {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .apv-trust-badges {
+    gap: 10px;
+  }
+  
+  .apv-badge {
+    font-size: 0.65rem;
+  }
+  
+  .apv-stats-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .apv-usecases-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .apv-features-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .apv-footer-cta h2 {
+    font-size: 1.4rem;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   18. ANIMATIONS & UTILITIES
+   ───────────────────────────────────────────────────────────── */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.apv-hero, .apv-mockup-section, .apv-section {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.apv-mockup-section {
+  animation-delay: 0.1s;
+}
+
+.apv-section:nth-of-type(2) {
+  animation-delay: 0.15s;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--apv-surface-2);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--apv-accent);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--apv-accent-dark);
+}
