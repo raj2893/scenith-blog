@@ -552,6 +552,7 @@ const CreateAIContentClient: React.FC = () => {
   const [loginError, setLoginError] = useState<string | null>(null);
   const [loginSuccess, setLoginSuccess] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [showVoiceToVideoModal, setShowVoiceToVideoModal] = useState(false);
 
   // ── Active tab
   const [activeTab, setActiveTab] = useState<Tab>(() => {
@@ -1047,6 +1048,7 @@ const CreateAIContentClient: React.FC = () => {
       if (!res.ok) throw new Error(await res.text());
       const data = await res.json();
       setGeneratedAudio(`${CDN_URL}/${data.audioPath}`);
+      setShowVoiceToVideoModal(true);
       window.dispatchEvent(new Event('creditsUpdated'));
       setTimeout(() => {
         resultRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -1690,12 +1692,12 @@ const CreateAIContentClient: React.FC = () => {
                   />
                   <div style={{ flex: 1 }} />
                   {!isLoggedIn ? (
-                    <button className="cac-generate-btn" onClick={() => setShowLoginModal(true)}>
+                    <button className="cac-generate-btn cac-generate-btn--sm" onClick={() => setShowLoginModal(true)}>
                       🔒 Sign Up Free & Generate
                     </button>
                   ) : (
                     <button
-                      className="cac-generate-btn"
+                      className="cac-generate-btn cac-generate-btn--sm"
                       onClick={handleGenerateVoice}
                       disabled={isGeneratingVoice || !prompt.trim() || !selectedVoice}
                     >
@@ -1704,8 +1706,20 @@ const CreateAIContentClient: React.FC = () => {
                       ) : "🎙️ Generate Voice"}
                     </button>
                   )}
+                  <button
+                    className="cac-generate-btn cac-generate-btn--sm cac-generate-btn--video"
+                    onClick={() => {
+                      const videoPrompt = `Make video narration with a model speaking this script: "${prompt}"`;
+                      setActiveTab('video');
+                      setPrompt(videoPrompt);
+                    }}
+                    disabled={!prompt.trim()}
+                    title="Generate a video with this script as narration"
+                  >
+                    🎬 Make Video →
+                  </button>
                   {isLoggedIn && (
-                    <a href="/pricing" className="cac-upgrade-link">Get More Credits →</a>
+                    <a href="/pricing" className="cac-upgrade-link cac-upgrade-link--sm">Get More Credits →</a>
                   )}
                 </div>
               </div>
@@ -3480,6 +3494,62 @@ const CreateAIContentClient: React.FC = () => {
         </a>
       </div>
     )}
+    {/* ── Voice → Video upsell modal ── */}
+    <AnimatePresence>
+      {showVoiceToVideoModal && (
+        <motion.div
+          className="cac-modal-overlay"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={(e) => { if (e.target === e.currentTarget) setShowVoiceToVideoModal(false); }}
+        >
+          <motion.div
+            className="cac-modal"
+            initial={{ scale: 0.92, opacity: 0, y: 16 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.92, opacity: 0, y: 16 }}
+            transition={{ duration: 0.18 }}
+            style={{ maxWidth: 360, width: '100%', padding: 'clamp(18px, 5vw, 28px)' }}
+          >
+            <button className="cac-modal-close" onClick={() => setShowVoiceToVideoModal(false)}>
+              <FaTimes size={11} />
+            </button>
+            <div style={{ textAlign: 'center', marginBottom: 16 }}>
+              <div style={{ fontSize: 32, marginBottom: 8 }}>🎬</div>
+              <h2 style={{ fontFamily: 'inherit', fontSize: 16, fontWeight: 800, color: 'var(--cac-text)', marginBottom: 6, lineHeight: 1.3 }}>
+                Turn this into a video?
+              </h2>
+              <p style={{ fontSize: 12.5, color: 'var(--cac-muted)', lineHeight: 1.6, margin: 0 }}>
+                Your voice is ready — now pair it with AI video. One click to switch over with your script pre-filled.
+              </p>
+            </div>
+            <button
+              className="cac-generate-btn"
+              style={{ width: '100%', justifyContent: 'center', marginBottom: 10, fontSize: 14 }}
+              onClick={() => {
+                const videoPrompt = `Make video narration with a model speaking this script: "${prompt}"`;
+                setShowVoiceToVideoModal(false);
+                setActiveTab('video');
+                setPrompt(videoPrompt);
+              }}
+            >
+              🎬 Yes, Make a Video →
+            </button>
+            <button
+              onClick={() => setShowVoiceToVideoModal(false)}
+              style={{
+                display: 'block', width: '100%', background: 'none',
+                border: 'none', color: 'var(--cac-muted)', fontSize: 12,
+                cursor: 'pointer', textDecoration: 'underline', padding: '4px 0',
+              }}
+            >
+              No thanks, I'm done
+            </button>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>    
   </>        
   );
 };
