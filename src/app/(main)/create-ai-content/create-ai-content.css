@@ -521,6 +521,30 @@
   max-width: 280px !important;
 }
 
+/* ── Smaller generate button variant ── */
+.cac-generate-btn--sm {
+  padding: 7px 14px;
+  font-size: 0.8rem;
+  border-radius: 9px;
+  box-shadow: 0 3px 12px rgba(99, 85, 220, 0.28);
+}
+
+/* ── Make Video button — purple-to-pink gradient ── */
+.cac-generate-btn--video {
+  background: linear-gradient(135deg, #7c3aed, #db2777);
+  box-shadow: 0 3px 12px rgba(124, 58, 237, 0.30);
+}
+
+.cac-generate-btn--video:disabled {
+  background: var(--cac-surface-2);
+  box-shadow: none;
+}
+
+/* ── Smaller upgrade link ── */
+.cac-upgrade-link--sm {
+  font-size: 0.75rem;
+}
+
 @media (max-width: 640px) {
   .cac-custom-dropdown.cac-chip-variant {
     display: flex;
