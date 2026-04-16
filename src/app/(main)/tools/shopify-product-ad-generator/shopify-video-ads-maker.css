@@ -1,0 +1,1077 @@
+/* app/tools/ai-shopify-video-ads-maker/shopify-video-ads-maker.css */
+
+/* ============================================
+   ROOT VARIABLES & RESET
+   ============================================ */
+:root {
+  --svam-accent: #96f0b6;
+  --svam-accent-dark: #1a7f4e;
+  --svam-accent-glow: rgba(150, 240, 182, 0.25);
+  --svam-bg-dark: #0a0c0f;
+  --svam-bg-card: rgba(18, 22, 28, 0.85);
+  --svam-bg-surface: #11151c;
+  --svam-border: rgba(150, 240, 182, 0.15);
+  --svam-text: #eef2ff;
+  --svam-text-muted: #9ca3af;
+  --svam-text-light: #f3f4f6;
+  --svam-success: #10b981;
+  --svam-warning: #f59e0b;
+  --svam-error: #ef4444;
+  --svam-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ============================================
+   PAGE CONTAINER
+   ============================================ */
+.svam-page {
+  position: relative;
+  min-height: 100vh;
+  background: var(--svam-bg-dark);
+  color: var(--svam-text);
+  font-family: system-ui, -apple-system, 'Inter', 'Segoe UI', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Ambient Background */
+.svam-ambient {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.svam-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.35;
+  animation: svamFloat 20s ease-in-out infinite;
+}
+
+.svam-blob-1 {
+  width: 60vw;
+  height: 60vw;
+  background: radial-gradient(circle, rgba(150, 240, 182, 0.4), transparent);
+  top: -20vh;
+  left: -20vw;
+  animation-delay: 0s;
+}
+
+.svam-blob-2 {
+  width: 50vw;
+  height: 50vw;
+  background: radial-gradient(circle, rgba(26, 127, 78, 0.3), transparent);
+  bottom: -10vh;
+  right: -10vw;
+  animation-delay: -5s;
+}
+
+.svam-blob-3 {
+  width: 40vw;
+  height: 40vw;
+  background: radial-gradient(circle, rgba(150, 240, 182, 0.2), transparent);
+  top: 40vh;
+  left: 30vw;
+  animation-delay: -10s;
+}
+
+@keyframes svamFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(5%, 5%) scale(1.05); }
+  66% { transform: translate(-3%, 8%) scale(0.98); }
+}
+
+.svam-grid-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(rgba(150, 240, 182, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(150, 240, 182, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ============================================
+   NAVIGATION
+   ============================================ */
+.svam-nav {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  backdrop-filter: blur(12px);
+  background: rgba(10, 12, 15, 0.7);
+  border-bottom: 1px solid var(--svam-border);
+}
+
+.svam-nav-logo {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  color: var(--svam-text);
+}
+
+.svam-nav-logo span {
+  color: var(--svam-accent);
+}
+
+.svam-nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  align-items: center;
+}
+
+.svam-nav-links a {
+  text-decoration: none;
+  color: var(--svam-text-muted);
+  font-weight: 500;
+  transition: var(--svam-transition);
+}
+
+.svam-nav-links a:hover {
+  color: var(--svam-accent);
+}
+
+.svam-nav-cta {
+  background: linear-gradient(135deg, var(--svam-accent), var(--svam-accent-dark));
+  padding: 0.5rem 1.25rem;
+  border-radius: 999px;
+  color: #000 !important;
+  font-weight: 700;
+}
+
+/* ============================================
+   CONTENT WRAPPER
+   ============================================ */
+.svam-content {
+  position: relative;
+  z-index: 5;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ============================================
+   HERO SECTION
+   ============================================ */
+.svam-hero {
+  text-align: center;
+  padding: 4rem 1rem 3rem;
+}
+
+.svam-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(150, 240, 182, 0.1);
+  backdrop-filter: blur(8px);
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--svam-accent);
+  margin-bottom: 2rem;
+  border: 1px solid var(--svam-border);
+}
+
+.svam-eyebrow-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--svam-accent);
+  border-radius: 50%;
+  display: inline-block;
+  animation: svamPulse 1.5s infinite;
+}
+
+@keyframes svamPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.2); }
+}
+
+.svam-hero-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .svam-hero-title {
+    font-size: 2.2rem;
+  }
+}
+
+.svam-highlight {
+  background: linear-gradient(135deg, #fff, var(--svam-accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.svam-gradient {
+  background: linear-gradient(135deg, var(--svam-accent), #60a5fa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.svam-hero-sub {
+  font-size: 1.2rem;
+  color: var(--svam-text-muted);
+  max-width: 700px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+}
+
+/* CTA Block */
+.svam-cta-block {
+  margin: 2rem auto;
+}
+
+.svam-cta-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: linear-gradient(135deg, var(--svam-accent), var(--svam-accent-dark));
+  color: #000;
+  font-weight: 800;
+  font-size: 1.25rem;
+  padding: 1rem 2rem;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: var(--svam-transition);
+  box-shadow: 0 8px 24px rgba(150, 240, 182, 0.3);
+}
+
+.svam-cta-primary:hover {
+  transform: scale(1.02);
+  box-shadow: 0 12px 32px rgba(150, 240, 182, 0.4);
+}
+
+.svam-cta-arrow {
+  font-size: 1.3rem;
+  transition: transform 0.2s;
+}
+
+.svam-cta-primary:hover .svam-cta-arrow {
+  transform: translateX(4px);
+}
+
+.svam-cta-note {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: var(--svam-text-muted);
+}
+
+.svam-trust-badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.svam-badge {
+  background: rgba(150, 240, 182, 0.08);
+  border: 1px solid var(--svam-border);
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.svam-badge-icon {
+  font-size: 0.9rem;
+}
+
+/* ============================================
+   MOCKUP SECTION
+   ============================================ */
+.svam-mockup-section {
+  margin: 4rem 0;
+}
+
+.svam-section-label {
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--svam-accent);
+  margin-bottom: 1rem;
+}
+
+.svam-mockup-wrapper {
+  position: relative;
+  margin: 2rem 0;
+}
+
+.svam-mockup-glow {
+  position: absolute;
+  inset: -20px;
+  background: radial-gradient(ellipse at center, var(--svam-accent-glow), transparent);
+  opacity: 0.5;
+  filter: blur(40px);
+  z-index: 0;
+}
+
+.svam-mockup-frame {
+  position: relative;
+  z-index: 1;
+  background: var(--svam-bg-card);
+  backdrop-filter: blur(16px);
+  border-radius: 24px;
+  border: 1px solid var(--svam-border);
+  overflow: hidden;
+}
+
+.svam-mockup-topbar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid var(--svam-border);
+}
+
+.svam-dot-red, .svam-dot-yellow, .svam-dot-green {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.svam-dot-red { background: #ff5f56; }
+.svam-dot-yellow { background: #ffbd2e; }
+.svam-dot-green { background: #27c93f; }
+
+.svam-mockup-url {
+  margin-left: auto;
+  font-size: 0.7rem;
+  color: var(--svam-text-muted);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.2rem 0.75rem;
+  border-radius: 999px;
+}
+
+.svam-mockup-body {
+  display: flex;
+  padding: 2rem;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 900px) {
+  .svam-mockup-body {
+    flex-direction: column;
+  }
+}
+
+.svam-prompt-col {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
+  padding: 1.25rem;
+}
+
+.svam-prompt-header {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.svam-prompt-avatar {
+  font-size: 2rem;
+}
+
+.svam-prompt-title {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.svam-prompt-type {
+  font-size: 0.7rem;
+  color: var(--svam-text-muted);
+}
+
+.svam-prompt-line {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(150, 240, 182, 0.05);
+  border-radius: 12px;
+  margin: 0.75rem 0;
+  font-size: 0.85rem;
+  border-left: 2px solid var(--svam-accent);
+}
+
+.svam-prompt-num {
+  font-size: 1.1rem;
+}
+
+.svam-prompt-connector {
+  width: 2px;
+  height: 20px;
+  background: var(--svam-border);
+  margin-left: 1.2rem;
+}
+
+.svam-mockup-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.svam-arrow-line {
+  background: var(--svam-border);
+  width: 60px;
+  height: 2px;
+  position: relative;
+}
+
+.svam-arrow-icon {
+  position: absolute;
+  right: -12px;
+  top: -8px;
+  font-size: 1rem;
+}
+
+.svam-arrow-label {
+  font-size: 0.7rem;
+  color: var(--svam-text-muted);
+}
+
+.svam-ad-col {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.svam-phone-mockup {
+  width: 240px;
+  background: #000;
+  border-radius: 32px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.svam-phone-notch {
+  width: 140px;
+  height: 28px;
+  background: #000;
+  border-radius: 0 0 20px 20px;
+  margin: 0 auto;
+}
+
+.svam-phone-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem;
+  background: #111;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.svam-phone-video {
+  aspect-ratio: 9 / 16;
+  background: linear-gradient(135deg, #1a472a, #0a1f12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: var(--svam-accent);
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.svam-play-icon {
+  font-size: 2rem;
+}
+
+.svam-phone-message {
+  padding: 0.6rem;
+  font-size: 0.7rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.svam-message-sender {
+  font-weight: 700;
+  margin-right: 0.4rem;
+}
+
+.svam-message-in {
+  background: rgba(150, 240, 182, 0.1);
+}
+
+/* ============================================
+   STATS SECTION
+   ============================================ */
+.svam-section {
+  margin: 5rem 0;
+}
+
+.svam-section-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .svam-section-title {
+    font-size: 1.6rem;
+  }
+}
+
+.svam-section-sub {
+  text-align: center;
+  color: var(--svam-text-muted);
+  max-width: 700px;
+  margin: 0 auto 2.5rem;
+}
+
+.svam-stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.svam-stat-card {
+  background: var(--svam-bg-card);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--svam-border);
+  border-radius: 20px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: var(--svam-transition);
+}
+
+.svam-stat-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--svam-accent);
+}
+
+.svam-stat-num {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--svam-accent);
+  margin-bottom: 0.5rem;
+}
+
+.svam-stat-label {
+  font-size: 0.85rem;
+  color: var(--svam-text-muted);
+  line-height: 1.4;
+}
+
+/* ============================================
+   USE CASES GRID
+   ============================================ */
+.svam-usecases-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.svam-uc-card {
+  background: var(--svam-bg-card);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--svam-border);
+  border-radius: 20px;
+  padding: 1.5rem;
+  transition: var(--svam-transition);
+}
+
+.svam-uc-card:hover {
+  border-color: var(--svam-accent);
+  transform: translateY(-2px);
+}
+
+.svam-uc-emoji {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.svam-uc-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.75rem;
+}
+
+.svam-uc-card p {
+  font-size: 0.85rem;
+  color: var(--svam-text-muted);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.svam-uc-tag {
+  display: inline-block;
+  background: rgba(150, 240, 182, 0.1);
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  color: var(--svam-accent);
+  border: 1px solid var(--svam-border);
+}
+
+/* ============================================
+   STEPS SECTION
+   ============================================ */
+.svam-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.svam-step {
+  display: flex;
+  gap: 1.5rem;
+  background: var(--svam-bg-card);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--svam-border);
+  border-radius: 24px;
+  padding: 1.5rem;
+  transition: var(--svam-transition);
+}
+
+@media (max-width: 640px) {
+  .svam-step {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+.svam-step:hover {
+  border-color: var(--svam-accent);
+}
+
+.svam-step-num {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--svam-accent);
+  opacity: 0.5;
+  min-width: 60px;
+}
+
+.svam-step-content h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+}
+
+.svam-step-content p {
+  color: var(--svam-text-muted);
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+}
+
+.svam-step-badge {
+  display: inline-block;
+  background: rgba(150, 240, 182, 0.08);
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  border: 1px solid var(--svam-border);
+}
+
+/* ============================================
+   INLINE CTA
+   ============================================ */
+.svam-inline-cta {
+  background: linear-gradient(135deg, rgba(150, 240, 182, 0.1), rgba(26, 127, 78, 0.05));
+  border: 1px solid var(--svam-border);
+  border-radius: 28px;
+  padding: 2rem;
+  text-align: center;
+  margin: 3rem 0;
+}
+
+.svam-inline-cta h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.svam-inline-cta p {
+  color: var(--svam-text-muted);
+  margin-bottom: 1.5rem;
+}
+
+/* ============================================
+   FEATURES GRID
+   ============================================ */
+.svam-features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.svam-feature-card {
+  background: var(--svam-bg-card);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--svam-border);
+  border-radius: 20px;
+  padding: 1.5rem;
+  transition: var(--svam-transition);
+}
+
+.svam-feature-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--svam-accent);
+}
+
+.svam-feature-icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.svam-feature-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.svam-feature-card p {
+  font-size: 0.85rem;
+  color: var(--svam-text-muted);
+  line-height: 1.5;
+}
+
+/* ============================================
+   PROSE / LONG-FORM CONTENT
+   ============================================ */
+.svam-prose {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.svam-prose h2 {
+  font-size: 1.8rem;
+  margin: 2rem 0 1rem;
+  color: var(--svam-accent);
+}
+
+.svam-prose h3 {
+  font-size: 1.3rem;
+  margin: 1.5rem 0 0.75rem;
+}
+
+.svam-prose h4 {
+  font-size: 1.1rem;
+  margin: 1rem 0 0.5rem;
+  color: var(--svam-text-light);
+}
+
+.svam-prose p {
+  color: var(--svam-text-muted);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+
+.svam-prose ul, .svam-prose ol {
+  margin: 1rem 0 1rem 2rem;
+  color: var(--svam-text-muted);
+  line-height: 1.7;
+}
+
+.svam-prose li {
+  margin-bottom: 0.5rem;
+}
+
+.svam-highlight-box {
+  background: linear-gradient(135deg, rgba(150, 240, 182, 0.08), rgba(26, 127, 78, 0.05));
+  border-left: 4px solid var(--svam-accent);
+  padding: 1.5rem;
+  border-radius: 16px;
+  margin: 1.5rem 0;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* ============================================
+   COMPARISON TABLE
+   ============================================ */
+.svam-compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--svam-bg-card);
+  backdrop-filter: blur(8px);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.svam-compare-table th,
+.svam-compare-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--svam-border);
+}
+
+.svam-compare-table th {
+  background: rgba(0, 0, 0, 0.3);
+  font-weight: 700;
+  color: var(--svam-accent);
+}
+
+.svam-col-highlight {
+  background: rgba(150, 240, 182, 0.05);
+}
+
+.svam-yes {
+  color: var(--svam-success);
+  font-weight: 600;
+}
+
+.svam-no {
+  color: var(--svam-error);
+}
+
+.svam-maybe {
+  color: var(--svam-warning);
+}
+
+/* ============================================
+   FAQ SECTION
+   ============================================ */
+.svam-faq {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.svam-faq-item {
+  background: var(--svam-bg-card);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--svam-border);
+  border-radius: 16px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+  transition: var(--svam-transition);
+}
+
+.svam-faq-item:hover {
+  border-color: var(--svam-accent);
+}
+
+.svam-faq-q {
+  padding: 1.25rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  list-style: none;
+}
+
+.svam-faq-q::-webkit-details-marker {
+  display: none;
+}
+
+.svam-faq-chevron {
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+}
+
+.svam-faq-item[open] .svam-faq-chevron {
+  transform: rotate(180deg);
+}
+
+.svam-faq-a {
+  padding: 0 1.25rem 1.25rem;
+  color: var(--svam-text-muted);
+  line-height: 1.6;
+  border-top: 1px solid var(--svam-border);
+}
+
+/* ============================================
+   RELATED TOOLS GRID
+   ============================================ */
+.svam-related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.svam-related-card {
+  background: var(--svam-bg-card);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--svam-border);
+  border-radius: 20px;
+  padding: 1.5rem;
+  text-decoration: none;
+  color: var(--svam-text);
+  transition: var(--svam-transition);
+  display: block;
+}
+
+.svam-related-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--svam-accent);
+}
+
+.svam-related-icon {
+  font-size: 1.8rem;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.svam-related-card h4 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.svam-related-card p {
+  font-size: 0.8rem;
+  color: var(--svam-text-muted);
+  line-height: 1.4;
+}
+
+/* ============================================
+   FOOTER CTA
+   ============================================ */
+.svam-footer-cta {
+  text-align: center;
+  background: linear-gradient(135deg, rgba(150, 240, 182, 0.08), rgba(26, 127, 78, 0.03));
+  border-top: 1px solid var(--svam-border);
+  border-radius: 40px;
+  padding: 3rem 2rem;
+  margin: 4rem 0 2rem;
+}
+
+.svam-footer-cta h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .svam-footer-cta h2 {
+    font-size: 1.5rem;
+  }
+}
+
+.svam-footer-cta p {
+  color: var(--svam-text-muted);
+  max-width: 600px;
+  margin: 0 auto 1.5rem;
+}
+
+.svam-footer-small {
+  font-size: 0.75rem;
+  margin-top: 1rem;
+  opacity: 0.7;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes svamFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.svam-hero, .svam-mockup-section, .svam-section {
+  animation: svamFadeIn 0.6s ease-out forwards;
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+@media (max-width: 768px) {
+  .svam-nav {
+    padding: 1rem;
+  }
+  
+  .svam-nav-links {
+    gap: 1rem;
+  }
+  
+  .svam-nav-links li:not(:last-child) {
+    display: none;
+  }
+  
+  .svam-content {
+    padding: 0 1rem;
+  }
+  
+  .svam-hero {
+    padding: 2rem 0;
+  }
+  
+  .svam-cta-primary {
+    font-size: 1rem;
+    padding: 0.75rem 1.5rem;
+  }
+  
+  .svam-stats-row {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .svam-usecases-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .svam-features-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--svam-bg-surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--svam-accent-dark);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--svam-accent);
+}
