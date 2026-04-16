@@ -760,6 +760,12 @@ export default function PricingPageClient() {
   }, []);
 
   useEffect(() => {
+    if (isIndianUser === false) {
+      setShowProPlans(true);
+    }
+  }, [isIndianUser]);
+
+  useEffect(() => {
     if (!document.getElementById('paypal-sdk')) {
       const s = document.createElement('script');
       s.src = 'https://www.paypal.com/sdk/js?client-id=AcxQJG7b-ZyAXBRp2P3GFJs-Unh0tvJHz2nlTrOaNi8vSnoy2POnyaH1ajhHXp4K8a5LJ6EIHfS3Yc3T&currency=USD';
