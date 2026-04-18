@@ -295,10 +295,6 @@ const VIDEO_ASPECT_RATIOS = [
   { value: "1:1", label: "1:1", icon: "⬛" },
 ];
 
-const VIDEO_DURATION_OPTIONS = [
-  { value: 5, label: "5s" },
-  { value: 10, label: "10s" },
-];
 
 const VIDEO_RESOLUTION_OPTIONS: Record<string, { value: string; label: string; icon: string }[]> = {
   wan: [
@@ -705,18 +701,31 @@ const CreateAIContentClient: React.FC = () => {
   const [videoInputFile, setVideoInputFile] = useState<File | null>(null);
   const [videoInputPreview, setVideoInputPreview] = useState<string | null>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
-  // Auto-set resolution when model changes
-  useEffect(() => {
-    const isWan = selectedVideoModel?.toLowerCase().includes('wan');
-    const isGrok = selectedVideoModel?.toLowerCase().includes('grok');
-    if (!isWan && !isGrok) {
-      setVideoResolution("1080p");
-    } else if (isWan) {
-      setVideoResolution("480p");
-    } else if (isGrok) {
-      setVideoResolution("480p");
-    }
-  }, [selectedVideoModel]);
+  // Auto-set resolution + duration when model changes
+useEffect(() => {
+  const isWan  = selectedVideoModel?.toLowerCase().includes('wan');
+  const isGrok = selectedVideoModel?.toLowerCase().includes('grok');
+  const isVeo  = selectedVideoModel?.toLowerCase().includes('veo');
+
+  if (!isWan && !isGrok) {
+    setVideoResolution("1080p");
+  } else if (isWan) {
+    setVideoResolution("480p");
+  } else if (isGrok) {
+    setVideoResolution("480p");
+  }
+
+  // Reset to valid duration default for selected model
+  setVideoDuration(isVeo ? 4 : 5);
+}, [selectedVideoModel]);
+
+// Dynamic duration options — Veo only supports 4s and 8s, others support 5s and 10s
+const VIDEO_DURATION_OPTIONS = useMemo(() => {
+  const isVeo = selectedVideoModel?.toLowerCase().includes('veo');
+  return isVeo
+    ? [{ value: 4, label: "4s" }, { value: 8, label: "8s" }]
+    : [{ value: 5, label: "5s" }, { value: 10, label: "10s" }];
+}, [selectedVideoModel]);
 
   const resultRef = useRef<HTMLDivElement>(null);
 
@@ -2680,50 +2689,38 @@ const CreateAIContentClient: React.FC = () => {
               </div>
             )}
 
-            {currentVideoJob.status === "COMPLETED" && currentVideoJob.videoUrl && (
-              <>
-                <video
-                  controls
-                  autoPlay
-                  loop
-                  src={currentVideoJob.videoUrl}
-                  className="cac-result-video"
-                />
-                <div className="cac-result-actions">
-                  
-                    className="cac-action-btn primary"
-                  <a  href={currentVideoJob.videoUrl}
-                    download={`scenith-video-${currentVideoJob.id}.mp4`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    📥 Download MP4
-                  </a>
-                  
-                    className="cac-action-btn primary"
-                  <a  href="https://scenith.in/tools/add-subtitles-to-videos"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ background: 'linear-gradient(135deg, #7c3aed, #db2777)' }}
-                  >
-                    💬 Add Subtitles
-                  </a>
-                  <button
-                    className="cac-action-btn secondary"
-                    onClick={() => {
-                      setCurrentVideoJob(null);
-                      setPrompt("");
-                    }}
-                  >
-                    🔄 New Video
-                  </button>
-                </div>
-                <div className="cac-upsell-strip">
-                  <span>Love this? Get more with Premium credits ✨</span>
-                  <a href="/pricing">View Plans →</a>
-                </div>
-              </>
-            )}
+      {currentVideoJob.status === "COMPLETED" && currentVideoJob.videoUrl && (
+        <>
+          <video
+            controls
+            autoPlay
+            loop
+            src={currentVideoJob.videoUrl}
+            className="cac-result-video"
+          />
+          <div className="cac-result-actions">
+            <a className="cac-action-btn primary" href={currentVideoJob.videoUrl} download={`scenith-video-${currentVideoJob.id}.mp4`} target="_blank" rel="noopener noreferrer">
+              📥 Download MP4
+            </a>
+            <a className="cac-action-btn primary" href="https://scenith.in/tools/add-subtitles-to-videos" target="_blank" rel="noopener noreferrer" style={{ background: 'linear-gradient(135deg, #7c3aed, #db2777)' }}>
+              💬 Add Subtitles
+            </a>
+            <button
+              className="cac-action-btn secondary"
+              onClick={() => {
+                setCurrentVideoJob(null);
+                setPrompt("");
+              }}
+            >
+              🔄 New Video
+            </button>
+          </div>
+          <div className="cac-upsell-strip">
+            <span>Love this? Get more with Premium credits ✨</span>
+            <a href="/pricing">View Plans →</a>
+          </div>
+        </>
+      )}
 
             {currentVideoJob.status === "FAILED" && (
               <div className="cac-error">
