@@ -40,6 +40,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
   const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
   const [isToolsDropdownOpen, setIsToolsDropdownOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const isMobile = () => window.matchMedia('(hover: none)').matches;
 
   // Auth states
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -141,6 +142,21 @@ window.addEventListener('storage', handleStorageChange);
   stopPolling();
 };
   }, [isLoggedIn]);
+
+  useEffect(() => {
+  const handleClickOutside = (e: MouseEvent | TouchEvent) => {
+    const target = e.target as HTMLElement;
+    if (!target.closest('.auth-nav-item')) {
+      setIsProfileDropdownOpen(false);
+    }
+  };
+  document.addEventListener('mousedown', handleClickOutside);
+  document.addEventListener('touchstart', handleClickOutside);
+  return () => {
+    document.removeEventListener('mousedown', handleClickOutside);
+    document.removeEventListener('touchstart', handleClickOutside);
+  };
+}, []);
 
   useEffect(() => {
     const onScroll = () => {
@@ -521,9 +537,9 @@ window.addEventListener('storage', handleStorageChange);
                     <button
                       type="button"
                       className="nav-avatar-button"
-                      onMouseEnter={() => setIsProfileDropdownOpen(true)}
-                      onMouseLeave={() => setIsProfileDropdownOpen(false)}
-                      onClick={toggleProfileDropdown}
+                      onMouseEnter={() => { if (!isMobile()) setIsProfileDropdownOpen(true); }}
+                      onMouseLeave={() => { if (!isMobile()) setIsProfileDropdownOpen(false); }}
+                      onClick={() => { if (isMobile()) setIsProfileDropdownOpen(v => !v); }}
                     >
                       {userProfile?.picture && userProfile.picture.trim() !== ''
                         ? <img src={userProfile.picture} alt="avatar" className="nav-avatar-img" referrerPolicy="no-referrer" />
@@ -533,8 +549,8 @@ window.addEventListener('storage', handleStorageChange);
                     {isProfileDropdownOpen && (
                       <div
                         className="tools-dropdown profile-dropdown"
-                        onMouseEnter={() => setIsProfileDropdownOpen(true)}
-                        onMouseLeave={() => setIsProfileDropdownOpen(false)}
+                        onMouseEnter={() => { if (!isMobile()) setIsProfileDropdownOpen(true); }}
+                        onMouseLeave={() => { if (!isMobile()) setIsProfileDropdownOpen(false); }}
                       >
                         <button type="button" className="tools-dropdown-item" onClick={() => navigate('/user-dashboard')}>Dashboard</button>
                         <button type="button" className="tools-dropdown-item" onClick={() => navigate('/pricing')}>Billing</button>
