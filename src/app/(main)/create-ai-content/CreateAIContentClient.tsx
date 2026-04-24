@@ -309,12 +309,12 @@ const VIDEO_RESOLUTION_OPTIONS: Record<string, { value: string; label: string; i
 };
 
 const STATIC_VIDEO_MODELS = [
-  { id: "wan2.5", name: "Wan 2.5", cr: 46 },
-  { id: "kling-v2.5-turbo", name: "Kling 2.5 Turbo", cr: 64 },
-  { id: "kling-v2.6-pro", name: "Kling 2.6 Pro", cr: 64 },
-  { id: "veo3.1-fast", name: "Veo 3.1 Fast", cr: 92 },
-  { id: "veo3.1", name: "Veo 3.1", cr: 186 },
-  { id: "grok-imagine", name: "Grok Imagine 🎵", cr: 47 },
+  { id: "wan2.5",           name: "Wan 2.5",          cr: 46,  supportsAudio: false },
+  { id: "kling-v2.5-turbo", name: "Kling 2.5 Turbo",  cr: 64,  supportsAudio: false },
+  { id: "kling-v2.6-pro",   name: "Kling 2.6 Pro",    cr: 64,  supportsAudio: true  },
+  { id: "veo3.1-fast",      name: "Veo 3.1 Fast",     cr: 92,  supportsAudio: true  },
+  { id: "veo3.1",           name: "Veo 3.1",          cr: 186, supportsAudio: true  },
+  { id: "grok-imagine",     name: "Grok Imagine 🎵",  cr: 47,  supportsAudio: true  },
 ];
 
 /**
@@ -329,30 +329,43 @@ const calcVideoCredits = (
 ): number => {
   const is10s = durationSeconds > 5;
   const res = resolution?.toLowerCase() || "480p";
+  const id = modelId?.toUpperCase() || "";
 
-  if (modelId?.toLowerCase().includes("wan")) {
+  // Wan 2.5 — resolution-based pricing
+  if (id.includes("WAN")) {
     const base5s = res === "480p" ? 46 : res === "720p" ? 92 : 138;
     return is10s ? base5s * 2 : base5s;
   }
-  if (modelId?.toLowerCase().includes("kling-v2.5") || modelId?.toLowerCase().includes("kling-2.5")) {
+
+  // Kling 2.5 Turbo — no audio
+  if (id.includes("KLING_2_5") || id.includes("KLING-2.5") || id.includes("KLING-V2.5")) {
     return is10s ? 130 : 64;
   }
-  if (modelId?.toLowerCase().includes("kling-v2.6") || modelId?.toLowerCase().includes("kling-2.6")) {
+
+  // Kling 2.6 Pro — audio doubles cost
+  if (id.includes("KLING_2_6") || id.includes("KLING-2.6") || id.includes("KLING-V2.6")) {
     const base5s = audioOn ? 130 : 64;
     return is10s ? base5s * 2 : base5s;
   }
-  if (modelId?.toLowerCase().includes("veo3.1-fast") || modelId?.toLowerCase().includes("veo 3.1 fast")) {
+
+  // Veo 3.1 Fast
+  if (id.includes("VEO_3_1_FAST") || id.includes("VEO3.1-FAST") || id.includes("VEO 3.1 FAST")) {
     if (!is10s) return audioOn ? 138 : 92;
     return audioOn ? 278 : 186;
   }
-  if (modelId?.toLowerCase().includes("veo3.1") || modelId?.toLowerCase().includes("veo 3.1")) {
+
+  // Veo 3.1 (must come after Fast check)
+  if (id.includes("VEO_3_1") || id.includes("VEO3.1") || id.includes("VEO 3.1")) {
     if (!is10s) return audioOn ? 370 : 186;
     return audioOn ? 740 : 370;
   }
-  if (modelId?.toLowerCase().includes("grok")) {
+
+  // Grok Imagine — resolution-based, audio always included (same price)
+  if (id.includes("GROK")) {
     const base5s = res === "720p" ? 66 : 47;
     return is10s ? base5s * 2 : base5s;
   }
+
   return 46; // fallback
 };
 
@@ -2314,10 +2327,10 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
 
                 {/* ── Audio toggle ── */}
                 {(() => {
-                  const modelData = (isLoggedIn && videoModels.length > 0 ? videoModels : [])
+                  const modelData = (isLoggedIn && videoModels.length > 0 ? videoModels : STATIC_VIDEO_MODELS)
                     .find((m: any) => m.id === selectedVideoModel);
                   const isGrok = selectedVideoModel?.toLowerCase().includes('grok');
-                  const supportsAudio = modelData?.supportsAudio ?? true;
+                  const supportsAudio = modelData?.supportsAudio ?? false;
 
                   if (isGrok && supportsAudio) {
                     return (
