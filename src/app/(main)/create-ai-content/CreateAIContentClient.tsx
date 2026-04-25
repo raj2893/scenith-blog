@@ -1555,6 +1555,9 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
     <>
     <div className="cac-page" data-theme={darkMode ? "dark" : "light"}>
 
+      {/* ── Dark zone: hero + tool ── */}
+      <div className="cac-dark-zone">
+
       {/* ── Hero ── */}
       <section className="cac-hero">
         <motion.div
@@ -2879,7 +2882,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
               return (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                   {[row1, row2].map((row, ri) => (
-                    <div key={ri} style={{ display: 'flex', gap: 10, animation: `${ri === 0 ? 'cac-scroll-left' : 'cac-scroll-right'} 240s linear infinite`, width: 'max-content' }}>
+                    <div key={ri} style={{ display: 'flex', gap: 10, animation: `${ri === 0 ? 'cac-scroll-left' : 'cac-scroll-right'} ${row.length * 12}s linear infinite`, width: 'max-content' }}>
                       {[...row, ...row].map((src, i) => (
                         <div key={i} style={{ width: 160, height: 160, borderRadius: 12, overflow: 'hidden', flexShrink: 0, border: '1px solid var(--cac-border-soft)' }}>
                           <img src={src} alt="AI generated" loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -2917,6 +2920,13 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
             </div>
           </div>
         )}        
+
+         </main>
+      </div>{/* end cac-dark-zone */}
+
+      {/* ── Light zone: upsell + SEO ── */}
+      <div className="cac-seo-zone">
+      <main className="cac-seo-main">
 
         {/* ── Upsell Banner ── */}
         {isLoggedIn && (
@@ -3193,7 +3203,8 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
           </div>
             
         </section>        
-      </main>
+       </main>
+      </div>{/* end cac-seo-zone */}
 
       {/* ── Login Modal ── */}
       <AnimatePresence>
