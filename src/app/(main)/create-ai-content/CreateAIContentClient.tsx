@@ -119,17 +119,43 @@ const IMAGE_MODEL_CONFIG: Record<
     flatPrice: false,
     supportsImg2Img: true,
     sizes: [
-      { value: "square", label: "Square (1:1)", icon: "⬛" },
-      { value: "portrait", label: "Portrait (9:16)", icon: "📱" },
+      { value: "square",    label: "Square (1:1)",    icon: "⬛" },
+      { value: "portrait",  label: "Portrait (9:16)", icon: "📱" },
       { value: "landscape", label: "Landscape (16:9)", icon: "🖥️" },
     ],
     qualities: [
-      { value: "draft", label: "Draft", creditsExtra: 0 },
+      { value: "draft",    label: "Draft",    creditsExtra: 0 },
       { value: "standard", label: "Standard", creditsExtra: 0 },
-      { value: "premium", label: "Premium", creditsExtra: 0 },
     ],
   },
   GPT_IMAGE_1_MEDIUM: {
+    flatPrice: false,
+    supportsImg2Img: true,
+    sizes: [
+      { value: "square",    label: "Square (1:1)",    icon: "⬛" },
+      { value: "portrait",  label: "Portrait (9:16)", icon: "📱" },
+      { value: "landscape", label: "Landscape (16:9)", icon: "🖥️" },
+    ],
+    qualities: [
+      { value: "draft",    label: "Draft",    creditsExtra: 0 },
+      { value: "standard", label: "Standard", creditsExtra: 0 },
+      { value: "premium",  label: "Premium",  creditsExtra: 0 },
+    ],
+  },
+  GPT_IMAGE_1_5: {
+  flatPrice: false,
+  supportsImg2Img: true,
+  sizes: [
+    { value: "square",    label: "Square (1:1)",    icon: "⬛" },
+    { value: "portrait",  label: "Portrait (9:16)", icon: "📱" },
+    { value: "landscape", label: "Landscape (16:9)", icon: "🖥️" },
+  ],
+  qualities: [
+    { value: "draft",    label: "Draft",    creditsExtra: 0 },
+    { value: "standard", label: "Standard", creditsExtra: 0 },
+  ],
+},
+  GPT_IMAGE_2: {
     flatPrice: false,
     supportsImg2Img: true,
     sizes: [
@@ -140,7 +166,6 @@ const IMAGE_MODEL_CONFIG: Record<
     qualities: [
       { value: "draft", label: "Draft", creditsExtra: 0 },
       { value: "standard", label: "Standard", creditsExtra: 0 },
-      { value: "premium", label: "Premium", creditsExtra: 0 },
     ],
   },
   IMAGEN_4_FAST: {
@@ -217,6 +242,8 @@ const MODEL_LOGOS: Record<string, string> = {
   // Image models
   GPT_IMAGE_1_MINI:     "https://cdn.scenith.in/brand-logos/Chatgpt%20logo.webp",
   GPT_IMAGE_1_MEDIUM:   "https://cdn.scenith.in/brand-logos/Chatgpt%20logo.webp",
+  GPT_IMAGE_1_5:        "https://cdn.scenith.in/brand-logos/Chatgpt%20logo.webp",
+  GPT_IMAGE_2:          "https://cdn.scenith.in/brand-logos/Chatgpt%20logo.webp",
   IMAGEN_4_FAST:        "https://cdn.scenith.in/brand-logos/Google%20Logo.webp",
   IMAGEN_4_STANDARD:    "https://cdn.scenith.in/brand-logos/Google%20Logo.webp",
   FLUX_1_1_PRO:         "https://cdn.scenith.in/brand-logos/Flux%20logo.png",
@@ -267,14 +294,19 @@ const getImageCreditCost = (
   switch (modelId) {
     case "GPT_IMAGE_1_MINI":
       if (q === "draft") return 10;
-      if (q === "premium") return nonSquare ? 47 : 32;
-      return nonSquare ? 12 : 15;
+      return nonSquare ? 14 : 15;
     case "GPT_IMAGE_1_MEDIUM":
       if (q === "draft") return 10;
       if (q === "premium") return nonSquare ? 47 : 32;
       return nonSquare ? 12 : 15;
+    case "GPT_IMAGE_2":
+      if (q === "draft") return nonSquare ? 12 : 8;
+      return nonSquare ? 35 : 24;  // standard
+    case "GPT_IMAGE_1_5":
+      if (q === "draft") return nonSquare ? 10 : 8;
+      return nonSquare ? 12 : 8;
     case "NANO_BANANA_PRO":
-      return q === "4k" ? 46 : 26;  // AR has zero cost impact
+      return q === "4k" ? 46 : 26;
     case "IMAGEN_4_FAST":
       return 10;
     case "IMAGEN_4_STANDARD":
@@ -1506,40 +1538,35 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
 
   const isFreeUser = !isLoggedIn || !imageUsage || imageUsage.planType === "FREE";
 
+  const ALL_IMAGE_MODELS_FREE = [
+    { id: "STABILITY_AI_CORE",  displayName: "Stability Core" },
+    { id: "GPT_IMAGE_1_MINI",   displayName: "GPT Mini 🔒" },
+    { id: "GPT_IMAGE_1_5",      displayName: "GPT Image 1.5 🔒" },
+    { id: "IMAGEN_4_FAST",      displayName: "Imagen 4 Fast 🔒" },
+    { id: "FLUX_1_1_PRO",       displayName: "FLUX 1.1 Pro 🔒" },
+    { id: "GPT_IMAGE_1_MEDIUM", displayName: "GPT Image 1 🔒" },
+    { id: "IMAGEN_4_STANDARD",  displayName: "Imagen 4 🔒" },
+    { id: "NANO_BANANA_PRO",    displayName: "Nano Banana 🔒" },
+    { id: "GPT_IMAGE_2",        displayName: "GPT Image 2 🔒" },
+    { id: "GROK_AURORA",        displayName: "Grok Aurora 🔒" },
+  ];
+
+  const ALL_IMAGE_MODELS_PAID = [
+    { id: "STABILITY_AI_CORE",  displayName: "Stability Core" },
+    { id: "GPT_IMAGE_1_MINI",   displayName: "GPT Mini" },
+    { id: "GPT_IMAGE_1_5",      displayName: "GPT Image 1.5" },
+    { id: "IMAGEN_4_FAST",      displayName: "Imagen 4 Fast" },
+    { id: "FLUX_1_1_PRO",       displayName: "FLUX 1.1 Pro" },
+    { id: "GPT_IMAGE_1_MEDIUM", displayName: "GPT Image 1" },
+    { id: "IMAGEN_4_STANDARD",  displayName: "Imagen 4" },
+    { id: "NANO_BANANA_PRO",    displayName: "Nano Banana ✨" },
+    { id: "GPT_IMAGE_2",        displayName: "GPT Image 2 ⚡" },
+    { id: "GROK_AURORA",        displayName: "Grok Aurora ⚡" },
+  ];
+
   const availableImageModels = useMemo(() => {
-    if (isLoggedIn && imageUsage?.availableModels?.length) {
-      if (isFreeUser) {
-        return imageUsage.availableModels.map((m) => ({
-          id: m.id,
-          displayName: m.id === "STABILITY_AI_CORE" ? m.displayName : `${m.displayName} 🔒`,
-        }));
-      }
-      return imageUsage.availableModels.map((m) => ({
-        id: m.id,
-        displayName: m.displayName,
-      }));
-    }
-    if (isFreeUser) {
-      return [
-        { id: "STABILITY_AI_CORE", displayName: "Stability Core" },
-        { id: "GPT_IMAGE_1_MINI", displayName: "GPT Mini 🔒" },
-        { id: "IMAGEN_4_FAST", displayName: "Imagen 4 Fast 🔒" },
-        { id: "FLUX_1_1_PRO", displayName: "FLUX 1.1 Pro 🔒" },
-        { id: "IMAGEN_4_STANDARD", displayName: "Imagen 4 🔒" },
-        { id: "GPT_IMAGE_1_MEDIUM", displayName: "GPT Medium 🔒" },
-        { id: "GROK_AURORA", displayName: "Grok Aurora 🔒" },
-      ];
-    }
-    return [
-      { id: "STABILITY_AI_CORE", displayName: "Stability Core" },
-      { id: "GPT_IMAGE_1_MINI", displayName: "GPT Mini" },
-      { id: "IMAGEN_4_FAST", displayName: "Imagen 4 Fast" },
-      { id: "FLUX_1_1_PRO", displayName: "FLUX 1.1 Pro" },
-      { id: "IMAGEN_4_STANDARD", displayName: "Imagen 4" },
-      { id: "GPT_IMAGE_1_MEDIUM", displayName: "GPT Medium" },
-      { id: "GROK_AURORA", displayName: "Grok Aurora ⚡" },
-    ];
-  }, [isLoggedIn, imageUsage, isFreeUser]);
+    return isFreeUser ? ALL_IMAGE_MODELS_FREE : ALL_IMAGE_MODELS_PAID;
+  }, [isFreeUser]);
 
   // ─────────────────── RENDER ───────────────────────────────────────────────
 
@@ -2884,8 +2911,21 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                   {[row1, row2].map((row, ri) => (
                     <div key={ri} style={{ display: 'flex', gap: 10, animation: `${ri === 0 ? 'cac-scroll-left' : 'cac-scroll-right'} ${row.length * 12}s linear infinite`, width: 'max-content' }}>
                       {[...row, ...row].map((src, i) => (
-                        <div key={i} style={{ width: 160, height: 160, borderRadius: 12, overflow: 'hidden', flexShrink: 0, border: '1px solid var(--cac-border-soft)' }}>
-                          <img src={src} alt="AI generated" loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <div key={i} style={{
+                          width: 160, height: 160, borderRadius: 12, overflow: 'hidden', flexShrink: 0,
+                          border: '1px solid var(--cac-border-soft)',
+                          background: 'linear-gradient(90deg, rgba(99,85,220,0.08) 25%, rgba(99,85,220,0.15) 50%, rgba(99,85,220,0.08) 75%)',
+                          backgroundSize: '200% 100%',
+                          animation: 'cac-shimmer 1.5s infinite',
+                        }}>
+                          <img
+                            src={src}
+                            alt="AI generated"
+                            loading="lazy"
+                            decoding="async"
+                            style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0, transition: 'opacity 0.3s ease' }}
+                            onLoad={(e) => { (e.target as HTMLImageElement).style.opacity = '1'; }}
+                          />
                         </div>
                       ))}
                     </div>
@@ -3449,7 +3489,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
               {/* Model pills */}
               <div style={{ display: 'flex', gap: 6, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 18 }}>
                 {[
-                  { key: 'GPT_IMAGE_1_MEDIUM', label: 'GPT Medium' },
+                  { key: 'GPT_IMAGE_2', label: 'GPT Image 2' },
                   { key: 'IMAGEN_4_STANDARD', label: 'Imagen 4' },
                   { key: 'NANO_BANANA_PRO', label: 'Nano Banana ✨' },
                   { key: 'GROK_AURORA', label: 'Grok Aurora' },

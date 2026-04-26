@@ -279,9 +279,9 @@
   position: relative;
   background-image: url('/images/New_background.png');
   background-size: cover;
-  background-position: center 45%;
+  background-position: center top;
   background-repeat: no-repeat;
-  background-attachment: local;
+  background-attachment: scroll;
 }
 
 .cac-dark-zone::after {
@@ -2217,5 +2217,14 @@ html[data-theme="dark"] .cac-darkmode-fab:hover {
   }
   .cac-chips-mobile::-webkit-scrollbar {
     display: none;
+  }
+}
+@keyframes cac-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+@media (max-width: 640px) {
+  .cac-dark-zone {
+    background-position: center top;
   }
 }
