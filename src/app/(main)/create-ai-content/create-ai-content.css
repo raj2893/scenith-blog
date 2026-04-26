@@ -249,10 +249,10 @@
   font-size: clamp(1.6rem, 4vw, 2.4rem);
   font-weight: 800;
   line-height: 1.15;
-  color: #ffffff; /* always white on dark bg */
+  color: #ffffff;
   margin-bottom: 10px;
   letter-spacing: -0.025em;
-  text-shadow: 0 2px 20px rgba(0,0,0,0.4);
+  text-shadow: 0 1px 8px rgba(0,0,0,0.15);
 }
 
 .cac-hero-sub {
@@ -278,7 +278,7 @@
 .cac-dark-zone {
   position: relative;
   background-image: url('/images/New_background.png');
-  background-size: cover;
+  background-size: 100% auto;
   background-position: center top;
   background-repeat: no-repeat;
   background-attachment: scroll;
@@ -2225,6 +2225,7 @@ html[data-theme="dark"] .cac-darkmode-fab:hover {
 }
 @media (max-width: 640px) {
   .cac-dark-zone {
-    background-position: center top;
+    background-size: auto 100%;
+    background-position: 70% top;
   }
 }
