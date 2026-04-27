@@ -1540,28 +1540,28 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
 
   const ALL_IMAGE_MODELS_FREE = [
     { id: "STABILITY_AI_CORE",  displayName: "Stability Core" },
-    { id: "GPT_IMAGE_1_MINI",   displayName: "GPT Mini 🔒" },
-    { id: "GPT_IMAGE_1_5",      displayName: "GPT Image 1.5 🔒" },
     { id: "IMAGEN_4_FAST",      displayName: "Imagen 4 Fast 🔒" },
-    { id: "FLUX_1_1_PRO",       displayName: "FLUX 1.1 Pro 🔒" },
-    { id: "GPT_IMAGE_1_MEDIUM", displayName: "GPT Image 1 🔒" },
     { id: "IMAGEN_4_STANDARD",  displayName: "Imagen 4 🔒" },
     { id: "NANO_BANANA_PRO",    displayName: "Nano Banana 🔒" },
+    { id: "GPT_IMAGE_1_MINI",   displayName: "GPT Mini 🔒" },
+    { id: "GPT_IMAGE_1_MEDIUM", displayName: "GPT Image 1 🔒" },
+    { id: "GPT_IMAGE_1_5",      displayName: "GPT Image 1.5 🔒" },
     { id: "GPT_IMAGE_2",        displayName: "GPT Image 2 🔒" },
     { id: "GROK_AURORA",        displayName: "Grok Aurora 🔒" },
+    { id: "FLUX_1_1_PRO",       displayName: "FLUX 1.1 Pro 🔒" },
   ];
 
   const ALL_IMAGE_MODELS_PAID = [
     { id: "STABILITY_AI_CORE",  displayName: "Stability Core" },
-    { id: "GPT_IMAGE_1_MINI",   displayName: "GPT Mini" },
-    { id: "GPT_IMAGE_1_5",      displayName: "GPT Image 1.5" },
     { id: "IMAGEN_4_FAST",      displayName: "Imagen 4 Fast" },
-    { id: "FLUX_1_1_PRO",       displayName: "FLUX 1.1 Pro" },
-    { id: "GPT_IMAGE_1_MEDIUM", displayName: "GPT Image 1" },
     { id: "IMAGEN_4_STANDARD",  displayName: "Imagen 4" },
     { id: "NANO_BANANA_PRO",    displayName: "Nano Banana ✨" },
+    { id: "GPT_IMAGE_1_MINI",   displayName: "GPT Mini" },
+    { id: "GPT_IMAGE_1_MEDIUM", displayName: "GPT Image 1" },
+    { id: "GPT_IMAGE_1_5",      displayName: "GPT Image 1.5" },
     { id: "GPT_IMAGE_2",        displayName: "GPT Image 2 ⚡" },
     { id: "GROK_AURORA",        displayName: "Grok Aurora ⚡" },
+    { id: "FLUX_1_1_PRO",       displayName: "FLUX 1.1 Pro" },
   ];
 
   const availableImageModels = useMemo(() => {
