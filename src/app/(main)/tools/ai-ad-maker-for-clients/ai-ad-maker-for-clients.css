@@ -1,0 +1,992 @@
+/* app/tools/ai-ad-maker-for-clients/ai-ad-maker-for-clients.css */
+
+/* ────────────────────────────────────────────────────────────────────────────
+   TABLE OF CONTENTS
+   1. CSS Reset & Variables
+   2. Hero Section
+   3. Main CTA Card
+   4. How It Works Steps
+   5. Ad Styles & Voice Styles (2-col)
+   6. Industry Templates Grid
+   7. Prompt Examples
+   8. Comparison Table
+   9. Why AI Ad Maker Grid
+   10. FAQ Section
+   11. Related Tools & Final CTA
+   12. Animations & Utilities
+   ──────────────────────────────────────────────────────────────────────────── */
+
+/* ─── 1. Reset & Variables ─────────────────────────────────────────────────── */
+
+.aam-page * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.aam-page {
+  --aam-bg-dark: #05050a;
+  --aam-bg-card: #0a0a14;
+  --aam-bg-elevated: #0f0f1a;
+  --aam-border: rgba(99, 85, 220, 0.2);
+  --aam-border-soft: rgba(99, 85, 220, 0.1);
+  --aam-accent: #8b5cf6;
+  --aam-accent-glow: rgba(139, 92, 246, 0.3);
+  --aam-accent-strong: #a78bfa;
+  --aam-text-main: #ffffff;
+  --aam-text-secondary: #a1a1b0;
+  --aam-text-muted: #6b6b7a;
+  --aam-success: #10b981;
+  --aam-warning: #f59e0b;
+  --aam-gradient-1: linear-gradient(135deg, #6355dc 0%, #8b5cf6 50%, #a78bfa 100%);
+  --aam-gradient-2: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
+  --aam-gradient-card: linear-gradient(135deg, rgba(99, 85, 220, 0.08), rgba(139, 92, 246, 0.03));
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.aam-page {
+  background: var(--aam-bg-dark);
+  color: var(--aam-text-main);
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+.aam-section-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ─── 2. Hero Section ──────────────────────────────────────────────────────── */
+
+.aam-hero {
+  position: relative;
+  padding: 80px 24px 100px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.aam-hero-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.12), transparent 70%);
+  pointer-events: none;
+}
+
+.aam-hero-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.aam-badge-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+
+.aam-badge {
+  background: rgba(139, 92, 246, 0.12);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  padding: 6px 14px;
+  border-radius: 40px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  backdrop-filter: blur(4px);
+}
+
+.aam-badge-alt {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.aam-hero-h1 {
+  font-size: clamp(40px, 8vw, 72px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+}
+
+.aam-hero-h1-line2 {
+  display: block;
+}
+
+.aam-hero-h1-accent {
+  background: linear-gradient(135deg, #a78bfa, #c084fc);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.aam-hero-desc {
+  font-size: 18px;
+  color: var(--aam-text-secondary);
+  max-width: 700px;
+  margin: 0 auto 40px;
+  line-height: 1.6;
+}
+
+.aam-hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 48px;
+  flex-wrap: wrap;
+}
+
+.aam-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.aam-stat-num {
+  font-size: 28px;
+  font-weight: 800;
+  background: var(--aam-gradient-1);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.aam-stat-label {
+  font-size: 13px;
+  color: var(--aam-text-muted);
+  margin-top: 4px;
+}
+
+.aam-stat-divider {
+  width: 1px;
+  height: 40px;
+  background: var(--aam-border);
+}
+
+/* Hero CTA Button — massive, glowing */
+.aam-hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--aam-gradient-1);
+  padding: 16px 36px;
+  border-radius: 60px;
+  font-weight: 700;
+  font-size: 18px;
+  color: white;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.3);
+}
+
+.aam-hero-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(139, 92, 246, 0.45);
+}
+
+.aam-cta-spark {
+  font-size: 20px;
+}
+
+.aam-cta-arrow {
+  transition: transform 0.2s;
+}
+
+.aam-hero-cta:hover .aam-cta-arrow {
+  transform: translateX(4px);
+}
+
+.aam-hero-cta-sub {
+  font-size: 13px;
+  color: var(--aam-text-muted);
+  margin-top: 16px;
+}
+
+/* Format strip */
+.aam-format-strip {
+  margin-top: 60px;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+  position: relative;
+}
+
+.aam-format-track {
+  display: inline-flex;
+  gap: 12px;
+  animation: aam-scroll-format 30s linear infinite;
+}
+
+.aam-format-pill {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 6px 18px;
+  border-radius: 40px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--aam-text-secondary);
+  backdrop-filter: blur(4px);
+}
+
+@keyframes aam-scroll-format {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ─── 3. Main CTA Card ─────────────────────────────────────────────────────── */
+
+.aam-cta-section {
+  padding: 40px 24px 64px;
+}
+
+.aam-cta-card {
+  max-width: 1280px;
+  margin: 0 auto;
+  background: var(--aam-gradient-card);
+  border: 1px solid var(--aam-border);
+  border-radius: 48px;
+  backdrop-filter: blur(20px);
+  overflow: hidden;
+}
+
+.aam-cta-card-inner {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 48px;
+  padding: 48px;
+}
+
+@media (max-width: 900px) {
+  .aam-cta-card-inner {
+    grid-template-columns: 1fr;
+    padding: 32px;
+    gap: 32px;
+  }
+}
+
+.aam-cta-tag {
+  display: inline-block;
+  background: rgba(139, 92, 246, 0.15);
+  padding: 4px 12px;
+  border-radius: 40px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.aam-cta-h2 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  line-height: 1.3;
+}
+
+.aam-cta-body {
+  color: var(--aam-text-secondary);
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.aam-cta-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.aam-cta-list li {
+  font-size: 14px;
+  color: var(--aam-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.aam-cta-right {
+  background: var(--aam-bg-card);
+  border-radius: 28px;
+  padding: 28px;
+  border: 1px solid var(--aam-border);
+}
+
+.aam-cta-box-label {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.aam-cta-box-models {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.aam-model-chip {
+  background: rgba(139, 92, 246, 0.1);
+  padding: 4px 12px;
+  border-radius: 40px;
+  font-size: 12px;
+  border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.aam-cta-box-preview {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 24px;
+  border: 1px solid var(--aam-border-soft);
+}
+
+.aam-fake-textarea {
+  font-size: 13px;
+  color: var(--aam-text-secondary);
+  font-style: italic;
+}
+
+.aam-fake-cursor::after {
+  content: "▊";
+  animation: aam-blink 1s step-end infinite;
+  margin-left: 2px;
+  color: var(--aam-accent);
+}
+
+@keyframes aam-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.aam-big-cta {
+  display: block;
+  text-align: center;
+  background: var(--aam-gradient-1);
+  padding: 14px;
+  border-radius: 40px;
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+  transition: all 0.2s;
+  margin-bottom: 12px;
+}
+
+.aam-big-cta small {
+  display: block;
+  font-size: 11px;
+  opacity: 0.8;
+  font-weight: normal;
+  margin-top: 4px;
+}
+
+.aam-big-cta:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+.aam-cta-disclaimer {
+  font-size: 11px;
+  color: var(--aam-text-muted);
+  text-align: center;
+}
+
+/* ─── 4. How It Works Steps ────────────────────────────────────────────────── */
+
+.aam-section {
+  padding: 80px 0;
+}
+
+.aam-section-dark {
+  background: rgba(10, 10, 20, 0.6);
+}
+
+.aam-section-tint {
+  background: linear-gradient(180deg, rgba(139, 92, 246, 0.03), transparent);
+}
+
+.aam-section-label {
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--aam-accent);
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.aam-section-h2 {
+  font-size: 36px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.aam-section-sub {
+  text-align: center;
+  color: var(--aam-text-secondary);
+  max-width: 700px;
+  margin: 0 auto 48px;
+}
+
+.aam-accent-text {
+  color: var(--aam-accent-strong);
+}
+
+.aam-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  max-width: 900px;
+  margin: 0 auto 48px;
+}
+
+.aam-step {
+  display: flex;
+  gap: 24px;
+  background: var(--aam-bg-card);
+  border-radius: 24px;
+  padding: 28px;
+  border: 1px solid var(--aam-border-soft);
+  transition: border-color 0.2s;
+}
+
+.aam-step:hover {
+  border-color: var(--aam-accent);
+}
+
+.aam-step-num {
+  font-size: 48px;
+  font-weight: 800;
+  background: var(--aam-gradient-1);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  line-height: 1;
+  font-feature-settings: "tnum";
+}
+
+.aam-step-content {
+  flex: 1;
+}
+
+.aam-step-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.aam-step-body {
+  color: var(--aam-text-secondary);
+  margin-bottom: 12px;
+  line-height: 1.6;
+}
+
+.aam-step-detail {
+  font-size: 13px;
+  color: var(--aam-accent);
+  border-left: 2px solid var(--aam-accent);
+  padding-left: 16px;
+}
+
+.aam-steps-cta {
+  text-align: center;
+}
+
+.aam-inline-cta {
+  display: inline-block;
+  color: var(--aam-accent-strong);
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 2px solid var(--aam-accent);
+  padding-bottom: 2px;
+  transition: opacity 0.2s;
+}
+
+.aam-inline-cta:hover {
+  opacity: 0.8;
+}
+
+/* ─── 5. Ad Styles & Voice Styles (2-col) ──────────────────────────────────── */
+
+.aam-two-col-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-top: 24px;
+}
+
+@media (max-width: 720px) {
+  .aam-two-col-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.aam-card-group {
+  background: var(--aam-bg-card);
+  border-radius: 28px;
+  padding: 28px;
+  border: 1px solid var(--aam-border-soft);
+}
+
+.aam-group-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.aam-style-card, .aam-voice-card {
+  display: flex;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.aam-style-card:last-child, .aam-voice-card:last-child {
+  border-bottom: none;
+}
+
+.aam-style-icon {
+  font-size: 28px;
+}
+
+.aam-style-details {
+  flex: 1;
+}
+
+.aam-style-name {
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.aam-style-vibe, .aam-style-colors {
+  font-size: 12px;
+  color: var(--aam-text-muted);
+}
+
+.aam-voice-name {
+  font-weight: 700;
+  width: 140px;
+}
+
+.aam-voice-best {
+  font-size: 13px;
+  color: var(--aam-text-secondary);
+  flex: 1;
+}
+
+.aam-credit-note {
+  font-size: 11px;
+  color: var(--aam-accent);
+  margin-top: 16px;
+  text-align: center;
+}
+
+/* ─── 6. Industry Templates Grid ───────────────────────────────────────────── */
+
+.aam-templates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.aam-template-card {
+  background: var(--aam-bg-card);
+  border-radius: 24px;
+  padding: 24px;
+  border: 1px solid var(--aam-border-soft);
+  transition: transform 0.2s;
+}
+
+.aam-template-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--aam-accent);
+}
+
+.aam-template-badge {
+  display: inline-block;
+  background: rgba(139, 92, 246, 0.12);
+  padding: 4px 12px;
+  border-radius: 40px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.aam-template-prompt {
+  font-size: 14px;
+  color: var(--aam-text-secondary);
+  line-height: 1.6;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.aam-template-use {
+  display: inline-block;
+  color: var(--aam-accent-strong);
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.aam-tip {
+  background: rgba(139, 92, 246, 0.06);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-top: 24px;
+}
+
+.aam-tip-icon {
+  font-size: 20px;
+}
+
+/* ─── 7. Prompt Examples ───────────────────────────────────────────────────── */
+
+.aam-examples-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.aam-example-card {
+  background: var(--aam-bg-card);
+  border-radius: 24px;
+  padding: 24px;
+  border: 1px solid var(--aam-border-soft);
+}
+
+.aam-example-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.aam-example-brand {
+  font-weight: 800;
+}
+
+.aam-example-style {
+  font-size: 12px;
+  background: rgba(139, 92, 246, 0.12);
+  padding: 2px 8px;
+  border-radius: 40px;
+}
+
+.aam-example-text {
+  font-size: 14px;
+  color: var(--aam-text-secondary);
+  line-height: 1.6;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.aam-example-btn {
+  display: inline-block;
+  background: rgba(139, 92, 246, 0.1);
+  padding: 8px 16px;
+  border-radius: 40px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--aam-accent-strong);
+  text-decoration: none;
+}
+
+/* ─── 8. Comparison Table ──────────────────────────────────────────────────── */
+
+.aam-compare-table {
+  background: var(--aam-bg-card);
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid var(--aam-border-soft);
+  margin-bottom: 24px;
+}
+
+.aam-compare-row {
+  display: grid;
+  grid-template-columns: 220px 1fr 1fr;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 14px;
+}
+
+.aam-compare-row:last-child {
+  border-bottom: none;
+}
+
+.aam-compare-header {
+  background: rgba(139, 92, 246, 0.08);
+  font-weight: 700;
+  border-bottom: 1px solid var(--aam-accent);
+}
+
+.aam-compare-note {
+  background: rgba(16, 185, 129, 0.05);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--aam-text-muted);
+}
+
+.aam-note-icon {
+  font-size: 20px;
+}
+
+@media (max-width: 700px) {
+  .aam-compare-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 16px;
+  }
+  .aam-compare-header {
+    display: none;
+  }
+}
+
+/* ─── 9. Why AI Ad Maker Grid ──────────────────────────────────────────────── */
+
+.aam-why-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.aam-why-card {
+  background: var(--aam-bg-card);
+  border-radius: 24px;
+  padding: 28px;
+  border: 1px solid var(--aam-border-soft);
+}
+
+.aam-why-icon {
+  font-size: 32px;
+  display: inline-block;
+  margin-bottom: 16px;
+}
+
+.aam-why-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.aam-why-body {
+  color: var(--aam-text-secondary);
+  line-height: 1.6;
+}
+
+/* ─── 10. FAQ Section ──────────────────────────────────────────────────────── */
+
+.aam-faq-list {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.aam-faq-item {
+  background: var(--aam-bg-card);
+  border-radius: 16px;
+  margin-bottom: 16px;
+  border: 1px solid var(--aam-border-soft);
+  transition: border-color 0.2s;
+}
+
+.aam-faq-item[open] {
+  border-color: var(--aam-accent);
+}
+
+.aam-faq-q {
+  padding: 20px 24px;
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.aam-faq-q::-webkit-details-marker {
+  display: none;
+}
+
+.aam-faq-q::after {
+  content: "▼";
+  font-size: 12px;
+  color: var(--aam-accent);
+  transition: transform 0.2s;
+}
+
+.aam-faq-item[open] .aam-faq-q::after {
+  transform: rotate(180deg);
+}
+
+.aam-faq-a {
+  padding: 0 24px 24px;
+  color: var(--aam-text-secondary);
+  line-height: 1.6;
+  border-top: 1px solid var(--aam-border-soft);
+  margin-top: 0;
+}
+
+/* ─── 11. Related Tools & Final CTA ────────────────────────────────────────── */
+
+.aam-related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.aam-related-card {
+  background: var(--aam-bg-card);
+  border-radius: 24px;
+  padding: 24px;
+  text-decoration: none;
+  border: 1px solid var(--aam-border-soft);
+  transition: all 0.2s;
+  display: block;
+}
+
+.aam-related-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--aam-accent);
+}
+
+.aam-related-icon {
+  font-size: 32px;
+  display: inline-block;
+  margin-bottom: 16px;
+}
+
+.aam-related-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--aam-text-main);
+  margin-bottom: 8px;
+}
+
+.aam-related-desc {
+  font-size: 13px;
+  color: var(--aam-text-secondary);
+  margin-bottom: 16px;
+}
+
+.aam-related-arrow {
+  font-size: 13px;
+  color: var(--aam-accent-strong);
+  font-weight: 600;
+}
+
+/* Final CTA Section */
+.aam-final-cta {
+  position: relative;
+  padding: 100px 24px;
+  text-align: center;
+  background: radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.12), transparent);
+}
+
+.aam-final-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.aam-final-noise {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.aam-final-h2 {
+  font-size: clamp(32px, 6vw, 52px);
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+
+.aam-final-accent {
+  background: var(--aam-gradient-1);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.aam-final-sub {
+  font-size: 18px;
+  color: var(--aam-text-secondary);
+  margin-bottom: 40px;
+  line-height: 1.6;
+}
+
+.aam-final-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--aam-gradient-1);
+  padding: 18px 42px;
+  border-radius: 60px;
+  font-weight: 700;
+  font-size: 18px;
+  color: white;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s;
+  box-shadow: 0 12px 32px rgba(139, 92, 246, 0.35);
+}
+
+.aam-final-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 40px rgba(139, 92, 246, 0.45);
+}
+
+.aam-final-note {
+  font-size: 12px;
+  color: var(--aam-text-muted);
+  margin-top: 24px;
+}
+
+/* ─── 12. Animations & Responsive ─────────────────────────────────────────── */
+
+@keyframes aam-glow-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.4); }
+  70% { box-shadow: 0 0 0 12px rgba(139, 92, 246, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0); }
+}
+
+.aam-hero-cta, .aam-final-btn, .aam-big-cta {
+  animation: aam-glow-pulse 2.5s infinite;
+}
+
+@media (max-width: 640px) {
+  .aam-hero {
+    padding: 60px 16px 80px;
+  }
+  .aam-section {
+    padding: 48px 0;
+  }
+  .aam-step {
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px;
+  }
+  .aam-step-num {
+    font-size: 32px;
+  }
+  .aam-cta-card-inner {
+    padding: 24px;
+  }
+  .aam-cta-h2 {
+    font-size: 26px;
+  }
+  .aam-hero-stats {
+    gap: 20px;
+  }
+}

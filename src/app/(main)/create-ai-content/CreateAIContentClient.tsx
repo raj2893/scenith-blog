@@ -257,6 +257,11 @@ const MODEL_LOGOS: Record<string, string> = {
   VEO_3_1_FAST:         "https://cdn.scenith.in/brand-logos/Google%20Logo.webp",
   VEO_3_1:              "https://cdn.scenith.in/brand-logos/Google%20Logo.webp",
   GROK_IMAGINE:         "https://cdn.scenith.in/brand-logos/Grok.png",
+  KLING_3_0_PRO:        "https://cdn.scenith.in/brand-logos/Kling%20logo.webp",
+  RUNWAY_GEN_4_5:       "https://cdn.scenith.in/brand-logos/Runway%20Logo.png",
+  HAILUO_02_PRO:        "https://cdn.scenith.in/brand-logos/Hailuo%20Logo.jpg",
+  LUMA_RAY_3_1:         "https://cdn.scenith.in/brand-logos/Luma%20Ray%20Logo.png",
+  COSMOS_PREDICT_2_5:   "https://cdn.scenith.in/brand-logos/Cosmos%20Logo.png",
   // Voice providers
   GOOGLE:               "https://cdn.scenith.in/brand-logos/Google%20Logo.webp",
   OPENAI:               "https://cdn.scenith.in/brand-logos/Chatgpt%20logo.webp",
@@ -338,15 +343,24 @@ const VIDEO_RESOLUTION_OPTIONS: Record<string, { value: string; label: string; i
     { value: "480p", label: "480p", icon: "📱" },
     { value: "720p", label: "720p", icon: "💻" },
   ],
+  luma: [
+    { value: "720p",  label: "720p",  icon: "💻" },
+    { value: "1080p", label: "1080p", icon: "🖥️" },
+  ],
 };
 
 const STATIC_VIDEO_MODELS = [
-  { id: "wan2.5",           name: "Wan 2.5",          cr: 46,  supportsAudio: false },
-  { id: "kling-v2.5-turbo", name: "Kling 2.5 Turbo",  cr: 64,  supportsAudio: false },
-  { id: "kling-v2.6-pro",   name: "Kling 2.6 Pro",    cr: 64,  supportsAudio: true  },
-  { id: "veo3.1-fast",      name: "Veo 3.1 Fast",     cr: 92,  supportsAudio: true  },
-  { id: "veo3.1",           name: "Veo 3.1",          cr: 186, supportsAudio: true  },
-  { id: "grok-imagine",     name: "Grok Imagine 🎵",  cr: 47,  supportsAudio: true  },
+  { id: "WAN_2_5",           name: "Wan 2.5",             cr: 46,  supportsAudio: false },
+  { id: "KLING_2_5_TURBO",   name: "Kling 2.5 Turbo",     cr: 64,  supportsAudio: false },
+  { id: "KLING_2_6_PRO",     name: "Kling 2.6 Pro",       cr: 64,  supportsAudio: true  },
+  { id: "KLING_3_0_PRO",     name: "Kling 3.0 Pro",       cr: 105, supportsAudio: true  },
+  { id: "VEO_3_1_FAST",      name: "Veo 3.1 Fast",        cr: 92,  supportsAudio: true  },
+  { id: "VEO_3_1",           name: "Veo 3.1",             cr: 186, supportsAudio: true  },
+  { id: "GROK_IMAGINE",      name: "Grok Imagine 🎵",     cr: 47,  supportsAudio: true  },
+  { id: "RUNWAY_GEN_4_5",    name: "Runway Gen-4.5",      cr: 116, supportsAudio: true  },
+  { id: "HAILUO_02_PRO",     name: "Hailuo 02 Pro",       cr: 90,  supportsAudio: false },
+  { id: "LUMA_RAY_3_1",      name: "Luma Ray 3.1",        cr: 76,  supportsAudio: false },
+  { id: "COSMOS_PREDICT_2_5",name: "Cosmos Predict 2.5",  cr: 48,  supportsAudio: false },
 ];
 
 /**
@@ -359,43 +373,74 @@ const calcVideoCredits = (
   audioOn: boolean,
   resolution: string
 ): number => {
-  const is10s = durationSeconds > 5;
   const res = resolution?.toLowerCase() || "480p";
   const id = modelId?.toUpperCase() || "";
 
-  // Wan 2.5 — resolution-based pricing
+  // Wan 2.5 — resolution-based pricing, no audio
   if (id.includes("WAN")) {
     const base5s = res === "480p" ? 46 : res === "720p" ? 92 : 138;
-    return is10s ? base5s * 2 : base5s;
+    return durationSeconds > 5 ? base5s * 2 : base5s;
   }
 
-  // Kling 2.5 Turbo — no audio
-  if (id.includes("KLING_2_5") || id.includes("KLING-2.5") || id.includes("KLING-V2.5")) {
-    return is10s ? 130 : 64;
+  // Kling 2.5 Turbo — flat rate, no audio
+  if (id === "KLING_2_5_TURBO") {
+    return durationSeconds > 5 ? 130 : 64;
   }
 
   // Kling 2.6 Pro — audio doubles cost
-  if (id.includes("KLING_2_6") || id.includes("KLING-2.6") || id.includes("KLING-V2.6")) {
+  if (id === "KLING_2_6_PRO") {
     const base5s = audioOn ? 130 : 64;
-    return is10s ? base5s * 2 : base5s;
+    return durationSeconds > 5 ? base5s * 2 : base5s;
   }
 
-  // Veo 3.1 Fast
-  if (id.includes("VEO_3_1_FAST") || id.includes("VEO3.1-FAST") || id.includes("VEO 3.1 FAST")) {
-    if (!is10s) return audioOn ? 138 : 92;
+  // Kling 3.0 Pro — 5s off=105, 5s on=158, 10s off=211, 10s on=316
+  if (id === "KLING_3_0_PRO") {
+    if (durationSeconds <= 5) return audioOn ? 158 : 105;
+    return audioOn ? 316 : 211;
+  }
+
+  // Veo 3.1 Fast — uses 4s/8s durations
+  if (id === "VEO_3_1_FAST") {
+    const isLong = durationSeconds > 4;
+    if (!isLong) return audioOn ? 138 : 92;
     return audioOn ? 278 : 186;
   }
 
-  // Veo 3.1 (must come after Fast check)
-  if (id.includes("VEO_3_1") || id.includes("VEO3.1") || id.includes("VEO 3.1")) {
-    if (!is10s) return audioOn ? 370 : 186;
+  // Veo 3.1 — uses 4s/8s durations (must come after Fast check)
+  if (id === "VEO_3_1") {
+    const isLong = durationSeconds > 4;
+    if (!isLong) return audioOn ? 370 : 186;
     return audioOn ? 740 : 370;
   }
 
-  // Grok Imagine — resolution-based, audio always included (same price)
-  if (id.includes("GROK")) {
+  // Grok Imagine — audio always on, resolution-based
+  if (id === "GROK_IMAGINE") {
     const base5s = res === "720p" ? 66 : 47;
-    return is10s ? base5s * 2 : base5s;
+    return durationSeconds > 5 ? base5s * 2 : base5s;
+  }
+  // Runway Gen-4.5 — 5s off=116, 5s on=172, 10s off=232, 10s on=344
+  if (id === "RUNWAY_GEN_4_5") {
+    if (durationSeconds <= 5) return audioOn ? 172 : 116;
+    return audioOn ? 344 : 232;
+  }
+  // Hailuo 02 Pro — flat $0.08/sec, no audio toggle. 6s=90cr, 10s=150cr.
+  if (id === "HAILUO_02_PRO") {
+    return durationSeconds <= 6 ? 90 : 150;
+  }
+
+  // Luma Ray 3.1 — resolution-variable
+  if (id === "LUMA_RAY_3_1") {
+    if (res === "1080p") {
+      if (durationSeconds <= 5) return audioOn ? 364 : 182;
+      return audioOn ? 728 : 364;
+    }
+    // 720p — audio included in price
+    return durationSeconds > 5 ? 152 : 76;
+  }
+
+  // Cosmos Predict 2.5 — no audio, flat 1080p
+  if (id === "COSMOS_PREDICT_2_5") {
+    return durationSeconds > 5 ? 96 : 48;
   }
 
   return 46; // fallback
@@ -748,28 +793,42 @@ const CreateAIContentClient: React.FC = () => {
   const videoInputRef = useRef<HTMLInputElement>(null);
   // Auto-set resolution + duration when model changes
 useEffect(() => {
-  const isWan  = selectedVideoModel?.toLowerCase().includes('wan');
-  const isGrok = selectedVideoModel?.toLowerCase().includes('grok');
-  const isVeo  = selectedVideoModel?.toLowerCase().includes('veo');
+  const id = selectedVideoModel?.toUpperCase() || "";
+  const isWan   = id.includes("WAN");
+  const isGrok  = id === "GROK_IMAGINE";
+  const isVeo   = id === "VEO_3_1" || id === "VEO_3_1_FAST";
+  const isLuma  = id === "LUMA_RAY_3_1";
+  const isHailuo = id === "HAILUO_02_PRO";
 
-  if (!isWan && !isGrok) {
-    setVideoResolution("1080p");
-  } else if (isWan) {
+  // Set default resolution
+  if (isWan) {
     setVideoResolution("480p");
   } else if (isGrok) {
     setVideoResolution("480p");
+  } else if (isLuma) {
+    setVideoResolution("720p");
+  } else {
+    setVideoResolution("1080p");
   }
 
-  // Reset to valid duration default for selected model
-  setVideoDuration(isVeo ? 4 : 5);
+  // Set default duration — Veo uses 4s/8s, Hailuo uses 6s/10s, others use 5s/10s
+  if (isVeo) {
+    setVideoDuration(4);
+  } else if (isHailuo) {
+    setVideoDuration(6);
+  } else {
+    setVideoDuration(5);
+  }
 }, [selectedVideoModel]);
 
 // Dynamic duration options — Veo only supports 4s and 8s, others support 5s and 10s
 const VIDEO_DURATION_OPTIONS = useMemo(() => {
-  const isVeo = selectedVideoModel?.toLowerCase().includes('veo');
-  return isVeo
-    ? [{ value: 4, label: "4s" }, { value: 8, label: "8s" }]
-    : [{ value: 5, label: "5s" }, { value: 10, label: "10s" }];
+  const id = selectedVideoModel?.toUpperCase() || "";
+  const isVeo    = id === "VEO_3_1" || id === "VEO_3_1_FAST";
+  const isHailuo = id === "HAILUO_02_PRO";
+  if (isVeo)    return [{ value: 4, label: "4s" }, { value: 8, label: "8s" }];
+  if (isHailuo) return [{ value: 6, label: "6s" }, { value: 10, label: "10s" }];
+  return [{ value: 5, label: "5s" }, { value: 10, label: "10s" }];
 }, [selectedVideoModel]);
 
   const resultRef = useRef<HTMLDivElement>(null);
@@ -2335,9 +2394,17 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                 />
                 {/* ── Resolution selector (only for Wan 2.5 and Grok) ── */}
                 {(() => {
-                  const isWan  = selectedVideoModel?.toLowerCase().includes('wan');
-                  const isGrok = selectedVideoModel?.toLowerCase().includes('grok');
-                  const resOptions = isWan ? VIDEO_RESOLUTION_OPTIONS.wan : isGrok ? VIDEO_RESOLUTION_OPTIONS.grok : null;
+                  const id = selectedVideoModel?.toUpperCase() || "";
+                  const isWan  = id.includes("WAN");
+                  const isGrok = id === "GROK_IMAGINE";
+                  const isLuma = id === "LUMA_RAY_3_1";
+                  const resOptions = isWan
+                    ? VIDEO_RESOLUTION_OPTIONS.wan
+                    : isGrok
+                    ? VIDEO_RESOLUTION_OPTIONS.grok
+                    : isLuma
+                    ? VIDEO_RESOLUTION_OPTIONS.luma
+                    : null;
                   if (!resOptions) return null;
                   return (
                     <div className="cac-toggle-group">
@@ -2357,9 +2424,10 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
 
                 {/* ── Audio toggle ── */}
                 {(() => {
+                  const id = selectedVideoModel?.toUpperCase() || "";
                   const modelData = (isLoggedIn && videoModels.length > 0 ? videoModels : STATIC_VIDEO_MODELS)
                     .find((m: any) => m.id === selectedVideoModel);
-                  const isGrok = selectedVideoModel?.toLowerCase().includes('grok');
+                  const isGrok = id === "GROK_IMAGINE";
                   const supportsAudio = modelData?.supportsAudio ?? false;
 
                   if (isGrok && supportsAudio) {
@@ -3366,10 +3434,12 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                   gap: 10, flexWrap: 'wrap', marginBottom: '30px'
                 }}>
                   {[
-                    { key: 'WAN_2_5',        label: 'Wan 2.5' },
-                    { key: 'KLING_2_5_TURBO', label: 'Kling' },
-                    { key: 'VEO_3_1_FAST',   label: 'Veo 3.1' },
-                    { key: 'GROK_IMAGINE',   label: 'Grok' },
+                    { key: 'WAN_2_5',          label: 'Wan 2.5'   },
+                    { key: 'KLING_3_0_PRO',    label: 'Kling 3.0' },
+                    { key: 'VEO_3_1_FAST',     label: 'Veo 3.1'   },
+                    { key: 'HAILUO_02_PRO',    label: 'Hailuo'    },
+                    { key: 'LUMA_RAY_3_1',     label: 'Luma Ray'  },
+                    { key: 'COSMOS_PREDICT_2_5', label: 'Cosmos'  },
                   ].map(m => (
                     <div key={m.key} style={{
                       display: 'flex', alignItems: 'center', gap: 5,
