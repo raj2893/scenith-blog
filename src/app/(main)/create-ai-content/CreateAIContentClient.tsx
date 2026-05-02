@@ -2982,9 +2982,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                         <div key={i} style={{
                           width: 160, height: 160, borderRadius: 12, overflow: 'hidden', flexShrink: 0,
                           border: '1px solid var(--cac-border-soft)',
-                          background: 'linear-gradient(90deg, rgba(99,85,220,0.08) 25%, rgba(99,85,220,0.15) 50%, rgba(99,85,220,0.08) 75%)',
-                          backgroundSize: '200% 100%',
-                          animation: 'cac-shimmer 1.5s infinite',
+                          background: 'rgba(99,85,220,0.06)',
                         }}>
                           <img
                             src={src}
@@ -3019,7 +3017,10 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
             <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 8, scrollSnapType: 'x mandatory', scrollbarWidth: 'thin', scrollbarColor: 'var(--cac-border) transparent' }}>
               {demoVideos.map((url, i) => (
                 <div key={i} style={{ flexShrink: 0, scrollSnapAlign: 'start', width: 220, borderRadius: 14, overflow: 'hidden', border: '1px solid var(--cac-border)', background: '#000', position: 'relative' }}>
-                  <video src={url} autoPlay loop muted playsInline style={{ width: '100%', height: 160, objectFit: 'cover', display: 'block' }} />
+                  <video src={url} loop muted playsInline preload="none" style={{ width: '100%', height: 160, objectFit: 'cover', display: 'block' }}
+                    onMouseEnter={e => (e.currentTarget as HTMLVideoElement).play()}
+                    onMouseLeave={e => { const v = e.currentTarget as HTMLVideoElement; v.pause(); v.currentTime = 0; }}
+                  />
                   <div style={{ position: 'absolute', bottom: 6, left: '50%', transform: 'translateX(-50%)', background: 'rgba(0,0,0,0.6)', borderRadius: 999, padding: '2px 8px', fontSize: 10, color: '#fff', whiteSpace: 'nowrap' }}>
                     🎬 Sample {i + 1}
                   </div>
