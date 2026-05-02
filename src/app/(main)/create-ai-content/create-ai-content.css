@@ -27,7 +27,7 @@
    ============================================================ */
 :root,
 [data-theme="light"] {
-  --cac-bg:           #f5f6fa;
+  --cac-bg:           #f7fafc;
   --cac-surface:      #ffffff;
   --cac-surface-2:    #f0f1f8;
   --cac-border:       rgba(99, 85, 220, 0.18);
@@ -277,7 +277,7 @@
 
 .cac-dark-zone {
   position: relative;
-  background: linear-gradient(135deg, #1a0a2e 0%, #0d0f1a 40%, #1a1035 100%);
+  background: var(--cac-hero-grad);
 }
 
 .cac-dark-zone::after {
