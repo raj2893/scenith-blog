@@ -296,6 +296,22 @@
   );
   pointer-events: none;
   z-index: 0;
+  /* Explicitly constrain overlay to dark-zone only */
+  bottom: 0;
+  overflow: hidden;
+}
+/* SEO zone must never be affected by dark-zone stacking context */
+.cac-seo-zone {
+  position: relative;
+  z-index: 1;
+  background: var(--cac-bg);
+  isolation: isolate;
+}
+
+.cac-seo-main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
 }
 
 .cac-hero {
