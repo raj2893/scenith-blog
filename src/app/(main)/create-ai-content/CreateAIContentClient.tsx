@@ -7,7 +7,7 @@ import React, {
   useRef,
   useMemo,
 } from "react";
-import axios from "axios";
+import axios from "axios"; 
 import { motion, AnimatePresence } from "framer-motion";
 import { FaTimes, FaMoon, FaSun } from "react-icons/fa";
 import { API_BASE_URL, CDN_URL } from "@/app/config";
@@ -639,6 +639,7 @@ const CreateAIContentClient: React.FC = () => {
   const [loginSuccess, setLoginSuccess] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [showVoiceToVideoModal, setShowVoiceToVideoModal] = useState(false);
+  const [showDemos, setShowDemos] = useState(false);
 
   // ── Active tab
   const [activeTab, setActiveTab] = useState<Tab>(() => {
@@ -1059,20 +1060,30 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
     []
   );
 
+  // Images fetch — add .slice(0, 10)
   useEffect(() => {
     fetch(`${API_BASE_URL}/api/public/gallery/images`)
       .then(r => r.json())
-      .then((paths: string[]) => setDemoImages(paths.map(p => `${CDN_URL}/${p}`)))
+      .then((paths: string[]) => setDemoImages(
+        paths.slice(0, 10).map(p => `${CDN_URL}/${p}`)  // ← add slice
+      ))
       .catch(() => {});
   }, []);
-  
+
+  // Videos fetch — add .slice(0, 10)
   useEffect(() => {
     fetch(`${API_BASE_URL}/api/public/gallery/videos`)
       .then(r => r.json())
-      .then((paths: string[]) => setDemoVideos(paths.map(p => `${CDN_URL}/${p}`)))
+      .then((paths: string[]) => setDemoVideos(
+        paths.slice(0, 10).map(p => `${CDN_URL}/${p}`)  // ← add slice
+      ))
       .catch(() => {});
-  }, []);  
+  }, []); 
 
+  useEffect(() => {
+    const timer = setTimeout(() => setShowDemos(true), 1500);
+    return () => clearTimeout(timer);
+  }, []);  
   // ─────────────────── VOICE ACTIONS ───────────────────────────────────────
 
   const handlePlayDemo = (voice: Voice) => {
@@ -2960,7 +2971,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
         )}
 
         {/* ── Demo Images Marquee (shown on image tab) ── */}
-        {activeTab === "image" && demoImages.length > 0 && (
+        {activeTab === "image" && demoImages.length > 0 && showDemos && (
           <div style={{ marginBottom: 24, overflow: 'hidden' }}>
             <p style={{
               textAlign: 'center', fontSize: 12, color: 'var(--cac-text-2)',
@@ -3003,7 +3014,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
         )}
 
         {/* ── Demo Videos Strip (shown on video tab) ── */}
-        {activeTab === "video" && demoVideos.length > 0 && (
+        {activeTab === "video" && demoVideos.length > 0 && showDemos && (
           <div style={{ marginBottom: 24 }}>
             <p style={{
               textAlign: 'center', fontSize: 12, color: 'var(--cac-text-2)',

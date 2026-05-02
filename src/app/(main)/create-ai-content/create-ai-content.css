@@ -27,7 +27,7 @@
    ============================================================ */
 :root,
 [data-theme="light"] {
-  --cac-bg:           #f5f6fa;
+  --cac-bg:           #f7fafc;
   --cac-surface:      #ffffff;
   --cac-surface-2:    #f0f1f8;
   --cac-border:       rgba(99, 85, 220, 0.18);
@@ -277,11 +277,7 @@
 
 .cac-dark-zone {
   position: relative;
-  background-image: url('/images/New_background.png');
-  background-size: 100% auto;
-  background-position: center top;
-  background-repeat: no-repeat;
-  background-attachment: scroll;
+  background: var(--cac-hero-grad);
 }
 
 .cac-dark-zone::after {
@@ -2238,10 +2234,4 @@ html[data-theme="dark"] .cac-darkmode-fab:hover {
 @keyframes cac-shimmer {
   0%   { background-position: 200% 0; }
   100% { background-position: -200% 0; }
-}
-@media (max-width: 640px) {
-  .cac-dark-zone {
-    background-size: auto 100%;
-    background-position: 70% top;
-  }
 }
