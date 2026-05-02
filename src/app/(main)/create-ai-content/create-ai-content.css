@@ -277,11 +277,7 @@
 
 .cac-dark-zone {
   position: relative;
-  background-image: url('/images/New_background.png');
-  background-size: 100% auto;
-  background-position: center top;
-  background-repeat: no-repeat;
-  background-attachment: scroll;
+  background: linear-gradient(135deg, #1a0a2e 0%, #0d0f1a 40%, #1a1035 100%);
 }
 
 .cac-dark-zone::after {
@@ -2238,10 +2234,4 @@ html[data-theme="dark"] .cac-darkmode-fab:hover {
 @keyframes cac-shimmer {
   0%   { background-position: 200% 0; }
   100% { background-position: -200% 0; }
-}
-@media (max-width: 640px) {
-  .cac-dark-zone {
-    background-size: auto 100%;
-    background-position: 70% top;
-  }
 }
