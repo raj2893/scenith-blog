@@ -774,35 +774,129 @@ export default function PricingPageClient() {
     }
   }, []);
 
-  /* ── handleUpgrade — original logic untouched ── */
   const handleUpgrade = async (plan: PricingPlan) => {
     if (!isLoggedIn) { setShowLoginModal(true); return; }
     if (plan.role === 'BASIC' || plan.role === currentPlan) return;
+
     setLoading(plan.role);
+
+    const isRecurring = ['SPARK', 'MICRO', 'CREATOR_LITE', 'CREATOR', 'STUDIO'].includes(plan.role);
+    const isIndian    = plan.currency === 'INR';
+
     try {
-      const orderResponse = await axios.post(`${API_BASE_URL}/api/payments/create-order`, { planType: plan.role, amount: plan.price, currency: plan.currency }, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
-      const { internalOrderId, gatewayOrderId, keyId, gateway } = orderResponse.data;
-      if (gateway === 'razorpay') {
-        if (!document.getElementById('razorpay-script')) { const sc = document.createElement('script'); sc.src = 'https://checkout.razorpay.com/v1/checkout.js'; sc.id = 'razorpay-script'; document.body.appendChild(sc); }
+      // ── Indian users + recurring plans → Razorpay Subscription ──────────
+      if (isIndian && isRecurring) {
+        const subResponse = await axios.post(
+          `${API_BASE_URL}/api/payments/create-subscription`,
+          { planType: plan.role },
+          { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+        );
+
+        const { subscriptionId, keyId } = subResponse.data;
+
+        if (!document.getElementById('razorpay-script')) {
+          const sc = document.createElement('script');
+          sc.src = 'https://checkout.razorpay.com/v1/checkout.js';
+          sc.id  = 'razorpay-script';
+          document.body.appendChild(sc);
+          await new Promise(resolve => { sc.onload = resolve; });
+        }
+
         const opts = {
-          key: keyId, amount: plan.price * 100, currency: 'INR', order_id: gatewayOrderId, name: 'Scenith', description: `Upgrade to ${plan.name}`,
-          modal: { ondismiss: () => { setIsPaymentInProgress(false); setLoading(null); } },
+          key:             keyId,
+          subscription_id: subscriptionId,
+          name:            'Scenith',
+          description:     `${plan.name} — Monthly Subscription`,
+          modal: {
+            ondismiss: () => { setIsPaymentInProgress(false); setLoading(null); }
+          },
+          handler: async (_response: any) => {
+            setIsPaymentInProgress(false);
+            alert(`🎉 Subscribed to ${plan.name}! Your plan is now active. Credits will be added within a few seconds.`);
+            setCurrentPlan(plan.role);
+            router.push('/create-ai-content');
+          },
+          prefill: {
+            email: userProfile?.email || '',
+            name:  userProfile ? `${userProfile.firstName} ${userProfile.lastName}`.trim() : ''
+          },
+          theme: { color: '#5c4de8' }
+        };
+
+        setIsPaymentInProgress(true);
+        // @ts-ignore
+        new window.Razorpay(opts).open();
+
+      // ── Indian users + SPARK (one-time) → existing Razorpay order flow ──
+      } else if (isIndian && !isRecurring) {
+        const orderResponse = await axios.post(
+          `${API_BASE_URL}/api/payments/create-order`,
+          { planType: plan.role, amount: plan.price, currency: plan.currency },
+          { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+        );
+
+        const { internalOrderId, gatewayOrderId, keyId } = orderResponse.data;
+
+        if (!document.getElementById('razorpay-script')) {
+          const sc = document.createElement('script');
+          sc.src = 'https://checkout.razorpay.com/v1/checkout.js';
+          sc.id  = 'razorpay-script';
+          document.body.appendChild(sc);
+          await new Promise(resolve => { sc.onload = resolve; });
+        }
+
+        const opts = {
+          key:      keyId,
+          amount:   plan.price * 100,
+          currency: 'INR',
+          order_id: gatewayOrderId,
+          name:     'Scenith',
+          description: `${plan.name} (one-time)`,
+          modal: {
+            ondismiss: () => { setIsPaymentInProgress(false); setLoading(null); }
+          },
           handler: async (response: any) => {
             setIsPaymentInProgress(true);
             try {
-              await axios.post(`${API_BASE_URL}/api/payments/verify-razorpay`, { internalOrderId, razorpay_payment_id: response.razorpay_payment_id, razorpay_order_id: response.razorpay_order_id, razorpay_signature: response.razorpay_signature }, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
+              await axios.post(
+                `${API_BASE_URL}/api/payments/verify-razorpay`,
+                {
+                  internalOrderId,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_order_id:   response.razorpay_order_id,
+                  razorpay_signature:  response.razorpay_signature
+                },
+                { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+              );
               setIsPaymentInProgress(false);
-              alert(`🎉 Successfully upgraded to ${plan.name}!`);
+              alert(`🎉 Successfully purchased ${plan.name}!`);
               setCurrentPlan(plan.role);
               router.push('/create-ai-content');
-            } catch { setIsPaymentInProgress(false); alert('Payment verification failed. Please contact support.'); }
+            } catch {
+              setIsPaymentInProgress(false);
+              alert('Payment verification failed. Please contact support.');
+            }
           },
-          prefill: { email: userProfile?.email || '', name: userProfile ? `${userProfile.firstName} ${userProfile.lastName}`.trim() : '' },
+          prefill: {
+            email: userProfile?.email || '',
+            name:  userProfile ? `${userProfile.firstName} ${userProfile.lastName}`.trim() : ''
+          },
           theme: { color: '#5c4de8' }
         };
+
         // @ts-ignore
         new window.Razorpay(opts).open();
-      } else if (gateway === 'paypal') {
+
+      // ── International users → PayPal one-time (completely unchanged) ─────
+      } else if (!isIndian) {
+        const orderResponse = await axios.post(
+          `${API_BASE_URL}/api/payments/create-order`,
+          { planType: plan.role, amount: plan.price, currency: plan.currency },
+          { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+        );
+
+        const { internalOrderId, gatewayOrderId } = orderResponse.data;
+
         let overlay = document.getElementById('paypal-overlay');
         if (!overlay) {
           overlay = document.createElement('div');
@@ -819,15 +913,50 @@ export default function PricingPageClient() {
             <div id="paypal-button-container" style="min-height:48px;"></div>
             <p style="text-align:center;font-size:11px;color:#a0a0c0;margin-top:14px;">🔒 Secured by PayPal · Cancel anytime</p>
           </div>`;
+
         document.getElementById('paypal-modal-close')?.addEventListener('click', () => {
           if (overlay && document.body.contains(overlay)) document.body.removeChild(overlay);
           setLoading(null);
         });
+
         // @ts-ignore
-        paypal.Buttons({ createOrder: () => gatewayOrderId, onApprove: async (data: any) => { setIsPaymentInProgress(true); try { await axios.post(`${API_BASE_URL}/api/payments/capture-paypal`, { internalOrderId, paypalOrderId: data.orderID }, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }); setIsPaymentInProgress(false); alert(`🎉 Successfully upgraded to ${plan.name} via PayPal!`); setCurrentPlan(plan.role); router.push('/create-ai-content'); } catch { setIsPaymentInProgress(false); alert('Error capturing payment.'); } finally { if (overlay && document.body.contains(overlay)) document.body.removeChild(overlay); } }, onCancel: () => { if (overlay && document.body.contains(overlay)) document.body.removeChild(overlay); }, onError: (err: any) => { console.error(err); if (overlay && document.body.contains(overlay)) document.body.removeChild(overlay); } }).render('#paypal-button-container');
+        paypal.Buttons({
+          createOrder: () => gatewayOrderId,
+          onApprove: async (data: any) => {
+            setIsPaymentInProgress(true);
+            try {
+              await axios.post(
+                `${API_BASE_URL}/api/payments/capture-paypal`,
+                { internalOrderId, paypalOrderId: data.orderID },
+                { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+              );
+              setIsPaymentInProgress(false);
+              alert(`🎉 Successfully upgraded to ${plan.name} via PayPal!`);
+              setCurrentPlan(plan.role);
+              router.push('/create-ai-content');
+            } catch {
+              setIsPaymentInProgress(false);
+              alert('Error capturing payment.');
+            } finally {
+              if (overlay && document.body.contains(overlay)) document.body.removeChild(overlay);
+            }
+          },
+          onCancel: () => {
+            if (overlay && document.body.contains(overlay)) document.body.removeChild(overlay);
+          },
+          onError: (err: any) => {
+            console.error(err);
+            if (overlay && document.body.contains(overlay)) document.body.removeChild(overlay);
+          }
+        }).render('#paypal-button-container');
       }
-    } catch (error: any) { setIsPaymentInProgress(false); alert('Error: ' + (error.response?.data || error.message)); }
-    finally { setLoading(null); }
+
+    } catch (error: any) {
+      setIsPaymentInProgress(false);
+      alert('Error: ' + (error.response?.data || error.message));
+    } finally {
+      setLoading(null);
+    }
   };
 
   const handleLogin = async (formData: { email: string; password: string }) => {
@@ -918,7 +1047,7 @@ export default function PricingPageClient() {
     const o = { lite: Math.round(p.lite / 0.75), creator: Math.round(p.creator / 0.75), studio: Math.round(p.studio / 0.75) };
     return [
       { name: 'Starter Forge', role: 'BASIC', price: 0, currency: 'FREE', ttsLimit: 600, tagline: 'Try every tool, no card required.', features: ['50 credits/mo', '600 voice chars/mo', '5 speed videos + 5 BG removals', '10 SVG downloads', '720p export with watermark'], outcomes: [{ icon: '🎙️', label: 'Voice (600 chars)' }, { icon: '✂️', label: '5 BG removals' }] },
-      { name: 'Spark', role: 'SPARK', price: isIndianUser ? 50 : 1, originalPrice: isIndianUser ? 99 : 2, currency: cur, symbol: sym, ttsLimit: 5000, tagline: 'Ignite your first AI creation.', features: ['50 credits', '3,000 voice chars', 'All tools unlocked', '1080p · No watermark', 'One-time entry plan'], outcomes: [{ icon: '🎙️', label: '~5 voice segments' }, { icon: '✂️', label: '5 BG removals' }] },
+      { name: 'Spark', role: 'SPARK', price: isIndianUser ? 50 : 1, originalPrice: isIndianUser ? 99 : 2, currency: cur, symbol: sym, ttsLimit: 5000, tagline: 'Ignite your first AI creation.', features: ['50 credits', '3,000 voice chars', 'All tools unlocked', '1080p · No watermark'], outcomes: [{ icon: '🎙️', label: '~5 voice segments' }, { icon: '✂️', label: '5 BG removals' }] },
       { name: 'Starter Pack', role: 'MICRO', price: isIndianUser ? 150 : 3, originalPrice: isIndianUser ? 200 : 4, currency: cur, symbol: sym, ttsLimit: 10000, tagline: 'Dip your toes in — low commitment.', features: ['200 credits/mo', '10,000 voice chars/mo', 'All tools unlocked', '1080p · No watermark', 'Topups available'], outcomes: [{ icon: '🎙️', label: '~100 voice segments' }, { icon: '🖼️', label: '~10 AI images' }] },
       { name: 'Creator Lite', role: 'CREATOR_LITE', price: p.lite, originalPrice: o.lite, currency: cur, symbol: sym, ttsLimit: 50000, tagline: 'Your first real creative toolkit.', features: ['1,000 credits/mo · 50,000 voice chars', 'All AI models unlocked', '1080p · No watermark', '30 speed videos · 100 BG removals', 'Unlimited SVGs · Topups available'], outcomes: [{ icon: '🎙️', label: '~500 voice segments' }, { icon: '🖼️', label: '~150 AI images' }, { icon: '🎬', label: '3–6 AI videos' }] },
       { name: 'Creator Spark', role: 'CREATOR', price: p.creator, originalPrice: o.creator, currency: cur, symbol: sym, ttsLimit: 150000, popular: true, tagline: 'Everything you need to go pro.', features: ['2,000 credits/mo · 150,000 voice chars', 'All AI models · 1440p export', '60 speed videos · 500 BG removals', 'Unlimited SVGs · Priority support', 'Topups available'], outcomes: [{ icon: '🎙️', label: '~1,500 voice segments' }, { icon: '🖼️', label: '~450 AI images' }, { icon: '🎬', label: '9–18 AI videos' }] },
@@ -1147,11 +1276,13 @@ export default function PricingPageClient() {
                         if (isStudio) return 'v3-btn v3-btn-gold';
                         return 'v3-btn v3-btn-primary';
                       };
+                      const isRecurringPlan = ['SPARK', 'MICRO', 'CREATOR_LITE', 'CREATOR', 'STUDIO'].includes(plan.role);
                       const btnLabel = () => {
                         if (loading === plan.role) return 'Processing...';
                         if (isCurrent) return '✓ Your Current Plan';
                         if (isDowngradeBlocked) return 'Downgrade Not Available';
                         if (isFree) return 'Free Forever';
+                        if (isIndianUser && isRecurringPlan) return `Subscribe to ${plan.name} →`;
                         return `Get ${plan.name} →`;
                       };
                       return (
@@ -1280,11 +1411,13 @@ export default function PricingPageClient() {
                         if (isStudio) return 'v3-btn v3-btn-gold';
                         return 'v3-btn v3-btn-primary';
                       };
+                      const isRecurringPlan = ['SPARK', 'MICRO', 'CREATOR_LITE', 'CREATOR', 'STUDIO'].includes(plan.role);
                       const btnLabel = () => {
                         if (loading === plan.role) return 'Processing...';
                         if (isCurrent) return '✓ Your Current Plan';
                         if (isDowngradeBlocked) return 'Downgrade Not Available';
                         if (isFree) return 'Free Forever';
+                        if (isIndianUser && isRecurringPlan) return `Subscribe to ${plan.name} →`;
                         return `Get ${plan.name} →`;
                       };
                       return (

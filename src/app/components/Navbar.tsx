@@ -553,7 +553,7 @@ window.addEventListener('storage', handleStorageChange);
                         onMouseLeave={() => { if (!isMobile()) setIsProfileDropdownOpen(false); }}
                       >
                         <button type="button" className="tools-dropdown-item" onClick={() => navigate('/user-dashboard')}>Dashboard</button>
-                        <button type="button" className="tools-dropdown-item" onClick={() => navigate('/pricing')}>Billing</button>
+                        <button type="button" className="tools-dropdown-item" onClick={() => navigate('/user-dashboard?tab=subscription')}>Billing</button>
                         <button type="button" className="tools-dropdown-item logout-item" onClick={handleLogout}>Logout</button>
                       </div>
                     )}
