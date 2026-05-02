@@ -349,9 +349,27 @@ export default function UsageDashboard() {
   const [usageSummary,  setUsageSummary]  = useState<UsageSummary | null>(null);
   const [history,       setHistory]       = useState<CreditTransaction[]>([]);
   const [showPopup,     setShowPopup]     = useState(false);
-  const [activeTab,     setActiveTab]     = useState("overview");
+  const [activeTab, setActiveTab] = useState(() => {
+    if (typeof window === 'undefined') return 'overview';
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get('tab');
+    if (tab === 'overview' || tab === 'tools' || tab === 'history' || tab === 'subscription') return tab;
+    return 'overview';
+  });
   const [filterCat,     setFilterCat]     = useState("All");
   const [loading,       setLoading]       = useState(true);
+  const [subscriptionStatus, setSubscriptionStatus] = useState<{
+    hasSubscription: boolean;
+    autoRenew: boolean;
+    status: string;
+    nextBillingDate: string;
+    currentPeriodEnd: string;
+    planType: string;
+    gateway: string;
+  } | null>(null);
+  const [isCancellingSubscription, setIsCancellingSubscription] = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [cancelReason, setCancelReason] = useState('');
   const [stylesReady,   setStylesReady]   = useState(false);
 
   const meta        = PLAN_META[currentPlan] || PLAN_META["BASIC"];
@@ -490,10 +508,15 @@ export default function UsageDashboard() {
         else if (planTypes.includes("CREATOR_LITE")) setCurrentPlan("CREATOR_LITE");
         else                                         setCurrentPlan("BASIC");
 
-        const [summaryRes, historyRes] = await Promise.allSettled([
+        const [summaryRes, historyRes, subRes] = await Promise.allSettled([
           axios.get(`${API_BASE_URL}/api/credits/usage-summary`, { headers }),
           axios.get(`${API_BASE_URL}/api/credits/history?limit=20`, { headers }),
+          axios.get(`${API_BASE_URL}/api/payments/subscription-status`, { headers }),
         ]);
+
+        if (subRes.status === "fulfilled") {
+          setSubscriptionStatus(subRes.value.data);
+        }
 
         if (summaryRes.status === "fulfilled") {
           setUsageSummary(summaryRes.value.data);
@@ -529,6 +552,34 @@ export default function UsageDashboard() {
     fetchAll();
   }, []);
 
+  
+  /* ── CANCEL SUBSCRIPTION ── */
+  const handleCancelSubscription = async () => {
+    if (!cancelReason.trim()) {
+      alert('Please tell us why you are cancelling before proceeding.');
+      return;
+    }
+    setShowCancelModal(false);
+    setIsCancellingSubscription(true);
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post(
+        `${API_BASE_URL}/api/payments/cancel-subscription`,
+        { reason: cancelReason.trim() },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      alert('✅ Subscription cancelled. Your plan stays active until the end of the current billing period.');
+      setCancelReason('');
+      const res = await axios.get(`${API_BASE_URL}/api/payments/subscription-status`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setSubscriptionStatus(res.data);
+    } catch (error: any) {
+      alert('Error: ' + (error.response?.data || 'Could not cancel subscription. Please try again.'));
+    } finally {
+      setIsCancellingSubscription(false);
+    }
+  };
   /* ── UPGRADE POPUP ── */
   useEffect(() => {
     if (loading) return;
@@ -939,9 +990,67 @@ export default function UsageDashboard() {
                           ↑ Upgrade to {meta.nextName}
                         </a>
                       )}
-                    </div>
+                   </div>
                   </div>
                 </div>
+
+                {/* Subscription auto-renewal status */}
+                {subscriptionStatus?.hasSubscription && (
+                  <div style={{
+                    gridColumn: "1 / -1",
+                    padding: '18px 22px', borderRadius: 16,
+                    border: subscriptionStatus.autoRenew
+                      ? '1.5px solid rgba(16,185,129,0.25)'
+                      : '1.5px solid rgba(239,68,68,0.2)',
+                    background: subscriptionStatus.autoRenew
+                      ? 'rgba(16,185,129,0.04)'
+                      : 'rgba(239,68,68,0.04)',
+                    display: 'flex', alignItems: 'center',
+                    justifyContent: 'space-between', flexWrap: 'wrap', gap: 14,
+                  }}>
+                    <div>
+                      <div style={{ fontSize: 14, fontWeight: 800, color: subscriptionStatus.autoRenew ? '#059669' : '#ef4444', marginBottom: 5 }}>
+                        {subscriptionStatus.autoRenew ? '🔄 Auto-renewal is ON' : '⏸️ Auto-renewal is OFF'}
+                      </div>
+                      {subscriptionStatus.autoRenew && subscriptionStatus.nextBillingDate && (
+                        <div style={{ fontSize: 13, color: '#6b7280' }}>
+                          Next charge: <strong>{new Date(subscriptionStatus.nextBillingDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</strong>
+                        </div>
+                      )}
+                      {!subscriptionStatus.autoRenew && subscriptionStatus.currentPeriodEnd && (
+                        <div style={{ fontSize: 13, color: '#6b7280' }}>
+                          Plan active until: <strong>{new Date(subscriptionStatus.currentPeriodEnd).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</strong>
+                        </div>
+                      )}
+                      {subscriptionStatus.status === 'PAYMENT_FAILED' && (
+                        <div style={{ marginTop: 8, padding: '7px 12px', borderRadius: 8, background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.25)', fontSize: 12, color: '#d97706', fontWeight: 600 }}>
+                          ⚠️ Last payment failed. Please update your payment method.
+                          <a href="/pricing" style={{ marginLeft: 8, color: '#7c3aed', textDecoration: 'underline' }}>Re-subscribe →</a>
+                        </div>
+                      )}
+                    </div>
+                    {subscriptionStatus.autoRenew && (
+                      <button
+                        onClick={() => setShowCancelModal(true)}
+                        disabled={isCancellingSubscription}
+                        style={{
+                          padding: '10px 20px', borderRadius: 10,
+                          border: '1.5px solid rgba(239,68,68,0.3)',
+                          background: 'rgba(239,68,68,0.05)', color: '#ef4444',
+                          fontSize: 13, fontWeight: 700,
+                          cursor: isCancellingSubscription ? 'not-allowed' : 'pointer',
+                          opacity: isCancellingSubscription ? 0.6 : 1,
+                          fontFamily: "'Satoshi', 'DM Sans', sans-serif",
+                          transition: 'all 0.2s',
+                        }}
+                        onMouseEnter={e => { if (!isCancellingSubscription) { e.currentTarget.style.background = 'rgba(239,68,68,0.1)'; e.currentTarget.style.borderColor = '#ef4444'; }}}
+                        onMouseLeave={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.05)'; e.currentTarget.style.borderColor = 'rgba(239,68,68,0.3)'; }}
+                      >
+                        {isCancellingSubscription ? 'Cancelling...' : '✕ Cancel Subscription'}
+                      </button>
+                    )}
+                  </div>
+                )}
 
                 {/* Account info */}
                 <div className="ud-card">
@@ -1069,6 +1178,120 @@ export default function UsageDashboard() {
       {/* ── UPGRADE POPUP ── */}
       <AnimatePresence>
         {showPopup && <UpgradePopup plan={currentPlan} onClose={() => setShowPopup(false)} />}
+      </AnimatePresence>
+
+      {/* ── CANCEL SUBSCRIPTION MODAL ── */}
+      <AnimatePresence>
+        {showCancelModal && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            style={{ position: 'fixed', inset: 0, zIndex: 9999,
+              background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(10px)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
+            onClick={(e) => e.target === e.currentTarget && setShowCancelModal(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 24 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 24 }}
+              transition={{ type: 'spring', stiffness: 340, damping: 28 }}
+              style={{ background: '#fff', borderRadius: 20, padding: '36px 32px',
+                maxWidth: 440, width: '100%', position: 'relative',
+                boxShadow: '0 32px 80px rgba(0,0,0,0.18)',
+                fontFamily: "'Satoshi', 'DM Sans', sans-serif" }}
+            >
+              {/* Close */}
+              <button onClick={() => setShowCancelModal(false)}
+                style={{ position: 'absolute', top: 14, right: 14,
+                  background: '#f3f4f6', border: '1px solid #e5e7eb',
+                  borderRadius: 10, width: 34, height: 34, cursor: 'pointer',
+                  color: '#6b7280', fontSize: 18, display: 'flex',
+                  alignItems: 'center', justifyContent: 'center' }}>×</button>
+
+              {/* Header */}
+              <div style={{ textAlign: 'center', marginBottom: 24 }}>
+                <div style={{ fontSize: 44, marginBottom: 10 }}>😢</div>
+                <h2 style={{ fontSize: 20, fontWeight: 900, color: '#1a202c',
+                  letterSpacing: '-0.025em', marginBottom: 8 }}>
+                  Cancel Subscription?
+                </h2>
+                <p style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.6 }}>
+                  Your plan will stay active until the end of the current billing period.
+                  You won't be charged again after that.
+                </p>
+              </div>
+
+              {/* Reason selector */}
+              <div style={{ marginBottom: 16 }}>
+                <label style={{ fontSize: 12, fontWeight: 700, color: '#374151',
+                  display: 'block', marginBottom: 8, textTransform: 'uppercase',
+                  letterSpacing: '0.07em' }}>
+                  Why are you cancelling? *
+                </label>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {[
+                    "Too expensive for my budget",
+                    "Not using it enough",
+                    "Missing features I need",
+                    "Switching to another tool",
+                    "Technical issues",
+                    "Just taking a break",
+                    "Other",
+                  ].map(reason => (
+                    <button key={reason} onClick={() => setCancelReason(reason)}
+                      style={{
+                        padding: '10px 14px', borderRadius: 10, textAlign: 'left',
+                        border: cancelReason === reason
+                          ? '2px solid #ef4444' : '1.5px solid #e5e7eb',
+                        background: cancelReason === reason
+                          ? 'rgba(239,68,68,0.05)' : '#f9fafb',
+                        color: cancelReason === reason ? '#ef4444' : '#374151',
+                        fontSize: 13, fontWeight: cancelReason === reason ? 700 : 500,
+                        cursor: 'pointer', fontFamily: 'inherit',
+                        transition: 'all 0.15s',
+                      }}>
+                      {cancelReason === reason ? '● ' : '○ '}{reason}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Custom reason if "Other" selected */}
+              {cancelReason === 'Other' && (
+                <textarea
+                  placeholder="Tell us more (optional)..."
+                  onChange={e => setCancelReason(e.target.value === '' ? 'Other' : `Other: ${e.target.value}`)}
+                  style={{ width: '100%', padding: '10px 13px', borderRadius: 10,
+                    border: '1.5px solid #e5e7eb', fontSize: 13, fontFamily: 'inherit',
+                    color: '#374151', resize: 'none', height: 80, outline: 'none',
+                    marginBottom: 12 }}
+                />
+              )}
+
+              {/* Actions */}
+              <div style={{ display: 'flex', gap: 10, marginTop: 8 }}>
+                <button onClick={() => { setShowCancelModal(false); setCancelReason(''); }}
+                  style={{ flex: 1, padding: '12px 16px', borderRadius: 11,
+                    border: '1.5px solid #e5e7eb', background: '#f9fafb',
+                    color: '#6b7280', fontSize: 13, fontWeight: 700,
+                    cursor: 'pointer', fontFamily: 'inherit' }}>
+                  Keep My Plan
+                </button>
+                <button
+                  onClick={handleCancelSubscription}
+                  disabled={!cancelReason.trim() || isCancellingSubscription}
+                  style={{ flex: 1, padding: '12px 16px', borderRadius: 11, border: 'none',
+                    background: !cancelReason.trim() ? '#f3f4f6' : 'linear-gradient(135deg, #ef4444, #dc2626)',
+                    color: !cancelReason.trim() ? '#9ca3af' : '#fff',
+                    fontSize: 13, fontWeight: 700, cursor: !cancelReason.trim() ? 'not-allowed' : 'pointer',
+                    fontFamily: 'inherit', boxShadow: cancelReason.trim() ? '0 4px 14px rgba(239,68,68,0.4)' : 'none',
+                    transition: 'all 0.2s' }}>
+                  {isCancellingSubscription ? 'Cancelling...' : 'Yes, Cancel'}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
       </AnimatePresence>
 
     </div>
