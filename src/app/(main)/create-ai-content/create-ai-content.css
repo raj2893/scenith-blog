@@ -58,7 +58,7 @@
   --cac-shadow:       0 2px 16px rgba(99, 85, 220, 0.10);
   --cac-shadow-lg:    0 8px 40px rgba(99, 85, 220, 0.14);
 
-  --cac-hero-grad:    linear-gradient(135deg, #edeaff 0%, #f5f6fa 60%, #fce7f3 100%);
+  --cac-hero-grad:    linear-gradient(to right, #fce7f3 0%, #edeaff 15%, #f0eeff 50%, #edeaff 85%, #fce7f3 100%);
   --cac-card-shadow:  0 2px 12px rgba(99, 85, 220, 0.08);
 
   --cac-tab-active-bg:    linear-gradient(135deg, #6355dc, #8b5cf6);
@@ -249,18 +249,37 @@
   font-size: clamp(1.6rem, 4vw, 2.4rem);
   font-weight: 800;
   line-height: 1.15;
-  color: #ffffff;
+  color: var(--cac-text);
   margin-bottom: 10px;
   letter-spacing: -0.025em;
+}
+
+[data-theme="dark"] .cac-hero-title {
+  color: #ffffff;
   text-shadow: 0 1px 8px rgba(0,0,0,0.15);
 }
 
 .cac-hero-sub {
   font-size: 0.95rem;
-  color: rgba(255,255,255,0.75); /* light on dark bg */
+  color: var(--cac-text-2);
   font-weight: 400;
   line-height: 1.5;
+}
+
+[data-theme="dark"] .cac-hero-sub {
+  color: rgba(255,255,255,0.75);
   text-shadow: 0 1px 8px rgba(0,0,0,0.3);
+}
+
+[data-theme="light"] .cac-hero {
+  padding-bottom: 60px;
+  margin-bottom: -32px;
+  background: linear-gradient(135deg, #edeaff 0%, #f5f6fa 60%, #fce7f3 100%);
+  border-radius: 0 0 32px 32px;
+}
+
+[data-theme="light"] .cac-main {
+  padding-top: 48px;
 }
 
 .cac-gradient-text {
@@ -278,23 +297,29 @@
 .cac-dark-zone {
   position: relative;
   background: var(--cac-hero-grad);
+  isolation: isolate;
+}
+
+[data-theme="light"] .cac-dark-zone::after {
+  display: none;
 }
 
 .cac-dark-zone::after {
   content: '';
   position: absolute;
   inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .cac-dark-zone::after {
   background: linear-gradient(
     to bottom,
     rgba(13, 8, 20, 0.30) 0%,
     rgba(13, 8, 20, 0.25) 30%,
     rgba(13, 8, 20, 0.60) 100%
   );
-  pointer-events: none;
-  z-index: 0;
-  /* Explicitly constrain overlay to dark-zone only */
-  bottom: 0;
-  overflow: hidden;
 }
 /* SEO zone must never be affected by dark-zone stacking context */
 .cac-seo-zone {
