@@ -1,0 +1,1124 @@
+/* ==========================================================================
+   Cafe Menu Video Generator (CMVG) - Main Stylesheet
+   Warm, inviting coffee shop aesthetic with high engagement design
+   ========================================================================== */
+
+:root {
+  /* Warm coffee/cafe color palette */
+  --cmvg-accent: #c47c41;
+  --cmvg-accent-light: #e2a26a;
+  --cmvg-accent-deep: #9b5e2e;
+  --cmvg-gold: #d4a373;
+  --cmvg-gold-glow: rgba(212, 163, 115, 0.3);
+  --cmvg-accent-glow: rgba(196, 124, 65, 0.4);
+  --cmvg-dark: #1e1b18;
+  --cmvg-darker: #141210;
+  --cmvg-surface: #2c2824;
+  --cmvg-surface-light: #3d3832;
+  --cmvg-text: #f0ebe3;
+  --cmvg-text-muted: #b8aea2;
+  --cmvg-border: rgba(255, 248, 235, 0.08);
+  --cmvg-border-light: rgba(255, 248, 235, 0.12);
+  --cmvg-cream: #faf6f0;
+}
+
+/* Base */
+.cmvg-page {
+  background: var(--cmvg-darker);
+  color: var(--cmvg-text);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  line-height: 1.5;
+  overflow-x: clip;
+}
+
+.cmvg-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ==========================================================================
+   Hero Section - Warm Cafe Atmosphere
+   ========================================================================== */
+.cmvg-hero {
+  position: relative;
+  min-height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1e1b18 0%, #141210 100%);
+}
+
+.cmvg-hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.cmvg-hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.cmvg-orb-1 {
+  width: 550px;
+  height: 550px;
+  background: radial-gradient(circle, var(--cmvg-accent), transparent);
+  top: -180px;
+  left: -180px;
+}
+
+.cmvg-orb-2 {
+  width: 650px;
+  height: 650px;
+  background: radial-gradient(circle, var(--cmvg-gold), transparent);
+  bottom: -220px;
+  right: -220px;
+}
+
+.cmvg-orb-3 {
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, #8b5a2b, transparent);
+  top: 40%;
+  left: 65%;
+}
+
+.cmvg-grain {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.cmvg-hero-inner {
+  position: relative;
+  z-index: 2;
+  padding: 80px 0;
+}
+
+.cmvg-badge-row {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.cmvg-badge {
+  background: rgba(196, 124, 65, 0.12);
+  backdrop-filter: blur(12px);
+  padding: 8px 20px;
+  border-radius: 100px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid rgba(196, 124, 65, 0.3);
+  color: var(--cmvg-accent-light);
+}
+
+.cmvg-badge-gold {
+  background: rgba(212, 163, 115, 0.1);
+  border-color: rgba(212, 163, 115, 0.35);
+  color: var(--cmvg-gold);
+}
+
+.cmvg-hero-title {
+  font-size: 4.2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, #ffffff 0%, #e8ddd0 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.cmvg-gradient-text {
+  background: linear-gradient(135deg, var(--cmvg-accent), var(--cmvg-gold));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.cmvg-hero-sub {
+  font-size: 1.25rem;
+  color: var(--cmvg-text-muted);
+  max-width: 700px;
+  margin: 0 auto 32px;
+}
+
+.cmvg-hero-platforms {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 48px;
+  flex-wrap: wrap;
+}
+
+.cmvg-platform-chip {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 6px 16px;
+  border-radius: 100px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--cmvg-border);
+}
+
+/* Massive CTA Button - Coffee Themed */
+.cmvg-hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  background: linear-gradient(135deg, var(--cmvg-accent), var(--cmvg-gold));
+  padding: 18px 40px;
+  border-radius: 60px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  margin-bottom: 24px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 245, 230, 0.15);
+}
+
+.cmvg-hero-cta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 245, 230, 0.25);
+  filter: brightness(1.05);
+}
+
+.cmvg-cta-icon {
+  font-size: 2rem;
+}
+
+.cmvg-cta-text {
+  text-align: left;
+}
+
+.cmvg-cta-text strong {
+  display: block;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: white;
+}
+
+.cmvg-cta-text small {
+  display: block;
+  font-size: 0.8rem;
+  opacity: 0.85;
+  color: white;
+}
+
+.cmvg-cta-arrow {
+  font-size: 1.75rem;
+  transition: transform 0.2s ease;
+}
+
+.cmvg-hero-cta:hover .cmvg-cta-arrow {
+  transform: translateX(6px);
+}
+
+.cmvg-hero-trust {
+  font-size: 0.8rem;
+  color: var(--cmvg-text-muted);
+  opacity: 0.7;
+}
+
+/* ==========================================================================
+   Stats Bar - Warm Accents
+   ========================================================================== */
+.cmvg-stats-bar {
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--cmvg-border);
+  border-top: 1px solid var(--cmvg-border);
+  padding: 28px 0;
+}
+
+.cmvg-stats-inner {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 28px;
+}
+
+.cmvg-stat {
+  text-align: center;
+}
+
+.cmvg-stat-value {
+  display: block;
+  font-size: 2.2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--cmvg-accent), var(--cmvg-gold));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.cmvg-stat-unit {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--cmvg-text-muted);
+  margin-top: 4px;
+}
+
+.cmvg-stat-desc {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--cmvg-text-muted);
+  opacity: 0.7;
+}
+
+/* ==========================================================================
+   Section Common
+   ========================================================================== */
+.cmvg-section {
+  padding: 80px 0;
+  border-bottom: 1px solid var(--cmvg-border);
+}
+
+.cmvg-section:last-child {
+  border-bottom: none;
+}
+
+.cmvg-section-label {
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--cmvg-accent-light);
+  margin-bottom: 16px;
+}
+
+.cmvg-section-title {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #fff, #ddd0c0);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.cmvg-section-sub {
+  text-align: center;
+  font-size: 1.1rem;
+  color: var(--cmvg-text-muted);
+  max-width: 700px;
+  margin: 0 auto 48px;
+}
+
+/* ==========================================================================
+   Prompt Grid - Coffee Card Style
+   ========================================================================== */
+.cmvg-prompts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.cmvg-prompt-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--cmvg-border);
+  border-radius: 24px;
+  padding: 22px;
+  transition: all 0.3s ease;
+}
+
+.cmvg-prompt-card:hover {
+  border-color: var(--cmvg-accent);
+  transform: translateY(-4px);
+  background: rgba(196, 124, 65, 0.05);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+}
+
+.cmvg-prompt-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.cmvg-prompt-icon {
+  font-size: 1.85rem;
+}
+
+.cmvg-prompt-category {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--cmvg-accent-light);
+  background: rgba(196, 124, 65, 0.15);
+  padding: 4px 12px;
+  border-radius: 30px;
+}
+
+.cmvg-prompt-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.cmvg-prompt-text {
+  font-size: 0.85rem;
+  color: var(--cmvg-text-muted);
+  line-height: 1.55;
+  margin-bottom: 18px;
+  font-style: italic;
+}
+
+.cmvg-prompt-try {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--cmvg-accent-light);
+  text-decoration: none;
+  transition: gap 0.2s;
+}
+
+.cmvg-prompt-try:hover {
+  gap: 12px;
+  color: var(--cmvg-accent);
+}
+
+.cmvg-section-cta-wrap {
+  text-align: center;
+}
+
+.cmvg-section-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(196, 124, 65, 0.1);
+  padding: 12px 32px;
+  border-radius: 48px;
+  text-decoration: none;
+  font-weight: 600;
+  border: 1px solid rgba(196, 124, 65, 0.3);
+  transition: all 0.2s ease;
+  color: var(--cmvg-accent-light);
+}
+
+.cmvg-section-cta:hover {
+  background: rgba(196, 124, 65, 0.22);
+  border-color: var(--cmvg-accent);
+  transform: scale(1.02);
+}
+
+/* ==========================================================================
+   How It Works Steps - Stepped Process
+   ========================================================================== */
+.cmvg-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  margin-bottom: 48px;
+}
+
+.cmvg-step {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.cmvg-step-num {
+  font-size: 2.8rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--cmvg-accent), var(--cmvg-gold));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  min-width: 80px;
+  font-family: monospace;
+  letter-spacing: -1px;
+}
+
+.cmvg-step-content {
+  flex: 1;
+}
+
+.cmvg-step-content h3 {
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+  color: var(--cmvg-text);
+}
+
+.cmvg-step-content p {
+  color: var(--cmvg-text-muted);
+  margin-bottom: 16px;
+  line-height: 1.65;
+}
+
+.cmvg-step-tip {
+  background: rgba(212, 163, 115, 0.08);
+  border-left: 3px solid var(--cmvg-gold);
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  color: #e0d4c8;
+}
+
+/* ==========================================================================
+   AI Models Grid
+   ========================================================================== */
+.cmvg-models-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.cmvg-model-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--cmvg-border);
+  border-radius: 24px;
+  padding: 26px;
+  transition: all 0.2s ease;
+}
+
+.cmvg-model-card:hover {
+  border-color: var(--cmvg-accent);
+  transform: translateY(-3px);
+  background: rgba(196, 124, 65, 0.04);
+}
+
+.cmvg-model-top {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cmvg-model-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, var(--cmvg-accent), var(--cmvg-gold));
+  color: white;
+}
+
+.cmvg-model-tag {
+  font-size: 0.7rem;
+  color: var(--cmvg-text-muted);
+}
+
+.cmvg-model-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.cmvg-model-desc {
+  font-size: 0.85rem;
+  color: var(--cmvg-text-muted);
+  line-height: 1.55;
+}
+
+/* ==========================================================================
+   Use Cases Grid
+   ========================================================================== */
+.cmvg-usecases-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.cmvg-usecase-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--cmvg-border);
+  border-radius: 24px;
+  padding: 30px 24px;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.cmvg-usecase-card:hover {
+  border-color: var(--cmvg-accent);
+  background: rgba(196, 124, 65, 0.03);
+  transform: translateY(-2px);
+}
+
+.cmvg-usecase-icon {
+  font-size: 2.6rem;
+  margin-bottom: 18px;
+}
+
+.cmvg-usecase-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.cmvg-usecase-desc {
+  font-size: 0.85rem;
+  color: var(--cmvg-text-muted);
+  line-height: 1.55;
+}
+
+/* ==========================================================================
+   Main CTA Section - Huge Coffee Button
+   ========================================================================== */
+.cmvg-cta-section {
+  position: relative;
+  padding: 100px 0;
+  background: linear-gradient(135deg, #141210, #1e1b18);
+  overflow: hidden;
+}
+
+.cmvg-cta-bg {
+  position: absolute;
+  inset: 0;
+}
+
+.cmvg-cta-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(110px);
+  opacity: 0.2;
+}
+
+.cmvg-cta-orb-1 {
+  width: 650px;
+  height: 650px;
+  background: var(--cmvg-accent);
+  top: -220px;
+  left: -220px;
+}
+
+.cmvg-cta-orb-2 {
+  width: 650px;
+  height: 650px;
+  background: var(--cmvg-gold);
+  bottom: -220px;
+  right: -220px;
+}
+
+.cmvg-cta-inner {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.cmvg-cta-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--cmvg-accent-light);
+  margin-bottom: 20px;
+}
+
+.cmvg-cta-title {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+
+.cmvg-cta-desc {
+  font-size: 1.1rem;
+  color: var(--cmvg-text-muted);
+  max-width: 620px;
+  margin: 0 auto 32px;
+}
+
+.cmvg-cta-features {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 44px;
+}
+
+.cmvg-cta-feature {
+  font-size: 0.85rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 6px 16px;
+  border-radius: 32px;
+}
+
+.cmvg-main-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 24px;
+  background: linear-gradient(135deg, var(--cmvg-accent), var(--cmvg-gold));
+  padding: 20px 48px;
+  border-radius: 80px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+  margin-bottom: 28px;
+}
+
+.cmvg-main-cta:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.5);
+  filter: brightness(1.05);
+}
+
+.cmvg-main-cta-icon {
+  font-size: 2.4rem;
+}
+
+.cmvg-main-cta-content {
+  text-align: left;
+}
+
+.cmvg-main-cta-content strong {
+  display: block;
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: white;
+}
+
+.cmvg-main-cta-content small {
+  display: block;
+  font-size: 0.8rem;
+  opacity: 0.85;
+  color: white;
+}
+
+.cmvg-main-cta-badge {
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(4px);
+  padding: 6px 16px;
+  border-radius: 44px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: white;
+}
+
+.cmvg-cta-footnote {
+  font-size: 0.75rem;
+  color: var(--cmvg-text-muted);
+  opacity: 0.6;
+}
+
+/* ==========================================================================
+   Platforms Grid
+   ========================================================================== */
+.cmvg-platforms-grid {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.cmvg-platform-card {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 20px 32px;
+  border-radius: 32px;
+  border: 1px solid var(--cmvg-border);
+  min-width: 110px;
+  transition: all 0.2s;
+}
+
+.cmvg-platform-card:hover {
+  border-color: var(--cmvg-accent);
+  background: rgba(196, 124, 65, 0.05);
+}
+
+.cmvg-platform-icon-wrap {
+  font-size: 2.1rem;
+  margin-bottom: 10px;
+}
+
+.cmvg-platform-name {
+  display: block;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.cmvg-platform-ratio {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--cmvg-text-muted);
+  margin-top: 6px;
+}
+
+/* ==========================================================================
+   Article / SEO Deep Content - Rich Coffee Content
+   ========================================================================== */
+.cmvg-article-section {
+  background: linear-gradient(180deg, #141210, #0f0e0c);
+}
+
+.cmvg-article-inner {
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.cmvg-article-content {
+  margin-bottom: 60px;
+}
+
+.cmvg-article-content h2 {
+  font-size: 1.9rem;
+  margin-top: 52px;
+  margin-bottom: 22px;
+  border-left: 4px solid var(--cmvg-accent);
+  padding-left: 24px;
+  color: var(--cmvg-text);
+}
+
+.cmvg-article-content h3 {
+  font-size: 1.35rem;
+  margin-top: 34px;
+  margin-bottom: 16px;
+  color: var(--cmvg-accent-light);
+}
+
+.cmvg-article-content p {
+  color: var(--cmvg-text-muted);
+  line-height: 1.75;
+  margin-bottom: 22px;
+}
+
+.cmvg-article-content ul,
+.cmvg-article-content ol {
+  margin-bottom: 22px;
+  padding-left: 28px;
+  color: var(--cmvg-text-muted);
+}
+
+.cmvg-article-content li {
+  margin: 10px 0;
+  line-height: 1.65;
+}
+
+.cmvg-table-wrap {
+  overflow-x: auto;
+  margin: 36px 0;
+}
+
+.cmvg-compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.cmvg-compare-table th,
+.cmvg-compare-table td {
+  padding: 16px 20px;
+  text-align: left;
+  border-bottom: 1px solid var(--cmvg-border);
+}
+
+.cmvg-compare-table th {
+  background: rgba(196, 124, 65, 0.12);
+  font-weight: 700;
+  color: var(--cmvg-accent-light);
+}
+
+.cmvg-compare-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* ==========================================================================
+   FAQ Section - Accordion Style
+   ========================================================================== */
+.cmvg-faq {
+  margin-top: 52px;
+  border-top: 1px solid var(--cmvg-border);
+  padding-top: 52px;
+}
+
+.cmvg-faq h2 {
+  font-size: 1.9rem;
+  margin-bottom: 36px;
+  text-align: center;
+  color: var(--cmvg-text);
+}
+
+.cmvg-faq-item {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--cmvg-border);
+  border-radius: 22px;
+  margin-bottom: 18px;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+
+.cmvg-faq-item:hover {
+  border-color: rgba(196, 124, 65, 0.35);
+}
+
+.cmvg-faq-q {
+  padding: 22px 28px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(196, 124, 65, 0.045);
+}
+
+.cmvg-faq-q::-webkit-details-marker {
+  display: none;
+}
+
+.cmvg-faq-q::before {
+  content: '☕';
+  font-size: 1.2rem;
+}
+
+.cmvg-faq-item[open] .cmvg-faq-q::before {
+  content: '🍵';
+}
+
+.cmvg-faq-a {
+  padding: 0 28px 26px;
+  color: var(--cmvg-text-muted);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ==========================================================================
+   Final CTA Section
+   ========================================================================== */
+.cmvg-final-cta-section {
+  padding: 88px 0;
+  background: linear-gradient(135deg, #141210, #1a1714);
+  text-align: center;
+  border-top: 1px solid rgba(196, 124, 65, 0.2);
+}
+
+.cmvg-final-cta-title {
+  font-size: 2.3rem;
+  font-weight: 800;
+  margin-bottom: 22px;
+}
+
+.cmvg-final-cta-sub {
+  font-size: 1.1rem;
+  color: var(--cmvg-text-muted);
+  max-width: 650px;
+  margin: 0 auto 44px;
+}
+
+.cmvg-final-btn {
+  margin-bottom: 36px;
+}
+
+.cmvg-final-links {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+}
+
+.cmvg-final-links a {
+  color: var(--cmvg-text-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.cmvg-final-links a:hover {
+  color: var(--cmvg-accent-light);
+}
+
+.cmvg-final-links span {
+  color: var(--cmvg-border);
+}
+
+/* ==========================================================================
+   Responsive Design - Mobile & Tablet Friendly
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .cmvg-hero-title {
+    font-size: 3.2rem;
+  }
+  
+  .cmvg-cta-title {
+    font-size: 2.4rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .cmvg-container {
+    padding: 0 20px;
+  }
+
+  .cmvg-hero-title {
+    font-size: 2.4rem;
+  }
+
+  .cmvg-hero-sub {
+    font-size: 1rem;
+  }
+
+  .cmvg-hero-cta {
+    flex-direction: column;
+    text-align: center;
+    padding: 18px 28px;
+  }
+
+  .cmvg-cta-text {
+    text-align: center;
+  }
+
+  .cmvg-section-title {
+    font-size: 1.8rem;
+  }
+
+  .cmvg-cta-title {
+    font-size: 1.8rem;
+  }
+
+  .cmvg-main-cta {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px 28px;
+  }
+
+  .cmvg-main-cta-content {
+    text-align: center;
+  }
+
+  .cmvg-step {
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .cmvg-step-num {
+    min-width: auto;
+  }
+
+  .cmvg-final-cta-title {
+    font-size: 1.7rem;
+  }
+
+  .cmvg-article-content h2 {
+    font-size: 1.5rem;
+    padding-left: 16px;
+  }
+
+  .cmvg-article-content h3 {
+    font-size: 1.2rem;
+  }
+
+  .cmvg-stat-value {
+    font-size: 1.6rem;
+  }
+
+  .cmvg-prompts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cmvg-usecases-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cmvg-models-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .cmvg-hero-title {
+    font-size: 1.9rem;
+  }
+
+  .cmvg-section-title {
+    font-size: 1.5rem;
+  }
+
+  .cmvg-cta-features {
+    gap: 12px;
+  }
+
+  .cmvg-cta-feature {
+    font-size: 0.7rem;
+    padding: 4px 12px;
+  }
+
+  .cmvg-platforms-grid {
+    gap: 12px;
+  }
+
+  .cmvg-platform-card {
+    padding: 12px 20px;
+    min-width: 80px;
+  }
+
+  .cmvg-platform-icon-wrap {
+    font-size: 1.5rem;
+  }
+
+  .cmvg-faq-q {
+    padding: 16px 20px;
+    font-size: 0.9rem;
+  }
+  
+  .cmvg-faq-a {
+    padding: 0 20px 20px;
+  }
+}
+
+/* ==========================================================================
+   Animations
+   ========================================================================== */
+@keyframes cmvg-float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
+}
+
+.cmvg-main-cta {
+  animation: cmvg-float 3.5s ease-in-out infinite;
+}
+
+@keyframes cmvg-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(196, 124, 65, 0.4); }
+  70% { box-shadow: 0 0 0 16px rgba(196, 124, 65, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(196, 124, 65, 0); }
+}
+
+.cmvg-hero-cta {
+  animation: cmvg-pulse 2.2s infinite;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for cafe feel */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--cmvg-darker);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--cmvg-accent);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--cmvg-accent-light);
+}
