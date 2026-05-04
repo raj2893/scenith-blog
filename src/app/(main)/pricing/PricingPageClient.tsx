@@ -765,15 +765,6 @@ export default function PricingPageClient() {
     }
   }, [isIndianUser]);
 
-  useEffect(() => {
-    if (!document.getElementById('paypal-sdk')) {
-      const s = document.createElement('script');
-      s.src = 'https://www.paypal.com/sdk/js?client-id=AcxQJG7b-ZyAXBRp2P3GFJs-Unh0tvJHz2nlTrOaNi8vSnoy2POnyaH1ajhHXp4K8a5LJ6EIHfS3Yc3T&currency=USD';
-      s.id = 'paypal-sdk';
-      document.body.appendChild(s);
-    }
-  }, []);
-
   const handleUpgrade = async (plan: PricingPlan) => {
     if (!isLoggedIn) { setShowLoginModal(true); return; }
     if (plan.role === 'BASIC' || plan.role === currentPlan) return;
@@ -897,6 +888,22 @@ export default function PricingPageClient() {
 
         const { internalOrderId, gatewayOrderId } = orderResponse.data;
 
+        // Wait for PayPal SDK to load if not ready yet
+        const existingPaypalScript = document.getElementById('paypal-sdk');
+        if (existingPaypalScript) {
+          existingPaypalScript.remove();
+          delete (window as any).paypal;
+        }
+
+        await new Promise<void>((resolve, reject) => {
+          const s = document.createElement('script');
+          s.src = 'https://www.paypal.com/sdk/js?client-id=AcxQJG7b-ZyAXBRp2P3GFJs-Unh0tvJHz2nlTrOaNi8vSnoy2POnyaH1ajhHXp4K8a5LJ6EIHfS3Yc3T&currency=USD';
+          s.id = 'paypal-sdk';
+          s.onload = () => resolve();
+          s.onerror = () => reject(new Error('PayPal SDK failed to load'));
+          document.body.appendChild(s);
+        });
+
         let overlay = document.getElementById('paypal-overlay');
         if (!overlay) {
           overlay = document.createElement('div');
@@ -1002,6 +1009,22 @@ export default function PricingPageClient() {
         // @ts-ignore
         new window.Razorpay(opts).open();
       } else if (gateway === 'paypal') {
+        // Remove any stale/sandbox PayPal SDK and reload live SDK
+        const existingPaypalScript = document.getElementById('paypal-sdk');
+        if (existingPaypalScript) {
+          existingPaypalScript.remove();
+          delete (window as any).paypal;
+        }
+
+        await new Promise<void>((resolve, reject) => {
+          const s = document.createElement('script');
+          s.src = 'https://www.paypal.com/sdk/js?client-id=AcxQJG7b-ZyAXBRp2P3GFJs-Unh0tvJHz2nlTrOaNi8vSnoy2POnyaH1ajhHXp4K8a5LJ6EIHfS3Yc3T&currency=USD';
+          s.id = 'paypal-sdk';
+          s.onload = () => resolve();
+          s.onerror = () => reject(new Error('PayPal SDK failed to load'));
+          document.body.appendChild(s);
+        });
+
         let overlay = document.getElementById('paypal-overlay');
         if (!overlay) {
           overlay = document.createElement('div');
