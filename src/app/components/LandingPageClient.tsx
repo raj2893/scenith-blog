@@ -538,6 +538,60 @@ const youtubeTutorials = [
   { id: 'DyCA5u0iWeo', title: 'AI Subtitles Made Easy' },
 ];
 
+function YoutubeFacade({ videoId, title }: { videoId: string; title: string }) {
+  const [loaded, setLoaded] = useState(false);
+  
+  if (loaded) {
+    return (
+      <iframe
+        src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
+        title={title}
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+      />
+    );
+  }
+  
+  return (
+    <div
+      onClick={() => setLoaded(true)}
+      style={{
+        position: 'relative', width: '100%', paddingBottom: '56.25%',
+        background: '#000', cursor: 'pointer', borderRadius: 8,
+      }}
+    >
+      <img
+        src={`https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`}
+        alt={title}
+        loading="lazy"
+        style={{
+          position: 'absolute', inset: 0, width: '100%', height: '100%',
+          objectFit: 'cover', borderRadius: 8,
+        }}
+      />
+      <div style={{
+        position: 'absolute', inset: 0, display: 'flex',
+        alignItems: 'center', justifyContent: 'center',
+      }}>
+        <div style={{
+          width: 60, height: 60, borderRadius: '50%',
+          background: 'rgba(255,0,0,0.9)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <div style={{
+            width: 0, height: 0,
+            borderTop: '12px solid transparent',
+            borderBottom: '12px solid transparent',
+            borderLeft: '20px solid white',
+            marginLeft: 4,
+          }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function LandingPageClient() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [showPricingPopup, setShowPricingPopup] = useState(false);
@@ -553,11 +607,18 @@ export default function LandingPageClient() {
   }, []);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowPricingPopup(true);
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, []);
+    let shown = false;
+    const onScroll = () => {
+      if (shown) return;
+      if (window.scrollY > window.innerHeight * 1.5) {
+        shown = true;
+        setShowPricingPopup(true);
+        window.removeEventListener('scroll', onScroll);
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);  
 
   useEffect(() => {
     const detectCountry = async () => {
@@ -1625,14 +1686,7 @@ export default function LandingPageClient() {
             {youtubeTutorials.map((tutorial) => (
               <div className="tutorial-card" key={tutorial.id}>
                 <div className="video-wrapper">
-                  <iframe
-                    src={`https://www.youtube.com/embed/${tutorial.id}`}
-                    title={tutorial.title}
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    loading="lazy"
-                  ></iframe>
+                  <YoutubeFacade videoId={tutorial.id} title={tutorial.title} />
                 </div>
                 <h3>{tutorial.title}</h3>
               </div>

@@ -953,6 +953,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
   // ─────────────────── DATA FETCH ───────────────────────────────────────────
 
   useEffect(() => {
+    if (activeTab !== 'voice') return;
     // Fetch only metadata for filter dropdowns
     fetch(`${API_BASE_URL}/api/ai-voices/get-all-voices`)
       .then((r) => r.json())
@@ -965,57 +966,48 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
         setVoices(data);
       })
       .catch(() => {});
-  }, []);
+  }, [activeTab]);
 
+  // REPLACE your existing isLoggedIn useEffect with this:
   useEffect(() => {
     if (!isLoggedIn) return;
     const token = localStorage.getItem("token");
     const h = { Authorization: `Bearer ${token}` };
-
-    // TTS usage
-    fetch(`${API_BASE_URL}/api/sole-tts/usage`, { headers: h })
-      .then((r) => r.json())
-      .then(setTtsUsage)
-      .catch(() => {});
-
-    // Image usage
+  
+    // Fire immediately — user needs credit balance right away
     fetch(`${API_BASE_URL}/api/sole-image-gen/usage`, { headers: h })
       .then((r) => r.json())
       .then((data) => { setImageUsage(data); imageUsageRef.current = data; })
       .catch(() => {});
-
-    // Image history
-    setImageHistoryLoading(true);
-    fetch(`${API_BASE_URL}/api/sole-image-gen/history`, { headers: h })
-      .then((r) => r.json())
-      .then(setImageHistory)
-      .catch(() => {})
-      .finally(() => setImageHistoryLoading(false));
-
-    // Video models + credits
-    Promise.all([
-      axios.get(`${API_BASE_URL}/api/video-gen/models`, { headers: h }),
-      axios.get(`${API_BASE_URL}/api/video-gen/credits`, { headers: h }),
-    ])
-      .then(([mRes, cRes]) => {
-        setVideoModels(mRes.data.models || []);
-        setVideoCredits(cRes.data);
-        const wan = (mRes.data.models || []).find((m: any) =>
-          m.id.toLowerCase().includes("wan")
-        );
-        if (wan) setSelectedVideoModel(wan.id);
-      })
-      .catch((err) => {
-        if (err.response?.status === 402) {
-          setVideoCredits({
-            balance: 0,
-            planType: "FREE",
-            expiresAt: "N/A",
-            creditCosts: [],
-            freeVideoUsed: false,
-          });
-        }
-      });
+  
+    // Defer everything else by 2.5 seconds
+    const deferTimer = setTimeout(() => {
+      fetch(`${API_BASE_URL}/api/sole-tts/usage`, { headers: h })
+        .then((r) => r.json()).then(setTtsUsage).catch(() => {});
+    
+      Promise.all([
+        axios.get(`${API_BASE_URL}/api/video-gen/models`, { headers: h }),
+        axios.get(`${API_BASE_URL}/api/video-gen/credits`, { headers: h }),
+      ])
+        .then(([mRes, cRes]) => {
+          setVideoModels(mRes.data.models || []);
+          setVideoCredits(cRes.data);
+          const wan = (mRes.data.models || []).find((m: any) =>
+            m.id.toLowerCase().includes("wan")
+          );
+          if (wan) setSelectedVideoModel(wan.id);
+        })
+        .catch((err) => {
+          if (err.response?.status === 402) {
+            setVideoCredits({
+              balance: 0, planType: "FREE",
+              expiresAt: "N/A", creditCosts: [], freeVideoUsed: false,
+            });
+          }
+        });
+    }, 2500);
+  
+    return () => clearTimeout(deferTimer);
   }, [isLoggedIn]);
 
   useEffect(() => {
@@ -1638,6 +1630,22 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
     return isFreeUser ? ALL_IMAGE_MODELS_FREE : ALL_IMAGE_MODELS_PAID;
   }, [isFreeUser]);
 
+  const handleShowHistory = () => {
+    const newVal = !showImageHistory;
+    setShowImageHistory(newVal);
+    if (newVal && imageHistory.length === 0) {
+      setImageHistoryLoading(true);
+      const tok = localStorage.getItem("token");
+      fetch(`${API_BASE_URL}/api/sole-image-gen/history`, {
+        headers: { Authorization: `Bearer ${tok}` },
+      })
+        .then((r) => r.json())
+        .then(setImageHistory)
+        .catch(() => {})
+        .finally(() => setImageHistoryLoading(false));
+    }
+  };  
+
   // ─────────────────── RENDER ───────────────────────────────────────────────
 
   if (isPageLoading) {
@@ -1657,12 +1665,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
 
       {/* ── Hero ── */}
       <section className="cac-hero">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="cac-hero-inner"
-        >
+        <div className="cac-hero-inner">
           <h1 className="cac-hero-title">
             Create AI Content{" "}
             <span className="cac-gradient-text">in Seconds</span>
@@ -1670,7 +1673,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
           <p className="cac-hero-sub">
             Voice · Image · Video — one page, zero friction.
           </p>
-        </motion.div>
+        </div>
       </section>
 
       {/* ── Main Tool ── */}
@@ -1847,11 +1850,9 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
               </div>
               {/* Voice output below prompt on left side */}
               {generatedAudio && (
-                <motion.div
+                <div
                   ref={resultRef}
-                  className="cac-result-card"
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  className="cac-result-card cac-result-card--appear"
                 >
                   <div className="cac-result-header">
                     <span>🎙️ Your AI Voice</span>
@@ -1869,7 +1870,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                       🔄 New Voice
                     </button>
                   </div>
-                </motion.div>
+                </div>
               )}
             </div>
 
@@ -2602,11 +2603,9 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
 
         {/* ── Image Output ── */}
         {activeTab === "image" && generatedImages.length > 0 && (
-          <motion.div
+          <div
             ref={resultRef}
-            className="cac-result-card"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
+            className="cac-result-card cac-result-card--appear"
           >
             <div className="cac-result-header">
               <span>🖼️ Your AI Image</span>
@@ -2666,12 +2665,15 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                 </div>
               </div>
             ))}
-          </motion.div>
+          </div>
         )}
 
         {/* ── Carousel Output ── */}
         {activeTab === "image" && imageGenMode === 'carousel' && carouselImages.some(img => img !== null) && (
-          <motion.div ref={resultRef} className="cac-result-card" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
+          <div
+            ref={resultRef}
+            className="cac-result-card cac-result-card--appear"
+          >
             <div className="cac-result-header">
               <span>🎠 Your Carousel</span>
               <span style={{ fontSize: 12, color: 'var(--cac-muted)' }}>
@@ -2776,16 +2778,14 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                 setCarouselSlide(0);
               }}>🔄 New Carousel</button>
             </div>
-          </motion.div>
+          </div>
         )}
 
         {/* ── Video Job Card ── */}
         {activeTab === "video" && currentVideoJob && (
-          <motion.div
+          <div
             ref={resultRef}
-            className="cac-result-card"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
+            className="cac-result-card cac-result-card--appear"
           >
             <div className="cac-result-header">
               <span>🎬 Generation #{currentVideoJob.id}</span>
@@ -2856,14 +2856,14 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                 </div>
               </div>
             )}
-          </motion.div>
+          </div>
         )}
 
         {/* ── Image History ── */}
         {activeTab === "image" && isLoggedIn && (
           <div style={{ marginBottom: 24 }}>
             <button
-              onClick={() => setShowImageHistory(v => !v)}
+              onClick={handleShowHistory}
               style={{
                 display: 'flex', alignItems: 'center', gap: 8,
                 padding: '10px 16px', borderRadius: 10, border: '1.5px solid var(--cac-border)',

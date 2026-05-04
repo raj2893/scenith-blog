@@ -2238,6 +2238,10 @@ html[data-theme="dark"] .cac-darkmode-fab:hover {
   opacity: 0.5;
 }
 
+.cac-result-card--appear {
+  animation: cac-fade-up 0.4s ease both;
+}
+
 @media (max-width: 640px) {
   .cac-chips-desktop {
     display: none;
