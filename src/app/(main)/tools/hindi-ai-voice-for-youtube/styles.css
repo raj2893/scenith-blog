@@ -1,0 +1,394 @@
+/* ------------------------------
+   Hindi AI Voice for YouTube Page
+   Modern, Clean, Responsive
+------------------------------ */
+
+:root {
+  --primary: #4f46e5;
+  --primary-dark: #4338ca;
+  --primary-light: #818cf8;
+  --secondary: #0f172a;
+  --accent: #f59e0b;
+  --text-dark: #111827;
+  --text-light: #f9fafb;
+  --text-muted: #6b7280;
+  --border-light: #e5e7eb;
+  --bg-white: #ffffff;
+  --bg-gray: #f3f4f6;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  --radius: 1rem;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg-white);
+  color: var(--text-dark);
+  line-height: 1.6;
+}
+
+.hindi-voice-page {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Hero Section */
+.hindi-hero {
+  text-align: center;
+  padding: 4rem 1rem 3rem;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border-radius: 2rem;
+  margin: 2rem 0 3rem;
+}
+
+.hindi-hero h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #b45309, #d97706);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  color: #78350f;
+  max-width: 700px;
+  margin: 0 auto 2rem;
+}
+
+.hero-cta-group {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-primary, .btn-secondary {
+  display: inline-block;
+  padding: 0.75rem 1.8rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-secondary {
+  background: white;
+  color: var(--primary);
+  border: 1px solid var(--border-light);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-gray);
+  border-color: var(--primary-light);
+}
+
+.btn-large {
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+}
+
+/* Container */
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 0 3rem;
+}
+
+/* Content Sections */
+.content-section {
+  margin-bottom: 4rem;
+  scroll-margin-top: 2rem;
+}
+
+.content-section h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  border-left: 5px solid #d97706;
+  padding-left: 1rem;
+}
+
+.content-section p {
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.content-section strong {
+  color: var(--text-dark);
+}
+
+/* Use Cases Grid */
+.use-cases-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.use-case-card {
+  background: var(--bg-gray);
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.use-case-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.use-case-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: #b45309;
+}
+
+.use-case-card p {
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* Examples Block */
+.examples-block {
+  background: #fef9c3;
+  padding: 1rem 1.5rem;
+  border-radius: var(--radius);
+  margin: 1rem 0;
+}
+
+.example-item {
+  margin-bottom: 1rem;
+}
+
+/* Steps List */
+.steps-list {
+  list-style: none;
+  counter-reset: step-counter;
+  margin: 1.5rem 0;
+}
+
+.steps-list li {
+  counter-increment: step-counter;
+  margin-bottom: 1rem;
+  padding-left: 2rem;
+  position: relative;
+}
+
+.steps-list li::before {
+  content: counter(step-counter);
+  background: #d97706;
+  color: white;
+  font-weight: bold;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 0.8rem;
+}
+
+/* Tips List */
+.tips-list {
+  list-style: none;
+  margin: 1.5rem 0;
+}
+
+.tips-list li {
+  margin-bottom: 0.75rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.tips-list li::before {
+  content: "✓";
+  color: #d97706;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+}
+
+/* Mistakes */
+.mistake-item {
+  background: #fee2e2;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-left: 4px solid #ef4444;
+}
+
+/* Comparison Table */
+.comparison-table {
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin: 1.5rem 0;
+}
+
+.comparison-row {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 1fr;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-light);
+  background: white;
+}
+
+.comparison-row.header {
+  background: var(--bg-gray);
+  font-weight: 700;
+  border-bottom: 2px solid var(--border-light);
+}
+
+.comparison-row:last-child {
+  border-bottom: none;
+}
+
+/* Related Links Grid */
+.related-links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+}
+
+.related-link {
+  display: block;
+  padding: 0.5rem 1rem;
+  background: var(--bg-gray);
+  border-radius: 0.75rem;
+  color: var(--primary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.related-link:hover {
+  background: var(--primary-light);
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* FAQ */
+.faq-item {
+  border-bottom: 1px solid var(--border-light);
+  padding: 1rem 0;
+}
+
+.faq-item h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  color: #b45309;
+}
+
+.faq-item p {
+  margin-bottom: 0;
+}
+
+/* Final CTA */
+.final-cta-section {
+  text-align: center;
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  padding: 3rem 2rem;
+  border-radius: 2rem;
+  margin: 2rem 0 4rem;
+}
+
+.final-cta-section h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.final-cta-section p {
+  max-width: 500px;
+  margin: 0 auto 2rem;
+  color: #78350f;
+}
+
+.internal-links {
+  margin-top: 2rem;
+  font-size: 0.85rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.internal-links a {
+  color: var(--primary);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--primary-light);
+}
+
+.internal-links a:hover {
+  color: var(--primary-dark);
+  border-bottom-style: solid;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hindi-hero h1 {
+    font-size: 2rem;
+  }
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+  .content-section h2 {
+    font-size: 1.5rem;
+  }
+  .comparison-row {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+    padding: 1rem;
+  }
+  .comparison-row.header {
+    display: none;
+  }
+  .comparison-row span:first-child {
+    font-weight: 700;
+    color: #d97706;
+  }
+  .related-links-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .btn-primary, .btn-secondary {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+  .hindi-voice-page {
+    padding: 0 1rem;
+  }
+}
