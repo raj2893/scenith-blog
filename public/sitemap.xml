@@ -2725,5 +2725,17 @@
     <priority>0.9</priority>
     <changefreq>weekly</changefreq>
     <lastmod>2026-05-06</lastmod>
-  </url>    
+  </url>  
+  <url>
+    <loc>https://scenith.in/tools/ai-voice-for-kids-story-youtube</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-05-07</lastmod>
+  </url>
+  <url>
+    <loc>https://scenith.in/tools/ai-voice-for-horror-story-narration </loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-05-07</lastmod>
+  </url> 
 </urlset>
