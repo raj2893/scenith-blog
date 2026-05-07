@@ -1,0 +1,601 @@
+/* app/tools/ai-voice-for-kids-story-youtube/styles.css */
+
+/* CSS Variables */
+:root {
+  --ks-primary: #6366f1;
+  --ks-primary-dark: #4f46e5;
+  --ks-secondary: #8b5cf6;
+  --ks-accent: #f59e0b;
+  --ks-text-dark: #1f2937;
+  --ks-text-light: #6b7280;
+  --ks-bg: #ffffff;
+  --ks-bg-alt: #f9fafb;
+  --ks-border: #e5e7eb;
+  --ks-success: #10b981;
+}
+
+/* Reset & Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  color: var(--ks-text-dark);
+  line-height: 1.5;
+}
+
+.ks-page {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.ks-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .ks-container {
+    padding: 0 1rem;
+  }
+}
+
+/* Typography */
+.ks-gradient {
+  background: linear-gradient(135deg, var(--ks-primary), var(--ks-secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Hero Section */
+.ks-hero {
+  background: linear-gradient(135deg, #f0f4ff 0%, #e8ecf8 100%);
+  padding: 5rem 0 4rem;
+  text-align: center;
+}
+
+.ks-hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.ks-hero-title {
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 1.25rem;
+  letter-spacing: -0.02em;
+}
+
+@media (max-width: 768px) {
+  .ks-hero-title {
+    font-size: 2rem;
+  }
+}
+
+.ks-hero-subtitle {
+  font-size: 1.25rem;
+  color: var(--ks-text-light);
+  margin-bottom: 2rem;
+}
+
+.ks-hero-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.ks-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+}
+
+.ks-btn-primary {
+  background: linear-gradient(135deg, var(--ks-primary), var(--ks-secondary));
+  color: white;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+}
+
+.ks-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
+}
+
+.ks-btn-secondary {
+  background: white;
+  color: var(--ks-primary);
+  border: 1px solid var(--ks-border);
+}
+
+.ks-btn-secondary:hover {
+  border-color: var(--ks-primary);
+  background: #f8f9ff;
+}
+
+.ks-btn-large {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+}
+
+.ks-btn-outline {
+  background: transparent;
+  border: 2px solid white;
+  color: white;
+}
+
+.ks-btn-outline:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.ks-hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+  color: var(--ks-text-light);
+}
+
+.ks-hero-stats span {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* Section Styles */
+.ks-section {
+  padding: 5rem 0;
+}
+
+.ks-section-alt {
+  background: var(--ks-bg-alt);
+}
+
+.ks-section-accent {
+  background: linear-gradient(135deg, var(--ks-primary), var(--ks-secondary));
+  color: white;
+}
+
+.ks-section-accent .ks-card,
+.ks-section-accent .ks-advanced-item {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.ks-section-accent p,
+.ks-section-accent h3 {
+  color: white;
+}
+
+.ks-section-faq {
+  background: var(--ks-bg-alt);
+  padding-bottom: 4rem;
+}
+
+.ks-section-title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 3rem;
+  letter-spacing: -0.01em;
+}
+
+.ks-title-white {
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .ks-section-title {
+    font-size: 1.75rem;
+    margin-bottom: 2rem;
+  }
+}
+
+/* Grid Layouts */
+.ks-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .ks-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Cards */
+.ks-card {
+  background: white;
+  border-radius: 1.5rem;
+  padding: 1.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--ks-border);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.ks-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+}
+
+.ks-card-icon {
+  font-size: 2rem;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.ks-card h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.ks-card p {
+  color: var(--ks-text-light);
+  line-height: 1.6;
+}
+
+/* Examples Section */
+.ks-examples {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+@media (max-width: 1024px) {
+  .ks-examples {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ks-example {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  border: 1px solid var(--ks-border);
+}
+
+.ks-example-icon {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.ks-example h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+  color: var(--ks-primary);
+}
+
+.ks-example p {
+  color: var(--ks-text-light);
+  font-style: italic;
+  margin-bottom: 1rem;
+}
+
+.ks-example-meta {
+  font-size: 0.8rem;
+  color: var(--ks-text-light);
+}
+
+/* Steps */
+.ks-steps {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.ks-step {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 640px) {
+  .ks-step {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}
+
+.ks-step-number {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--ks-primary), var(--ks-secondary));
+  color: white;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.ks-step-content h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.ks-step-content p {
+  color: var(--ks-text-light);
+  margin-bottom: 0.5rem;
+}
+
+.ks-step-tip {
+  background: #fef3c7;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  color: #b45309;
+}
+
+/* Mistakes */
+.ks-mistakes {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.ks-mistake {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--ks-border);
+}
+
+.ks-mistake-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+/* Advanced Tips */
+.ks-advanced {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .ks-advanced {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ks-advanced-item {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.ks-advanced-item h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+}
+
+.ks-advanced-item p {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.95rem;
+}
+
+/* Use Cases Grid */
+.ks-usecases {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 1024px) {
+  .ks-usecases {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .ks-usecases {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ks-usecase {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  border: 1px solid var(--ks-border);
+  transition: all 0.2s;
+}
+
+.ks-usecase:hover {
+  border-color: var(--ks-primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.ks-usecase h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.ks-usecase p {
+  color: var(--ks-text-light);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.ks-usecase a {
+  font-size: 0.85rem;
+  color: var(--ks-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.ks-usecase a:hover {
+  text-decoration: underline;
+}
+
+/* FAQ */
+.ks-faq {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.ks-faq-item {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--ks-border);
+}
+
+.ks-faq-item h3 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ks-faq-item p {
+  color: var(--ks-text-light);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+/* CTA Section */
+.ks-cta-section {
+  padding: 4rem 0 5rem;
+  background: var(--ks-bg-alt);
+}
+
+.ks-cta-card {
+  background: linear-gradient(135deg, var(--ks-primary), var(--ks-secondary));
+  border-radius: 2rem;
+  padding: 3rem;
+  text-align: center;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .ks-cta-card {
+    padding: 2rem;
+  }
+}
+
+.ks-cta-card h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.ks-cta-card p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  margin-bottom: 2rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ks-cta-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.ks-cta-note {
+  font-size: 0.85rem;
+  opacity: 0.75;
+  margin-bottom: 0;
+}
+
+/* Internal Links */
+.ks-internal-links {
+  background: #1f2937;
+  color: #9ca3af;
+  padding: 3rem 0;
+}
+
+.ks-internal-links h3 {
+  color: white;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.ks-links-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.ks-links-grid a {
+  color: #9ca3af;
+  text-decoration: none;
+  font-size: 0.85rem;
+  padding: 0.25rem 0.5rem;
+  transition: color 0.2s;
+}
+
+.ks-links-grid a:hover {
+  color: white;
+}
+
+.ks-main-link {
+  text-align: center;
+  padding-top: 1.5rem;
+  border-top: 1px solid #374151;
+}
+
+.ks-main-cta-link {
+  display: inline-block;
+  background: var(--ks-primary);
+  color: white;
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.ks-main-cta-link:hover {
+  background: var(--ks-primary-dark);
+}
+
+/* Center Utilities */
+.ks-center {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ks-section,
+.ks-hero {
+  animation: fadeIn 0.5s ease-out forwards;
+}
