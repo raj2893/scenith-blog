@@ -54,6 +54,11 @@ export default function MaleAiVoiceStorytellingClient() {
             name: "Male AI Voice for Storytelling",
             description:
               "Professional male AI voices optimized for storytelling, audiobook narration, and long-form content",
+
+            image: [
+              "https://scenith.in/images/AIVoicesFilteredSS.png"
+            ],
+
             brand: {
               "@type": "Brand",
               name: "Scenith",

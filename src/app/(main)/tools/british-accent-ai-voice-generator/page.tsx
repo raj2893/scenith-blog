@@ -30,6 +30,11 @@ export default function BritishAccentAIVoiceGeneratorPage() {
     "@type": "Product",
     "name": "British Accent AI Voice Generator",
     "description": "Generate authentic British accent voiceovers with AI. Perfect for YouTube, TikTok, audiobooks, and professional ads.",
+
+    "image": [
+      "https://scenith.in/images/AIVoicesFilteredSS.png"
+    ],
+
     "offers": {
       "@type": "Offer",
       "price": "0",

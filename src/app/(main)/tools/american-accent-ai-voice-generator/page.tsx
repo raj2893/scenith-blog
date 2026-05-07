@@ -31,6 +31,11 @@ export default function AmericanAccentAIVoiceGeneratorPage() {
     "@type": "Product",
     "name": "American Accent AI Voice Generator",
     "description": "Generate authentic American accent voiceovers with AI. Perfect for YouTube, TikTok, podcasts, and professional ads.",
+
+    "image": [
+      "https://scenith.in/images/AIVoicesFilteredSS.png"
+    ],
+
     "offers": {
       "@type": "Offer",
       "price": "0",
