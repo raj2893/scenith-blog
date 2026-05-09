@@ -4,9 +4,6 @@
    (default) and [data-theme="dark"] on .cac-page.
    ============================================================ */
 
-/* ── Google font import ── */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
 /* ── Animations ── */
 @keyframes cac-spin {
   to { transform: rotate(360deg); }
@@ -83,7 +80,6 @@
   --cac-faq-bg:       #f8f8ff;
   --cac-faq-border:   rgba(99, 85, 220, 0.14);
   --cac-faq-summary:  #2d2d5e;
-  margin-top: 30px;
 }
 
 /* ============================================================
@@ -146,7 +142,6 @@
   --cac-faq-bg:       #1c2038;
   --cac-faq-border:   rgba(99, 102, 241, 0.16);
   --cac-faq-summary:  #cbd5e1;
-  margin-top: 30px;
 }
 
 /* ============================================================
@@ -664,6 +659,15 @@
 /* ── Smaller upgrade link ── */
 .cac-upgrade-link--sm {
   font-size: 0.75rem;
+}
+
+.cac-error-animated {
+  animation: cac-fade-up 0.2s ease both;
+}
+
+.cac-seo-zone {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 2000px;
 }
 
 @media (max-width: 640px) {

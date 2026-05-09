@@ -14,6 +14,15 @@ import { API_BASE_URL, CDN_URL } from "@/app/config";
 import './create-ai-content.css';
 import CustomDropdown from "./CustomDropdown";
 
+function useDebounce<T>(value: T, delay: number): T {
+  const [debounced, setDebounced] = useState(value);
+  useEffect(() => {
+    const t = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(t);
+  }, [value, delay]);
+  return debounced;
+}
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type Tab = "voice" | "image" | "video";
@@ -275,6 +284,10 @@ const ModelLogo: React.FC<{ modelKey: string; size?: number }> = ({ modelKey, si
     <img
       src={src}
       alt=""
+      width={size}
+      height={size}
+      loading="lazy"
+      decoding="async"
       style={{
         width: size,
         height: size,
@@ -639,7 +652,6 @@ const CreateAIContentClient: React.FC = () => {
   const [loginSuccess, setLoginSuccess] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [showVoiceToVideoModal, setShowVoiceToVideoModal] = useState(false);
-  const [showDemos, setShowDemos] = useState(false);
 
   // ── Active tab
   const [activeTab, setActiveTab] = useState<Tab>(() => {
@@ -718,6 +730,8 @@ const CreateAIContentClient: React.FC = () => {
   const [selectedVoice, setSelectedVoice] = useState<Voice | null>(null);
   const [filterLanguage, setFilterLanguage] = useState("");
   const [filterGender, setFilterGender] = useState("");
+  const debouncedLanguage = useDebounce(filterLanguage, 300);
+  const debouncedGender = useDebounce(filterGender, 300);  
   const [uniqueLanguages, setUniqueLanguages] = useState<string[]>([]);
   const [uniqueGenders, setUniqueGenders] = useState<string[]>([]);
   const [ttsUsage, setTtsUsage] = useState<TtsUsage | null>(null);
@@ -931,23 +945,20 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
 
   useEffect(() => {
     if (!showLoginModal) return;
-    const init = () => {
-      if (window.google?.accounts) {
-        window.google.accounts.id.initialize({
-          client_id:
-            "397321320139-tpd310sq9j8rdngqd9kdmhgegco52b3g.apps.googleusercontent.com",
-          callback: handleGoogleLogin,
-        });
-        const el = document.getElementById("cac-google-btn");
-        if (el)
-          window.google.accounts.id.renderButton(el, {
-            theme: "outline",
-            size: "large",
-            width: 300,
+    const timer = setTimeout(() => {
+      const init = () => {
+        if (window.google?.accounts) {
+          window.google.accounts.id.initialize({
+            client_id: "397321320139-tpd310sq9j8rdngqd9kdmhgegco52b3g.apps.googleusercontent.com",
+            callback: handleGoogleLogin,
           });
-      } else setTimeout(init, 100);
-    };
-    init();
+          const el = document.getElementById("cac-google-btn");
+          if (el) window.google.accounts.id.renderButton(el, { theme: "outline", size: "large", width: 300 });
+        } else setTimeout(init, 100);
+      };
+      init();
+    }, 50); // defer off the interaction frame
+    return () => clearTimeout(timer);
   }, [showLoginModal, handleGoogleLogin]);
 
   // ─────────────────── DATA FETCH ───────────────────────────────────────────
@@ -1016,19 +1027,19 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
       return;
     }
     let url = `${API_BASE_URL}/api/ai-voices/get-all-voices`;
-    if (filterLanguage && filterGender)
-      url = `${API_BASE_URL}/api/ai-voices/voices-by-language-and-gender?language=${encodeURIComponent(filterLanguage)}&gender=${encodeURIComponent(filterGender)}`;
-    else if (filterLanguage)
-      url = `${API_BASE_URL}/api/ai-voices/voices-by-language?language=${encodeURIComponent(filterLanguage)}`;
-    else if (filterGender)
-      url = `${API_BASE_URL}/api/ai-voices/voices-by-gender?gender=${encodeURIComponent(filterGender)}`;
+    if (debouncedLanguage && debouncedGender)
+      url = `${API_BASE_URL}/api/ai-voices/voices-by-language-and-gender?language=${encodeURIComponent(debouncedLanguage)}&gender=${encodeURIComponent(debouncedGender)}`;
+    else if (debouncedLanguage)
+      url = `${API_BASE_URL}/api/ai-voices/voices-by-language?language=${encodeURIComponent(debouncedLanguage)}`;
+    else if (debouncedGender)
+      url = `${API_BASE_URL}/api/ai-voices/voices-by-gender?gender=${encodeURIComponent(debouncedGender)}`;
     const token = localStorage.getItem("token");
     const opts = token ? { headers: { Authorization: `Bearer ${token}` } } : undefined;
     fetch(url, opts)
       .then((r) => r.json())
       .then(setVoices)
       .catch(() => {});
-  }, [filterLanguage, filterGender, selectedVoiceProvider]);  
+  }, [debouncedLanguage, debouncedGender, selectedVoiceProvider]);
 
   useEffect(() => {
     if (selectedVoiceProvider === "GOOGLE") return;
@@ -1072,10 +1083,6 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
       .catch(() => {});
   }, []); 
 
-  useEffect(() => {
-    const timer = setTimeout(() => setShowDemos(true), 1500);
-    return () => clearTimeout(timer);
-  }, []);  
   // ─────────────────── VOICE ACTIONS ───────────────────────────────────────
 
   const handlePlayDemo = (voice: Voice) => {
@@ -1589,11 +1596,11 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
   const activeVoices =
     selectedVoiceProvider === "GOOGLE" ? voices : externalVoices;
 
-  const imageCreditCost = getImageCreditCost(
+  const imageCreditCost = useMemo(() => getImageCreditCost(
     selectedImageModel.toUpperCase().replace(/-/g, "_"),
     imageSize,
     imageQuality
-  );
+  ), [selectedImageModel, imageSize, imageQuality]);
 
   const imageModelCfg =
     IMAGE_MODEL_CONFIG[selectedImageModel.toUpperCase().replace(/-/g, "_")];
@@ -1626,9 +1633,10 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
     { id: "FLUX_1_1_PRO",       displayName: "FLUX 1.1 Pro" },
   ];
 
+  const planType = imageUsage?.planType ?? "FREE";
   const availableImageModels = useMemo(() => {
-    return isFreeUser ? ALL_IMAGE_MODELS_FREE : ALL_IMAGE_MODELS_PAID;
-  }, [isFreeUser]);
+    return (!isLoggedIn || planType === "FREE") ? ALL_IMAGE_MODELS_FREE : ALL_IMAGE_MODELS_PAID;
+  }, [isLoggedIn, planType]);
 
   const handleShowHistory = () => {
     const newVal = !showImageHistory;
@@ -1645,6 +1653,42 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
         .finally(() => setImageHistoryLoading(false));
     }
   };  
+
+  const handleTabChange = useCallback((t: Tab) => {
+    setActiveTab(t);
+    setPrompt("");
+    setError(null);
+    setImageGenMode('text');
+    setInputImageFile(null);
+    setInputImagePreview(null);
+    if (t !== 'video') {
+      setVideoFromImageUrl(null);
+      setVideoGenMode('text');
+      setVideoInputFile(null);
+      setVideoInputPreview(null);
+    }
+    setCarouselError(null);
+    if (t !== 'image') {
+      setCarouselPrompts(["", "", ""]);
+      setCarouselFiles([null, null, null]);
+      setCarouselPreviews([null, null, null]);
+      setCarouselImages([null, null, null]);
+    }
+  }, []);
+
+  const videoModelOptions = useMemo(() => {
+    const models = isLoggedIn && videoModels.length > 0
+      ? videoModels
+      : STATIC_VIDEO_MODELS.map((m) => ({
+          id: m.id, displayName: m.name,
+          creditCosts: [{ duration: 5, audio: false, credits: m.cr }],
+        }));
+    return models.map((m: any) => ({
+      value: m.id,
+      label: `${m.displayName} · ${calcVideoCredits(m.id, videoDuration, videoAudioEnabled, videoResolution)}cr`,
+      logo: MODEL_LOGOS[m.id] ?? undefined,
+    }));
+  }, [isLoggedIn, videoModels, videoDuration, videoAudioEnabled, videoResolution]);  
 
   // ─────────────────── RENDER ───────────────────────────────────────────────
 
@@ -1684,28 +1728,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
             <button
               key={t}
               className={`cac-tab ${activeTab === t ? "active" : ""}`}
-              onClick={() => {
-                setActiveTab(t);
-                setPrompt("");
-                setError(null);
-                setImageGenMode('text');
-                setInputImageFile(null);
-                setInputImagePreview(null);
-                if (t !== 'video') {
-                  setVideoFromImageUrl(null);
-                  setVideoGenMode('text');
-                  setVideoInputFile(null);
-                  setVideoInputPreview(null);
-                }
-                setCarouselError(null);
-                if (t !== 'image') {
-                  setImageGenMode('text');
-                  setCarouselPrompts(["", "", ""]);
-                  setCarouselFiles([null, null, null]);
-                  setCarouselPreviews([null, null, null]);
-                  setCarouselImages([null, null, null]);
-                }
-              }}
+              onClick={() => handleTabChange(t)}
             >
               {t === "voice" && "🎙️ Voice"}
               {t === "image" && "🖼️ Image"}
@@ -1788,18 +1811,9 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                     </span>
                   )}
                 </div>
-                <AnimatePresence>
-                  {error && (
-                    <motion.div
-                      className="cac-error"
-                      initial={{ opacity: 0, y: -6 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0 }}
-                    >
-                      ⚠️ {error}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                {(error || carouselError) && (
+                  <div className="cac-error cac-error-animated">⚠️ {error || carouselError}</div>
+                )}
                 <div className="cac-cta-row">
                   <CustomDropdown
                     className="cac-chip-variant"
@@ -2388,20 +2402,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                 <CustomDropdown
                   value={selectedVideoModel}
                   onChange={(val) => setSelectedVideoModel(val)}
-                  options={(isLoggedIn && videoModels.length > 0
-                    ? videoModels
-                    : STATIC_VIDEO_MODELS.map((m) => ({
-                        id: m.id, displayName: m.name,
-                        creditCosts: [{ duration: 5, audio: false, credits: m.cr }],
-                      }))
-                  ).map((m: any) => {
-                    const cost = calcVideoCredits(m.id, videoDuration, videoAudioEnabled, videoResolution);
-                  return {
-                      value: m.id,
-                      label: `${m.displayName}${cost != null ? ` · ${cost}cr` : ''}`,
-                      logo: MODEL_LOGOS[m.id] ?? undefined,
-                    };
-                  })}
+                  options={videoModelOptions}
                   style={{ flex: "1 1 auto", minWidth: 130, maxWidth: 200 }}
                 />
                 {/* ── Resolution selector (only for Wan 2.5 and Grok) ── */}
@@ -2490,13 +2491,9 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
               </div>
             )}
 
-            <AnimatePresence>
-              {(error || carouselError) && (
-                <motion.div className="cac-error" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-                  ⚠️ {error || carouselError}
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {(error || carouselError) && (
+              <div className="cac-error cac-error-animated">⚠️ {error || carouselError}</div>
+            )}
 
             <div className="cac-cta-row">
               <CustomDropdown
@@ -2971,7 +2968,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
         )}
 
         {/* ── Demo Images Marquee (shown on image tab) ── */}
-        {activeTab === "image" && demoImages.length > 0 && showDemos && (
+        {activeTab === "image" && demoImages.length > 0 && generatedImages.length === 0 && !isGeneratingImage && (
           <div style={{ marginBottom: 24, overflow: 'hidden' }}>
             <p style={{
               textAlign: 'center', fontSize: 12, color: 'var(--cac-text-2)',
@@ -2994,14 +2991,15 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                           width: 160, height: 160, borderRadius: 12, overflow: 'hidden', flexShrink: 0,
                           border: '1px solid var(--cac-border-soft)',
                           background: 'rgba(99,85,220,0.06)',
+                          contain: 'layout paint size',
+                          aspectRatio: '1 / 1',
                         }}>
                           <img
                             src={src}
                             alt="AI generated"
-                            loading="lazy"
-                            decoding="async"
-                            style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0, transition: 'opacity 0.3s ease' }}
-                            onLoad={(e) => { (e.target as HTMLImageElement).style.opacity = '1'; }}
+                            loading={i < 4 ? 'eager' : 'lazy'}
+                            decoding={i < 4 ? 'sync' : 'async'}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                           />
                         </div>
                       ))}
@@ -3014,7 +3012,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
         )}
 
         {/* ── Demo Videos Strip (shown on video tab) ── */}
-        {activeTab === "video" && demoVideos.length > 0 && showDemos && (
+        {activeTab === "video" && demoVideos.length > 0 && !currentVideoJob && !isGeneratingVideo && (
           <div style={{ marginBottom: 24 }}>
             <p style={{
               textAlign: 'center', fontSize: 12, color: 'var(--cac-text-2)',
