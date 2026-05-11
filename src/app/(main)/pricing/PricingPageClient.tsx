@@ -687,7 +687,7 @@ export default function PricingPageClient() {
   const [isPricingReady, setIsPricingReady] = useState(false);
   const [isPaymentInProgress, setIsPaymentInProgress] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [showProPlans, setShowProPlans] = useState(true);
+  const [showProPlans, setShowProPlans] = useState(false);
 
   const plansRef = useRef<HTMLDivElement>(null);
   const scrollToPlans = () => plansRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -758,6 +758,12 @@ export default function PricingPageClient() {
     };
     detect().finally(() => setIsPricingReady(true));
   }, []);
+
+  useEffect(() => {
+    if (isIndianUser === false) {
+      setShowProPlans(true);
+    }
+  }, [isIndianUser]);  
 
   const handleUpgrade = async (plan: PricingPlan) => {
     if (!isLoggedIn) { setShowLoginModal(true); return; }
