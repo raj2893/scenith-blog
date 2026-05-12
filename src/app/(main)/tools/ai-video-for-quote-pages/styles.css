@@ -712,3 +712,11 @@ section {
     font-size: 0.7rem;
   }
 }
+/* Inline form for example chips */
+.inline-form {
+  display: inline-block;
+}
+
+.inline-form .example-chip {
+  width: 100%;
+}

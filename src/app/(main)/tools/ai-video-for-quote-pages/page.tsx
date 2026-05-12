@@ -68,6 +68,7 @@ export default function AIVideoForQuotePages() {
       </section>
 
       {/* Prompt Input Box - Direct Redirect to Tool Page */}
+            {/* Prompt Input Box - Direct Redirect to Tool Page */}
       <section className="prompt-box-section">
         <div className="container">
           <div className="prompt-box-card">
@@ -85,11 +86,12 @@ export default function AIVideoForQuotePages() {
               className="prompt-form"
             >
               <input type="hidden" name="tab" value="video" />
-              <input type="hidden" name={utmParams.split("&")[0].split("=")[0]} value={utmParams.split("&")[0].split("=")[1]} />
-              <input type="hidden" name={utmParams.split("&")[1].split("=")[0]} value={utmParams.split("&")[1].split("=")[1]} />
-              <input type="hidden" name={utmParams.split("&")[2].split("=")[0]} value={utmParams.split("&")[2].split("=")[1]} />
+              <input type="hidden" name="utm_source" value="ai-video-for-quote-pages" />
+              <input type="hidden" name="utm_medium" value="cta" />
+              <input type="hidden" name="utm_campaign" value="seo" />
               <textarea
                 name="text"
+                id="quote-textarea"
                 className="prompt-textarea"
                 placeholder='e.g., "The only way to do great work is to love what you do. — Steve Jobs"'
                 rows={3}
@@ -101,48 +103,36 @@ export default function AIVideoForQuotePages() {
             </form>
             <div className="prompt-examples">
               <span>✨ Try these quotes:</span>
-              <button
-                type="button"
-                className="example-chip"
-                onClick={() => {
-                  const textarea = document.querySelector(
-                    ".prompt-textarea"
-                  ) as HTMLTextAreaElement;
-                  if (textarea)
-                    textarea.value =
-                      '"Success is not final, failure is not fatal: it is the courage to continue that counts." — Winston Churchill';
-                }}
-              >
-                "Success is not final..."
-              </button>
-              <button
-                type="button"
-                className="example-chip"
-                onClick={() => {
-                  const textarea = document.querySelector(
-                    ".prompt-textarea"
-                  ) as HTMLTextAreaElement;
-                  if (textarea)
-                    textarea.value =
-                      '"Believe you can and you\'re halfway there." — Theodore Roosevelt';
-                }}
-              >
-                "Believe you can..."
-              </button>
-              <button
-                type="button"
-                className="example-chip"
-                onClick={() => {
-                  const textarea = document.querySelector(
-                    ".prompt-textarea"
-                  ) as HTMLTextAreaElement;
-                  if (textarea)
-                    textarea.value =
-                      '"The future belongs to those who believe in the beauty of their dreams." — Eleanor Roosevelt';
-                }}
-              >
-                "The future belongs..."
-              </button>
+              <form action="/create-ai-content" method="GET" className="inline-form">
+                <input type="hidden" name="tab" value="video" />
+                <input type="hidden" name="utm_source" value="ai-video-for-quote-pages" />
+                <input type="hidden" name="utm_medium" value="cta" />
+                <input type="hidden" name="utm_campaign" value="seo" />
+                <input type="hidden" name="text" value='"Success is not final, failure is not fatal: it is the courage to continue that counts." — Winston Churchill' />
+                <button type="submit" className="example-chip">
+                  "Success is not final..."
+                </button>
+              </form>
+              <form action="/create-ai-content" method="GET" className="inline-form">
+                <input type="hidden" name="tab" value="video" />
+                <input type="hidden" name="utm_source" value="ai-video-for-quote-pages" />
+                <input type="hidden" name="utm_medium" value="cta" />
+                <input type="hidden" name="utm_campaign" value="seo" />
+                <input type="hidden" name="text" value='"Believe you can and you\'re halfway there." — Theodore Roosevelt' />
+                <button type="submit" className="example-chip">
+                  "Believe you can..."
+                </button>
+              </form>
+              <form action="/create-ai-content" method="GET" className="inline-form">
+                <input type="hidden" name="tab" value="video" />
+                <input type="hidden" name="utm_source" value="ai-video-for-quote-pages" />
+                <input type="hidden" name="utm_medium" value="cta" />
+                <input type="hidden" name="utm_campaign" value="seo" />
+                <input type="hidden" name="text" value='"The future belongs to those who believe in the beauty of their dreams." — Eleanor Roosevelt' />
+                <button type="submit" className="example-chip">
+                  "The future belongs..."
+                </button>
+              </form>
             </div>
           </div>
         </div>
