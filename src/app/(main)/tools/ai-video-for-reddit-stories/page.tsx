@@ -517,25 +517,16 @@ export default function AiVideoForRedditStoriesPage() {
                 </button>
             </div>
             </form>
-            <div className="rrs-prompt-examples">
-            
-                href={`/create-ai-content?tab=video&text=${encodeURIComponent("I caught my best friend stealing from my mom's funeral")}`}
-                className="rrs-prompt-chip"
-            >
+          <div className="rrs-prompt-examples">
+              <Link href={`/create-ai-content?tab=video&text=${encodeURIComponent("I caught my best friend stealing from my mom's funeral")}`} className="rrs-prompt-chip">
                 'I caught my best friend stealing from my mom's funeral'
-            </a>
-            
-                href={`/create-ai-content?tab=video&text=${encodeURIComponent("TIFU by sending a risky text to my boss")}`}
-                className="rrs-prompt-chip"
-            >
+              </Link>
+              <Link href={`/create-ai-content?tab=video&text=${encodeURIComponent("TIFU by sending a risky text to my boss")}`} className="rrs-prompt-chip">
                 'TIFU by sending a risky text to my boss'
-            </a>
-            
-                href={`/create-ai-content?tab=video&text=${encodeURIComponent("Reddit, am I the jerk for taking the last donut?")}`}
-                className="rrs-prompt-chip"
-            >
+              </Link>
+              <Link href={`/create-ai-content?tab=video&text=${encodeURIComponent("Reddit, am I the jerk for taking the last donut?")}`} className="rrs-prompt-chip">
                 'Reddit, am I the jerk for taking the last donut?'
-            </a>
+              </Link>
             </div>
         </div>
         </section>
@@ -660,17 +651,18 @@ export default function AiVideoForRedditStoriesPage() {
               </div>
             </form>
             <div className="rrs-prompt-examples">
-              {["'I caught my best friend stealing from my mom's funeral'", "'TIFU by sending a risky text to my boss'", "'Reddit, am I the jerk for taking the last donut?'"].map((example, idx) => (
-                <button 
+            {[
+                "I caught my best friend stealing from my mom's funeral",
+                "TIFU by sending a risky text to my boss",
+                "Reddit, am I the jerk for taking the last donut?"
+              ].map((example, idx) => (
+                <Link
                   key={idx}
+                  href={`/create-ai-content?tab=video&text=${encodeURIComponent(example)}`}
                   className="rrs-prompt-chip"
-                  onClick={() => {
-                    const input = document.querySelector('.rrs-prompt-input') as HTMLInputElement;
-                    if (input) input.value = example.replace(/^['"]|['"]$/g, '');
-                  }}
                 >
-                  {example}
-                </button>
+                  '{example}'
+                </Link>
               ))}
             </div>
           </div>

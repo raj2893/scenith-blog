@@ -102,26 +102,27 @@ export default function AIVideoForQuotePages() {
               </button>
             </form>
             <div className="prompt-examples">
-                <span>✨ Try these quotes:</span>
-                
-                    href={`/create-ai-content?tab=video&utm_source=ai-video-for-quote-pages&utm_medium=cta&utm_campaign=seo&text=${encodeURIComponent('"Success is not final, failure is not fatal: it is the courage to continue that counts." — Winston Churchill')}`}
-                    className="example-chip"
-                >
-                    "Success is not final..."
-                </a>
-                
-                    href={`/create-ai-content?tab=video&utm_source=ai-video-for-quote-pages&utm_medium=cta&utm_campaign=seo&text=${encodeURIComponent('"Believe you can and you\'re halfway there." — Theodore Roosevelt')}`}
-                    className="example-chip"
-                >
-                    "Believe you can..."
-                </a>
-                
-                    href={`/create-ai-content?tab=video&utm_source=ai-video-for-quote-pages&utm_medium=cta&utm_campaign=seo&text=${encodeURIComponent('"The future belongs to those who believe in the beauty of their dreams." — Eleanor Roosevelt')}`}
-                    className="example-chip"
-                >
-                    "The future belongs..."
-                </a>
-                </div>
+              <span>✨ Try these quotes:</span>
+              <Link
+                href={`/create-ai-content?tab=video&utm_source=ai-video-for-quote-pages&utm_medium=cta&utm_campaign=seo&text=${encodeURIComponent('"Success is not final, failure is not fatal: it is the courage to continue that counts." — Winston Churchill')}`}
+                className="example-chip"
+              >
+                "Success is not final..."
+              </Link>
+              <Link
+                href={`/create-ai-content?tab=video&utm_source=ai-video-for-quote-pages&utm_medium=cta&utm_campaign=seo&text=${encodeURIComponent('"Believe you can and you\'re halfway there." — Theodore Roosevelt')}`}
+                className="example-chip"
+              >
+                "Believe you can..."
+              </Link>
+              <Link
+                href={`/create-ai-content?tab=video&utm_source=ai-video-for-quote-pages&utm_medium=cta&utm_campaign=seo&text=${encodeURIComponent('"The future belongs to those who believe in the beauty of their dreams." — Eleanor Roosevelt')}`}
+                className="example-chip"
+              >
+                "The future belongs..."
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 
