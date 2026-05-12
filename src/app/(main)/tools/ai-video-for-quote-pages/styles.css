@@ -306,6 +306,8 @@ section {
   color: var(--gray-600);
   cursor: pointer;
   transition: var(--transition);
+  text-decoration: none;        /* add this */
+  display: inline-block;        /* add this */
 }
 
 .example-chip:hover {

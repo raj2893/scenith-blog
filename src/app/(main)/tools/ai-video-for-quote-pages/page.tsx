@@ -103,38 +103,25 @@ export default function AIVideoForQuotePages() {
             </form>
             <div className="prompt-examples">
                 <span>✨ Try these quotes:</span>
-                <form action="/create-ai-content" method="GET" className="inline-form">
-                    <input type="hidden" name="tab" value="video" />
-                    <input type="hidden" name="utm_source" value="ai-video-for-quote-pages" />
-                    <input type="hidden" name="utm_medium" value="cta" />
-                    <input type="hidden" name="utm_campaign" value="seo" />
-                    <input type="hidden" name="text" value='"Success is not final, failure is not fatal: it is the courage to continue that counts." — Winston Churchill' />
-                    <button type="submit" className="example-chip">
+                
+                    href={`/create-ai-content?tab=video&utm_source=ai-video-for-quote-pages&utm_medium=cta&utm_campaign=seo&text=${encodeURIComponent('"Success is not final, failure is not fatal: it is the courage to continue that counts." — Winston Churchill')}`}
+                    className="example-chip"
+                >
                     "Success is not final..."
-                    </button>
-                </form>
-                <form action="/create-ai-content" method="GET" className="inline-form">
-                    <input type="hidden" name="tab" value="video" />
-                    <input type="hidden" name="utm_source" value="ai-video-for-quote-pages" />
-                    <input type="hidden" name="utm_medium" value="cta" />
-                    <input type="hidden" name="utm_campaign" value="seo" />
-                    <input type="hidden" name="text" value='"Believe you can and you&apos;re halfway there." — Theodore Roosevelt' />
-                    <button type="submit" className="example-chip">
+                </a>
+                
+                    href={`/create-ai-content?tab=video&utm_source=ai-video-for-quote-pages&utm_medium=cta&utm_campaign=seo&text=${encodeURIComponent('"Believe you can and you\'re halfway there." — Theodore Roosevelt')}`}
+                    className="example-chip"
+                >
                     "Believe you can..."
-                    </button>
-                </form>
-                <form action="/create-ai-content" method="GET" className="inline-form">
-                    <input type="hidden" name="tab" value="video" />
-                    <input type="hidden" name="utm_source" value="ai-video-for-quote-pages" />
-                    <input type="hidden" name="utm_medium" value="cta" />
-                    <input type="hidden" name="utm_campaign" value="seo" />
-                    <input type="hidden" name="text" value='"The future belongs to those who believe in the beauty of their dreams." — Eleanor Roosevelt' />
-                    <button type="submit" className="example-chip">
+                </a>
+                
+                    href={`/create-ai-content?tab=video&utm_source=ai-video-for-quote-pages&utm_medium=cta&utm_campaign=seo&text=${encodeURIComponent('"The future belongs to those who believe in the beauty of their dreams." — Eleanor Roosevelt')}`}
+                    className="example-chip"
+                >
                     "The future belongs..."
-                    </button>
-                </form>
+                </a>
                 </div>
-          </div>
         </div>
       </section>
 
