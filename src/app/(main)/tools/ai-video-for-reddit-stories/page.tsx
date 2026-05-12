@@ -368,6 +368,9 @@ const pageStyles = `
   font-size: 0.8rem;
   cursor: pointer;
   transition: background 0.2s;
+   text-decoration: none;      /* add */
+  color: var(--rrs-gray-200); /* add */
+  display: inline-block;      /* add */
 }
 
 .rrs-prompt-chip:hover {
@@ -492,30 +495,49 @@ export default function AiVideoForRedditStoriesPage() {
         </section>
 
         {/* USE CASES SECTION */}
+       {/* PROMPT GENERATOR BOX */}
         <section className="rrs-section">
-          <h2 className="rrs-h2">Where Reddit Story Videos Go Viral</h2>
-          <div className="rrs-grid">
-            <div className="rrs-card">
-              <div className="rrs-card-icon">📱</div>
-              <h3 className="rrs-h3">YouTube Shorts & TikTok</h3>
-              <p>Vertical 9:16 videos with fast pacing, bold captions, and dramatic narration. Perfect for "Am I the Asshole?" subreddit stories or "Today I Learned" facts.</p>
+        <div className="rrs-prompt-box">
+            <h3 className="rrs-h3" style={{marginBottom: '0.5rem'}}>🎤 Try It Now: Turn Any Script into a Video</h3>
+            <p style={{color: 'var(--rrs-gray-400)', marginBottom: '1.5rem'}}>
+            Paste your Reddit story below — we'll take you straight to the video creator with your script pre-filled.
+            </p>
+            <form action="/create-ai-content" method="GET" target="_self">
+            <input type="hidden" name="tab" value="video" />
+            <div className="rrs-prompt-input-group">
+                <input 
+                type="text" 
+                name="text" 
+                className="rrs-prompt-input" 
+                placeholder="e.g., 'AITA for not inviting my sister to my wedding? She ruined my engagement...'"
+                required
+                />
+                <button type="submit" className="rrs-generate-btn">
+                Generate Video →
+                </button>
             </div>
-            <div className="rrs-card">
-              <div className="rrs-card-icon">📺</div>
-              <h3 className="rrs-h3">Faceless YouTube Channels</h3>
-              <p>Build a faceless storytelling channel without showing your face. Use AI b-roll generated from prompts like "tense confrontation in office" to match the story mood.</p>
+            </form>
+            <div className="rrs-prompt-examples">
+            
+                href={`/create-ai-content?tab=video&text=${encodeURIComponent("I caught my best friend stealing from my mom's funeral")}`}
+                className="rrs-prompt-chip"
+            >
+                'I caught my best friend stealing from my mom's funeral'
+            </a>
+            
+                href={`/create-ai-content?tab=video&text=${encodeURIComponent("TIFU by sending a risky text to my boss")}`}
+                className="rrs-prompt-chip"
+            >
+                'TIFU by sending a risky text to my boss'
+            </a>
+            
+                href={`/create-ai-content?tab=video&text=${encodeURIComponent("Reddit, am I the jerk for taking the last donut?")}`}
+                className="rrs-prompt-chip"
+            >
+                'Reddit, am I the jerk for taking the last donut?'
+            </a>
             </div>
-            <div className="rrs-card">
-              <div className="rrs-card-icon">🎮</div>
-              <h3 className="rrs-h3">Gaming & Reaction Videos</h3>
-              <p>Reddit stories are huge in the gaming niche — use our video generator to add atmospheric clips of game environments while narrating creepy or funny threads.</p>
-            </div>
-            <div className="rrs-card">
-              <div className="rrs-card-icon">🧠</div>
-              <h3 className="rrs-h3">Educational & "Life Pro Tips"</h3>
-              <p>Turn r/LifeProTips or r/explainlikeimfive into short educational videos. Our AI voice can handle complex terminology with perfect pronunciation.</p>
-            </div>
-          </div>
+        </div>
         </section>
 
         {/* REAL EXAMPLES SECTION */}
