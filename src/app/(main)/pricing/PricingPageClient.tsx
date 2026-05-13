@@ -585,6 +585,43 @@ const injectStyles = () => {
     .v3-final-note { font-size: 12px; color: rgba(255,255,255,0.3); margin-top: 18px; }
 
     /* ── FOOTER ── */
+    .v3-success-overlay {
+      position: fixed; inset: 0; z-index: 99999;
+      background: rgba(10,5,30,0.65); backdrop-filter: blur(12px);
+      display: flex; align-items: center; justify-content: center; padding: 24px;
+    }
+    .v3-success-modal {
+      background: var(--surface); border-radius: 24px;
+      padding: 48px 36px; max-width: 380px; width: 100%;
+      text-align: center;
+      box-shadow: 0 32px 80px rgba(92,77,232,0.22);
+      border: 1.5px solid var(--border2);
+    }
+    .v3-success-icon {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: linear-gradient(135deg, #10b981, #059669);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 32px; margin: 0 auto 20px;
+      box-shadow: 0 8px 28px rgba(16,185,129,0.38);
+    }
+    .v3-success-title {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: 26px; font-weight: 400; color: var(--ink);
+      margin-bottom: 10px; letter-spacing: -0.01em;
+    }
+    .v3-success-sub { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 24px; }
+    .v3-success-bar-wrap {
+      background: var(--surface2); border-radius: 999px;
+      height: 5px; overflow: hidden; margin-top: 8px;
+    }
+    .v3-success-bar {
+      height: 100%; border-radius: 999px;
+      background: linear-gradient(90deg, var(--violet), #8b5cf6);
+      animation: v3-bar-fill 2.8s linear forwards;
+    }
+    @keyframes v3-bar-fill { from { width: 0% } to { width: 100% } }
+    .v3-success-redirect-note { font-size: 11.5px; color: var(--muted2); margin-top: 10px; }
+
     .v3-footer {
       background: var(--ink); border-top: 1px solid rgba(255,255,255,0.06);
       text-align: center; padding: 24px;
@@ -688,6 +725,15 @@ export default function PricingPageClient() {
   const [isPaymentInProgress, setIsPaymentInProgress] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [showProPlans, setShowProPlans] = useState(false);
+  const [successModal, setSuccessModal] = useState<{ show: boolean; planName: string } | null>(null);
+
+  const showSuccessAndRedirect = (planName: string) => {
+    setSuccessModal({ show: true, planName });
+    setTimeout(() => {
+      setSuccessModal(null);
+      router.push('/create-ai-content');
+    }, 3000);
+  };
 
   const plansRef = useRef<HTMLDivElement>(null);
   const scrollToPlans = () => plansRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -803,9 +849,8 @@ export default function PricingPageClient() {
           },
           handler: async (_response: any) => {
             setIsPaymentInProgress(false);
-            alert(`🎉 Subscribed to ${plan.name}! Your plan is now active. Credits will be added within a few seconds.`);
             setCurrentPlan(plan.role);
-            router.push('/create-ai-content');
+            showSuccessAndRedirect(plan.name);
           },
           prefill: {
             email: userProfile?.email || '',
@@ -860,9 +905,8 @@ export default function PricingPageClient() {
                 { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
               );
               setIsPaymentInProgress(false);
-              alert(`🎉 Successfully purchased ${plan.name}!`);
               setCurrentPlan(plan.role);
-              router.push('/create-ai-content');
+              showSuccessAndRedirect(plan.name);
             } catch {
               setIsPaymentInProgress(false);
               alert('Payment verification failed. Please contact support.');
@@ -938,9 +982,8 @@ export default function PricingPageClient() {
                 { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
               );
               setIsPaymentInProgress(false);
-              alert(`🎉 Successfully upgraded to ${plan.name} via PayPal!`);
               setCurrentPlan(plan.role);
-              router.push('/create-ai-content');
+              showSuccessAndRedirect(plan.name);
             } catch {
               setIsPaymentInProgress(false);
               alert('Error capturing payment.');
@@ -1811,6 +1854,26 @@ export default function PricingPageClient() {
       <footer className="v3-footer">
         © 2025 Scenith · All plans billed monthly · Prices shown in {isIndianUser ? 'INR (Indian users)' : 'USD (international)'}
       </footer>
+
+      {/* ══ SUCCESS MODAL ══ */}
+      <AnimatePresence>
+        {successModal?.show && (
+          <motion.div className="v3-success-overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <motion.div className="v3-success-modal" initial={{ scale: 0.85, opacity: 0, y: 24 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.85, opacity: 0 }} transition={{ duration: 0.28, ease: 'easeOut' }}>
+              <div className="v3-success-icon">🎉</div>
+              <h2 className="v3-success-title">You're all set!</h2>
+              <p className="v3-success-sub">
+                <strong>{successModal.planName}</strong> is now active.<br />
+                Credits have been added to your account.
+              </p>
+              <div className="v3-success-bar-wrap">
+                <div className="v3-success-bar" />
+              </div>
+              <p className="v3-success-redirect-note">Redirecting you to the studio...</p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ══ LOGIN MODAL ══ */}
       <AnimatePresence>
