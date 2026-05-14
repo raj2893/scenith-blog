@@ -1,9 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import Head from 'next/head';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import { FaMicrophone, FaClosedCaptioning, FaExchangeAlt, FaEraser, FaTachometerAlt, FaPaintBrush, FaCompressArrowsAlt, FaShapes, FaPlay, FaCheckCircle, FaStar, FaFilePdf } from 'react-icons/fa';
 import '../../../styles/LandingPage.css';
 
@@ -594,7 +592,6 @@ function YoutubeFacade({ videoId, title }: { videoId: string; title: string }) {
 
 export default function LandingPageClient() {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [showPricingPopup, setShowPricingPopup] = useState(false);
   const [isIndianUser, setIsIndianUser] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -607,267 +604,38 @@ export default function LandingPageClient() {
   }, []);
 
   useEffect(() => {
-    let shown = false;
-    const onScroll = () => {
-      if (shown) return;
-      if (window.scrollY > window.innerHeight * 1.5) {
-        shown = true;
-        setShowPricingPopup(true);
-        window.removeEventListener('scroll', onScroll);
-      }
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);  
-
-  useEffect(() => {
-    const detectCountry = async () => {
+    const timer = setTimeout(async () => {
       try {
         const response = await fetch('https://ipapi.co/json/');
         const data = await response.json();
-        const countryCode = data.country_code;
-        setIsIndianUser(countryCode === 'IN');
-      } catch (err) {
-        console.error('Geo detection failed, defaulting to international');
+        setIsIndianUser(data.country_code === 'IN');
+      } catch {
         setIsIndianUser(false);
       }
-    };
-    detectCountry();
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, []); 
+
+  useEffect(() => {
+    const els = document.querySelectorAll('.animate-fade-up-scroll');
+    if (!els.length) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('in-view');
+            observer.unobserve(e.target); // fire once only
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+    );
+    els.forEach(el => observer.observe(el));
+    return () => observer.disconnect();
   }, []);  
 
   return (
     <>
-      <Head>
-        <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-        {/* Primary Meta Tags */}
-        <title>Scenith - Free AI Voice Generator & Content Creation Tools | Premium SVG Icons</title>
-        <meta
-          name="description"
-          content="Create professional content FREE with Scenith's AI-powered tools. #1 AI Voice Generator with 40+ voices, Image Editor, Auto Subtitles, Background Remover, SVG Library & more. No watermark. Join 1500+ creators!"
-        />
-        <meta
-          name="keywords"
-          content="AI voice generator, text to speech, AI voice, voice generator free, TTS online, AI voiceover, image editor online, photo editor free, background remover, auto subtitle generator, video speed changer, media converter, SVG icons free, vector graphics, Scenith, content creation tools, social media tools"
-        />
-        <meta name="author" content="Scenith" />
-        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-
-        {/* Canonical URL */}
-        <link rel="canonical" href="https://scenith.in/" />
-
-        {/* Open Graph / Facebook */}
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://scenith.in/" />
-        <meta property="og:title" content="Scenith - #1 Free AI Voice Generator & Content Creation Platform" />
-        <meta property="og:description" content="Transform text to natural speech with 40+ AI voices. Plus Image Editor, Auto Subtitles, SVG Icons & more. No watermark. Free forever!" />
-        <meta property="og:image" content="https://scenith.in/images/og-image.jpg" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:site_name" content="Scenith" />
-        <meta property="og:locale" content="en_US" />
-
-        {/* Twitter */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:url" content="https://scenith.in/" />
-        <meta name="twitter:title" content="Scenith - Free AI Voice Generator & Content Tools" />
-        <meta name="twitter:description" content="40+ natural AI voices, Image Editor, Auto Subtitles, SVG Icons. Create professional content FREE!" />
-        <meta name="twitter:image" content="https://scenith.in/images/twitter-image.jpg" />
-        <meta name="twitter:creator" content="@scenith" />
-        <meta name="twitter:site" content="@scenith" />
-
-        {/* Additional SEO Tags */}
-        <meta name="language" content="English" />
-        <meta name="revisit-after" content="7 days" />
-        <meta name="distribution" content="global" />
-        <meta name="rating" content="general" />
-        <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-
-        {/* Geo Tags */}
-        <meta name="geo.region" content="IN" />
-        <meta name="geo.placename" content="India" />
-
-        {/* Mobile App Tags */}
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="Scenith" />
-        <meta name="mobile-web-app-capable" content="yes" />
-
-        {/* Schema.org Structured Data - WebSite */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebSite",
-              "name": "Scenith",
-              "alternateName": "Scenith AI Tools",
-              "url": "https://scenith.in",
-              "description": "Free AI-powered content creation platform with voice generation, image editing, subtitle creation, and SVG icons.",
-              "potentialAction": {
-                "@type": "SearchAction",
-                "target": {
-                  "@type": "EntryPoint",
-                  "urlTemplate": "https://scenith.in/tools?search={search_term_string}"
-                },
-                "query-input": "required name=search_term_string"
-              }
-            })
-          }}
-        />
-
-        {/* Schema.org Structured Data - Organization */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              "name": "Scenith",
-              "url": "https://scenith.in",
-              "logo": "https://scenith.in/logo.png",
-              "description": "Leading platform for AI voice generation, image editing, and content creation tools",
-              "foundingDate": "2024",
-              "sameAs": [
-                "https://twitter.com/scenith",
-                "https://www.facebook.com/scenith",
-                "https://www.instagram.com/scenith",
-                "https://www.youtube.com/@Scenith-f4n"
-              ],
-              "contactPoint": {
-                "@type": "ContactPoint",
-                "contactType": "Customer Service",
-                "email": "support@scenith.in",
-                "availableLanguage": ["English"]
-              }
-            })
-          }}
-        />
-
-        {/* Schema.org Structured Data - SoftwareApplication */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "SoftwareApplication",
-              "name": "Scenith AI Voice Generator",
-              "applicationCategory": "MultimediaApplication",
-              "operatingSystem": "Web Browser, Windows, macOS, Linux, iOS, Android",
-              "offers": {
-                "@type": "Offer",
-                "price": "0",
-                "priceCurrency": "USD",
-                "priceValidUntil": "2025-12-31"
-              },
-              "aggregateRating": {
-                "@type": "AggregateRating",
-                "ratingValue": "4.9",
-                "ratingCount": "10000",
-                "bestRating": "5",
-                "worstRating": "1"
-              },
-              "description": "Professional AI voice generator with 40+ natural voices, image editor, subtitle creator, and premium SVG icons. Free forever, no watermark.",
-              "featureList": [
-                "AI Voice Generation (40+ voices)",
-                "Image Editor",
-                "AI Image Generator (text-to-image)",
-                "Background Remover",
-                "Video Speed Modifier",
-                "Media Compression",
-                "Media Format Conversion",
-                "SVG Icon Library"
-              ],
-              "screenshot": "https://scenith.in/images/screenshot.jpg"
-            })
-          }}
-        />
-
-        {/* Schema.org Structured Data - ItemList for Tools */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "ItemList",
-              "name": "Scenith Professional AI Tools",
-              "description": "Free AI-powered tools for content creators",
-              "numberOfItems": 8,
-              "itemListElement": toolsShowcase.map((tool, index) => ({
-                "@type": "ListItem",
-                "position": index + 1,
-                "item": {
-                  "@type": "SoftwareApplication",
-                  "name": tool.title,
-                  "description": tool.description,
-                  "url": `https://scenith.in${tool.link}`,
-                  "applicationCategory": "MultimediaApplication",
-                  "operatingSystem": "Web Browser",
-                  "offers": {
-                    "@type": "Offer",
-                    "price": "0",
-                    "priceCurrency": "USD"
-                  }
-                }
-              }))
-            })
-          }}
-        />
-
-        {/* Schema.org Structured Data - FAQPage */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "FAQPage",
-              "mainEntity": [
-                {
-                  "@type": "Question",
-                  "name": "Is Scenith's AI Voice Generator really free?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Yes! Scenith offers a completely free tier with AI Voice Generation (5,000 characters/month across 40+ voices), Image Editor, Auto Subtitles, Background Remover, and access to our SVG Library. No watermarks, no hidden fees. Upgrade only for higher limits and advanced features."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "How many AI voices does Scenith offer?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Scenith provides 40+ natural-sounding AI voices across 20+ languages. Our text-to-speech technology creates lifelike voiceovers perfect for YouTube, podcasts, audiobooks, explainer videos, and more. Voices include male, female, and various accents with adjustable speed and pitch."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "What is the SVG Library?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Our SVG Library contains premium vector icons and graphics. Download in SVG, PNG, or JPG formats for your projects. Perfect for web design, presentations, social media, and branding. All icons are high-quality and ready to use."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "Can I use Scenith tools for commercial projects?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Yes! Our CREATOR and STUDIO plans include commercial usage rights for AI-generated voices, edited images, and downloaded SVG icons. The BASIC plan is for personal use. Check our pricing page for detailed licensing information."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "Does Scenith add watermarks to my content?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "No watermarks ever! All content created with Scenith—AI voices, edited images, subtitles, converted files—is completely clean and professional. Your brand stays front and center, even on the free BASIC plan."
-                  }
-                }
-              ]
-            })
-          }}
-        />
-      </Head>
 
       <script
         type="application/ld+json"
@@ -876,7 +644,6 @@ export default function LandingPageClient() {
         }}
       />      
 
-      {showPricingPopup && <PricingPopup onClose={() => setShowPricingPopup(false)} />}
       <div className="landing-page">
         {/* Animated Background */}
         <div className="animated-background">
@@ -890,12 +657,7 @@ export default function LandingPageClient() {
 
         {/* Hero Section - Enhanced */}
         <section className="hero-section" id="hero-section">
-          <motion.div
-            className="hero-content"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
+          <div className="hero-content animate-fade-up">
             <div className="hero-badge">
               <FaStar className="star-icon" />
               <span>Free credits every month — no card needed</span>
@@ -942,7 +704,7 @@ export default function LandingPageClient() {
             <p className="hero-no-credit">
               50 free credits every month · Use on any tool
             </p>
-          </motion.div>
+          </div>
         </section>
 
         {/* PROBLEM SECTION */}
@@ -994,12 +756,7 @@ export default function LandingPageClient() {
 
         {/* Final CTA Section - Enhanced */}
         <section className="final-cta-section">
-          <motion.div
-            className="final-cta-content"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
+          <div className="final-cta-content animate-fade-up-scroll">
             <span className="cta-label">Your Last Excuse Just Ran Out</span>
             <h2 className="final-cta-title">
               Your First Viral Post is{' '}
@@ -1029,7 +786,7 @@ export default function LandingPageClient() {
             <p className="final-cta-note">
               Join 2,500+ creators already growing with Scenith
             </p>
-          </motion.div>
+          </div>
         </section>                
 
         {/* ── CREDIT EXPLAINER — insert after hero-section ── */}
@@ -1159,25 +916,15 @@ export default function LandingPageClient() {
             </p>       
           </div>
 
-          <motion.div
-            className="featured-tools-grid"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
+          <div className="featured-tools-grid animate-fade-up-scroll">
             {toolsShowcase.sort((a, b) => a.rank - b.rank).map((tool, index) => {
               const IconComponent = tool.icon;
               const isFeatured = index < 3;
               
               return (
-                <motion.div
+                <div
                   key={tool.id}
-                  className={`tool-card ${isFeatured ? 'tool-card-featured' : ''}`}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: index * 0.05 }}
+                  className={`tool-card ...`}
                   style={{ '--tool-color': tool.color } as React.CSSProperties}
                 >
                   <Link href={tool.link} className="tool-card-link">
@@ -1204,10 +951,10 @@ export default function LandingPageClient() {
                       </svg>
                     </button>
                   </Link>
-                </motion.div>
+                </div>
               );
             })}
-          </motion.div>
+          </div>
         </section>
 
         {/* ── AI MODEL SHOWCASE — insert after featured-tools-section ── */}
@@ -1419,13 +1166,7 @@ export default function LandingPageClient() {
 
         {/* NEW: SVG Library Highlight Section */}
         <section className="svg-library-showcase">
-          <motion.div
-            className="svg-showcase-content"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
+          <div className="svg-showcase-content animate-fade-up-scroll">
             <div className="svg-showcase-left">
               <span className="section-label">New Release</span>
               <h2 className="svg-showcase-title">
@@ -1477,7 +1218,7 @@ export default function LandingPageClient() {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </section>       
 
         {/* ── PRICING PREVIEW — replace detailed-comparison-section ── */}
@@ -1510,7 +1251,7 @@ export default function LandingPageClient() {
               },
               {
                 name: 'Creator Spark',
-                price: isIndianUser ? '₹1749' : '$19',
+                price: isIndianUser === true ? '₹1749' : '$19',
                 credits: '900 credits / mo',
                 cta: 'Get Spark →',
                 ctaLink: '/pricing',
@@ -1651,13 +1392,9 @@ export default function LandingPageClient() {
                 color: '#FDCB6E'
               }
             ].map((item, index) => (
-              <motion.div
+              <div
                 key={index}
-                className="why-choose-card"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
+                className="why-choose-card animate-fade-up-scroll"
                 style={{ '--accent-color': item.color } as React.CSSProperties}
               >
                 <div className="why-icon-wrapper">
@@ -1665,7 +1402,7 @@ export default function LandingPageClient() {
                 </div>
                 <h3>{item.title}</h3>
                 <p>{item.description}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </section>      
@@ -1676,13 +1413,7 @@ export default function LandingPageClient() {
             <h2>Learn How to Use Scenith AI Tools</h2>
             <p className="section-subtitle">Master our tools in minutes with step-by-step video guides</p>
           </div>
-          <motion.div
-            className="tutorials-grid"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
+          <div className="tutorials-grid animate-fade-up-scroll">
             {youtubeTutorials.map((tutorial) => (
               <div className="tutorial-card" key={tutorial.id}>
                 <div className="video-wrapper">
@@ -1691,7 +1422,7 @@ export default function LandingPageClient() {
                 <h3>{tutorial.title}</h3>
               </div>
             ))}
-          </motion.div>
+          </div>
           <a
             href="https://www.youtube.com/@Scenith-f4n"
             target="_blank"
@@ -1708,13 +1439,7 @@ export default function LandingPageClient() {
             <h2>Content Creation Guides & Tips</h2>
             <p className="section-subtitle">Learn from expert creators and grow your audience</p>
           </div>
-          <motion.div
-            className="blog-preview-grid"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
+          <div className="blog-preview-grid animate-fade-up-scroll">
             <div className="blog-preview-card">
               <div className="blog-preview-content">
                 <h3>How to Add Subtitles to Video (Free & Easy)</h3>
@@ -1733,7 +1458,7 @@ export default function LandingPageClient() {
                 </Link>
               </div>
             </div>
-          </motion.div>
+          </div>
           <Link href="/blogs" className="view-all-blogs-cta">
             View All Creator Guides & Tips
           </Link>
@@ -1789,17 +1514,13 @@ export default function LandingPageClient() {
                 a: 'Absolutely! That\'s the power of Scenith\'s unified platform. Generate an AI voiceover, add it to a video, create auto-subtitles, edit a thumbnail in the Image Editor, download SVG icons for graphics—all in one workflow. Everything integrates seamlessly for maximum productivity.'
               }
             ].map((faq, index) => (
-              <motion.div
+              <div
                 key={index}
-                className="faq-item"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.05 }}
+                className="faq-item animate-fade-up-scroll"
               >
                 <h3 className="faq-question">{faq.q}</h3>
                 <p className="faq-answer">{faq.a}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </section>

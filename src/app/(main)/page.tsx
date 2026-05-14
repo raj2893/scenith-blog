@@ -100,5 +100,14 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage() {
-  return <LandingPageClient />;
+  return (
+    <>
+      {/* Preconnect for YouTube thumbnails — eliminates ~200ms cold connection */}
+      <link rel="preconnect" href="https://i.ytimg.com" />
+      <link rel="dns-prefetch" href="https://i.ytimg.com" />
+      {/* Preconnect for geo detection */}
+      <link rel="dns-prefetch" href="https://ipapi.co" />
+      <LandingPageClient />
+    </>
+  );
 }

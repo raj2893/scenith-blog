@@ -45,7 +45,7 @@ a {
 
 /* ========== ANIMATED BACKGROUND ========== */
 .animated-background {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -53,6 +53,7 @@ a {
   z-index: -1;
   overflow: hidden;
   pointer-events: none;
+  contain: strict;
 }
 
 .gradient-orb {
@@ -61,6 +62,7 @@ a {
   filter: blur(80px);
   opacity: 0.15;
   animation: float-orb 20s infinite ease-in-out;
+  will-change: transform;
 }
 
 .orb-1 {
@@ -141,7 +143,7 @@ a {
   text-align: center;
   position: relative;
   background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(20px);
+  backdrop-filter: none;
   border-radius: 32px;
   border: 1px solid var(--border-color);
   box-shadow: var(--shadow-xl);
@@ -365,7 +367,7 @@ a {
 
 .tool-card {
   background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(20px);
+  backdrop-filter: none;
   border-radius: 24px;
   border: 2px solid var(--border-color);
   padding: 35px;
@@ -576,7 +578,7 @@ a {
   margin: 0 auto 100px;
   padding: 80px 20px;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(247, 250, 252, 0.9));
-  backdrop-filter: blur(20px);
+  backdrop-filter: none;
   border-radius: 32px;
   border: 1px solid var(--border-color);
   box-shadow: var(--shadow-lg);
@@ -716,7 +718,7 @@ a {
 
 .stat-card {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(247, 250, 252, 0.9));
-  backdrop-filter: blur(20px);
+  backdrop-filter: none;
   padding: 40px 30px;
   border-radius: 24px;
   border: 1px solid var(--border-color);
@@ -764,7 +766,7 @@ a {
 
 .why-choose-card {
   background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(20px);
+  backdrop-filter: none;
   padding: 40px;
   border-radius: 24px;
   border: 2px solid var(--border-color);
@@ -846,7 +848,7 @@ a {
 
 .tutorial-card {
   background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(20px);
+  backdrop-filter: none;
   border-radius: 20px;
   border: 2px solid var(--border-color);
   overflow: hidden;
@@ -924,7 +926,7 @@ a {
 
 .blog-preview-card {
   background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(20px);
+  backdrop-filter: none;
   padding: 40px;
   border-radius: 24px;
   border: 2px solid var(--border-color);
@@ -1014,7 +1016,7 @@ a {
 
 .faq-item {
   background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(20px);
+  backdrop-filter: none;
   padding: 32px;
   border-radius: 20px;
   border: 2px solid var(--border-color);
@@ -1220,7 +1222,7 @@ a {
   background: rgba(255, 255, 255, 0.08);
   color: var(--text-primary);
   border: 2px solid rgba(102, 126, 234, 0.3);
-  backdrop-filter: blur(10px);
+  backdrop-filter: none;
 }
 
 .cta-tools:hover {
@@ -1228,6 +1230,46 @@ a {
   border-color: #667eea;
   transform: translateY(-3px);
   box-shadow: 0 8px 30px rgba(102, 126, 234, 0.2);
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.7s ease both;
+}
+
+.animate-fade-up-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+
+.animate-fade-up-scroll.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up,
+  .animate-fade-up-scroll,
+  .animate-fade-up-scroll.in-view {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .gradient-orb,
+  .floating-shape,
+  .svg-preview-card,
+  .gradient-text,
+  .featured-glow,
+  .final-cta-section::before {
+    animation: none !important;
+  }
 }
 
 /* ========== RESPONSIVE DESIGN ========== */
@@ -1328,6 +1370,19 @@ a {
   .detailed-comparison-section th,
   .detailed-comparison-section td {
     padding: 12px 8px;
+  }  
+
+  .gradient-orb,
+  .floating-shape {
+    display: none;
+  }
+
+  .svg-preview-card {
+    animation: none;
+  }
+
+  .featured-glow {
+    display: none;
   }  
 }
 
