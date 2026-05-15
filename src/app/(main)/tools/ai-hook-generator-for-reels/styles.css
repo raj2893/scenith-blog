@@ -1,0 +1,743 @@
+/* app/tools/ai-hook-generator-for-reels/styles.css */
+
+/* CSS Variables & Reset */
+.hook-page {
+  --ms-primary: #6355dc;
+  --ms-primary-dark: #4c3db3;
+  --ms-secondary: #8b5cf6;
+  --ms-accent: #f59e0b;
+  --ms-gray-50: #f9fafb;
+  --ms-gray-100: #f3f4f6;
+  --ms-gray-200: #e5e7eb;
+  --ms-gray-300: #d1d5db;
+  --ms-gray-600: #4b5563;
+  --ms-gray-700: #374151;
+  --ms-gray-800: #1f2937;
+  --ms-gray-900: #111827;
+  --ms-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --ms-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --ms-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  --ms-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  color: var(--ms-gray-800);
+  line-height: 1.5;
+}
+
+.ms-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Typography */
+.ms-section-title {
+  font-size: 2rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+  color: var(--ms-gray-900);
+}
+
+.ms-section-sub {
+  text-align: center;
+  font-size: 1.125rem;
+  color: var(--ms-gray-600);
+  margin-bottom: 2rem;
+}
+
+.ms-gradient {
+  background: linear-gradient(135deg, var(--ms-primary), var(--ms-secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Buttons */
+.ms-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+}
+
+.ms-btn-primary {
+  background: linear-gradient(135deg, var(--ms-primary), var(--ms-secondary));
+  color: white;
+  box-shadow: var(--ms-shadow-md);
+}
+
+.ms-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--ms-shadow-lg);
+  filter: brightness(1.05);
+}
+
+.ms-btn-outline {
+  background: transparent;
+  border: 1.5px solid var(--ms-primary);
+  color: var(--ms-primary);
+}
+
+.ms-btn-outline:hover {
+  background: rgba(99, 85, 220, 0.08);
+  transform: translateY(-1px);
+}
+
+.ms-btn-large {
+  padding: 14px 32px;
+  font-size: 1rem;
+}
+
+/* Hero Section */
+.ms-hero {
+  background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+  padding: 80px 0 60px;
+  border-bottom: 1px solid rgba(99, 85, 220, 0.1);
+}
+
+.ms-hero-content {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.ms-badge {
+  display: inline-block;
+  background: rgba(99, 85, 220, 0.12);
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ms-primary);
+  margin-bottom: 1.5rem;
+}
+
+.ms-hero-title {
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  margin-bottom: 1.25rem;
+  color: var(--ms-gray-900);
+}
+
+.ms-hero-sub {
+  font-size: 1.125rem;
+  color: var(--ms-gray-600);
+  margin-bottom: 2rem;
+}
+
+.ms-hero-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.ms-no-card {
+  font-size: 0.8125rem;
+  color: var(--ms-gray-600);
+}
+
+.ms-hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(99, 85, 220, 0.15);
+}
+
+.ms-stat {
+  text-align: center;
+}
+
+.ms-stat strong {
+  display: block;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--ms-primary);
+}
+
+.ms-stat span {
+  font-size: 0.875rem;
+  color: var(--ms-gray-600);
+}
+
+/* Use Cases Grid */
+.ms-use-cases {
+  padding: 80px 0;
+  background: white;
+}
+
+.ms-use-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 32px;
+  margin-top: 48px;
+}
+
+.ms-use-card {
+  background: var(--ms-gray-50);
+  padding: 28px;
+  border-radius: 24px;
+  transition: all 0.3s ease;
+  border: 1px solid var(--ms-gray-200);
+}
+
+.ms-use-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--ms-shadow-lg);
+  border-color: var(--ms-primary);
+}
+
+.ms-use-icon {
+  font-size: 2rem;
+  margin-bottom: 16px;
+}
+
+.ms-use-card h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.ms-use-card p {
+  color: var(--ms-gray-600);
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.ms-inline-link {
+  color: var(--ms-primary);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.ms-inline-link:hover {
+  text-decoration: underline;
+}
+
+/* Examples Section */
+.ms-examples {
+  background: var(--ms-gray-50);
+  padding: 80px 0;
+}
+
+.ms-examples-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 32px;
+  margin-top: 48px;
+}
+
+.ms-example-card {
+  background: white;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: var(--ms-shadow-md);
+  transition: transform 0.2s;
+}
+
+.ms-example-card:hover {
+  transform: translateY(-4px);
+}
+
+.ms-example-platform {
+  display: inline-block;
+  background: var(--ms-gray-100);
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ms-gray-700);
+  margin-bottom: 16px;
+}
+
+.ms-example-script {
+  background: var(--ms-gray-50);
+  padding: 20px;
+  border-radius: 16px;
+  margin: 16px 0;
+  font-size: 0.875rem;
+  border-left: 3px solid var(--ms-primary);
+}
+
+.ms-hook {
+  font-weight: 700;
+  color: var(--ms-primary);
+  margin-bottom: 8px;
+  font-size: 1rem;
+}
+
+/* Steps Section */
+.ms-steps {
+  padding: 80px 0;
+  background: white;
+}
+
+.ms-steps-list {
+  max-width: 800px;
+  margin: 48px auto 0;
+}
+
+.ms-step {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.ms-step-num {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--ms-primary), var(--ms-secondary));
+  color: white;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.25rem;
+}
+
+.ms-step-content h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.ms-step-content p {
+  color: var(--ms-gray-600);
+  margin-bottom: 8px;
+}
+
+.ms-step-tip {
+  background: #fef3c7;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 0.8125rem;
+  color: #b45309;
+}
+
+/* Best Practices */
+.ms-best-practices {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  padding: 80px 0;
+}
+
+.ms-bp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 32px;
+  margin-top: 48px;
+}
+
+.ms-bp-card {
+  background: white;
+  padding: 28px;
+  border-radius: 24px;
+  box-shadow: var(--ms-shadow-sm);
+  border: 1px solid var(--ms-gray-200);
+}
+
+.ms-bp-icon {
+  font-size: 2rem;
+  margin-bottom: 16px;
+}
+
+.ms-bp-card h3 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.ms-bp-card p {
+  color: var(--ms-gray-600);
+  line-height: 1.6;
+}
+
+/* Mistakes Grid */
+.ms-mistakes {
+  padding: 80px 0;
+  background: white;
+}
+
+.ms-mistakes-grid {
+  max-width: 800px;
+  margin: 48px auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ms-mistake-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  background: var(--ms-gray-50);
+  border-radius: 16px;
+  border-left: 3px solid #ef4444;
+}
+
+.ms-mistake-x {
+  color: #ef4444;
+  font-weight: 800;
+  font-size: 1.125rem;
+  flex-shrink: 0;
+}
+
+/* Advanced Tips */
+.ms-advanced {
+  background: var(--ms-gray-900);
+  color: white;
+  padding: 80px 0;
+}
+
+.ms-advanced-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.ms-advanced .ms-section-title {
+  color: white;
+}
+
+.ms-advanced-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 32px;
+  margin-top: 48px;
+}
+
+.ms-advanced-card {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 24px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ms-advanced-card h3 {
+  font-size: 1.125rem;
+  margin-bottom: 12px;
+  color: var(--ms-secondary);
+}
+
+.ms-advanced-card p {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+}
+
+/* Prompt Box */
+.ms-prompt-box {
+  padding: 80px 0;
+  background: white;
+}
+
+.ms-prompt-card {
+  max-width: 800px;
+  margin: 0 auto;
+  background: var(--ms-gray-50);
+  border-radius: 32px;
+  padding: 40px;
+  text-align: center;
+  box-shadow: var(--ms-shadow-lg);
+  border: 1px solid var(--ms-gray-200);
+}
+
+.ms-prompt-card h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.ms-prompt-card p {
+  color: var(--ms-gray-600);
+  margin-bottom: 24px;
+}
+
+.ms-prompt-textarea {
+  width: 100%;
+  padding: 16px;
+  border: 1.5px solid var(--ms-gray-200);
+  border-radius: 20px;
+  font-family: inherit;
+  font-size: 0.875rem;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+
+.ms-prompt-textarea:focus {
+  outline: none;
+  border-color: var(--ms-primary);
+}
+
+.ms-prompt-actions {
+  margin-top: 20px;
+}
+
+.ms-prompt-note {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--ms-gray-500);
+  margin-top: 12px;
+}
+
+.ms-prompt-examples {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--ms-gray-200);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+
+.ms-prompt-examples span {
+  font-size: 0.8125rem;
+  color: var(--ms-gray-600);
+}
+
+.ms-example-link {
+  background: white;
+  border: 1px solid var(--ms-gray-200);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  text-decoration: none;
+  color: var(--ms-gray-700);
+  transition: all 0.2s;
+  display: inline-block;
+}
+
+.ms-example-link:hover {
+  background: var(--ms-primary);
+  color: white;
+  border-color: var(--ms-primary);
+  text-decoration: none;
+}
+
+/* Internal Links Section */
+.ms-internal-links {
+  padding: 80px 0;
+  background: var(--ms-gray-50);
+}
+
+.ms-links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 48px;
+}
+
+.ms-internal-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: white;
+  border-radius: 20px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border: 1px solid var(--ms-gray-200);
+}
+
+.ms-internal-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--ms-shadow-md);
+  border-color: var(--ms-primary);
+}
+
+.ms-internal-card span {
+  font-size: 1.75rem;
+}
+
+.ms-internal-card strong {
+  display: block;
+  color: var(--ms-gray-800);
+  margin-bottom: 4px;
+}
+
+.ms-internal-card p {
+  font-size: 0.75rem;
+  color: var(--ms-gray-600);
+  margin: 0;
+}
+
+.ms-internal-card.highlight {
+  background: linear-gradient(135deg, rgba(99, 85, 220, 0.05), rgba(139, 92, 246, 0.05));
+  border-color: var(--ms-primary);
+}
+
+/* FAQ Section */
+.ms-faq {
+  padding: 80px 0;
+  background: white;
+}
+
+.ms-faq-grid {
+  max-width: 800px;
+  margin: 48px auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ms-faq-item {
+  background: var(--ms-gray-50);
+  border-radius: 20px;
+  padding: 20px 24px;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+
+.ms-faq-item:hover {
+  box-shadow: var(--ms-shadow-md);
+}
+
+.ms-faq-item summary {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--ms-gray-800);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ms-faq-item summary::after {
+  content: '+';
+  font-size: 1.25rem;
+  color: var(--ms-primary);
+}
+
+.ms-faq-item[open] summary::after {
+  content: '−';
+}
+
+.ms-faq-item p {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--ms-gray-200);
+  color: var(--ms-gray-600);
+  line-height: 1.6;
+}
+
+/* Final CTA */
+.ms-final-cta {
+  padding: 80px 0;
+  background: linear-gradient(135deg, var(--ms-primary), var(--ms-secondary));
+  color: white;
+}
+
+.ms-final-card {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.ms-final-card h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.ms-final-card p {
+  font-size: 1.125rem;
+  margin-bottom: 32px;
+  opacity: 0.9;
+}
+
+.ms-final-links {
+  margin-top: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  font-size: 0.875rem;
+}
+
+.ms-final-links a {
+  color: white;
+  text-decoration: none;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.ms-final-links a:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .ms-container {
+    padding: 0 16px;
+  }
+  
+  .ms-hero-title {
+    font-size: 2rem;
+  }
+  
+  .ms-section-title {
+    font-size: 1.5rem;
+  }
+  
+  .ms-hero-stats {
+    gap: 24px;
+  }
+  
+  .ms-step {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .ms-prompt-card {
+    padding: 24px;
+  }
+  
+  .ms-final-links {
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+  }
+  
+  .ms-links-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ms-use-card, .ms-example-card, .ms-step, .ms-bp-card, .ms-internal-card {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+/* Scroll padding for anchor links */
+html {
+  scroll-padding-top: 80px;
+}
