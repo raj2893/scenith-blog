@@ -850,6 +850,9 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
 
   const [demoImages, setDemoImages] = useState<string[]>([]);
   const [demoVideos, setDemoVideos] = useState<string[]>([]);
+  const [videoHistory, setVideoHistory] = useState<VideoJob[]>([]);
+  const [showVideoHistory, setShowVideoHistory] = useState(false);
+  const [videoHistoryLoading, setVideoHistoryLoading] = useState(false);
   // ─────────────────── AUTH ────────────────────────────────────────────────
 
   useEffect(() => {
@@ -1653,6 +1656,21 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
         .finally(() => setImageHistoryLoading(false));
     }
   };  
+  const handleShowVideoHistory = () => {
+    const newVal = !showVideoHistory;
+    setShowVideoHistory(newVal);
+    if (newVal && videoHistory.length === 0) {
+      setVideoHistoryLoading(true);
+      const tok = localStorage.getItem("token");
+      fetch(`${API_BASE_URL}/api/video-gen/history`, {
+        headers: { Authorization: `Bearer ${tok}` },
+      })
+        .then((r) => r.json())
+        .then((data: VideoJob[]) => setVideoHistory(data.filter(j => j.status === "COMPLETED")))
+        .catch(() => {})
+        .finally(() => setVideoHistoryLoading(false));
+    }
+  };
 
   const handleTabChange = useCallback((t: Tab) => {
     setActiveTab(t);
@@ -3011,6 +3029,141 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
           </div>
         )}
 
+        {/* ── Video History ── */}
+        {activeTab === "video" && isLoggedIn && (
+          <div style={{ marginBottom: 24 }}>
+            <button
+              onClick={handleShowVideoHistory}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 8,
+                padding: '10px 16px', borderRadius: 10, border: '1.5px solid var(--cac-border)',
+                background: 'var(--cac-surface)', color: 'var(--cac-accent)',
+                fontSize: 13, fontWeight: 700, cursor: 'pointer', width: '100%',
+                justifyContent: 'space-between',
+              }}
+            >
+              <span>🎬 Your Past Videos {videoHistory.length > 0 ? `(${videoHistory.length})` : ''}</span>
+              <span>{showVideoHistory ? '▲ Hide' : '▼ Show'}</span>
+            </button>
+
+            {showVideoHistory && (
+              <div style={{ marginTop: 12 }}>
+                {videoHistoryLoading ? (
+                  <div style={{ textAlign: 'center', padding: 24, color: 'var(--cac-muted)' }}>
+                    <div className="cac-spinner" style={{ margin: '0 auto 8px' }} />
+                    Loading history…
+                  </div>
+                ) : videoHistory.length === 0 ? (
+                  <div style={{ textAlign: 'center', padding: 24, color: 'var(--cac-muted)', fontSize: 13 }}>
+                    No completed videos yet. Generate your first one above!
+                  </div>
+                ) : (
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+                    gap: 12,
+                  }}>
+                    {videoHistory.map((vid) => (
+                      <div key={vid.id} style={{
+                        borderRadius: 12, overflow: 'hidden',
+                        border: '1px solid var(--cac-border)',
+                        background: 'var(--cac-surface)',
+                      }}>
+                        <div style={{ position: 'relative', background: '#000' }}>
+                          <video
+                            src={vid.videoUrl!}
+                            loop
+                            muted
+                            playsInline
+                            preload="none"
+                            style={{ width: '100%', height: 140, objectFit: 'cover', display: 'block' }}
+                            onMouseEnter={e => (e.currentTarget as HTMLVideoElement).play()}
+                            onMouseLeave={e => {
+                              const v = e.currentTarget as HTMLVideoElement;
+                              v.pause();
+                              v.currentTime = 0;
+                            }}
+                          />
+                          <div style={{
+                            position: 'absolute', bottom: 6, left: 6,
+                            background: 'rgba(0,0,0,0.65)', borderRadius: 6,
+                            padding: '2px 7px', fontSize: 10, color: '#fff',
+                            display: 'flex', alignItems: 'center', gap: 4,
+                          }}>
+                            <ModelLogo modelKey={vid.model} size={11} />
+                            {vid.modelDisplayName}
+                          </div>
+                          <div style={{
+                            position: 'absolute', top: 6, right: 6,
+                            background: 'rgba(0,0,0,0.55)', borderRadius: 6,
+                            padding: '2px 7px', fontSize: 10, color: '#fff',
+                          }}>
+                            {vid.durationSeconds}s · {vid.aspectRatio}
+                          </div>
+                        </div>
+                        <div style={{ padding: '8px 10px' }}>
+                          <p style={{
+                            fontSize: 11, color: 'var(--cac-text-2)', margin: '0 0 8px',
+                            overflow: 'hidden', textOverflow: 'ellipsis',
+                            display: '-webkit-box', WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical' as const,
+                          }}>
+                            {vid.prompt}
+                          </p>
+                          <div style={{ display: 'flex', gap: 6, flexDirection: 'column' }}>
+                            <button
+                              onClick={async () => {
+                                try {
+                                  const res = await fetch(vid.videoUrl!);
+                                  const blob = await res.blob();
+                                  const url = URL.createObjectURL(blob);
+                                  const a = document.createElement('a');
+                                  a.href = url;
+                                  a.download = `scenith-video-${vid.id}.mp4`;
+                                  document.body.appendChild(a);
+                                  a.click();
+                                  document.body.removeChild(a);
+                                  URL.revokeObjectURL(url);
+                                } catch {
+                                  window.open(vid.videoUrl!, '_blank');
+                                }
+                              }}
+                              style={{
+                                display: 'block', textAlign: 'center',
+                                padding: '6px 10px', borderRadius: 8, border: 'none',
+                                background: 'linear-gradient(135deg, #6355dc, #8b5cf6)',
+                                color: '#fff', fontSize: 11, fontWeight: 700,
+                                cursor: 'pointer', width: '100%',
+                              }}
+                            >
+                              📥 Download MP4
+                            </button>
+                            <button
+                              onClick={() => {
+                                setCurrentVideoJob(null);
+                                setPrompt(vid.prompt || '');
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                              }}
+                              style={{
+                                padding: '6px 10px', borderRadius: 8,
+                                border: '1px solid var(--cac-border)',
+                                background: 'transparent', color: 'var(--cac-accent)',
+                                fontSize: 11, fontWeight: 600,
+                                cursor: 'pointer', width: '100%',
+                              }}
+                            >
+                              🔁 Reuse Prompt
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
         {/* ── Demo Videos Strip (shown on video tab) ── */}
         {activeTab === "video" && demoVideos.length > 0 && !currentVideoJob && !isGeneratingVideo && (
           <div style={{ marginBottom: 24 }}>
