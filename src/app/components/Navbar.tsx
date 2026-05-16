@@ -294,6 +294,7 @@ window.addEventListener('storage', handleStorageChange);
   };
 
   const handleNavbarLoginClick = () => {
+    setIsNavMenuOpen(false);
     setNavbarLoginTriggered(true);
     setShowLoginModal(true);
   };
@@ -575,7 +576,7 @@ window.addEventListener('storage', handleStorageChange);
       </nav>
 
       {/* Login Modal - Only render when triggered from navbar */}
-      {showLoginModal && navbarLoginTriggered && (
+      {showLoginModal && (
         <div className="modal-overlay navbar-modal" onClick={() => {
           setShowLoginModal(false);
           setNavbarLoginTriggered(false);
