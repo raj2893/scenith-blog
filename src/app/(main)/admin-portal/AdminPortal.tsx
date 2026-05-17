@@ -337,6 +337,7 @@ const TABS = [
   { id: "subscriptions", label: "🔑 Subscriptions"  },
   { id: "videojobs",     label: "🎬 Video Jobs"      },
   { id: "ttsstats",      label: "🎙️ TTS Analytics"  },
+  { id: "founder",       label: "🚀 Founder Intel"  },
 ];
 
 export default function AdminPortal() {
@@ -360,6 +361,18 @@ export default function AdminPortal() {
   const [topUsers, setTopUsers]     = useState<TopUser[]>([]);
   const [activeSubs, setActiveSubs] = useState<{ subscriptions: any[]; total: number }>({ subscriptions: [], total: 0 });
   const [ttsStats, setTtsStats] = useState<any>(null);
+
+  // ── Founder Analytics State ──────────────────────────────────────────────
+  const [founderScorecard,    setFounderScorecard]    = useState<any>(null);
+  const [founderGrowth,       setFounderGrowth]       = useState<any>(null);
+  const [founderRevenue,      setFounderRevenue]      = useState<any>(null);
+  const [founderToolAdoption, setFounderToolAdoption] = useState<any>(null);
+  const [founderEngagement,   setFounderEngagement]   = useState<any>(null);
+  const [founderContentHealth,setFounderContentHealth]= useState<any>(null);
+  const [founderAiDeepDive,   setFounderAiDeepDive]   = useState<any>(null);
+  const [founderBillingHealth,setFounderBillingHealth]= useState<any>(null);
+  const [founderActiveSection,setFounderActiveSection]= useState<string>("scorecard");
+  const [founderLoading,      setFounderLoading]      = useState(false);
 
   // pagination
   const [payPage, setPayPage]     = useState(0);
@@ -465,6 +478,30 @@ export default function AdminPortal() {
       api("/api/admin/tts-stats", { from, to })
         .then(setTtsStats).catch(console.error);
     }
+  }, [tab, from, to, api]);
+
+  useEffect(() => {
+    if (tab !== "founder") return;
+    setFounderLoading(true);
+    Promise.all([
+      api("/api/admin/founder/scorecard"),
+      api("/api/admin/founder/growth",        { from, to }),
+      api("/api/admin/founder/revenue",        { from, to }),
+      api("/api/admin/founder/tool-adoption",  { from, to }),
+      api("/api/admin/founder/engagement",     { from, to }),
+      api("/api/admin/founder/content-health", { from, to }),
+      api("/api/admin/founder/ai-deep-dive",   { from, to }),
+      api("/api/admin/founder/billing-health"),
+    ]).then(([sc, gr, rv, ta, en, ch, ai, bh]) => {
+      setFounderScorecard(sc);
+      setFounderGrowth(gr);
+      setFounderRevenue(rv);
+      setFounderToolAdoption(ta);
+      setFounderEngagement(en);
+      setFounderContentHealth(ch);
+      setFounderAiDeepDive(ai);
+      setFounderBillingHealth(bh);
+    }).catch(console.error).finally(() => setFounderLoading(false));
   }, [tab, from, to, api]);
   
 
@@ -1188,6 +1225,844 @@ export default function AdminPortal() {
                       emptyMsg="No TTS usage in selected range"
                     />
                   </div>
+                </>
+              )}
+            </motion.div>
+          )}
+
+        {/* ════════════════════ FOUNDER INTEL ════════════════════ */}
+          {tab === "founder" && (
+            <motion.div key="founder" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.25 }}>
+
+              {founderLoading && (
+                <div style={{ textAlign: "center", padding: 64, color: "#9ca3af", fontSize: 14 }}>
+                  ⏳ Loading founder intelligence…
+                </div>
+              )}
+
+              {!founderLoading && (
+                <>
+                  {/* ── Sub-nav ── */}
+                  <div style={{
+                    display: "flex", gap: 4, flexWrap: "wrap" as const,
+                    marginBottom: 24, background: "#fff",
+                    border: "1px solid #e5e7eb", borderRadius: 12, padding: 4,
+                    width: "fit-content", boxShadow: "0 1px 4px rgba(0,0,0,0.04)"
+                  }}>
+                    {[
+                      { id: "scorecard",     label: "🎯 Scorecard"       },
+                      { id: "growth",        label: "📈 Growth"          },
+                      { id: "revenue",       label: "💰 Revenue"         },
+                      { id: "toolAdoption",  label: "🛠️ Tools"          },
+                      { id: "engagement",    label: "💡 Engagement"      },
+                      { id: "contentHealth", label: "📁 Content"         },
+                      { id: "aiDeepDive",    label: "🤖 AI Deep Dive"    },
+                      { id: "billingHealth", label: "🏦 Billing"         },
+                    ].map(s => (
+                      <button key={s.id}
+                        onClick={() => setFounderActiveSection(s.id)}
+                        style={{
+                          padding: "7px 14px", borderRadius: 8, border: "none",
+                          fontSize: 12, fontWeight: 700, cursor: "pointer",
+                          fontFamily: "inherit", whiteSpace: "nowrap" as const,
+                          transition: "all 0.18s",
+                          background: founderActiveSection === s.id
+                            ? "linear-gradient(135deg,#1e1b4b,#4c1d95)"
+                            : "transparent",
+                          color: founderActiveSection === s.id ? "#fff" : "#6b7280",
+                          boxShadow: founderActiveSection === s.id ? "0 2px 10px rgba(30,27,75,0.3)" : "none",
+                        }}>{s.label}</button>
+                    ))}
+                  </div>
+
+                  {/* ════ SCORECARD ════ */}
+                  {founderActiveSection === "scorecard" && founderScorecard && (
+                    <div>
+                      <div style={{ marginBottom: 8 }}>
+                        <span style={{ fontSize: 11, color: "#9ca3af", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                          Last 30 days vs prior 30 days · All-time totals
+                        </span>
+                      </div>
+
+                      {/* Top KPI row */}
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(160px,1fr))", gap: 14, marginBottom: 20 }}>
+                        {[
+                          { icon:"👥", label:"Total Users",       val: fmt(founderScorecard.totalUsers),          sub: `+${fmt(founderScorecard.newUsersLast30d)} last 30d`,                     color:"#6355dc" },
+                          { icon:"📈", label:"User Growth",       val: `${founderScorecard.userGrowthPct > 0 ? "+" : ""}${founderScorecard.userGrowthPct}%`,   sub:"vs prior 30 days",         color: founderScorecard.userGrowthPct >= 0 ? "#10b981" : "#ef4444" },
+                          { icon:"💳", label:"Paid Users",        val: fmt(founderScorecard.totalPaidUsers),      sub: `${founderScorecard.freeToPaidPct}% of all`,                            color:"#8b5cf6" },
+                          { icon:"🔑", label:"Active Subs",       val: fmt(founderScorecard.activeSubscriptions), sub:"non-expired plans",                                                      color:"#f59e0b" },
+                          { icon:"💰", label:"Revenue (30d)",     val: fmtCur(founderScorecard.revenueInrLast30d), sub: `${founderScorecard.revenueGrowthPct > 0 ? "+" : ""}${founderScorecard.revenueGrowthPct}% vs prior`, color:"#10b981" },
+                          { icon:"📊", label:"Est. MRR",          val: fmtCur(founderScorecard.estimatedMRR),    sub:"from active plans",                                                      color:"#3b82f6" },
+                          { icon:"⚡", label:"Total Jobs (30d)",  val: fmt(founderScorecard.totalJobsLast30d),   sub:"across all tools",                                                       color:"#f97316" },
+                          { icon:"⚠️", label:"Expiring 7d",       val: fmt(founderScorecard.expiringSoon7d),     sub:"need attention",                                                         color: founderScorecard.expiringSoon7d > 0 ? "#ef4444" : "#10b981" },
+                        ].map(k => (
+                          <KpiCard key={k.label} icon={k.icon} label={k.label} value={k.val} sub={k.sub} color={k.color} />
+                        ))}
+                      </div>
+
+                      {/* Tool breakdown last 30d */}
+                      <div className="ap-card">
+                        <p className="ap-section-title">🛠️ Tool Usage Breakdown — Last 30 Days</p>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                          {Object.entries(founderScorecard.breakdown30d as Record<string,number>)
+                            .sort((a,b) => Number(b[1]) - Number(a[1]))
+                            .map(([k,v]) => {
+                              const max = Math.max(...Object.values(founderScorecard.breakdown30d as Record<string,number>).map(Number), 1);
+                              const pct = Math.round((Number(v) / max) * 100);
+                              const colors: Record<string,string> = {
+                                tts:"#f59e0b", imageGen:"#8b5cf6", videoGen:"#ef4444",
+                                bgRemoval:"#ec4899", subtitles:"#06b6d4", pdf:"#6b7280",
+                                svgDownloads:"#14b8a6"
+                              };
+                              const labels: Record<string,string> = {
+                                tts:"🎙️ AI Voice", imageGen:"🎨 Image Gen", videoGen:"🎬 Video Gen",
+                                bgRemoval:"✂️ BG Removal", subtitles:"📝 Subtitles",
+                                pdf:"📄 PDF Tools", svgDownloads:"🔷 SVG Downloads"
+                              };
+                              const c = colors[k] ?? "#6355dc";
+                              return (
+                                <div key={k} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                  <span style={{ fontSize: 12, color: "#374151", width: 140, flexShrink: 0 }}>{labels[k] ?? k}</span>
+                                  <div style={{ flex: 1, height: 8, background: "#f3f4f6", borderRadius: 99, overflow: "hidden" }}>
+                                    <div style={{ width: `${pct}%`, height: "100%", background: c, borderRadius: 99, transition: "width 0.8s ease" }} />
+                                  </div>
+                                  <span style={{ fontSize: 13, fontWeight: 800, color: c, width: 44, textAlign: "right" as const }}>{fmt(Number(v))}</span>
+                                </div>
+                              );
+                            })}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ════ GROWTH ════ */}
+                  {founderActiveSection === "growth" && founderGrowth && (
+                    <div>
+                      {/* Summary KPIs */}
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(160px,1fr))", gap: 14, marginBottom: 20 }}>
+                        {[
+                          { icon:"👥", label:"Total Users",       val: fmt(founderGrowth.summary.totalUsers),      color:"#6355dc" },
+                          { icon:"✅", label:"Verified",          val: fmt(founderGrowth.summary.totalVerified),   sub: `${Math.round(founderGrowth.summary.totalVerified/Math.max(founderGrowth.summary.totalUsers,1)*100)}% activation rate`, color:"#10b981" },
+                          { icon:"🔗", label:"Google SSO",        val: fmt(founderGrowth.summary.totalGoogleAuth), sub:`${Math.round(founderGrowth.summary.totalGoogleAuth/Math.max(founderGrowth.summary.totalUsers,1)*100)}% of signups`, color:"#f59e0b" },
+                          { icon:"💳", label:"Total Paid",        val: fmt(founderGrowth.summary.totalPaidUsers),  sub:`${founderGrowth.summary.overallPaidPct}% conversion`, color:"#8b5cf6" },
+                          { icon:"🆓", label:"Free Tier",         val: fmt(founderGrowth.summary.totalFreeUsers),  color:"#9ca3af" },
+                          { icon:"📅", label:"New (window)",      val: fmt(founderGrowth.window.signups),          sub:`vs ${fmt(founderGrowth.comparison.prevSignups)} prev`, color:"#3b82f6" },
+                          { icon:"📈", label:"Growth %",          val: `${founderGrowth.comparison.growthPct > 0 ? "+" : ""}${founderGrowth.comparison.growthPct}%`, color: founderGrowth.comparison.growthPct >= 0 ? "#10b981" : "#ef4444" },
+                          { icon:"🎯", label:"Activation Rate",   val: `${founderGrowth.window.activationRate}%`,  sub:"verified / signed up", color:"#f97316" },
+                          { icon:"🏷️", label:"Conversion Rate",   val: `${founderGrowth.window.conversionRate}%`,  sub:"free → paid in window", color:"#ec4899" },
+                        ].map(k => (
+                          <KpiCard key={k.label} icon={k.icon} label={k.label} value={k.val} sub={k.sub} color={k.color} />
+                        ))}
+                      </div>
+
+                      <div className="ap-grid2" style={{ marginBottom: 20 }}>
+                        {/* Daily Signup Trend */}
+                        <div className="ap-card">
+                          <p className="ap-section-title">📅 Daily Signup Trend</p>
+                          <MiniBarChart data={founderGrowth.signupTrend} valueKey="signups" color="#818cf8" label="Daily Signups" />
+                        </div>
+                        {/* Signup Source Split */}
+                        <div className="ap-card">
+                          <p className="ap-section-title">🔀 Signup Source Split (window)</p>
+                          <div style={{ display: "flex", flexDirection: "column", gap: 14, marginTop: 8 }}>
+                            {[
+                              { label: "🔗 Google SSO", val: founderGrowth.window.googleAuth, pct: founderGrowth.window.googlePct, color: "#f59e0b" },
+                              { label: "📧 Native Email", val: founderGrowth.window.nativeAuth, pct: founderGrowth.window.nativePct, color: "#6355dc" },
+                            ].map(row => (
+                              <div key={row.label}>
+                                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
+                                  <span style={{ fontSize: 13, color: "#374151" }}>{row.label}</span>
+                                  <span style={{ fontSize: 13, fontWeight: 800, color: row.color }}>{fmt(row.val)} ({row.pct}%)</span>
+                                </div>
+                                <div style={{ height: 8, background: "#f3f4f6", borderRadius: 99, overflow: "hidden" }}>
+                                  <div style={{ width: `${row.pct}%`, height: "100%", background: row.color, borderRadius: 99, transition: "width 0.8s ease" }} />
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Plan Distribution */}
+                      <div className="ap-card" style={{ marginBottom: 20 }}>
+                        <p className="ap-section-title">🏷️ Plan Distribution (All-time)</p>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                          {Object.entries(founderGrowth.planDistribution as Record<string,number>)
+                            .sort((a,b) => Number(b[1]) - Number(a[1]))
+                            .map(([plan, count]) => {
+                              const total = Object.values(founderGrowth.planDistribution as Record<string,number>).reduce((a,b) => a+b, 0);
+                              const pct = total > 0 ? Math.round(Number(count) / total * 1000) / 10 : 0;
+                              const planColors: Record<string,string> = {
+                                FREE: "#9ca3af", SPARK: "#a78bfa", MICRO: "#818cf8",
+                                CREATOR_LITE: "#6355dc", CREATOR: "#7c3aed", STUDIO: "#f59e0b"
+                              };
+                              const c = planColors[plan] ?? "#6355dc";
+                              return (
+                                <div key={plan} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                  <span style={{ fontSize: 12, color: "#374151", width: 110, flexShrink: 0 }}>{plan}</span>
+                                  <div style={{ flex: 1, height: 8, background: "#f3f4f6", borderRadius: 99, overflow: "hidden" }}>
+                                    <div style={{ width: `${pct}%`, height: "100%", background: c, borderRadius: 99 }} />
+                                  </div>
+                                  <span style={{ fontSize: 12, fontWeight: 800, color: c, width: 60, textAlign: "right" as const }}>{fmt(Number(count))} <span style={{ fontWeight: 400, color: "#9ca3af" }}>({pct}%)</span></span>
+                                </div>
+                              );
+                            })}
+                        </div>
+                      </div>
+
+                      {/* Churn signal */}
+                      {founderGrowth.churnSignals.expiredActiveFlags > 0 && (
+                        <div className="ap-card" style={{ border: "1px solid #fee2e2", background: "#fff5f5" }}>
+                          <p className="ap-section-title" style={{ color: "#ef4444" }}>🚨 Churn Signal</p>
+                          <p style={{ fontSize: 13, color: "#374151" }}>
+                            <strong>{founderGrowth.churnSignals.expiredActiveFlags}</strong> users have <code>active=true</code> plans with expired dates. {founderGrowth.churnSignals.note}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* ════ REVENUE ════ */}
+                  {founderActiveSection === "revenue" && founderRevenue && (
+                    <div>
+                      {/* KPIs */}
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(160px,1fr))", gap: 14, marginBottom: 20 }}>
+                        {[
+                          { icon:"💰", label:"Total Revenue",      val: fmtCur(founderRevenue.totals.totalRevenue),   sub:`${founderRevenue.totals.successOrders} orders`,   color:"#10b981" },
+                          { icon:"🇮🇳", label:"INR Revenue",        val: fmtCur(founderRevenue.totals.inrRevenue, "INR"), sub:"Razorpay",                                    color:"#f97316" },
+                          { icon:"💵", label:"USD Revenue",        val: `$${founderRevenue.totals.usdRevenue.toFixed(0)}`, sub:"PayPal",                                    color:"#3b82f6" },
+                          { icon:"📊", label:"Est. MRR",           val: fmtCur(founderRevenue.mrr.estimatedMRR),     sub:`${founderRevenue.mrr.activePlanCount} active plans`, color:"#8b5cf6" },
+                          { icon:"👤", label:"ARPU",               val: fmtCur(founderRevenue.totals.arpu),          sub:"avg revenue/paying user",                         color:"#6355dc" },
+                          { icon:"❌", label:"Payment Fail Rate",  val: `${founderRevenue.totals.paymentFailRate}%`, sub:`${fmtCur(founderRevenue.totals.failedValue)} at risk`, color: founderRevenue.totals.paymentFailRate > 10 ? "#ef4444" : "#f59e0b" },
+                          { icon:"🔁", label:"Renewals (30d)",     val: fmt(founderRevenue.upcomingRenewals.count),  sub:`${fmtCur(founderRevenue.upcomingRenewals.revenuePotential)} potential`, color:"#14b8a6" },
+                          { icon:"💳", label:"Paying Users",       val: fmt(founderRevenue.totals.uniquePayingUsers), sub:"in selected range",                              color:"#ec4899" },
+                        ].map(k => <KpiCard key={k.label} icon={k.icon} label={k.label} value={k.val} sub={k.sub} color={k.color} />)}
+                      </div>
+
+                      <div className="ap-grid2" style={{ marginBottom: 20 }}>
+                        {/* Daily Revenue Chart */}
+                        <div className="ap-card">
+                          <p className="ap-section-title">📈 Daily Revenue Trend</p>
+                          <MiniBarChart data={founderRevenue.dailyTrend} valueKey="revenue" color="#10b981" label="Daily Revenue" />
+                        </div>
+                        {/* Plan Revenue Mix */}
+                        <div className="ap-card">
+                          <p className="ap-section-title">🏷️ Revenue by Plan</p>
+                          <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 4 }}>
+                            {founderRevenue.planRevenue.map((p: any) => {
+                              const planColors: Record<string,string> = { MICRO:"#818cf8", CREATOR_LITE:"#6355dc", CREATOR:"#7c3aed", STUDIO:"#f59e0b", SPARK:"#a78bfa" };
+                              const c = planColors[p.planType] ?? "#6355dc";
+                              return (
+                                <div key={p.planType} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                  <span style={{ fontSize: 12, color: "#374151", width: 100, flexShrink: 0 }}>{p.planType}</span>
+                                  <div style={{ flex: 1, height: 8, background: "#f3f4f6", borderRadius: 99, overflow: "hidden" }}>
+                                    <div style={{ width: `${p.pct}%`, height: "100%", background: c, borderRadius: 99 }} />
+                                  </div>
+                                  <span style={{ fontSize: 12, fontWeight: 800, color: c, width: 70, textAlign: "right" as const }}>{fmtCur(p.revenue)} <span style={{ fontWeight: 400, color: "#9ca3af", fontSize: 10 }}>({p.pct}%)</span></span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                          {/* Active plan distribution */}
+                          <div style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid #f3f4f6" }}>
+                            <p style={{ fontSize: 11, color: "#9ca3af", fontWeight: 700, marginBottom: 8, textTransform: "uppercase" as const, letterSpacing: "0.07em" }}>Active Plans</p>
+                            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" as const }}>
+                              {Object.entries(founderRevenue.mrr.activePlanDist as Record<string,number>).map(([plan, count]) => {
+                                const planColors: Record<string,string> = { MICRO:"#818cf8", CREATOR_LITE:"#6355dc", CREATOR:"#7c3aed", STUDIO:"#f59e0b", SPARK:"#a78bfa" };
+                                const c = planColors[plan] ?? "#6355dc";
+                                return (
+                                  <div key={plan} style={{ padding: "5px 12px", borderRadius: 99, background: `${c}18`, border: `1px solid ${c}33` }}>
+                                    <span style={{ fontSize: 11, fontWeight: 800, color: c }}>{plan}: {count}</span>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Top Revenue Users */}
+                      <div className="ap-card">
+                        <p className="ap-section-title">🏆 Top Revenue Users</p>
+                        <Table
+                          cols={[
+                            { key: "email",    label: "Email" },
+                            { key: "name",     label: "Name" },
+                            { key: "planType", label: "Plan",    render: v => <StatusBadge status={String(v)} /> },
+                            { key: "revenue",  label: "Revenue", render: v => <span style={{ fontWeight: 800, color: "#10b981" }}>{fmtCur(Number(v))}</span> },
+                          ]}
+                          rows={founderRevenue.topRevUsers}
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ════ TOOL ADOPTION ════ */}
+                  {founderActiveSection === "toolAdoption" && founderToolAdoption && (
+                    <div>
+                      {/* Automated Observations */}
+                      {founderToolAdoption.observations.length > 0 && (
+                        <div className="ap-card" style={{ marginBottom: 20, border: "1px solid #e0e7ff", background: "#f5f3ff" }}>
+                          <p className="ap-section-title" style={{ color: "#4c1d95" }}>💡 Automated Observations</p>
+                          {founderToolAdoption.observations.map((obs: string, i: number) => (
+                            <p key={i} style={{ fontSize: 13, color: "#374151", marginBottom: 6 }}>{obs}</p>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Grand Total */}
+                      <div style={{ marginBottom: 16 }}>
+                        <KpiCard icon="⚡" label="Total Jobs in Range" value={fmt(founderToolAdoption.grandTotal)} color="#6355dc" />
+                      </div>
+
+                      {/* Tool Table */}
+                      <div className="ap-card" style={{ marginBottom: 20 }}>
+                        <p className="ap-section-title">🛠️ Tool Performance Breakdown (ranked by usage)</p>
+                        <div style={{ overflowX: "auto" as const }}>
+                          <table style={{ width: "100%", borderCollapse: "collapse" as const, fontSize: 12.5 }}>
+                            <thead>
+                              <tr style={{ borderBottom: "2px solid #f3f4f6" }}>
+                                {["Tool","Total Jobs","Success Rate","Credits Burned","Unique Users","Share %"].map(h => (
+                                  <th key={h} style={{ padding: "10px 14px", textAlign: "left" as const, fontWeight: 800, color: "#9ca3af", textTransform: "uppercase" as const, letterSpacing: "0.07em", fontSize: 10.5, whiteSpace: "nowrap" as const }}>{h}</th>
+                                ))}
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {founderToolAdoption.tools.map((tool: any, i: number) => {
+                                const toolColors: Record<string,string> = {
+                                  tts:"#f59e0b", imageGen:"#8b5cf6", videoGen:"#ef4444",
+                                  bgRemoval:"#ec4899", subtitles:"#06b6d4", videoSpeed:"#f97316",
+                                  compression:"#10b981", conversion:"#3b82f6", pdf:"#6b7280",
+                                  svgDownloads:"#14b8a6", imageEditor:"#a78bfa"
+                                };
+                                const c = toolColors[tool.key] ?? "#6355dc";
+                                return (
+                                  <tr key={i} style={{ borderBottom: "1px solid #f9fafb" }}
+                                    onMouseEnter={e => (e.currentTarget.style.background = "#fafafa")}
+                                    onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
+                                    <td style={{ padding: "11px 14px", fontWeight: 700, color: c }}>{tool.label}</td>
+                                    <td style={{ padding: "11px 14px", fontWeight: 800, color: "#374151" }}>{fmt(tool.total)}</td>
+                                    <td style={{ padding: "11px 14px" }}>
+                                      <span style={{ color: tool.successRate >= 80 ? "#10b981" : tool.successRate >= 50 ? "#f59e0b" : "#ef4444", fontWeight: 700 }}>
+                                        {tool.successRate}%
+                                      </span>
+                                    </td>
+                                    <td style={{ padding: "11px 14px", color: tool.creditsBurned > 0 ? "#ef4444" : "#9ca3af", fontWeight: tool.creditsBurned > 0 ? 700 : 400 }}>
+                                      {tool.creditsBurned > 0 ? fmt(tool.creditsBurned) : "—"}
+                                    </td>
+                                    <td style={{ padding: "11px 14px", color: tool.uniqueUsers > 0 ? "#6355dc" : "#9ca3af" }}>
+                                      {tool.uniqueUsers > 0 ? fmt(tool.uniqueUsers) : "—"}
+                                    </td>
+                                    <td style={{ padding: "11px 14px" }}>
+                                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                                        <div style={{ width: 60, height: 6, background: "#f3f4f6", borderRadius: 99, overflow: "hidden" }}>
+                                          <div style={{ width: `${tool.sharePct}%`, height: "100%", background: c, borderRadius: 99 }} />
+                                        </div>
+                                        <span style={{ fontSize: 11, color: "#6b7280", fontWeight: 600 }}>{tool.sharePct}%</span>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ════ ENGAGEMENT ════ */}
+                  {founderActiveSection === "engagement" && founderEngagement && (
+                    <div>
+                      {/* Activity Summary */}
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(160px,1fr))", gap: 14, marginBottom: 20 }}>
+                        {[
+                          { icon:"⚡", label:"Active Users (window)",  val: fmt(founderEngagement.activitySummary.activeUsersInWindow), color:"#6355dc" },
+                          { icon:"🔥", label:"Credits Burned",         val: fmt(founderEngagement.activitySummary.totalCreditsBurned),   color:"#ef4444" },
+                          { icon:"🎁", label:"Credits Granted",        val: fmt(founderEngagement.activitySummary.totalCreditsGranted),   color:"#10b981" },
+                          { icon:"📊", label:"Net Credit Flow",        val: fmt(founderEngagement.activitySummary.netCreditFlow),         color: founderEngagement.activitySummary.netCreditFlow >= 0 ? "#10b981" : "#ef4444" },
+                        ].map(k => <KpiCard key={k.label} icon={k.icon} label={k.label} value={k.val} color={k.color} />)}
+                      </div>
+
+                      {/* Upsell Opportunity */}
+                      <div className="ap-card" style={{ marginBottom: 20, border: "1px solid #fde68a", background: "#fffbeb" }}>
+                        <p className="ap-section-title" style={{ color: "#d97706" }}>💰 Upsell Opportunities</p>
+                        <div style={{ display: "flex", gap: 20, flexWrap: "wrap" as const }}>
+                          <div style={{ background: "#fff", border: "1px solid #fde68a", borderRadius: 12, padding: "14px 18px", flex: 1, minWidth: 160 }}>
+                            <div style={{ fontSize: 26, fontWeight: 900, color: "#f59e0b" }}>{fmt(founderEngagement.upsellOpportunity.freeUsersHittingVoiceLimit)}</div>
+                            <div style={{ fontSize: 12, color: "#92400e", fontWeight: 700 }}>Free users at voice limit</div>
+                            <div style={{ fontSize: 11, color: "#9ca3af" }}>{founderEngagement.upsellOpportunity.voiceCharLimit} char/month cap hit</div>
+                          </div>
+                          <div style={{ background: "#fff", border: "1px solid #fde68a", borderRadius: 12, padding: "14px 18px", flex: 1, minWidth: 160 }}>
+                            <div style={{ fontSize: 26, fontWeight: 900, color: "#f97316" }}>{fmt(founderEngagement.upsellOpportunity.freeUsersNearVoiceLimit)}</div>
+                            <div style={{ fontSize: 12, color: "#92400e", fontWeight: 700 }}>Near voice limit (80%+)</div>
+                            <div style={{ fontSize: 11, color: "#9ca3af" }}>Warm upsell targets</div>
+                          </div>
+                          <div style={{ flex: 3, minWidth: 200, display: "flex", alignItems: "center" }}>
+                            <p style={{ fontSize: 13, color: "#374151" }}>💡 {founderEngagement.upsellOpportunity.insight}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Expiring Soon */}
+                      {founderEngagement.expiringSoon.length > 0 && (
+                        <div className="ap-card" style={{ marginBottom: 20, border: "1px solid #fecaca" }}>
+                          <p className="ap-section-title" style={{ color: "#dc2626" }}>⚠️ Plans Expiring in 14 Days ({founderEngagement.expiringSoon.length})</p>
+                          <Table
+                            cols={[
+                              { key: "email",     label: "Email" },
+                              { key: "name",      label: "Name" },
+                              { key: "planType",  label: "Plan",    render: v => <StatusBadge status={String(v)} /> },
+                              { key: "expiresAt", label: "Expires", render: v => <span style={{ fontWeight: 700, color: "#ef4444" }}>{fmtDateShort(v)} ({daysLeft(v)}d)</span> },
+                            ]}
+                            rows={founderEngagement.expiringSoon}
+                          />
+                        </div>
+                      )}
+
+                      <div className="ap-grid2" style={{ marginBottom: 20 }}>
+                        {/* Power Users */}
+                        <div className="ap-card">
+                          <p className="ap-section-title">🏆 Power Users (All-Time Credit Spend)</p>
+                          <Table
+                            cols={[
+                              { key: "email",      label: "Email" },
+                              { key: "planType",   label: "Plan",  render: v => <StatusBadge status={String(v)} /> },
+                              { key: "totalSpent", label: "Spent", render: v => <span style={{ fontWeight: 800, color: "#ef4444" }}>{fmt(Number(v))}</span> },
+                              { key: "balance",    label: "Bal",   render: v => <span style={{ fontWeight: 700, color: "#10b981" }}>{fmt(Number(v))}</span> },
+                            ]}
+                            rows={founderEngagement.powerUsers}
+                          />
+                        </div>
+                        {/* At-Risk Users */}
+                        <div className="ap-card">
+                          <p className="ap-section-title">🔴 At-Risk Users (Paid, &lt;50 Credits)</p>
+                          <Table
+                            cols={[
+                              { key: "email",     label: "Email" },
+                              { key: "planType",  label: "Plan",  render: v => <StatusBadge status={String(v)} /> },
+                              { key: "balance",   label: "Credits", render: v => <span style={{ fontWeight: 800, color: "#ef4444" }}>{Number(v)}</span> },
+                            ]}
+                            rows={founderEngagement.atRiskUsers}
+                            emptyMsg="No at-risk paid users 🎉"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Plan Engagement */}
+                      <div className="ap-card">
+                        <p className="ap-section-title">📊 Engagement by Plan Tier</p>
+                        <div style={{ overflowX: "auto" as const }}>
+                          <table style={{ width: "100%", borderCollapse: "collapse" as const, fontSize: 12.5 }}>
+                            <thead>
+                              <tr style={{ borderBottom: "2px solid #f3f4f6" }}>
+                                {["Plan","Users","Avg Balance","Avg Credits Spent","Never Used","Dormant %"].map(h => (
+                                  <th key={h} style={{ padding: "10px 14px", textAlign: "left" as const, fontWeight: 800, color: "#9ca3af", textTransform: "uppercase" as const, letterSpacing: "0.07em", fontSize: 10.5 }}>{h}</th>
+                                ))}
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {Object.entries(founderEngagement.planEngagement as Record<string,any>).map(([plan, data]: [string, any]) => {
+                                const planColors: Record<string,string> = { FREE:"#9ca3af", SPARK:"#a78bfa", MICRO:"#818cf8", CREATOR_LITE:"#6355dc", CREATOR:"#7c3aed", STUDIO:"#f59e0b" };
+                                const c = planColors[plan] ?? "#6355dc";
+                                return (
+                                  <tr key={plan} style={{ borderBottom: "1px solid #f9fafb" }}
+                                    onMouseEnter={e => (e.currentTarget.style.background = "#fafafa")}
+                                    onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
+                                    <td style={{ padding: "11px 14px" }}><StatusBadge status={plan} /></td>
+                                    <td style={{ padding: "11px 14px", fontWeight: 700 }}>{fmt(data.userCount)}</td>
+                                    <td style={{ padding: "11px 14px", color: "#10b981", fontWeight: 600 }}>{data.avgBalance}</td>
+                                    <td style={{ padding: "11px 14px", color: "#6355dc", fontWeight: 600 }}>{data.avgTotalSpent}</td>
+                                    <td style={{ padding: "11px 14px", color: "#9ca3af" }}>{data.neverUsedCredits}</td>
+                                    <td style={{ padding: "11px 14px" }}>
+                                      <span style={{ color: Number(data.dormantPct) > 50 ? "#ef4444" : Number(data.dormantPct) > 20 ? "#f59e0b" : "#10b981", fontWeight: 700 }}>
+                                        {data.dormantPct}%
+                                      </span>
+                                    </td>
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ════ CONTENT HEALTH ════ */}
+                  {founderActiveSection === "contentHealth" && founderContentHealth && (
+                    <div>
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(170px,1fr))", gap: 14, marginBottom: 20 }}>
+                        {[
+                          { icon:"🎬", label:"Video Projects",     val: fmt(founderContentHealth.videoEditor.totalProjects),     sub:`${fmt(founderContentHealth.videoEditor.exported)} exported (${founderContentHealth.videoEditor.exportRate}%)`,  color:"#ef4444" },
+                          { icon:"🖼️", label:"Image Editor Projs", val: fmt(founderContentHealth.imageEditor.totalAllTime),      sub:`${fmt(founderContentHealth.imageEditor.exported)} exported (${founderContentHealth.imageEditor.exportRate}%)`,  color:"#a78bfa" },
+                          { icon:"📄", label:"PDF Operations",     val: fmt(founderContentHealth.pdfTools.totalOps),             sub:"total PDF jobs",                                                                                               color:"#6b7280" },
+                          { icon:"📦", label:"Compressions",       val: fmt(founderContentHealth.compression.totalJobs),         sub:"media compressed",                                                                                             color:"#10b981" },
+                          { icon:"🔄", label:"Media Conversions",  val: fmt(founderContentHealth.mediaConversion.totalJobs),     sub:"format conversions",                                                                                           color:"#3b82f6" },
+                          { icon:"✂️", label:"BG Removals",        val: fmt(founderContentHealth.bgRemoval.total),               sub:`${founderContentHealth.bgRemoval.successRate}% success rate`,                                                  color:"#ec4899" },
+                          { icon:"⚡", label:"Video Speed Jobs",   val: fmt(founderContentHealth.videoSpeed.totalJobs),          sub:"speed adjustments",                                                                                            color:"#f97316" },
+                        ].map(k => <KpiCard key={k.label} icon={k.icon} label={k.label} value={k.val} sub={k.sub} color={k.color} />)}
+                      </div>
+
+                      <div className="ap-grid2" style={{ marginBottom: 20 }}>
+                        {/* PDF Operation Breakdown */}
+                        <div className="ap-card">
+                          <p className="ap-section-title">📄 PDF Operations Breakdown</p>
+                          {Object.keys(founderContentHealth.pdfTools.byOperation).length === 0 ? (
+                            <p style={{ color: "#9ca3af", fontSize: 13 }}>No PDF operations in range</p>
+                          ) : (
+                            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                              {Object.entries(founderContentHealth.pdfTools.byOperation as Record<string,number>)
+                                .sort((a,b) => Number(b[1]) - Number(a[1]))
+                                .map(([op, count]) => {
+                                  const total = Object.values(founderContentHealth.pdfTools.byOperation as Record<string,number>).reduce((a,b) => a+b, 0);
+                                  const pct = total > 0 ? Math.round(Number(count)/total*100) : 0;
+                                  return (
+                                    <div key={op} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                      <span style={{ fontSize: 11, color: "#374151", width: 130, flexShrink: 0 }}>{op.replace("_"," ")}</span>
+                                      <div style={{ flex: 1, height: 7, background: "#f3f4f6", borderRadius: 99, overflow: "hidden" }}>
+                                        <div style={{ width: `${pct}%`, height: "100%", background: "#6b7280", borderRadius: 99 }} />
+                                      </div>
+                                      <span style={{ fontSize: 12, fontWeight: 700, color: "#374151", width: 30, textAlign: "right" as const }}>{count}</span>
+                                    </div>
+                                  );
+                                })}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Compression by file type */}
+                        <div className="ap-card">
+                          <p className="ap-section-title">📦 Compression by File Type</p>
+                          {Object.keys(founderContentHealth.compression.byFileType).length === 0 ? (
+                            <p style={{ color: "#9ca3af", fontSize: 13 }}>No compressions yet</p>
+                          ) : (
+                            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                              {Object.entries(founderContentHealth.compression.byFileType as Record<string,number>)
+                                .sort((a,b) => Number(b[1]) - Number(a[1]))
+                                .map(([type, count]) => {
+                                  const total = Object.values(founderContentHealth.compression.byFileType as Record<string,number>).reduce((a,b) => a+b, 0);
+                                  const pct = total > 0 ? Math.round(Number(count)/total*100) : 0;
+                                  return (
+                                    <div key={type} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                      <span style={{ fontSize: 11, color: "#374151", width: 80, flexShrink: 0 }}>{type}</span>
+                                      <div style={{ flex: 1, height: 7, background: "#f3f4f6", borderRadius: 99, overflow: "hidden" }}>
+                                        <div style={{ width: `${pct}%`, height: "100%", background: "#10b981", borderRadius: 99 }} />
+                                      </div>
+                                      <span style={{ fontSize: 12, fontWeight: 700, color: "#374151", width: 30, textAlign: "right" as const }}>{count}</span>
+                                    </div>
+                                  );
+                                })}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="ap-grid2">
+                        {/* Media Conversion by Format */}
+                        <div className="ap-card">
+                          <p className="ap-section-title">🔄 Conversion Target Formats</p>
+                          {Object.keys(founderContentHealth.mediaConversion.byFormat).length === 0 ? (
+                            <p style={{ color: "#9ca3af", fontSize: 13 }}>No conversions yet</p>
+                          ) : (
+                            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" as const }}>
+                              {Object.entries(founderContentHealth.mediaConversion.byFormat as Record<string,number>)
+                                .sort((a,b) => Number(b[1]) - Number(a[1]))
+                                .map(([fmt_, count]) => (
+                                  <div key={fmt_} style={{ padding: "6px 14px", borderRadius: 99, background: "#dbeafe", border: "1px solid #93c5fd" }}>
+                                    <span style={{ fontSize: 12, fontWeight: 800, color: "#1d4ed8" }}>{fmt_}: {count}</span>
+                                  </div>
+                                ))}
+                            </div>
+                          )}
+                        </div>
+                        {/* Video Speed Distribution */}
+                        <div className="ap-card">
+                          <p className="ap-section-title">⚡ Video Speed Distribution</p>
+                          {Object.keys(founderContentHealth.videoSpeed.speedDistribution).length === 0 ? (
+                            <p style={{ color: "#9ca3af", fontSize: 13 }}>No speed jobs yet</p>
+                          ) : (
+                            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                              {Object.entries(founderContentHealth.videoSpeed.speedDistribution as Record<string,number>)
+                                .sort((a,b) => Number(b[1]) - Number(a[1]))
+                                .map(([speed, count]) => {
+                                  const total = Object.values(founderContentHealth.videoSpeed.speedDistribution as Record<string,number>).reduce((a,b) => a+b, 0);
+                                  const pct = total > 0 ? Math.round(Number(count)/total*100) : 0;
+                                  return (
+                                    <div key={speed} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                      <span style={{ fontSize: 11, color: "#374151", width: 100, flexShrink: 0 }}>{speed}</span>
+                                      <div style={{ flex: 1, height: 7, background: "#f3f4f6", borderRadius: 99, overflow: "hidden" }}>
+                                        <div style={{ width: `${pct}%`, height: "100%", background: "#f97316", borderRadius: 99 }} />
+                                      </div>
+                                      <span style={{ fontSize: 12, fontWeight: 700, color: "#374151", width: 30, textAlign: "right" as const }}>{count}</span>
+                                    </div>
+                                  );
+                                })}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ════ AI DEEP DIVE ════ */}
+                  {founderActiveSection === "aiDeepDive" && founderAiDeepDive && (
+                    <div>
+                      {/* AI Credit Burn */}
+                      <div style={{ marginBottom: 20 }}>
+                        <KpiCard icon="🔥" label="Total AI Credit Burn (window)" value={fmt(founderAiDeepDive.aiCreditBurnTotal)} sub="all AI tools combined" color="#ef4444" />
+                      </div>
+
+                      <div className="ap-grid2" style={{ marginBottom: 20 }}>
+                        {/* AI Video Gen */}
+                        <div className="ap-card">
+                          <p className="ap-section-title">🎬 AI Video Generation</p>
+                          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 14 }}>
+                            {[
+                              { label:"Total Jobs",      val: fmt(founderAiDeepDive.videoGen.total),             color:"#374151" },
+                              { label:"Credits Used",    val: fmt(founderAiDeepDive.videoGen.totalCreditsUsed),   color:"#ef4444" },
+                              { label:"Unique Users",    val: fmt(founderAiDeepDive.videoGen.uniqueUsers),        color:"#6355dc" },
+                              { label:"Audio Enabled",   val: fmt(founderAiDeepDive.videoGen.audioEnabledCount),  color:"#10b981" },
+                              { label:"Avg Completion",  val: founderAiDeepDive.videoGen.avgCompletionMins != null ? `${founderAiDeepDive.videoGen.avgCompletionMins}m` : "—", color:"#f59e0b" },
+                            ].map(s => (
+                              <div key={s.label} style={{ background: "#f9fafb", borderRadius: 10, padding: "10px 12px" }}>
+                                <div style={{ fontSize: 10, color: "#9ca3af", fontWeight: 700, textTransform: "uppercase" as const, marginBottom: 3 }}>{s.label}</div>
+                                <div style={{ fontSize: 18, fontWeight: 900, color: s.color }}>{s.val}</div>
+                              </div>
+                            ))}
+                          </div>
+                          {/* Status breakdown */}
+                          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" as const, marginBottom: 10 }}>
+                            {Object.entries(founderAiDeepDive.videoGen.byStatus as Record<string,number>).map(([status, count]) => {
+                              const c: Record<string,string> = { COMPLETED:"#10b981", FAILED:"#ef4444", PENDING:"#f59e0b", PROCESSING:"#3b82f6" };
+                              const bg: Record<string,string> = { COMPLETED:"#dcfce7", FAILED:"#fee2e2", PENDING:"#fef9c3", PROCESSING:"#dbeafe" };
+                              return (
+                                <span key={status} style={{ padding:"4px 10px", borderRadius:99, fontSize:11, fontWeight:700, background: bg[status] ?? "#f3f4f6", color: c[status] ?? "#374151" }}>
+                                  {status}: {count}
+                                </span>
+                              );
+                            })}
+                          </div>
+                          {/* Model breakdown */}
+                          <p style={{ fontSize: 11, color: "#9ca3af", fontWeight: 700, marginBottom: 6, textTransform: "uppercase" as const }}>By Model</p>
+                          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" as const, marginBottom: 10 }}>
+                            {Object.entries(founderAiDeepDive.videoGen.byModel as Record<string,number>).map(([model, count]) => (
+                              <span key={model} style={{ padding:"4px 10px", borderRadius:99, fontSize:11, fontWeight:700, background:"#e0e7ff", color:"#4338ca" }}>
+                                {model}: {count}
+                              </span>
+                            ))}
+                          </div>
+                          {/* Aspect ratios */}
+                          <p style={{ fontSize: 11, color: "#9ca3af", fontWeight: 700, marginBottom: 6, textTransform: "uppercase" as const }}>Aspect Ratios</p>
+                          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" as const }}>
+                            {Object.entries(founderAiDeepDive.videoGen.byAspectRatio as Record<string,number>).map(([ar, count]) => (
+                              <span key={ar} style={{ padding:"4px 10px", borderRadius:99, fontSize:11, fontWeight:700, background:"#f0fdf4", color:"#15803d" }}>
+                                {ar}: {count}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* AI Image Gen */}
+                        <div className="ap-card">
+                          <p className="ap-section-title">🎨 AI Image Generation</p>
+                          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 14 }}>
+                            {[
+                              { label:"Total Jobs",   val: fmt(founderAiDeepDive.imageGen.total),       color:"#374151" },
+                              { label:"Unique Users", val: fmt(founderAiDeepDive.imageGen.uniqueUsers), color:"#6355dc" },
+                            ].map(s => (
+                              <div key={s.label} style={{ background: "#f9fafb", borderRadius: 10, padding: "10px 12px" }}>
+                                <div style={{ fontSize: 10, color: "#9ca3af", fontWeight: 700, textTransform: "uppercase" as const, marginBottom: 3 }}>{s.label}</div>
+                                <div style={{ fontSize: 18, fontWeight: 900, color: s.color }}>{s.val}</div>
+                              </div>
+                            ))}
+                          </div>
+                          {/* Status */}
+                          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" as const, marginBottom: 10 }}>
+                            {Object.entries(founderAiDeepDive.imageGen.byStatus as Record<string,number>).map(([status, count]) => {
+                              const c: Record<string,string> = { COMPLETED:"#10b981", FAILED:"#ef4444", PENDING:"#f59e0b", PROCESSING:"#3b82f6" };
+                              const bg: Record<string,string> = { COMPLETED:"#dcfce7", FAILED:"#fee2e2", PENDING:"#fef9c3", PROCESSING:"#dbeafe" };
+                              return (
+                                <span key={status} style={{ padding:"4px 10px", borderRadius:99, fontSize:11, fontWeight:700, background: bg[status] ?? "#f3f4f6", color: c[status] ?? "#374151" }}>
+                                  {status}: {count}
+                                </span>
+                              );
+                            })}
+                          </div>
+                          {/* Resolution */}
+                          {Object.keys(founderAiDeepDive.imageGen.byResolution).length > 0 && (
+                            <>
+                              <p style={{ fontSize: 11, color: "#9ca3af", fontWeight: 700, marginBottom: 6, textTransform: "uppercase" as const }}>Resolutions</p>
+                              <div style={{ display: "flex", gap: 6, flexWrap: "wrap" as const }}>
+                                {Object.entries(founderAiDeepDive.imageGen.byResolution as Record<string,number>).map(([res, count]) => (
+                                  <span key={res} style={{ padding:"4px 10px", borderRadius:99, fontSize:11, fontWeight:700, background:"#fdf4ff", color:"#7e22ce" }}>
+                                    {res}: {count}
+                                  </span>
+                                ))}
+                              </div>
+                            </>
+                          )}
+
+                          {/* TTS in same card */}
+                          <div style={{ marginTop: 20, paddingTop: 16, borderTop: "1px solid #f3f4f6" }}>
+                            <p className="ap-section-title">🎙️ TTS Summary</p>
+                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                              {[
+                                { label:"Total Jobs",    val: fmt(founderAiDeepDive.tts.total),           color:"#f59e0b" },
+                                { label:"Total Chars",   val: fmt(founderAiDeepDive.tts.totalChars),      color:"#6355dc" },
+                                { label:"Free Tier Jobs",val: fmt(founderAiDeepDive.tts.freeUserJobs),    color:"#9ca3af" },
+                                { label:"Paid Tier Jobs",val: fmt(founderAiDeepDive.tts.paidUserJobs),    color:"#10b981" },
+                                { label:"Free Users",    val: fmt(founderAiDeepDive.tts.freeUniqueUsers), color:"#9ca3af" },
+                                { label:"Paid Users",    val: fmt(founderAiDeepDive.tts.paidUniqueUsers), color:"#10b981" },
+                              ].map(s => (
+                                <div key={s.label} style={{ background: "#f9fafb", borderRadius: 10, padding: "8px 12px" }}>
+                                  <div style={{ fontSize: 10, color: "#9ca3af", fontWeight: 700, textTransform: "uppercase" as const, marginBottom: 2 }}>{s.label}</div>
+                                  <div style={{ fontSize: 16, fontWeight: 900, color: s.color }}>{s.val}</div>
+                                </div>
+                              ))}
+                            </div>
+                            <div style={{ display: "flex", gap: 6, flexWrap: "wrap" as const, marginTop: 10 }}>
+                              {Object.entries(founderAiDeepDive.tts.byProvider as Record<string,number>).map(([prov, count]) => {
+                                const c: Record<string,string> = { GOOGLE:"#3b82f6", OPENAI:"#10b981", AZURE:"#0ea5e9" };
+                                const bg: Record<string,string> = { GOOGLE:"#dbeafe", OPENAI:"#dcfce7", AZURE:"#e0f2fe" };
+                                return (
+                                  <span key={prov} style={{ padding:"4px 10px", borderRadius:99, fontSize:11, fontWeight:700, background: bg[prov] ?? "#f3f4f6", color: c[prov] ?? "#374151" }}>
+                                    {prov}: {count}
+                                  </span>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Daily AI Trend Chart */}
+                      {founderAiDeepDive.dailyAiTrend.length > 0 && (
+                        <div className="ap-card">
+                          <p className="ap-section-title">📅 Daily AI Tool Usage Trend</p>
+                          <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
+                            {[["#f59e0b","TTS"],["#ef4444","Video Gen"],["#8b5cf6","Image Gen"]].map(([c,l]) => (
+                              <div key={l} style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                                <div style={{ width: 8, height: 8, borderRadius: 2, background: c }} />
+                                <span style={{ fontSize: 11, color: "#6b7280" }}>{l}</span>
+                              </div>
+                            ))}
+                          </div>
+                          <div style={{ display: "flex", alignItems: "flex-end", gap: 3, height: 72 }}>
+                            {founderAiDeepDive.dailyAiTrend.slice(-30).map((d: any, i: number) => {
+                              const ttsV     = Number(d.tts)      || 0;
+                              const vidV     = Number(d.videoGen) || 0;
+                              const imgV     = Number(d.imageGen) || 0;
+                              const total    = ttsV + vidV + imgV;
+                              const maxTotal = Math.max(...founderAiDeepDive.dailyAiTrend.slice(-30).map((x: any) => Number(x.tts||0)+Number(x.videoGen||0)+Number(x.imageGen||0)), 1);
+                              const barH = Math.max(4, (total / maxTotal) * 72);
+                              return (
+                                <div key={i} title={`${d.date}: TTS ${ttsV}, Video ${vidV}, Image ${imgV}`}
+                                  style={{ flex: 1, minWidth: 4, height: barH, borderRadius: "3px 3px 0 0",
+                                    overflow: "hidden", display: "flex", flexDirection: "column" as const }}>
+                                  {ttsV > 0 && <div style={{ height: `${total > 0 ? ttsV/total*100 : 0}%`, background: "#f59e0b", flexShrink: 0 }} />}
+                                  {vidV > 0 && <div style={{ height: `${total > 0 ? vidV/total*100 : 0}%`, background: "#ef4444", flexShrink: 0 }} />}
+                                  {imgV > 0 && <div style={{ height: `${total > 0 ? imgV/total*100 : 0}%`, background: "#8b5cf6", flexShrink: 0 }} />}
+                                </div>
+                              );
+                            })}
+                          </div>
+                          <div style={{ display: "flex", justifyContent: "space-between", marginTop: 4 }}>
+                            <span style={{ fontSize: 10, color: "#d1d5db" }}>{founderAiDeepDive.dailyAiTrend[0]?.date}</span>
+                            <span style={{ fontSize: 10, color: "#d1d5db" }}>Today</span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* ════ BILLING HEALTH ════ */}
+                  {founderActiveSection === "billingHealth" && founderBillingHealth && (
+                    <div>
+                      {/* Alerts */}
+                      <div className="ap-card" style={{ marginBottom: 20, border: founderBillingHealth.paymentFailedCount > 0 ? "1px solid #fecaca" : "1px solid #bbf7d0", background: founderBillingHealth.paymentFailedCount > 0 ? "#fff5f5" : "#f0fdf4" }}>
+                        <p className="ap-section-title" style={{ color: founderBillingHealth.paymentFailedCount > 0 ? "#dc2626" : "#15803d" }}>
+                          {founderBillingHealth.paymentFailedCount > 0 ? "🚨 Billing Alerts" : "✅ Billing Health"}
+                        </p>
+                        {founderBillingHealth.alerts.map((a: string, i: number) => (
+                          <p key={i} style={{ fontSize: 13, color: "#374151", marginBottom: 4 }}>{a}</p>
+                        ))}
+                      </div>
+
+                      {/* KPIs */}
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(160px,1fr))", gap: 14, marginBottom: 20 }}>
+                        {[
+                          { icon:"📋", label:"Total Subscriptions",  val: fmt(founderBillingHealth.totalSubscriptions),    color:"#6355dc" },
+                          { icon:"❌", label:"Payment Failed",        val: fmt(founderBillingHealth.paymentFailedCount),     color: founderBillingHealth.paymentFailedCount > 0 ? "#ef4444" : "#10b981" },
+                          { icon:"⏰", label:"Grace Period (48h)",   val: fmt(founderBillingHealth.gracePeriodExpiring48h), color: founderBillingHealth.gracePeriodExpiring48h > 0 ? "#f59e0b" : "#10b981" },
+                          { icon:"🚫", label:"Cancelled (Active)",   val: fmt(founderBillingHealth.cancelledButActive),     color:"#9ca3af", },
+                          { icon:"📈", label:"Avg Consecutive Fails", val: `${founderBillingHealth.avgConsecutiveFailures}`, color:"#f97316" },
+                        ].map(k => <KpiCard key={k.label} icon={k.icon} label={k.label} value={k.val} color={k.color} />)}
+                      </div>
+
+                      <div className="ap-grid2" style={{ marginBottom: 20 }}>
+                        {/* Status breakdown */}
+                        <div className="ap-card">
+                          <p className="ap-section-title">📊 Subscription Status Breakdown</p>
+                          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                            {Object.entries(founderBillingHealth.byStatus as Record<string,number>)
+                              .sort((a,b) => Number(b[1]) - Number(a[1]))
+                              .map(([status, count]) => {
+                                const statusColors: Record<string,string> = {
+                                  ACTIVE:"#10b981", CANCELLED:"#9ca3af", PAYMENT_FAILED:"#ef4444",
+                                  EXPIRED:"#6b7280", CREATED:"#f59e0b", AUTHENTICATED:"#3b82f6",
+                                  COMPLETED:"#14b8a6", PAUSED:"#f97316"
+                                };
+                                const total = Object.values(founderBillingHealth.byStatus as Record<string,number>).reduce((a,b) => a+b, 0);
+                                const pct = total > 0 ? Math.round(Number(count)/total*100) : 0;
+                                const c = statusColors[status] ?? "#6355dc";
+                                return (
+                                  <div key={status} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                    <span style={{ fontSize: 11, color: "#374151", width: 130, flexShrink: 0 }}>{status}</span>
+                                    <div style={{ flex: 1, height: 8, background: "#f3f4f6", borderRadius: 99, overflow: "hidden" }}>
+                                      <div style={{ width: `${pct}%`, height: "100%", background: c, borderRadius: 99 }} />
+                                    </div>
+                                    <span style={{ fontSize: 12, fontWeight: 800, color: c, width: 40, textAlign: "right" as const }}>{count}</span>
+                                  </div>
+                                );
+                              })}
+                          </div>
+                        </div>
+
+                        {/* Gateway + Plan breakdown */}
+                        <div className="ap-card">
+                          <p className="ap-section-title">🏦 Gateway Distribution</p>
+                          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" as const, marginBottom: 16 }}>
+                            {Object.entries(founderBillingHealth.byGateway as Record<string,number>).map(([gw, count]) => {
+                              const gwColors: Record<string,string> = { RAZORPAY:"#6355dc", PAYPAL:"#003087" };
+                              const c = gwColors[gw] ?? "#6355dc";
+                              return (
+                                <div key={gw} style={{ flex: 1, padding: "14px 16px", borderRadius: 12, background: `${c}10`, border: `1px solid ${c}25`, textAlign: "center" as const }}>
+                                  <div style={{ fontSize: 22, fontWeight: 900, color: c }}>{count}</div>
+                                  <div style={{ fontSize: 12, color: c, fontWeight: 700 }}>{gw}</div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                          <p style={{ fontSize: 11, color: "#9ca3af", fontWeight: 700, marginBottom: 8, textTransform: "uppercase" as const }}>By Plan Type</p>
+                          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" as const }}>
+                            {Object.entries(founderBillingHealth.byPlan as Record<string,number>)
+                              .sort((a,b) => Number(b[1]) - Number(a[1]))
+                              .map(([plan, count]) => {
+                                const planColors: Record<string,string> = { MICRO:"#818cf8", CREATOR_LITE:"#6355dc", CREATOR:"#7c3aed", STUDIO:"#f59e0b", SPARK:"#a78bfa" };
+                                const c = planColors[plan] ?? "#6355dc";
+                                return (
+                                  <div key={plan} style={{ padding:"5px 12px", borderRadius:99, background:`${c}18`, border:`1px solid ${c}33` }}>
+                                    <span style={{ fontSize:11, fontWeight:800, color:c }}>{plan}: {count}</span>
+                                  </div>
+                                );
+                              })}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </>
               )}
             </motion.div>

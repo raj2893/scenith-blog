@@ -55,7 +55,8 @@ const CompressMediaClient: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [targetSize, setTargetSize] = useState<string>("500KB");
   const [isUploading, setIsUploading] = useState<boolean>(false);
-  const [isCompressing, setIsCompressing] = useState<boolean>(false);
+  const [compressingIds, setCompressingIds] = useState<Set<number>>(new Set());
+const pollingRefs = React.useRef<Map<number, NodeJS.Timeout>>(new Map());
   const [error, setError] = useState<string | null>(null);
   const [mediaList, setMediaList] = useState<MediaItem[]>([]);
   const [uploadSuccess, setUploadSuccess] = useState<string | null>(null);
@@ -65,6 +66,13 @@ const CompressMediaClient: React.FC = () => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<{id: number; name: string; type: string} | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  // Cleanup all polling intervals on unmount
+  useEffect(() => {
+    return () => {
+      pollingRefs.current.forEach((interval) => clearInterval(interval));
+    };
+  }, []);
 
   // Handle scroll for navbar styling
   useEffect(() => {
@@ -98,7 +106,14 @@ const CompressMediaClient: React.FC = () => {
           });
           setIsLoggedIn(true);
           setShowLoginModal(false);
-          fetchMediaList(token);
+          fetchMediaList(token).then((items) => {
+            items.forEach((item: MediaItem) => {
+              if (item.status === "PROCESSING") {
+                setCompressingIds(prev => new Set(prev).add(item.id));
+                startPolling(item.id);
+              }
+            });
+          });
         })
         .catch((error) => {
           console.error("Error fetching user profile:", error);
@@ -119,9 +134,11 @@ const CompressMediaClient: React.FC = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMediaList(response.data);
+      return response.data; // return so caller can resume polling
     } catch (error) {
       console.error("Error fetching media list:", error);
       setError("Failed to load media list.");
+      return [];
     }
   };
 
@@ -150,7 +167,14 @@ const CompressMediaClient: React.FC = () => {
       });
       setIsLoggedIn(true);
       setShowLoginModal(false);
-      fetchMediaList(token);
+      fetchMediaList(token).then((items) => {
+        items.forEach((item: MediaItem) => {
+          if (item.status === "PROCESSING") {
+            setCompressingIds(prev => new Set(prev).add(item.id));
+            startPolling(item.id);
+          }
+        });
+      });
     } catch (error: any) {
       setLoginError(error.response?.data?.message || "Login failed. Please check your credentials.");
     } finally {
@@ -184,7 +208,14 @@ const CompressMediaClient: React.FC = () => {
       });
       setIsLoggedIn(true);
       setShowLoginModal(false);
-      fetchMediaList(response.data.token);
+      fetchMediaList(response.data.token).then((items) => {
+        items.forEach((item: MediaItem) => {
+          if (item.status === "PROCESSING") {
+            setCompressingIds(prev => new Set(prev).add(item.id));
+            startPolling(item.id);
+          }
+        });
+      });
     } catch (error: any) {
       setLoginError(error.response?.data?.message || "Google login failed");
     } finally {
@@ -285,29 +316,81 @@ const handleDeleteConfirm = async () => {
   };
 
   // Handle compression
+  const stopPolling = (mediaId: number) => {
+    const ref = pollingRefs.current.get(mediaId);
+    if (ref) {
+      clearInterval(ref);
+      pollingRefs.current.delete(mediaId);
+    }
+    setCompressingIds(prev => {
+      const next = new Set(prev);
+      next.delete(mediaId);
+      return next;
+    });
+  };
+
+  const startPolling = (mediaId: number) => {
+    // Stop any existing poll for this id first
+    stopPolling(mediaId);
+
+    const interval = setInterval(async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axios.get(
+          `${API_BASE_URL}/api/compression/status/${mediaId}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const { status, errorMessage } = res.data;
+
+        // Update the item in the list with latest status
+        setMediaList(prev =>
+          prev.map(item =>
+            item.id === mediaId
+              ? { ...item, status, errorMessage }
+              : item
+          )
+        );
+
+        // If terminal state, stop polling and refresh full item
+        if (status === "SUCCESS" || status === "FAILED") {
+          stopPolling(mediaId);
+          // Refresh full list to get processedCdnUrl and other fields
+          const token = localStorage.getItem("token");
+          if (token) fetchMediaList(token);
+        }
+      } catch (err) {
+        console.error("Status poll failed for mediaId:", mediaId, err);
+        // Don't stop polling on transient errors — keep trying
+      }
+    }, 3000); // poll every 3 seconds
+
+    pollingRefs.current.set(mediaId, interval);
+  };
+
   const handleCompress = async (mediaId: number) => {
     if (!requireLogin()) return;
-    setIsCompressing(true);
+    if (compressingIds.has(mediaId)) return;
+
     setError(null);
+    setCompressingIds(prev => new Set(prev).add(mediaId));
+
     try {
-      const response = await axios.post(
+      await axios.post(
         `${API_BASE_URL}/api/compression/compress/${mediaId}`,
         {},
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
+        { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
       );
-      setMediaList(mediaList.map((item) => (item.id === mediaId ? response.data : item)));
+      // Compression started — begin polling for status
+      startPolling(mediaId);
     } catch (error: any) {
-      setError(error.response?.data?.message || "Failed to compress media.");
-      setMediaList(
-        mediaList.map((item) =>
-          item.id === mediaId ? { ...item, status: "FAILED", errorMessage: error.response?.data?.message || "Compression failed" } : item
-        )
-      );
-    } finally {
-      setIsCompressing(false);
+      setError(error.response?.data?.message || "Failed to start compression.");
+      setCompressingIds(prev => {
+        const next = new Set(prev);
+        next.delete(mediaId);
+        return next;
+      });
     }
+    // Note: no finally here — compressingIds stays set until polling detects terminal state
   };
 
   const handleDownload = async (url: string, fileName: string) => {
@@ -637,7 +720,7 @@ const handleDeleteConfirm = async () => {
                               <button
                                 onClick={() => handleCompress(media.id)}
                                 className="cta-button compress-button"
-                                disabled={isCompressing}
+                                disabled={compressingIds.has(media.id)}
                                 aria-label={
                                   media.status === "SUCCESS"
                                     ? `Re-compress ${media.originalFileName}`
@@ -646,7 +729,7 @@ const handleDeleteConfirm = async () => {
                                     : `Compress ${media.originalFileName}`
                                 }
                               >
-                                {isCompressing ? (
+                                {compressingIds.has(media.id) ? (
                                   <span className="compressing-spinner">Compressing...</span>
                                 ) : media.status === "SUCCESS" ? (
                                   "Re-compress"
