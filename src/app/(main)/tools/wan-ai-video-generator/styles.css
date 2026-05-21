@@ -1,0 +1,844 @@
+/* app/tools/wan-ai-video-generator/styles.css */
+
+/* Reset & Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.wan-page {
+  --primary: #6366f1;
+  --primary-dark: #4f46e5;
+  --primary-light: #818cf8;
+  --secondary: #8b5cf6;
+  --dark: #0f172a;
+  --darker: #020617;
+  --gray-50: #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e1;
+  --gray-600: #475569;
+  --gray-700: #334155;
+  --gray-800: #1e293b;
+  --gray-900: #0f172a;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  
+  background: var(--gray-50);
+  color: var(--gray-800);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  line-height: 1.5;
+}
+
+.container, .wan-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Typography */
+.wan-gradient {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Hero Section */
+.wan-hero {
+  background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+  color: white;
+  padding: 80px 0 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+.wan-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 30% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.wan-hero .wan-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.wan-badge {
+  display: inline-block;
+  background: rgba(99, 102, 241, 0.2);
+  border: 1px solid rgba(99, 102, 241, 0.4);
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-bottom: 24px;
+  backdrop-filter: blur(4px);
+}
+
+.wan-hero-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+
+.wan-hero-desc {
+  font-size: 1.2rem;
+  color: var(--gray-300);
+  margin-bottom: 32px;
+  max-width: 90%;
+}
+
+.wan-hero-ctas {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.wan-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  color: white;
+  text-decoration: none;
+  padding: 12px 28px;
+  border-radius: 40px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.wan-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4);
+}
+
+.wan-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: white;
+  text-decoration: none;
+  padding: 12px 28px;
+  border-radius: 40px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: 1px solid var(--gray-600);
+}
+
+.wan-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--primary);
+}
+
+.wan-stats {
+  display: flex;
+  gap: 32px;
+}
+
+.wan-stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.wan-stat-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary-light);
+}
+
+.wan-stat-label {
+  font-size: 0.8rem;
+  color: var(--gray-400);
+}
+
+/* Demo Card */
+.wan-demo-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.wan-demo-badge {
+  font-size: 0.75rem;
+  color: var(--primary-light);
+  margin-bottom: 12px;
+}
+
+.wan-demo-prompt {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  color: var(--gray-200);
+  margin-bottom: 16px;
+  font-family: monospace;
+}
+
+.wan-demo-placeholder {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+  border-radius: 12px;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-400);
+  font-size: 0.9rem;
+  border: 1px dashed rgba(99, 102, 241, 0.3);
+  margin-bottom: 12px;
+}
+
+.wan-demo-meta {
+  font-size: 0.7rem;
+  color: var(--gray-500);
+  text-align: center;
+}
+
+/* Section Styles */
+.wan-section {
+  padding: 80px 0;
+}
+
+.wan-section-alt {
+  background: white;
+}
+
+.wan-section-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.wan-section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--gray-900);
+}
+
+.wan-section-subtitle {
+  font-size: 1.1rem;
+  color: var(--gray-600);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Use Cases Grid */
+.wan-usecases-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 32px;
+}
+
+.wan-usecase-card {
+  background: white;
+  border-radius: 20px;
+  padding: 28px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  transition: all 0.3s ease;
+  border: 1px solid var(--gray-100);
+}
+
+.wan-usecase-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+  border-color: var(--primary-light);
+}
+
+.wan-usecase-icon {
+  font-size: 2.5rem;
+  margin-bottom: 16px;
+}
+
+.wan-usecase-card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 12px;
+  color: var(--gray-900);
+}
+
+.wan-usecase-card p {
+  color: var(--gray-600);
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.wan-card-link {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.wan-card-link:hover {
+  gap: 8px;
+}
+
+/* Examples Grid */
+.wan-examples-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  max-width: 800px;
+  margin: 0 auto 48px;
+}
+
+.wan-example {
+  display: flex;
+  gap: 24px;
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--gray-200);
+}
+
+.wan-example-video-placeholder {
+  width: 160px;
+  height: 160px;
+  background: linear-gradient(135deg, var(--gray-200), var(--gray-300));
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.wan-example-play {
+  font-size: 2rem;
+  opacity: 0.7;
+}
+
+.wan-example-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+.wan-example-content {
+  flex: 1;
+}
+
+.wan-example-content h4 {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  color: var(--gray-900);
+}
+
+.wan-example-prompt {
+  font-size: 0.85rem;
+  color: var(--gray-600);
+  margin-bottom: 12px;
+  line-height: 1.5;
+  font-family: monospace;
+}
+
+.wan-example-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: var(--gray-500);
+}
+
+.wan-example-meta a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.wan-center-cta {
+  text-align: center;
+}
+
+.wan-btn-lg {
+  padding: 16px 40px;
+  font-size: 1.1rem;
+}
+
+/* Steps */
+.wan-steps {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.wan-step {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.wan-step:last-child {
+  margin-bottom: 0;
+}
+
+.wan-step-num {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: white;
+  flex-shrink: 0;
+}
+
+.wan-step-content h3 {
+  font-size: 1.3rem;
+  margin-bottom: 8px;
+  color: var(--gray-900);
+}
+
+.wan-step-content p {
+  color: var(--gray-600);
+  margin-bottom: 12px;
+  line-height: 1.6;
+}
+
+.wan-step-tip {
+  background: #ecfdf5;
+  color: var(--success);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  display: inline-block;
+}
+
+.wan-step-tip a {
+  color: var(--success);
+}
+
+/* Best Practices Grid */
+.wan-best-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.wan-best-card {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  border-left: 4px solid var(--primary);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.wan-best-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  color: var(--gray-900);
+}
+
+.wan-best-card p {
+  color: var(--gray-600);
+  line-height: 1.6;
+}
+
+.wan-best-card a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+/* Mistakes List */
+.wan-mistakes-list {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.wan-mistake {
+  display: flex;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.wan-mistake-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.wan-mistake-text {
+  color: var(--gray-700);
+  line-height: 1.6;
+}
+
+.wan-mistake-text strong {
+  color: var(--gray-900);
+}
+
+.wan-mistake-text a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+/* Advanced Tips Grid */
+.wan-advanced-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.wan-advanced-card {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 1px solid var(--gray-200);
+}
+
+.wan-advanced-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--primary-light);
+}
+
+.wan-advanced-icon {
+  font-size: 2rem;
+  margin-bottom: 16px;
+}
+
+.wan-advanced-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  color: var(--gray-900);
+}
+
+.wan-advanced-card p {
+  color: var(--gray-600);
+  line-height: 1.6;
+  font-size: 0.9rem;
+}
+
+.wan-advanced-card a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+/* FAQ Section */
+.wan-faq {
+  background: white;
+}
+
+.wan-faq-grid {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.wan-faq-item {
+  background: var(--gray-50);
+  border-radius: 12px;
+  padding: 4px 0;
+}
+
+.wan-faq-item summary {
+  padding: 16px 20px;
+  font-weight: 600;
+  color: var(--gray-900);
+  cursor: pointer;
+  border-radius: 12px;
+  transition: background 0.2s;
+  list-style: none;
+  position: relative;
+}
+
+.wan-faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.wan-faq-item summary::after {
+  content: '▼';
+  font-size: 0.8rem;
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: transform 0.2s;
+}
+
+.wan-faq-item[open] summary::after {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.wan-faq-item summary:hover {
+  background: var(--gray-100);
+}
+
+.wan-faq-answer {
+  padding: 0 20px 20px 20px;
+  color: var(--gray-600);
+  line-height: 1.7;
+  border-top: 1px solid var(--gray-200);
+  margin-top: 4px;
+}
+
+.wan-faq-answer a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+/* CTA Section */
+.wan-cta-section {
+  padding: 60px 0 80px;
+  background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+}
+
+.wan-cta-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 32px;
+  padding: 48px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.wan-cta-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 16px;
+}
+
+.wan-cta-desc {
+  color: var(--gray-300);
+  margin-bottom: 32px;
+  font-size: 1.1rem;
+}
+
+/* Prompt Box */
+.wan-prompt-box {
+  max-width: 600px;
+  margin: 0 auto 32px;
+  text-align: left;
+}
+
+.wan-prompt-label {
+  display: block;
+  color: white;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.wan-prompt-textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--gray-600);
+  background: rgba(0, 0, 0, 0.3);
+  color: white;
+  font-family: inherit;
+  font-size: 0.9rem;
+  resize: vertical;
+  margin-bottom: 16px;
+}
+
+.wan-prompt-textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.wan-prompt-textarea::placeholder {
+  color: var(--gray-500);
+}
+
+.wan-btn-block {
+  display: block;
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+}
+
+.wan-prompt-hint {
+  font-size: 0.75rem;
+  color: var(--gray-500);
+  margin-top: 12px;
+  text-align: center;
+}
+
+.wan-cta-features {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  color: var(--gray-400);
+  font-size: 0.85rem;
+}
+
+.wan-cta-features span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Internal Links */
+.wan-internal-links {
+  background: white;
+  padding: 48px 0;
+  border-top: 1px solid var(--gray-200);
+}
+
+.wan-internal-links-content h3 {
+  text-align: center;
+  font-size: 1.3rem;
+  margin-bottom: 24px;
+  color: var(--gray-900);
+}
+
+.wan-links-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+}
+
+.wan-internal-link {
+  color: var(--gray-700);
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 40px;
+  background: var(--gray-100);
+  transition: all 0.2s;
+  font-size: 0.85rem;
+}
+
+.wan-internal-link:hover {
+  background: var(--primary);
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .wan-hero .wan-container {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  
+  .wan-hero-desc {
+    max-width: 100%;
+  }
+  
+  .wan-hero-ctas {
+    justify-content: center;
+  }
+  
+  .wan-stats {
+    justify-content: center;
+  }
+  
+  .wan-section-title {
+    font-size: 2rem;
+  }
+  
+  .wan-hero-title {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .wan-container {
+    padding: 0 16px;
+  }
+  
+  .wan-section {
+    padding: 48px 0;
+  }
+  
+  .wan-usecases-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .wan-example {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .wan-example-video-placeholder {
+    width: 100%;
+    max-width: 280px;
+  }
+  
+  .wan-step {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .wan-step-num {
+    margin: 0 auto;
+  }
+  
+  .wan-best-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .wan-cta-card {
+    padding: 32px 20px;
+  }
+  
+  .wan-cta-title {
+    font-size: 1.5rem;
+  }
+  
+  .wan-links-grid {
+    gap: 8px;
+  }
+  
+  .wan-internal-link {
+    font-size: 0.75rem;
+    padding: 4px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .wan-hero-ctas {
+    flex-direction: column;
+  }
+  
+  .wan-btn-primary, .wan-btn-secondary {
+    justify-content: center;
+  }
+  
+  .wan-stats {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+  }
+  
+  .wan-section-title {
+    font-size: 1.6rem;
+  }
+  
+  .wan-cta-features {
+    gap: 12px;
+  }
+}
