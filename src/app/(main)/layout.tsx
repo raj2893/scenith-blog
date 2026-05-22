@@ -96,7 +96,31 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* ✅ Google Analytics 4 */}
+        {/* Preconnect must come first */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+
+        {/* All fonts in one non-blocking request */}
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Poiret+One&family=Comic+Neue:ital,wght@0,400;0,700;1,400;1,700&family=Tangerine:wght@400;700&family=Noto+Sans+Mono:wght@400;700&family=Imperial+Script&family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Birthstone&family=Lavishly+Yours&family=Amatic+SC:wght@400;700&family=Rampart+One&family=Freckle+Face&family=Fredericka+the+Great&family=Kings&family=Kirang+Haerang&family=Rubik+Wet+Paint&family=Fascinate+Inline&family=Barrio&family=Yesteryear&family=Gelasio:ital,wght@0,400;0,700;1,400;1,700&family=Doto:wght@900&family=Butcherman&family=Bungee+Hairline&family=Alumni+Sans+Pinstripe&family=Mountains+of+Christmas:wght@400;700&family=Arimo:ital,wght@0,400;0,700;1,400;1,700&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&family=Carlito:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat+Alternates:wght@500;900&family=Lexend+Giga:wght@400;700;900&family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800&display=swap"
+        />
+        <noscript>
+          <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Poiret+One&family=Comic+Neue:ital,wght@0,400;0,700;1,400;1,700&family=Tangerine:wght@400;700&family=Noto+Sans+Mono:wght@400;700&family=Imperial+Script&family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Birthstone&family=Lavishly+Yours&family=Amatic+SC:wght@400;700&family=Rampart+One&family=Freckle+Face&family=Fredericka+the+Great&family=Kings&family=Kirang+Haerang&family=Rubik+Wet+Paint&family=Fascinate+Inline&family=Barrio&family=Yesteryear&family=Gelasio:ital,wght@0,400;0,700;1,400;1,700&family=Doto:wght@900&family=Butcherman&family=Bungee+Hairline&family=Alumni+Sans+Pinstripe&family=Mountains+of+Christmas:wght@400;700&family=Arimo:ital,wght@0,400;0,700;1,400;1,700&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&family=Carlito:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat+Alternates:wght@500;900&family=Lexend+Giga:wght@400;700;900&family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800&display=swap"
+          />
+        </noscript>
+
+        {/* Google AdSense */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3084309234365491"
+          crossOrigin="anonymous"
+        />
+        <meta name="google-adsense-account" content="ca-pub-3084309234365491" />
+
+        {/* Google Analytics */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-GV9N09RZ1B"
           strategy="afterInteractive"
@@ -111,20 +135,7 @@ export default function RootLayout({
             });
           `}
         </Script>
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3084309234365491"
-             crossOrigin="anonymous"></script>  
-        <meta name="google-adsense-account" content="ca-pub-3084309234365491" />           
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poiret+One&family=Comic+Neue&family=Tangerine&family=Noto+Sans+Mono&family=Imperial+Script&family=Verdana&family=Courier+Prime&family=Times+New+Roman&family=Tahoma&family=Birthstone&family=Lavishly+Yours&family=Amatic+SC&family=Rampart+One&family=Freckle+Face&family=Fredericka+the+Great&family=Kings&family=Kirang+Haerang&family=Rubik+Wet+Paint&family=Fascinate+Inline&family=Barrio&family=Yesteryear&family=Gelasio&family=Doto&family=Butcherman&family=Bungee+Hairline&family=Alumni+Sans+Pinstripe&family=Comic+Sans+MS&family=Mountains+of+Christmas&family=Courier+New&family=Impact&family=Arimo&family=Tinos&family=Carlito&family=Montserrat+Alternates&family=Lexend+Giga&family=Georgia&family=Calibri&display=swap" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Alumni+Sans+Pinstripe&family=Amatic+SC:wght@400;700&family=Arimo:ital,wght@0,400;0,700;1,400;1,700&family=Barriecito&family=Barrio&family=Birthstone&family=Bungee+Hairline&family=Butcherman&family=Carlito:ital,wght@0,400;0,700;1,400;1,700&family=Comic+Neue:ital,wght@0,400;0,700;1,400;1,700&family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Doto:wght@900&family=Fascinate+Inline&family=Freckle+Face&family=Fredericka+the+Great&family=Gelasio:ital,wght@0,400;0,700;1,400;1,700&family=Imperial+Script&family=Kings&family=Kirang+Haerang&family=Lavishly+Yours&family=Lexend+Giga:wght@400;700;900&family=Montserrat+Alternates:wght@500;900&family=Mountains+of+Christmas:wght@400;700&family=Noto+Sans+Mono:wght@400;700&family=Poiret+One&family=Rampart+One&family=Rubik+Wet+Paint&family=Tangerine:wght@400;700&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&family=Yesteryear&display=swap"
-          rel="stylesheet"/>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-        />          
-      </head>      
+      </head> 
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <AuthListener/>
         <Navbar pageType="blogs" />

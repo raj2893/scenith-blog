@@ -3,7 +3,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { FaBars, FaDollarSign, FaHome, FaTools, FaBlog, FaTimes, FaUser, FaFilePdf, FaImage, FaVideo, FaTachometerAlt, FaShieldAlt } from 'react-icons/fa';
 import axios from 'axios';
-import { motion } from 'framer-motion';
 import { API_BASE_URL } from '../config';
 import '../../../styles/Navbar.css';
 
@@ -55,7 +54,6 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
   const [isCreditsDropdownOpen, setIsCreditsDropdownOpen] = useState(false);
   const [isAdminUser, setIsAdminUser] = useState(false);
 
-  // Check authentication status on mount
   useEffect(() => {
     const checkAuth = async () => {
       const token = localStorage.getItem('token');
@@ -64,11 +62,8 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
           const response = await axios.get(`${API_BASE_URL}/auth/me`, {
             headers: { Authorization: `Bearer ${token}` },
           });
-          console.log('User data from API:', response.data);
-          console.log('Picture value:', response.data.picture);
           const fullName = response.data.name || '';
-          const nameParts = fullName.trim().split(' ');
-          const firstName = nameParts[0] || '';
+          const firstName = fullName.trim().split(' ')[0] || '';
           setUserProfile({
             email: response.data.email || '',
             firstName,
@@ -78,7 +73,6 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
           setCredits(response.data.creditBalance ?? 50);
           setIsAdminUser(response.data.role === 'ADMIN');
         } catch (error) {
-          console.error('Auth check failed:', error);
           localStorage.removeItem('token');
           localStorage.removeItem('userProfile');
           setIsLoggedIn(false);
@@ -91,56 +85,40 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
         setCredits(50);
       }
     };
-
+  
     checkAuth();
-
-    const handleLoginEvent = () => {
-      checkAuth();
-    };
-
+  
+    const handleLoginEvent = () => checkAuth();
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'token' || e.key === null) {
-        checkAuth();
-      }
+      if (e.key === 'token' || e.key === null) checkAuth();
     };
-
+    // ✅ Handles mobile Google redirect — re-check when user returns to tab
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') checkAuth();
+    };
+    const handleFocus = () => checkAuth();
+  
     window.addEventListener('userLoggedIn', handleLoginEvent);
-window.addEventListener('creditsUpdated', handleLoginEvent);  // ← add this
-window.addEventListener('storage', handleStorageChange);
-
+    window.addEventListener('creditsUpdated', handleLoginEvent);
+    window.addEventListener('storage', handleStorageChange);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleFocus);
+  
     let pollInterval: NodeJS.Timeout | null = null;
-
-    const startPolling = () => {
-      if (!isLoggedIn) {
-        pollInterval = setInterval(() => {
-          const token = localStorage.getItem('token');
-          if (token && !isLoggedIn) {
-            checkAuth();
-          }
-        }, 2000);
-      }
-    };
-
-    const stopPolling = () => {
-      if (pollInterval) {
-        clearInterval(pollInterval);
-        pollInterval = null;
-      }
-    };
-
-    // Start polling if logged out
     if (!isLoggedIn) {
-      startPolling();
-    } else {
-      stopPolling();
+      pollInterval = setInterval(() => {
+        if (localStorage.getItem('token') && !isLoggedIn) checkAuth();
+      }, 2000);
     }
-
+  
     return () => {
-  window.removeEventListener('userLoggedIn', handleLoginEvent);
-  window.removeEventListener('creditsUpdated', handleLoginEvent);  // ← add this
-  window.removeEventListener('storage', handleStorageChange);
-  stopPolling();
-};
+      window.removeEventListener('userLoggedIn', handleLoginEvent);
+      window.removeEventListener('creditsUpdated', handleLoginEvent);
+      window.removeEventListener('storage', handleStorageChange);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleFocus);
+      if (pollInterval) clearInterval(pollInterval);
+    };
   }, [isLoggedIn]);
 
   useEffect(() => {
@@ -159,10 +137,11 @@ window.addEventListener('storage', handleStorageChange);
 }, []);
 
   useEffect(() => {
+    const navEl = document.querySelector('.nav-bar');
     const onScroll = () => {
-      document.querySelector('.nav-bar')?.classList.toggle('scrolled', window.scrollY > 10);
+      navEl?.classList.toggle('scrolled', window.scrollY > 10);
     };
-    window.addEventListener('scroll', onScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);  
 
@@ -338,14 +317,6 @@ window.addEventListener('storage', handleStorageChange);
       clearTimeout(timer);
     };
   }, [showLoginModal, navbarLoginTriggered, handleGoogleLogin]);
-
-  useEffect(() => {
-    return () => {
-      if (!showLoginModal && navbarLoginTriggered) {
-        setNavbarLoginTriggered(false);
-      }
-    };
-  }, [showLoginModal, navbarLoginTriggered]);
 
   const baseNavLinks: NavLink[] = [
     { label: 'Home', path: '/', icon: <FaHome /> },
@@ -581,11 +552,8 @@ window.addEventListener('storage', handleStorageChange);
           setShowLoginModal(false);
           setNavbarLoginTriggered(false);
         }}>
-          <motion.div
-            className="login-modal"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3 }}
+          <div
+            className="login-modal login-modal-animate"
             onClick={(e) => e.stopPropagation()}
           >
             <button
@@ -657,7 +625,7 @@ window.addEventListener('storage', handleStorageChange);
                 <a href="/signup">Sign up</a>
               </p>
             </div>
-          </motion.div>
+          </div>
         </div>
       )}
     </>
