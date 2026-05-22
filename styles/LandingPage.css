@@ -63,6 +63,8 @@ a {
   opacity: 0.15;
   animation: float-orb 20s infinite ease-in-out;
   will-change: transform;
+  contain: layout style paint;
+  transform: translateZ(0);
 }
 
 .orb-1 {
@@ -98,6 +100,8 @@ a {
   background: rgba(102, 126, 234, 0.05);
   border-radius: 20px;
   animation: float-shape 15s infinite ease-in-out;
+  will-change: transform;
+  contain: layout style paint;
 }
 
 .shape-1 {
@@ -429,6 +433,8 @@ a {
   opacity: 0.05;
   animation: rotate-glow 10s linear infinite;
   pointer-events: none;
+  will-change: transform;
+  contain: layout style paint;
 }
 
 @keyframes rotate-glow {
@@ -685,6 +691,7 @@ a {
   aspect-ratio: 1;
   transition: all 0.3s;
   cursor: pointer;
+  will-change: transform;
 }
 
 .svg-preview-card:hover {

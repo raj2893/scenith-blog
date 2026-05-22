@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { FaMicrophone, FaClosedCaptioning, FaExchangeAlt, FaEraser, FaTachometerAlt, FaPaintBrush, FaCompressArrowsAlt, FaShapes, FaPlay, FaCheckCircle, FaStar, FaFilePdf } from 'react-icons/fa';
 import '../../../styles/LandingPage.css';
@@ -303,6 +303,7 @@ function PricingPopup({ onClose }: { onClose: () => void }) {
         <button
           onClick={onClose}
           aria-label="Close"
+          className="sc-close-btn"
           style={{
             position: 'absolute', top: '14px', right: '14px',
             background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(102,126,234,0.15)',
@@ -311,8 +312,6 @@ function PricingPopup({ onClose }: { onClose: () => void }) {
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             transition: 'all 0.2s', lineHeight: 1,
           }}
-          onMouseOver={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.14)'; (e.currentTarget as HTMLButtonElement).style.color = 'white'; }}
-          onMouseOut={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.06)'; (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.5)'; }}
         >×</button>
 
         {/* Urgency pill */}
@@ -390,6 +389,7 @@ function PricingPopup({ onClose }: { onClose: () => void }) {
         
          <a href="/pricing"
           onClick={onClose}
+          className="sc-cta-link"
           style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
             width: '100%', padding: '13px 24px',
@@ -400,8 +400,6 @@ function PricingPopup({ onClose }: { onClose: () => void }) {
             transition: 'transform 0.2s, box-shadow 0.2s',
             letterSpacing: '-0.01em',
           }}
-          onMouseOver={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.transform = 'scale(1.03)'; el.style.boxShadow = '0 8px 32px rgba(102,126,234,0.55)'; }}
-          onMouseOut={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.transform = 'scale(1)'; el.style.boxShadow = '0 4px 24px rgba(102,126,234,0.4)'; }}
         >
           🚀 Claim 25% OFF — View Plans
         </a>
@@ -409,6 +407,9 @@ function PricingPopup({ onClose }: { onClose: () => void }) {
           @keyframes scPopFadeOverlay { from { opacity:0; } to { opacity:1; } }
           @keyframes scPopSlideUp { from { opacity:0; transform:translateY(40px) scale(0.96); } to { opacity:1; transform:translateY(0) scale(1); } }
           @keyframes scPopPulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.45; transform:scale(1.35); } }
+          .sc-close-btn:hover { background: rgba(255,255,255,0.14) !important; color: white !important; }
+          .sc-cta-link { transition: transform 0.2s, box-shadow 0.2s; }
+          .sc-cta-link:hover { transform: scale(1.03) !important; box-shadow: 0 8px 32px rgba(102,126,234,0.55) !important; }
         `}</style>
       </div>
     </div>
@@ -591,17 +592,40 @@ function YoutubeFacade({ videoId, title }: { videoId: string; title: string }) {
 }
 
 export default function LandingPageClient() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isIndianUser, setIsIndianUser] = useState<boolean | null>(null);
+const [isIndianUser, setIsIndianUser] = useState<boolean | null>(null);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const pricingPlans = useMemo(() => [
+    {
+      name: 'Creator Lite',
+      price: isIndianUser === true ? '₹799' : '$9',
+      credits: '1,000 credits / mo',
+      cta: 'Get Lite →',
+      ctaLink: '/pricing',
+      highlight: false,
+      perks: ['~66 AI images', 'Voice generation', 'All PDF tools', 'No watermarks'],
+      color: '#667eea'
+    },
+    {
+      name: 'Creator Spark',
+      price: isIndianUser === true ? '₹1749' : '$19',
+      credits: '2000 credits / mo',
+      cta: 'Get Spark →',
+      ctaLink: '/pricing',
+      highlight: true,
+      perks: ['~450 AI images', '~14 Kling 5s videos', '150K voice chars', 'Priority support'],
+      color: '#a899f5'
+    },
+    {
+      name: 'Creator Odyssey',
+      price: isIndianUser ? '₹3599' : '$39',
+      credits: '2,500 credits / mo',
+      cta: 'Get Odyssey →',
+      ctaLink: '/pricing',
+      highlight: false,
+      perks: ['~1,250 AI images', '~39 Kling 5s videos', '400K voice chars', '4K export'],
+      color: '#f59e0b'
+    },
+  ], [isIndianUser]);
 
   useEffect(() => {
     const timer = setTimeout(async () => {
@@ -614,25 +638,34 @@ export default function LandingPageClient() {
       }
     }, 5000);
     return () => clearTimeout(timer);
-  }, []); 
+  }, []);
 
   useEffect(() => {
-    const els = document.querySelectorAll('.animate-fade-up-scroll');
-    if (!els.length) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(e => {
-          if (e.isIntersecting) {
-            e.target.classList.add('in-view');
-            observer.unobserve(e.target); // fire once only
-          }
-        });
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
-    );
-    els.forEach(el => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);  
+    const setup = () => {
+      const els = document.querySelectorAll('.animate-fade-up-scroll');
+      if (!els.length) return;
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(e => {
+            if (e.isIntersecting) {
+              e.target.classList.add('in-view');
+              observer.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+      );
+      els.forEach(el => observer.observe(el));
+    };
+
+    if ('requestIdleCallback' in window) {
+      const id = (window as any).requestIdleCallback(setup, { timeout: 2000 });
+      return () => (window as any).cancelIdleCallback(id);
+    } else {
+      const t = setTimeout(setup, 200);
+      return () => clearTimeout(t);
+    }
+  }, []);    
 
   return (
     <>
@@ -1238,38 +1271,7 @@ export default function LandingPageClient() {
             gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
             gap: '20px', marginTop: '50px', marginBottom: '40px'
           }}>
-            {[
-              {
-                name: 'Starter Forge',
-                price: 'Free',
-                credits: '50 credits / mo',
-                cta: 'Start Free',
-                ctaLink: '/tools/ai-image-generation',
-                highlight: false,
-                perks: ['~25 AI images', 'Voice generation', 'All PDF tools', 'No watermarks'],
-                color: '#667eea'
-              },
-              {
-                name: 'Creator Spark',
-                price: isIndianUser === true ? '₹1749' : '$19',
-                credits: '900 credits / mo',
-                cta: 'Get Spark →',
-                ctaLink: '/pricing',
-                highlight: true,
-                perks: ['~450 AI images', '~14 Kling 5s videos', '150K voice chars', 'Priority support'],
-                color: '#a899f5'
-              },
-              {
-                name: 'Creator Odyssey',
-                price: isIndianUser ? '₹3599' : '$39',
-                credits: '2,500 credits / mo',
-                cta: 'Get Odyssey →',
-                ctaLink: '/pricing',
-                highlight: false,
-                perks: ['~1,250 AI images', '~39 Kling 5s videos', '400K voice chars', '4K export'],
-                color: '#f59e0b'
-              },
-            ].map((plan) => (
+            {pricingPlans.map((plan) => (
               <div key={plan.name} style={{
                 background: plan.highlight
                   ? 'linear-gradient(135deg, #0f0c29 0%, #1e1a45 100%)'
