@@ -53,6 +53,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
   const [credits, setCredits] = useState<number>(50);
   const [isCreditsDropdownOpen, setIsCreditsDropdownOpen] = useState(false);
   const [isAdminUser, setIsAdminUser] = useState(false);
+  const googleCallbackRef = React.useRef<((resp: any) => void) | null>(null);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -225,43 +226,41 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
     }
   };
 
-  const handleGoogleLogin = useCallback(async (credentialResponse: any) => {
-    setLoginError('');
-    setLoginSuccess('');
-    setIsLoggingIn(true);
-    try {
-      const response = await axios.post(`${API_BASE_URL}/auth/google`, {
-        token: credentialResponse.credential,
-      });
-      localStorage.setItem('token', response.data.token);
-
-      const userResponse = await axios.get(`${API_BASE_URL}/auth/me`, {
-        headers: { Authorization: `Bearer ${response.data.token}` },
-      });
-
-      const fullName = userResponse.data.name || '';
-      const nameParts = fullName.trim().split(' ');
-      const firstName = nameParts[0] || '';
-
-      setUserProfile({
-        email: userResponse.data.email || '',
-        firstName,
-        picture: userResponse.data.picture || null,
-      });
-      setIsLoggedIn(true);
-      setShowLoginModal(false);
-      setNavbarLoginTriggered(false);
-      setLoginSuccess('Google login successful!');
-      setTimeout(() => setLoginSuccess(''), 3000);
-
-      dispatchLoginEvent();
-    } catch (error: any) {
-      setLoginError(error.response?.data?.message || 'Google login failed');
-      setTimeout(() => setLoginError(''), 8000);
-    } finally {
-      setIsLoggingIn(false);
-    }
-  }, []);
+  useEffect(() => {
+    googleCallbackRef.current = async (credentialResponse: any) => {
+      setLoginError('');
+      setLoginSuccess('');
+      setIsLoggingIn(true);
+      try {
+        const response = await axios.post(`${API_BASE_URL}/auth/google`, {
+          token: credentialResponse.credential,
+        });
+        localStorage.setItem('token', response.data.token);
+  
+        const userResponse = await axios.get(`${API_BASE_URL}/auth/me`, {
+          headers: { Authorization: `Bearer ${response.data.token}` },
+        });
+  
+        const fullName = userResponse.data.name || '';
+        const firstName = fullName.trim().split(' ')[0] || '';
+  
+        setUserProfile({
+          email: userResponse.data.email || '',
+          firstName,
+          picture: userResponse.data.picture || null,
+        });
+        setIsLoggedIn(true);
+        setShowLoginModal(false);
+        setNavbarLoginTriggered(false);
+        dispatchLoginEvent();
+      } catch (error: any) {
+        setLoginError(error.response?.data?.message || 'Google login failed');
+        setTimeout(() => setLoginError(''), 8000);
+      } finally {
+        setIsLoggingIn(false);
+      }
+    };
+  });
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -280,43 +279,38 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
 
   useEffect(() => {
     if (!showLoginModal || !navbarLoginTriggered) return;
-
+  
     const timer = setTimeout(() => {
       const initializeGoogleSignIn = () => {
-        if (window.google && window.google.accounts) {
-          try {
-            // Check if Google Sign-In is already initialized globally
-            const existingButton = document.getElementById('navbarGoogleSignInButton');
-            if (!existingButton) return;
-
-            // Only render if the button container is empty
-            if (existingButton.children.length === 0) {
-              window.google.accounts.id.initialize({
-                client_id: '397321320139-tpd310sq9j8rdngqd9kdmhgegco52b3g.apps.googleusercontent.com',
-                callback: handleGoogleLogin,
-              });
-              window.google.accounts.id.renderButton(existingButton, {
-                theme: 'outline',
-                size: 'large',
-                width: 300,
-              });
-            }
-          } catch (error) {
-            // Silently handle if already initialized
-            console.warn('Google Sign-In already initialized elsewhere');
-          }
-        } else {
+        if (!window.google?.accounts) {
           setTimeout(initializeGoogleSignIn, 100);
+          return;
         }
+  
+        const existingButton = document.getElementById('navbarGoogleSignInButton');
+        if (!existingButton) return;
+  
+        // Always re-initialize with a stable wrapper that calls the ref
+        // This is the key fix — wrapper never goes stale
+        window.google.accounts.id.initialize({
+          client_id: '397321320139-tpd310sq9j8rdngqd9kdmhgegco52b3g.apps.googleusercontent.com',
+          callback: (resp: any) => googleCallbackRef.current?.(resp),
+        });
+  
+        // Always clear and re-render the button
+        existingButton.innerHTML = '';
+        window.google.accounts.id.renderButton(existingButton, {
+          theme: 'outline',
+          size: 'large',
+          width: 300,
+        });
       };
-
+  
       initializeGoogleSignIn();
     }, 150);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [showLoginModal, navbarLoginTriggered, handleGoogleLogin]);
+  
+    return () => clearTimeout(timer);
+  }, [showLoginModal, navbarLoginTriggered]);
 
   const baseNavLinks: NavLink[] = [
     { label: 'Home', path: '/', icon: <FaHome /> },
