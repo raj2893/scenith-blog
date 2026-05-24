@@ -652,6 +652,10 @@ const CreateAIContentClient: React.FC = () => {
   const [loginSuccess, setLoginSuccess] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [showVoiceToVideoModal, setShowVoiceToVideoModal] = useState(false);
+  const [voiceHistory, setVoiceHistory] = useState<{id: number; audioPath: string; presignedUrl?: string; createdAt: string}[]>([]);
+  const [voiceHistoryAccessDenied, setVoiceHistoryAccessDenied] = useState(false);
+  const [showVoiceHistory, setShowVoiceHistory] = useState(false);
+  const [voiceHistoryLoading, setVoiceHistoryLoading] = useState(false);
 
   // ── Active tab
   const [activeTab, setActiveTab] = useState<Tab>(() => {
@@ -1567,16 +1571,42 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
 
   const handleDownloadAudio = async () => {
     if (!generatedAudio) return;
-    const res = await fetch(generatedAudio);
-    const blob = await res.blob();
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `ai-voice-${Date.now()}.mp3`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    try {
+      const res = await fetch(generatedAudio);
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `ai-voice-${Date.now()}.mp3`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch {
+      window.open(generatedAudio, '_blank');
+    }
+  };
+
+  const handleShowVoiceHistory = () => {
+    const newVal = !showVoiceHistory;
+    setShowVoiceHistory(newVal);
+    if (newVal && voiceHistory.length === 0) {
+      setVoiceHistoryLoading(true);
+      const tok = localStorage.getItem("token");
+      fetch(`${API_BASE_URL}/api/sole-tts/history`, {
+        headers: { Authorization: `Bearer ${tok}` },
+      })
+        .then((r) => r.json())
+        .then((data) => {
+          if (data.hasAccess === false || data.error) {
+            setVoiceHistoryAccessDenied(true);
+          } else {
+            setVoiceHistory(data.history || []);
+          }
+        })
+        .catch(() => {})
+        .finally(() => setVoiceHistoryLoading(false));
+    }
   };
 
   const handleDownloadImage = async (imageUrl: string, id: number) => {
@@ -1756,7 +1786,8 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
         </div>
 
         {/* ─ Prompt + Voice side-by-side for voice tab, full-width for others ─ */}
-        {activeTab === "voice" ? (
+        {activeTab === "voice" && (
+          <>
           <div className="cac-voice-layout">
             {/* LEFT: prompt card */}
             <div className="cac-voice-layout-left">
@@ -1991,7 +2022,139 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
               </div>
             </div>
           </div>
-        ) : (
+        </>
+        )}
+        {activeTab === "voice" && isLoggedIn && (
+            <div style={{ marginBottom: 16 }}>
+              <button
+                onClick={handleShowVoiceHistory}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 8,
+                  padding: '10px 16px', borderRadius: 10, border: '1.5px solid var(--cac-border)',
+                  background: 'var(--cac-surface)', color: 'var(--cac-accent)',
+                  fontSize: 13, fontWeight: 700, cursor: 'pointer', width: '100%',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <span>🎙️ Your Past Voices {voiceHistory.length > 0 ? `(${voiceHistory.length})` : ''}</span>
+                <span>{showVoiceHistory ? '▲ Hide' : '▼ Show'}</span>
+              </button>
+              {showVoiceHistory && (
+                <div style={{ marginTop: 10 }}>
+                  {voiceHistoryLoading ? (
+                    <div style={{ textAlign: 'center', padding: 20, color: 'var(--cac-muted)' }}>
+                      <div className="cac-spinner" style={{ margin: '0 auto 8px' }} />
+                      Loading history…
+                    </div>
+                  ) : voiceHistoryAccessDenied ? (
+                    <div style={{
+                      textAlign: 'center', padding: '16px 12px',
+                      background: 'rgba(99,85,220,0.04)', borderRadius: 10,
+                      border: '1px solid rgba(99,85,220,0.15)',
+                    }}>
+                      <div style={{ fontSize: 20, marginBottom: 6 }}>🔒</div>
+                      <p style={{ fontSize: 12.5, fontWeight: 700, color: 'var(--cac-accent)', margin: '0 0 4px' }}>
+                        Voice History is a Premium Feature
+                      </p>
+                      <p style={{ fontSize: 11.5, color: 'var(--cac-muted)', margin: '0 0 10px' }}>
+                        Upgrade to access your full generation history.
+                      </p>
+                      <a href="/pricing" style={{
+                        display: 'inline-block', padding: '7px 16px', borderRadius: 8,
+                        background: 'linear-gradient(135deg, #6355dc, #8b5cf6)',
+                        color: '#fff', fontSize: 12, fontWeight: 700, textDecoration: 'none',
+                      }}>
+                        Upgrade →
+                      </a>
+                    </div>
+                  ) : voiceHistory.length === 0 ? (
+                    <div style={{ textAlign: 'center', padding: 20, color: 'var(--cac-muted)', fontSize: 13 }}>
+                      No voices generated yet. Create your first one above!
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                      {voiceHistory.map((item) => {
+                        const audioUrl = item.presignedUrl || `${CDN_URL}/${item.audioPath}`;
+                        const isPlaying = playingDemo === `history-${item.id}`;
+                        return (
+                          <div key={item.id} style={{
+                            borderRadius: 10, border: '1px solid var(--cac-border)',
+                            background: 'var(--cac-surface)', padding: '10px 12px',
+                          }}>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+                              <span style={{ fontSize: 10.5, color: 'var(--cac-muted)' }}>
+                                🎙️ {new Date(item.createdAt).toLocaleDateString()}
+                              </span>
+                              <div style={{ display: 'flex', gap: 6 }}>
+                                <button
+                                  onClick={() => {
+                                    const vid = `history-${item.id}`;
+                                    if (demoAudioRef.current) {
+                                      demoAudioRef.current.pause();
+                                      demoAudioRef.current.currentTime = 0;
+                                    }
+                                    if (isPlaying) {
+                                      setPlayingDemo(null);
+                                      return;
+                                    }
+                                    const audio = new Audio(audioUrl);
+                                    audio.play().catch(() => setPlayingDemo(null));
+                                    audio.onended = () => setPlayingDemo(null);
+                                    audio.onerror = () => setPlayingDemo(null);
+                                    demoAudioRef.current = audio;
+                                    setPlayingDemo(vid);
+                                  }}
+                                  style={{
+                                    padding: '5px 10px', borderRadius: 7, border: '1px solid var(--cac-border)',
+                                    background: 'transparent', color: 'var(--cac-accent)',
+                                    fontSize: 11, fontWeight: 700, cursor: 'pointer',
+                                  }}
+                                >
+                                  {isPlaying ? '⏸️ Pause' : '▶️ Play'}
+                                </button>
+                                <button
+                                  onClick={async () => {
+                                    try {
+                                      const res = await fetch(audioUrl);
+                                      if (!res.ok) throw new Error('fetch failed');
+                                      const blob = await res.blob();
+                                      const blobUrl = URL.createObjectURL(blob);
+                                      const a = document.createElement('a');
+                                      a.href = blobUrl;
+                                      a.download = `ai-voice-${item.id}.mp3`;
+                                      document.body.appendChild(a);
+                                      a.click();
+                                      document.body.removeChild(a);
+                                      URL.revokeObjectURL(blobUrl);
+                                    } catch {
+                                      const a = document.createElement('a');
+                                      a.href = audioUrl;
+                                      a.download = `ai-voice-${item.id}.mp3`;
+                                      document.body.appendChild(a);
+                                      a.click();
+                                      document.body.removeChild(a);
+                                    }
+                                  }}
+                                  style={{
+                                    padding: '5px 10px', borderRadius: 7, border: 'none',
+                                    background: 'linear-gradient(135deg, #6355dc, #8b5cf6)',
+                                    color: '#fff', fontSize: 11, fontWeight: 700, cursor: 'pointer',
+                                  }}
+                                >
+                                  📥 Download
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+        {activeTab !== "voice" && (
           /* Image / Video tab — full width prompt card */
          <div className="cac-prompt-card">
 
@@ -2582,7 +2745,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
               {isLoggedIn && <a href="/pricing" className="cac-upgrade-link">Get More Credits →</a>}
             </div>
           </div>
-        )}        
+        )}
 
         {/* ── Image Job Status ── */}
         {activeTab === "image" &&
