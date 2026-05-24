@@ -412,18 +412,20 @@ const calcVideoCredits = (
     return audioOn ? 316 : 211;
   }
 
-  // Veo 3.1 Fast — uses 4s/8s durations
+  // Veo 3.1 Fast — 4s/8s normal, 20s/30s extend-video
   if (id === "VEO_3_1_FAST") {
-    const isLong = durationSeconds > 4;
-    if (!isLong) return audioOn ? 138 : 92;
-    return audioOn ? 278 : 186;
+    if (durationSeconds <= 4)  return audioOn ?  138 :  92;
+    if (durationSeconds <= 8)  return audioOn ?  278 : 186;
+    if (durationSeconds <= 20) return audioOn ?  556 : 370;
+    return                            audioOn ?  834 : 556;
   }
 
-  // Veo 3.1 — uses 4s/8s durations (must come after Fast check)
+  // Veo 3.1 — 4s/8s normal, 20s/30s extend-video
   if (id === "VEO_3_1") {
-    const isLong = durationSeconds > 4;
-    if (!isLong) return audioOn ? 370 : 186;
-    return audioOn ? 740 : 370;
+    if (durationSeconds <= 4)  return audioOn ?  370 :  186;
+    if (durationSeconds <= 8)  return audioOn ?  740 :  370;
+    if (durationSeconds <= 20) return audioOn ? 1480 :  740;
+    return                            audioOn ? 2224 : 1112;
   }
 
   // Grok Imagine — audio always on, resolution-based
@@ -840,12 +842,12 @@ useEffect(() => {
   }
 }, [selectedVideoModel]);
 
-// Dynamic duration options — Veo only supports 4s and 8s, others support 5s and 10s
+// Dynamic duration options — Veo supports 4s/8s/20s/30s, Hailuo 6s/10s, others 5s/10s
 const VIDEO_DURATION_OPTIONS = useMemo(() => {
   const id = selectedVideoModel?.toUpperCase() || "";
   const isVeo    = id === "VEO_3_1" || id === "VEO_3_1_FAST";
   const isHailuo = id === "HAILUO_02_PRO";
-  if (isVeo)    return [{ value: 4, label: "4s" }, { value: 8, label: "8s" }];
+  if (isVeo)    return [{ value: 4, label: "4s" }, { value: 8, label: "8s" }, { value: 20, label: "20s" }, { value: 30, label: "30s" }];
   if (isHailuo) return [{ value: 6, label: "6s" }, { value: 10, label: "10s" }];
   return [{ value: 5, label: "5s" }, { value: 10, label: "10s" }];
 }, [selectedVideoModel]);
