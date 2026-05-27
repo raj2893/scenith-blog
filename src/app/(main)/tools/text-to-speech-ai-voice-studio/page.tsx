@@ -1,6 +1,7 @@
 // app/tools/text-to-speech-ai-voice-studio/page.tsx
 import Link from 'next/link';
 import './styles.css';
+import TtsGenerateButton from './TtsGenerateButton';
 
 export const metadata = {
   title: 'Text to Speech AI Voice Studio | 40+ Natural Voices, 20+ Languages',
@@ -159,15 +160,7 @@ export default function TextToSpeechAIVoiceStudioPage() {
             />
             <div className="tts-prompt-footer">
               <span className="tts-char-counter" id="charCounter">0 characters</span>
-              <a
-                href={ctaUrl}
-                className="tts-generate-btn"
-                id="ttsGenerateBtn"
-                onClick="const input=document.getElementById('ttsScriptInput');const text=input?.value;if(text&&text.trim()){sessionStorage.setItem('microToolScript',text);sessionStorage.setItem('cac_prefill_script',text);}"
-              >
-                <span className="tts-btn-icon">🎤</span>
-                Generate AI Voice →
-              </a>
+                <TtsGenerateButton ctaUrl={ctaUrl} />
             </div>
             <p className="tts-prompt-note">
               💡 <strong>Pro tip:</strong> Add punctuation for natural pauses. Question marks and exclamation points improve intonation.
