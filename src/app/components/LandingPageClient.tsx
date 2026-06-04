@@ -938,6 +938,107 @@ const [isIndianUser, setIsIndianUser] = useState<boolean | null>(null);
           </div>
         </section>         
 
+        {/* SEO: How It Works — targets "how to use AI voice generator", "how to create AI videos", workflow queries */}
+        <section style={{
+          maxWidth: '1100px', margin: '0 auto 100px', padding: '0 20px'
+        }}>
+          <div className="section-header" style={{ marginBottom: '56px' }}>
+            <span className="section-label">Step by Step</span>
+            <h2>From Idea to Published Content in Minutes</h2>
+            <p className="section-subtitle">
+              No learning curve. No technical skills. Just open Scenith, pick your tool, and create.
+            </p>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            {[
+              {
+                step: '01',
+                title: 'Choose your content type',
+                desc: 'Need a voiceover for your YouTube video? A viral Reel? A product image? A PDF presentation? Pick the tool that matches your goal — AI Voice, AI Video, Image Editor, or PDF Tools.',
+                tags: ['AI Voice', 'AI Video', 'Image Editor', 'PDF Tools'],
+                color: '#667eea',
+              },
+              {
+                step: '02',
+                title: 'Enter your prompt or script',
+                desc: 'Type what you want. For voiceovers, paste your script and pick a voice — Hindi, English, or 20+ other languages. For videos, describe the scene. For images, describe the visual. Scenith handles the rest.',
+                tags: ['40+ voices', '20+ languages', 'Text-to-video', 'Text-to-image'],
+                color: '#f06cbe',
+              },
+              {
+                step: '03',
+                title: 'Generate in seconds',
+                desc: 'Scenith uses Kling 2.6, Veo 3.1, FLUX 1.1 Pro, Imagen 4, and Amazon Polly-level voice models — the same AI used by professional studios. Your content is ready in seconds, not hours.',
+                tags: ['Kling 2.6', 'Veo 3.1', 'FLUX 1.1', 'Imagen 4'],
+                color: '#4facfe',
+              },
+              {
+                step: '04',
+                title: 'Download and publish',
+                desc: 'Download your voiceover as MP3 or WAV, your video as MP4, your image as PNG or WebP, your PDF as a clean file — no watermarks, no branding, no limits. Post directly to YouTube, Instagram, or TikTok.',
+                tags: ['No watermarks', 'MP3 / WAV', 'MP4 / PNG', 'Instant download'],
+                color: '#48bb78',
+              },
+            ].map((item, i) => (
+              <div key={item.step} style={{
+                display: 'flex', gap: '28px', alignItems: 'flex-start',
+                background: 'rgba(255,255,255,0.92)',
+                border: `1.5px solid ${item.color}22`,
+                borderRadius: '20px', padding: '28px 32px',
+                transition: 'border-color 0.2s, box-shadow 0.2s',
+              }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLElement).style.borderColor = item.color + '55';
+                  (e.currentTarget as HTMLElement).style.boxShadow = `0 8px 32px ${item.color}18`;
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLElement).style.borderColor = item.color + '22';
+                  (e.currentTarget as HTMLElement).style.boxShadow = 'none';
+                }}
+              >
+                <div style={{
+                  minWidth: '56px', height: '56px', borderRadius: '16px',
+                  background: `${item.color}15`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: '1.1rem', fontWeight: 800, color: item.color, flexShrink: 0,
+                }}>
+                  {item.step}
+                </div>
+                <div style={{ flex: 1 }}>
+                  <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#1a202c', marginBottom: '8px' }}>
+                    {item.title}
+                  </h3>
+                  <p style={{ color: '#4a5568', fontSize: '0.92rem', lineHeight: 1.7, marginBottom: '14px' }}>
+                    {item.desc}
+                  </p>
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    {item.tags.map(tag => (
+                      <span key={tag} style={{
+                        fontSize: '0.78rem', fontWeight: 600, padding: '3px 10px',
+                        borderRadius: '8px', background: `${item.color}12`, color: item.color,
+                        border: `1px solid ${item.color}25`,
+                      }}>{tag}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ textAlign: 'center', marginTop: '40px' }}>
+            <Link href="/create-ai-content" style={{
+              display: 'inline-flex', alignItems: 'center', gap: '10px',
+              padding: '14px 32px', borderRadius: '14px',
+              background: 'linear-gradient(135deg, #667eea, #764ba2)',
+              color: 'white', fontSize: '0.95rem', fontWeight: 700, textDecoration: 'none',
+              boxShadow: '0 4px 20px rgba(102,126,234,0.35)',
+            }}>
+              Try It Free — No Card Needed →
+            </Link>
+          </div>
+        </section>
+
         {/* Top Tools Showcase - Featured */}
         <section className="featured-tools-section">
           <div className="section-header">
@@ -1195,7 +1296,139 @@ const [isIndianUser, setIsIndianUser] = useState<boolean | null>(null);
               </div>
             ))}
           </div>
-        </section>            
+        </section>
+
+        {/* SEO: Niche Use Cases — targets faceless YouTube, Hindi voice, creator queries */}
+        <section style={{
+          maxWidth: '1100px', margin: '0 auto 100px', padding: '0 20px'
+        }}>
+          <div className="section-header" style={{ marginBottom: '48px' }}>
+            <span className="section-label">Built for Every Creator</span>
+            <h2>One Platform. Every Niche.</h2>
+            <p className="section-subtitle">
+              From faceless YouTube channels to Hindi content creators to agency owners —
+              Scenith is built around your specific workflow, not a generic template.
+            </p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '28px' }}>
+
+            {/* Niche 1 — Faceless YouTube */}
+            <div style={{
+              background: 'rgba(255,255,255,0.95)',
+              border: '2px solid rgba(102,126,234,0.15)',
+              borderRadius: '24px', padding: '32px 28px',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.05)'
+            }}>
+              <div style={{ fontSize: '2rem', marginBottom: '14px' }}>🎬</div>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#1a202c', marginBottom: '10px' }}>
+                Faceless YouTube Channel
+              </h3>
+              <p style={{ color: '#4a5568', fontSize: '0.92rem', lineHeight: 1.7, marginBottom: '18px' }}>
+                Build a profitable faceless channel without ever showing your face or recording your voice.
+                Generate AI voiceovers for narration, create thumbnails with the image editor, and
+                produce AI videos using Kling and Veo — all from one dashboard.
+              </p>
+              <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 22px' }}>
+                {[
+                  'AI narration in 40+ voices and 20+ languages',
+                  'YouTube Shorts, long-form, and documentary style',
+                  'Thumbnail creation with SVG icon library',
+                  'Auto-subtitle generation for every video',
+                ].map(p => (
+                  <li key={p} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '8px', fontSize: '0.88rem', color: '#4a5568' }}>
+                    <span style={{ color: '#667eea', fontWeight: 700, marginTop: '2px', flexShrink: 0 }}>✓</span>{p}
+                  </li>
+                ))}
+              </ul>
+              <Link href="/create-ai-content" style={{
+                display: 'inline-flex', alignItems: 'center', gap: '6px',
+                padding: '10px 20px', borderRadius: '10px',
+                background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                color: 'white', fontSize: '0.88rem', fontWeight: 700, textDecoration: 'none'
+              }}>
+                Start Your Channel →
+              </Link>
+            </div>
+
+            {/* Niche 2 — Hindi Content Creators */}
+            <div style={{
+              background: 'rgba(255,255,255,0.95)',
+              border: '2px solid rgba(255,107,107,0.15)',
+              borderRadius: '24px', padding: '32px 28px',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.05)'
+            }}>
+              <div style={{ fontSize: '2rem', marginBottom: '14px' }}>🎙️</div>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#1a202c', marginBottom: '10px' }}>
+                Hindi AI Voice Generator
+              </h3>
+              <p style={{ color: '#4a5568', fontSize: '0.92rem', lineHeight: 1.7, marginBottom: '18px' }}>
+                India's fastest-growing creator community deserves a voice tool that actually sounds natural in Hindi.
+                Scenith offers dedicated Hindi male and female AI voices — realistic, expressive, and
+                free to try without any signup required.
+              </p>
+              <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 22px' }}>
+                {[
+                  'Natural-sounding Hindi male and female voices',
+                  'Perfect for YouTube, Reels, and WhatsApp content',
+                  'Adjust speed, pitch, and emotion per clip',
+                  'Download as MP3 or WAV — no watermark',
+                ].map(p => (
+                  <li key={p} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '8px', fontSize: '0.88rem', color: '#4a5568' }}>
+                    <span style={{ color: '#FF6B6B', fontWeight: 700, marginTop: '2px', flexShrink: 0 }}>✓</span>{p}
+                  </li>
+                ))}
+              </ul>
+              <Link href="/tools/hindi-female-ai-voice-generation" style={{
+                display: 'inline-flex', alignItems: 'center', gap: '6px',
+                padding: '10px 20px', borderRadius: '10px',
+                background: 'linear-gradient(135deg, #FF6B6B, #ee5a24)',
+                color: 'white', fontSize: '0.88rem', fontWeight: 700, textDecoration: 'none'
+              }}>
+                Try Hindi Voices Free →
+              </Link>
+            </div>
+
+            {/* Niche 3 — AI Video for Social Media */}
+            <div style={{
+              background: 'rgba(255,255,255,0.95)',
+              border: '2px solid rgba(240,108,190,0.15)',
+              borderRadius: '24px', padding: '32px 28px',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.05)'
+            }}>
+              <div style={{ fontSize: '2rem', marginBottom: '14px' }}>📱</div>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#1a202c', marginBottom: '10px' }}>
+                AI Video Generator for Reels & Shorts
+              </h3>
+              <p style={{ color: '#4a5568', fontSize: '0.92rem', lineHeight: 1.7, marginBottom: '18px' }}>
+                Generate cinematic short-form videos from a text prompt — no camera, no filming, no editing skills needed.
+                Choose from Kling 2.6, Veo 3.1, or Wan 2.5 based on your content style and budget.
+                Post daily without burning out.
+              </p>
+              <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 22px' }}>
+                {[
+                  'Text-to-video in under 2 minutes',
+                  'Multiple AI models — Kling, Veo, Wan',
+                  'Instagram Reels, YouTube Shorts, TikTok ready',
+                  '50 free credits monthly — no card needed',
+                ].map(p => (
+                  <li key={p} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '8px', fontSize: '0.88rem', color: '#4a5568' }}>
+                    <span style={{ color: '#f06cbe', fontWeight: 700, marginTop: '2px', flexShrink: 0 }}>✓</span>{p}
+                  </li>
+                ))}
+              </ul>
+              <Link href="/create-ai-content" style={{
+                display: 'inline-flex', alignItems: 'center', gap: '6px',
+                padding: '10px 20px', borderRadius: '10px',
+                background: 'linear-gradient(135deg, #f06cbe, #c0392b)',
+                color: 'white', fontSize: '0.88rem', fontWeight: 700, textDecoration: 'none'
+              }}>
+                Generate Your First Video →
+              </Link>
+            </div>
+
+          </div>
+        </section>
 
         {/* NEW: SVG Library Highlight Section */}
         <section className="svg-library-showcase">
@@ -1348,6 +1581,59 @@ const [isIndianUser, setIsIndianUser] = useState<boolean | null>(null);
           </Link>
         </section>      
 
+        {/* SEO: Stats & Social Proof — E-E-A-T signal, boosts domain trust */}
+        <section style={{
+          maxWidth: '1100px', margin: '0 auto 100px', padding: '0 20px'
+        }}>
+          <div style={{
+            background: 'linear-gradient(135deg, #0f0c29 0%, #1e1a45 100%)',
+            borderRadius: '28px', padding: '56px 48px',
+            border: '1px solid rgba(102,126,234,0.25)',
+            boxShadow: '0 0 60px rgba(102,126,234,0.12)',
+          }}>
+            <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+              <h2 style={{
+                fontSize: 'clamp(1.6rem, 3vw, 2.4rem)', fontWeight: 900,
+                color: 'white', letterSpacing: '-0.02em', marginBottom: '12px',
+              }}>
+                Trusted by Creators Worldwide
+              </h2>
+              <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '1rem' }}>
+                Real numbers. No vanity metrics.
+              </p>
+            </div>
+
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+              gap: '2px',
+            }}>
+              {[
+                { num: '2,500+', label: 'Active creators', color: '#a899f5' },
+                { num: '40+', label: 'AI voices available', color: '#f06cbe' },
+                { num: '20+', label: 'Languages supported', color: '#4facfe' },
+                { num: '5', label: 'AI video models', color: '#fdcb6e' },
+                { num: '9', label: 'PDF tools free', color: '#55efc4' },
+              ].map((stat) => (
+                <div key={stat.label} style={{
+                  textAlign: 'center', padding: '24px 16px',
+                  borderRight: '1px solid rgba(255,255,255,0.06)',
+                }}>
+                  <div style={{
+                    fontSize: 'clamp(1.8rem, 3vw, 2.6rem)', fontWeight: 900,
+                    color: stat.color, marginBottom: '6px', lineHeight: 1,
+                  }}>
+                    {stat.num}
+                  </div>
+                  <div style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.45)', fontWeight: 600 }}>
+                    {stat.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Why Choose Section */}
         <section className="why-choose-section">
           <div className="section-header">
@@ -1407,7 +1693,84 @@ const [isIndianUser, setIsIndianUser] = useState<boolean | null>(null);
               </div>
             ))}
           </div>
-        </section>      
+        </section>
+
+        {/* SEO: Competitor Comparison — targets "ElevenLabs alternative", "free AI voice generator" queries */}
+        <section style={{
+          maxWidth: '1100px', margin: '0 auto 100px', padding: '0 20px'
+        }}>
+          <div className="section-header" style={{ marginBottom: '48px' }}>
+            <span className="section-label">Honest Comparison</span>
+            <h2>How Scenith Compares to Other AI Tools</h2>
+            <p className="section-subtitle">
+              One platform replacing five separate subscriptions. Here's what that actually means in savings and features.
+            </p>
+          </div>
+
+          <div style={{ overflowX: 'auto', borderRadius: '20px', border: '1.5px solid rgba(102,126,234,0.18)' }}>
+            <table style={{
+              width: '100%', borderCollapse: 'collapse',
+              background: 'rgba(255,255,255,0.95)', fontSize: '0.88rem'
+            }}>
+              <thead>
+                <tr style={{ background: 'linear-gradient(135deg, #667eea11, #764ba211)' }}>
+                  <th style={{ padding: '16px 20px', textAlign: 'left', fontWeight: 700, color: '#1a202c', borderBottom: '1.5px solid rgba(102,126,234,0.18)' }}>Feature</th>
+                  {[
+                    { name: 'Scenith', highlight: true },
+                    { name: 'ElevenLabs', highlight: false },
+                    { name: 'Canva', highlight: false },
+                    { name: 'Adobe', highlight: false },
+                  ].map(col => (
+                    <th key={col.name} style={{
+                      padding: '16px 20px', textAlign: 'center', fontWeight: 700,
+                      color: col.highlight ? '#667eea' : '#4a5568',
+                      borderBottom: '1.5px solid rgba(102,126,234,0.18)',
+                      background: col.highlight ? 'rgba(102,126,234,0.06)' : 'transparent'
+                    }}>
+                      {col.name}
+                      {col.highlight && <div style={{ fontSize: '0.7rem', fontWeight: 600, color: '#a899f5', marginTop: '2px' }}>All-in-one</div>}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  { feature: 'AI Voice Generation', scenith: '✅ 40+ voices', elevenlabs: '✅ 30+ voices', canva: '❌ None', adobe: '❌ None' },
+                  { feature: 'AI Image Generation', scenith: '✅ FLUX, Imagen 4, GPT Image', elevenlabs: '❌ None', canva: '✅ Limited', adobe: '✅ Firefly only' },
+                  { feature: 'AI Video Generation', scenith: '✅ Kling, Veo 3.1, Wan 2.5', elevenlabs: '❌ None', canva: '⚠️ Basic only', adobe: '❌ None' },
+                  { feature: 'Background Remover', scenith: '✅ Included free', elevenlabs: '❌ None', canva: '⚠️ Pro only', adobe: '⚠️ Paid plan' },
+                  { feature: 'PDF Tools', scenith: '✅ 9 tools free', elevenlabs: '❌ None', canva: '❌ None', adobe: '⚠️ $239/year' },
+                  { feature: 'Auto Subtitles', scenith: '✅ Included', elevenlabs: '❌ None', canva: '⚠️ Limited', adobe: '⚠️ Premiere only' },
+                  { feature: 'No watermark (free)', scenith: '✅ Always', elevenlabs: '⚠️ Partial', canva: '❌ Canva branded', adobe: '❌ Watermarked' },
+                  { feature: 'Starting price', scenith: '🆓 Free forever', elevenlabs: '$5/month', canva: '$12.99/month', adobe: '$54.99/month' },
+                ].map((row, i) => (
+                  <tr key={row.feature} style={{ background: i % 2 === 0 ? 'transparent' : 'rgba(102,126,234,0.02)' }}>
+                    <td style={{ padding: '13px 20px', color: '#2d3748', fontWeight: 600, borderBottom: '0.5px solid rgba(102,126,234,0.08)' }}>{row.feature}</td>
+                    <td style={{ padding: '13px 20px', textAlign: 'center', borderBottom: '0.5px solid rgba(102,126,234,0.08)', background: 'rgba(102,126,234,0.04)', fontWeight: 600, color: '#2d3748' }}>{row.scenith}</td>
+                    <td style={{ padding: '13px 20px', textAlign: 'center', color: '#718096', borderBottom: '0.5px solid rgba(102,126,234,0.08)' }}>{row.elevenlabs}</td>
+                    <td style={{ padding: '13px 20px', textAlign: 'center', color: '#718096', borderBottom: '0.5px solid rgba(102,126,234,0.08)' }}>{row.canva}</td>
+                    <td style={{ padding: '13px 20px', textAlign: 'center', color: '#718096', borderBottom: '0.5px solid rgba(102,126,234,0.08)' }}>{row.adobe}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div style={{ textAlign: 'center', marginTop: '28px' }}>
+            <p style={{ fontSize: '0.9rem', color: '#718096', marginBottom: '16px' }}>
+              Stop paying for five tools. Get everything in one place — free to start.
+            </p>
+            <Link href="/pricing" style={{
+              display: 'inline-flex', alignItems: 'center', gap: '8px',
+              padding: '12px 28px', borderRadius: '12px',
+              background: 'linear-gradient(135deg, #667eea, #764ba2)',
+              color: 'white', fontSize: '0.95rem', fontWeight: 700, textDecoration: 'none',
+              boxShadow: '0 4px 20px rgba(102,126,234,0.35)'
+            }}>
+              See Full Pricing →
+            </Link>
+          </div>
+        </section>
 
         {/* Tutorials Section - Updated */}
         <section className="tutorials-section" id="tutorials-section">
@@ -1465,6 +1828,76 @@ const [isIndianUser, setIsIndianUser] = useState<boolean | null>(null);
             View All Creator Guides & Tips
           </Link>
         </section>      
+
+        {/* SEO: People Also Ask — directly targets Google PAA boxes for AI voice/video queries */}
+        <section style={{
+          maxWidth: '900px', margin: '0 auto 80px', padding: '0 20px'
+        }}>
+          <div className="section-header" style={{ marginBottom: '40px' }}>
+            <span className="section-label">Quick Answers</span>
+            <h2>People Also Ask</h2>
+            <p className="section-subtitle">
+              The most common questions creators have before switching to Scenith.
+            </p>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {[
+              {
+                q: 'Is Scenith a free AI voice generator?',
+                a: 'Yes — Scenith offers a permanently free plan with 50 credits every month, no credit card required. You can use those credits across any tool including the AI voice generator, which supports 40+ natural voices in 20+ languages. Free users get clean downloads with zero watermarks.',
+              },
+              {
+                q: 'Can I use Scenith to create faceless YouTube videos?',
+                a: 'Absolutely. Scenith is built specifically for faceless content creators. You can generate AI voiceovers for narration, create AI videos using Kling or Veo 3.1 from text prompts, design thumbnails in the image editor, and add auto-generated subtitles — all without showing your face or recording your own voice.',
+              },
+              {
+                q: 'What is the best free AI voice generator for Hindi content?',
+                a: 'Scenith provides dedicated Hindi male and female AI voices that sound natural and expressive. Unlike generic TTS tools, Scenith\'s Hindi voices support speed and emotion adjustments, and you can download clean MP3 or WAV files with no watermark even on the free plan.',
+              },
+              {
+                q: 'How does Scenith compare to ElevenLabs?',
+                a: 'ElevenLabs specializes only in voice generation and starts at $5/month with limited characters. Scenith includes AI voice generation plus AI image generation, AI video generation (Kling, Veo 3.1, Wan 2.5), background removal, subtitle generation, PDF tools, and an SVG icon library — all starting free. If you need a full content creation suite rather than voice only, Scenith replaces 5+ separate subscriptions.',
+              },
+              {
+                q: 'Which AI video generator is best for Instagram Reels and YouTube Shorts?',
+                a: 'Scenith gives you access to multiple models so you can choose based on your needs: Wan 2.5 is the most affordable for standard clips, Kling 2.6 Pro delivers cinematic 1080p quality with native audio, and Veo 3.1 from Google produces the most realistic footage for high-quality content. All are accessible from one dashboard with a shared credit balance.',
+              },
+              {
+                q: 'Does Scenith add watermarks to free content?',
+                a: 'No. Scenith never adds watermarks to any content you create — not on the free plan, not on paid plans. Your voiceovers, images, videos, and PDFs are always clean and professional, ready to publish directly to any platform.',
+              },
+            ].map((item, i) => (
+              <div key={i} style={{
+                background: 'rgba(255,255,255,0.92)',
+                border: '1.5px solid rgba(102,126,234,0.12)',
+                borderRadius: '16px', padding: '22px 26px',
+                transition: 'border-color 0.2s, box-shadow 0.2s',
+              }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLElement).style.borderColor = 'rgba(102,126,234,0.35)';
+                  (e.currentTarget as HTMLElement).style.boxShadow = '0 6px 24px rgba(102,126,234,0.1)';
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLElement).style.borderColor = 'rgba(102,126,234,0.12)';
+                  (e.currentTarget as HTMLElement).style.boxShadow = 'none';
+                }}
+              >
+                <h3 style={{
+                  fontSize: '1rem', fontWeight: 700, color: '#1a202c',
+                  marginBottom: '10px', lineHeight: 1.4,
+                }}>
+                  {item.q}
+                </h3>
+                <p style={{
+                  fontSize: '0.9rem', color: '#4a5568', lineHeight: 1.75, margin: 0,
+                }}>
+                  {item.a}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
 
         {/* FAQ Section - Enhanced */}
         <section className="faq-section">
