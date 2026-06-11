@@ -1,0 +1,1045 @@
+/* app/tools/ai-cinematic-wallpaper-generator/styles.css */
+
+/* ============================================
+   ROOT VARIABLES & RESET
+   ============================================ */
+
+:root {
+  --cinematic-primary: #7c3aed;
+  --cinematic-primary-dark: #6d28d9;
+  --cinematic-primary-light: #8b5cf6;
+  --cinematic-secondary: #db2777;
+  --cinematic-accent: #f59e0b;
+  --cinematic-dark: #0f0f12;
+  --cinematic-darker: #0a0a0c;
+  --cinematic-gray-100: #f8fafc;
+  --cinematic-gray-200: #e2e8f0;
+  --cinematic-gray-300: #cbd5e1;
+  --cinematic-gray-400: #94a3b8;
+  --cinematic-gray-500: #64748b;
+  --cinematic-gray-600: #475569;
+  --cinematic-gray-700: #334155;
+  --cinematic-gray-800: #1e293b;
+  --cinematic-gray-900: #0f172a;
+  --cinematic-gradient: linear-gradient(135deg, #7c3aed, #db2777);
+  --cinematic-gradient-subtle: linear-gradient(135deg, rgba(124, 58, 237, 0.08), rgba(219, 39, 119, 0.04));
+  --cinematic-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --cinematic-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --cinematic-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --cinematic-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --cinematic-radius-sm: 0.5rem;
+  --cinematic-radius-md: 0.75rem;
+  --cinematic-radius-lg: 1rem;
+  --cinematic-radius-xl: 1.5rem;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  background: var(--cinematic-darker);
+  color: var(--cinematic-gray-100);
+  line-height: 1.6;
+  scroll-behavior: smooth;
+}
+
+/* ============================================
+   CONTAINER & LAYOUT
+   ============================================ */
+
+.cinematic-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.cinematic-page {
+  background: linear-gradient(180deg, var(--cinematic-darker) 0%, var(--cinematic-dark) 100%);
+  min-height: 100vh;
+}
+
+/* ============================================
+   BREADCRUMB NAVIGATION
+   ============================================ */
+
+.cinematic-breadcrumb {
+  background: rgba(15, 15, 18, 0.9);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(124, 58, 237, 0.15);
+  padding: 0.85rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.cinematic-breadcrumb ol {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  list-style: none;
+}
+
+.cinematic-breadcrumb li {
+  display: inline-flex;
+  align-items: center;
+}
+
+.cinematic-breadcrumb li:not(:last-child)::after {
+  content: '/';
+  margin-left: 0.5rem;
+  color: var(--cinematic-gray-500);
+}
+
+.cinematic-breadcrumb a {
+  color: var(--cinematic-gray-400);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.cinematic-breadcrumb a:hover {
+  color: var(--cinematic-primary-light);
+}
+
+.cinematic-breadcrumb li:last-child span {
+  color: var(--cinematic-primary-light);
+  font-weight: 500;
+}
+
+/* ============================================
+   HERO SECTION
+   ============================================ */
+
+.cinematic-hero {
+  padding: 3rem 0 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.cinematic-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 50%, rgba(124, 58, 237, 0.12), transparent 50%);
+  pointer-events: none;
+}
+
+.cinematic-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(124, 58, 237, 0.12);
+  border: 1px solid rgba(124, 58, 237, 0.25);
+  border-radius: 100px;
+  padding: 0.4rem 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.cinematic-badge-icon {
+  font-size: 1rem;
+}
+
+.cinematic-badge-text {
+  background: var(--cinematic-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.cinematic-hero-title {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #fff, var(--cinematic-primary-light));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.cinematic-hero-subtitle {
+  display: block;
+  font-size: clamp(1rem, 3vw, 1.25rem);
+  font-weight: 500;
+  color: var(--cinematic-gray-300);
+  margin-top: 0.5rem;
+  background: none;
+  -webkit-background-clip: unset;
+  background-clip: unset;
+  color: var(--cinematic-gray-300);
+}
+
+.cinematic-hero-desc {
+  font-size: 1.125rem;
+  color: var(--cinematic-gray-300);
+  max-width: 720px;
+  margin-bottom: 2rem;
+  line-height: 1.7;
+}
+
+/* Prompt Box */
+.cinematic-prompt-box {
+  background: var(--cinematic-gray-900);
+  border: 1px solid var(--cinematic-gray-800);
+  border-radius: var(--cinematic-radius-xl);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  transition: all 0.3s ease;
+}
+
+.cinematic-prompt-box:hover {
+  border-color: rgba(124, 58, 237, 0.3);
+  box-shadow: var(--cinematic-shadow-lg);
+}
+
+.cinematic-prompt-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.cinematic-prompt-icon {
+  font-size: 1.5rem;
+}
+
+.cinematic-prompt-header h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--cinematic-gray-200);
+}
+
+.cinematic-prompt-textarea {
+  width: 100%;
+  background: var(--cinematic-gray-800);
+  border: 1px solid var(--cinematic-gray-700);
+  border-radius: var(--cinematic-radius-md);
+  padding: 1rem;
+  color: var(--cinematic-gray-100);
+  font-size: 0.95rem;
+  font-family: inherit;
+  resize: vertical;
+  transition: all 0.2s ease;
+}
+
+.cinematic-prompt-textarea:focus {
+  outline: none;
+  border-color: var(--cinematic-primary);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+}
+
+.cinematic-prompt-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.cinematic-prompt-stats {
+  font-size: 0.8rem;
+  color: var(--cinematic-gray-400);
+}
+
+.cinematic-generate-btn {
+  background: var(--cinematic-gradient);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--cinematic-radius-md);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: white;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.cinematic-generate-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -5px rgba(124, 58, 237, 0.4);
+}
+
+.cinematic-btn-icon {
+  font-size: 1.1rem;
+}
+
+/* Main CTA */
+.cinematic-hero-cta {
+  margin-bottom: 2rem;
+}
+
+.cinematic-main-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--cinematic-gradient);
+  border-radius: var(--cinematic-radius-lg);
+  padding: 1rem 1.5rem;
+  text-decoration: none;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.cinematic-main-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--cinematic-shadow-xl);
+}
+
+.cinematic-cta-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cinematic-cta-emoji {
+  font-size: 2rem;
+}
+
+.cinematic-cta-text-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.cinematic-cta-text-block strong {
+  font-size: 1.125rem;
+}
+
+.cinematic-cta-text-block small {
+  font-size: 0.8rem;
+  opacity: 0.9;
+}
+
+.cinematic-cta-arrow {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+/* Trust Row */
+.cinematic-trust-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.cinematic-trust-pill {
+  background: rgba(124, 58, 237, 0.1);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  border-radius: 100px;
+  padding: 0.4rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--cinematic-gray-300);
+}
+
+/* ============================================
+   DEFINITION SECTION
+   ============================================ */
+
+.cinematic-definition {
+  padding: 3rem 0;
+  border-top: 1px solid rgba(124, 58, 237, 0.1);
+  border-bottom: 1px solid rgba(124, 58, 237, 0.1);
+}
+
+.cinematic-definition-box {
+  background: var(--cinematic-gradient-subtle);
+  border-radius: var(--cinematic-radius-lg);
+  padding: 2rem;
+  border: 1px solid rgba(124, 58, 237, 0.15);
+}
+
+.cinematic-definition-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  color: var(--cinematic-primary-light);
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.cinematic-definition-text {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--cinematic-gray-300);
+}
+
+.cinematic-definition-text strong {
+  color: var(--cinematic-primary-light);
+}
+
+/* ============================================
+   SECTION HEADINGS
+   ============================================ */
+
+.cinematic-why,
+.cinematic-usecases,
+.cinematic-howto,
+.cinematic-examples,
+.cinematic-practices,
+.cinematic-mistakes,
+.cinematic-advanced,
+.cinematic-faq,
+.cinematic-final-cta {
+  padding: 4rem 0;
+}
+
+.cinematic-container h2 {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #fff, var(--cinematic-primary-light));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.cinematic-section-intro {
+  font-size: 1.125rem;
+  color: var(--cinematic-gray-400);
+  margin-bottom: 3rem;
+  max-width: 720px;
+}
+
+/* ============================================
+   WHY CINEMATIC GRID
+   ============================================ */
+
+.cinematic-why-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.cinematic-why-card {
+  background: var(--cinematic-gray-900);
+  border: 1px solid var(--cinematic-gray-800);
+  border-radius: var(--cinematic-radius-lg);
+  padding: 1.75rem;
+  transition: all 0.3s ease;
+}
+
+.cinematic-why-card:hover {
+  border-color: rgba(124, 58, 237, 0.3);
+  transform: translateY(-4px);
+}
+
+.cinematic-why-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.cinematic-why-card h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--cinematic-gray-100);
+}
+
+.cinematic-why-card p {
+  color: var(--cinematic-gray-400);
+  line-height: 1.6;
+}
+
+/* ============================================
+   USE CASES GRID
+   ============================================ */
+
+.cinematic-usecase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.cinematic-usecase-card {
+  background: var(--cinematic-gray-900);
+  border: 1px solid var(--cinematic-gray-800);
+  border-radius: var(--cinematic-radius-lg);
+  padding: 1.75rem;
+  transition: all 0.3s ease;
+}
+
+.cinematic-usecase-card:hover {
+  border-color: rgba(124, 58, 237, 0.3);
+  transform: translateY(-2px);
+}
+
+.cinematic-uc-icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.cinematic-usecase-card h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--cinematic-gray-100);
+}
+
+.cinematic-usecase-card p {
+  color: var(--cinematic-gray-400);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.cinematic-uc-niches {
+  font-size: 0.8rem;
+  color: var(--cinematic-primary-light);
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--cinematic-gray-800);
+}
+
+/* ============================================
+   HOW TO STEPS
+   ============================================ */
+
+.cinematic-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.cinematic-step {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.cinematic-step-num {
+  background: var(--cinematic-gradient);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.cinematic-step-body {
+  flex: 1;
+}
+
+.cinematic-step-body h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--cinematic-gray-100);
+}
+
+.cinematic-step-body p {
+  color: var(--cinematic-gray-400);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.cinematic-step-example {
+  background: rgba(124, 58, 237, 0.08);
+  border-left: 3px solid var(--cinematic-primary);
+  padding: 1rem;
+  border-radius: var(--cinematic-radius-sm);
+  font-size: 0.9rem;
+  color: var(--cinematic-gray-300);
+}
+
+/* ============================================
+   PROMPT EXAMPLES
+   ============================================ */
+
+.cinematic-examples-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.cinematic-example-category {
+  background: var(--cinematic-gray-900);
+  border-radius: var(--cinematic-radius-lg);
+  padding: 1.5rem;
+  border: 1px solid var(--cinematic-gray-800);
+}
+
+.cinematic-example-category h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--cinematic-primary-light);
+}
+
+.cinematic-example-category ul {
+  list-style: none;
+  padding: 0;
+}
+
+.cinematic-example-category li {
+  font-size: 0.85rem;
+  color: var(--cinematic-gray-400);
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--cinematic-gray-800);
+  line-height: 1.5;
+}
+
+.cinematic-example-category li:last-child {
+  border-bottom: none;
+}
+
+.cinematic-examples-cta {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.cinematic-examples-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--cinematic-gradient);
+  padding: 0.75rem 2rem;
+  border-radius: var(--cinematic-radius-md);
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.cinematic-examples-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--cinematic-shadow-lg);
+}
+
+/* ============================================
+   BEST PRACTICES & MISTAKES
+   ============================================ */
+
+.cinematic-practices-grid,
+.cinematic-mistakes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.cinematic-practice-card,
+.cinematic-mistake-card {
+  background: var(--cinematic-gray-900);
+  border-radius: var(--cinematic-radius-lg);
+  padding: 1.5rem;
+  border: 1px solid var(--cinematic-gray-800);
+}
+
+.cinematic-practice-card h3,
+.cinematic-mistake-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--cinematic-gray-100);
+}
+
+.cinematic-practice-card p,
+.cinematic-mistake-card p {
+  color: var(--cinematic-gray-400);
+  line-height: 1.6;
+  font-size: 0.9rem;
+}
+
+.cinematic-mistake-card {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.cinematic-mistake-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.cinematic-mistake-card div {
+  flex: 1;
+}
+
+/* ============================================
+   ADVANCED TECHNIQUES
+   ============================================ */
+
+.cinematic-advanced-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.cinematic-advanced-card {
+  background: var(--cinematic-gradient-subtle);
+  border-radius: var(--cinematic-radius-lg);
+  padding: 1.5rem;
+  border: 1px solid rgba(124, 58, 237, 0.2);
+}
+
+.cinematic-advanced-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--cinematic-primary-light);
+}
+
+.cinematic-advanced-card p {
+  color: var(--cinematic-gray-400);
+  line-height: 1.6;
+  font-size: 0.9rem;
+}
+
+/* ============================================
+   FAQ SECTION
+   ============================================ */
+
+.cinematic-faq-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cinematic-faq-item {
+  background: var(--cinematic-gray-900);
+  border: 1px solid var(--cinematic-gray-800);
+  border-radius: var(--cinematic-radius-md);
+  overflow: hidden;
+}
+
+.cinematic-faq-item summary {
+  padding: 1.25rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--cinematic-gray-200);
+  transition: background 0.2s ease;
+  list-style: none;
+  position: relative;
+}
+
+.cinematic-faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.cinematic-faq-item summary::after {
+  content: '+';
+  position: absolute;
+  right: 1.5rem;
+  font-size: 1.25rem;
+  color: var(--cinematic-primary-light);
+  transition: transform 0.2s ease;
+}
+
+.cinematic-faq-item[open] summary::after {
+  content: '−';
+}
+
+.cinematic-faq-item summary:hover {
+  background: rgba(124, 58, 237, 0.05);
+}
+
+.cinematic-faq-item p {
+  padding: 0 1.5rem 1.25rem 1.5rem;
+  color: var(--cinematic-gray-400);
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+/* ============================================
+   FINAL CTA SECTION
+   ============================================ */
+
+.cinematic-final-cta {
+  background: linear-gradient(180deg, transparent, rgba(124, 58, 237, 0.05));
+  border-top: 1px solid rgba(124, 58, 237, 0.1);
+}
+
+.cinematic-final-cta-inner {
+  background: var(--cinematic-gradient-subtle);
+  border-radius: var(--cinematic-radius-xl);
+  padding: 3rem 2rem;
+  text-align: center;
+  border: 1px solid rgba(124, 58, 237, 0.2);
+}
+
+.cinematic-final-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.cinematic-final-cta-inner h2 {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #fff, var(--cinematic-primary-light));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.cinematic-final-desc {
+  color: var(--cinematic-gray-400);
+  margin-bottom: 2rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cinematic-final-cta-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--cinematic-gradient);
+  border-radius: var(--cinematic-radius-lg);
+  padding: 1rem 1.75rem;
+  text-decoration: none;
+  color: white;
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cinematic-final-cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--cinematic-shadow-xl);
+}
+
+.cinematic-final-cta-content {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.cinematic-final-cta-content strong {
+  font-size: 1rem;
+}
+
+.cinematic-final-cta-content small {
+  font-size: 0.7rem;
+  opacity: 0.9;
+}
+
+.cinematic-final-arrow {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.cinematic-final-trust-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.cinematic-final-trust-pills span {
+  background: rgba(124, 58, 237, 0.1);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  border-radius: 100px;
+  padding: 0.3rem 1rem;
+  font-size: 0.75rem;
+  color: var(--cinematic-gray-300);
+}
+
+.cinematic-final-footnote {
+  font-size: 0.8rem;
+  color: var(--cinematic-gray-500);
+}
+
+.cinematic-inline-link {
+  color: var(--cinematic-primary-light);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.cinematic-inline-link:hover {
+  color: var(--cinematic-primary);
+  text-decoration: underline;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+  .cinematic-container {
+    padding: 0 1rem;
+  }
+
+  .cinematic-hero {
+    padding: 2rem 0 3rem;
+  }
+
+  .cinematic-why,
+  .cinematic-usecases,
+  .cinematic-howto,
+  .cinematic-examples,
+  .cinematic-practices,
+  .cinematic-mistakes,
+  .cinematic-advanced,
+  .cinematic-faq,
+  .cinematic-final-cta {
+    padding: 2rem 0;
+  }
+
+  .cinematic-step {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .cinematic-step-num {
+    width: 36px;
+    height: 36px;
+    font-size: 1.1rem;
+  }
+
+  .cinematic-main-cta {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+  }
+
+  .cinematic-cta-left {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .cinematic-prompt-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cinematic-generate-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .cinematic-examples-grid,
+  .cinematic-why-grid,
+  .cinematic-usecase-grid,
+  .cinematic-practices-grid,
+  .cinematic-mistakes-grid,
+  .cinematic-advanced-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cinematic-final-cta-inner {
+    padding: 2rem 1rem;
+  }
+
+  .cinematic-final-cta-btn {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+
+  .cinematic-final-cta-content {
+    text-align: center;
+  }
+
+  .cinematic-trust-row {
+    gap: 0.5rem;
+  }
+
+  .cinematic-trust-pill {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.75rem;
+  }
+
+  .cinematic-mistake-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .cinematic-hero-title {
+    font-size: 1.75rem;
+  }
+
+  .cinematic-hero-desc {
+    font-size: 0.95rem;
+  }
+
+  .cinematic-section-intro {
+    font-size: 0.95rem;
+  }
+
+  .cinematic-example-category li {
+    font-size: 0.75rem;
+  }
+
+  .cinematic-faq-item summary {
+    padding: 1rem;
+    font-size: 0.9rem;
+  }
+
+  .cinematic-faq-item p {
+    padding: 0 1rem 1rem 1rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cinematic-hero,
+.cinematic-definition,
+.cinematic-why,
+.cinematic-usecases,
+.cinematic-howto,
+.cinematic-examples,
+.cinematic-practices,
+.cinematic-mistakes,
+.cinematic-advanced,
+.cinematic-faq,
+.cinematic-final-cta {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
