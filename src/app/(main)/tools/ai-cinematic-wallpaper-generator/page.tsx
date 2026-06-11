@@ -1,6 +1,7 @@
 // app/tools/ai-cinematic-wallpaper-generator/page.tsx
 import Link from 'next/link';
 import './styles.css';
+import GenerateButton from './GenerateButton';
 
 export const metadata = {
   title: "AI Cinematic Wallpaper Generator | 4K Movie-Quality Wallpapers (2025)",
@@ -233,20 +234,7 @@ export default function CinematicWallpaperPage() {
                 <span>✨ Pro tip: Add &quot;cinematic still, shallow depth of field, film grain&quot; for authentic movie look</span>
               </div>
               <div className="cinematic-prompt-actions">
-                <button
-                  className="cinematic-generate-btn"
-                  onClick={() => {
-                    const promptInput = document.getElementById('cinematicPromptInput') as HTMLTextAreaElement;
-                    const prompt = promptInput?.value || '';
-                    if (prompt) {
-                      sessionStorage.setItem('microToolPrompt', prompt);
-                    }
-                    window.location.href = ctaUrl;
-                  }}
-                >
-                  <span className="cinematic-btn-icon">🎬</span>
-                  Generate Cinematic Wallpaper →
-                </button>
+                <GenerateButton ctaUrl={ctaUrl} />
               </div>
             </div>
           </div>
