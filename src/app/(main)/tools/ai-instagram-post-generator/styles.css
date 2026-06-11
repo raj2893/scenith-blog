@@ -1,0 +1,372 @@
+/* Instagram Post Generator Page Styles */
+
+.igp-page {
+  --igp-primary: #6355dc;
+  --igp-primary-dark: #4a3cb0;
+  --igp-secondary: #f5a623;
+  --igp-bg: #ffffff;
+  --igp-surface: #f8f9fc;
+  --igp-text: #1a202c;
+  --igp-text-light: #4a5568;
+  --igp-border: #e2e8f0;
+  --igp-radius: 24px;
+  --igp-radius-sm: 16px;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: var(--igp-bg);
+  color: var(--igp-text);
+  line-height: 1.5;
+}
+
+.igp-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Hero */
+.igp-hero {
+  background: linear-gradient(135deg, #f8f9fc 0%, #f0f2f8 100%);
+  padding: 60px 0 80px;
+  border-bottom: 1px solid var(--igp-border);
+}
+
+.igp-hero-badge {
+  display: inline-block;
+  background: rgba(99, 85, 220, 0.1);
+  padding: 6px 14px;
+  border-radius: 40px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--igp-primary);
+  margin-bottom: 24px;
+}
+
+.igp-hero h1 {
+  font-size: 3.2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #1a202c 0%, #4a5568 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.igp-hero-desc {
+  font-size: 1.2rem;
+  color: var(--igp-text-light);
+  max-width: 720px;
+  margin-bottom: 40px;
+}
+
+/* Prompt Box */
+.igp-prompt-box {
+  background: white;
+  border-radius: var(--igp-radius);
+  box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
+  padding: 28px;
+  margin: 40px 0;
+  border: 1px solid var(--igp-border);
+}
+
+.igp-prompt-header {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+  color: var(--igp-primary);
+}
+
+.igp-prompt-textarea {
+  width: 100%;
+  padding: 16px;
+  border-radius: var(--igp-radius-sm);
+  border: 2px solid var(--igp-border);
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  transition: border 0.2s;
+}
+
+.igp-prompt-textarea:focus {
+  outline: none;
+  border-color: var(--igp-primary);
+}
+
+.igp-prompt-btn {
+  background: linear-gradient(135deg, var(--igp-primary) 0%, var(--igp-primary-dark) 100%);
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 60px;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.2s;
+  width: 100%;
+  margin-top: 16px;
+}
+
+.igp-prompt-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(99, 85, 220, 0.3);
+}
+
+.igp-prompt-trust {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 20px;
+  font-size: 0.85rem;
+  color: var(--igp-text-light);
+}
+
+.igp-hero-stats {
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.igp-stat {
+  text-align: center;
+}
+
+.igp-stat strong {
+  display: block;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--igp-primary);
+}
+
+/* Sections */
+section {
+  padding: 70px 0;
+  border-bottom: 1px solid var(--igp-border);
+}
+
+h2 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  letter-spacing: -0.01em;
+}
+
+.igp-section-intro {
+  font-size: 1.1rem;
+  color: var(--igp-text-light);
+  margin-bottom: 48px;
+  max-width: 720px;
+}
+
+/* Use Cases Grid */
+.igp-usecase-grid, .igp-examples-grid, .igp-bp-grid, .igp-advanced-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 28px;
+}
+
+.igp-usecase-card, .igp-example-card, .igp-bp-item, .igp-advanced-card {
+  background: var(--igp-surface);
+  padding: 28px;
+  border-radius: var(--igp-radius-sm);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.igp-usecase-card:hover, .igp-example-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px -12px rgba(0,0,0,0.15);
+}
+
+.igp-uc-icon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.igp-example-prompt {
+  background: rgba(99,85,220,0.08);
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 500;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+}
+
+.igp-example-result {
+  font-size: 0.9rem;
+  color: var(--igp-text-light);
+}
+
+/* Steps */
+.igp-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.igp-step {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.igp-step-num {
+  background: var(--igp-primary);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+/* Mistakes List */
+.igp-mistakes-list {
+  columns: 2;
+  column-gap: 40px;
+  list-style: none;
+  padding: 0;
+}
+
+.igp-mistakes-list li {
+  margin-bottom: 16px;
+  break-inside: avoid;
+  background: var(--igp-surface);
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+}
+
+/* Internal Links */
+.igp-internal-links {
+  background: var(--igp-surface);
+}
+
+.igp-links-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.igp-link-card {
+  background: white;
+  padding: 12px 24px;
+  border-radius: 60px;
+  text-decoration: none;
+  color: var(--igp-text);
+  font-weight: 500;
+  border: 1px solid var(--igp-border);
+  transition: all 0.2s;
+}
+
+.igp-link-card:hover {
+  border-color: var(--igp-primary);
+  color: var(--igp-primary);
+  transform: translateY(-2px);
+}
+
+/* FAQ */
+.igp-faq-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.igp-faq-item {
+  background: var(--igp-surface);
+  border-radius: var(--igp-radius-sm);
+  padding: 0;
+}
+
+.igp-faq-item summary {
+  padding: 20px 24px;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.igp-faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.igp-faq-item summary::after {
+  content: '+';
+  font-size: 1.4rem;
+  font-weight: 300;
+}
+
+.igp-faq-item[open] summary::after {
+  content: '−';
+}
+
+.igp-faq-item p {
+  padding: 0 24px 24px;
+  margin: 0;
+  color: var(--igp-text-light);
+}
+
+/* Final CTA */
+.igp-final-cta {
+  border-bottom: none;
+  background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+  color: white;
+}
+
+.igp-final-card {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.igp-final-card h2 {
+  color: white;
+  margin-bottom: 16px;
+}
+
+.igp-final-card p {
+  color: rgba(255,255,255,0.8);
+  margin-bottom: 32px;
+}
+
+.igp-final-btn {
+  display: inline-block;
+  background: white;
+  color: var(--igp-primary);
+  padding: 16px 32px;
+  border-radius: 60px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.1rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.igp-final-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+}
+
+.igp-final-note {
+  margin-top: 24px;
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .igp-hero h1 { font-size: 2.2rem; }
+  .igp-container { padding: 0 20px; }
+  section { padding: 50px 0; }
+  .igp-mistakes-list { columns: 1; }
+  .igp-hero-stats { gap: 20px; }
+}
