@@ -179,7 +179,7 @@ export default function AIThumbnailGeneratorPage() {
                 <strong>Viewers decide whether to click in under 2 seconds</strong> while scrolling. 
                 Your thumbnail has to stop the scroll. According to YouTube's internal data, 
                 thumbnails with human faces get <strong>37% more clicks</strong> than those without. 
-                The expression matters most: surprise (30% lift) > anger (22% lift) > joy (15% lift).
+                The expression matters most: surprise (30% lift) &gt; anger (22% lift) &gt; joy (15% lift).
               </p>
             </div>
             <div className="tt-why-card">
