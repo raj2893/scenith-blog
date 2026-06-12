@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import './styles.css';
+import GenerateButton from './GenerateButton';
 
 export const metadata = {
   title: 'AI Instagram Post Generator | Create Viral Posts & Carousels',
@@ -38,18 +39,7 @@ export default function AIInstagramPostGeneratorPage() {
                 rows={3}
                 id="igp-prompt-input"
               ></textarea>
-              <button
-                className="igp-prompt-btn"
-                onClick={() => {
-                  const prompt = (document.getElementById('igp-prompt-input') as HTMLTextAreaElement).value;
-                  if (prompt.trim()) {
-                    sessionStorage.setItem('microToolPrompt', prompt);
-                  }
-                  window.location.href = ctaUrl;
-                }}
-              >
-                Generate Post for Free →
-              </button>
+              <GenerateButton ctaUrl={ctaUrl} />
             </div>
             <div className="igp-prompt-trust">
               <span>✅ No credit card</span>

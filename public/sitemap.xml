@@ -3062,4 +3062,28 @@
     <changefreq>weekly</changefreq>
     <lastmod>2026-06-11</lastmod>
   </url>
+  <url>
+    <loc>https://scenith.in/tools/ai-music-video-generator</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-06-12</lastmod>
+  </url>
+  <url>
+    <loc>https://scenith.in/tools/ugc-style-ai-video-generator</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-06-12</lastmod>
+  </url>
+  <url>
+    <loc>https://scenith.in/tools/product-demo-ai-video-generator</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-06-12</lastmod>
+  </url>
+  <url>
+    <loc>https://scenith.in/tools/faceless-content-ai-generator</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-06-12</lastmod>
+  </url>
 </urlset>

@@ -1,0 +1,929 @@
+/* app/tools/faceless-content-ai-generator/styles.css */
+
+.faceless-page {
+  --faceless-primary: #6366f1;
+  --faceless-primary-dark: #4f46e5;
+  --faceless-secondary: #8b5cf6;
+  --faceless-accent: #06b6d4;
+  --faceless-dark: #0f172a;
+  --faceless-gray-50: #f8fafc;
+  --faceless-gray-100: #f1f5f9;
+  --faceless-gray-200: #e2e8f0;
+  --faceless-gray-300: #cbd5e1;
+  --faceless-gray-400: #94a3b8;
+  --faceless-gray-500: #64748b;
+  --faceless-gray-600: #475569;
+  --faceless-gray-700: #334155;
+  --faceless-gray-800: #1e293b;
+  --faceless-gray-900: #0f172a;
+  
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color: var(--faceless-gray-800);
+  background: white;
+  line-height: 1.5;
+}
+
+.faceless-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Breadcrumb */
+.faceless-breadcrumb {
+  background: var(--faceless-gray-50);
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--faceless-gray-200);
+}
+
+.faceless-breadcrumb ol {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  font-size: 14px;
+}
+
+.faceless-breadcrumb li:not(:last-child)::after {
+  content: "›";
+  margin-left: 8px;
+  color: var(--faceless-gray-400);
+}
+
+.faceless-breadcrumb a {
+  color: var(--faceless-gray-600);
+  text-decoration: none;
+}
+
+.faceless-breadcrumb a:hover {
+  color: var(--faceless-primary);
+  text-decoration: underline;
+}
+
+.faceless-breadcrumb [aria-current="page"] {
+  color: var(--faceless-gray-800);
+  font-weight: 500;
+}
+
+/* Hero Section */
+.faceless-hero {
+  background: linear-gradient(135deg, var(--faceless-dark) 0%, #1e1b4b 100%);
+  color: white;
+  padding: 64px 0 80px;
+  text-align: center;
+}
+
+.faceless-hero-badge {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.faceless-hero-badge span {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 6px 14px;
+  border-radius: 40px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.faceless-hero-title {
+  font-size: 48px;
+  font-weight: 800;
+  margin-bottom: 16px;
+  line-height: 1.2;
+  background: linear-gradient(135deg, #fff, #a78bfa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.faceless-hero-subhead {
+  display: block;
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--faceless-gray-300);
+  margin-top: 8px;
+}
+
+.faceless-hero-desc {
+  font-size: 18px;
+  max-width: 800px;
+  margin: 24px auto;
+  color: var(--faceless-gray-300);
+  line-height: 1.6;
+}
+
+.faceless-hero-desc strong {
+  color: white;
+}
+
+.faceless-hero-cta {
+  margin: 32px 0 24px;
+}
+
+.faceless-primary-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, var(--faceless-primary), var(--faceless-secondary));
+  padding: 16px 32px;
+  border-radius: 60px;
+  font-weight: 700;
+  font-size: 18px;
+  color: white;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+}
+
+.faceless-primary-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(99, 102, 241, 0.4);
+}
+
+.faceless-btn-arrow {
+  font-size: 20px;
+  transition: transform 0.2s;
+}
+
+.faceless-primary-btn:hover .faceless-btn-arrow {
+  transform: translateX(4px);
+}
+
+.faceless-trust-badges {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--faceless-gray-400);
+}
+
+/* Prompt Section */
+.faceless-prompt-section {
+  padding: 60px 0;
+  background: var(--faceless-gray-50);
+}
+
+.faceless-prompt-card {
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  border: 1px solid var(--faceless-gray-200);
+}
+
+.faceless-prompt-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.03));
+  border-bottom: 1px solid var(--faceless-gray-200);
+}
+
+.faceless-prompt-icon {
+  font-size: 24px;
+}
+
+.faceless-prompt-header h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--faceless-gray-800);
+}
+
+.faceless-prompt-badge {
+  background: var(--faceless-primary);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 30px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-left: auto;
+}
+
+.faceless-prompt-form {
+  padding: 24px;
+}
+
+.faceless-prompt-textarea {
+  width: 100%;
+  padding: 16px;
+  border: 1.5px solid var(--faceless-gray-200);
+  border-radius: 16px;
+  font-size: 15px;
+  font-family: inherit;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+
+.faceless-prompt-textarea:focus {
+  outline: none;
+  border-color: var(--faceless-primary);
+}
+
+.faceless-prompt-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.faceless-prompt-tips {
+  font-size: 13px;
+  color: var(--faceless-gray-600);
+  background: var(--faceless-gray-100);
+  padding: 8px 14px;
+  border-radius: 30px;
+}
+
+.faceless-generate-btn {
+  background: var(--faceless-gray-900);
+  color: white;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 40px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.faceless-generate-btn:hover {
+  background: var(--faceless-gray-700);
+  transform: translateY(-1px);
+}
+
+/* Section Headers */
+.faceless-section-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.faceless-section-tag {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--faceless-primary);
+  background: rgba(99, 102, 241, 0.1);
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+}
+
+.faceless-section-header h2 {
+  font-size: 36px;
+  font-weight: 800;
+  margin-bottom: 16px;
+  color: var(--faceless-gray-900);
+}
+
+.faceless-section-intro {
+  font-size: 18px;
+  color: var(--faceless-gray-600);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Grid Layouts */
+.faceless-grid-2col {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+}
+
+/* Cards */
+.faceless-card {
+  background: white;
+  border: 1px solid var(--faceless-gray-200);
+  border-radius: 24px;
+  padding: 32px;
+  transition: box-shadow 0.2s;
+}
+
+.faceless-card:hover {
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.faceless-card-icon {
+  font-size: 40px;
+  margin-bottom: 20px;
+}
+
+.faceless-card h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--faceless-gray-800);
+}
+
+.faceless-card p {
+  color: var(--faceless-gray-600);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.faceless-list {
+  padding-left: 20px;
+  color: var(--faceless-gray-600);
+  line-height: 1.6;
+}
+
+.faceless-list li {
+  margin-bottom: 10px;
+}
+
+.faceless-stat-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--faceless-gray-200);
+}
+
+.faceless-stat {
+  text-align: center;
+  flex: 1;
+}
+
+.faceless-stat-number {
+  display: block;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--faceless-primary);
+}
+
+.faceless-stat-label {
+  font-size: 12px;
+  color: var(--faceless-gray-500);
+}
+
+.faceless-quote {
+  font-style: italic;
+  padding: 20px;
+  background: var(--faceless-gray-50);
+  border-radius: 16px;
+  color: var(--faceless-gray-700);
+  font-size: 15px;
+  border-left: 4px solid var(--faceless-primary);
+}
+
+.faceless-quote-source {
+  display: block;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--faceless-gray-500);
+  font-style: normal;
+}
+
+/* Niches Grid */
+.faceless-niches-section {
+  padding: 70px 0;
+  background: var(--faceless-gray-50);
+}
+
+.faceless-niches-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.faceless-niche-card {
+  background: white;
+  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid var(--faceless-gray-200);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.faceless-niche-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.faceless-niche-icon {
+  font-size: 32px;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.faceless-niche-card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--faceless-gray-800);
+}
+
+.faceless-niche-card p {
+  color: var(--faceless-gray-600);
+  line-height: 1.6;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.faceless-niche-stats {
+  display: flex;
+  gap: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--faceless-primary);
+  border-top: 1px solid var(--faceless-gray-200);
+  padding-top: 12px;
+}
+
+/* How It Works */
+.faceless-how-section {
+  padding: 70px 0;
+}
+
+.faceless-steps {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.faceless-step {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.faceless-step-number {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, var(--faceless-primary), var(--faceless-secondary));
+  color: white;
+  border-radius: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.faceless-step-content h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--faceless-gray-800);
+}
+
+.faceless-step-content p {
+  color: var(--faceless-gray-600);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.faceless-step-tip {
+  background: rgba(99, 102, 241, 0.08);
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  color: var(--faceless-primary-dark);
+}
+
+.faceless-how-cta {
+  text-align: center;
+  margin-top: 32px;
+}
+
+.faceless-secondary-btn {
+  display: inline-block;
+  background: white;
+  border: 2px solid var(--faceless-primary);
+  color: var(--faceless-primary);
+  padding: 14px 32px;
+  border-radius: 60px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.faceless-secondary-btn:hover {
+  background: var(--faceless-primary);
+  color: white;
+}
+
+/* Best Practices */
+.faceless-bestpractices-section {
+  padding: 70px 0;
+  background: var(--faceless-gray-50);
+}
+
+.faceless-practices-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.faceless-practice-card {
+  background: white;
+  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid var(--faceless-gray-200);
+}
+
+.faceless-practice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.faceless-practice-number {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--faceless-gray-300);
+}
+
+.faceless-practice-tag {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--faceless-primary);
+  background: rgba(99, 102, 241, 0.1);
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.faceless-practice-card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--faceless-gray-800);
+}
+
+.faceless-practice-card p {
+  color: var(--faceless-gray-600);
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.faceless-example-mini {
+  background: var(--faceless-gray-100);
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 13px;
+  color: var(--faceless-gray-700);
+  margin-top: 16px;
+  font-style: italic;
+}
+
+/* Common Mistakes */
+.faceless-mistakes-section {
+  padding: 70px 0;
+}
+
+.faceless-mistakes-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.faceless-mistake-item {
+  display: flex;
+  gap: 16px;
+  padding: 20px;
+  background: white;
+  border: 1px solid var(--faceless-gray-200);
+  border-radius: 16px;
+  transition: all 0.2s;
+}
+
+.faceless-mistake-item:hover {
+  border-color: var(--faceless-gray-300);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.faceless-mistake-emoji {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.faceless-mistake-item h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: var(--faceless-gray-800);
+}
+
+.faceless-mistake-item p {
+  font-size: 14px;
+  color: var(--faceless-gray-600);
+  line-height: 1.5;
+}
+
+/* Advanced Tips */
+.faceless-advanced-section {
+  padding: 70px 0;
+  background: linear-gradient(135deg, var(--faceless-gray-900), #1e1b4b);
+  color: white;
+}
+
+.faceless-advanced-section .faceless-section-header h2 {
+  color: white;
+}
+
+.faceless-advanced-section .faceless-section-intro {
+  color: var(--faceless-gray-300);
+}
+
+.faceless-advanced-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.faceless-advanced-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.2s;
+}
+
+.faceless-advanced-card:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.faceless-advanced-icon {
+  font-size: 32px;
+  margin-bottom: 16px;
+}
+
+.faceless-advanced-card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.faceless-advanced-card p {
+  color: var(--faceless-gray-300);
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+/* Examples Section */
+.faceless-examples-section {
+  padding: 70px 0;
+  background: var(--faceless-gray-50);
+}
+
+.faceless-examples-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.faceless-example-template {
+  background: white;
+  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid var(--faceless-gray-200);
+}
+
+.faceless-template-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  background: var(--faceless-gray-100);
+  border-radius: 20px;
+  margin-bottom: 16px;
+}
+
+.faceless-example-template h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--faceless-gray-800);
+}
+
+.faceless-template-script {
+  background: var(--faceless-gray-50);
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--faceless-gray-700);
+  margin-bottom: 16px;
+  font-style: italic;
+}
+
+.faceless-template-script p {
+  margin-bottom: 8px;
+}
+
+.faceless-template-result {
+  font-size: 12px;
+  color: var(--faceless-primary);
+  font-weight: 600;
+}
+
+/* FAQ Section */
+.faceless-faq-section {
+  padding: 70px 0;
+}
+
+.faceless-faq-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.faceless-faq-item {
+  padding: 24px;
+  background: white;
+  border: 1px solid var(--faceless-gray-200);
+  border-radius: 20px;
+}
+
+.faceless-faq-item h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--faceless-gray-800);
+}
+
+.faceless-faq-item p {
+  color: var(--faceless-gray-600);
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+/* Final CTA */
+.faceless-final-section {
+  padding: 70px 0;
+  background: linear-gradient(135deg, var(--faceless-primary), var(--faceless-secondary));
+}
+
+.faceless-final-card {
+  text-align: center;
+  color: white;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.faceless-final-icon {
+  font-size: 56px;
+  margin-bottom: 24px;
+}
+
+.faceless-final-card h2 {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.faceless-final-desc {
+  font-size: 18px;
+  margin-bottom: 32px;
+  opacity: 0.9;
+}
+
+.faceless-primary-btn-large {
+  padding: 18px 40px;
+  font-size: 20px;
+  margin-bottom: 32px;
+}
+
+.faceless-final-links {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.faceless-final-links a {
+  color: white;
+  text-decoration: none;
+}
+
+.faceless-final-links a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .faceless-niches-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 1024px) {
+  .faceless-hero-title {
+    font-size: 36px;
+  }
+  
+  .faceless-practices-grid,
+  .faceless-advanced-grid,
+  .faceless-examples-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .faceless-faq-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .faceless-container {
+    padding: 0 20px;
+  }
+  
+  .faceless-hero {
+    padding: 48px 0 60px;
+  }
+  
+  .faceless-hero-title {
+    font-size: 28px;
+  }
+  
+  .faceless-hero-subhead {
+    font-size: 16px;
+  }
+  
+  .faceless-hero-desc {
+    font-size: 16px;
+  }
+  
+  .faceless-section-header h2 {
+    font-size: 28px;
+  }
+  
+  .faceless-grid-2col,
+  .faceless-niches-grid,
+  .faceless-practices-grid,
+  .faceless-advanced-grid,
+  .faceless-examples-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .faceless-step {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .faceless-step-tip {
+    text-align: left;
+  }
+  
+  .faceless-prompt-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .faceless-generate-btn {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .faceless-trust-badges {
+    gap: 12px;
+  }
+  
+  .faceless-stat-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .faceless-hero-badge {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .faceless-primary-btn {
+    padding: 12px 24px;
+    font-size: 16px;
+  }
+  
+  .faceless-final-card h2 {
+    font-size: 24px;
+  }
+  
+  .faceless-final-desc {
+    font-size: 16px;
+  }
+}
