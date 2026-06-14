@@ -104,7 +104,7 @@ interface GeneratedImage {
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const IMAGE_STYLE_PRESETS = [
+/* const IMAGE_STYLE_PRESETS = [
   { value: "realistic", label: "Realistic", icon: "📷" },
   { value: "artistic", label: "Artistic", icon: "🎨" },
   { value: "anime", label: "Anime", icon: "🎌" },
@@ -113,7 +113,7 @@ const IMAGE_STYLE_PRESETS = [
   { value: "fantasy", label: "Fantasy", icon: "🧙" },
   { value: "sci-fi", label: "Sci-Fi", icon: "🚀" },
   { value: "vintage", label: "Vintage", icon: "📼" },
-];
+]; */
 
 const IMAGE_MODEL_CONFIG: Record<
   string,
@@ -754,7 +754,7 @@ const CreateAIContentClient: React.FC = () => {
   const [selectedImageModel, setSelectedImageModel] = useState("STABILITY_AI_CORE");
   const [imageSize, setImageSize] = useState("square");
   const [imageQuality, setImageQuality] = useState("standard");
-  const [imageStyle, setImageStyle] = useState("realistic");
+  /*const [imageStyle, setImageStyle] = useState("realistic");*/
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
   const [generatedImages, setGeneratedImages] = useState<GeneratedImage[]>([]);
   const [currentImageJob, setCurrentImageJob] = useState<{
@@ -1284,9 +1284,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
     setGeneratedImages([]);
     setCurrentImageJob(null);
     try {
-      let enhancedPrompt = prompt;
-      if (imageStyle !== "realistic")
-        enhancedPrompt = `${prompt}, ${imageStyle} style`;
+      const enhancedPrompt = prompt;
 
       let res: Response;
 
@@ -1379,7 +1377,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
         if (!slidePrompt) continue;
         setCarouselProgress(i + 1);
 
-        const enhancedPrompt = imageStyle !== "realistic" ? `${slidePrompt}, ${imageStyle} style` : slidePrompt;
+        const enhancedPrompt = slidePrompt;
         const slideFile = carouselUseSharedImage ? carouselSharedFile : carouselFiles[i];
         let res: Response;
 
@@ -2455,37 +2453,39 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
             {/* ── Image options ── */}
             {activeTab === "image" && (
               <div className="cac-options-row">
-                <select className="cac-select" value={imageStyle} onChange={(e) => setImageStyle(e.target.value)}>
-                  {IMAGE_STYLE_PRESETS.map((s) => (
-                    <option key={s.value} value={s.value}>{s.icon} {s.label}</option>
-                  ))}
-                </select>
+
                 <CustomDropdown
                   value={selectedImageModel}
                   onChange={(val) => {
-                    const currentlyFree = !imageUsage || imageUsage.planType === "FREE";
-                    if (currentlyFree && val !== "STABILITY_AI_CORE") {
-                      setSelectedImageModel(val); // allow selection so modal fires on generate
-                      setImageSize("square");
-                      setImageQuality("standard");
-                    } else {
-                      setSelectedImageModel(val);
-                      setImageSize("square");
-                      setImageQuality("standard");
-                    }
+                    setSelectedImageModel(val);
+                    setImageSize("square");
+                    setImageQuality("standard");
                   }}
                   options={availableImageModels.map((m) => ({
                     value: m.id,
-                    label: m.displayName,
+                    label: `${m.displayName.replace(/ 🔒| ✨| ⚡/g, '')} · ${getImageCreditCost(m.id.toUpperCase().replace(/-/g, '_'), 'square', 'standard')}cr`,
                     logo: MODEL_LOGOS[m.id.toUpperCase().replace(/-/g, '_')],
                   }))}
-                  style={{ minWidth: 140 }}
+                  selectedLabel={(() => {
+                    const cost = getImageCreditCost(selectedImageModel.toUpperCase().replace(/-/g, '_'), imageSize, imageQuality);
+                    return `${cost}cr`;
+                  })()}
+                  selectedLogo={MODEL_LOGOS[selectedImageModel.toUpperCase().replace(/-/g, '_')]}
+                  style={{ minWidth: 100 }}
                 />
                 {imageModelCfg && imageModelCfg.sizes.length > 1 && (
                   <select className="cac-select" value={imageSize} onChange={(e) => setImageSize(e.target.value)}>
-                    {imageModelCfg.sizes.map((s) => (
-                      <option key={s.value} value={s.value}>{s.icon} {s.label}</option>
-                    ))}
+                    {imageModelCfg.sizes.map((s) => {
+                      const dimMap: Record<string, string> = {
+                        square: "1:1", portrait: "9:16", landscape: "16:9",
+                        wide: "3:2", tall: "2:3", ultrawide: "21:9", standard: "4:3",
+                      };
+                      return (
+                        <option key={s.value} value={s.value}>
+                          {s.icon} {dimMap[s.value] ?? s.value}
+                        </option>
+                      );
+                    })}
                   </select>
                 )}
                 {imageModelCfg && imageModelCfg.qualities.length > 1 && (
@@ -2495,11 +2495,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                     ))}
                   </select>
                 )}
-                <span className="cac-credit-pill">
-                  ⚡ {isLoggedIn ? imageUsage?.balance ?? "..." : 50} cr · {imageGenMode === 'carousel'
-                    ? `${imageCreditCost * carouselPrompts.filter(p => p.trim()).length || imageCreditCost * 3}cr total`
-                    : `${imageCreditCost}cr/img`}
-                </span>
+
               </div>
             )}
 
@@ -2586,7 +2582,9 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                   value={selectedVideoModel}
                   onChange={(val) => setSelectedVideoModel(val)}
                   options={videoModelOptions}
-                  style={{ flex: "1 1 auto", minWidth: 130, maxWidth: 200 }}
+                  selectedLabel={`${calcVideoCredits(selectedVideoModel, videoDuration, videoAudioEnabled, videoResolution)}cr`}
+                  selectedLogo={MODEL_LOGOS[selectedVideoModel?.toUpperCase() ?? ''] ?? undefined}
+                  style={{ minWidth: 80 }}
                 />
                 {/* ── Resolution selector (only for Wan 2.5 and Grok) ── */}
                 {(() => {
@@ -2603,18 +2601,17 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                     : null;
                   if (!resOptions) return null;
                   return (
-                    <div className="cac-toggle-group">
+                    <select
+                      className="cac-select"
+                      value={videoResolution}
+                      onChange={(e) => setVideoResolution(e.target.value)}
+                    >
                       {resOptions.map((r) => (
-                        <button
-                          key={r.value}
-                          className={`cac-toggle-btn ${videoResolution === r.value ? "active" : ""}`}
-                          onClick={() => setVideoResolution(r.value)}
-                          title={`${r.label} — ${calcVideoCredits(selectedVideoModel, videoDuration, videoAudioEnabled, r.value)}cr`}
-                        >
+                        <option key={r.value} value={r.value}>
                           {r.icon} {r.label}
-                        </button>
+                        </option>
                       ))}
-                    </div>
+                    </select>
                   );
                 })()}
 
@@ -2654,23 +2651,20 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                   }
                   return null;
                 })()}                 
-                <div className="cac-toggle-group">
+               <select
+                  className="cac-select"
+                  value={videoDuration}
+                  onChange={(e) => setVideoDuration(Number(e.target.value))}
+                >
                   {VIDEO_DURATION_OPTIONS.map((d) => (
-                    <button
-                      key={d.value}
-                      className={`cac-toggle-btn ${videoDuration === d.value ? "active" : ""}`}
-                      onClick={() => setVideoDuration(d.value)}
-                    >{d.label}</button>
+                    <option key={d.value} value={d.value}>{d.label}</option>
                   ))}
-                </div>
+                </select>
                 <select className="cac-select" value={videoAspectRatio} onChange={(e) => setVideoAspectRatio(e.target.value)}>
                   {VIDEO_ASPECT_RATIOS.map((ar) => (
                     <option key={ar.value} value={ar.value}>{ar.icon} {ar.label}</option>
                   ))}
                 </select>               
-                <span className="cac-credit-pill">
-                  ⚡ {isLoggedIn ? videoCredits?.balance ?? "..." : 50} cr · {calcVideoCredits(selectedVideoModel, videoDuration, videoAudioEnabled, videoResolution)}cr/vid
-                </span>
               </div>
             )}
 
@@ -3116,29 +3110,22 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                             >
                               🎬 Make Video →
                             </button>
-                            <button
-                              onClick={async () => {
-                                const res = await fetch(img.imagePath);
-                                const blob = await res.blob();
-                                const url = URL.createObjectURL(blob);
-                                const a = document.createElement('a');
-                                a.href = url;
-                                a.download = `ai-image-${img.id}.png`;
-                                document.body.appendChild(a);
-                                a.click();
-                                document.body.removeChild(a);
-                                URL.revokeObjectURL(url);
-                              }}
+                            <a href={img.imagePath}
+                              download={`ai-image-${img.id}.png`}
+                              target="_blank"
+                              rel="noopener noreferrer"
                               style={{
+                                display: 'block', textAlign: 'center',
                                 padding: '6px 10px', borderRadius: 8,
                                 border: '1px solid var(--cac-border)',
                                 background: 'transparent', color: 'var(--cac-accent)',
                                 fontSize: 11, fontWeight: 600,
                                 cursor: 'pointer', width: '100%',
+                                textDecoration: 'none', boxSizing: 'border-box',
                               }}
                             >
                               📥 Download
-                            </button>
+                            </a>
                           </div>
                         </div>
                       </div>
