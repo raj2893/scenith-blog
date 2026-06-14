@@ -406,10 +406,10 @@ const calcVideoCredits = (
     return durationSeconds > 5 ? base5s * 2 : base5s;
   }
 
-  // Kling 3.0 Pro — 5s off=105, 5s on=158, 10s off=211, 10s on=316
+  // Kling 3.0 Pro — $0.112/sec (audio off) | $0.168/sec (audio on), 3–15s
   if (id === "KLING_3_0_PRO") {
-    if (durationSeconds <= 5) return audioOn ? 158 : 105;
-    return audioOn ? 316 : 211;
+    const ratePerSec = audioOn ? 0.168 : 0.112;
+    return Math.ceil(durationSeconds * ratePerSec * 94 / 0.50);
   }
 
   // Veo 3.1 Fast — 4s/8s normal, 20s/30s extend-video
@@ -443,19 +443,20 @@ const calcVideoCredits = (
     return durationSeconds <= 6 ? 90 : 150;
   }
 
-  // Luma Ray 3.1 — resolution-variable
+  // Luma Ray 3.1 — fal supports 5s and 9s ONLY (10s is invalid)
+  // 720p: $0.08/s flat, audio included. 1080p: $0.19/s off | $0.38/s on.
   if (id === "LUMA_RAY_3_1") {
     if (res === "1080p") {
-      if (durationSeconds <= 5) return audioOn ? 364 : 182;
-      return audioOn ? 728 : 364;
+      const ratePerSec = audioOn ? 0.38 : 0.19;
+      return Math.ceil(durationSeconds * ratePerSec * 94 / 0.50);
     }
-    // 720p — audio included in price
-    return durationSeconds > 5 ? 152 : 76;
+    // 720p — audio included, flat $0.08/s
+    return Math.ceil(durationSeconds * 0.08 * 94 / 0.50);
   }
 
-  // Cosmos Predict 2.5 — no audio, flat 1080p
+  // Cosmos Predict 2.5 — fixed ~5.8s output, no audio, always 48cr
   if (id === "COSMOS_PREDICT_2_5") {
-    return durationSeconds > 5 ? 96 : 48;
+    return 48;
   }
 
   return 46; // fallback
@@ -832,7 +833,7 @@ useEffect(() => {
     setVideoResolution("1080p");
   }
 
-  // Set default duration — Veo uses 4s/8s, Hailuo uses 6s/10s, others use 5s/10s
+  // Set default duration
   if (isVeo) {
     setVideoDuration(4);
   } else if (isHailuo) {
@@ -842,13 +843,19 @@ useEffect(() => {
   }
 }, [selectedVideoModel]);
 
-// Dynamic duration options — Veo supports 4s/8s/20s/30s, Hailuo 6s/10s, others 5s/10s
+// Dynamic duration options per model
 const VIDEO_DURATION_OPTIONS = useMemo(() => {
   const id = selectedVideoModel?.toUpperCase() || "";
   const isVeo    = id === "VEO_3_1" || id === "VEO_3_1_FAST";
   const isHailuo = id === "HAILUO_02_PRO";
-  if (isVeo)    return [{ value: 4, label: "4s" }, { value: 8, label: "8s" }, { value: 20, label: "20s" }, { value: 30, label: "30s" }];
-  if (isHailuo) return [{ value: 6, label: "6s" }, { value: 10, label: "10s" }];
+  const isKling30 = id === "KLING_3_0_PRO";
+  const isLuma   = id === "LUMA_RAY_3_1";
+  const isCosmos = id === "COSMOS_PREDICT_2_5";
+  if (isVeo)     return [{ value: 4, label: "4s" }, { value: 8, label: "8s" }, { value: 20, label: "20s" }, { value: 30, label: "30s" }];
+  if (isHailuo)  return [{ value: 6, label: "6s" }, { value: 10, label: "10s" }];
+  if (isKling30) return [{ value: 3, label: "3s" }, { value: 5, label: "5s" }, { value: 8, label: "8s" }, { value: 10, label: "10s" }, { value: 15, label: "15s" }];
+  if (isLuma)    return [{ value: 5, label: "5s" }, { value: 9, label: "9s" }];
+  if (isCosmos)  return [{ value: 5, label: "5s" }];
   return [{ value: 5, label: "5s" }, { value: 10, label: "10s" }];
 }, [selectedVideoModel]);
 
