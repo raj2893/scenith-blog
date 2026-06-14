@@ -31,26 +31,22 @@ export default function AIInstagramPostGeneratorPage() {
             <div className="igp-prompt-header">
               <span>✨ Generate Your Instagram Post Now</span>
             </div>
-            <div className="igp-prompt-form">
+            <form
+              className="igp-prompt-form"
+              action={ctaUrl}
+              method="get"
+              onSubmit={undefined}
+            >
               <textarea
                 className="igp-prompt-textarea"
                 placeholder="E.g., 'Aesthetic flat lay of iced coffee and a notebook for a studygram' or 'Neon cyberpunk cityscape for a motivational quote'"
                 rows={3}
-                id="igp-prompt-input"
+                name="prompt"
               ></textarea>
-              <button
-                className="igp-prompt-btn"
-                onClick={() => {
-                  const prompt = (document.getElementById('igp-prompt-input') as HTMLTextAreaElement).value;
-                  if (prompt.trim()) {
-                    sessionStorage.setItem('microToolPrompt', prompt);
-                  }
-                  window.location.href = ctaUrl;
-                }}
-              >
+              <button type="submit" className="igp-prompt-btn">
                 Generate Post for Free →
               </button>
-            </div>
+            </form>
             <div className="igp-prompt-trust">
               <span>✅ No credit card</span>
               <span>⚡ 10+ AI models</span>
