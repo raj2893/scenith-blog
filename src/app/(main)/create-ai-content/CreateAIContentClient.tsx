@@ -104,7 +104,7 @@ interface GeneratedImage {
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const IMAGE_STYLE_PRESETS = [
+/* const IMAGE_STYLE_PRESETS = [
   { value: "realistic", label: "Realistic", icon: "📷" },
   { value: "artistic", label: "Artistic", icon: "🎨" },
   { value: "anime", label: "Anime", icon: "🎌" },
@@ -113,7 +113,7 @@ const IMAGE_STYLE_PRESETS = [
   { value: "fantasy", label: "Fantasy", icon: "🧙" },
   { value: "sci-fi", label: "Sci-Fi", icon: "🚀" },
   { value: "vintage", label: "Vintage", icon: "📼" },
-];
+]; */
 
 const IMAGE_MODEL_CONFIG: Record<
   string,
@@ -406,10 +406,10 @@ const calcVideoCredits = (
     return durationSeconds > 5 ? base5s * 2 : base5s;
   }
 
-  // Kling 3.0 Pro — 5s off=105, 5s on=158, 10s off=211, 10s on=316
+  // Kling 3.0 Pro — $0.112/sec (audio off) | $0.168/sec (audio on), 3–15s
   if (id === "KLING_3_0_PRO") {
-    if (durationSeconds <= 5) return audioOn ? 158 : 105;
-    return audioOn ? 316 : 211;
+    const ratePerSec = audioOn ? 0.168 : 0.112;
+    return Math.ceil(durationSeconds * ratePerSec * 94 / 0.50);
   }
 
   // Veo 3.1 Fast — 4s/8s normal, 20s/30s extend-video
@@ -443,19 +443,20 @@ const calcVideoCredits = (
     return durationSeconds <= 6 ? 90 : 150;
   }
 
-  // Luma Ray 3.1 — resolution-variable
+  // Luma Ray 3.1 — fal supports 5s and 9s ONLY (10s is invalid)
+  // 720p: $0.08/s flat, audio included. 1080p: $0.19/s off | $0.38/s on.
   if (id === "LUMA_RAY_3_1") {
     if (res === "1080p") {
-      if (durationSeconds <= 5) return audioOn ? 364 : 182;
-      return audioOn ? 728 : 364;
+      const ratePerSec = audioOn ? 0.38 : 0.19;
+      return Math.ceil(durationSeconds * ratePerSec * 94 / 0.50);
     }
-    // 720p — audio included in price
-    return durationSeconds > 5 ? 152 : 76;
+    // 720p — audio included, flat $0.08/s
+    return Math.ceil(durationSeconds * 0.08 * 94 / 0.50);
   }
 
-  // Cosmos Predict 2.5 — no audio, flat 1080p
+  // Cosmos Predict 2.5 — fixed ~5.8s output, no audio, always 48cr
   if (id === "COSMOS_PREDICT_2_5") {
-    return durationSeconds > 5 ? 96 : 48;
+    return 48;
   }
 
   return 46; // fallback
@@ -754,7 +755,7 @@ const CreateAIContentClient: React.FC = () => {
   const [selectedImageModel, setSelectedImageModel] = useState("STABILITY_AI_CORE");
   const [imageSize, setImageSize] = useState("square");
   const [imageQuality, setImageQuality] = useState("standard");
-  const [imageStyle, setImageStyle] = useState("realistic");
+  /*const [imageStyle, setImageStyle] = useState("realistic");*/
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
   const [generatedImages, setGeneratedImages] = useState<GeneratedImage[]>([]);
   const [currentImageJob, setCurrentImageJob] = useState<{
@@ -832,7 +833,7 @@ useEffect(() => {
     setVideoResolution("1080p");
   }
 
-  // Set default duration — Veo uses 4s/8s, Hailuo uses 6s/10s, others use 5s/10s
+  // Set default duration
   if (isVeo) {
     setVideoDuration(4);
   } else if (isHailuo) {
@@ -842,13 +843,19 @@ useEffect(() => {
   }
 }, [selectedVideoModel]);
 
-// Dynamic duration options — Veo supports 4s/8s/20s/30s, Hailuo 6s/10s, others 5s/10s
+// Dynamic duration options per model
 const VIDEO_DURATION_OPTIONS = useMemo(() => {
   const id = selectedVideoModel?.toUpperCase() || "";
   const isVeo    = id === "VEO_3_1" || id === "VEO_3_1_FAST";
   const isHailuo = id === "HAILUO_02_PRO";
-  if (isVeo)    return [{ value: 4, label: "4s" }, { value: 8, label: "8s" }, { value: 20, label: "20s" }, { value: 30, label: "30s" }];
-  if (isHailuo) return [{ value: 6, label: "6s" }, { value: 10, label: "10s" }];
+  const isKling30 = id === "KLING_3_0_PRO";
+  const isLuma   = id === "LUMA_RAY_3_1";
+  const isCosmos = id === "COSMOS_PREDICT_2_5";
+  if (isVeo)     return [{ value: 4, label: "4s" }, { value: 8, label: "8s" }, { value: 20, label: "20s" }, { value: 30, label: "30s" }];
+  if (isHailuo)  return [{ value: 6, label: "6s" }, { value: 10, label: "10s" }];
+  if (isKling30) return [{ value: 3, label: "3s" }, { value: 5, label: "5s" }, { value: 8, label: "8s" }, { value: 10, label: "10s" }, { value: 15, label: "15s" }];
+  if (isLuma)    return [{ value: 5, label: "5s" }, { value: 9, label: "9s" }];
+  if (isCosmos)  return [{ value: 5, label: "5s" }];
   return [{ value: 5, label: "5s" }, { value: 10, label: "10s" }];
 }, [selectedVideoModel]);
 
@@ -1284,9 +1291,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
     setGeneratedImages([]);
     setCurrentImageJob(null);
     try {
-      let enhancedPrompt = prompt;
-      if (imageStyle !== "realistic")
-        enhancedPrompt = `${prompt}, ${imageStyle} style`;
+      const enhancedPrompt = prompt;
 
       let res: Response;
 
@@ -1379,7 +1384,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
         if (!slidePrompt) continue;
         setCarouselProgress(i + 1);
 
-        const enhancedPrompt = imageStyle !== "realistic" ? `${slidePrompt}, ${imageStyle} style` : slidePrompt;
+        const enhancedPrompt = slidePrompt;
         const slideFile = carouselUseSharedImage ? carouselSharedFile : carouselFiles[i];
         let res: Response;
 
@@ -2455,37 +2460,39 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
             {/* ── Image options ── */}
             {activeTab === "image" && (
               <div className="cac-options-row">
-                <select className="cac-select" value={imageStyle} onChange={(e) => setImageStyle(e.target.value)}>
-                  {IMAGE_STYLE_PRESETS.map((s) => (
-                    <option key={s.value} value={s.value}>{s.icon} {s.label}</option>
-                  ))}
-                </select>
+
                 <CustomDropdown
                   value={selectedImageModel}
                   onChange={(val) => {
-                    const currentlyFree = !imageUsage || imageUsage.planType === "FREE";
-                    if (currentlyFree && val !== "STABILITY_AI_CORE") {
-                      setSelectedImageModel(val); // allow selection so modal fires on generate
-                      setImageSize("square");
-                      setImageQuality("standard");
-                    } else {
-                      setSelectedImageModel(val);
-                      setImageSize("square");
-                      setImageQuality("standard");
-                    }
+                    setSelectedImageModel(val);
+                    setImageSize("square");
+                    setImageQuality("standard");
                   }}
                   options={availableImageModels.map((m) => ({
                     value: m.id,
-                    label: m.displayName,
+                    label: `${m.displayName.replace(/ 🔒| ✨| ⚡/g, '')} · ${getImageCreditCost(m.id.toUpperCase().replace(/-/g, '_'), 'square', 'standard')}cr`,
                     logo: MODEL_LOGOS[m.id.toUpperCase().replace(/-/g, '_')],
                   }))}
-                  style={{ minWidth: 140 }}
+                  selectedLabel={(() => {
+                    const cost = getImageCreditCost(selectedImageModel.toUpperCase().replace(/-/g, '_'), imageSize, imageQuality);
+                    return `${cost}cr`;
+                  })()}
+                  selectedLogo={MODEL_LOGOS[selectedImageModel.toUpperCase().replace(/-/g, '_')]}
+                  style={{ minWidth: 100 }}
                 />
                 {imageModelCfg && imageModelCfg.sizes.length > 1 && (
                   <select className="cac-select" value={imageSize} onChange={(e) => setImageSize(e.target.value)}>
-                    {imageModelCfg.sizes.map((s) => (
-                      <option key={s.value} value={s.value}>{s.icon} {s.label}</option>
-                    ))}
+                    {imageModelCfg.sizes.map((s) => {
+                      const dimMap: Record<string, string> = {
+                        square: "1:1", portrait: "9:16", landscape: "16:9",
+                        wide: "3:2", tall: "2:3", ultrawide: "21:9", standard: "4:3",
+                      };
+                      return (
+                        <option key={s.value} value={s.value}>
+                          {s.icon} {dimMap[s.value] ?? s.value}
+                        </option>
+                      );
+                    })}
                   </select>
                 )}
                 {imageModelCfg && imageModelCfg.qualities.length > 1 && (
@@ -2495,11 +2502,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                     ))}
                   </select>
                 )}
-                <span className="cac-credit-pill">
-                  ⚡ {isLoggedIn ? imageUsage?.balance ?? "..." : 50} cr · {imageGenMode === 'carousel'
-                    ? `${imageCreditCost * carouselPrompts.filter(p => p.trim()).length || imageCreditCost * 3}cr total`
-                    : `${imageCreditCost}cr/img`}
-                </span>
+
               </div>
             )}
 
@@ -2586,7 +2589,9 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                   value={selectedVideoModel}
                   onChange={(val) => setSelectedVideoModel(val)}
                   options={videoModelOptions}
-                  style={{ flex: "1 1 auto", minWidth: 130, maxWidth: 200 }}
+                  selectedLabel={`${calcVideoCredits(selectedVideoModel, videoDuration, videoAudioEnabled, videoResolution)}cr`}
+                  selectedLogo={MODEL_LOGOS[selectedVideoModel?.toUpperCase() ?? ''] ?? undefined}
+                  style={{ minWidth: 80 }}
                 />
                 {/* ── Resolution selector (only for Wan 2.5 and Grok) ── */}
                 {(() => {
@@ -2603,18 +2608,17 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                     : null;
                   if (!resOptions) return null;
                   return (
-                    <div className="cac-toggle-group">
+                    <select
+                      className="cac-select"
+                      value={videoResolution}
+                      onChange={(e) => setVideoResolution(e.target.value)}
+                    >
                       {resOptions.map((r) => (
-                        <button
-                          key={r.value}
-                          className={`cac-toggle-btn ${videoResolution === r.value ? "active" : ""}`}
-                          onClick={() => setVideoResolution(r.value)}
-                          title={`${r.label} — ${calcVideoCredits(selectedVideoModel, videoDuration, videoAudioEnabled, r.value)}cr`}
-                        >
+                        <option key={r.value} value={r.value}>
                           {r.icon} {r.label}
-                        </button>
+                        </option>
                       ))}
-                    </div>
+                    </select>
                   );
                 })()}
 
@@ -2654,23 +2658,20 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                   }
                   return null;
                 })()}                 
-                <div className="cac-toggle-group">
+               <select
+                  className="cac-select"
+                  value={videoDuration}
+                  onChange={(e) => setVideoDuration(Number(e.target.value))}
+                >
                   {VIDEO_DURATION_OPTIONS.map((d) => (
-                    <button
-                      key={d.value}
-                      className={`cac-toggle-btn ${videoDuration === d.value ? "active" : ""}`}
-                      onClick={() => setVideoDuration(d.value)}
-                    >{d.label}</button>
+                    <option key={d.value} value={d.value}>{d.label}</option>
                   ))}
-                </div>
+                </select>
                 <select className="cac-select" value={videoAspectRatio} onChange={(e) => setVideoAspectRatio(e.target.value)}>
                   {VIDEO_ASPECT_RATIOS.map((ar) => (
                     <option key={ar.value} value={ar.value}>{ar.icon} {ar.label}</option>
                   ))}
                 </select>               
-                <span className="cac-credit-pill">
-                  ⚡ {isLoggedIn ? videoCredits?.balance ?? "..." : 50} cr · {calcVideoCredits(selectedVideoModel, videoDuration, videoAudioEnabled, videoResolution)}cr/vid
-                </span>
               </div>
             )}
 
@@ -3116,29 +3117,22 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                             >
                               🎬 Make Video →
                             </button>
-                            <button
-                              onClick={async () => {
-                                const res = await fetch(img.imagePath);
-                                const blob = await res.blob();
-                                const url = URL.createObjectURL(blob);
-                                const a = document.createElement('a');
-                                a.href = url;
-                                a.download = `ai-image-${img.id}.png`;
-                                document.body.appendChild(a);
-                                a.click();
-                                document.body.removeChild(a);
-                                URL.revokeObjectURL(url);
-                              }}
+                            <a href={img.imagePath}
+                              download={`ai-image-${img.id}.png`}
+                              target="_blank"
+                              rel="noopener noreferrer"
                               style={{
+                                display: 'block', textAlign: 'center',
                                 padding: '6px 10px', borderRadius: 8,
                                 border: '1px solid var(--cac-border)',
                                 background: 'transparent', color: 'var(--cac-accent)',
                                 fontSize: 11, fontWeight: 600,
                                 cursor: 'pointer', width: '100%',
+                                textDecoration: 'none', boxSizing: 'border-box',
                               }}
                             >
                               📥 Download
-                            </button>
+                            </a>
                           </div>
                         </div>
                       </div>

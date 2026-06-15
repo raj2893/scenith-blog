@@ -18,6 +18,8 @@ interface CustomDropdownProps {
   className?: string;
   style?: React.CSSProperties;
   maxHeight?: number;
+  selectedLabel?: string;
+  selectedLogo?: string;
 }
 
 const CustomDropdown: React.FC<CustomDropdownProps> = ({
@@ -29,6 +31,8 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
   className = "",
   style = {},
   maxHeight = 240,
+  selectedLabel,
+  selectedLogo,
 }) => {
   const [open, setOpen] = useState(false);
   const [menuPos, setMenuPos] = useState<{
@@ -138,7 +142,25 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
         disabled={disabled}
       >
         <span className="cac-dropdown-value" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          {selected ? (
+          {selectedLabel || selectedLogo ? (
+            <>
+              {selectedLogo && (
+                <img
+                  src={selectedLogo}
+                  alt=""
+                  style={{
+                    width: 15,
+                    height: 15,
+                    objectFit: "contain",
+                    objectPosition: "center",
+                    borderRadius: 3,
+                    flexShrink: 0,
+                  }}
+                />
+              )}
+              {selectedLabel && <span>{selectedLabel}</span>}
+            </>
+          ) : selected ? (
             <>
               {selected.logo && (
                 <img
