@@ -1,0 +1,623 @@
+/* app/tools/how-to-start-a-faceless-youtube-channel-with-ai/styles.css */
+
+/* ===== Base ===== */
+.fy-page {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+  background: #0a0a0f;
+  color: #e2e8f0;
+  line-height: 1.7;
+  padding: 0 0 2rem 0;
+}
+
+.fy-container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ===== Typography ===== */
+.fy-section-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #f8fafc;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.2;
+}
+
+.fy-section-desc {
+  font-size: 1.1rem;
+  color: #94a3b8;
+  max-width: 720px;
+  margin: 0 auto 2rem auto;
+  text-align: center;
+}
+
+/* ===== Hero ===== */
+.fy-hero {
+  padding: 60px 0 40px;
+  background: linear-gradient(180deg, #0f0f1a 0%, #161622 100%);
+  border-bottom: 1px solid #1e293b;
+  text-align: center;
+}
+
+.fy-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(99, 85, 220, 0.15);
+  border: 1px solid rgba(99, 85, 220, 0.25);
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #8b5cf6;
+  margin-bottom: 20px;
+}
+
+.fy-hero-title {
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: #f8fafc;
+  line-height: 1.1;
+  margin: 0 0 8px 0;
+}
+
+.fy-hero-subtitle {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: #94a3b8;
+  margin-top: 4px;
+}
+
+.fy-hero-desc {
+  font-size: 1.1rem;
+  max-width: 720px;
+  margin: 16px auto 28px;
+  color: #cbd5e1;
+}
+
+.fy-hero-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.fy-hero-trust {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.fy-hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 32px;
+  padding-top: 20px;
+  border-top: 1px solid #1e293b;
+}
+
+.fy-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fy-stat strong {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #8b5cf6;
+}
+
+.fy-stat span {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+/* ===== Buttons ===== */
+.fy-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #6355dc, #8b5cf6);
+  color: #fff;
+  padding: 14px 32px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: all 0.2s;
+  border: none;
+}
+
+.fy-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(99, 85, 220, 0.35);
+}
+
+.fy-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: #cbd5e1;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  border: 1.5px solid #2d3748;
+  transition: all 0.2s;
+}
+
+.fy-btn-secondary:hover {
+  border-color: #6355dc;
+  color: #f8fafc;
+}
+
+.fy-btn-large {
+  font-size: 1.1rem;
+  padding: 16px 40px;
+}
+
+.fy-btn-small {
+  display: inline-block;
+  background: linear-gradient(135deg, #6355dc, #8b5cf6);
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-decoration: none;
+  margin-top: 8px;
+  transition: all 0.2s;
+}
+
+.fy-btn-small:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(99, 85, 220, 0.3);
+}
+
+/* ===== Sections ===== */
+.fy-section {
+  padding: 60px 0;
+}
+
+.fy-section-alt {
+  background: #0f0f1a;
+  border-top: 1px solid #1a1a2e;
+  border-bottom: 1px solid #1a1a2e;
+}
+
+.fy-section-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.fy-section-header h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #f8fafc;
+  margin: 0;
+}
+
+/* ===== Step Number ===== */
+.fy-step-number {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #8b5cf6;
+  background: rgba(99, 85, 220, 0.12);
+  padding: 4px 14px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+
+/* ===== Grids ===== */
+.fy-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.fy-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.fy-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+/* ===== Cards ===== */
+.fy-card {
+  background: #14141e;
+  border: 1px solid #1e293b;
+  border-radius: 16px;
+  padding: 24px 28px;
+  transition: all 0.2s;
+}
+
+.fy-card:hover {
+  border-color: #2d3748;
+}
+
+.fy-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin: 0 0 8px 0;
+}
+
+.fy-card p {
+  color: #94a3b8;
+  font-size: 0.95rem;
+  margin: 0 0 12px 0;
+}
+
+.fy-card ul,
+.fy-card ol {
+  padding-left: 20px;
+  color: #cbd5e1;
+  font-size: 0.95rem;
+  margin: 8px 0;
+}
+
+.fy-card ul li,
+.fy-card ol li {
+  margin-bottom: 4px;
+}
+
+.fy-card-icon {
+  font-size: 1.8rem;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.fy-card-warning {
+  border-left: 4px solid #ef4444;
+}
+
+.fy-highlight-box {
+  background: rgba(99, 85, 220, 0.06);
+  border: 1px solid rgba(99, 85, 220, 0.15);
+  border-radius: 16px;
+  padding: 24px 28px;
+}
+
+.fy-highlight-box h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin: 0 0 12px 0;
+}
+
+.fy-highlight-box ul {
+  padding-left: 20px;
+  color: #cbd5e1;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.fy-highlight-box ul li {
+  margin-bottom: 4px;
+}
+
+/* ===== Lists ===== */
+.fy-list-check {
+  list-style: none;
+  padding: 0;
+}
+
+.fy-list-check li {
+  padding: 4px 0;
+  position: relative;
+  padding-left: 28px;
+}
+
+.fy-list-check li::before {
+  content: "✅";
+  position: absolute;
+  left: 0;
+  top: 4px;
+}
+
+/* ===== Tip ===== */
+.fy-tip {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.15);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  color: #6ee7b7;
+  margin-top: 12px;
+}
+
+/* ===== Code Block ===== */
+.fy-code-block {
+  background: #0a0a12;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 0.85rem;
+  color: #cbd5e1;
+  margin: 8px 0;
+}
+
+.fy-code-block p {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.fy-code-block strong {
+  color: #8b5cf6;
+}
+
+/* ===== CTA Banner ===== */
+.fy-cta-banner {
+  background: linear-gradient(135deg, rgba(99, 85, 220, 0.10), rgba(139, 92, 246, 0.06));
+  border: 1px solid rgba(99, 85, 220, 0.20);
+  border-radius: 16px;
+  padding: 32px 40px;
+  margin-top: 32px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.fy-cta-banner h3 {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #f8fafc;
+  margin: 0 0 4px 0;
+}
+
+.fy-cta-banner p {
+  color: #94a3b8;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* ===== FAQ ===== */
+.fy-faq-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.fy-faq-item {
+  background: #14141e;
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.fy-faq-item summary {
+  padding: 18px 24px;
+  font-weight: 700;
+  color: #f8fafc;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background 0.2s;
+}
+
+.fy-faq-item summary:hover {
+  background: rgba(99, 85, 220, 0.04);
+}
+
+.fy-faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.fy-faq-item summary::after {
+  content: "+";
+  font-size: 1.2rem;
+  color: #8b5cf6;
+}
+
+.fy-faq-item[open] summary::after {
+  content: "−";
+}
+
+.fy-faq-item p {
+  padding: 0 24px 20px 24px;
+  margin: 0;
+  color: #cbd5e1;
+  font-size: 0.95rem;
+}
+
+.fy-faq-item p br {
+  display: block;
+  content: "";
+  margin: 4px 0;
+}
+
+/* ===== Final CTA ===== */
+.fy-final-cta {
+  padding: 60px 0;
+  background: linear-gradient(180deg, #0f0f1a, #161622);
+  border-top: 1px solid #1e293b;
+  text-align: center;
+}
+
+.fy-final-cta-inner {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.fy-final-icon {
+  font-size: 2.8rem;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.fy-final-cta h2 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #f8fafc;
+  margin: 0 0 12px 0;
+}
+
+.fy-final-cta p {
+  color: #94a3b8;
+  font-size: 1.05rem;
+  margin: 0 0 24px 0;
+}
+
+.fy-final-cta-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin: 20px 0 28px;
+}
+
+.fy-final-trust {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+/* ===== Internal Links ===== */
+.fy-internal-links {
+  background: #0a0a12;
+  border-top: 1px solid #1a1a2e;
+  padding: 32px 0;
+}
+
+.fy-internal-links h3 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 12px 0;
+}
+
+.fy-internal-links ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.fy-internal-links ul li {
+  margin: 0;
+}
+
+.fy-internal-links ul li a {
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+
+.fy-internal-links ul li a:hover {
+  color: #8b5cf6;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 992px) {
+  .fy-grid-3 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .fy-hero-title {
+    font-size: 2rem;
+  }
+
+  .fy-hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .fy-section-title {
+    font-size: 1.6rem;
+  }
+
+  .fy-two-col {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .fy-grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .fy-grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .fy-faq-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .fy-cta-banner {
+    flex-direction: column;
+    text-align: center;
+    padding: 24px;
+  }
+
+  .fy-hero-cta-row {
+    flex-direction: column;
+  }
+
+  .fy-final-cta-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .fy-btn-primary,
+  .fy-btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .fy-hero-stats {
+    gap: 16px;
+  }
+
+  .fy-internal-links ul {
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .fy-hero-title {
+    font-size: 1.6rem;
+  }
+
+  .fy-section-title {
+    font-size: 1.3rem;
+  }
+
+  .fy-card {
+    padding: 18px 16px;
+  }
+
+  .fy-highlight-box {
+    padding: 18px 16px;
+  }
+}
