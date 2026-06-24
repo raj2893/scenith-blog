@@ -1,0 +1,682 @@
+/* app/tools/faceless-youtube-niche-ideas/styles.css */
+
+/* ============================================================
+   ROOT VARIABLES (Light & Dark)
+   ============================================================ */
+.fy-page {
+  --fy-white: #ffffff;
+  --fy-black: #0b0e14;
+  --fy-gray-50: #f8fafc;
+  --fy-gray-100: #f1f5f9;
+  --fy-gray-200: #e2e8f0;
+  --fy-gray-300: #cbd5e1;
+  --fy-gray-400: #94a3b8;
+  --fy-gray-500: #64748b;
+  --fy-gray-600: #475569;
+  --fy-gray-700: #334155;
+  --fy-gray-800: #1e293b;
+  --fy-gray-900: #0f172a;
+
+  --fy-primary: #6355dc;
+  --fy-primary-light: #8b5cf6;
+  --fy-primary-dark: #4f46e5;
+  --fy-primary-gradient: linear-gradient(135deg, #6355dc, #8b5cf6);
+  --fy-secondary: #db2777;
+  --fy-secondary-light: #ec4899;
+
+  --fy-bg: var(--fy-white);
+  --fy-bg-alt: var(--fy-gray-50);
+  --fy-text: var(--fy-gray-900);
+  --fy-text-muted: var(--fy-gray-600);
+  --fy-border: var(--fy-gray-200);
+  --fy-card-shadow: 0 4px 20px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.04);
+  --fy-card-hover-shadow: 0 12px 40px rgba(99, 85, 220, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+
+  color-scheme: light dark;
+  background: var(--fy-bg);
+  color: var(--fy-text);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (prefers-color-scheme: dark) {
+  .fy-page {
+    --fy-bg: var(--fy-gray-900);
+    --fy-bg-alt: var(--fy-gray-800);
+    --fy-text: var(--fy-gray-100);
+    --fy-text-muted: var(--fy-gray-400);
+    --fy-border: var(--fy-gray-700);
+    --fy-card-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    --fy-card-hover-shadow: 0 12px 40px rgba(99, 85, 220, 0.12), 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* ============================================================
+   CONTAINER & LAYOUT
+   ============================================================ */
+.fy-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+.fy-page h1,
+.fy-page h2,
+.fy-page h3,
+.fy-page h4 {
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.fy-page h1 {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+}
+.fy-page h2 {
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+  margin-bottom: 1.25rem;
+}
+.fy-page h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+.fy-page h4 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+
+.fy-page p {
+  margin-bottom: 1rem;
+  color: var(--fy-text-muted);
+}
+
+.fy-gradient-text {
+  background: var(--fy-primary-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.fy-btn-primary,
+.fy-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.75rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.fy-btn-primary {
+  background: var(--fy-primary-gradient);
+  color: white;
+  box-shadow: 0 4px 14px rgba(99, 85, 220, 0.25);
+}
+.fy-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(99, 85, 220, 0.35);
+}
+.fy-btn-primary .fy-btn-arrow {
+  transition: transform 0.2s;
+}
+.fy-btn-primary:hover .fy-btn-arrow {
+  transform: translateX(4px);
+}
+
+.fy-btn-secondary {
+  background: transparent;
+  color: var(--fy-text);
+  border-color: var(--fy-border);
+}
+.fy-btn-secondary:hover {
+  background: var(--fy-bg-alt);
+  border-color: var(--fy-gray-400);
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.fy-hero {
+  padding: 3rem 0 2.5rem;
+  text-align: center;
+  border-bottom: 1px solid var(--fy-border);
+}
+.fy-hero-badge {
+  display: inline-block;
+  background: var(--fy-primary-gradient);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 1rem;
+  border-radius: 9999px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+.fy-hero-title {
+  max-width: 800px;
+  margin: 0 auto 1rem;
+}
+.fy-hero-sub {
+  max-width: 660px;
+  margin: 0 auto 2rem;
+  font-size: 1.1rem;
+  color: var(--fy-text-muted);
+}
+.fy-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+.fy-hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--fy-text-muted);
+}
+.fy-hero-stats span {
+  background: var(--fy-bg-alt);
+  padding: 0.35rem 1rem;
+  border-radius: 9999px;
+  border: 1px solid var(--fy-border);
+}
+
+/* ============================================================
+   QUICK NAV
+   ============================================================ */
+.fy-quick-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  padding: 1rem 0;
+  margin: 1.5rem 0 2.5rem;
+  border-bottom: 1px solid var(--fy-border);
+}
+.fy-quick-nav-label {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--fy-text-muted);
+}
+.fy-quick-nav-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.fy-quick-nav-list a {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--fy-primary);
+  text-decoration: none;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  background: var(--fy-bg-alt);
+  border: 1px solid transparent;
+  transition: all 0.15s;
+}
+.fy-quick-nav-list a:hover {
+  background: var(--fy-primary);
+  color: white;
+  border-color: var(--fy-primary);
+}
+
+/* ============================================================
+   INTRO
+   ============================================================ */
+.fy-intro {
+  padding: 2rem 0 1.5rem;
+}
+.fy-intro h2 {
+  margin-bottom: 1rem;
+}
+.fy-intro p {
+  max-width: 760px;
+}
+.fy-intro a {
+  color: var(--fy-primary);
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 2px solid var(--fy-primary-light);
+}
+.fy-intro a:hover {
+  border-bottom-color: var(--fy-primary);
+}
+
+/* ============================================================
+   USE CASES
+   ============================================================ */
+.fy-usecases {
+  padding: 2.5rem 0;
+}
+.fy-usecase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+.fy-usecase-card {
+  background: var(--fy-bg-alt);
+  padding: 1.5rem;
+  border-radius: 20px;
+  border: 1px solid var(--fy-border);
+  transition: all 0.2s;
+}
+.fy-usecase-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--fy-card-hover-shadow);
+}
+.fy-usecase-card .fy-uc-icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+.fy-usecase-card h3 {
+  margin-bottom: 0.25rem;
+}
+.fy-usecase-card p {
+  font-size: 0.95rem;
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   NICHE LIST
+   ============================================================ */
+.fy-niche-list {
+  padding: 2.5rem 0;
+}
+.fy-niche-intro {
+  max-width: 700px;
+  margin-bottom: 2.5rem;
+}
+.fy-niche-category {
+  margin-bottom: 3rem;
+}
+.fy-niche-category h3 {
+  font-size: 1.8rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 3px solid var(--fy-primary-light);
+  display: inline-block;
+}
+.fy-niche-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+.fy-niche-card {
+  background: var(--fy-bg-alt);
+  padding: 1.5rem;
+  border-radius: 20px;
+  border: 1px solid var(--fy-border);
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+.fy-niche-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--fy-card-hover-shadow);
+}
+.fy-niche-badge {
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: white;
+  background: var(--fy-primary-gradient);
+  padding: 0.15rem 0.75rem;
+  border-radius: 9999px;
+  align-self: flex-start;
+  margin-bottom: 0.75rem;
+}
+.fy-niche-card h4 {
+  font-size: 1.1rem;
+  margin-bottom: 0.35rem;
+}
+.fy-niche-card p {
+  font-size: 0.9rem;
+  flex: 1;
+  margin-bottom: 1rem;
+}
+.fy-niche-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: var(--fy-text-muted);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+.fy-niche-cta {
+  font-weight: 700;
+  color: var(--fy-primary);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.15s;
+  align-self: flex-start;
+}
+.fy-niche-cta:hover {
+  border-bottom-color: var(--fy-primary);
+}
+
+/* ============================================================
+   HOW-TO
+   ============================================================ */
+.fy-howto {
+  padding: 2.5rem 0;
+}
+.fy-howto-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+.fy-howto-step {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+}
+.fy-howto-num {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--fy-primary);
+  line-height: 1;
+  min-width: 3rem;
+  background: var(--fy-bg-alt);
+  border-radius: 9999px;
+  text-align: center;
+  padding: 0.2rem 0;
+  border: 2px solid var(--fy-border);
+}
+.fy-howto-step h3 {
+  margin-bottom: 0.15rem;
+}
+.fy-howto-step p {
+  margin-bottom: 0;
+  font-size: 0.95rem;
+}
+.fy-howto-step a {
+  color: var(--fy-primary);
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+}
+.fy-howto-step a:hover {
+  border-bottom-color: var(--fy-primary);
+}
+
+/* ============================================================
+   BEST PRACTICES
+   ============================================================ */
+.fy-best-practices {
+  padding: 2.5rem 0;
+}
+.fy-bp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+.fy-bp-card {
+  background: var(--fy-bg-alt);
+  padding: 1.5rem;
+  border-radius: 20px;
+  border: 1px solid var(--fy-border);
+}
+.fy-bp-icon {
+  font-size: 1.8rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+.fy-bp-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.fy-bp-card p {
+  font-size: 0.9rem;
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   COMMON MISTAKES
+   ============================================================ */
+.fy-mistakes {
+  padding: 2.5rem 0;
+}
+.fy-mistakes-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+.fy-mistakes-list li {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  background: var(--fy-bg-alt);
+  padding: 1.25rem 1.5rem;
+  border-radius: 16px;
+  border-left: 4px solid var(--fy-secondary);
+}
+.fy-mistake-icon {
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+.fy-mistakes-list h4 {
+  font-size: 1rem;
+  margin-bottom: 0.1rem;
+}
+.fy-mistakes-list p {
+  font-size: 0.9rem;
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   ADVANCED TIPS
+   ============================================================ */
+.fy-advanced {
+  padding: 2.5rem 0;
+}
+.fy-advanced-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+.fy-advanced-card {
+  background: var(--fy-bg-alt);
+  padding: 1.5rem;
+  border-radius: 20px;
+  border: 1px solid var(--fy-border);
+  transition: all 0.2s;
+}
+.fy-advanced-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--fy-card-hover-shadow);
+}
+.fy-adv-icon {
+  font-size: 1.8rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+.fy-advanced-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.fy-advanced-card p {
+  font-size: 0.9rem;
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   FAQ
+   ============================================================ */
+.fy-faq {
+  padding: 2.5rem 0;
+}
+.fy-faq-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+.fy-faq-item {
+  background: var(--fy-bg-alt);
+  padding: 1.25rem 1.5rem;
+  border-radius: 16px;
+  border: 1px solid var(--fy-border);
+}
+.fy-faq-item h3 {
+  font-size: 1.05rem;
+  margin-bottom: 0.25rem;
+  color: var(--fy-text);
+}
+.fy-faq-item p {
+  font-size: 0.95rem;
+  margin-bottom: 0;
+  color: var(--fy-text-muted);
+}
+
+/* ============================================================
+   FINAL CTA
+   ============================================================ */
+.fy-final-cta {
+  padding: 3rem 0 2rem;
+  border-top: 1px solid var(--fy-border);
+}
+.fy-final-cta-inner {
+  background: var(--fy-primary-gradient);
+  padding: 3rem 2.5rem;
+  border-radius: 32px;
+  text-align: center;
+  color: white;
+}
+.fy-final-cta-inner h2 {
+  color: white;
+  margin-bottom: 0.75rem;
+}
+.fy-final-cta-inner p {
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 600px;
+  margin: 0 auto 2rem;
+}
+.fy-final-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+.fy-final-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.fy-final-cta-inner .fy-btn-primary {
+  background: white;
+  color: var(--fy-primary-dark);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+}
+.fy-final-cta-inner .fy-btn-primary:hover {
+  background: var(--fy-gray-100);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+.fy-final-cta-inner .fy-btn-secondary {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+.fy-final-cta-inner .fy-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+.fy-final-disclaimer {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  margin-top: 1rem;
+}
+
+/* ============================================================
+   INTERNAL LINKS
+   ============================================================ */
+.fy-internal-links {
+  padding: 2rem 0 3rem;
+  border-top: 1px solid var(--fy-border);
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+.fy-internal-links a {
+  color: var(--fy-primary);
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0 0.25rem;
+}
+.fy-internal-links a:hover {
+  text-decoration: underline;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 640px) {
+  .fy-container {
+    padding: 0 1rem;
+  }
+  .fy-hero-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+  .fy-btn-primary,
+  .fy-btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+  .fy-quick-nav {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .fy-quick-nav-list {
+    justify-content: center;
+  }
+  .fy-hero-stats {
+    gap: 0.75rem;
+  }
+  .fy-niche-grid {
+    grid-template-columns: 1fr;
+  }
+  .fy-final-cta-inner {
+    padding: 2rem 1.25rem;
+  }
+  .fy-howto-step {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .fy-howto-num {
+    min-width: auto;
+    padding: 0.1rem 1rem;
+  }
+  .fy-mistakes-list li {
+    flex-direction: column;
+  }
+}
