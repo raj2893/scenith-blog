@@ -3193,4 +3193,28 @@
     <changefreq>weekly</changefreq>
     <lastmod>2026-06-24</lastmod>
   </url>
+  <url>
+    <loc>https://scenith.in/tools/ai-animation-video-generator</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-06-28</lastmod>
+  </url>
+  <url>
+    <loc>https://scenith.in/tools/prompt-to-video-ai-generator</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-06-28</lastmod>
+  </url>
+  <url>
+    <loc>https://scenith.in/tools/script-to-video-converter</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-06-28</lastmod>
+  </url>
+  <url>
+    <loc>https://scenith.in/tools/image-to-video-ai-generator</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-06-28</lastmod>
+  </url> 
 </urlset>
