@@ -1,0 +1,595 @@
+/* ─────────────────────────────────────────────────────────────
+   AI Sales Video Generator — page styles
+   Prefix: asv- (AI Sales Video)
+───────────────────────────────────────────────────────────── */
+
+.asv-page {
+  --asv-accent: #6355dc;
+  --asv-accent-2: #f06cbe;
+  --asv-text: #1a202c;
+  --asv-text-2: #4a5568;
+  --asv-muted: #718096;
+  --asv-border: rgba(99, 85, 220, 0.15);
+  --asv-surface: #ffffff;
+  --asv-bg-alt: #f8f7fd;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--asv-text);
+  background: var(--asv-surface);
+  line-height: 1.6;
+}
+
+.asv-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ── Breadcrumb ── */
+.asv-breadcrumb {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 14px 20px 0;
+  font-size: 0.8rem;
+  color: var(--asv-muted);
+}
+.asv-breadcrumb ol {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0;
+  margin: 0;
+}
+.asv-breadcrumb li:not(:last-child)::after {
+  content: "/";
+  margin-left: 6px;
+  color: var(--asv-border);
+}
+.asv-breadcrumb a {
+  color: var(--asv-muted);
+  text-decoration: none;
+}
+.asv-breadcrumb a:hover {
+  color: var(--asv-accent);
+}
+
+/* ── Hero ── */
+.asv-hero {
+  padding: 56px 0 48px;
+  background: linear-gradient(180deg, #f8f7fd 0%, #ffffff 100%);
+}
+
+.asv-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 100px;
+  background: rgba(99, 85, 220, 0.1);
+  border: 1px solid rgba(99, 85, 220, 0.25);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--asv-accent);
+  margin-bottom: 20px;
+}
+
+.asv-hero-title {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin: 0 0 18px;
+}
+
+.asv-hero-sub-title {
+  display: block;
+  font-size: clamp(1.1rem, 2.4vw, 1.5rem);
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--asv-accent), var(--asv-accent-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-top: 8px;
+}
+
+.asv-hero-desc {
+  font-size: 1.08rem;
+  color: var(--asv-text-2);
+  max-width: 760px;
+  margin: 0 0 32px;
+}
+
+/* ── Prompt Box (form) ── */
+.asv-prompt-box {
+  max-width: 760px;
+  background: var(--asv-surface);
+  border: 1.5px solid var(--asv-border);
+  border-radius: 18px;
+  padding: 20px 22px;
+  box-shadow: 0 8px 30px rgba(99, 85, 220, 0.1);
+  margin-bottom: 24px;
+}
+
+.asv-prompt-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--asv-accent);
+  margin-bottom: 10px;
+}
+
+.asv-prompt-textarea {
+  width: 100%;
+  border: 1.5px solid var(--asv-border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--asv-text);
+  resize: vertical;
+  min-height: 80px;
+  box-sizing: border-box;
+  background: #fbfaff;
+}
+.asv-prompt-textarea:focus {
+  outline: none;
+  border-color: var(--asv-accent);
+}
+
+.asv-prompt-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.asv-prompt-hint {
+  font-size: 0.8rem;
+  color: var(--asv-muted);
+}
+
+.asv-prompt-btn {
+  padding: 12px 26px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--asv-accent), #8b5cf6);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(99, 85, 220, 0.4);
+  transition: transform 0.15s, box-shadow 0.15s;
+  white-space: nowrap;
+}
+.asv-prompt-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(99, 85, 220, 0.5);
+}
+
+.asv-trust-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.asv-trust-pill {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--asv-text-2);
+  background: var(--asv-bg-alt);
+  border: 1px solid var(--asv-border);
+  border-radius: 100px;
+  padding: 6px 14px;
+}
+
+/* ── Sections ── */
+.asv-section {
+  padding: 56px 0;
+}
+.asv-alt-bg {
+  background: var(--asv-bg-alt);
+}
+
+.asv-section h2 {
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  margin: 0 0 14px;
+  color: var(--asv-text);
+}
+
+.asv-section-intro {
+  color: var(--asv-text-2);
+  font-size: 1rem;
+  max-width: 760px;
+  margin: 0 0 32px;
+}
+
+/* ── Definition box ── */
+.asv-definition-section {
+  padding: 32px 0 8px;
+}
+.asv-definition-box {
+  background: var(--asv-bg-alt);
+  border: 1px solid var(--asv-border);
+  border-radius: 16px;
+  padding: 24px 26px;
+}
+.asv-definition-label {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--asv-accent);
+  margin-bottom: 10px;
+}
+.asv-definition-box p {
+  margin: 0;
+  color: var(--asv-text-2);
+  font-size: 0.98rem;
+  line-height: 1.75;
+}
+
+/* ── Grids ── */
+.asv-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+.asv-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.asv-card {
+  background: var(--asv-surface);
+  border: 1.5px solid var(--asv-border);
+  border-radius: 16px;
+  padding: 24px 22px;
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+.asv-card:hover {
+  border-color: rgba(99, 85, 220, 0.35);
+  box-shadow: 0 8px 28px rgba(99, 85, 220, 0.12);
+}
+.asv-card-icon {
+  font-size: 1.6rem;
+  display: block;
+  margin-bottom: 10px;
+}
+.asv-card h3 {
+  font-size: 1.02rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+.asv-card p {
+  font-size: 0.9rem;
+  color: var(--asv-text-2);
+  margin: 0;
+  line-height: 1.7;
+}
+
+/* ── Platform examples ── */
+.asv-platform-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.asv-platform-item {
+  background: var(--asv-surface);
+  border: 1.5px solid var(--asv-border);
+  border-radius: 16px;
+  padding: 22px 24px;
+}
+.asv-platform-item h3 {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+.asv-platform-item p {
+  margin: 0;
+  color: var(--asv-text-2);
+  font-size: 0.92rem;
+  line-height: 1.75;
+}
+.asv-platform-item em {
+  color: var(--asv-text);
+  font-style: italic;
+}
+
+/* ── Steps ── */
+.asv-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.asv-step {
+  display: flex;
+  gap: 22px;
+  align-items: flex-start;
+  background: var(--asv-surface);
+  border: 1.5px solid var(--asv-border);
+  border-radius: 18px;
+  padding: 22px 26px;
+}
+.asv-step-num {
+  min-width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: rgba(99, 85, 220, 0.1);
+  color: var(--asv-accent);
+  font-weight: 900;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.asv-step-body h3 {
+  margin: 0 0 6px;
+  font-size: 1.02rem;
+  font-weight: 700;
+}
+.asv-step-body p {
+  margin: 0;
+  color: var(--asv-text-2);
+  font-size: 0.92rem;
+  line-height: 1.75;
+}
+.asv-step-body em {
+  font-style: italic;
+  color: var(--asv-text);
+}
+
+/* ── Best practices ── */
+.asv-practice {
+  background: var(--asv-surface);
+  border: 1.5px solid var(--asv-border);
+  border-radius: 16px;
+  padding: 22px 24px;
+}
+.asv-practice h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  font-weight: 700;
+}
+.asv-practice p {
+  margin: 0;
+  color: var(--asv-text-2);
+  font-size: 0.92rem;
+  line-height: 1.75;
+}
+
+/* ── Mistakes ── */
+.asv-mistakes {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.asv-mistake {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: #fff7f7;
+  border: 1.5px solid rgba(255, 107, 107, 0.25);
+  border-radius: 16px;
+  padding: 20px 22px;
+}
+.asv-mistake-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+.asv-mistake h3 {
+  margin: 0 0 6px;
+  font-size: 0.98rem;
+  font-weight: 700;
+}
+.asv-mistake p {
+  margin: 0;
+  color: var(--asv-text-2);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+/* ── Advanced tips ── */
+.asv-advanced-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+}
+.asv-advanced-item {
+  background: var(--asv-surface);
+  border: 1.5px solid var(--asv-border);
+  border-radius: 16px;
+  padding: 22px 24px;
+}
+.asv-advanced-item h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  font-weight: 700;
+}
+.asv-advanced-item p {
+  margin: 0;
+  color: var(--asv-text-2);
+  font-size: 0.9rem;
+  line-height: 1.75;
+}
+.asv-advanced-item em {
+  font-style: italic;
+  color: var(--asv-text);
+}
+
+/* ── Mid CTA ── */
+.asv-mid-cta-section {
+  padding: 48px 0;
+  background: linear-gradient(135deg, #0f0c29 0%, #1e1a45 100%);
+  text-align: center;
+}
+.asv-mid-cta-inner h2 {
+  color: #fff;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 900;
+  margin: 0 0 8px;
+}
+.asv-mid-cta-inner p {
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0 0 22px;
+}
+.asv-mid-cta-btn {
+  display: inline-block;
+  padding: 14px 32px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  font-weight: 800;
+  font-size: 1rem;
+  text-decoration: none;
+  box-shadow: 0 4px 22px rgba(102, 126, 234, 0.45);
+}
+
+/* ── Related tools ── */
+.asv-related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+.asv-related-card {
+  display: block;
+  background: var(--asv-surface);
+  border: 1.5px solid var(--asv-border);
+  border-radius: 16px;
+  padding: 20px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+}
+.asv-related-card:hover {
+  border-color: rgba(99, 85, 220, 0.4);
+  box-shadow: 0 8px 24px rgba(99, 85, 220, 0.12);
+  transform: translateY(-2px);
+}
+.asv-related-card span {
+  font-size: 1.4rem;
+  display: block;
+  margin-bottom: 8px;
+}
+.asv-related-card h3 {
+  margin: 0 0 6px;
+  font-size: 0.98rem;
+  font-weight: 700;
+}
+.asv-related-card p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--asv-muted);
+  line-height: 1.6;
+}
+
+/* ── FAQ ── */
+.asv-faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.asv-faq-item {
+  background: var(--asv-surface);
+  border: 1.5px solid var(--asv-border);
+  border-radius: 14px;
+  padding: 16px 20px;
+}
+.asv-faq-item summary {
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.98rem;
+  color: var(--asv-text);
+  list-style: none;
+}
+.asv-faq-item summary::-webkit-details-marker {
+  display: none;
+}
+.asv-faq-item summary::before {
+  content: "▸ ";
+  color: var(--asv-accent);
+}
+.asv-faq-item[open] summary::before {
+  content: "▾ ";
+}
+.asv-faq-item p {
+  margin: 10px 0 0;
+  color: var(--asv-text-2);
+  font-size: 0.92rem;
+  line-height: 1.75;
+}
+
+/* ── Final CTA ── */
+.asv-final-cta-section {
+  padding: 64px 0 72px;
+  text-align: center;
+  background: linear-gradient(180deg, #ffffff 0%, #f8f7fd 100%);
+}
+.asv-final-cta-inner {
+  max-width: 640px;
+}
+.asv-final-icon {
+  font-size: 2.4rem;
+  display: block;
+  margin-bottom: 10px;
+}
+.asv-final-cta-inner h2 {
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  font-weight: 900;
+  margin: 0 0 10px;
+}
+.asv-final-cta-inner p {
+  color: var(--asv-text-2);
+  margin: 0 0 26px;
+}
+.asv-final-cta-btn {
+  display: inline-block;
+  padding: 15px 34px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--asv-accent), var(--asv-accent-2));
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.02rem;
+  text-decoration: none;
+  box-shadow: 0 6px 26px rgba(99, 85, 220, 0.4);
+}
+.asv-final-footnote {
+  margin-top: 22px;
+  font-size: 0.85rem;
+  color: var(--asv-muted);
+}
+
+/* ── Inline links ── */
+.asv-inline-link {
+  color: var(--asv-accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+.asv-inline-link:hover {
+  text-decoration: underline;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .asv-hero {
+    padding: 40px 0 32px;
+  }
+  .asv-section {
+    padding: 40px 0;
+  }
+  .asv-step {
+    flex-direction: column;
+  }
+  .asv-prompt-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .asv-prompt-btn {
+    width: 100%;
+  }
+}
