@@ -3258,5 +3258,17 @@
     <priority>0.9</priority>
     <changefreq>weekly</changefreq>
     <lastmod>2026-07-06</lastmod>
-  </url>   
+  </url> 
+  <url>
+    <loc>https://scenith.in/tools/indian-english-ai-voice-generator</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-07-09</lastmod>
+  </url> 
+  <url>
+    <loc>https://scenith.in/tools/indian-ai-voice-for-youtube</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-07-09</lastmod>
+  </url> 
 </urlset>

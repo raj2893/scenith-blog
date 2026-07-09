@@ -416,7 +416,7 @@ const calcVideoCredits = (
   if (id === "VEO_3_1_FAST") {
     if (durationSeconds <= 4)  return audioOn ?  138 :  92;
     if (durationSeconds <= 8)  return audioOn ?  278 : 186;
-    if (durationSeconds <= 20) return audioOn ?  556 : 370;
+    if (durationSeconds <= 20) return audioOn ?  630 : 420;
     return                            audioOn ?  834 : 556;
   }
 
@@ -424,7 +424,7 @@ const calcVideoCredits = (
   if (id === "VEO_3_1") {
     if (durationSeconds <= 4)  return audioOn ?  370 :  186;
     if (durationSeconds <= 8)  return audioOn ?  740 :  370;
-    if (durationSeconds <= 20) return audioOn ? 1480 :  740;
+    if (durationSeconds <= 20) return audioOn ? 1680 :  840;
     return                            audioOn ? 2224 : 1112;
   }
 
