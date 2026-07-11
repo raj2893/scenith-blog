@@ -1,0 +1,680 @@
+/* ─────────────────────────────────────────────────────────────
+   Indian Female AI Voice Generator — page styles
+   Palette (Indian textile inspired):
+     Ivory paper   #FBF4E8
+     Sindoor       #8E1F2F   (deep madder red — primary)
+     Marigold      #E9A319   (accent / CTA glow)
+     Peacock       #0E5E63   (secondary accent)
+     Ink           #2B1B15   (text)
+   Type:
+     Display — "Rozha One" (Indian Type Foundry, Devanagari-rooted)
+     Body    — "Mukta"     (Devanagari + Latin)
+   Signature: temple-border zigzag strip + bindi dot markers
+   ───────────────────────────────────────────────────────────── */
+
+@import url("https://fonts.googleapis.com/css2?family=Rozha+One&family=Mukta:wght@400;500;600;700;800&display=swap");
+
+.ifv-page {
+  --ifv-paper: #fbf4e8;
+  --ifv-paper-2: #f6ead6;
+  --ifv-sindoor: #8e1f2f;
+  --ifv-sindoor-dark: #6e1523;
+  --ifv-marigold: #e9a319;
+  --ifv-peacock: #0e5e63;
+  --ifv-ink: #2b1b15;
+  --ifv-ink-2: #5c4a41;
+  --ifv-line: rgba(142, 31, 47, 0.16);
+
+  font-family: "Mukta", "Segoe UI", system-ui, sans-serif;
+  background: var(--ifv-paper);
+  color: var(--ifv-ink);
+  line-height: 1.75;
+  font-size: 16.5px;
+  overflow-x: hidden;
+}
+
+.ifv-container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ── Typography ── */
+.ifv-page h1,
+.ifv-page h2 {
+  font-family: "Rozha One", "Rozha One Devanagari", serif;
+  font-weight: 400;
+  color: var(--ifv-sindoor-dark);
+  line-height: 1.18;
+  letter-spacing: 0.01em;
+}
+
+.ifv-page h1 {
+  font-size: clamp(2rem, 4.6vw, 3.1rem);
+  margin: 0 0 16px;
+}
+
+.ifv-page h2 {
+  font-size: clamp(1.55rem, 3.2vw, 2.2rem);
+  margin: 0 0 14px;
+  position: relative;
+  padding-left: 22px;
+}
+
+/* bindi dot before every H2 — the section marker */
+.ifv-page h2::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.52em;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, var(--ifv-marigold), var(--ifv-sindoor));
+  box-shadow: 0 0 0 3px rgba(233, 163, 25, 0.22);
+}
+
+.ifv-page h3 {
+  font-family: "Mukta", sans-serif;
+  font-weight: 700;
+  font-size: 1.08rem;
+  color: var(--ifv-ink);
+  margin: 0 0 8px;
+}
+
+.ifv-page p {
+  margin: 0 0 14px;
+  color: var(--ifv-ink-2);
+}
+
+.ifv-page a {
+  color: var(--ifv-peacock);
+  text-decoration: underline;
+  text-decoration-color: rgba(14, 94, 99, 0.35);
+  text-underline-offset: 3px;
+  transition: color 0.15s;
+}
+.ifv-page a:hover {
+  color: var(--ifv-sindoor);
+}
+
+.ifv-intro {
+  max-width: 760px;
+  font-size: 1.03rem;
+}
+
+/* ── Breadcrumb ── */
+.ifv-breadcrumb {
+  border-bottom: 1px solid var(--ifv-line);
+  background: var(--ifv-paper);
+}
+.ifv-breadcrumb ol {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 12px 20px;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: var(--ifv-ink-2);
+}
+.ifv-breadcrumb li + li::before {
+  content: "›";
+  margin-right: 6px;
+  color: var(--ifv-marigold);
+}
+.ifv-breadcrumb a {
+  color: var(--ifv-ink-2);
+  text-decoration: none;
+}
+.ifv-breadcrumb a:hover {
+  color: var(--ifv-sindoor);
+}
+
+/* ── Hero ── */
+.ifv-hero {
+  position: relative;
+  padding: 64px 0 72px;
+  background:
+    radial-gradient(900px 420px at 85% -10%, rgba(233, 163, 25, 0.16), transparent 65%),
+    radial-gradient(700px 380px at -10% 110%, rgba(14, 94, 99, 0.1), transparent 60%),
+    var(--ifv-paper);
+}
+
+/* signature: temple-border zigzag strip along the hero top */
+.ifv-hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background:
+    linear-gradient(135deg, var(--ifv-sindoor) 25%, transparent 25%) 0 0 / 16px 12px,
+    linear-gradient(225deg, var(--ifv-sindoor) 25%, transparent 25%) 0 0 / 16px 12px,
+    var(--ifv-marigold);
+}
+
+.ifv-hero-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 44px;
+  align-items: start;
+}
+
+.ifv-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ifv-sindoor);
+  background: rgba(233, 163, 25, 0.14);
+  border: 1px solid rgba(233, 163, 25, 0.45);
+  border-radius: 999px;
+  padding: 6px 16px;
+  margin: 0 0 18px;
+}
+.ifv-bindi {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ifv-sindoor);
+  box-shadow: 0 0 0 2.5px rgba(142, 31, 47, 0.2);
+}
+
+.ifv-h1-sub {
+  display: block;
+  font-family: "Mukta", sans-serif;
+  font-weight: 600;
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  color: var(--ifv-peacock);
+  margin-top: 10px;
+  letter-spacing: 0;
+}
+
+.ifv-hero-lede {
+  font-size: 1.06rem;
+  max-width: 560px;
+}
+
+.ifv-trust-row {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0;
+  margin: 18px 0 24px;
+}
+.ifv-trust-row li {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--ifv-ink);
+  background: #fff;
+  border: 1px solid var(--ifv-line);
+  border-radius: 999px;
+  padding: 6px 14px;
+}
+
+.ifv-hero-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* ── Buttons ── */
+.ifv-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: "Mukta", sans-serif;
+  font-weight: 800;
+  font-size: 0.95rem;
+  border-radius: 12px;
+  padding: 13px 26px;
+  text-decoration: none !important;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.ifv-btn-primary {
+  background: linear-gradient(135deg, var(--ifv-sindoor), var(--ifv-sindoor-dark));
+  color: #fff !important;
+  box-shadow: 0 6px 22px rgba(142, 31, 47, 0.32), inset 0 -2px 0 rgba(0, 0, 0, 0.18);
+}
+.ifv-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(142, 31, 47, 0.4);
+}
+.ifv-btn-ghost {
+  background: transparent;
+  color: var(--ifv-peacock) !important;
+  border: 2px solid rgba(14, 94, 99, 0.4);
+}
+.ifv-btn-ghost:hover {
+  border-color: var(--ifv-peacock);
+  background: rgba(14, 94, 99, 0.06);
+}
+.ifv-btn-block {
+  width: 100%;
+}
+.ifv-btn-lg {
+  font-size: 1.05rem;
+  padding: 16px 34px;
+}
+.ifv-btn:focus-visible {
+  outline: 3px solid var(--ifv-marigold);
+  outline-offset: 2px;
+}
+
+/* ── Script card (prompt form) ── */
+.ifv-script-card {
+  background: #fff;
+  border: 1.5px solid rgba(233, 163, 25, 0.5);
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 14px 40px rgba(142, 31, 47, 0.1);
+  position: relative;
+}
+/* marigold corner accent */
+.ifv-script-card::after {
+  content: "";
+  position: absolute;
+  top: -7px;
+  right: 24px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ffd27a, var(--ifv-marigold));
+  box-shadow: 0 0 0 4px var(--ifv-paper);
+}
+.ifv-script-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.ifv-script-title {
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--ifv-ink);
+}
+.ifv-script-hint {
+  font-size: 0.75rem;
+  color: var(--ifv-ink-2);
+  white-space: nowrap;
+}
+.ifv-script-card textarea {
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  min-height: 160px;
+  font-family: "Mukta", sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--ifv-ink);
+  background: var(--ifv-paper);
+  border: 1.5px solid var(--ifv-line);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.ifv-script-card textarea:focus {
+  outline: none;
+  border-color: var(--ifv-marigold);
+  box-shadow: 0 0 0 3px rgba(233, 163, 25, 0.2);
+}
+.ifv-script-note {
+  font-size: 0.78rem;
+  color: var(--ifv-ink-2);
+  margin: 10px 0 0;
+  text-align: center;
+}
+
+/* ── Sections ── */
+.ifv-section {
+  padding: 60px 0;
+}
+.ifv-alt {
+  background: var(--ifv-paper-2);
+  border-top: 1px solid var(--ifv-line);
+  border-bottom: 1px solid var(--ifv-line);
+}
+
+/* ── Definition ── */
+.ifv-definition {
+  padding: 42px 0;
+}
+.ifv-definition-box {
+  background: #fff;
+  border-left: 5px solid var(--ifv-marigold);
+  border-radius: 0 16px 16px 0;
+  padding: 24px 28px;
+  box-shadow: 0 6px 24px rgba(43, 27, 21, 0.06);
+}
+.ifv-definition-box p {
+  margin: 0;
+  font-size: 1.02rem;
+}
+.ifv-label {
+  display: inline-block;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ifv-sindoor);
+  margin-bottom: 8px;
+}
+
+/* ── Grids & cards ── */
+.ifv-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 28px;
+}
+.ifv-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin-top: 28px;
+}
+
+.ifv-card,
+.ifv-style-card,
+.ifv-tip,
+.ifv-mistake {
+  background: #fff;
+  border: 1px solid var(--ifv-line);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(43, 27, 21, 0.04);
+}
+.ifv-card p,
+.ifv-style-card p,
+.ifv-tip p,
+.ifv-mistake p {
+  font-size: 0.93rem;
+  margin-bottom: 0;
+}
+.ifv-card-icon {
+  display: block;
+  font-size: 1.7rem;
+  margin-bottom: 10px;
+}
+
+.ifv-style-card {
+  border-top: 4px solid var(--ifv-peacock);
+}
+.ifv-style-card:nth-child(even) {
+  border-top-color: var(--ifv-marigold);
+}
+.ifv-bestfor {
+  margin-top: 10px !important;
+  font-size: 0.87rem !important;
+  background: rgba(14, 94, 99, 0.06);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.ifv-mistake {
+  border-left: 4px solid var(--ifv-sindoor);
+}
+.ifv-mistakes {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin-top: 24px;
+}
+
+.ifv-mid-cta {
+  text-align: center;
+  margin-top: 34px;
+}
+
+/* ── Use cases ── */
+.ifv-usecase {
+  background: #fff;
+  border: 1px solid var(--ifv-line);
+  border-radius: 16px;
+  padding: 26px 28px;
+  margin-top: 18px;
+  box-shadow: 0 4px 16px rgba(43, 27, 21, 0.04);
+}
+.ifv-usecase h3 {
+  color: var(--ifv-sindoor-dark);
+  font-size: 1.12rem;
+}
+.ifv-usecase p {
+  margin-bottom: 0;
+  font-size: 0.96rem;
+}
+.ifv-usecase em {
+  color: var(--ifv-peacock);
+  font-style: normal;
+  font-weight: 600;
+}
+
+/* ── Steps ── */
+.ifv-steps {
+  list-style: none;
+  counter-reset: ifv-step;
+  padding: 0;
+  margin: 28px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.ifv-steps li {
+  counter-increment: ifv-step;
+  position: relative;
+  background: #fff;
+  border: 1px solid var(--ifv-line);
+  border-radius: 16px;
+  padding: 24px 26px 24px 84px;
+  box-shadow: 0 4px 16px rgba(43, 27, 21, 0.04);
+}
+.ifv-steps li::before {
+  content: counter(ifv-step);
+  position: absolute;
+  left: 24px;
+  top: 24px;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Rozha One", serif;
+  font-size: 1.3rem;
+  color: #fff;
+  background: linear-gradient(135deg, var(--ifv-marigold), var(--ifv-sindoor));
+  box-shadow: 0 4px 12px rgba(142, 31, 47, 0.28);
+}
+.ifv-steps p {
+  margin-bottom: 0;
+  font-size: 0.95rem;
+}
+
+/* ── Table ── */
+.ifv-table-wrap {
+  overflow-x: auto;
+  margin-top: 26px;
+  border-radius: 16px;
+  border: 1.5px solid var(--ifv-line);
+  background: #fff;
+}
+.ifv-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  min-width: 640px;
+}
+.ifv-table th,
+.ifv-table td {
+  padding: 13px 18px;
+  text-align: left;
+  border-bottom: 1px solid rgba(142, 31, 47, 0.09);
+  color: var(--ifv-ink-2);
+}
+.ifv-table thead th {
+  background: var(--ifv-paper-2);
+  color: var(--ifv-ink);
+  font-weight: 800;
+  border-bottom: 2px solid rgba(142, 31, 47, 0.18);
+}
+.ifv-table td:first-child {
+  font-weight: 600;
+  color: var(--ifv-ink);
+}
+.ifv-col-hl {
+  background: rgba(233, 163, 25, 0.1);
+  color: var(--ifv-ink) !important;
+  font-weight: 600;
+}
+.ifv-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ── FAQ ── */
+.ifv-faq-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin-top: 26px;
+}
+.ifv-faq {
+  background: #fff;
+  border: 1px solid var(--ifv-line);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(43, 27, 21, 0.04);
+}
+.ifv-faq h3 {
+  color: var(--ifv-sindoor-dark);
+}
+.ifv-faq p {
+  margin-bottom: 0;
+  font-size: 0.92rem;
+}
+
+/* ── Final CTA ── */
+.ifv-final {
+  position: relative;
+  padding: 76px 0 84px;
+  background:
+    radial-gradient(700px 340px at 50% -20%, rgba(233, 163, 25, 0.28), transparent 65%),
+    linear-gradient(160deg, var(--ifv-sindoor-dark), var(--ifv-sindoor) 55%, #a3312f);
+  color: #fdf3e4;
+  text-align: center;
+}
+/* mirrored temple border at the bottom */
+.ifv-final::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background:
+    linear-gradient(315deg, var(--ifv-sindoor-dark) 25%, transparent 25%) 0 0 / 16px 12px,
+    linear-gradient(45deg, var(--ifv-sindoor-dark) 25%, transparent 25%) 0 0 / 16px 12px,
+    var(--ifv-marigold);
+}
+.ifv-final h2 {
+  color: #fff;
+  padding-left: 0;
+}
+.ifv-final h2::before {
+  display: none;
+}
+.ifv-final p {
+  color: rgba(253, 243, 228, 0.85);
+  max-width: 620px;
+  margin: 0 auto 26px;
+}
+.ifv-final-icon {
+  display: block;
+  font-size: 2.4rem;
+  margin-bottom: 12px;
+}
+.ifv-final .ifv-btn-primary {
+  background: linear-gradient(135deg, var(--ifv-marigold), #c9820a);
+  color: var(--ifv-ink) !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+.ifv-final-trust {
+  justify-content: center;
+  margin-top: 26px;
+}
+.ifv-final-trust li {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #fdf3e4;
+}
+.ifv-final-links {
+  margin-top: 26px;
+  font-size: 0.88rem;
+}
+.ifv-final-links a {
+  color: #ffd98f;
+  text-decoration-color: rgba(255, 217, 143, 0.4);
+}
+.ifv-final-links a:hover {
+  color: #fff;
+}
+
+/* ── Motion preference ── */
+@media (prefers-reduced-motion: reduce) {
+  .ifv-btn,
+  .ifv-page a {
+    transition: none;
+  }
+  .ifv-btn-primary:hover {
+    transform: none;
+  }
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .ifv-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  .ifv-grid-3 {
+    grid-template-columns: 1fr;
+  }
+  .ifv-grid-2,
+  .ifv-mistakes,
+  .ifv-faq-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .ifv-page {
+    font-size: 15.5px;
+  }
+  .ifv-hero {
+    padding: 44px 0 52px;
+  }
+  .ifv-section {
+    padding: 44px 0;
+  }
+  .ifv-steps li {
+    padding: 70px 20px 22px 20px;
+  }
+  .ifv-steps li::before {
+    left: 20px;
+    top: 18px;
+  }
+  .ifv-hero-ctas .ifv-btn {
+    width: 100%;
+  }
+}
