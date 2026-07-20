@@ -1,0 +1,741 @@
+/* ─────────────────────────────────────────────────────────────
+   Indian Accent AI Voice Generator — /tools/indian-accent-ai-voice-generator
+   Palette: warm ivory canvas, deep ink text, saffron primary,
+   peacock-green secondary — grounded in the subject without
+   turning the page into a flag. All classes prefixed `iav-`.
+   ───────────────────────────────────────────────────────────── */
+
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Inter:wght@400;500;600;700;800&display=swap");
+
+.iav-page {
+  --iav-ink: #23201c;
+  --iav-ink-2: #55504a;
+  --iav-muted: #837d75;
+  --iav-canvas: #fdfaf4;
+  --iav-surface: #ffffff;
+  --iav-tint: #f7f1e4;
+  --iav-saffron: #e8590c;
+  --iav-saffron-soft: #fdeee2;
+  --iav-green: #14695a;
+  --iav-green-soft: #e4f1ec;
+  --iav-border: #eadfcd;
+  --iav-radius: 16px;
+  --iav-display: "Fraunces", Georgia, serif;
+  --iav-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  font-family: var(--iav-body);
+  color: var(--iav-ink);
+  background: var(--iav-canvas);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+.iav-container {
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ── Typography ── */
+.iav-page h1,
+.iav-page h2 {
+  font-family: var(--iav-display);
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  color: var(--iav-ink);
+}
+
+.iav-page h2 {
+  font-size: clamp(1.6rem, 3.4vw, 2.3rem);
+  margin: 0 0 14px;
+}
+
+.iav-page h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+  color: var(--iav-ink);
+}
+
+.iav-page p {
+  margin: 0 0 12px;
+}
+
+.iav-page a {
+  color: var(--iav-green);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: rgba(20, 105, 90, 0.35);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.15s ease;
+}
+
+.iav-page a:hover {
+  text-decoration-color: var(--iav-green);
+}
+
+.iav-eyebrow {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--iav-saffron);
+  margin-bottom: 10px;
+}
+
+.iav-lead {
+  font-size: 1.05rem;
+  color: var(--iav-ink-2);
+  max-width: 720px;
+  margin-bottom: 32px;
+}
+
+/* ── Breadcrumb ── */
+.iav-breadcrumb {
+  padding: 18px 20px 0;
+  max-width: 1060px;
+  margin: 0 auto;
+}
+
+.iav-breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.8rem;
+  color: var(--iav-muted);
+}
+
+.iav-breadcrumb li:not(:last-child)::after {
+  content: "›";
+  margin-left: 6px;
+  color: var(--iav-border);
+}
+
+.iav-breadcrumb a {
+  color: var(--iav-muted);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.iav-breadcrumb a:hover {
+  color: var(--iav-saffron);
+}
+
+.iav-breadcrumb [aria-current="page"] {
+  color: var(--iav-ink-2);
+  font-weight: 600;
+}
+
+/* ── Hero ── */
+.iav-hero {
+  padding: 44px 0 56px;
+  text-align: center;
+  background:
+    radial-gradient(680px 340px at 50% -80px, var(--iav-saffron-soft), transparent 70%),
+    var(--iav-canvas);
+}
+
+.iav-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: var(--iav-surface);
+  border: 1px solid var(--iav-border);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--iav-ink-2);
+  margin-bottom: 22px;
+  box-shadow: 0 2px 10px rgba(35, 32, 28, 0.05);
+}
+
+.iav-hero-title {
+  font-size: clamp(2rem, 5.4vw, 3.4rem);
+  margin: 0 0 16px;
+}
+
+.iav-accent {
+  color: var(--iav-saffron);
+  font-style: italic;
+}
+
+.iav-hero-sub {
+  max-width: 700px;
+  margin: 0 auto 34px;
+  font-size: 1.05rem;
+  color: var(--iav-ink-2);
+}
+
+/* ── Prompt studio (signature element) ── */
+.iav-studio {
+  max-width: 720px;
+  margin: 0 auto 26px;
+  background: var(--iav-surface);
+  border: 1.5px solid var(--iav-border);
+  border-top: 4px solid var(--iav-saffron);
+  border-radius: var(--iav-radius);
+  box-shadow: 0 18px 48px rgba(35, 32, 28, 0.09);
+  text-align: left;
+  overflow: hidden;
+}
+
+.iav-studio-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--iav-border);
+  background: linear-gradient(to bottom, #fffdf8, #fdfaf4);
+}
+
+.iav-studio-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--iav-saffron);
+  box-shadow: 0 0 0 4px var(--iav-saffron-soft);
+  flex-shrink: 0;
+  animation: iav-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes iav-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .iav-studio-dot { animation: none; }
+}
+
+.iav-studio-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--iav-ink);
+  flex: 1;
+}
+
+.iav-studio-hint {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--iav-green);
+  background: var(--iav-green-soft);
+  border-radius: 999px;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+
+.iav-textarea {
+  display: block;
+  width: 100%;
+  border: none;
+  outline: none;
+  resize: vertical;
+  min-height: 130px;
+  padding: 16px 18px;
+  font-family: var(--iav-body);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--iav-ink);
+  background: transparent;
+  box-sizing: border-box;
+}
+
+.iav-textarea::placeholder {
+  color: var(--iav-muted);
+}
+
+.iav-textarea:focus-visible {
+  background: #fffdf8;
+}
+
+.iav-studio-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 12px 18px 16px;
+  border-top: 1px solid var(--iav-border);
+}
+
+.iav-studio-note {
+  font-size: 0.78rem;
+  color: var(--iav-muted);
+  margin: 0;
+  flex: 1;
+  min-width: 200px;
+}
+
+/* ── Buttons ── */
+.iav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  border-radius: 12px;
+  font-family: var(--iav-body);
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  text-decoration: none !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.iav-btn-primary {
+  background: linear-gradient(135deg, var(--iav-saffron), #f97316);
+  color: #fff !important;
+  padding: 13px 26px;
+  box-shadow: 0 6px 20px rgba(232, 89, 12, 0.32);
+}
+
+.iav-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 28px rgba(232, 89, 12, 0.4);
+}
+
+.iav-btn-primary:focus-visible {
+  outline: 3px solid var(--iav-green);
+  outline-offset: 2px;
+}
+
+.iav-btn-lg {
+  font-size: 1.05rem;
+  padding: 16px 32px;
+}
+
+/* ── Trust row ── */
+.iav-trust-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.iav-trust-row span {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--iav-ink-2);
+  background: var(--iav-surface);
+  border: 1px solid var(--iav-border);
+  border-radius: 999px;
+  padding: 5px 13px;
+}
+
+/* ── Sections ── */
+.iav-section {
+  padding: 64px 0;
+}
+
+.iav-section-tint {
+  background: var(--iav-tint);
+  border-top: 1px solid var(--iav-border);
+  border-bottom: 1px solid var(--iav-border);
+}
+
+/* ── Definition ── */
+.iav-definition {
+  border-left: 4px solid var(--iav-green);
+  background: var(--iav-surface);
+  border-radius: 0 var(--iav-radius) var(--iav-radius) 0;
+  padding: 22px 26px;
+  box-shadow: 0 4px 18px rgba(35, 32, 28, 0.05);
+}
+
+.iav-definition p {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--iav-ink-2);
+}
+
+.iav-definition .iav-eyebrow {
+  color: var(--iav-green);
+}
+
+/* ── Card grids ── */
+.iav-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.iav-grid-2 {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.iav-grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+}
+
+.iav-card {
+  background: var(--iav-surface);
+  border: 1px solid var(--iav-border);
+  border-radius: var(--iav-radius);
+  padding: 24px 22px;
+  box-shadow: 0 3px 14px rgba(35, 32, 28, 0.04);
+}
+
+.iav-card p:last-child {
+  margin-bottom: 0;
+}
+
+.iav-card p {
+  font-size: 0.92rem;
+  color: var(--iav-ink-2);
+}
+
+/* Voice style cards */
+.iav-card-style {
+  display: flex;
+  flex-direction: column;
+}
+
+.iav-style-emoji {
+  font-size: 1.7rem;
+  margin-bottom: 10px;
+}
+
+.iav-style-tag {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--iav-saffron);
+  margin-bottom: 10px !important;
+}
+
+.iav-style-use {
+  margin-top: auto;
+  padding-top: 10px;
+  font-size: 0.8rem !important;
+  font-weight: 600;
+  color: var(--iav-green) !important;
+  border-top: 1px dashed var(--iav-border);
+}
+
+/* ── Mid CTA ── */
+.iav-cta-mid {
+  text-align: center;
+  margin-top: 36px;
+}
+
+/* ── Steps ── */
+.iav-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.iav-step {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  background: var(--iav-surface);
+  border: 1px solid var(--iav-border);
+  border-radius: var(--iav-radius);
+  padding: 24px;
+}
+
+.iav-step-num {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: var(--iav-saffron-soft);
+  color: var(--iav-saffron);
+  font-family: var(--iav-display);
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.iav-step p {
+  font-size: 0.92rem;
+  color: var(--iav-ink-2);
+}
+
+.iav-step-tip {
+  font-size: 0.82rem !important;
+  color: var(--iav-green) !important;
+  background: var(--iav-green-soft);
+  border-radius: 10px;
+  padding: 8px 12px;
+  margin-bottom: 0 !important;
+}
+
+/* ── Best-practice rules ── */
+.iav-rules {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 0;
+  border: 1px solid var(--iav-border);
+  border-radius: var(--iav-radius);
+  overflow: hidden;
+  background: var(--iav-surface);
+}
+
+.iav-rule {
+  padding: 24px 24px 20px;
+  border-bottom: 1px solid var(--iav-border);
+  border-right: 1px solid var(--iav-border);
+}
+
+.iav-rule p {
+  font-size: 0.9rem;
+  color: var(--iav-ink-2);
+  margin-bottom: 0;
+}
+
+/* ── Mistakes ── */
+.iav-mistakes {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.iav-mistake {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: var(--iav-surface);
+  border: 1px solid var(--iav-border);
+  border-radius: var(--iav-radius);
+  padding: 20px 22px;
+}
+
+.iav-mistake-mark {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #fbe9e7;
+  color: #c0392b;
+  font-weight: 800;
+  font-size: 0.9rem;
+  margin-top: 2px;
+}
+
+.iav-mistake p {
+  font-size: 0.9rem;
+  color: var(--iav-ink-2);
+  margin-bottom: 0;
+}
+
+/* ── Comparison table ── */
+.iav-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--iav-border);
+  border-radius: var(--iav-radius);
+  background: var(--iav-surface);
+}
+
+.iav-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.87rem;
+  min-width: 640px;
+}
+
+.iav-table th,
+.iav-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--iav-border);
+  color: var(--iav-ink-2);
+}
+
+.iav-table thead th {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--iav-ink);
+  background: var(--iav-tint);
+}
+
+.iav-table td:first-child {
+  font-weight: 600;
+  color: var(--iav-ink);
+}
+
+.iav-col-hl {
+  background: var(--iav-green-soft);
+  color: var(--iav-ink) !important;
+  font-weight: 600;
+}
+
+.iav-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ── FAQ ── */
+.iav-faq {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 820px;
+}
+
+.iav-faq-item {
+  background: var(--iav-surface);
+  border: 1px solid var(--iav-border);
+  border-radius: 14px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.iav-faq-item summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 16px 44px 16px 20px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--iav-ink);
+  position: relative;
+  user-select: none;
+}
+
+.iav-faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.iav-faq-item summary::after {
+  content: "+";
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--iav-display);
+  font-size: 1.2rem;
+  color: var(--iav-saffron);
+  transition: transform 0.2s ease;
+}
+
+.iav-faq-item[open] summary::after {
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.iav-faq-item[open] summary {
+  border-bottom: 1px solid var(--iav-border);
+}
+
+.iav-faq-item p {
+  padding: 14px 20px 18px;
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--iav-ink-2);
+}
+
+.iav-faq-item summary:focus-visible {
+  outline: 3px solid var(--iav-green);
+  outline-offset: -3px;
+  border-radius: 14px;
+}
+
+/* ── Final CTA ── */
+.iav-final {
+  padding: 72px 0 80px;
+  background:
+    radial-gradient(560px 280px at 50% 0%, rgba(232, 89, 12, 0.1), transparent 70%),
+    #211d18;
+}
+
+.iav-final-inner {
+  text-align: center;
+  max-width: 740px;
+  margin: 0 auto;
+}
+
+.iav-final h2 {
+  color: #fdfaf4;
+  margin-bottom: 14px;
+}
+
+.iav-final > .iav-container p,
+.iav-final-inner > p {
+  color: rgba(253, 250, 244, 0.7);
+}
+
+.iav-final-inner > p:first-of-type {
+  font-size: 1.02rem;
+  margin-bottom: 28px;
+}
+
+.iav-final-pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin: 22px 0 30px;
+}
+
+.iav-final-pills span {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: rgba(253, 250, 244, 0.85);
+  border: 1px solid rgba(253, 250, 244, 0.2);
+  border-radius: 999px;
+  padding: 5px 13px;
+}
+
+.iav-final-links {
+  font-size: 0.85rem;
+  line-height: 2;
+  color: rgba(253, 250, 244, 0.55) !important;
+}
+
+.iav-final-links a {
+  color: #f3b183;
+  text-decoration-color: rgba(243, 177, 131, 0.4);
+}
+
+.iav-final-links a:hover {
+  color: #f8c9a6;
+  text-decoration-color: #f8c9a6;
+}
+
+.iav-final-links strong {
+  color: rgba(253, 250, 244, 0.8);
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .iav-section {
+    padding: 44px 0;
+  }
+
+  .iav-hero {
+    padding: 30px 0 44px;
+  }
+
+  .iav-step {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .iav-studio-foot {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .iav-studio-foot .iav-btn {
+    width: 100%;
+  }
+
+  .iav-rule {
+    border-right: none;
+  }
+}
