@@ -13,6 +13,17 @@ import { FaTimes, FaMoon, FaSun } from "react-icons/fa";
 import { API_BASE_URL, CDN_URL } from "@/app/config";
 import './create-ai-content.css';
 import CustomDropdown from "./CustomDropdown";
+import "./workspace/studio.css";
+import StudioShell from "./workspace/StudioShell";
+import StudioSidebar from "./workspace/StudioSidebar";
+import StudioTopbar from "./workspace/StudioTopbar";
+import StudioHistoryRail from "./workspace/StudioHistoryRail";
+import QuickExamples from "./workspace/QuickExamples";
+import {
+  STUDIO_FLAGS,
+  StudioHistoryItem,
+  studioTitleFromPrompt,
+} from "./workspace/studio.config";
 
 function useDebounce<T>(value: T, delay: number): T {
   const [debounced, setDebounced] = useState(value);
@@ -649,6 +660,12 @@ const CreateAIContentClient: React.FC = () => {
   // ── Auth
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  // ── Studio shell (presentation only) ──
+  const [authCreditBalance, setAuthCreditBalance] = useState<number | null>(null);
+  const [studioSidebarOpen, setStudioSidebarOpen] = useState(false);
+  const [studioHistoryLoaded, setStudioHistoryLoaded] = useState<Record<Tab, boolean>>({
+    voice: false, image: false, video: false,
+  });
   const [isPageLoading, setIsPageLoading] = useState(true);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
@@ -888,6 +905,9 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
           googleAuth: res.data.googleAuth || false,
           role: res.data.role || "BASIC",
         });
+        setAuthCreditBalance(
+          typeof res.data.creditBalance === "number" ? res.data.creditBalance : null
+        );
         setIsLoggedIn(true);
       })
       .catch(() => {
@@ -917,6 +937,9 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
         googleAuth: meRes.data.googleAuth || false,
         role: meRes.data.role || "BASIC",
       });
+      setAuthCreditBalance(
+        typeof meRes.data.creditBalance === "number" ? meRes.data.creditBalance : null
+      );
       setIsLoggedIn(true);
       setShowLoginModal(false);
     } catch (err: any) {
@@ -949,6 +972,9 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
           googleAuth: true,
           role: meRes.data.role || "BASIC",
         });
+        setAuthCreditBalance(
+          typeof meRes.data.creditBalance === "number" ? meRes.data.creditBalance : null
+        );
         setIsLoggedIn(true);
         setShowLoginModal(false);
         setIsLoggingIn(false);
@@ -1594,25 +1620,35 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
     }
   };
 
+  /**
+   * Fetch-only half of the voice history flow. Same endpoint, same
+   * setters, same access-denied handling as before — extracted so the
+   * studio rail can load history WITHOUT toggling the inline panel.
+   */
+  const loadVoiceHistory = useCallback(() => {
+    setStudioHistoryLoaded((p) => ({ ...p, voice: true }));
+    setVoiceHistoryLoading(true);
+    const tok = localStorage.getItem("token");
+    fetch(`${API_BASE_URL}/api/sole-tts/history`, {
+      headers: { Authorization: `Bearer ${tok}` },
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.hasAccess === false || data.error) {
+          setVoiceHistoryAccessDenied(true);
+        } else {
+          setVoiceHistory(data.history || []);
+        }
+      })
+      .catch(() => {})
+      .finally(() => setVoiceHistoryLoading(false));
+  }, []);
+
   const handleShowVoiceHistory = () => {
     const newVal = !showVoiceHistory;
     setShowVoiceHistory(newVal);
     if (newVal && voiceHistory.length === 0) {
-      setVoiceHistoryLoading(true);
-      const tok = localStorage.getItem("token");
-      fetch(`${API_BASE_URL}/api/sole-tts/history`, {
-        headers: { Authorization: `Bearer ${tok}` },
-      })
-        .then((r) => r.json())
-        .then((data) => {
-          if (data.hasAccess === false || data.error) {
-            setVoiceHistoryAccessDenied(true);
-          } else {
-            setVoiceHistory(data.history || []);
-          }
-        })
-        .catch(() => {})
-        .finally(() => setVoiceHistoryLoading(false));
+      loadVoiceHistory();
     }
   };
 
@@ -1678,34 +1714,44 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
     return (!isLoggedIn || planType === "FREE") ? ALL_IMAGE_MODELS_FREE : ALL_IMAGE_MODELS_PAID;
   }, [isLoggedIn, planType]);
 
+  const loadImageHistory = useCallback(() => {
+    setStudioHistoryLoaded((p) => ({ ...p, image: true }));
+    setImageHistoryLoading(true);
+    const tok = localStorage.getItem("token");
+    fetch(`${API_BASE_URL}/api/sole-image-gen/history`, {
+      headers: { Authorization: `Bearer ${tok}` },
+    })
+      .then((r) => r.json())
+      .then(setImageHistory)
+      .catch(() => {})
+      .finally(() => setImageHistoryLoading(false));
+  }, []);
+
   const handleShowHistory = () => {
     const newVal = !showImageHistory;
     setShowImageHistory(newVal);
     if (newVal && imageHistory.length === 0) {
-      setImageHistoryLoading(true);
-      const tok = localStorage.getItem("token");
-      fetch(`${API_BASE_URL}/api/sole-image-gen/history`, {
-        headers: { Authorization: `Bearer ${tok}` },
-      })
-        .then((r) => r.json())
-        .then(setImageHistory)
-        .catch(() => {})
-        .finally(() => setImageHistoryLoading(false));
+      loadImageHistory();
     }
-  };  
+  };
+  const loadVideoHistory = useCallback(() => {
+    setStudioHistoryLoaded((p) => ({ ...p, video: true }));
+    setVideoHistoryLoading(true);
+    const tok = localStorage.getItem("token");
+    fetch(`${API_BASE_URL}/api/video-gen/history`, {
+      headers: { Authorization: `Bearer ${tok}` },
+    })
+      .then((r) => r.json())
+      .then((data: VideoJob[]) => setVideoHistory(data.filter(j => j.status === "COMPLETED")))
+      .catch(() => {})
+      .finally(() => setVideoHistoryLoading(false));
+  }, []);
+
   const handleShowVideoHistory = () => {
     const newVal = !showVideoHistory;
     setShowVideoHistory(newVal);
     if (newVal && videoHistory.length === 0) {
-      setVideoHistoryLoading(true);
-      const tok = localStorage.getItem("token");
-      fetch(`${API_BASE_URL}/api/video-gen/history`, {
-        headers: { Authorization: `Bearer ${tok}` },
-      })
-        .then((r) => r.json())
-        .then((data: VideoJob[]) => setVideoHistory(data.filter(j => j.status === "COMPLETED")))
-        .catch(() => {})
-        .finally(() => setVideoHistoryLoading(false));
+      loadVideoHistory();
     }
   };
 
@@ -1745,6 +1791,198 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
     }));
   }, [isLoggedIn, videoModels, videoDuration, videoAudioEnabled, videoResolution]);  
 
+  /* ══════════════════════════════════════════════════════════
+     STUDIO SHELL — derived values only.
+     Every figure below is read from state the page already
+     fetches. No new endpoints, no new credit maths.
+     ══════════════════════════════════════════════════════════ */
+
+  /** Single wallet balance. Usage endpoints refresh after each
+   *  generation, so this stays current without extra requests. */
+  const studioCreditBalance = useMemo<number | null>(() => {
+    if (typeof imageUsage?.balance === "number") return imageUsage.balance;
+    if (typeof videoCredits?.balance === "number") return videoCredits.balance;
+    return authCreditBalance;
+  }, [imageUsage, videoCredits, authCreditBalance]);
+
+  const studioPlanLabel = useMemo(() => {
+    if (!isLoggedIn) return "Free plan";
+    const p = imageUsage?.planType ?? videoCredits?.planType ?? "FREE";
+    return p === "FREE" ? "Free plan" : `${p.charAt(0)}${p.slice(1).toLowerCase()} plan`;
+  }, [isLoggedIn, imageUsage, videoCredits]);
+
+  /** Meter is only meaningful for voice, where a hard monthly
+   *  character limit exists. Null elsewhere so the bar hides. */
+  const studioPlanMeter = useMemo<number | null>(() => {
+    const limit = ttsUsage?.voiceCharsLimit ?? 0;
+    if (!limit) return null;
+    const used = ttsUsage?.voiceCharsUsed ?? 0;
+    return Math.min(1, Math.max(0, 1 - used / limit));
+  }, [ttsUsage]);
+
+  const studioUserName = useMemo(
+    () => [userProfile?.firstName, userProfile?.lastName].filter(Boolean).join(" ").trim(),
+    [userProfile]
+  );
+
+  /** Normalise the three existing history arrays into one shape. */
+  const studioHistoryItems = useMemo<StudioHistoryItem[]>(() => {
+    if (activeTab === "image") {
+      return imageHistory.map((img) => ({
+        key: `image-${img.id}`,
+        id: img.id,
+        kind: "image" as Tab,
+        title: studioTitleFromPrompt(img.prompt, "Untitled image"),
+        prompt: img.prompt || "",
+        thumbUrl: img.imagePath,
+        createdAt: img.createdAt,
+      }));
+    }
+    if (activeTab === "video") {
+      return videoHistory.map((v) => ({
+        key: `video-${v.id}`,
+        id: v.id,
+        kind: "video" as Tab,
+        title: studioTitleFromPrompt(v.prompt, "Untitled video"),
+        prompt: v.prompt || "",
+        videoUrl: v.videoUrl || null,
+        createdAt: v.createdAt,
+      }));
+    }
+    return voiceHistory.map((a) => ({
+      key: `voice-${a.id}`,
+      id: a.id,
+      kind: "voice" as Tab,
+      title: `Voice clip #${a.id}`,
+      prompt: "",
+      audioUrl: a.presignedUrl || `${CDN_URL}/${a.audioPath}`,
+      createdAt: a.createdAt,
+    }));
+  }, [activeTab, imageHistory, videoHistory, voiceHistory]);
+
+  const studioHistoryLoading =
+    activeTab === "image" ? imageHistoryLoading
+    : activeTab === "video" ? videoHistoryLoading
+    : voiceHistoryLoading;
+
+  const loadStudioHistory = useCallback(() => {
+    if (!isLoggedIn) return;
+    if (activeTab === "image") loadImageHistory();
+    else if (activeTab === "video") loadVideoHistory();
+    else loadVoiceHistory();
+  }, [isLoggedIn, activeTab, loadImageHistory, loadVideoHistory, loadVoiceHistory]);
+
+  /** Lazily load history for the ACTIVE tab only, once per tab per
+   *  session, and only after the initial data burst has settled. */
+  useEffect(() => {
+    if (!STUDIO_FLAGS.autoLoadHistory) return;
+    if (!STUDIO_FLAGS.showHistoryRail) return;
+    if (!isLoggedIn) return;
+    if (studioHistoryLoaded[activeTab]) return;
+    const t = setTimeout(() => loadStudioHistory(), 3000);
+    return () => clearTimeout(t);
+  }, [isLoggedIn, activeTab, studioHistoryLoaded, loadStudioHistory]);
+
+  /** Reset the composer without touching credits, plan or auth. */
+  const handleNewCreation = useCallback(() => {
+    setPrompt("");
+    setError(null);
+    setGeneratedAudio(null);
+    setGeneratedImages([]);
+    setCurrentImageJob(null);
+    setCurrentVideoJob(null);
+    setImageGenMode("text");
+    setInputImageFile(null);
+    setInputImagePreview(null);
+    setVideoGenMode("text");
+    setVideoInputFile(null);
+    setVideoInputPreview(null);
+    setVideoFromImageUrl(null);
+    setCarouselError(null);
+    setCarouselPrompts(["", "", ""]);
+    setCarouselFiles([null, null, null]);
+    setCarouselPreviews([null, null, null]);
+    setCarouselImages([null, null, null]);
+    setCarouselSlide(0);
+    setCarouselSharedFile(null);
+    setCarouselSharedPreview(null);
+    setCarouselUseSharedImage(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
+  const handleStudioReuse = useCallback((item: StudioHistoryItem) => {
+    if (item.prompt) setPrompt(item.prompt);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
+  const handleStudioOpen = useCallback((item: StudioHistoryItem) => {
+    if (item.kind === "voice" && item.audioUrl) {
+      if (demoAudioRef.current) {
+        demoAudioRef.current.pause();
+        demoAudioRef.current.currentTime = 0;
+      }
+      const vid = `history-${item.id}`;
+      if (playingDemo === vid) { setPlayingDemo(null); return; }
+      const audio = new Audio(item.audioUrl);
+      audio.play().catch(() => setPlayingDemo(null));
+      audio.onended = () => setPlayingDemo(null);
+      audio.onerror = () => setPlayingDemo(null);
+      demoAudioRef.current = audio;
+      setPlayingDemo(vid);
+      return;
+    }
+    const url = item.thumbUrl || item.videoUrl;
+    if (url) window.open(url, "_blank", "noopener,noreferrer");
+  }, [playingDemo]);
+
+  const studioSidebarNode = (
+    <StudioSidebar
+      activeTab={activeTab}
+      isLoggedIn={isLoggedIn}
+      userName={studioUserName}
+      userEmail={userProfile?.email || ""}
+      userPicture={userProfile?.picture || null}
+      creditBalance={studioCreditBalance}
+      planLabel={studioPlanLabel}
+      planMeter={studioPlanMeter}
+      onSwitchTab={handleTabChange}
+      onNewCreation={handleNewCreation}
+      onClose={() => setStudioSidebarOpen(false)}
+    />
+  );
+
+  const studioTopbarNode = (
+    <StudioTopbar
+      title="AI Content Studio"
+      subtitle="Create AI voice, images and video in seconds"
+      isLoggedIn={isLoggedIn}
+      creditBalance={studioCreditBalance}
+      userName={studioUserName}
+      userEmail={userProfile?.email || ""}
+      userPicture={userProfile?.picture || null}
+      darkMode={darkMode}
+      onToggleTheme={() => setDarkMode((d) => !d)}
+      onOpenSidebar={() => setStudioSidebarOpen(true)}
+      onSignIn={() => setShowLoginModal(true)}
+    />
+  );
+
+  const studioRailNode = (
+    <StudioHistoryRail
+      activeTab={activeTab}
+      items={studioHistoryItems}
+      loading={studioHistoryLoading}
+      loaded={studioHistoryLoaded[activeTab]}
+      isLoggedIn={isLoggedIn}
+      accessDenied={activeTab === "voice" && voiceHistoryAccessDenied}
+      limit={STUDIO_FLAGS.historyRailLimit}
+      onLoad={loadStudioHistory}
+      onSignIn={() => setShowLoginModal(true)}
+      onReuse={handleStudioReuse}
+      onOpen={handleStudioOpen}
+    />
+  );
+
   // ─────────────────── RENDER ───────────────────────────────────────────────
 
   if (isPageLoading) {
@@ -1759,24 +1997,20 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
     <>
     <div className="cac-page" data-theme={darkMode ? "dark" : "light"}>
 
-      {/* ── Dark zone: hero + tool ── */}
+      {/* ── Studio zone: workspace shell + tool ── */}
       <div className="cac-dark-zone">
 
-      {/* ── Hero ── */}
-      <section className="cac-hero">
-        <div className="cac-hero-inner">
-          <h1 className="cac-hero-title">
-            Create AI Content{" "}
-            <span className="cac-gradient-text">in Seconds</span>
-          </h1>
-          <p className="cac-hero-sub">
-            Voice · Image · Video — one page, zero friction.
-          </p>
-        </div>
-      </section>
+      <StudioShell
+        sidebar={studioSidebarNode}
+        topbar={studioTopbarNode}
+        rail={studioRailNode}
+        showRail={STUDIO_FLAGS.showHistoryRail}
+        sidebarOpen={studioSidebarOpen}
+        onCloseSidebar={() => setStudioSidebarOpen(false)}
+      >
 
       {/* ── Main Tool ── */}
-      <main className="cac-main">
+      <main className="cac-main cac-main--studio">
         {/* ─ Tabs ─ */}
         <div className="cac-tabs">
           {(["voice", "image", "video"] as Tab[]).map((t) => (
@@ -2029,6 +2263,13 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
               </div>
             </div>
           </div>
+        {STUDIO_FLAGS.showQuickExamples && (
+          <QuickExamples
+            items={PROMPT_SUGGESTIONS.voice}
+            disabled={isGenerating}
+            onPick={setPrompt}
+          />
+        )}
         </>
         )}
         {activeTab === "voice" && isLoggedIn && (
@@ -2750,6 +2991,14 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
           </div>
         )}
 
+        {activeTab !== "voice" && STUDIO_FLAGS.showQuickExamples && (
+          <QuickExamples
+            items={PROMPT_SUGGESTIONS[activeTab]}
+            disabled={isGenerating}
+            onPick={setPrompt}
+          />
+        )}
+
         {/* ── Image Job Status ── */}
         {activeTab === "image" &&
           currentImageJob &&
@@ -3352,6 +3601,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
         )}        
 
          </main>
+      </StudioShell>
       </div>{/* end cac-dark-zone */}
 
       {/* ── Light zone: upsell + SEO ── */}
