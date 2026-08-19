@@ -1128,8 +1128,43 @@
   gap: 16px;
 }
 
+/* These must sit AFTER the base rule above. The `padding` shorthand
+   there beats any longhand reset written earlier in the file, which
+   is why the mobile insets weren't clearing. */
+
+/* Rail stops being a side column — drop its inset */
+@media (max-width: 1180px) {
+  .cac-seo-main {
+    padding-right: var(--studio-gutter);
+  }
+}
+
+/* Sidebar becomes a drawer — drop its inset */
 @media (max-width: 960px) {
   .cac-seo-main {
     padding-left: var(--studio-gutter);
+  }
+}
+
+/* Phones: stack the sentence above the CTA */
+@media (max-width: 640px) {
+  .cac-upsell-banner {
+    max-width: 100%;
+    padding: 14px 16px;
+    margin-bottom: 0;
+  }
+
+  .cac-upsell-inner {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .cac-upsell-inner div {
+    font-size: 0.82rem;
+  }
+
+  .cac-upsell-btn {
+    width: 100%;
+    text-align: center;
   }
 }
