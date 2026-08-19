@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { FiFolder, FiPlay, FiDownload, FiLock } from "react-icons/fi";
+import { FiPlay, FiDownload, FiLock } from "react-icons/fi";
 import {
   StudioHistoryItem,
   StudioTab,
@@ -148,11 +148,6 @@ const StudioHistoryRail: React.FC<StudioHistoryRailProps> = ({
           </ul>
         )}
       </div>
-
-      <a href="/dashboard" className="cac-studio-rail__foot">
-        <FiFolder size={14} />
-        Go to my projects
-      </a>
     </div>
   );
 };

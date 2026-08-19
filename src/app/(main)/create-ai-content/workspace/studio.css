@@ -70,11 +70,13 @@
   min-height: calc(100vh - var(--studio-navbar-h));
 }
 
+/* Static and stretched: the sidebar has no scroll container and no
+   viewport anchor, so nothing — not focus, not a tab switch — can
+   ever reposition it. "New creation" stays pinned at the top. */
 .cac-studio__sidebar {
-  position: sticky;
-  top: var(--studio-navbar-h);
-  align-self: start;
-  height: calc(100vh - var(--studio-navbar-h));
+  position: static;
+  align-self: stretch;
+  height: auto;
   border-right: 1px solid var(--studio-line);
   background: var(--studio-panel);
   z-index: 30;
@@ -116,7 +118,6 @@
   position: sticky;
   top: calc(var(--studio-navbar-h) + var(--studio-topbar-h) + var(--studio-gutter));
   align-self: start;
-  max-height: calc(100vh - var(--studio-navbar-h) - var(--studio-topbar-h) - (var(--studio-gutter) * 2));
 }
 
 .cac-studio__scrim {
@@ -133,19 +134,21 @@
    ============================================================ */
 
 .cac-studio-sidebar {
-  height: 100%;
+  position: sticky;
+  top: calc(var(--studio-navbar-h) + 16px);
   display: flex;
   flex-direction: column;
   padding: 16px 12px 12px;
-  overflow: hidden;
+  overflow: visible;
 }
 
-/* ── Brand ── */
+/* ── Drawer close row (collapses to nothing on desktop) ── */
 .cac-studio-sidebar__brand {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 4px 14px;
+  justify-content: flex-end;
+  padding: 0;
+  flex-shrink: 0;
 }
 
 .cac-studio-brand {
@@ -204,6 +207,7 @@
   background: var(--cac-accent-grad);
   box-shadow: 0 4px 14px rgba(99, 85, 220, 0.30);
   cursor: pointer;
+  flex-shrink: 0;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
@@ -222,19 +226,10 @@
   flex-direction: column;
   gap: 2px;
   margin-top: 16px;
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-width: thin;
-  scrollbar-color: var(--studio-line-strong) transparent;
+  flex: 0 0 auto;
+  overflow: visible;
 }
 
-.cac-studio-nav::-webkit-scrollbar { width: 6px; }
-.cac-studio-nav::-webkit-scrollbar-thumb {
-  background: var(--studio-line-strong);
-  border-radius: 999px;
-}
 
 .cac-studio-nav__heading {
   margin: 16px 0 5px;
@@ -263,6 +258,7 @@
   text-decoration: none;
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease;
+  scroll-margin-block: 8px;
 }
 
 .cac-studio-nav__item:hover {
@@ -299,7 +295,8 @@
 
 /* ── Plan card ── */
 .cac-studio-plan {
-  margin-top: 12px;
+  margin-top: auto;
+  padding-top: 12px;
   padding: 12px 13px;
   border: 1px solid var(--studio-line);
   border-radius: var(--studio-radius);
@@ -584,12 +581,18 @@
 .cac-studio-rail {
   display: flex;
   flex-direction: column;
-  max-height: 100%;
+  /* Definite limit, set here rather than inherited as a percentage
+     from the wrapper — otherwise it resolves to `none` and the body
+     never shrinks into a scroller. */
+  max-height: calc(100vh - var(--studio-navbar-h) - var(--studio-topbar-h) - (var(--studio-gutter) * 2));
+  min-height: 0;
   border: 1px solid var(--studio-line);
   border-radius: var(--studio-radius);
   background: var(--studio-panel);
   box-shadow: var(--studio-shadow);
-  overflow: hidden;
+  /* `clip` still rounds the corners but is NOT a scroll container,
+     so focusing an item in the list can't drag the header away. */
+  overflow: clip;
 }
 
 .cac-studio-rail__head {
@@ -599,6 +602,7 @@
   gap: 8px;
   padding: 13px 15px;
   border-bottom: 1px solid var(--studio-line);
+  background: var(--studio-panel);
   flex-shrink: 0;
 }
 
@@ -978,6 +982,11 @@
   .cac-studio-rail__body {
     max-height: 340px;
   }
+
+  /* Rail is no longer a side column, so drop its inset */
+  .cac-seo-main {
+    padding-right: var(--studio-gutter);
+  }
 }
 
 /* ── Sidebar becomes a drawer ── */
@@ -1009,6 +1018,10 @@
 
   .cac-studio-sidebar__close {
     display: flex;
+  }
+
+  .cac-studio-sidebar__brand {
+    padding: 0 0 12px;
   }
 
   .cac-studio-topbar__menu {
@@ -1079,5 +1092,44 @@
 
   .cac-qx__track {
     scroll-behavior: auto;
+  }
+}
+
+/* ============================================================
+   10 · UPSELL BANNER ALIGNMENT
+   The banner lives in .cac-seo-zone, outside the studio grid,
+   so it was centring on the full page width while the eye reads
+   the workspace column as centre. Align it to the main column
+   and centre its contents.
+   ============================================================ */
+
+/* Inset by the sidebar on the left AND the history rail on the
+   right, so the banner centres on the composer column rather
+   than on the full page width. */
+.cac-seo-main {
+  max-width: 100%;
+  margin: 0;
+  padding: 0 calc(var(--studio-rail-w) + var(--studio-gutter))
+             var(--studio-gutter)
+             calc(var(--studio-sidebar-w) + var(--studio-gutter));
+}
+
+/* Constrain the banner so the sentence and CTA read as one unit
+   instead of drifting inside a very wide box. */
+.cac-upsell-banner {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 12px 18px;
+}
+
+.cac-upsell-inner {
+  justify-content: center;
+  text-align: center;
+  gap: 16px;
+}
+
+@media (max-width: 960px) {
+  .cac-seo-main {
+    padding-left: var(--studio-gutter);
   }
 }

@@ -122,14 +122,8 @@ const StudioSidebar: React.FC<StudioSidebarProps> = ({
 
   return (
     <div className="cac-studio-sidebar">
-      {/* ── Brand ── */}
+       {/* ── Mobile drawer close ── */}
       <div className="cac-studio-sidebar__brand">
-        <a href="/" className="cac-studio-brand">
-          <span className="cac-studio-brand__mark" aria-hidden="true">
-            <FiZap size={16} />
-          </span>
-          <span className="cac-studio-brand__word">Scenith</span>
-        </a>
         <button
           type="button"
           className="cac-studio-sidebar__close"

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { FiMenu, FiZap, FiPlus, FiMoon, FiSun } from "react-icons/fi";
+import { FiMenu, FiMoon, FiSun } from "react-icons/fi";
 
 /* ============================================================
    StudioTopbar
@@ -37,8 +37,6 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({
   onOpenSidebar,
   onSignIn,
 }) => {
-  const initial = (userName || userEmail || "U").charAt(0).toUpperCase();
-
   return (
     <div className="cac-studio-topbar">
       <button
@@ -56,19 +54,6 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({
       </div>
 
       <div className="cac-studio-topbar__actions">
-        {isLoggedIn && (
-          <span className="cac-studio-credits" title="Credit balance">
-            <FiZap size={13} />
-            {creditBalance === null ? "—" : creditBalance.toLocaleString()}
-            <span className="cac-studio-credits__word">Credits</span>
-          </span>
-        )}
-
-        <a href="/pricing" className="cac-studio-upgrade">
-          <FiPlus size={14} />
-          Upgrade
-        </a>
-
         <button
           type="button"
           className="cac-studio-iconbtn"
@@ -78,15 +63,7 @@ const StudioTopbar: React.FC<StudioTopbarProps> = ({
           {darkMode ? <FiSun size={15} /> : <FiMoon size={15} />}
         </button>
 
-        {isLoggedIn ? (
-          <a href="/user-dashboard" className="cac-studio-topbar__avatar" title={userEmail}>
-            {userPicture ? (
-              <img src={userPicture} alt="" referrerPolicy="no-referrer" />
-            ) : (
-              <span>{initial}</span>
-            )}
-          </a>
-        ) : (
+        {!isLoggedIn && (
           <button type="button" className="cac-studio-signin" onClick={onSignIn}>
             Sign in
           </button>
