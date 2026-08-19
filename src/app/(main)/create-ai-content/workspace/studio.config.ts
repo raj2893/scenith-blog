@@ -63,8 +63,8 @@ export const STUDIO_TOOL_NAV: StudioNavItem[] = [
   { id: "tool-video", label: "AI video", icon: "FiVideo", tab: "video" },
   { id: "tool-image", label: "AI image", icon: "FiImage", tab: "image" },
   { id: "tool-voice", label: "AI voice", icon: "FiMic", tab: "voice" },
-  { id: "tool-subtitles", label: "AI subtitles", icon: "FiType", href: "/tools/add-subtitles-to-videos" },
-  { id: "tool-editor", label: "Image editor", icon: "FiEdit3", href: "/tools/image-editing" },
+  { id: "tool-speed", label: "Video speed modifier", icon: "FiFastForward", href: "/tools/video-speed-modifier" },
+  { id: "tool-pdf", label: "PDF tools", icon: "FiFileText", href: "/tools/pdf-tools" },
   { id: "tool-bgremove", label: "Background remover", icon: "FiCrop", href: "/tools/background-removal" },
   { id: "tool-all", label: "All tools", icon: "FiGrid", href: "/tools" },
 ];
