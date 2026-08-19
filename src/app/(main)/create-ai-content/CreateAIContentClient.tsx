@@ -13,6 +13,17 @@ import { FaTimes, FaMoon, FaSun } from "react-icons/fa";
 import { API_BASE_URL, CDN_URL } from "@/app/config";
 import './create-ai-content.css';
 import CustomDropdown from "./CustomDropdown";
+import "./workspace/studio.css";
+import StudioShell from "./workspace/StudioShell";
+import StudioSidebar from "./workspace/StudioSidebar";
+import StudioTopbar from "./workspace/StudioTopbar";
+import StudioHistoryRail from "./workspace/StudioHistoryRail";
+
+import {
+  STUDIO_FLAGS,
+  StudioHistoryItem,
+  studioTitleFromPrompt,
+} from "./workspace/studio.config";
 
 function useDebounce<T>(value: T, delay: number): T {
   const [debounced, setDebounced] = useState(value);
@@ -649,6 +660,12 @@ const CreateAIContentClient: React.FC = () => {
   // ── Auth
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  // ── Studio shell (presentation only) ──
+  const [authCreditBalance, setAuthCreditBalance] = useState<number | null>(null);
+  const [studioSidebarOpen, setStudioSidebarOpen] = useState(false);
+  const [studioHistoryLoaded, setStudioHistoryLoaded] = useState<Record<Tab, boolean>>({
+    voice: false, image: false, video: false,
+  });
   const [isPageLoading, setIsPageLoading] = useState(true);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
@@ -888,6 +905,9 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
           googleAuth: res.data.googleAuth || false,
           role: res.data.role || "BASIC",
         });
+        setAuthCreditBalance(
+          typeof res.data.creditBalance === "number" ? res.data.creditBalance : null
+        );
         setIsLoggedIn(true);
       })
       .catch(() => {
@@ -917,6 +937,9 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
         googleAuth: meRes.data.googleAuth || false,
         role: meRes.data.role || "BASIC",
       });
+      setAuthCreditBalance(
+        typeof meRes.data.creditBalance === "number" ? meRes.data.creditBalance : null
+      );
       setIsLoggedIn(true);
       setShowLoginModal(false);
     } catch (err: any) {
@@ -949,6 +972,9 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
           googleAuth: true,
           role: meRes.data.role || "BASIC",
         });
+        setAuthCreditBalance(
+          typeof meRes.data.creditBalance === "number" ? meRes.data.creditBalance : null
+        );
         setIsLoggedIn(true);
         setShowLoginModal(false);
         setIsLoggingIn(false);
@@ -1594,27 +1620,29 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
     }
   };
 
-  const handleShowVoiceHistory = () => {
-    const newVal = !showVoiceHistory;
-    setShowVoiceHistory(newVal);
-    if (newVal && voiceHistory.length === 0) {
-      setVoiceHistoryLoading(true);
-      const tok = localStorage.getItem("token");
-      fetch(`${API_BASE_URL}/api/sole-tts/history`, {
-        headers: { Authorization: `Bearer ${tok}` },
+  /**
+   * Fetch-only half of the voice history flow. Same endpoint, same
+   * setters, same access-denied handling as before — extracted so the
+   * studio rail can load history WITHOUT toggling the inline panel.
+   */
+  const loadVoiceHistory = useCallback(() => {
+    setStudioHistoryLoaded((p) => ({ ...p, voice: true }));
+    setVoiceHistoryLoading(true);
+    const tok = localStorage.getItem("token");
+    fetch(`${API_BASE_URL}/api/sole-tts/history`, {
+      headers: { Authorization: `Bearer ${tok}` },
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.hasAccess === false || data.error) {
+          setVoiceHistoryAccessDenied(true);
+        } else {
+          setVoiceHistory(data.history || []);
+        }
       })
-        .then((r) => r.json())
-        .then((data) => {
-          if (data.hasAccess === false || data.error) {
-            setVoiceHistoryAccessDenied(true);
-          } else {
-            setVoiceHistory(data.history || []);
-          }
-        })
-        .catch(() => {})
-        .finally(() => setVoiceHistoryLoading(false));
-    }
-  };
+      .catch(() => {})
+      .finally(() => setVoiceHistoryLoading(false));
+  }, []);
 
   const handleDownloadImage = async (imageUrl: string, id: number) => {
     const res = await fetch(imageUrl);
@@ -1678,36 +1706,33 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
     return (!isLoggedIn || planType === "FREE") ? ALL_IMAGE_MODELS_FREE : ALL_IMAGE_MODELS_PAID;
   }, [isLoggedIn, planType]);
 
-  const handleShowHistory = () => {
-    const newVal = !showImageHistory;
-    setShowImageHistory(newVal);
-    if (newVal && imageHistory.length === 0) {
-      setImageHistoryLoading(true);
-      const tok = localStorage.getItem("token");
-      fetch(`${API_BASE_URL}/api/sole-image-gen/history`, {
-        headers: { Authorization: `Bearer ${tok}` },
-      })
-        .then((r) => r.json())
-        .then(setImageHistory)
-        .catch(() => {})
-        .finally(() => setImageHistoryLoading(false));
-    }
-  };  
-  const handleShowVideoHistory = () => {
-    const newVal = !showVideoHistory;
-    setShowVideoHistory(newVal);
-    if (newVal && videoHistory.length === 0) {
-      setVideoHistoryLoading(true);
-      const tok = localStorage.getItem("token");
-      fetch(`${API_BASE_URL}/api/video-gen/history`, {
-        headers: { Authorization: `Bearer ${tok}` },
-      })
-        .then((r) => r.json())
-        .then((data: VideoJob[]) => setVideoHistory(data.filter(j => j.status === "COMPLETED")))
-        .catch(() => {})
-        .finally(() => setVideoHistoryLoading(false));
-    }
-  };
+  const loadImageHistory = useCallback(() => {
+    setStudioHistoryLoaded((p) => ({ ...p, image: true }));
+    setImageHistoryLoading(true);
+    const tok = localStorage.getItem("token");
+    fetch(`${API_BASE_URL}/api/sole-image-gen/history`, {
+      headers: { Authorization: `Bearer ${tok}` },
+    })
+      .then((r) => r.json())
+      .then(setImageHistory)
+      .catch(() => {})
+      .finally(() => setImageHistoryLoading(false));
+  }, []);
+
+  const loadVideoHistory = useCallback(() => {
+    setStudioHistoryLoaded((p) => ({ ...p, video: true }));
+    setVideoHistoryLoading(true);
+    const tok = localStorage.getItem("token");
+    fetch(`${API_BASE_URL}/api/video-gen/history`, {
+      headers: { Authorization: `Bearer ${tok}` },
+    })
+      .then((r) => r.json())
+      .then((data: VideoJob[]) => setVideoHistory(data.filter(j => j.status === "COMPLETED")))
+      .catch(() => {})
+      .finally(() => setVideoHistoryLoading(false));
+  }, []);
+
+ 
 
   const handleTabChange = useCallback((t: Tab) => {
     setActiveTab(t);
@@ -1745,6 +1770,198 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
     }));
   }, [isLoggedIn, videoModels, videoDuration, videoAudioEnabled, videoResolution]);  
 
+  /* ══════════════════════════════════════════════════════════
+     STUDIO SHELL — derived values only.
+     Every figure below is read from state the page already
+     fetches. No new endpoints, no new credit maths.
+     ══════════════════════════════════════════════════════════ */
+
+  /** Single wallet balance. Usage endpoints refresh after each
+   *  generation, so this stays current without extra requests. */
+  const studioCreditBalance = useMemo<number | null>(() => {
+    if (typeof imageUsage?.balance === "number") return imageUsage.balance;
+    if (typeof videoCredits?.balance === "number") return videoCredits.balance;
+    return authCreditBalance;
+  }, [imageUsage, videoCredits, authCreditBalance]);
+
+  const studioPlanLabel = useMemo(() => {
+    if (!isLoggedIn) return "Free plan";
+    const p = imageUsage?.planType ?? videoCredits?.planType ?? "FREE";
+    return p === "FREE" ? "Free plan" : `${p.charAt(0)}${p.slice(1).toLowerCase()} plan`;
+  }, [isLoggedIn, imageUsage, videoCredits]);
+
+  /** Meter is only meaningful for voice, where a hard monthly
+   *  character limit exists. Null elsewhere so the bar hides. */
+  const studioPlanMeter = useMemo<number | null>(() => {
+    const limit = ttsUsage?.voiceCharsLimit ?? 0;
+    if (!limit) return null;
+    const used = ttsUsage?.voiceCharsUsed ?? 0;
+    return Math.min(1, Math.max(0, 1 - used / limit));
+  }, [ttsUsage]);
+
+  const studioUserName = useMemo(
+    () => [userProfile?.firstName, userProfile?.lastName].filter(Boolean).join(" ").trim(),
+    [userProfile]
+  );
+
+  /** Normalise the three existing history arrays into one shape. */
+  const studioHistoryItems = useMemo<StudioHistoryItem[]>(() => {
+    if (activeTab === "image") {
+      return imageHistory.map((img) => ({
+        key: `image-${img.id}`,
+        id: img.id,
+        kind: "image" as Tab,
+        title: studioTitleFromPrompt(img.prompt, "Untitled image"),
+        prompt: img.prompt || "",
+        thumbUrl: img.imagePath,
+        createdAt: img.createdAt,
+      }));
+    }
+    if (activeTab === "video") {
+      return videoHistory.map((v) => ({
+        key: `video-${v.id}`,
+        id: v.id,
+        kind: "video" as Tab,
+        title: studioTitleFromPrompt(v.prompt, "Untitled video"),
+        prompt: v.prompt || "",
+        videoUrl: v.videoUrl || null,
+        createdAt: v.createdAt,
+      }));
+    }
+    return voiceHistory.map((a) => ({
+      key: `voice-${a.id}`,
+      id: a.id,
+      kind: "voice" as Tab,
+      title: `Voice clip #${a.id}`,
+      prompt: "",
+      audioUrl: a.presignedUrl || `${CDN_URL}/${a.audioPath}`,
+      createdAt: a.createdAt,
+    }));
+  }, [activeTab, imageHistory, videoHistory, voiceHistory]);
+
+  const studioHistoryLoading =
+    activeTab === "image" ? imageHistoryLoading
+    : activeTab === "video" ? videoHistoryLoading
+    : voiceHistoryLoading;
+
+  const loadStudioHistory = useCallback(() => {
+    if (!isLoggedIn) return;
+    if (activeTab === "image") loadImageHistory();
+    else if (activeTab === "video") loadVideoHistory();
+    else loadVoiceHistory();
+  }, [isLoggedIn, activeTab, loadImageHistory, loadVideoHistory, loadVoiceHistory]);
+
+  /** Lazily load history for the ACTIVE tab only, once per tab per
+   *  session, and only after the initial data burst has settled. */
+  useEffect(() => {
+    if (!STUDIO_FLAGS.autoLoadHistory) return;
+    if (!STUDIO_FLAGS.showHistoryRail) return;
+    if (!isLoggedIn) return;
+    if (studioHistoryLoaded[activeTab]) return;
+    const t = setTimeout(() => loadStudioHistory(), 3000);
+    return () => clearTimeout(t);
+  }, [isLoggedIn, activeTab, studioHistoryLoaded, loadStudioHistory]);
+
+  /** Reset the composer without touching credits, plan or auth. */
+  const handleNewCreation = useCallback(() => {
+    setPrompt("");
+    setError(null);
+    setGeneratedAudio(null);
+    setGeneratedImages([]);
+    setCurrentImageJob(null);
+    setCurrentVideoJob(null);
+    setImageGenMode("text");
+    setInputImageFile(null);
+    setInputImagePreview(null);
+    setVideoGenMode("text");
+    setVideoInputFile(null);
+    setVideoInputPreview(null);
+    setVideoFromImageUrl(null);
+    setCarouselError(null);
+    setCarouselPrompts(["", "", ""]);
+    setCarouselFiles([null, null, null]);
+    setCarouselPreviews([null, null, null]);
+    setCarouselImages([null, null, null]);
+    setCarouselSlide(0);
+    setCarouselSharedFile(null);
+    setCarouselSharedPreview(null);
+    setCarouselUseSharedImage(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
+  const handleStudioReuse = useCallback((item: StudioHistoryItem) => {
+    if (item.prompt) setPrompt(item.prompt);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
+  const handleStudioOpen = useCallback((item: StudioHistoryItem) => {
+    if (item.kind === "voice" && item.audioUrl) {
+      if (demoAudioRef.current) {
+        demoAudioRef.current.pause();
+        demoAudioRef.current.currentTime = 0;
+      }
+      const vid = `history-${item.id}`;
+      if (playingDemo === vid) { setPlayingDemo(null); return; }
+      const audio = new Audio(item.audioUrl);
+      audio.play().catch(() => setPlayingDemo(null));
+      audio.onended = () => setPlayingDemo(null);
+      audio.onerror = () => setPlayingDemo(null);
+      demoAudioRef.current = audio;
+      setPlayingDemo(vid);
+      return;
+    }
+    const url = item.thumbUrl || item.videoUrl;
+    if (url) window.open(url, "_blank", "noopener,noreferrer");
+  }, [playingDemo]);
+
+  const studioSidebarNode = (
+    <StudioSidebar
+      activeTab={activeTab}
+      isLoggedIn={isLoggedIn}
+      userName={studioUserName}
+      userEmail={userProfile?.email || ""}
+      userPicture={userProfile?.picture || null}
+      creditBalance={studioCreditBalance}
+      planLabel={studioPlanLabel}
+      planMeter={studioPlanMeter}
+      onSwitchTab={handleTabChange}
+      onNewCreation={handleNewCreation}
+      onClose={() => setStudioSidebarOpen(false)}
+    />
+  );
+
+  const studioTopbarNode = (
+    <StudioTopbar
+      title="AI Content Studio"
+      subtitle="Create AI voice, images and video in seconds"
+      isLoggedIn={isLoggedIn}
+      creditBalance={studioCreditBalance}
+      userName={studioUserName}
+      userEmail={userProfile?.email || ""}
+      userPicture={userProfile?.picture || null}
+      darkMode={darkMode}
+      onToggleTheme={() => setDarkMode((d) => !d)}
+      onOpenSidebar={() => setStudioSidebarOpen(true)}
+      onSignIn={() => setShowLoginModal(true)}
+    />
+  );
+
+  const studioRailNode = (
+    <StudioHistoryRail
+      activeTab={activeTab}
+      items={studioHistoryItems}
+      loading={studioHistoryLoading}
+      loaded={studioHistoryLoaded[activeTab]}
+      isLoggedIn={isLoggedIn}
+      accessDenied={activeTab === "voice" && voiceHistoryAccessDenied}
+      limit={STUDIO_FLAGS.historyRailLimit}
+      onLoad={loadStudioHistory}
+      onSignIn={() => setShowLoginModal(true)}
+      onReuse={handleStudioReuse}
+      onOpen={handleStudioOpen}
+    />
+  );
+
   // ─────────────────── RENDER ───────────────────────────────────────────────
 
   if (isPageLoading) {
@@ -1759,24 +1976,20 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
     <>
     <div className="cac-page" data-theme={darkMode ? "dark" : "light"}>
 
-      {/* ── Dark zone: hero + tool ── */}
+      {/* ── Studio zone: workspace shell + tool ── */}
       <div className="cac-dark-zone">
 
-      {/* ── Hero ── */}
-      <section className="cac-hero">
-        <div className="cac-hero-inner">
-          <h1 className="cac-hero-title">
-            Create AI Content{" "}
-            <span className="cac-gradient-text">in Seconds</span>
-          </h1>
-          <p className="cac-hero-sub">
-            Voice · Image · Video — one page, zero friction.
-          </p>
-        </div>
-      </section>
+      <StudioShell
+        sidebar={studioSidebarNode}
+        topbar={studioTopbarNode}
+        rail={studioRailNode}
+        showRail={STUDIO_FLAGS.showHistoryRail}
+        sidebarOpen={studioSidebarOpen}
+        onCloseSidebar={() => setStudioSidebarOpen(false)}
+      >
 
       {/* ── Main Tool ── */}
-      <main className="cac-main">
+      <main className="cac-main cac-main--studio">
         {/* ─ Tabs ─ */}
         <div className="cac-tabs">
           {(["voice", "image", "video"] as Tab[]).map((t) => (
@@ -1871,20 +2084,6 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                   <div className="cac-error cac-error-animated">⚠️ {error || carouselError}</div>
                 )}
                 <div className="cac-cta-row">
-                  <CustomDropdown
-                    className="cac-chip-variant"
-                    placeholder="💡 Try a prompt…"
-                    disabled={isGenerating}
-                    value=""
-                    options={PROMPT_SUGGESTIONS.voice.map(s => ({
-                      value: s.label,
-                      label: `${s.label} — ${s.prompt.slice(0, 42)}…`,
-                    }))}
-                    onChange={(val) => {
-                      const found = PROMPT_SUGGESTIONS.voice.find(s => s.label === val);
-                      if (found) setPrompt(found.prompt);
-                    }}
-                  />
                   <div style={{ flex: 1 }} />
                   {!isLoggedIn ? (
                     <button className="cac-generate-btn cac-generate-btn--sm" onClick={() => setShowLoginModal(true)}>
@@ -2031,136 +2230,6 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
           </div>
         </>
         )}
-        {activeTab === "voice" && isLoggedIn && (
-            <div style={{ marginBottom: 16 }}>
-              <button
-                onClick={handleShowVoiceHistory}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: 8,
-                  padding: '10px 16px', borderRadius: 10, border: '1.5px solid var(--cac-border)',
-                  background: 'var(--cac-surface)', color: 'var(--cac-accent)',
-                  fontSize: 13, fontWeight: 700, cursor: 'pointer', width: '100%',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <span>🎙️ Your Past Voices {voiceHistory.length > 0 ? `(${voiceHistory.length})` : ''}</span>
-                <span>{showVoiceHistory ? '▲ Hide' : '▼ Show'}</span>
-              </button>
-              {showVoiceHistory && (
-                <div style={{ marginTop: 10 }}>
-                  {voiceHistoryLoading ? (
-                    <div style={{ textAlign: 'center', padding: 20, color: 'var(--cac-muted)' }}>
-                      <div className="cac-spinner" style={{ margin: '0 auto 8px' }} />
-                      Loading history…
-                    </div>
-                  ) : voiceHistoryAccessDenied ? (
-                    <div style={{
-                      textAlign: 'center', padding: '16px 12px',
-                      background: 'rgba(99,85,220,0.04)', borderRadius: 10,
-                      border: '1px solid rgba(99,85,220,0.15)',
-                    }}>
-                      <div style={{ fontSize: 20, marginBottom: 6 }}>🔒</div>
-                      <p style={{ fontSize: 12.5, fontWeight: 700, color: 'var(--cac-accent)', margin: '0 0 4px' }}>
-                        Voice History is a Premium Feature
-                      </p>
-                      <p style={{ fontSize: 11.5, color: 'var(--cac-muted)', margin: '0 0 10px' }}>
-                        Upgrade to access your full generation history.
-                      </p>
-                      <a href="/pricing" style={{
-                        display: 'inline-block', padding: '7px 16px', borderRadius: 8,
-                        background: 'linear-gradient(135deg, #6355dc, #8b5cf6)',
-                        color: '#fff', fontSize: 12, fontWeight: 700, textDecoration: 'none',
-                      }}>
-                        Upgrade →
-                      </a>
-                    </div>
-                  ) : voiceHistory.length === 0 ? (
-                    <div style={{ textAlign: 'center', padding: 20, color: 'var(--cac-muted)', fontSize: 13 }}>
-                      No voices generated yet. Create your first one above!
-                    </div>
-                  ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                      {voiceHistory.map((item) => {
-                        const audioUrl = item.presignedUrl || `${CDN_URL}/${item.audioPath}`;
-                        const isPlaying = playingDemo === `history-${item.id}`;
-                        return (
-                          <div key={item.id} style={{
-                            borderRadius: 10, border: '1px solid var(--cac-border)',
-                            background: 'var(--cac-surface)', padding: '10px 12px',
-                          }}>
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
-                              <span style={{ fontSize: 10.5, color: 'var(--cac-muted)' }}>
-                                🎙️ {new Date(item.createdAt).toLocaleDateString()}
-                              </span>
-                              <div style={{ display: 'flex', gap: 6 }}>
-                                <button
-                                  onClick={() => {
-                                    const vid = `history-${item.id}`;
-                                    if (demoAudioRef.current) {
-                                      demoAudioRef.current.pause();
-                                      demoAudioRef.current.currentTime = 0;
-                                    }
-                                    if (isPlaying) {
-                                      setPlayingDemo(null);
-                                      return;
-                                    }
-                                    const audio = new Audio(audioUrl);
-                                    audio.play().catch(() => setPlayingDemo(null));
-                                    audio.onended = () => setPlayingDemo(null);
-                                    audio.onerror = () => setPlayingDemo(null);
-                                    demoAudioRef.current = audio;
-                                    setPlayingDemo(vid);
-                                  }}
-                                  style={{
-                                    padding: '5px 10px', borderRadius: 7, border: '1px solid var(--cac-border)',
-                                    background: 'transparent', color: 'var(--cac-accent)',
-                                    fontSize: 11, fontWeight: 700, cursor: 'pointer',
-                                  }}
-                                >
-                                  {isPlaying ? '⏸️ Pause' : '▶️ Play'}
-                                </button>
-                                <button
-                                  onClick={async () => {
-                                    try {
-                                      const res = await fetch(audioUrl);
-                                      if (!res.ok) throw new Error('fetch failed');
-                                      const blob = await res.blob();
-                                      const blobUrl = URL.createObjectURL(blob);
-                                      const a = document.createElement('a');
-                                      a.href = blobUrl;
-                                      a.download = `ai-voice-${item.id}.mp3`;
-                                      document.body.appendChild(a);
-                                      a.click();
-                                      document.body.removeChild(a);
-                                      URL.revokeObjectURL(blobUrl);
-                                    } catch {
-                                      const a = document.createElement('a');
-                                      a.href = audioUrl;
-                                      a.download = `ai-voice-${item.id}.mp3`;
-                                      document.body.appendChild(a);
-                                      a.click();
-                                      document.body.removeChild(a);
-                                    }
-                                  }}
-                                  style={{
-                                    padding: '5px 10px', borderRadius: 7, border: 'none',
-                                    background: 'linear-gradient(135deg, #6355dc, #8b5cf6)',
-                                    color: '#fff', fontSize: 11, fontWeight: 700, cursor: 'pointer',
-                                  }}
-                                >
-                                  📥 Download
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          )}
         {activeTab !== "voice" && (
           /* Image / Video tab — full width prompt card */
          <div className="cac-prompt-card">
@@ -2680,20 +2749,6 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
             )}
 
             <div className="cac-cta-row">
-              <CustomDropdown
-                className="cac-chip-variant"
-                placeholder="💡 Try a prompt…"
-                disabled={isGenerating}
-                value=""
-                options={PROMPT_SUGGESTIONS[activeTab].map(s => ({
-                  value: s.label,
-                  label: `${s.label} — ${s.prompt.slice(0, 42)}…`,
-                }))}
-                onChange={(val) => {
-                  const found = PROMPT_SUGGESTIONS[activeTab].find(s => s.label === val);
-                  if (found) setPrompt(found.prompt);
-                }}
-              />
               <div style={{ flex: 1 }} />
               {!isLoggedIn ? (
                 <button className="cac-generate-btn" onClick={() => setShowLoginModal(true)}>
@@ -3040,110 +3095,6 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
           </div>
         )}
 
-        {/* ── Image History ── */}
-        {activeTab === "image" && isLoggedIn && (
-          <div style={{ marginBottom: 24 }}>
-            <button
-              onClick={handleShowHistory}
-              style={{
-                display: 'flex', alignItems: 'center', gap: 8,
-                padding: '10px 16px', borderRadius: 10, border: '1.5px solid var(--cac-border)',
-                background: 'var(--cac-surface)', color: 'var(--cac-accent)',
-                fontSize: 13, fontWeight: 700, cursor: 'pointer', width: '100%',
-                justifyContent: 'space-between',
-              }}
-            >
-              <span>🖼️ Your Past Generations {imageHistory.length > 0 ? `(${imageHistory.length})` : ''}</span>
-              <span>{showImageHistory ? '▲ Hide' : '▼ Show'}</span>
-            </button>
-
-            {showImageHistory && (
-              <div style={{ marginTop: 12 }}>
-                {imageHistoryLoading ? (
-                  <div style={{ textAlign: 'center', padding: 24, color: 'var(--cac-muted)' }}>
-                    <div className="cac-spinner" style={{ margin: '0 auto 8px' }} />
-                    Loading history…
-                  </div>
-                ) : imageHistory.length === 0 ? (
-                  <div style={{ textAlign: 'center', padding: 24, color: 'var(--cac-muted)', fontSize: 13 }}>
-                    No images generated yet. Create your first one above!
-                  </div>
-                ) : (
-                  <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-                    gap: 12,
-                  }}>
-                    {imageHistory.map((img) => (
-                      <div key={img.id} style={{
-                        borderRadius: 12, overflow: 'hidden',
-                        border: '1px solid var(--cac-border)',
-                        background: 'var(--cac-surface)',
-                      }}>
-                        <div style={{ position: 'relative', aspectRatio: '1', overflow: 'hidden' }}>
-                          <img
-                            src={img.imagePath}
-                            alt={img.prompt}
-                            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                            loading="lazy"
-                          />
-                        </div>
-                        <div style={{ padding: '8px 10px' }}>
-                          <p style={{
-                            fontSize: 11, color: 'var(--cac-text-2)', margin: '0 0 8px',
-                            overflow: 'hidden', textOverflow: 'ellipsis',
-                            display: '-webkit-box', WebkitLineClamp: 2,
-                            WebkitBoxOrient: 'vertical' as const,
-                          }}>
-                            {img.prompt}
-                          </p>
-                          <div style={{ display: 'flex', gap: 6, flexDirection: 'column' }}>
-                            <button
-                              onClick={() => {
-                                setVideoFromImageUrl(img.imagePath);
-                                setActiveTab('video');
-                                setPrompt(img.prompt || '');
-                                setShowImageHistory(false);
-                                setTimeout(() => {
-                                  resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                }, 100);
-                              }}
-                              style={{
-                                padding: '6px 10px', borderRadius: 8, border: 'none',
-                                background: 'linear-gradient(135deg, #7c3aed, #db2777)',
-                                color: '#fff', fontSize: 11, fontWeight: 700,
-                                cursor: 'pointer', width: '100%',
-                              }}
-                            >
-                              🎬 Make Video →
-                            </button>
-                            <a href={img.imagePath}
-                              download={`ai-image-${img.id}.png`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              style={{
-                                display: 'block', textAlign: 'center',
-                                padding: '6px 10px', borderRadius: 8,
-                                border: '1px solid var(--cac-border)',
-                                background: 'transparent', color: 'var(--cac-accent)',
-                                fontSize: 11, fontWeight: 600,
-                                cursor: 'pointer', width: '100%',
-                                textDecoration: 'none', boxSizing: 'border-box',
-                              }}
-                            >
-                              📥 Download
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        )}
-
         {/* ── Demo Images Marquee (shown on image tab) ── */}
         {activeTab === "image" && demoImages.length > 0 && generatedImages.length === 0 && !isGeneratingImage && (
           <div style={{ marginBottom: 24, overflow: 'hidden' }}>
@@ -3187,142 +3138,6 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
             })()}
           </div>
         )}
-
-        {/* ── Video History ── */}
-        {activeTab === "video" && isLoggedIn && (
-          <div style={{ marginBottom: 24 }}>
-            <button
-              onClick={handleShowVideoHistory}
-              style={{
-                display: 'flex', alignItems: 'center', gap: 8,
-                padding: '10px 16px', borderRadius: 10, border: '1.5px solid var(--cac-border)',
-                background: 'var(--cac-surface)', color: 'var(--cac-accent)',
-                fontSize: 13, fontWeight: 700, cursor: 'pointer', width: '100%',
-                justifyContent: 'space-between',
-              }}
-            >
-              <span>🎬 Your Past Videos {videoHistory.length > 0 ? `(${videoHistory.length})` : ''}</span>
-              <span>{showVideoHistory ? '▲ Hide' : '▼ Show'}</span>
-            </button>
-
-            {showVideoHistory && (
-              <div style={{ marginTop: 12 }}>
-                {videoHistoryLoading ? (
-                  <div style={{ textAlign: 'center', padding: 24, color: 'var(--cac-muted)' }}>
-                    <div className="cac-spinner" style={{ margin: '0 auto 8px' }} />
-                    Loading history…
-                  </div>
-                ) : videoHistory.length === 0 ? (
-                  <div style={{ textAlign: 'center', padding: 24, color: 'var(--cac-muted)', fontSize: 13 }}>
-                    No completed videos yet. Generate your first one above!
-                  </div>
-                ) : (
-                  <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-                    gap: 12,
-                  }}>
-                    {videoHistory.map((vid) => (
-                      <div key={vid.id} style={{
-                        borderRadius: 12, overflow: 'hidden',
-                        border: '1px solid var(--cac-border)',
-                        background: 'var(--cac-surface)',
-                      }}>
-                        <div style={{ position: 'relative', background: '#000' }}>
-                          <video
-                            src={vid.videoUrl!}
-                            loop
-                            muted
-                            playsInline
-                            preload="none"
-                            style={{ width: '100%', height: 140, objectFit: 'cover', display: 'block' }}
-                            onMouseEnter={e => (e.currentTarget as HTMLVideoElement).play()}
-                            onMouseLeave={e => {
-                              const v = e.currentTarget as HTMLVideoElement;
-                              v.pause();
-                              v.currentTime = 0;
-                            }}
-                          />
-                          <div style={{
-                            position: 'absolute', bottom: 6, left: 6,
-                            background: 'rgba(0,0,0,0.65)', borderRadius: 6,
-                            padding: '2px 7px', fontSize: 10, color: '#fff',
-                            display: 'flex', alignItems: 'center', gap: 4,
-                          }}>
-                            <ModelLogo modelKey={vid.model} size={11} />
-                            {vid.modelDisplayName}
-                          </div>
-                          <div style={{
-                            position: 'absolute', top: 6, right: 6,
-                            background: 'rgba(0,0,0,0.55)', borderRadius: 6,
-                            padding: '2px 7px', fontSize: 10, color: '#fff',
-                          }}>
-                            {vid.durationSeconds}s · {vid.aspectRatio}
-                          </div>
-                        </div>
-                        <div style={{ padding: '8px 10px' }}>
-                          <p style={{
-                            fontSize: 11, color: 'var(--cac-text-2)', margin: '0 0 8px',
-                            overflow: 'hidden', textOverflow: 'ellipsis',
-                            display: '-webkit-box', WebkitLineClamp: 2,
-                            WebkitBoxOrient: 'vertical' as const,
-                          }}>
-                            {vid.prompt}
-                          </p>
-                          <div style={{ display: 'flex', gap: 6, flexDirection: 'column' }}>
-                            <button
-                              onClick={async () => {
-                                try {
-                                  const res = await fetch(vid.videoUrl!);
-                                  const blob = await res.blob();
-                                  const url = URL.createObjectURL(blob);
-                                  const a = document.createElement('a');
-                                  a.href = url;
-                                  a.download = `scenith-video-${vid.id}.mp4`;
-                                  document.body.appendChild(a);
-                                  a.click();
-                                  document.body.removeChild(a);
-                                  URL.revokeObjectURL(url);
-                                } catch {
-                                  window.open(vid.videoUrl!, '_blank');
-                                }
-                              }}
-                              style={{
-                                display: 'block', textAlign: 'center',
-                                padding: '6px 10px', borderRadius: 8, border: 'none',
-                                background: 'linear-gradient(135deg, #6355dc, #8b5cf6)',
-                                color: '#fff', fontSize: 11, fontWeight: 700,
-                                cursor: 'pointer', width: '100%',
-                              }}
-                            >
-                              📥 Download MP4
-                            </button>
-                            <button
-                              onClick={() => {
-                                setCurrentVideoJob(null);
-                                setPrompt(vid.prompt || '');
-                                window.scrollTo({ top: 0, behavior: 'smooth' });
-                              }}
-                              style={{
-                                padding: '6px 10px', borderRadius: 8,
-                                border: '1px solid var(--cac-border)',
-                                background: 'transparent', color: 'var(--cac-accent)',
-                                fontSize: 11, fontWeight: 600,
-                                cursor: 'pointer', width: '100%',
-                              }}
-                            >
-                              🔁 Reuse Prompt
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        )}
         {/* ── Demo Videos Strip (shown on video tab) ── */}
         {activeTab === "video" && demoVideos.length > 0 && !currentVideoJob && !isGeneratingVideo && (
           <div style={{ marginBottom: 24 }}>
@@ -3352,6 +3167,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
         )}        
 
          </main>
+      </StudioShell>
       </div>{/* end cac-dark-zone */}
 
       {/* ── Light zone: upsell + SEO ── */}
@@ -3377,262 +3193,6 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
           </div>
         )}
 
-        {/* ── SEO Section (minimal) ── */}
-        <section className="cac-seo-section">
-          <h2>One Platform for All Your AI Content</h2>
-          <div className="cac-seo-grid">
-            <div className="cac-seo-card">
-              <span className="cac-seo-icon">🎙️</span>
-              <h3>AI Voice</h3>
-              <p>
-                40+ natural voices, 20+ languages. Perfect for YouTube, podcasts,
-                and ads. Instant MP3 download.
-              </p>
-            </div>
-            <div className="cac-seo-card">
-              <span className="cac-seo-icon">🖼️</span>
-              <h3>AI Image</h3>
-              <p>
-                Text-to-image in 8 styles with 7 state-of-the-art models. High-res
-                PNG, commercial use included.
-              </p>
-            </div>
-            <div className="cac-seo-card">
-              <span className="cac-seo-icon">🎬</span>
-              <h3>AI Video</h3>
-              <p>
-                Cinematic text-to-video with Kling, Veo, Wan 2.5 and more. Up to
-                1080p, MP4 download.
-              </p>
-            </div>
-          </div>
-          <div className="cac-seo-faq">
-            <h3>Frequently Asked Questions</h3>
-            <details>
-              <summary>Is this free to use?</summary>
-              <p>
-                Yes — you get 50 free credits on sign-up, no card required. Credits
-                cover voice, image, and video generation.
-              </p>
-            </details>
-            <details>
-              <summary>Can I use the content commercially?</summary>
-              <p>
-                All content generated on Scenith comes with full commercial rights.
-                No attribution required.
-              </p>
-            </details>
-            <details>
-              <summary>How fast is generation?</summary>
-              <p>
-                Voice: ~3 sec · Image: 10–30 sec · Video: 30–120 sec depending on
-                model and duration.
-              </p>
-            </details>
-          </div>
-        </section>
-
-        {/* ── SEO Sections ── */}
-        <section className="cac-seo-section">
-
-          {/* ── What is this page ── */}
-          <div className="cac-seo-intro">
-            <h2>Free AI Content Creator — Voice, Image & Video in One Place</h2>
-            <p>
-              Scenith's AI Content Creator lets you generate professional-quality voices,
-              images, and videos from a single page — no switching tools, no wasted time.
-              Type a prompt, pick a mode, and your content is ready in seconds.
-              Used by YouTubers, marketers, indie developers, and educators worldwide.
-            </p>
-          </div>
-
-          {/* ── 3-col feature cards ── */}
-          <div className="cac-seo-grid">
-            <div className="cac-seo-card">
-              <span className="cac-seo-icon">🎙️</span>
-              <h3>AI Voice Generator</h3>
-              <p>
-                Convert text to speech with 40+ natural-sounding voices across 20+ languages.
-                Choose from Google, OpenAI, and Azure voices. Perfect for YouTube voiceovers,
-                podcast intros, e-learning narration, and ad scripts. Instant MP3 download,
-                commercial use included.
-              </p>
-            </div>
-            <div className="cac-seo-card">
-              <span className="cac-seo-icon">🖼️</span>
-              <h3>AI Image Generator</h3>
-              <p>
-                Turn any text description into a stunning image using GPT, Imagen 4, FLUX,
-                Grok Aurora, and Stability AI models. 8 artistic styles including realistic
-                photo, anime, digital art, and 3D render. High-res PNG output with full
-                commercial rights — no watermarks.
-              </p>
-            </div>
-            <div className="cac-seo-card">
-              <span className="cac-seo-icon">🎬</span>
-              <h3>AI Video Generator</h3>
-              <p>
-                Generate cinematic AI videos from text prompts using Kling 2.6, Veo 3.1,
-                Wan 2.5, and Grok Imagine. Up to 1080p resolution, 10-second clips,
-                16:9 / 9:16 / 1:1 aspect ratios. Download MP4 directly — no editing
-                software required.
-              </p>
-            </div>
-          </div>
-
-          {/* ── How it works ── */}
-          <div className="cac-seo-how">
-            <h2>How to Create AI Content in 3 Steps</h2>
-            <div className="cac-seo-steps">
-              <div className="cac-seo-step">
-                <span className="cac-seo-step-num">1</span>
-                <div>
-                  <h3>Choose your content type</h3>
-                  <p>Switch between Voice, Image, and Video using the tab bar at the top. Each mode loads its own set of AI models and settings instantly.</p>
-                </div>
-              </div>
-              <div className="cac-seo-step">
-                <span className="cac-seo-step-num">2</span>
-                <div>
-                  <h3>Write your prompt</h3>
-                  <p>Describe what you want in plain language. Use the quick-fill chips for inspiration, or paste your own script. The more specific your prompt, the better the result.</p>
-                </div>
-              </div>
-              <div className="cac-seo-step">
-                <span className="cac-seo-step-num">3</span>
-                <div>
-                  <h3>Generate and download</h3>
-                  <p>Hit Generate. Voice is ready in ~3 seconds. Images take 10–30 seconds. Videos take 30–120 seconds depending on model. Download your file instantly — MP3, PNG, or MP4.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* ── Use cases ── */}
-          <div className="cac-seo-usecases">
-            <h2>Who Uses Scenith AI Content Creator?</h2>
-            <div className="cac-seo-uc-grid">
-              <div className="cac-seo-uc-card">
-                <span>🎬</span>
-                <h3>YouTubers & Content Creators</h3>
-                <p>Generate voiceovers for faceless YouTube channels, create eye-catching thumbnails with AI images, and produce short video clips for Reels and Shorts — all without leaving this page.</p>
-              </div>
-              <div className="cac-seo-uc-card">
-                <span>📣</span>
-                <h3>Marketers & Ad Agencies</h3>
-                <p>Produce ad voiceovers in multiple languages, generate product visuals without a photoshoot, and create short video ads for social media campaigns in minutes.</p>
-              </div>
-              <div className="cac-seo-uc-card">
-                <span>📚</span>
-                <h3>Educators & Course Creators</h3>
-                <p>Narrate course modules with natural AI voices, generate illustrative images for lesson slides, and create explainer video clips without any recording equipment.</p>
-              </div>
-              <div className="cac-seo-uc-card">
-                <span>🛍️</span>
-                <h3>E-commerce & Product Teams</h3>
-                <p>Create professional product images from text descriptions, generate promotional voiceovers for product pages, and produce short demo videos at a fraction of traditional production cost.</p>
-              </div>
-              <div className="cac-seo-uc-card">
-                <span>🎮</span>
-                <h3>Game Developers & Indie Studios</h3>
-                <p>Design concept art and character visuals, generate character dialogue voiceovers, and produce atmospheric video cutscenes — all powered by state-of-the-art AI models.</p>
-              </div>
-              <div className="cac-seo-uc-card">
-                <span>🧑‍💼</span>
-                <h3>Businesses & Startups</h3>
-                <p>Produce pitch deck visuals, company intro voiceovers, and brand video content without hiring an agency. Full commercial rights on everything you generate.</p>
-              </div>
-            </div>
-          </div>
-
-          {/* ── Comparison table ── */}
-          <div className="cac-seo-compare">
-            <h2>Why Scenith vs Using Separate AI Tools?</h2>
-            <div className="cac-seo-compare-grid">
-              <div className="cac-seo-compare-col cac-compare-them">
-                <h3>❌ Using Separate Tools</h3>
-                <ul>
-                  <li>Different subscriptions for voice, image, and video</li>
-                  <li>Log in / out of multiple platforms</li>
-                  <li>Inconsistent credit systems and billing</li>
-                  <li>No unified history or workflow</li>
-                  <li>$30–$80+/mo across multiple tools</li>
-                </ul>
-              </div>
-              <div className="cac-seo-compare-col cac-compare-us">
-                <h3>✅ Scenith AI Content Creator</h3>
-                <ul>
-                  <li>Voice + Image + Video under one login</li>
-                  <li>Single credit balance works across all 3 modes</li>
-                  <li>One plan covers everything — from $9/mo</li>
-                  <li>7+ AI image models, 6 video models, 3 voice providers</li>
-                  <li>50 free credits on signup — no card required</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          {/* ── Models ── */}
-          <div className="cac-seo-models">
-            <h2>Powered by the World's Best AI Models</h2>
-            <div className="cac-seo-model-tags">
-              {[
-                "GPT Image 1 (OpenAI)", "Imagen 4 (Google)", "FLUX 1.1 Pro",
-                "Grok Aurora (xAI)", "Stability AI Core", "Kling 2.6 Pro",
-                "Veo 3.1 (Google)", "Wan 2.5", "Grok Imagine (xAI)",
-                "Google TTS", "OpenAI TTS", "Azure Neural TTS"
-              ].map(m => (
-                <span key={m} className="cac-model-tag">{m}</span>
-              ))}
-            </div>
-          </div>
-            
-          {/* ── FAQ ── */}
-          <div className="cac-seo-faq">
-            <h2>Frequently Asked Questions</h2>
-            
-            <details>
-              <summary>Is Scenith AI Content Creator free to use?</summary>
-              <p>Yes — you get 50 free credits when you sign up, with no credit card required. Free credits work across voice, image, and video generation. Paid plans start at $9/month and include 300 credits plus access to all AI models.</p>
-            </details>
-            
-            <details>
-              <summary>Can I use AI-generated content commercially?</summary>
-              <p>Absolutely. All content generated on Scenith — voiceovers, images, and videos — comes with full commercial rights. You can use them in YouTube videos, ads, products, client work, and any commercial project without attribution.</p>
-            </details>
-            
-            <details>
-              <summary>What is the best AI model for realistic images?</summary>
-              <p>For photorealistic images, we recommend GPT Image 1 Medium (standard or premium quality) or Grok Aurora. For artistic styles and illustrations, FLUX 1.1 Pro and Stability AI Core produce excellent results. Imagen 4 Standard is ideal for high-detail prints.</p>
-            </details>
-            
-            <details>
-              <summary>Which AI video model is best for cinematic quality?</summary>
-              <p>Kling 2.6 Pro and Veo 3.1 produce the highest quality cinematic videos at 1080p. For faster generation at lower cost, Wan 2.5 and Kling 2.5 Turbo are great options. Grok Imagine is the only model that includes AI-generated audio.</p>
-            </details>
-            
-            <details>
-              <summary>How many languages does the AI voice generator support?</summary>
-              <p>The Google TTS provider supports 20+ languages including English (US, UK, Australian, Indian accents), Spanish, French, German, Mandarin, Hindi, Arabic, and more. Azure Neural TTS adds additional multilingual voices. OpenAI TTS voices are English-focused with very natural prosody.</p>
-            </details>
-            
-            <details>
-              <summary>How long does AI content generation take?</summary>
-              <p>Voice generation completes in approximately 2–4 seconds. Image generation takes 10–30 seconds depending on model. Video generation takes 30–120 seconds depending on model, duration, and resolution. All generations run in the background — you can stay on the page or close the tab for images and return.</p>
-            </details>
-            
-            <details>
-              <summary>What file formats are supported for download?</summary>
-              <p>AI Voice generates MP3 files. AI Image generates high-resolution PNG files. AI Video generates MP4 files. All files are downloaded directly to your device with no additional software required.</p>
-            </details>
-            
-            <details>
-              <summary>Do I need to install anything?</summary>
-              <p>No. Scenith AI Content Creator is entirely browser-based. It works on any device — desktop, tablet, or mobile — with no plugins, extensions, or software downloads required.</p>
-            </details>
-          </div>
-            
-        </section>        
        </main>
       </div>{/* end cac-seo-zone */}
 
