@@ -14,6 +14,7 @@ import {
   FiGrid,
   FiPlus,
   FiX,
+  FiCalendar,
 } from "react-icons/fi";
 import {
   STUDIO_PRIMARY_NAV,
@@ -39,6 +40,7 @@ const ICONS: Record<string, React.ComponentType<{ size?: number }>> = {
   FiFileText,
   FiCrop,
   FiGrid,
+  FiCalendar,
 };
 
 interface StudioSidebarProps {

@@ -56,6 +56,7 @@ export interface StudioNavItem {
 
 export const STUDIO_PRIMARY_NAV: StudioNavItem[] = [
   { id: "create", label: "Create", icon: "FiZap", href: "/create-ai-content" },
+  { id: "content-engine", label: "Content Engine", icon: "FiCalendar", href: "/create-ai-content/content-engine" },
   { id: "usage", label: "Usage & credits", icon: "FiPieChart", href: "/user-dashboard" },
 ];
 
