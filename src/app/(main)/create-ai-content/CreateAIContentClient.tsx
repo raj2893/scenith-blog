@@ -3182,7 +3182,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                 <strong>Need more credits?</strong>
                 <span>
                   {" "}
-                  Creator Lite gives you 300cr/mo for voice, image & video — just
+                  Creator Lite gives you 1000cr/mo for voice, image & video — just
                   $9/mo.
                 </span>
               </div>
@@ -3503,7 +3503,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
       <div className="cac-floating-cta">
         <a href="/pricing" className="cac-floating-btn">
           ⚡ <strong>Get More Credits</strong>
-          <small>from $9/mo · 300cr included</small>
+          <small>from $9/mo · 1000cr included</small>
         </a>
       </div>
     )}
