@@ -16,6 +16,7 @@ import {
 } from "./contentEngineApi";
 import CreatePlanModal from "./CreatePlanModal";
 import PlanWorkspace from "./PlanWorkspace";
+import Tip from "../tips/Tip";
 
 interface Me { name: string; email: string; picture: string | null; role: string; }
 
@@ -219,7 +220,9 @@ export function EntitlementBar({ ent, planLabel }: { ent: ContentEngineEntitleme
   return (
     <div className="ce-ent">
       <div className="ce-ent__stat">
-        <div className="ce-ent__label">Planning days</div>
+        <div className="ce-ent__label" style={{ display: "flex", alignItems: "center", gap: 5 }}>
+          Planning days <Tip id="cePlanningDays" />
+        </div>
         <div className="ce-ent__value">
           {unl(ent.contentDaysRemaining)}<span className="ce-ent__of"> / {unl(ent.contentDaysAllowed)} left</span>
         </div>

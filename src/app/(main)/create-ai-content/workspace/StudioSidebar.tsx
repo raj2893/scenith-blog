@@ -22,6 +22,7 @@ import {
   StudioNavItem,
   StudioTab,
 } from "./studio.config";
+import Tip from "../tips/Tip";
 
 /* ============================================================
    StudioSidebar
@@ -165,7 +166,10 @@ const StudioSidebar: React.FC<StudioSidebarProps> = ({
             {isLoggedIn ? "Manage plan" : "See plans"}
           </a>
         </div>
-        <p className="cac-studio-plan__label">Credits left</p>
+        <p className="cac-studio-plan__label" style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          Credits left
+          <Tip id="credits" />
+        </p>
         <p className="cac-studio-plan__value">{formatCredits(creditBalance)}</p>
         {planMeter !== null && (
           <div
