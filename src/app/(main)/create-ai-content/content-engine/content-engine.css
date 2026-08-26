@@ -13,6 +13,10 @@
 .ce-topbar { display: flex; align-items: center; gap: 12px; padding: 0 6px; }
 .ce-topbar__menu { display: none; background: none; border: none; color: #1e1e30; cursor: pointer; }
 .ce-topbar__title { display: flex; align-items: center; gap: 7px; font-weight: 700; font-size: 15px; color: #1e1e30; }
+/* Back-to-plans control lives in the sticky topbar so it never hides under it. */
+.ce-topbar__back { display: inline-flex; align-items: center; gap: 6px; background: none; border: none;
+  padding: 0; font-family: inherit; font-weight: 700; font-size: 15px; color: #5c4de8; cursor: pointer; }
+.ce-topbar__back:hover { color: #4a3ec0; }
 
 /* buttons */
 .ce-btn { display: inline-flex; align-items: center; gap: 7px; padding: 10px 16px; border-radius: 10px; border: none;
@@ -44,6 +48,7 @@
 .ce-empty__icon { font-size: 44px; margin-bottom: 12px; }
 .ce-empty__title { font-size: 22px; font-weight: 700; margin-bottom: 8px; color: #1e1e30; }
 .ce-empty__sub { font-size: 14px; color: #7070a0; line-height: 1.6; margin-bottom: 20px; }
+.ce-empty__actions { display: inline-flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
 
 /* entitlement bar — pinned just below the sticky Studio topbar so it is never
    clipped/hidden as the plan list scrolls beneath it. */
@@ -64,7 +69,7 @@
 /* hub */
 .ce-hub__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
 .ce-hub__title { font-size: 20px; font-weight: 700; color: #1e1e30; }
-.ce-plan-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.ce-plan-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); gap: 14px; }
 .ce-plan-card { background: #fff; border: 1.5px solid var(--border); border-radius: 14px; padding: 16px; cursor: pointer; transition: all .16s; }
 .ce-plan-card:hover { border-color: rgba(92,77,232,.3); box-shadow: 0 8px 26px rgba(92,77,232,.09); transform: translateY(-2px); }
 .ce-plan-card__top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
@@ -116,7 +121,7 @@
 .ce-viewtoggle button { border: none; background: none; padding: 6px 9px; border-radius: 7px; cursor: pointer; color: #7070a0; }
 .ce-viewtoggle button.is-on { background: #fff; color: #5c4de8; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
 .ce-ws__regen { font-size: 12.5px; color: #7070a0; margin-bottom: 14px; }
-.ce-ws__cols { display: grid; grid-template-columns: 1fr 380px; gap: 18px; align-items: start; }
+.ce-ws__cols { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 18px; align-items: start; }
 
 /* calendar */
 .ce-cal { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 12px; overflow-x: auto; }
@@ -154,7 +159,7 @@
 .ce-item.is-open { border-color: rgba(92,77,232,.28); }
 .ce-item__bar { display: flex; align-items: center; gap: 8px; padding: 9px 11px; cursor: pointer; }
 .ce-item__chev { color: #a0a0c0; display: flex; }
-.ce-item__title { flex: 1; font-size: 13px; font-weight: 600; color: #1e1e30; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ce-item__title { flex: 1; min-width: 0; font-size: 13px; font-weight: 600; color: #1e1e30; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ce-item__fmt { font-size: 10.5px; font-weight: 700; color: #7070a0; background: #f0eeff; padding: 2px 7px; border-radius: 6px; }
 .ce-badge { font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 99px; white-space: nowrap; }
 .ce-item__body { padding: 4px 12px 14px; border-top: 1px solid var(--border); }
@@ -189,7 +194,7 @@
 .ce-list__count { font-size: 12px; color: #a0a0c0; margin-left: auto; }
 .ce-list__rows { display: flex; flex-direction: column; gap: 6px; }
 .ce-list__group { border: 1px solid var(--border); border-radius: 10px; background: #fff; overflow: hidden; }
-.ce-list__row { width: 100%; display: grid; grid-template-columns: 100px 130px 1fr auto; gap: 12px; align-items: center; padding: 11px 14px; border: none; background: none; cursor: pointer; text-align: left; }
+.ce-list__row { width: 100%; display: grid; grid-template-columns: 100px 130px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 11px 14px; border: none; background: none; cursor: pointer; text-align: left; }
 .ce-list__row:hover { background: #fbfaff; }
 .ce-list__date { font-size: 12px; color: #7070a0; font-weight: 600; }
 .ce-list__plat { font-size: 12.5px; font-weight: 600; color: #3a3a5c; }
@@ -198,7 +203,9 @@
 
 /* responsive */
 @media (max-width: 900px) {
-  .ce-ws__cols { grid-template-columns: 1fr; }
+  /* minmax(0,...) lets the track shrink below the calendar's min-width instead
+     of blowing the whole layout past the viewport. */
+  .ce-ws__cols { grid-template-columns: minmax(0, 1fr); }
   .ce-daypanel { position: static; }
   .ce-topbar__menu { display: inline-flex; }
 }
@@ -210,13 +217,16 @@
   .ce-ent__plan { position: absolute; top: 12px; right: 14px; }
   .ce-hub__head { flex-wrap: wrap; gap: 12px; }
   .ce-hub__head .ce-btn { flex: 1 1 100%; justify-content: center; }
+  /* Stack the workspace header: title on its own row, then actions. (The back
+     control now lives in the sticky topbar, so it's never hidden on scroll.) */
   .ce-ws__head { gap: 10px; }
+  .ce-ws__title { flex: 1 1 100%; min-width: 0; }
   .ce-ws__actions { flex: 1 1 100%; justify-content: space-between; }
 }
 @media (max-width: 560px) {
   .ce-field-row { grid-template-columns: 1fr; }
   .ce-item__grid { grid-template-columns: 1fr; }
-  .ce-list__row { grid-template-columns: 1fr auto; }
+  .ce-list__row { grid-template-columns: minmax(0, 1fr) auto; }
   .ce-list__date, .ce-list__plat { display: none; }
   .ce-hub, .ce-ws { padding: 14px; }
   .ce-modal { padding: 22px 18px; border-radius: 16px; }
@@ -224,6 +234,24 @@
   .ce-modal__actions .ce-btn { width: 100%; justify-content: center; }
   .ce-ent__stat { flex: 1 1 100%; min-width: 100%; }
   .ce-ent__plan { position: static; align-self: flex-start; }
-  .ce-assets { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+  .ce-assets { grid-template-columns: repeat(auto-fill, minmax(min(90px, 100%), 1fr)); }
   .ce-item__toolbar { gap: 6px; }
+
+  /* Calendar fills the phone width instead of overflowing / needing a scroll. */
+  .ce-cal { padding: 8px; }
+  .ce-cal__grid, .ce-cal__dow { min-width: 0; gap: 4px; }
+  .ce-cal__dow span { font-size: 9px; }
+  .ce-cal__cell { aspect-ratio: auto; min-height: 48px; padding: 4px 3px; border-radius: 8px; }
+  .ce-cal__num { font-size: 11px; }
+  .ce-cal__counts { gap: 2px; }
+  .ce-cal__count { font-size: 9px; padding: 1px 3px; }
+
+  /* Day panel: header wraps, its Add-content button goes full width; hide the
+     small format chip on items so the title + status never get clipped. */
+  .ce-daypanel { padding: 12px; }
+  .ce-daypanel__head { flex-wrap: wrap; gap: 10px; }
+  .ce-daypanel__head .ce-addmenu { width: 100%; }
+  .ce-daypanel__head .ce-addmenu > .ce-btn { width: 100%; justify-content: center; }
+  .ce-item__fmt { display: none; }
+  .ce-ws__actions { flex-wrap: wrap; }
 }

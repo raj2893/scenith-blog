@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { FiArrowLeft, FiPlus, FiRefreshCw, FiGrid, FiList } from "react-icons/fi";
+import { FiPlus, FiRefreshCw, FiGrid, FiList } from "react-icons/fi";
 import {
   contentEngineApi, ContentEngineError, ContentEngineEntitlement,
   CalendarResponse, ContentDay, ContentItem, ContentPlatform, ContentItemStatus,
@@ -19,11 +19,10 @@ function isoOf(d: Date): string {
 }
 
 export default function PlanWorkspace({
-  planId, entitlement, onBack, onMetaChanged,
+  planId, entitlement, onMetaChanged,
 }: {
   planId: number;
   entitlement: ContentEngineEntitlement | null;
-  onBack: () => void;
   onMetaChanged: () => void;
 }) {
   const [cal, setCal] = useState<CalendarResponse | null>(null);
@@ -88,7 +87,6 @@ export default function PlanWorkspace({
   return (
     <div className="ce-ws">
       <div className="ce-ws__head">
-        <button className="ce-btn ce-btn--ghost ce-btn--sm" onClick={onBack}><FiArrowLeft size={14} /> Plans</button>
         <div className="ce-ws__title">
           <h1>{plan.title}</h1>
           <span className="ce-ws__meta">{plan.startDate} → {plan.endDate} · {plan.durationDays} days</span>

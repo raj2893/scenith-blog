@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { FiPlus, FiCalendar, FiArchive, FiTrash2, FiMenu } from "react-icons/fi";
+import { FiPlus, FiCalendar, FiArchive, FiTrash2, FiMenu, FiArrowLeft } from "react-icons/fi";
 import { API_BASE_URL } from "@/app/config";
 import StudioShell from "../workspace/StudioShell";
 import StudioSidebar from "../workspace/StudioSidebar";
@@ -17,6 +17,8 @@ import {
 import CreatePlanModal from "./CreatePlanModal";
 import PlanWorkspace from "./PlanWorkspace";
 import Tip from "../tips/Tip";
+import StudioLoginModal from "../workspace/StudioLoginModal";
+import { AnimatePresence } from "framer-motion";
 
 interface Me { name: string; email: string; picture: string | null; role: string; }
 
@@ -30,13 +32,18 @@ export default function ContentEngineClient() {
   const [error, setError] = useState<string | null>(null);
   const [showCreate, setShowCreate] = useState(false);
   const [activePlanId, setActivePlanId] = useState<number | null>(null);
+  const [signedOut, setSignedOut] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
       const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-      if (!token) { router.push("/"); return; }
+      // Not signed in: don't bounce off the page — show the Content Engine with a
+      // sign-up prompt instead. (Entitlements/plans need auth, so we skip them.)
+      if (!token) { setSignedOut(true); return; }
+      setSignedOut(false);
       const meRes = await axios
         .get(`${API_BASE_URL}/auth/me`, { headers: { Authorization: `Bearer ${token}` } })
         .catch(() => null);
@@ -59,7 +66,7 @@ export default function ContentEngineClient() {
     } finally {
       setLoading(false);
     }
-  }, [router]);
+  }, []);
 
   useEffect(() => { load(); }, [load]);
 
@@ -102,9 +109,17 @@ export default function ContentEngineClient() {
       <button className="ce-topbar__menu" onClick={() => setSidebarOpen(true)} aria-label="Open menu">
         <FiMenu size={18} />
       </button>
-      <div className="ce-topbar__title">
-        <FiCalendar size={16} /> <span>Content Engine</span>
-      </div>
+      {activePlanId ? (
+        // A plan is open: the back control lives in the sticky topbar so it stays
+        // visible while the calendar scrolls (instead of hiding under this bar).
+        <button className="ce-topbar__back" onClick={() => setActivePlanId(null)}>
+          <FiArrowLeft size={16} /> <span>Plans</span>
+        </button>
+      ) : (
+        <div className="ce-topbar__title">
+          <FiCalendar size={16} /> <span>Content Engine</span>
+        </div>
+      )}
     </div>
   );
 
@@ -118,11 +133,25 @@ export default function ContentEngineClient() {
     >
       {loading ? (
         <div className="ce-loading"><div className="ce-spinner" /><p>Loading Content Engine…</p></div>
+      ) : signedOut ? (
+        <div className="ce-hub">
+          <div className="ce-empty">
+            <div className="ce-empty__icon">🗓️</div>
+            <h2 className="ce-empty__title">Plan your content with Scenith</h2>
+            <p className="ce-empty__sub">
+              The Content Engine plans and AI-generates a full content calendar across Instagram,
+              TikTok, YouTube and X. Sign up to start planning — it&apos;s part of the Creator plans.
+            </p>
+            <div className="ce-empty__actions">
+              <button className="ce-btn ce-btn--primary" onClick={() => setShowLogin(true)}>Sign up free →</button>
+              <button className="ce-btn ce-btn--ghost" onClick={() => setShowLogin(true)}>Log in</button>
+            </div>
+          </div>
+        </div>
       ) : activePlanId ? (
         <PlanWorkspace
           planId={activePlanId}
           entitlement={ent}
-          onBack={() => setActivePlanId(null)}
           onMetaChanged={refreshMeta}
         />
       ) : (
@@ -144,6 +173,21 @@ export default function ContentEngineClient() {
           onCreated={onPlanCreated}
         />
       )}
+
+      <AnimatePresence>
+        {showLogin && (
+          <StudioLoginModal
+            subtitle="Log in to plan and generate content for free"
+            onClose={() => setShowLogin(false)}
+            onLoggedIn={() => {
+              // Stay on the Content Engine page: just close the modal and reload
+              // this page's data now that we have a token.
+              setShowLogin(false);
+              load();
+            }}
+          />
+        )}
+      </AnimatePresence>
     </StudioShell>
   );
 }
