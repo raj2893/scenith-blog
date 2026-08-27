@@ -7,6 +7,7 @@ import {
   ContentItem, ContentItemStatus, PlatformVersion, ContentPlatform,
   ALL_ITEM_STATUSES, ALL_PLATFORMS, PLATFORM_META, STATUS_META,
 } from "./contentEngineApi";
+import { useCeUi } from "./CeUi";
 
 function bytes(n: number | null): string {
   if (!n) return "";
@@ -35,12 +36,15 @@ export default function ContentItemCard({
   onDeleted: (id: number) => void;
   onMetaChanged: () => void;
 }) {
+  const ui = useCeUi();
   const [item, setItem] = useState<ContentItem>(initial);
   const [expanded, setExpanded] = useState(startExpanded);
   const [draft, setDraft] = useState<Draft>(draftOf(initial));
   const [busy, setBusy] = useState<string | null>(null);
   const [addVerOpen, setAddVerOpen] = useState(false);
+  const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const fileRef = useRef<HTMLInputElement>(null);
+  const savingRef = useRef(false);
 
   useEffect(() => { setItem(initial); setDraft(draftOf(initial)); }, [initial]);
 
@@ -49,29 +53,75 @@ export default function ContentItemCard({
   const regenLeft = entitlement ? entitlement.regenerationsRemainingToday : null;
   const noRegen = regenLeft !== null && regenLeft === 0;
 
+  /* Keep the latest draft/dirty for the unmount flush (below). */
+  const flushRef = useRef<{ dirty: boolean; id: number; draft: Draft }>({ dirty, id: item.id, draft });
+  flushRef.current = { dirty, id: item.id, draft };
+
+  /* Warn before a browser unload while there are unsaved edits. */
+  useEffect(() => {
+    if (!dirty) return;
+    const h = (e: BeforeUnloadEvent) => { e.preventDefault(); e.returnValue = ""; };
+    window.addEventListener("beforeunload", h);
+    return () => window.removeEventListener("beforeunload", h);
+  }, [dirty]);
+
+  /* Best-effort save if the card unmounts (e.g. switching day) while still dirty
+     and a blur-autosave didn't catch it — so edits are never silently lost. */
+  useEffect(() => {
+    return () => {
+      const f = flushRef.current;
+      if (f.dirty && !savingRef.current) contentEngineApi.updateItem(f.id, f.draft).catch(() => {});
+    };
+  }, []);
+
+  /* "Saved" fades back to idle after a moment. */
+  useEffect(() => {
+    if (saveState !== "saved") return;
+    const t = setTimeout(() => setSaveState("idle"), 2500);
+    return () => clearTimeout(t);
+  }, [saveState]);
+
   const save = async () => {
-    setBusy("save");
-    try { sync(await contentEngineApi.updateItem(item.id, draft)); }
-    catch (err) { alert(msg(err)); }
-    finally { setBusy(null); }
+    if (savingRef.current) return;
+    if (JSON.stringify(draft) === JSON.stringify(draftOf(item))) return; // nothing to save
+    savingRef.current = true;
+    setBusy("save"); setSaveState("saving");
+    try { sync(await contentEngineApi.updateItem(item.id, draft)); setSaveState("saved"); }
+    catch (err) { setSaveState("error"); ui.toast(msg(err), "error"); }
+    finally { savingRef.current = false; setBusy(null); }
+  };
+  /* Autosave when focus leaves the field group entirely. */
+  const onFieldsBlur = (e: React.FocusEvent<HTMLDivElement>) => {
+    if (e.currentTarget.contains(e.relatedTarget as Node | null)) return; // still editing
+    if (dirty && !busy) save();
   };
   const changeStatus = async (status: ContentItemStatus) => {
     setBusy("status");
     try { sync(await contentEngineApi.setItemStatus(item.id, status)); }
-    catch (err) { alert(msg(err)); }
+    catch (err) { ui.toast(msg(err), "error"); }
     finally { setBusy(null); }
   };
   const regenerate = async () => {
     setBusy("regen");
-    try { sync(await contentEngineApi.regenerateItem(item.id)); onMetaChanged(); }
-    catch (err) { alert(msg(err)); }
+    try { sync(await contentEngineApi.regenerateItem(item.id)); onMetaChanged(); ui.toast("Content regenerated.", "success"); }
+    catch (err) { ui.toast(msg(err), "error"); }
     finally { setBusy(null); }
   };
   const del = async () => {
-    if (!confirm("Delete this content item and its versions + assets?")) return;
+    const ok = await ui.confirm({
+      title: "Delete this content piece?",
+      message: `“${item.title || "Untitled content"}” and everything on it will be removed.`,
+      details: [
+        ...(item.platformVersions.length ? [`${item.platformVersions.length} platform version${item.platformVersions.length === 1 ? "" : "s"}`] : []),
+        ...(item.assets.length ? [`${item.assets.length} uploaded file${item.assets.length === 1 ? "" : "s"}`] : []),
+      ],
+      confirmLabel: "Delete",
+      destructive: true,
+    });
+    if (!ok) return;
     setBusy("del");
     try { await contentEngineApi.deleteItem(item.id); onDeleted(item.id); }
-    catch (err) { alert(msg(err)); setBusy(null); }
+    catch (err) { ui.toast(msg(err), "error"); setBusy(null); }
   };
 
   const regenVersion = async (v: PlatformVersion) => {
@@ -80,7 +130,7 @@ export default function ContentItemCard({
       const updated = await contentEngineApi.regenerateVersion(v.id);
       sync({ ...item, platformVersions: item.platformVersions.map((x) => (x.id === v.id ? updated : x)) });
       onMetaChanged();
-    } catch (err) { alert(msg(err)); } finally { setBusy(null); }
+    } catch (err) { ui.toast(msg(err), "error"); } finally { setBusy(null); }
   };
   const addVersion = async (platform: ContentPlatform) => {
     setBusy("addver");
@@ -88,25 +138,36 @@ export default function ContentItemCard({
       const v = await contentEngineApi.createVersion(item.id, { platform });
       sync({ ...item, platformVersions: [...item.platformVersions, v] });
       setAddVerOpen(false);
-    } catch (err) { alert(msg(err)); } finally { setBusy(null); }
+    } catch (err) { ui.toast(msg(err), "error"); } finally { setBusy(null); }
   };
   const delVersion = async (v: PlatformVersion) => {
-    if (!confirm(`Delete the ${PLATFORM_META[v.platform].label} version?`)) return;
+    const ok = await ui.confirm({
+      title: `Delete the ${PLATFORM_META[v.platform].label} version?`,
+      confirmLabel: "Delete version",
+      destructive: true,
+    });
+    if (!ok) return;
     setBusy(`ver-${v.id}`);
     try { await contentEngineApi.deleteVersion(v.id); sync({ ...item, platformVersions: item.platformVersions.filter((x) => x.id !== v.id) }); }
-    catch (err) { alert(msg(err)); } finally { setBusy(null); }
+    catch (err) { ui.toast(msg(err), "error"); } finally { setBusy(null); }
   };
 
   const upload = async (file: File) => {
     setBusy("upload");
-    try { const a = await contentEngineApi.uploadAsset(item.id, file); sync({ ...item, assets: [...item.assets, a] }); }
-    catch (err) { alert(msg(err)); } finally { setBusy(null); if (fileRef.current) fileRef.current.value = ""; }
+    try { const a = await contentEngineApi.uploadAsset(item.id, file); sync({ ...item, assets: [...item.assets, a] }); ui.toast("File uploaded.", "success"); }
+    catch (err) { ui.toast(msg(err), "error"); } finally { setBusy(null); if (fileRef.current) fileRef.current.value = ""; }
   };
   const delAsset = async (id: number) => {
-    if (!confirm("Delete this uploaded file?")) return;
+    const ok = await ui.confirm({
+      title: "Delete this uploaded file?",
+      message: "The file will be permanently removed from your content.",
+      confirmLabel: "Delete file",
+      destructive: true,
+    });
+    if (!ok) return;
     setBusy(`asset-${id}`);
     try { await contentEngineApi.deleteAsset(id); sync({ ...item, assets: item.assets.filter((a) => a.id !== id) }); }
-    catch (err) { alert(msg(err)); } finally { setBusy(null); }
+    catch (err) { ui.toast(msg(err), "error"); } finally { setBusy(null); }
   };
 
   const sm = STATUS_META[item.status];
@@ -122,7 +183,7 @@ export default function ContentItemCard({
 
       {expanded && (
         <div className="ce-item__body">
-          <div className="ce-item__grid">
+          <div className="ce-item__grid" onBlur={onFieldsBlur}>
             <Field label="Idea / title"><input value={draft.title} onChange={(e) => setDraft({ ...draft, title: e.target.value })} /></Field>
             <Field label="Format"><input value={draft.contentFormat} onChange={(e) => setDraft({ ...draft, contentFormat: e.target.value })} placeholder="Reel, Short, Carousel…" /></Field>
             <Field label="Hook" full><textarea rows={2} value={draft.hook} onChange={(e) => setDraft({ ...draft, hook: e.target.value })} /></Field>
@@ -135,6 +196,7 @@ export default function ContentItemCard({
           <div className="ce-item__toolbar">
             <button className="ce-btn ce-btn--primary ce-btn--sm" onClick={save} disabled={!dirty || busy === "save"}>{busy === "save" ? "Saving…" : "Save"}</button>
             {dirty && <button className="ce-btn ce-btn--ghost ce-btn--sm" onClick={() => setDraft(draftOf(item))}>Reset</button>}
+            <SaveState busy={busy === "save" || saveState === "saving"} dirty={dirty} state={saveState} />
             <button className="ce-btn ce-btn--ghost ce-btn--sm" onClick={regenerate} disabled={!!busy || noRegen}
                     title={noRegen ? "No regenerations left today" : ""}>
               <FiRefreshCw size={13} /> {busy === "regen" ? "Regenerating…" : "Regenerate"}
@@ -227,6 +289,18 @@ function Field({ label, full, children }: { label: string; full?: boolean; child
       <span>{label}</span>
       {children}
     </label>
+  );
+}
+
+function SaveState({ busy, dirty, state }: { busy: boolean; dirty: boolean; state: "idle" | "saving" | "saved" | "error"; }) {
+  const kind = busy ? "saving" : dirty ? "dirty" : state === "saved" ? "saved" : state === "error" ? "error" : null;
+  if (!kind) return null;
+  const label = kind === "saving" ? "Saving…" : kind === "dirty" ? "Unsaved changes" : kind === "saved" ? "✓ Saved" : "Save failed";
+  return (
+    <span className={`ce-savestate ce-savestate--${kind}`}>
+      {(kind === "dirty" || kind === "error") && <span className="ce-savestate__dot" />}
+      {label}
+    </span>
   );
 }
 

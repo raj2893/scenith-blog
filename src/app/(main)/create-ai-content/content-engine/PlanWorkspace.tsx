@@ -8,6 +8,8 @@ import {
   ALL_PLATFORMS, ALL_ITEM_STATUSES, PLATFORM_META, STATUS_META,
 } from "./contentEngineApi";
 import ContentItemCard from "./ContentItemCard";
+import GenerationOverlay from "./GenerationOverlay";
+import { useCeUi } from "./CeUi";
 
 /* Parse yyyy-MM-dd as a LOCAL date (never let UTC shift the calendar). */
 function parseLocal(iso: string): Date {
@@ -31,6 +33,7 @@ export default function PlanWorkspace({
   const [selectedDayId, setSelectedDayId] = useState<number | null>(null);
   const [view, setView] = useState<"calendar" | "list">("calendar");
   const [regenBusy, setRegenBusy] = useState(false);
+  const ui = useCeUi();
 
   const refresh = useCallback(async (keepSelection = true) => {
     try {
@@ -64,14 +67,26 @@ export default function PlanWorkspace({
   }, []);
 
   const regeneratePlan = async () => {
-    if (!confirm("Regenerate the ENTIRE plan? This replaces all current content and uploaded assets. This cannot be undone.")) return;
+    const itemCount = cal ? cal.days.reduce((n, d) => n + d.items.length, 0) : 0;
+    const assetCount = cal ? cal.days.reduce((n, d) => n + d.items.reduce((m, i) => m + i.assets.length, 0), 0) : 0;
+    const details = [`${itemCount} content piece${itemCount === 1 ? "" : "s"} will be rewritten`];
+    if (assetCount > 0) details.push(`${assetCount} uploaded file${assetCount === 1 ? "" : "s"} will be deleted`);
+    const ok = await ui.confirm({
+      title: "Regenerate the entire plan?",
+      message: "The AI will rebuild every day from scratch. This replaces all current content and uploaded assets, and uses one regeneration.",
+      details,
+      confirmLabel: "Regenerate plan",
+      destructive: true,
+    });
+    if (!ok) return;
     setRegenBusy(true);
     try {
       const c = await contentEngineApi.regeneratePlan(planId);
       setCal(c);
       onMetaChanged();
+      ui.toast("Plan regenerated.", "success");
     } catch (err) {
-      alert(err instanceof ContentEngineError ? err.message : "Failed to regenerate plan.");
+      ui.toast(err instanceof ContentEngineError ? err.message : "Failed to regenerate plan.", "error");
     } finally {
       setRegenBusy(false);
     }
@@ -86,6 +101,9 @@ export default function PlanWorkspace({
 
   return (
     <div className="ce-ws">
+      {regenBusy && (
+        <GenerationOverlay days={plan.durationDays} platforms={plan.platforms.length} mode="regenerate" />
+      )}
       <div className="ce-ws__head">
         <div className="ce-ws__title">
           <h1>{plan.title}</h1>
@@ -196,6 +214,7 @@ function DayPanel({
 }) {
   const [addOpen, setAddOpen] = useState<ContentPlatform | null>(null);
   const [adding, setAdding] = useState(false);
+  const ui = useCeUi();
 
   if (!day) return <div className="ce-daypanel ce-daypanel--empty">Select a date to view its content.</div>;
 
@@ -209,7 +228,7 @@ function DayPanel({
       onItemAdded(day.id, item);
       setAddOpen(null);
     } catch (err) {
-      alert(err instanceof ContentEngineError ? err.message : "Failed to add content.");
+      ui.toast(err instanceof ContentEngineError ? err.message : "Failed to add content.", "error");
     } finally {
       setAdding(false);
     }

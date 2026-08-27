@@ -6,6 +6,7 @@ import {
   contentEngineApi, ContentEngineError, ContentEngineEntitlement,
   ContentPlatform, ALL_PLATFORMS, PLATFORM_META, PlanGenerationRequest,
 } from "./contentEngineApi";
+import GenerationOverlay from "./GenerationOverlay";
 
 function todayISO(): string {
   const d = new Date();
@@ -89,6 +90,10 @@ export default function CreatePlanModal({
   };
 
   return (
+    <>
+    {busy && generateWithAi && (
+      <GenerationOverlay days={durationDays} platforms={platforms.length} mode="create" />
+    )}
     <div className="ce-overlay" onClick={busy ? undefined : onClose}>
       <div className="ce-modal" onClick={(e) => e.stopPropagation()}>
         <button className="ce-modal__close" onClick={onClose} disabled={busy}><FiX size={16} /></button>
@@ -175,5 +180,6 @@ export default function CreatePlanModal({
         </div>
       </div>
     </div>
+    </>
   );
 }

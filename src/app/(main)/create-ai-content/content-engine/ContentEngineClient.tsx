@@ -19,6 +19,7 @@ import PlanWorkspace from "./PlanWorkspace";
 import Tip from "../tips/Tip";
 import StudioLoginModal from "../workspace/StudioLoginModal";
 import { AnimatePresence } from "framer-motion";
+import { CeUiProvider, useCeUi } from "./CeUi";
 
 interface Me { name: string; email: string; picture: string | null; role: string; }
 
@@ -124,6 +125,7 @@ export default function ContentEngineClient() {
   );
 
   return (
+    <CeUiProvider>
     <StudioShell
       sidebar={sidebar}
       topbar={topbar}
@@ -189,6 +191,7 @@ export default function ContentEngineClient() {
         )}
       </AnimatePresence>
     </StudioShell>
+    </CeUiProvider>
   );
 }
 
@@ -293,21 +296,28 @@ export function EntitlementBar({ ent, planLabel }: { ent: ContentEngineEntitleme
 
 function PlanCard({ plan, onOpen, onChanged }: { plan: ContentPlan; onOpen: () => void; onChanged: () => void; }) {
   const [busy, setBusy] = useState(false);
+  const ui = useCeUi();
 
   const archive = async (e: React.MouseEvent) => {
     e.stopPropagation();
     setBusy(true);
-    try { await contentEngineApi.archivePlan(plan.id); onChanged(); }
-    catch (err) { alert(err instanceof ContentEngineError ? err.message : "Failed to archive."); }
+    try { await contentEngineApi.archivePlan(plan.id); onChanged(); ui.toast("Plan archived.", "success"); }
+    catch (err) { ui.toast(err instanceof ContentEngineError ? err.message : "Failed to archive.", "error"); }
     finally { setBusy(false); }
   };
   const del = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!confirm(`Delete "${plan.title}"? This removes all its content and uploads. This cannot be undone.`)) return;
+    const ok = await ui.confirm({
+      title: `Delete “${plan.title}”?`,
+      message: "This permanently removes the whole plan. This cannot be undone.",
+      details: [`${plan.durationDays} day${plan.durationDays === 1 ? "" : "s"} of planning`, "All content pieces, versions & uploaded files"],
+      confirmLabel: "Delete plan",
+      destructive: true,
+    });
+    if (!ok) return;
     setBusy(true);
-    try { await contentEngineApi.deletePlan(plan.id); onChanged(); }
-    catch (err) { alert(err instanceof ContentEngineError ? err.message : "Failed to delete."); }
-    finally { setBusy(false); }
+    try { await contentEngineApi.deletePlan(plan.id); onChanged(); ui.toast("Plan deleted.", "success"); }
+    catch (err) { ui.toast(err instanceof ContentEngineError ? err.message : "Failed to delete.", "error"); setBusy(false); }
   };
 
   return (
