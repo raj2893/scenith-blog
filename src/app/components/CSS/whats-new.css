@@ -1,0 +1,145 @@
+/* ============================================================
+   Launch announcement — badges, modal, studio card
+   ============================================================ */
+
+/* ── NEW pill (navbar, dropdowns, footer) ── */
+.new-badge,
+.wn-pill {
+  display: inline-flex; align-items: center;
+  margin-left: 6px; padding: 2px 6px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #5c4de8, #8b5cf6);
+  color: #fff;
+  font-size: 9px; font-weight: 800;
+  letter-spacing: .05em; line-height: 1.4;
+  text-transform: uppercase;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+.wn-pill--dot {
+  padding: 0; width: 6px; height: 6px; border-radius: 50%;
+  background: #8b5cf6; margin-left: 5px;
+}
+
+/* ── Announcement modal ── */
+.wn-overlay {
+  position: fixed; inset: 0; z-index: 100030;
+  background: rgba(10, 5, 30, .58); backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; animation: wn-fade .16s ease both;
+}
+.wn-modal {
+  position: relative; width: 100%; max-width: 440px;
+  background: #fff; border-radius: 20px; overflow: hidden;
+  box-shadow: 0 30px 80px rgba(92, 77, 232, .3);
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  animation: wn-pop .2s ease both;
+}
+.wn-modal__close {
+  position: absolute; top: 13px; right: 13px; z-index: 2;
+  width: 28px; height: 28px; border-radius: 8px;
+  border: none; background: rgba(255, 255, 255, .18); color: #fff;
+  cursor: pointer; display: grid; place-items: center;
+}
+.wn-modal__close:hover { background: rgba(255, 255, 255, .3); }
+
+.wn-modal__hero {
+  background: linear-gradient(135deg, #5c4de8 0%, #8b5cf6 100%);
+  padding: 26px 24px 22px; color: #fff; position: relative; overflow: hidden;
+}
+.wn-modal__hero::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="g" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23g)"/></svg>');
+}
+.wn-modal__tag {
+  position: relative; display: inline-block;
+  padding: 3px 9px; border-radius: 999px;
+  background: rgba(255, 255, 255, .2);
+  font-size: 10px; font-weight: 800; letter-spacing: .07em;
+  text-transform: uppercase; margin-bottom: 10px;
+}
+.wn-modal__title {
+  position: relative; font-size: 22px; font-weight: 800;
+  line-height: 1.2; margin: 0 0 7px;
+}
+.wn-modal__sub {
+  position: relative; font-size: 13px; line-height: 1.55;
+  margin: 0; color: rgba(255, 255, 255, .88);
+}
+
+.wn-modal__body { padding: 20px 24px 22px; }
+.wn-list { list-style: none; margin: 0 0 18px; padding: 0; display: grid; gap: 10px; }
+.wn-list li { display: flex; align-items: flex-start; gap: 10px; }
+.wn-list__ico {
+  width: 26px; height: 26px; border-radius: 8px; flex-shrink: 0;
+  display: grid; place-items: center; font-size: 13px;
+  background: rgba(92, 77, 232, .09);
+}
+.wn-list__txt { font-size: 12.8px; line-height: 1.5; color: #3a3a5c; }
+.wn-list__txt strong { display: block; color: #1e1e30; font-weight: 700; margin-bottom: 1px; }
+
+.wn-cta {
+  display: block; width: 100%; text-align: center; text-decoration: none;
+  padding: 13px 16px; border-radius: 11px; border: none;
+  background: linear-gradient(135deg, #5c4de8, #8b5cf6); color: #fff;
+  font-family: inherit; font-size: 14px; font-weight: 800; cursor: pointer;
+  box-shadow: 0 8px 24px rgba(92, 77, 232, .3);
+  transition: transform .15s, box-shadow .15s;
+}
+.wn-cta:hover { transform: translateY(-1px); box-shadow: 0 12px 30px rgba(92, 77, 232, .42); }
+.wn-later {
+  display: block; width: 100%; margin-top: 9px; padding: 4px 0;
+  background: none; border: none; cursor: pointer;
+  font-family: inherit; font-size: 12px; color: #7070a0; text-decoration: underline;
+}
+.wn-note { text-align: center; font-size: 11px; color: #a0a0c0; margin: 11px 0 0; }
+
+/* ── In-studio discovery card ── */
+.wn-studio {
+  display: flex; align-items: center; gap: 13px;
+  padding: 13px 15px; margin-bottom: 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(99, 85, 220, .22);
+  background: linear-gradient(135deg, rgba(99, 85, 220, .07), rgba(139, 92, 246, .04));
+  animation: wn-slide .25s ease both;
+}
+.wn-studio__ico {
+  width: 38px; height: 38px; border-radius: 11px; flex-shrink: 0;
+  display: grid; place-items: center; font-size: 18px;
+  background: linear-gradient(135deg, #5c4de8, #8b5cf6);
+}
+.wn-studio__txt { flex: 1; min-width: 0; }
+.wn-studio__ttl {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 2px;
+  font-size: 13.5px; font-weight: 800; color: var(--cac-text, #1e1e30); margin: 0 0 2px;
+}
+.wn-studio__sub {
+  font-size: 12px; line-height: 1.45; color: var(--cac-muted, #7070a0); margin: 0;
+}
+.wn-studio__go {
+  flex-shrink: 0; padding: 8px 15px; border-radius: 9px; text-decoration: none;
+  background: linear-gradient(135deg, #5c4de8, #8b5cf6); color: #fff;
+  font-size: 12.5px; font-weight: 700; white-space: nowrap;
+}
+.wn-studio__x {
+  flex-shrink: 0; background: none; border: none; cursor: pointer;
+  color: var(--cac-muted, #a0a0c0); padding: 4px; line-height: 0;
+}
+.wn-studio__x:hover { color: var(--cac-text, #1e1e30); }
+
+@keyframes wn-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes wn-pop { from { opacity: 0; transform: scale(.95) translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes wn-slide { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .wn-overlay, .wn-modal, .wn-studio { animation: none; }
+}
+
+@media (max-width: 640px) {
+  .wn-modal__hero { padding: 22px 18px 18px; }
+  .wn-modal__title { font-size: 19px; }
+  .wn-modal__body { padding: 17px 18px 19px; }
+  .wn-studio { flex-wrap: wrap; }
+  .wn-studio__txt { flex: 1 1 100%; order: 2; }
+  .wn-studio__go { flex: 1 1 100%; order: 3; text-align: center; }
+}

@@ -24,6 +24,8 @@ import {
   StudioTab,
 } from "./studio.config";
 import Tip from "../tips/Tip";
+import { isBadgeActive, trackNew } from "@/app/whatsNew";
+import "../../../../app/components/CSS/whats-new.css";
 
 /* ============================================================
    StudioSidebar
@@ -146,12 +148,13 @@ const StudioSidebar: React.FC<StudioSidebarProps> = ({
         href={item.href}
         className={`cac-studio-nav__item ${active ? "is-active" : ""}`}
         aria-current={active ? "page" : undefined}
-        onClick={onClose}
+        onClick={() => { if (item.badge) trackNew("sidebar_badge_click", { id: item.id }); onClose(); }}
       >
         <span className="cac-studio-nav__icon">
           <Icon size={16} />
         </span>
         <span className="cac-studio-nav__label">{item.label}</span>
+        {item.badge && isBadgeActive() && <span className="new-badge">{item.badge}</span>}
       </a>
     );
   };

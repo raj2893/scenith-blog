@@ -19,6 +19,7 @@ import StudioSidebar from "./workspace/StudioSidebar";
 import StudioTopbar from "./workspace/StudioTopbar";
 import StudioHistoryRail from "./workspace/StudioHistoryRail";
 import Tip from "./tips/Tip";
+import StudioNewFeatureCard from "@/app/components/StudioNewFeatureCard";
 
 import {
   STUDIO_FLAGS,
@@ -1991,6 +1992,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
 
       {/* ── Main Tool ── */}
       <main className="cac-main cac-main--studio">
+        <StudioNewFeatureCard />
         {/* ─ Tabs ─ */}
         <div className="cac-tabs">
           {(["voice", "image", "video"] as Tab[]).map((t) => (

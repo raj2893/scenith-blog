@@ -52,11 +52,12 @@ export interface StudioNavItem {
   icon: string; // react-icons/fi name, resolved in StudioSidebar
   href?: string;
   tab?: StudioTab;
+  badge?: string;
 }
 
 export const STUDIO_PRIMARY_NAV: StudioNavItem[] = [
   { id: "create", label: "Create", icon: "FiZap", href: "/create-ai-content" },
-  { id: "content-engine", label: "Content Engine", icon: "FiCalendar", href: "/create-ai-content/content-engine" },
+    { id: "content-engine", label: "Content Engine", icon: "FiCalendar", href: "/create-ai-content/content-engine", badge: "New" },
   { id: "usage", label: "Usage & credits", icon: "FiPieChart", href: "/user-dashboard" },
 ];
 

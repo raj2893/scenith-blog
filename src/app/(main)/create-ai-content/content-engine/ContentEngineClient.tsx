@@ -214,12 +214,39 @@ function Hub({
     return (
       <div className="ce-empty">
         <div className="ce-empty__icon">🗓️</div>
-        <h2 className="ce-empty__title">Content Engine is a Creator feature</h2>
+        <h2 className="ce-empty__title">Plan a month of content in one pass</h2>
         <p className="ce-empty__sub">
-          Plan and AI-generate a full content calendar across every platform. Available on Creator
-          Lite, Creator Spark, and Creator Odyssey.
+          Describe your brand once. Content Engine writes a full calendar — hooks, captions,
+          CTAs and shot direction — then sends any slot straight to the AI studio.
         </p>
-        <a className="ce-btn ce-btn--primary" href="/pricing">View plans →</a>
+
+        <div style={{ display: "grid", gap: 8, maxWidth: 400, margin: "20px auto 22px", textAlign: "left" }}>
+          {[
+            ["📅", "A full calendar generated day by day"],
+            ["🎯", "Instagram, TikTok, YouTube and X, each with its own version"],
+            ["♻️", "Regenerate any piece that doesn't land"],
+            ["⚡", "Send any slot to AI voice, image or video"],
+          ].map(([icon, text]) => (
+            <div
+              key={text}
+              style={{
+                display: "flex", alignItems: "center", gap: 11,
+                padding: "10px 14px", borderRadius: 11,
+                background: "#fff", border: "1px solid var(--border)",
+                fontSize: 12.8, color: "#3a3a5c", lineHeight: 1.45,
+              }}
+            >
+              <span style={{ fontSize: 16, flexShrink: 0 }}>{icon}</span>{text}
+            </div>
+          ))}
+        </div>
+
+        <a className="ce-btn ce-btn--primary" href="/pricing?src=engine_lock">
+          Unlock Content Engine →
+        </a>
+        <p style={{ fontSize: 11.5, color: "#a0a0c0", marginTop: 11 }}>
+          Included with Creator Lite, Creator Spark and Creator Odyssey — from ₹799 / $9 a month.
+        </p>
       </div>
     );
   }
