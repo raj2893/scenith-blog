@@ -19,7 +19,7 @@ const Tip: React.FC<TipProps> = ({ id, children, gap = 9 }) => {
   const [open, setOpen] = useState(false);
   const [pos, setPos] = useState<{ top: number; left: number; below: boolean } | null>(null);
   const anchorRef = useRef<HTMLSpanElement>(null);
-  const hoverTimer = useRef<number>();
+  const hoverTimer = useRef<number | undefined>(undefined);
 
   const place = useCallback(() => {
     const el = anchorRef.current;

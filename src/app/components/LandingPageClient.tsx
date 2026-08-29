@@ -729,6 +729,14 @@ const [isIndianUser, setIsIndianUser] = useState<boolean | null>(null);
               <Link href="/create-ai-content" className="cta-button cta-primary">
                 🎥 Generate Free — No Card Needed
               </Link>
+              <Link href="/create-ai-content/content-engine" className="cta-button cta-secondary">
+                🗓️ Content Engine
+                <span style={{
+                  fontSize: "0.62rem", fontWeight: 800, letterSpacing: "0.06em", lineHeight: 1,
+                  background: "linear-gradient(135deg, #667eea, #764ba2)", color: "#fff",
+                  padding: "3px 7px", borderRadius: "999px", textTransform: "uppercase",
+                }}>New</span>
+              </Link>
               <Link href="/pricing" className="cta-button cta-secondary">
                 💵 See all Plans
               </Link>
