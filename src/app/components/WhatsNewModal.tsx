@@ -93,10 +93,10 @@ export default function WhatsNewModal() {
             </li>
           </ul>
 
-          
+          <a
             className="wn-cta"
             href={newHref("whatsnew_modal")}
-          <a onClick={() => trackNew("whatsnew_modal_cta", {})}
+            onClick={() => trackNew("whatsnew_modal_cta", {})}
           >
             Open Content Engine →
           </a>
