@@ -16,6 +16,7 @@ const Footer = () => {
 
   const links = [
     // All Tools (new + existing)
+    { label: 'Content Engine', path: '/create-ai-content/content-engine' },
     { label: 'AI Video Generator', path: '/create-ai-content' },
     { label: 'AI Voice Generator', path: '/create-ai-content' },
     { label: 'AI Image Generator', path: '/create-ai-content' },

@@ -18,6 +18,8 @@ import StudioShell from "./workspace/StudioShell";
 import StudioSidebar from "./workspace/StudioSidebar";
 import StudioTopbar from "./workspace/StudioTopbar";
 import StudioHistoryRail from "./workspace/StudioHistoryRail";
+import Tip from "./tips/Tip";
+import StudioNewFeatureCard from "@/app/components/StudioNewFeatureCard";
 
 import {
   STUDIO_FLAGS,
@@ -1990,6 +1992,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
 
       {/* ── Main Tool ── */}
       <main className="cac-main cac-main--studio">
+        <StudioNewFeatureCard />
         {/* ─ Tabs ─ */}
         <div className="cac-tabs">
           {(["voice", "image", "video"] as Tab[]).map((t) => (
@@ -2069,10 +2072,11 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                     </select>
                   )}
                   {/* Credits */}
-                  <span className="cac-credit-pill">
+                  <span className="cac-credit-pill" style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
                     {isLoggedIn
                       ? `🎙️ ${((ttsUsage?.voiceCharsLimit ?? 0) - (ttsUsage?.voiceCharsUsed ?? 0)).toLocaleString()} chars left`
                       : "🎙️ 600 chars free"}
+                    <Tip id="voiceChars" />
                   </span>
                   {selectedVoice && (
                     <span className="cac-selected-voice-pill">
@@ -2285,6 +2289,10 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                     )}
                   </button>
                 ))}
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6, marginLeft: 6, paddingBottom: 4 }}>
+                  <Tip id="imgToImg" />
+                  <Tip id="carousel" />
+                </span>                
               </div>
             )}
 
@@ -2304,8 +2312,9 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                       disabled={isGeneratingCarousel}
                       style={{ accentColor: 'var(--cac-accent)', width: 14, height: 14 }}
                     />
-                    <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--cac-accent)' }}>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--cac-accent)', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
                       🔗 Use same reference image for all slides
+                      <Tip id="carouselShared" />
                     </span>
                   </label>
                   {carouselUseSharedImage && (
@@ -2549,6 +2558,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                   selectedLogo={MODEL_LOGOS[selectedImageModel.toUpperCase().replace(/-/g, '_')]}
                   style={{ minWidth: 100 }}
                 />
+                <Tip id="imageModel" />
                 {imageModelCfg && imageModelCfg.sizes.length > 1 && (
                   <select className="cac-select" value={imageSize} onChange={(e) => setImageSize(e.target.value)}>
                     {imageModelCfg.sizes.map((s) => {
@@ -2564,6 +2574,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                     })}
                   </select>
                 )}
+                {imageModelCfg && imageModelCfg.sizes.length > 1 && <Tip id="imageSize" />}
                 {imageModelCfg && imageModelCfg.qualities.length > 1 && (
                   <select className="cac-select" value={imageQuality} onChange={(e) => setImageQuality(e.target.value)}>
                     {imageModelCfg.qualities.map((q) => (
@@ -2571,6 +2582,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                     ))}
                   </select>
                 )}
+                {imageModelCfg && imageModelCfg.qualities.length > 1 && <Tip id="imageQuality" />}
 
               </div>
             )}
@@ -2593,6 +2605,9 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                     }}
                   >{m.label}</button>
                 ))}
+                <span style={{ display: 'inline-flex', alignItems: 'center', marginLeft: 6, paddingBottom: 4 }}>
+                  <Tip id="imgToVideo" />
+                </span>                
               </div>
             )}
 
@@ -2662,6 +2677,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                   selectedLogo={MODEL_LOGOS[selectedVideoModel?.toUpperCase() ?? ''] ?? undefined}
                   style={{ minWidth: 80 }}
                 />
+                <Tip id="videoModel" />
                 {/* ── Resolution selector (only for Wan 2.5 and Grok) ── */}
                 {(() => {
                   const id = selectedVideoModel?.toUpperCase() || "";
@@ -2677,6 +2693,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                     : null;
                   if (!resOptions) return null;
                   return (
+                    <>
                     <select
                       className="cac-select"
                       value={videoResolution}
@@ -2688,6 +2705,8 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                         </option>
                       ))}
                     </select>
+                    <Tip id="videoResolution" />
+                    </>
                   );
                 })()}
 
@@ -2719,8 +2738,9 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                           onChange={(e) => setVideoAudioEnabled(e.target.checked)}
                           style={{ accentColor: 'var(--cac-accent)', width: 14, height: 14 }}
                         />
-                        <span style={{ fontSize: 11, color: 'var(--cac-text-2)', fontWeight: 600, whiteSpace: 'nowrap' }}>
+                        <span style={{ fontSize: 11, color: 'var(--cac-text-2)', fontWeight: 600, whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: 5 }}>
                           🎵 Audio
+                          <Tip id="videoAudio" />
                         </span>
                       </label>
                     );
@@ -2736,6 +2756,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                     <option key={d.value} value={d.value}>{d.label}</option>
                   ))}
                 </select>
+                <Tip id="videoDuration" />
                 <select className="cac-select" value={videoAspectRatio} onChange={(e) => setVideoAspectRatio(e.target.value)}>
                   {VIDEO_ASPECT_RATIOS.map((ar) => (
                     <option key={ar.value} value={ar.value}>{ar.icon} {ar.label}</option>
@@ -2898,6 +2919,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                   >
                     🎬 Make Video from this Image
                   </button>
+                  <Tip id="makeVideoFromImage" />
                 </div>
               </div>
             ))}
@@ -3182,7 +3204,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
                 <strong>Need more credits?</strong>
                 <span>
                   {" "}
-                  Creator Lite gives you 300cr/mo for voice, image & video — just
+                  Creator Lite gives you 1000cr/mo for voice, image & video — just
                   $9/mo.
                 </span>
               </div>
@@ -3503,7 +3525,7 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
       <div className="cac-floating-cta">
         <a href="/pricing" className="cac-floating-btn">
           ⚡ <strong>Get More Credits</strong>
-          <small>from $9/mo · 300cr included</small>
+          <small>from $9/mo · 1000cr included</small>
         </a>
       </div>
     )}

@@ -4,6 +4,8 @@ import { useRouter, usePathname } from 'next/navigation';
 import { FaBars, FaDollarSign, FaHome, FaTools, FaBlog, FaTimes, FaUser, FaFilePdf, FaImage, FaVideo, FaTachometerAlt, FaShieldAlt } from 'react-icons/fa';
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
+import { isBadgeActive, newHref } from '../whatsNew';
+import './CSS/whats-new.css';
 import '../../../styles/Navbar.css';
 
 // Define TypeScript interfaces
@@ -17,7 +19,7 @@ interface NavLink {
   path?: string;
   sectionId?: string;
   isDropdown?: boolean;
-  dropdownItems?: { label: string; href: string }[];
+    dropdownItems?: { label: string; href: string; isNew?: boolean }[];
   icon?: React.ReactNode;
   isNew?: boolean; // Add this line
 }
@@ -319,6 +321,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
       isDropdown: true,
       icon: <FaTools />,
       dropdownItems: [
+        { label: 'Content Engine', href: newHref('navbar'), isNew: isBadgeActive() },
         { label: 'AI Image Generator', href: '/create-ai-content' },
         { label: 'AI Video Generator', href: '/create-ai-content' },
         { label: 'AI Voice Generator', href: '/create-ai-content' },
@@ -381,6 +384,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
                   >
                     {link.icon && <span className="nav-link-icon">{link.icon}</span>}
                     {link.label}
+                    {link.isNew && <span className="wn-pill wn-pill--dot" aria-label="New feature" />}
                     <span className="dropdown-chevron">▾</span>
                   </button>
                   {(link.label === 'Utilities' ? isUtilitiesDropdownOpen : isToolsDropdownOpen) && (
@@ -392,6 +396,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
                       {link.dropdownItems?.map((item) => (
                         <button key={item.label} type="button" className="tools-dropdown-item" onClick={() => navigate(item.href)}>
                           {item.label}
+                          {item.isNew && <span className="new-badge">New</span>}
                         </button>
                       ))}
                     </div>

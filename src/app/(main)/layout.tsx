@@ -5,6 +5,7 @@ import Navbar from '../../app/components/Navbar';
 import Footer from '../../app/components/Footer';
 import Script from "next/script";
 import AuthListener from "../components/AuthListener";
+import WhatsNewModal from "../components/WhatsNewModal";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -138,6 +139,7 @@ export default function RootLayout({
       </head> 
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <AuthListener/>
+        <WhatsNewModal />
         <Navbar pageType="blogs" />
         <main>{children}</main>
         <Footer />

@@ -53,6 +53,17 @@
                    0 8px 26px rgba(0, 0, 0, 0.34);
 }
 
+/* The global Navbar shrinks to 56px at ≤768px (see styles/Navbar.css
+   --nav-height-mobile). Match it here so the sticky topbar sits flush under the
+   navbar instead of leaving an 8px seam / overlapping the page title. */
+@media (max-width: 768px) {
+  :root,
+  [data-theme="light"],
+  [data-theme="dark"] {
+    --studio-navbar-h: 56px;
+  }
+}
+
 /* ============================================================
    2 · SHELL GRID
    The studio paints its own background over .cac-dark-zone's
@@ -84,6 +95,12 @@
 
 .cac-studio__body {
   min-width: 0;
+  /* Reserve the fixed global navbar's height. Without this the studio starts at
+     the document top (behind the fixed navbar) and the sticky topbar's flow slot
+     doesn't line up with its sticky `top`, so the page title slides up under the
+     navbar on scroll. Reserving navbar-h keeps navbar → topbar → content stacked
+     cleanly at every width (the var is responsive: 64px desktop, 56px ≤768px). */
+  padding-top: var(--studio-navbar-h);
 }
 
 .cac-studio__topbar {
