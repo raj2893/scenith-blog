@@ -337,6 +337,7 @@ const TABS = [
   { id: "subscriptions", label: "🔑 Subscriptions"  },
   { id: "videojobs",     label: "🎬 Video Jobs"      },
   { id: "ttsstats",      label: "🎙️ TTS Analytics"  },
+  { id: "contentengine", label: "🗓️ Content Engine" },
   { id: "founder",       label: "🚀 Founder Intel"  },
 ];
 
@@ -361,6 +362,7 @@ export default function AdminPortal() {
   const [topUsers, setTopUsers]     = useState<TopUser[]>([]);
   const [activeSubs, setActiveSubs] = useState<{ subscriptions: any[]; total: number }>({ subscriptions: [], total: 0 });
   const [ttsStats, setTtsStats] = useState<any>(null);
+  const [ceStats, setCeStats] = useState<any>(null);
 
   // ── Founder Analytics State ──────────────────────────────────────────────
   const [founderScorecard,    setFounderScorecard]    = useState<any>(null);
@@ -477,6 +479,14 @@ export default function AdminPortal() {
     if (tab === "ttsstats") {
       api("/api/admin/tts-stats", { from, to })
         .then(setTtsStats).catch(console.error);
+    }
+  }, [tab, from, to, api]);
+
+  useEffect(() => {
+    if (tab === "contentengine") {
+      setCeStats(null);
+      api("/api/admin/content-engine-stats", { from, to })
+        .then(setCeStats).catch(console.error);
     }
   }, [tab, from, to, api]);
 
@@ -1224,6 +1234,173 @@ export default function AdminPortal() {
                       rows={ttsStats.topUsers}
                       emptyMsg="No TTS usage in selected range"
                     />
+                  </div>
+                </>
+              )}
+            </motion.div>
+          )}
+
+          {/* ════════════════════ CONTENT ENGINE ════════════════════ */}
+          {tab === "contentengine" && (
+            <motion.div key="contentengine" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.25 }}>
+
+              {!ceStats && <div style={{ textAlign: "center", padding: 48, color: "#9ca3af", fontSize: 14 }}>⏳ Loading Content Engine analytics…</div>}
+
+              {ceStats && (
+                <>
+                  {/* Growth KPIs — the founder's dashboard */}
+                  <p className="ap-section-title" style={{ marginBottom: 10, marginTop: 2 }}>📈 Growth signals</p>
+                  <div className="ap-grid4" style={{ marginBottom: 18 }}>
+                    <KpiCard icon="📈" label="Adoption Rate"    value={`${ceStats.totals.adoptionRatePct}%`} color="#5c4de8" sub={`${fmt(ceStats.totals.uniqueUsers)} of ${fmt(ceStats.totals.eligibleUsers)} eligible creators used it`} />
+                    <KpiCard icon="🔂" label="Repeat Creators"  value={fmt(ceStats.totals.repeatCreators)}   color="#8b5cf6" sub={`${ceStats.totals.repeatRatePct}% came back for a 2nd plan`} />
+                    <KpiCard icon="🚀" label="Shipped Rate"     value={`${ceStats.totals.postedRatePct}%`}   color="#059669" sub={`${fmt(ceStats.totals.postedItems)} pieces marked Posted`} />
+                    <KpiCard icon="🤖" label="AI Calls"         value={fmt(ceStats.totals.totalAiCalls)}     color="#ef4444" sub="plan generations + regenerations" />
+                    <KpiCard icon="📋" label="Avg Plans/Creator" value={ceStats.totals.avgPlansPerCreator}   color="#0ea5e9" />
+                    <KpiCard icon="📆" label="Avg Days/Plan"    value={ceStats.totals.avgDaysPerPlan}        color="#6355dc" />
+                    <KpiCard icon="✍️" label="Avg Pieces/Plan"  value={ceStats.totals.avgItemsPerPlan}       color="#f59e0b" />
+                  </div>
+
+                  {/* Usage KPIs */}
+                  <p className="ap-section-title" style={{ marginBottom: 10 }}>📦 Usage volume</p>
+                  <div className="ap-grid4" style={{ marginBottom: 22 }}>
+                    <KpiCard icon="🗓️" label="Plans Created"       value={fmt(ceStats.totals.totalPlans)}       color="#5c4de8" sub={`${fmt(ceStats.totals.currentActivePlans)} active right now`} />
+                    <KpiCard icon="👥" label="Creators Using It"   value={fmt(ceStats.totals.uniqueUsers)}       color="#8b5cf6" />
+                    <KpiCard icon="📆" label="Days Planned"        value={fmt(ceStats.totals.totalDaysPlanned)}  color="#0ea5e9" />
+                    <KpiCard icon="📝" label="Content Pieces"      value={fmt(ceStats.totals.totalItems)}        color="#f59e0b" />
+                    <KpiCard icon="🎯" label="Platform Versions"   value={fmt(ceStats.totals.totalVersions)}     color="#10b981" />
+                    <KpiCard icon="🔁" label="AI Regenerations"    value={fmt(ceStats.totals.totalRegenerations)} color="#ef4444" />
+                    <KpiCard icon="📤" label="Uploaded Assets"     value={fmt(ceStats.totals.totalAssets)}       color="#6355dc" sub={`${(Number(ceStats.totals.totalAssetBytes) / 1048576).toFixed(1)} MB`} />
+                    <KpiCard icon="🗂️" label="Plan Status"         value={fmt(ceStats.totals.activePlans)}       color="#059669" sub={`${fmt(ceStats.totals.archivedPlans)} archived · ${fmt(ceStats.totals.completedPlans)} completed`} />
+                  </div>
+
+                  {/* Platform breakdown */}
+                  <div className="ap-card" style={{ marginBottom: 22 }}>
+                    <p className="ap-section-title">Content by Platform</p>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                      {ceStats.platformBreakdown.map((p: any) => {
+                        const meta: Record<string, { c: string; i: string }> = {
+                          INSTAGRAM: { c: "#e1306c", i: "📸" }, TIKTOK: { c: "#111827", i: "🎵" },
+                          YOUTUBE: { c: "#ff0000", i: "▶️" }, X: { c: "#1d9bf0", i: "𝕏" },
+                        };
+                        const m = meta[p.platform] ?? { c: "#6355dc", i: "•" };
+                        return (
+                          <div key={p.platform} style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                            <span style={{ fontSize: 16, width: 24 }}>{m.i}</span>
+                            <span style={{ fontSize: 13, fontWeight: 700, color: "#374151", width: 90 }}>{p.platform}</span>
+                            <div style={{ flex: 1, height: 10, background: "#f3f4f6", borderRadius: 99, overflow: "hidden" }}>
+                              <div style={{ width: `${p.pct}%`, height: "100%", background: m.c, borderRadius: 99, transition: "width 0.8s ease" }} />
+                            </div>
+                            <span style={{ fontSize: 13, fontWeight: 800, color: m.c, width: 56, textAlign: "right" }}>{fmt(Number(p.items))}</span>
+                            <span style={{ fontSize: 11, color: "#9ca3af", width: 36, textAlign: "right" }}>{p.pct}%</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Status + tier breakdowns side by side */}
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 16, marginBottom: 22 }}>
+                    <div className="ap-card">
+                      <p className="ap-section-title">Content Pieces by Status</p>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+                        {ceStats.statusBreakdown.map((s: any) => {
+                          const sc: Record<string, string> = {
+                            PLANNED: "#7070a0", IN_PROGRESS: "#d97706", READY: "#5c4de8", POSTED: "#059669", ARCHIVED: "#94a3b8",
+                          };
+                          const c = sc[s.status] ?? "#6355dc";
+                          return (
+                            <div key={s.status} style={{ display: "flex", alignItems: "center", gap: 8, background: `${c}12`, borderRadius: 10, padding: "8px 12px" }}>
+                              <span style={{ width: 8, height: 8, borderRadius: 99, background: c }} />
+                              <span style={{ fontSize: 12, fontWeight: 700, color: "#374151" }}>{String(s.status).replace("_", " ")}</span>
+                              <span style={{ fontSize: 14, fontWeight: 900, color: c }}>{fmt(Number(s.items))}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                    <div className="ap-card">
+                      <p className="ap-section-title">Plans by Subscription Tier</p>
+                      {ceStats.tierBreakdown.length === 0 ? (
+                        <div style={{ color: "#9ca3af", fontSize: 13, padding: "8px 0" }}>No plans in range</div>
+                      ) : (
+                        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                          {ceStats.tierBreakdown.map((t: any) => {
+                            const max = Math.max(...ceStats.tierBreakdown.map((x: any) => Number(x.plans)), 1);
+                            return (
+                              <div key={t.tier} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                <span style={{ fontSize: 12, fontWeight: 700, color: "#374151", width: 120 }}>{t.tier}</span>
+                                <div style={{ flex: 1, height: 9, background: "#f3f4f6", borderRadius: 99, overflow: "hidden" }}>
+                                  <div style={{ width: `${(Number(t.plans) / max) * 100}%`, height: "100%", background: "#5c4de8", borderRadius: 99 }} />
+                                </div>
+                                <span style={{ fontSize: 13, fontWeight: 800, color: "#5c4de8", width: 40, textAlign: "right" }}>{fmt(Number(t.plans))}</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Daily chart */}
+                  {ceStats.dailyChart.length > 0 && (
+                    <div className="ap-card" style={{ marginBottom: 22 }}>
+                      <p className="ap-section-title">Daily Activity (plans created)</p>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 12 }}>
+                        <span style={{ fontSize: 12, color: "#9ca3af", fontWeight: 700 }}>Plans per day · hover for regenerations</span>
+                        <span style={{ fontSize: 22, fontWeight: 900, color: "#5c4de8", letterSpacing: "-0.04em" }}>
+                          {fmt(ceStats.dailyChart.reduce((s: number, d: any) => s + Number(d.plans), 0))}
+                        </span>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "flex-end", gap: 3, height: 64 }}>
+                        {ceStats.dailyChart.slice(-30).map((d: any, i: number) => {
+                          const val = Number(d.plans) || 0;
+                          const maxV = Math.max(...ceStats.dailyChart.slice(-30).map((x: any) => Number(x.plans)), 1);
+                          const barH = Math.max(4, (val / maxV) * 64);
+                          return (
+                            <div key={i} title={`${d.date}: ${val} plan(s), ${d.regenerations} regeneration(s)`}
+                              style={{ flex: 1, height: barH, minWidth: 4, borderRadius: "3px 3px 0 0",
+                                background: "linear-gradient(180deg,#8b5cf6,#5c4de8)", cursor: "default" }} />
+                          );
+                        })}
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginTop: 4 }}>
+                        <span style={{ fontSize: 10, color: "#d1d5db" }}>{ceStats.dailyChart[0]?.date}</span>
+                        <span style={{ fontSize: 10, color: "#d1d5db" }}>Today</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Per-user usage */}
+                  <div className="ap-card" style={{ marginBottom: 22 }}>
+                    <p className="ap-section-title">
+                      👥 Creators Using Content Engine
+                      {ceStats.users?.length > 0 &&
+                        <span style={{ fontSize: 12, fontWeight: 400, color: "#9ca3af", marginLeft: 8 }}>
+                          {ceStats.users.length} creators · {fmt(ceStats.totals.totalDaysPlanned)} days planned
+                        </span>
+                      }
+                    </p>
+                    {(!ceStats.users || ceStats.users.length === 0) ? (
+                      <div style={{ textAlign: "center", padding: 24, color: "#9ca3af", fontSize: 13 }}>
+                        No Content Engine usage in selected date range
+                      </div>
+                    ) : (
+                      <Table
+                        cols={[
+                          { key: "userEmail",     label: "Email" },
+                          { key: "userName",      label: "Name" },
+                          { key: "planType",      label: "Plan",         render: v => <StatusBadge status={String(v || "—")} /> },
+                          { key: "planCount",     label: "Plans",        render: v => <span style={{ fontWeight: 700, color: "#5c4de8" }}>{fmt(Number(v))}</span> },
+                          { key: "activePlans",   label: "Active",       render: v => Number(v) > 0 ? <span style={{ color: "#059669", fontWeight: 700 }}>{fmt(Number(v))}</span> : <span style={{ color: "#d1d5db" }}>—</span> },
+                          { key: "daysPlanned",   label: "Days",         render: v => <span style={{ fontWeight: 800, color: "#0ea5e9" }}>{fmt(Number(v))}</span> },
+                          { key: "itemCount",     label: "Pieces",       render: v => <span style={{ fontWeight: 700, color: "#f59e0b" }}>{fmt(Number(v))}</span> },
+                          { key: "regenerations", label: "Regens",       render: v => Number(v) > 0 ? <span style={{ color: "#ef4444", fontWeight: 700 }}>{fmt(Number(v))}</span> : <span style={{ color: "#d1d5db" }}>—</span> },
+                        ]}
+                        rows={ceStats.users}
+                        emptyMsg="No Content Engine usage in selected range"
+                      />
+                    )}
                   </div>
                 </>
               )}

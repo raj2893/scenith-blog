@@ -30,7 +30,7 @@ export default function StudioNewFeatureCard() {
       <span className="wn-studio__ico">🗓️</span>
       <div className="wn-studio__txt">
         <p className="wn-studio__ttl">
-          Content Engine <span className="new-badge">New</span>
+                    Content Engine <span className="wn-pill">New</span>
         </p>
         <p className="wn-studio__sub">
           Plan a full multi-platform content calendar with AI, then generate every asset here.

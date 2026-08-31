@@ -154,7 +154,7 @@ const StudioSidebar: React.FC<StudioSidebarProps> = ({
           <Icon size={16} />
         </span>
         <span className="cac-studio-nav__label">{item.label}</span>
-        {item.badge && isBadgeActive() && <span className="new-badge">{item.badge}</span>}
+          {item.badge && isBadgeActive() && <span className="wn-pill">{item.badge}</span>}
       </a>
     );
   };

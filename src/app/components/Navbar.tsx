@@ -396,7 +396,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageType, scrollToSection }) => {
                       {link.dropdownItems?.map((item) => (
                         <button key={item.label} type="button" className="tools-dropdown-item" onClick={() => navigate(item.href)}>
                           {item.label}
-                          {item.isNew && <span className="new-badge">New</span>}
+                          {item.isNew && <span className="wn-pill">New</span>}
                         </button>
                       ))}
                     </div>
