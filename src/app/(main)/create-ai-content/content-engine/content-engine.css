@@ -326,3 +326,23 @@
   .ce-toaster { bottom: 12px; }
   .ce-genoverlay__card { padding: 24px 18px; }
 }
+
+.ce-hub__sub { font-size: 13px; color: #7070a0; line-height: 1.5; margin: 4px 0 0; }
+@media (max-width: 640px) { .ce-hub__sub { font-size: 12.5px; } }
+
+/* ── Entitlement boundary notice ── */
+.ce-limit {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 13px 16px; margin-bottom: 18px; border-radius: 13px;
+  font-family: 'DM Sans', system-ui, sans-serif;
+}
+.ce-limit.is-low     { background: rgba(245,158,11,.08); border: 1px solid rgba(245,158,11,.26); }
+.ce-limit.is-blocked { background: rgba(225,29,72,.06);  border: 1px solid rgba(225,29,72,.22); }
+.ce-limit__ico { font-size: 17px; flex-shrink: 0; }
+.ce-limit__txt { flex: 1; min-width: 200px; display: grid; gap: 2px; }
+.ce-limit__txt strong { font-size: 13px; font-weight: 800; color: #1e1e30; }
+.ce-limit__txt span { font-size: 12.2px; color: #6a6a92; line-height: 1.5; }
+.ce-limit__cta { flex-shrink: 0; text-decoration: none; }
+@media (max-width: 560px) { .ce-limit__cta { width: 100%; justify-content: center; } }
+.ce-item__make { margin-left: auto; text-decoration: none; flex-shrink: 0; }
+@media (max-width: 560px) { .ce-item__make { margin-left: 0; width: 100%; justify-content: center; } }

@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { FaMicrophone, FaClosedCaptioning, FaExchangeAlt, FaEraser, FaTachometerAlt, FaPaintBrush, FaCompressArrowsAlt, FaShapes, FaPlay, FaCheckCircle, FaStar, FaFilePdf } from 'react-icons/fa';
 import '../../../styles/LandingPage.css';
+import ContentEngineSection from './ContentEngineSection';
 
 // Enhanced Structured Data
 const homepageStructuredData = {
@@ -693,31 +694,32 @@ const [isIndianUser, setIsIndianUser] = useState<boolean | null>(null);
           <div className="hero-content animate-fade-up">
             <div className="hero-badge">
               <FaStar className="star-icon" />
-              <span>Free credits every month — no card needed</span>
+              <span>New — Content Engine: plan your next 25 days</span>
             </div>
 
             <h1>
-              Create AI Images, Videos<br />
-              & Voice in <span className="gradient-text">Seconds</span>
+              Plan Your Content.<br />
+              Create It with <span className="gradient-text">AI</span>.
             </h1>
 
             <p className="hero-subtitle">
-              One platform. One credit balance. Unlimited creative tools.{' '}
+              Know what to post every day — then make the images, videos and voiceovers
+              for it in seconds.{' '}
               <strong>Start free — no daily limits, no watermarks.</strong>
             </p>
 
             <div className="hero-features-grid">
               <div className="hero-feature-item">
                 <FaCheckCircle className="check-icon" />
-                <span>AI Image Generation</span>
+                <span>AI Image, Video &amp; Voice</span>
               </div>
               <div className="hero-feature-item">
                 <FaCheckCircle className="check-icon" />
-                <span>AI Video Generation</span>
+                <span>Content Calendar Planning</span>
               </div>
               <div className="hero-feature-item">
                 <FaCheckCircle className="check-icon" />
-                <span>40+ AI Voices</span>
+                <span>Instagram, TikTok, YouTube &amp; X</span>
               </div>
               <div className="hero-feature-item">
                 <FaCheckCircle className="check-icon" />
@@ -1238,7 +1240,10 @@ const [isIndianUser, setIsIndianUser] = useState<boolean | null>(null);
               50 free credits on signup · No card required
             </p>
           </div>
-        </section>    
+        </section>  
+
+        {/* ── CONTENT ENGINE ── */}
+        <ContentEngineSection />  
 
         {/* USE CASES */}
         <section style={{

@@ -2,13 +2,16 @@ import { Metadata } from "next";
 import LandingPageClient from "../components/LandingPageClient";
 
 export const metadata: Metadata = {
-  title: "Scenith – AI Content Creation Platform for Images, Videos & Voice",
-  description: "Create AI images, videos, voiceovers and social content from one platform. Scenith helps creators generate high-quality content fast with free monthly credits.",
+  title: "Scenith – AI Content Creation & Content Planner for your Social Posts.",
+  description: "Create AI images, videos and voiceovers, then plan what to post next with Content Engine. Scenith gives creators one workspace for making content and organising it across Instagram, TikTok, YouTube and X. 50 free credits monthly.",
   keywords: [
     "AI content creation platform",
     "AI image generator",
     "AI video generator",
     "AI voice generator",
+    "AI content planner",
+    "social media content calendar",
+    "content planning tool for creators",
     "AI tools for content creators",
     "text to video AI",
     "AI content generator",
@@ -33,8 +36,8 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://scenith.in/",
     siteName: "Scenith",
-    title: "Scenith – AI Content Creation Platform for Images, Videos & Voice",
-    description: "Generate AI images with FLUX & Imagen 4, cinematic videos with Kling & Veo 3.1, and natural voiceovers — all from one platform. 50 free credits monthly, no card required.",
+    title: "Scenith – AI Content Creation & Content Planner for your Social Posts.",
+    description: "Generate AI images with FLUX & Imagen 4, cinematic videos with Kling & Veo 3.1, and natural voiceovers. Then plan your next content cycle with Content Engine. 50 free credits monthly, no card required.",
     images: [
       {
         url: "https://scenith.in/images/og-image.jpg",

@@ -245,7 +245,8 @@ function Hub({
           Unlock Content Engine →
         </a>
         <p style={{ fontSize: 11.5, color: "#a0a0c0", marginTop: 11 }}>
-          Included with Creator Lite, Creator Spark and Creator Odyssey — from ₹799 / $9 a month.
+          Included with Creator Lite (25 planning days), Creator Spark (60) and
+          Creator Odyssey (90) — from ₹799/mo.
         </p>
       </div>
     );
@@ -255,13 +256,78 @@ function Hub({
     (ent.contentDaysRemaining < 0 || ent.contentDaysRemaining > 0) &&
     (ent.maxActivePlans < 0 || ent.activePlansUsed < ent.maxActivePlans);
 
+    /* Which limit is blocking? Backend remains source of truth — we only read ent.* */
+    const outOfDays  = ent.contentDaysRemaining === 0;
+    const outOfSlots = ent.maxActivePlans >= 0 && ent.activePlansUsed >= ent.maxActivePlans;
+    const lowOnDays  =
+      ent.contentDaysRemaining > 0 && ent.contentDaysAllowed > 0 &&
+      ent.contentDaysRemaining <= Math.max(5, Math.round(ent.contentDaysAllowed * 0.2));    
+
   return (
     <div className="ce-hub">
       <EntitlementBar ent={ent} planLabel={me?.role} />
 
+      {(outOfDays || outOfSlots || lowOnDays) && (
+        <div className={`ce-limit ${outOfDays || outOfSlots ? "is-blocked" : "is-low"}`}>
+          <span className="ce-limit__ico">{outOfDays || outOfSlots ? "🔒" : "⚡"}</span>
+          <div className="ce-limit__txt">
+            {outOfDays && (
+              <>
+                <strong>Your planning days are used up.</strong>
+                <span>
+                  You've planned all {ent.contentDaysAllowed} days for this billing period.
+                  They reset on{" "}
+                  {ent.billingCycleEnd
+                    ? new Date(ent.billingCycleEnd).toLocaleDateString(undefined, { day: "numeric", month: "short" })
+                    : "your next renewal"}
+                  . Upgrade to keep planning now.
+                </span>
+              </>
+            )}
+            {!outOfDays && outOfSlots && (
+              <>
+                <strong>
+                  You're using all {ent.maxActivePlans} active plan
+                  {ent.maxActivePlans === 1 ? "" : "s"}.
+                </strong>
+                <span>
+                  Archive a plan below to free a slot — you keep everything in it — or upgrade
+                  for more plans at once. You still have {ent.contentDaysRemaining} planning days left.
+                </span>
+              </>
+            )}
+            {!outOfDays && !outOfSlots && lowOnDays && (
+              <>
+                <strong>
+                  {ent.contentDaysRemaining} planning day
+                  {ent.contentDaysRemaining === 1 ? "" : "s"} left.
+                </strong>
+                <span>
+                  That's {ent.contentDaysUsed} of {ent.contentDaysAllowed} used this period.
+                </span>
+              </>
+            )}
+          </div>
+          {(outOfDays || outOfSlots) && (
+            
+            <a  className="ce-btn ce-btn--primary ce-btn--sm ce-limit__cta"
+              href="/pricing?src=engine_limit"
+              onClick={() => { try { (window as any).gtag?.("event", "content_engine_upgrade_click", { reason: outOfDays ? "days" : "slots" }); } catch {} }}
+            >
+              See plans →
+            </a>
+          )}
+        </div>
+      )}      
+
       <div className="ce-hub__head">
-        <h1 className="ce-hub__title">Your content plans</h1>
-        <button className="ce-btn ce-btn--primary" onClick={onCreate} disabled={!canCreate} title={canCreate ? "" : "No planning days or active-plan slots left"}>
+        <div>
+          <h1 className="ce-hub__title">Content Engine</h1>
+          <p className="ce-hub__sub">
+            Plan, organise and create your content across every platform.
+          </p>
+        </div>
+        <button className="ce-btn ce-btn--primary" onClick={onCreate} disabled={!canCreate} title={canCreate ? "" : outOfDays ? "No planning days left this period" : "Archive a plan to free a slot"}>
           <FiPlus size={15} /> Create new plan
         </button>
       </div>
@@ -305,15 +371,21 @@ export function EntitlementBar({ ent, planLabel }: { ent: ContentEngineEntitleme
         )}
       </div>
       <div className="ce-ent__stat">
-        <div className="ce-ent__label">Active plans</div>
+        <div className="ce-ent__label" style={{ display: "flex", alignItems: "center", gap: 5 }}>
+          Active plans <Tip id="ceActivePlans" />
+        </div>
         <div className="ce-ent__value">{ent.activePlansUsed}<span className="ce-ent__of"> / {unl(ent.maxActivePlans)}</span></div>
       </div>
       <div className="ce-ent__stat">
-        <div className="ce-ent__label">Platforms / plan</div>
+        <div className="ce-ent__label" style={{ display: "flex", alignItems: "center", gap: 5 }}>
+          Platforms / plan <Tip id="cePlatforms" />
+        </div>
         <div className="ce-ent__value">{unl(ent.maxPlatforms)}</div>
       </div>
       <div className="ce-ent__stat">
-        <div className="ce-ent__label">Regenerations today</div>
+        <div className="ce-ent__label" style={{ display: "flex", alignItems: "center", gap: 5 }}>
+          Regenerations today <Tip id="ceRegens" />
+        </div>
         <div className="ce-ent__value">{unl(ent.regenerationsRemainingToday)}<span className="ce-ent__of"> / {unl(ent.regenerationLimitPerDay)} left</span></div>
       </div>
       <div className="ce-ent__plan">{planLabel || ent.subscriptionPlan}</div>

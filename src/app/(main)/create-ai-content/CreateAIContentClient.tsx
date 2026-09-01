@@ -20,6 +20,7 @@ import StudioTopbar from "./workspace/StudioTopbar";
 import StudioHistoryRail from "./workspace/StudioHistoryRail";
 import Tip from "./tips/Tip";
 import StudioNewFeatureCard from "@/app/components/StudioNewFeatureCard";
+import Coachmark from "@/app/components/Coachmark";
 
 import {
   STUDIO_FLAGS,
@@ -1993,6 +1994,15 @@ const VIDEO_DURATION_OPTIONS = useMemo(() => {
       {/* ── Main Tool ── */}
       <main className="cac-main cac-main--studio">
         <StudioNewFeatureCard />
+        <Coachmark
+          target='[data-nav="content-engine"]'
+          storageKey="scenith_cm_content_engine"
+          title="Not sure what to create?"
+          body="Content Engine plans your next 25 days — hooks, captions and CTAs for every platform. Then send any piece straight back here to make it."
+          ctaLabel="Show me →"
+          ctaHref="/create-ai-content/content-engine?src=coachmark"
+          onCta={() => { try { (window as any).gtag?.("event", "content_engine_cta_click", { source: "coachmark" }); } catch {} }}
+        />      
         {/* ─ Tabs ─ */}
         <div className="cac-tabs">
           {(["voice", "image", "video"] as Tab[]).map((t) => (

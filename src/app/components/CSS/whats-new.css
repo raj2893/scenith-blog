@@ -142,3 +142,93 @@
   .wn-studio__txt { flex: 1 1 100%; order: 2; }
   .wn-studio__go { flex: 1 1 100%; order: 3; text-align: center; }
 }
+
+/* ── Tour variant ── */
+.wn-modal--tour { display: flex; flex-direction: column; min-height: 430px; }
+.wn-modal__hero--sm { padding: 22px 24px 18px; }
+.wn-modal__hero--sm .wn-modal__title { font-size: 19px; margin: 0; }
+.wn-modal__body { flex: 1; }
+
+.wn-q { font-size: 12px; font-weight: 800; color: #7070a0; text-transform: uppercase; letter-spacing: .06em; margin: 0 0 10px; }
+.wn-pains { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; }
+.wn-pains li {
+  padding: 10px 13px; border-radius: 10px; background: #fbfaff;
+  border: 1px solid rgba(99,85,220,.12); font-size: 12.8px; color: #3a3a5c; line-height: 1.45;
+}
+
+.wn-day { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
+.wn-day__col {
+  text-align: center; padding: 13px 6px; border-radius: 11px;
+  background: linear-gradient(135deg, rgba(92,77,232,.09), rgba(139,92,246,.05));
+  border: 1px solid rgba(99,85,220,.16);
+}
+.wn-day__n { display: block; font-size: 21px; font-weight: 800; color: #5c4de8; line-height: 1; margin-bottom: 4px; }
+.wn-day__p { font-size: 10.5px; font-weight: 700; color: #6a6a92; }
+.wn-day__cap { font-size: 12.3px; line-height: 1.55; color: #7070a0; margin: 0; text-align: center; }
+
+.wn-how { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.wn-how li { display: flex; gap: 10px; align-items: flex-start; }
+.wn-how__n {
+  width: 21px; height: 21px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center;
+  background: linear-gradient(135deg,#5c4de8,#8b5cf6); color: #fff; font-size: 10.5px; font-weight: 800;
+}
+.wn-how strong { display: block; font-size: 12.8px; font-weight: 700; color: #1e1e30; margin-bottom: 1px; }
+.wn-how span { font-size: 11.8px; color: #7070a0; line-height: 1.45; }
+
+.wn-unlock { padding: 14px 15px; border-radius: 13px; border: 1.5px solid rgba(92,77,232,.32);
+  background: linear-gradient(135deg, rgba(92,77,232,.07), rgba(139,92,246,.04)); margin-bottom: 12px; }
+.wn-unlock__row { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+.wn-unlock__row strong { font-size: 14.5px; font-weight: 800; color: #1e1e30; }
+.wn-unlock__price { font-size: 19px; font-weight: 800; color: #5c4de8; }
+.wn-unlock__price em { font-size: 11.5px; font-weight: 600; color: #7070a0; font-style: normal; }
+.wn-unlock__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.wn-unlock__list li { display: flex; align-items: center; gap: 7px; font-size: 12.3px; color: #3a3a5c; }
+.wn-unlock__list svg { color: #059669; flex-shrink: 0; }
+.wn-unlock__note { font-size: 11.5px; line-height: 1.55; color: #a0a0c0; margin: 0; text-align: center; }
+
+.wn-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 14px 24px 18px; border-top: 1px solid rgba(99,85,220,.1); }
+.wn-dots { display: flex; gap: 6px; }
+.wn-dot { width: 7px; height: 7px; border-radius: 50%; padding: 0; border: none; cursor: pointer;
+  background: rgba(99,85,220,.22); transition: background .15s, width .15s; }
+.wn-dot.is-on { width: 18px; border-radius: 999px; background: #5c4de8; }
+.wn-foot__btns { display: flex; align-items: center; gap: 10px; }
+.wn-cta--inline { display: inline-flex; align-items: center; gap: 6px; width: auto;
+  padding: 10px 20px; font-size: 13px; margin: 0; }
+.wn-foot .wn-later { width: auto; margin: 0; }
+
+@media (max-width: 560px) {
+  .wn-modal--tour { min-height: 0; }
+  .wn-day { grid-template-columns: repeat(2, 1fr); }
+  .wn-foot { flex-direction: column-reverse; align-items: stretch; }
+  .wn-foot__btns { justify-content: space-between; }
+  .wn-dots { justify-content: center; }
+}
+
+.cac-studio-nav__hint {
+  display: block; padding: 4px 12px 8px 40px;
+  font-size: 11px; color: var(--cac-muted); text-decoration: none;
+}
+.cac-studio-nav__hint:hover { color: var(--cac-accent); text-decoration: underline; }
+
+/* ── Specificity guard ──
+   .cac-page * { padding: 0 } (create-ai-content.css) ties with our single-class
+   selectors and wins on load order. Doubling the class raises specificity. */
+.wn-pill.wn-pill {
+  padding: 3px 7px;
+  margin-left: 7px;
+  font-size: 9.5px;
+  line-height: 1.5;
+}
+.wn-pill--dot.wn-pill--dot {
+  padding: 0;
+  width: 6px;
+  height: 6px;
+}
+.wn-studio__go.wn-studio__go {
+  padding: 9px 18px;
+  margin-left: 2px;
+}
+.wn-studio__x.wn-studio__x { padding: 5px; }
+.wn-studio__ico.wn-studio__ico { padding: 0; }
+.wn-studio.wn-studio { padding: 13px 15px; }
