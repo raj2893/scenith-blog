@@ -1103,9 +1103,9 @@ export default function PricingPageClient() {
         { name: 'Starter Forge', role: 'BASIC', price: 0, currency: 'FREE', ttsLimit: 600, tagline: 'Try every tool, no card required.', features: ['50 credits/mo', '600 voice chars/mo', '5 speed videos + 5 BG removals', '10 SVG downloads', '720p export with watermark'], outcomes: [{ icon: '🎙️', label: 'Voice (600 chars)' }, { icon: '✂️', label: '5 BG removals' }] },
         { name: 'Spark', role: 'SPARK', price: 0, currency: 'LOADING', ttsLimit: 5000, tagline: 'Ignite your first AI creation.', features: ['50 credits', 'All tools unlocked', '1080p · No watermark', 'One-time entry plan'], outcomes: [{ icon: '🎙️', label: '~5 voice segments' }, { icon: '✂️', label: '5 BG removals' }] },
         { name: 'Starter Pack', role: 'MICRO', price: 0, currency: 'LOADING', ttsLimit: 10000, tagline: 'Dip your toes in — low commitment.', features: ['200 credits/mo', '10,000 voice chars/mo', 'All tools unlocked', '1080p · No watermark', 'Topups available'], outcomes: [{ icon: '🎙️', label: '~100 voice segments' }, { icon: '🖼️', label: '~10 AI images' }] },
-        { name: 'Creator Lite', role: 'CREATOR_LITE', price: 0, currency: 'LOADING', ttsLimit: 50000, tagline: 'Your first real creative toolkit.', features: ['1,000 credits/mo · 50,000 voice chars', 'All AI models unlocked', '1080p · No watermark', '30 speed videos · 100 BG removals', 'Unlimited SVGs · Topups available'], outcomes: [{ icon: '🎙️', label: '~500 voice segments' }, { icon: '🖼️', label: '~150 AI images' }, { icon: '🎬', label: '3–6 AI videos' }] },
-        { name: 'Creator Spark', role: 'CREATOR', price: 0, currency: 'LOADING', ttsLimit: 150000, popular: true, tagline: 'Everything you need to go pro.', features: ['2,000 credits/mo · 150,000 voice chars', 'All AI models · 1440p export', '60 speed videos · 500 BG removals', 'Unlimited SVGs · Priority support', 'Topups available'], outcomes: [{ icon: '🎙️', label: '~1,500 voice segments' }, { icon: '🖼️', label: '~450 AI images' }, { icon: '🎬', label: '9–18 AI videos' }] },
-        { name: 'Creator Odyssey', role: 'STUDIO', price: 0, currency: 'LOADING', ttsLimit: 400000, tagline: 'Unlimited power for serious creators.', features: ['4,000 credits/mo · 400,000 voice chars', 'All AI models · 4K export', 'Unlimited speed videos + BG removals', 'Fastest queue · Dedicated support', 'Topups available'], outcomes: [{ icon: '🎙️', label: '~4,000 voice segments' }, { icon: '🖼️', label: '~1,250 AI images' }, { icon: '🎬', label: '25–50 AI videos' }] },
+      { name: 'Creator Lite', role: 'CREATOR_LITE', price: 0, currency: 'LOADING', ttsLimit: 50000, tagline: 'Create with AI — and know what to post next.', features: ['🗓️ Content Engine — 25 planning days/mo', '1,000 credits/mo · 50,000 voice chars', 'All AI models unlocked', '1080p · No watermark', '30 speed videos · 100 BG removals', 'Unlimited SVGs · Topups available'], outcomes: [{ icon: '🎙️', label: '~500 voice segments' }, { icon: '🖼️', label: '~150 AI images' }, { icon: '🎬', label: '3–6 AI videos' }, { icon: '🗓️', label: '25 days of content planned' }] },
+      { name: 'Creator Spark', role: 'CREATOR', price: 0, currency: 'LOADING', ttsLimit: 150000, popular: true, tagline: 'Everything you need to go pro.', features: ['🗓️ Content Engine — 60 planning days/mo', '2,000 credits/mo · 150,000 voice chars', 'All AI models · 1440p export', '60 speed videos · 500 BG removals', 'Unlimited SVGs · Priority support', 'Topups available'], outcomes: [{ icon: '🎙️', label: '~1,500 voice segments' }, { icon: '🖼️', label: '~450 AI images' }, { icon: '🎬', label: '9–18 AI videos' }, { icon: '🗓️', label: '60 days of content planned' }] },
+      { name: 'Creator Odyssey', role: 'STUDIO', price: 0, currency: 'LOADING', ttsLimit: 400000, tagline: 'Unlimited power for serious creators.', features: ['🗓️ Content Engine — 90 planning days/mo', '4,000 credits/mo · 400,000 voice chars', 'All AI models · 4K export', 'Unlimited speed videos + BG removals', 'Fastest queue · Dedicated support', 'Topups available'], outcomes: [{ icon: '🎙️', label: '~4,000 voice segments' }, { icon: '🖼️', label: '~1,250 AI images' }, { icon: '🎬', label: '25–50 AI videos' }, { icon: '🗓️', label: '90 days of content planned' }] },
       ];
     }
     const sym = isIndianUser ? '₹' : '$';
@@ -1116,9 +1116,9 @@ export default function PricingPageClient() {
       { name: 'Starter Forge', role: 'BASIC', price: 0, currency: 'FREE', ttsLimit: 600, tagline: 'Try every tool, no card required.', features: ['50 credits/mo', '600 voice chars/mo', '5 speed videos + 5 BG removals', '10 SVG downloads', '720p export with watermark'], outcomes: [{ icon: '🎙️', label: 'Voice (600 chars)' }, { icon: '✂️', label: '5 BG removals' }] },
       { name: 'Spark', role: 'SPARK', price: isIndianUser ? 50 : 1, originalPrice: isIndianUser ? 99 : 2, currency: cur, symbol: sym, ttsLimit: 5000, tagline: 'Ignite your first AI creation.', features: ['50 credits', '3,000 voice chars', 'All tools unlocked', '1080p · No watermark'], outcomes: [{ icon: '🎙️', label: '~5 voice segments' }, { icon: '✂️', label: '5 BG removals' }] },
       { name: 'Starter Pack', role: 'MICRO', price: isIndianUser ? 150 : 3, originalPrice: isIndianUser ? 200 : 4, currency: cur, symbol: sym, ttsLimit: 10000, tagline: 'Dip your toes in — low commitment.', features: ['200 credits/mo', '10,000 voice chars/mo', 'All tools unlocked', '1080p · No watermark', 'Topups available'], outcomes: [{ icon: '🎙️', label: '~100 voice segments' }, { icon: '🖼️', label: '~10 AI images' }] },
-      { name: 'Creator Lite', role: 'CREATOR_LITE', price: p.lite, originalPrice: o.lite, currency: cur, symbol: sym, ttsLimit: 50000, tagline: 'Your first real creative toolkit.', features: ['1,000 credits/mo · 50,000 voice chars', 'All AI models unlocked', '1080p · No watermark', '30 speed videos · 100 BG removals', 'Unlimited SVGs · Topups available'], outcomes: [{ icon: '🎙️', label: '~500 voice segments' }, { icon: '🖼️', label: '~150 AI images' }, { icon: '🎬', label: '3–6 AI videos' }] },
-      { name: 'Creator Spark', role: 'CREATOR', price: p.creator, originalPrice: o.creator, currency: cur, symbol: sym, ttsLimit: 150000, popular: true, tagline: 'Everything you need to go pro.', features: ['2,000 credits/mo · 150,000 voice chars', 'All AI models · 1440p export', '60 speed videos · 500 BG removals', 'Unlimited SVGs · Priority support', 'Topups available'], outcomes: [{ icon: '🎙️', label: '~1,500 voice segments' }, { icon: '🖼️', label: '~450 AI images' }, { icon: '🎬', label: '9–18 AI videos' }] },
-      { name: 'Creator Odyssey', role: 'STUDIO', price: p.studio, originalPrice: o.studio, currency: cur, symbol: sym, ttsLimit: 400000, tagline: 'Unlimited power for serious creators.', features: ['4,000 credits/mo · 400,000 voice chars', 'All AI models · 4K export', 'Unlimited speed videos + BG removals', 'Fastest queue · Dedicated support', 'Topups available'], outcomes: [{ icon: '🎙️', label: '~4,000 voice segments' }, { icon: '🖼️', label: '~1,250 AI images' }, { icon: '🎬', label: '25–50 AI videos' }] },
+      { name: 'Creator Lite', role: 'CREATOR_LITE', price: p.lite, originalPrice: o.lite, currency: cur, symbol: sym, ttsLimit: 50000, tagline: 'Create with AI — and know what to post next.', features: ['🗓️ Content Engine — 25 planning days/mo', '1,000 credits/mo · 50,000 voice chars', 'All AI models unlocked', '1080p · No watermark', '30 speed videos · 100 BG removals', 'Unlimited SVGs · Topups available'], outcomes: [{ icon: '🎙️', label: '~500 voice segments' }, { icon: '🖼️', label: '~150 AI images' }, { icon: '🎬', label: '3–6 AI videos' }, { icon: '🗓️', label: '25 days of content planned' }] },
+      { name: 'Creator Spark', role: 'CREATOR', price: p.creator, originalPrice: o.creator, currency: cur, symbol: sym, ttsLimit: 150000, popular: true, tagline: 'Everything you need to go pro.', features: ['🗓️ Content Engine — 60 planning days/mo', '2,000 credits/mo · 150,000 voice chars', 'All AI models · 1440p export', '60 speed videos · 500 BG removals', 'Unlimited SVGs · Priority support', 'Topups available'], outcomes: [{ icon: '🎙️', label: '~1,500 voice segments' }, { icon: '🖼️', label: '~450 AI images' }, { icon: '🎬', label: '9–18 AI videos' }, { icon: '🗓️', label: '60 days of content planned' }] },
+      { name: 'Creator Odyssey', role: 'STUDIO', price: p.studio, originalPrice: o.studio, currency: cur, symbol: sym, ttsLimit: 400000, tagline: 'Unlimited power for serious creators.', features: ['🗓️ Content Engine — 90 planning days/mo', '4,000 credits/mo · 400,000 voice chars', 'All AI models · 4K export', 'Unlimited speed videos + BG removals', 'Fastest queue · Dedicated support', 'Topups available'], outcomes: [{ icon: '🎙️', label: '~4,000 voice segments' }, { icon: '🖼️', label: '~1,250 AI images' }, { icon: '🎬', label: '25–50 AI videos' }, { icon: '🗓️', label: '90 days of content planned' }] },
     ];
   };
 
@@ -1749,6 +1749,10 @@ export default function PricingPageClient() {
               <tbody>
                 {[
                   ['Monthly Credits', '50', '50', '200', '1,000', '2,000', '4,000'],
+                  ['🗓️ Content Engine',        '✗',     '✗',            '✗',            '✓',            '✓',            '✓'],
+                  ['Planning days / mo',       '—',     '—',            '—',            '25',           '60',           '90'],
+                  ['Active plans at once',     '—',     '—',            '—',            '1',            '3',            '10'],
+                  ['Platforms per plan',       '—',     '—',            '—',            '3',            '5',            'All 4'],                  
                   ['Voice Characters / mo',    '600',   '3,000',      '10,000',       '50,000',       '150,000',      '400,000'],
                   ['Chars per Request',        '200',   '500',          '700',          '700',          '4,000',        '6,000'],
                   ['AI Video Generation',      '✓',     '✓ All models', '✓ All models', '✓ All models', '✓ All models', '✓ All models'],
@@ -1781,6 +1785,37 @@ export default function PricingPageClient() {
           </div>
         </div>
       </div>
+
+      {/* ══ CONTENT ENGINE ALLOWANCE EXPLAINER ══ */}
+      <div className="v3-compare" style={{ paddingTop: 0 }}>
+        <div className="v3-compare-inner" style={{ maxWidth: 760 }}>
+          <div style={{
+            padding: '20px 22px', borderRadius: 16,
+            border: '1px solid rgba(99,85,220,0.18)',
+            background: 'rgba(99,85,220,0.04)',
+          }}>
+            <p style={{ fontSize: 14, fontWeight: 800, marginBottom: 8 }}>
+              🗓️ How planning days work
+            </p>
+            <p style={{ fontSize: 13, lineHeight: 1.65, marginBottom: 12 }}>
+              Planning days are a <strong>total for your billing period</strong>, shared across
+              every plan you build — not a limit per plan. Use them however you like.
+            </p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+              {[
+                'Creator Lite · 25 days → one 25-day plan, or a 15-day + a 10-day',
+                'Creator Spark · 60 days → one 60-day plan, or two 30-day plans',
+                'Creator Odyssey · 90 days → run several campaigns at once',
+              ].map((t) => (
+                <span key={t} style={{
+                  padding: '6px 12px', borderRadius: 999, fontSize: 11.5,
+                  background: '#fff', border: '1px solid rgba(99,85,220,0.14)',
+                }}>{t}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>      
 
       {/* ══ USE CASES ══ */}
       <div className="v3-use">
@@ -1850,11 +1885,6 @@ export default function PricingPageClient() {
           <p className="v3-final-note">No credit card required · Commercial use on all plans</p>
         </div>
       </div>
-
-      {/* ══ FOOTER ══ */}
-      <footer className="v3-footer">
-        © 2025 Scenith · All plans billed monthly · Prices shown in {isIndianUser ? 'INR (Indian users)' : 'USD (international)'}
-      </footer>
 
       {/* ══ SUCCESS MODAL ══ */}
       <AnimatePresence>

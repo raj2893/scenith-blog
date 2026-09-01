@@ -117,7 +117,8 @@ export const TIPS = {
   },
   ceRegens: {
     title: "Regenerations",
-    body: "Daily limit on re-rolling AI content for a slot you don't like. Resets every day, so you're never permanently stuck with a bad draft.",
+    body: "Daily limit on asking AI to rewrite something — a whole plan, one item, or one platform version. Your own text edits don't count and are always unlimited.",
+    points: ["Resets every day", "Only AI rewrites are counted"],
   },
 } as const satisfies Record<string, TipContent>;
 

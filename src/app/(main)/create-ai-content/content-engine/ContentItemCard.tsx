@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { FiRefreshCw, FiTrash2, FiUpload, FiChevronDown, FiChevronRight } from "react-icons/fi";
+import { FiRefreshCw, FiTrash2, FiUpload, FiChevronDown, FiChevronRight, FiZap } from "react-icons/fi";
 import {
   contentEngineApi, ContentEngineError, ContentEngineEntitlement,
   ContentItem, ContentItemStatus, PlatformVersion, ContentPlatform,
@@ -14,6 +14,21 @@ function bytes(n: number | null): string {
   if (n < 1024) return `${n} B`;
   if (n < 1024 * 1024) return `${(n / 1024).toFixed(0)} KB`;
   return `${(n / 1024 / 1024).toFixed(1)} MB`;
+}
+
+/* Routes a planned item into the existing AI studio with its brief pre-filled.
+   Uses the current /create-ai-content route + query params only — no new API,
+   no duplicated generation UI. */
+function studioHref(item: ContentItem): string {
+  const fmt = (item.contentFormat || "").toLowerCase();
+  const isVideo = /reel|short|video|tiktok|clip/.test(fmt);
+  const prompt = [item.creativeDirection, item.title].filter(Boolean).join(" — ").slice(0, 400);
+  const q = new URLSearchParams({
+    tab: isVideo ? "video" : "image",
+    text: prompt,
+    src: "content_engine",
+  });
+  return `/create-ai-content?${q.toString()}`;
 }
 const isImage = (ct: string | null) => !!ct && ct.startsWith("image/");
 
@@ -206,6 +221,14 @@ export default function ContentItemCard({
               {ALL_ITEM_STATUSES.map((s) => <option key={s} value={s}>{STATUS_META[s].label}</option>)}
             </select>
             <button className="ce-icon-btn ce-icon-btn--danger" onClick={del} disabled={!!busy} title="Delete item"><FiTrash2 size={14} /></button>
+            
+            <a className="ce-btn ce-btn--ghost ce-btn--sm ce-item__make"
+              href={studioHref(item)}
+              title="Open this brief in the Scenith AI studio"
+              onClick={() => { try { (window as any).gtag?.("event", "content_engine_create_with_scenith", { format: item.contentFormat || "unknown" }); } catch {} }}
+            >
+              <FiZap size={13} /> Create with Scenith →
+            </a>
           </div>
 
           {/* Platform versions */}

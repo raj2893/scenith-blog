@@ -2,22 +2,23 @@ import { Metadata } from "next";
 import PricingPageClient from "./PricingPageClient";
 
 export const metadata: Metadata = {
-  title: "Scenith Pricing - Choose Your Plan | Free, Creator & Studio",
+  title: "Scenith Pricing — Plans for AI Creation & Content Planning",
   description:
-    "Upgrade your Scenith experience with premium plans. Get more AI voice characters, access to all premium voices, and advanced features. Starting at ₹499/month for Indian users.",
+    "Scenith plans from ₹799/mo. Generate AI images, videos and voiceovers, and plan your content calendar with Content Engine. Free plan includes 50 credits every month, no card required.",
   keywords: [
     'scenith pricing',
     'pricing plans',
-    'upgrade scenith',
+    'ai content creation pricing',
+    'ai video generator pricing',
+    'ai image generator pricing',
     'ai voice generator pricing',
-    'text to speech pricing',
-    'premium ai voices',
+    'content planning tool pricing',
     'creator plan',
-    'studio plan'
   ],
   openGraph: {
-    title: 'Scenith Pricing - Simple & Transparent Plans',
-    description: 'Choose the perfect plan: Free, Creator (₹349/$9), or Studio (₹749/$19). Unlock more AI voice characters, video tools, and premium features.',
+    title: 'Scenith Pricing — Create with AI, Plan with Content Engine',
+    description:
+      'Creator Lite ₹799, Creator Spark ₹1,749, Creator Odyssey ₹3,599. All AI models unlocked, no watermark, and Content Engine to plan what you post next. Start free with 50 credits a month.',
     images: ['/images/og-pricing.jpg'],
   },
 };

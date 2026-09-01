@@ -146,6 +146,7 @@ const StudioSidebar: React.FC<StudioSidebarProps> = ({
       <a
         key={item.id}
         href={item.href}
+        data-nav={item.id}
         className={`cac-studio-nav__item ${active ? "is-active" : ""}`}
         aria-current={active ? "page" : undefined}
         onClick={() => { if (item.badge) trackNew("sidebar_badge_click", { id: item.id }); onClose(); }}
@@ -193,6 +194,10 @@ const StudioSidebar: React.FC<StudioSidebarProps> = ({
         <p className="cac-studio-nav__heading">Tools</p>
         {STUDIO_TOOL_NAV.map(renderItem)}
       </nav>
+
+      <a href="/create-ai-content?tour=1" className="cac-studio-nav__hint">
+        How Content Engine works
+      </a>
 
       {/* ── Plan card ── */}
       <div className="cac-studio-plan">
