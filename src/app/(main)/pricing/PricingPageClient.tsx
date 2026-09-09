@@ -807,7 +807,7 @@ export default function PricingPageClient() {
 
   useEffect(() => {
     // Default everyone (Indian + international) to the Pro plans view once region is detected.
-    if (isIndianUser !== null) {
+    if (isIndianUser === false) {
       setShowProPlans(true);
     }
   }, [isIndianUser]);
