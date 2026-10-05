@@ -3283,10 +3283,22 @@
     <changefreq>weekly</changefreq>
     <lastmod>2026-07-20</lastmod>
   </url>
-    <url>
+  <url>
     <loc>https://scenith.in/tools/indian-english-text-to-speech</loc>
     <priority>0.9</priority>
     <changefreq>weekly</changefreq>
     <lastmod>2026-07-20</lastmod>
+  </url>  
+  <url>
+    <loc>https://scenith.in/tools/add-voiceover-to-slides</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-10-05</lastmod>
+  </url>  
+    <url>
+    <loc>https://scenith.in/tools/how-to-make-long-ai-videos</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-10-05</lastmod>
   </url>  
 </urlset>
