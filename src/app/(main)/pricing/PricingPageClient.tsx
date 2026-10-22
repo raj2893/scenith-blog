@@ -22,7 +22,8 @@ interface PricingPlan {
   popular?: boolean;
   symbol?: string;
   tagline: string;
-  outcomes: { icon: string; label: string }[];
+  credits: number; 
+  outcomes?: { icon: string; label: string }[];
 }
 
 interface UserProfile {
@@ -417,6 +418,29 @@ const injectStyles = () => {
     .v3-outcome-label { font-size: 12.5px; color: var(--ink2); font-weight: 500; }
     .v3-outcome-count { font-size: 12.5px; color: var(--violet); font-weight: 700; margin-left: auto; white-space: nowrap; }
 
+
+    /* usage block = credits + what you can create (sits right under the price) */
+    .v3-usage {
+      margin: 16px 0 4px; padding: 14px 14px 12px; border-radius: 14px;
+      background: linear-gradient(160deg, rgba(92,77,232,0.07) 0%, rgba(224,64,160,0.05) 100%);
+      border: 1.5px solid rgba(92,77,232,0.16);
+    }
+    .v3-card-pop .v3-usage { border-color: rgba(92,77,232,0.32); }
+    .v3-usage-credits { display: flex; align-items: baseline; justify-content: center; gap: 6px; flex-wrap: wrap; font-size: 13px; color: var(--ink3); font-weight: 600; }
+    .v3-usage-credits strong { font-size: 20px; color: var(--violet); font-weight: 800; letter-spacing: -0.02em; }
+    .v3-usage-bonus { font-size: 10.5px; font-weight: 700; color: #059669; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.22); border-radius: 999px; padding: 2px 8px; }
+    .v3-usage-title { margin: 12px 0 8px; text-align: center; font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+    .v3-usage-grid { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 6px; }
+    .v3-usage-stat { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 9px 4px 8px; text-align: center; }
+    .v3-usage-num { display: block; font-family: 'Instrument Serif', Georgia, serif; font-size: 30px; line-height: 1; color: var(--ink); letter-spacing: -0.03em; }
+    .v3-usage-lbl { display: block; margin-top: 4px; font-size: 11px; font-weight: 700; color: var(--ink3); }
+    .v3-usage-or { font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--muted2); }
+    .v3-usage-voice { margin-top: 9px; text-align: center; font-size: 12px; font-weight: 600; color: var(--ink2); }
+    .v3-usage-value { margin-top: 8px; text-align: center; font-size: 11.5px; font-weight: 700; color: #059669; }
+    .v3-usage-note { margin-top: 6px; text-align: center; font-size: 10px; color: var(--muted2); line-height: 1.4; }
+    .v3-upsell-link { margin-top: 10px; background: none; border: none; width: 100%; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; color: var(--violet); text-align: center; }
+    .v3-upsell-link:hover { text-decoration: underline; }    
+
     /* features */
     .v3-feats { list-style: none; flex: 1; display: flex; flex-direction: column; gap: 8px; margin-top: 18px; min-height: 0; }
     .v3-feat { display: flex; align-items: flex-start; gap: 6px; font-size: 12px; color: var(--ink2); line-height: 1.4; font-weight: 500; text-align: left; }
@@ -701,12 +725,41 @@ const FAQ = [
    CREDIT EXPLAINER DATA
 ───────────────────────────────────────────────────────────────────── */
 const CREDIT_USES = [
-  { icon: '🖼️', count: '10–15 cr', unit: 'per image', label: 'AI Image (standard)' },
-  { icon: '🎬', count: '50–100 cr', unit: 'per video', label: 'AI Video Generation' },
+  { icon: '🖼️', count: '8+ cr', unit: 'per image', label: 'AI Image' },
+  { icon: '🎬', count: '46+ cr', unit: 'per video', label: 'AI Video Generation' },
   { icon: '✂️', count: '10 cr', unit: 'per image', label: 'Background Removal' },
   { icon: '⚡', count: '10 cr', unit: 'per video', label: 'Speed Video' },
   { icon: '📝', count: '10 cr', unit: 'per file', label: 'AI Subtitles' },
 ];
+
+/* ─────────────────────────────────────────────────────────────────────
+   USAGE MATH — "what you can create" per plan
+   Cheapest video: Wan 2.5 · 480p · 5s = 46 cr
+   Cheapest image: GPT Image 1.5 · draft · square = 8 cr
+   Every account also gets 50 free credits each month.
+───────────────────────────────────────────────────────────────────── */
+const FREE_MONTHLY_CREDITS = 50;
+const CHEAPEST_VIDEO_CREDITS = 46;
+const CHEAPEST_IMAGE_CREDITS = 8;
+const VOICE_CHARS_PER_MINUTE = 900; // ~150 words/min of narration
+
+const formatVoice = (chars: number) => {
+  const mins = chars / VOICE_CHARS_PER_MINUTE;
+  if (mins < 60) return `~${Math.max(1, Math.round(mins))} min`;
+  return `~${(mins / 60).toFixed(1).replace(/\.0$/, '')} hrs`;
+};
+
+const getUsage = (plan: { role: string; credits: number; ttsLimit: number }) => {
+  const bonus = plan.role === 'BASIC' ? 0 : FREE_MONTHLY_CREDITS;
+  const total = plan.credits + bonus;
+  return {
+    bonus,
+    total,
+    videos: Math.floor(total / CHEAPEST_VIDEO_CREDITS),
+    images: Math.floor(total / CHEAPEST_IMAGE_CREDITS),
+    voice: formatVoice(plan.ttsLimit),
+  };
+};
 
 /* ─────────────────────────────────────────────────────────────────────
    MAIN COMPONENT
@@ -1098,27 +1151,32 @@ export default function PricingPageClient() {
 
   /* ── PLAN DATA ── */
   const getPlans = (): PricingPlan[] => {
-    if (isIndianUser === null) {
-      return [
-        { name: 'Starter Forge', role: 'BASIC', price: 0, currency: 'FREE', ttsLimit: 600, tagline: 'Try every tool, no card required.', features: ['50 credits/mo', '600 voice chars/mo', '5 speed videos + 5 BG removals', '10 SVG downloads', '720p export with watermark'], outcomes: [{ icon: '🎙️', label: 'Voice (600 chars)' }, { icon: '✂️', label: '5 BG removals' }] },
-        { name: 'Spark', role: 'SPARK', price: 0, currency: 'LOADING', ttsLimit: 5000, tagline: 'Ignite your first AI creation.', features: ['50 credits', 'All tools unlocked', '1080p · No watermark', 'One-time entry plan'], outcomes: [{ icon: '🎙️', label: '~5 voice segments' }, { icon: '✂️', label: '5 BG removals' }] },
-        { name: 'Starter Pack', role: 'MICRO', price: 0, currency: 'LOADING', ttsLimit: 10000, tagline: 'Dip your toes in — low commitment.', features: ['200 credits/mo', '10,000 voice chars/mo', 'All tools unlocked', '1080p · No watermark', 'Topups available'], outcomes: [{ icon: '🎙️', label: '~100 voice segments' }, { icon: '🖼️', label: '~10 AI images' }] },
-      { name: 'Creator Lite', role: 'CREATOR_LITE', price: 0, currency: 'LOADING', ttsLimit: 50000, tagline: 'Create with AI — and know what to post next.', features: ['🗓️ Content Engine — 25 planning days/mo', '1,200 credits/mo · 50,000 voice chars', 'All AI models unlocked', '1080p · No watermark', '30 speed videos · 100 BG removals', 'Unlimited SVGs · Topups available'], outcomes: [{ icon: '🎙️', label: '~500 voice segments' }, { icon: '🖼️', label: '~150 AI images' }, { icon: '🎬', label: '3–6 AI videos' }, { icon: '🗓️', label: '25 days of content planned' }] },
-      { name: 'Creator Spark', role: 'CREATOR', price: 0, currency: 'LOADING', ttsLimit: 150000, popular: true, tagline: 'Everything you need to go pro.', features: ['🗓️ Content Engine — 60 planning days/mo', '2,600 credits/mo · 150,000 voice chars', 'All AI models · 1440p export', '60 speed videos · 500 BG removals', 'Unlimited SVGs · Priority support', 'Topups available'], outcomes: [{ icon: '🎙️', label: '~1,500 voice segments' }, { icon: '🖼️', label: '~450 AI images' }, { icon: '🎬', label: '9–18 AI videos' }, { icon: '🗓️', label: '60 days of content planned' }] },
-      { name: 'Creator Odyssey', role: 'STUDIO', price: 0, currency: 'LOADING', ttsLimit: 300000, tagline: 'Unlimited power for serious creators.', features: ['🗓️ Content Engine — 90 planning days/mo', '5,500 credits/mo · 300,000 voice chars', 'All AI models · 4K export', 'Unlimited speed videos + BG removals', 'Fastest queue · Dedicated support', 'Topups available'], outcomes: [{ icon: '🎙️', label: '~3,000 voice segments' }, { icon: '🖼️', label: '~1,250 AI images' }, { icon: '🎬', label: '25–50 AI videos' }, { icon: '🗓️', label: '90 days of content planned' }] },
-      ];
-    }
+    const regionPending = isIndianUser === null;
     const sym = isIndianUser ? '₹' : '$';
     const cur = isIndianUser ? 'INR' : 'USD';
-    const p = isIndianUser ? { lite: 799, creator: 1749, studio: 3599 } : { lite: 9, creator: 19, studio: 39 };
-    const o = { lite: Math.round(p.lite / 0.75), creator: Math.round(p.creator / 0.75), studio: Math.round(p.studio / 0.75) };
+    const p = isIndianUser
+      ? { spark: 50, micro: 150, lite: 799, creator: 1749, studio: 3599 }
+      : { spark: 1,  micro: 3,   lite: 9,   creator: 19,   studio: 39 };
+    const o = {
+      spark: isIndianUser ? 99 : 2,
+      micro: isIndianUser ? 200 : 4,
+      lite: Math.round(p.lite / 0.75),
+      creator: Math.round(p.creator / 0.75),
+      studio: Math.round(p.studio / 0.75),
+    };
+    // While the region is still being detected, show "Loading price..."
+    const priced = (price: number, originalPrice: number) =>
+      regionPending
+        ? { price: 0, currency: 'LOADING' }
+        : { price, originalPrice, currency: cur, symbol: sym };
+
     return [
-      { name: 'Starter Forge', role: 'BASIC', price: 0, currency: 'FREE', ttsLimit: 600, tagline: 'Try every tool, no card required.', features: ['50 credits/mo', '600 voice chars/mo', '5 speed videos + 5 BG removals', '10 SVG downloads', '720p export with watermark'], outcomes: [{ icon: '🎙️', label: 'Voice (600 chars)' }, { icon: '✂️', label: '5 BG removals' }] },
-      { name: 'Spark', role: 'SPARK', price: isIndianUser ? 50 : 1, originalPrice: isIndianUser ? 99 : 2, currency: cur, symbol: sym, ttsLimit: 5000, tagline: 'Ignite your first AI creation.', features: ['50 credits', '3,000 voice chars', 'All tools unlocked', '1080p · No watermark'], outcomes: [{ icon: '🎙️', label: '~5 voice segments' }, { icon: '✂️', label: '5 BG removals' }] },
-      { name: 'Starter Pack', role: 'MICRO', price: isIndianUser ? 150 : 3, originalPrice: isIndianUser ? 200 : 4, currency: cur, symbol: sym, ttsLimit: 10000, tagline: 'Dip your toes in — low commitment.', features: ['200 credits/mo', '10,000 voice chars/mo', 'All tools unlocked', '1080p · No watermark', 'Topups available'], outcomes: [{ icon: '🎙️', label: '~100 voice segments' }, { icon: '🖼️', label: '~10 AI images' }] },
-      { name: 'Creator Lite', role: 'CREATOR_LITE', price: p.lite, originalPrice: o.lite, currency: cur, symbol: sym, ttsLimit: 50000, tagline: 'Create with AI — and know what to post next.', features: ['🗓️ Content Engine — 25 planning days/mo', '1,200 credits/mo · 50,000 voice chars', 'All AI models unlocked', '1080p · No watermark', '30 speed videos · 100 BG removals', 'Unlimited SVGs · Topups available'], outcomes: [{ icon: '🎙️', label: '~500 voice segments' }, { icon: '🖼️', label: '~150 AI images' }, { icon: '🎬', label: '3–6 AI videos' }, { icon: '🗓️', label: '25 days of content planned' }] },
-      { name: 'Creator Spark', role: 'CREATOR', price: p.creator, originalPrice: o.creator, currency: cur, symbol: sym, ttsLimit: 150000, popular: true, tagline: 'Everything you need to go pro.', features: ['🗓️ Content Engine — 60 planning days/mo', '2,600 credits/mo · 150,000 voice chars', 'All AI models · 1440p export', '60 speed videos · 500 BG removals', 'Unlimited SVGs · Priority support', 'Topups available'], outcomes: [{ icon: '🎙️', label: '~1,500 voice segments' }, { icon: '🖼️', label: '~450 AI images' }, { icon: '🎬', label: '9–18 AI videos' }, { icon: '🗓️', label: '60 days of content planned' }] },
-      { name: 'Creator Odyssey', role: 'STUDIO', price: p.studio, originalPrice: o.studio, currency: cur, symbol: sym, ttsLimit: 300000, tagline: 'Unlimited power for serious creators.', features: ['🗓️ Content Engine — 90 planning days/mo', '5,500 credits/mo · 300,000 voice chars', 'All AI models · 4K export', 'Unlimited speed videos + BG removals', 'Fastest queue · Dedicated support', 'Topups available'], outcomes: [{ icon: '🎙️', label: '~3,000 voice segments' }, { icon: '🖼️', label: '~1,250 AI images' }, { icon: '🎬', label: '25–50 AI videos' }, { icon: '🗓️', label: '90 days of content planned' }] },
+      { name: 'Starter Forge', role: 'BASIC', price: 0, currency: 'FREE', credits: 50, ttsLimit: 600, tagline: 'Try every tool, no card required.', features: ['50 credits/mo (≈1 AI video or 6 images)', '600 voice chars/mo', '5 speed videos + 5 BG removals', '10 SVG downloads', '720p export with watermark'] },
+      { name: 'Spark', role: 'SPARK', ...priced(p.spark, o.spark), credits: 50, ttsLimit: 3000, tagline: 'Ignite your first AI creation.', features: ['3,000 voice chars', 'All tools unlocked', '1080p · No watermark', 'One-time purchase'] },
+      { name: 'Starter Pack', role: 'MICRO', ...priced(p.micro, o.micro), credits: 200, ttsLimit: 10000, tagline: 'Dip your toes in — low commitment.', features: ['10,000 voice chars/mo', 'All tools unlocked', '1080p · No watermark', 'Topups available'] },
+      { name: 'Creator Lite', role: 'CREATOR_LITE', ...priced(p.lite, o.lite), credits: 1200, ttsLimit: 50000, tagline: 'Create with AI — and know what to post next.', features: ['🗓️ Content Engine — 25 planning days/mo', '50,000 voice chars/mo', 'All AI models unlocked', '1080p · No watermark', '30 speed videos · 100 BG removals', 'Unlimited SVGs · Topups available'] },
+      { name: 'Creator Spark', role: 'CREATOR', ...priced(p.creator, o.creator), credits: 2600, ttsLimit: 150000, popular: true, tagline: 'Everything you need to go pro.', features: ['🗓️ Content Engine — 60 planning days/mo', '150,000 voice chars/mo', 'All AI models · 1440p export', '60 speed videos · 500 BG removals', 'Unlimited SVGs · Priority support', 'Topups available'] },
+      { name: 'Creator Odyssey', role: 'STUDIO', ...priced(p.studio, o.studio), credits: 5500, ttsLimit: 300000, tagline: 'Unlimited power for serious creators.', features: ['🗓️ Content Engine — 90 planning days/mo', '300,000 voice chars/mo', 'All AI models · 4K export', 'Unlimited speed videos + BG removals', 'Fastest queue · Dedicated support', 'Topups available'] },
     ];
   };
 
@@ -1386,18 +1444,46 @@ export default function PricingPageClient() {
                               <span className="v3-price-save">✓ 25% introductory discount</span>
                             </div>
                           )}
-                          {isFree && (
-                            <div className="v3-outcomes">
-                              <div className="v3-outcomes-title">Try every tool free</div>
-                              {plan.outcomes.map((o, i) => (
-                                <div key={i} className="v3-outcome-row">
-                                  <span className="v3-outcome-icon">{o.icon}</span>
-                                  <span className="v3-outcome-label">{o.label}</span>
-                                  <span className="v3-outcome-count">/ mo</span>
+                          {plan.currency !== 'LOADING' && (() => {
+                            const u = getUsage(plan);
+                            const isMonthlyPro = ['CREATOR_LITE', 'CREATOR', 'STUDIO'].includes(plan.role);
+                            const spark = plans.find(pl => pl.role === 'SPARK');
+                            const sparkPerCredit = spark && spark.credits ? spark.price / spark.credits : 0;
+                            const savePct = sparkPerCredit ? Math.round((1 - (plan.price / plan.credits) / sparkPerCredit) * 100) : 0;
+                            const perDay = plan.price / 30;
+                            const perDayLabel = plan.currency === 'INR' ? `₹${Math.round(perDay)}` : `$${perDay.toFixed(2)}`;
+                            return (
+                              <div className="v3-usage">
+                                <div className="v3-usage-credits">
+                                  <strong>{u.total.toLocaleString()}</strong> credits{plan.role === 'SPARK' ? '' : ' / mo'}
+                                  {u.bonus > 0 && (
+                                    <span className="v3-usage-bonus">{plan.credits.toLocaleString()} + {u.bonus} free</span>
+                                  )}
                                 </div>
-                              ))}
-                            </div>
-                          )}
+                                <div className="v3-usage-title">{plan.role === 'SPARK' ? 'You can create' : 'Every month you can create'}</div>
+                                <div className="v3-usage-grid">
+                                  <div className="v3-usage-stat">
+                                    <span className="v3-usage-num">{u.videos}</span>
+                                    <span className="v3-usage-lbl">🎬 AI videos</span>
+                                  </div>
+                                  <span className="v3-usage-or">or</span>
+                                  <div className="v3-usage-stat">
+                                    <span className="v3-usage-num">{u.images}</span>
+                                    <span className="v3-usage-lbl">🖼️ AI images</span>
+                                  </div>
+                                </div>
+                                <div className="v3-usage-voice">+ 🎙️ {u.voice} of AI voiceover</div>
+                                {isMonthlyPro && (
+                                  <div className="v3-usage-value">
+                                    Just {perDayLabel}/day{savePct > 0 ? ` · ${savePct}% less per credit than Spark` : ''}
+                                  </div>
+                                )}
+                                <div className="v3-usage-note">
+                                  Up to — based on 5s Wan 2.5 videos (46 cr) and GPT Image 1.5 drafts (8 cr). Premium models use more credits.
+                                </div>
+                              </div>
+                            );
+                          })()}
                           <ul className="v3-feats">
                             {plan.features.map((feat, i) => {
                               const boldified = feat
@@ -1414,18 +1500,6 @@ export default function PricingPageClient() {
                               );
                             })}
                           </ul>
-                          {!isFree && plan.currency !== 'LOADING' && (
-                            <div className="v3-outcomes">
-                              <div className="v3-outcomes-title">With this plan you can create</div>
-                              {plan.outcomes.map((o, i) => (
-                                <div key={i} className="v3-outcome-row">
-                                  <span className="v3-outcome-icon">{o.icon}</span>
-                                  <span className="v3-outcome-label">{o.label}</span>
-                                  <span className="v3-outcome-count">/ mo</span>
-                                </div>
-                              ))}
-                            </div>
-                          )}
                           <button
                             className={btnClass()}
                             onClick={() => handleUpgrade(plan)}
@@ -1433,6 +1507,11 @@ export default function PricingPageClient() {
                           >
                             {btnLabel()}
                           </button>
+                          {!isCurrent && !isDowngradeBlocked && (
+                            <button type="button" className="v3-upsell-link" onClick={() => setShowProPlans(true)}>
+                              Creating every week? Creator Lite gives {getUsage(plans.find(pl => pl.role === 'CREATOR_LITE')!).videos} videos/mo →
+                            </button>
+                          )}                            
                         </motion.div>
                       );
                     })}
@@ -1521,18 +1600,46 @@ export default function PricingPageClient() {
                               <span className="v3-price-save">✓ 25% introductory discount</span>
                             </div>
                           )}
-                          {isFree && (
-                            <div className="v3-outcomes">
-                              <div className="v3-outcomes-title">Try every tool free</div>
-                              {plan.outcomes.map((o, i) => (
-                                <div key={i} className="v3-outcome-row">
-                                  <span className="v3-outcome-icon">{o.icon}</span>
-                                  <span className="v3-outcome-label">{o.label}</span>
-                                  <span className="v3-outcome-count">/ mo</span>
+                          {plan.currency !== 'LOADING' && (() => {
+                            const u = getUsage(plan);
+                            const isMonthlyPro = ['CREATOR_LITE', 'CREATOR', 'STUDIO'].includes(plan.role);
+                            const spark = plans.find(pl => pl.role === 'SPARK');
+                            const sparkPerCredit = spark && spark.credits ? spark.price / spark.credits : 0;
+                            const savePct = sparkPerCredit ? Math.round((1 - (plan.price / plan.credits) / sparkPerCredit) * 100) : 0;
+                            const perDay = plan.price / 30;
+                            const perDayLabel = plan.currency === 'INR' ? `₹${Math.round(perDay)}` : `$${perDay.toFixed(2)}`;
+                            return (
+                              <div className="v3-usage">
+                                <div className="v3-usage-credits">
+                                  <strong>{u.total.toLocaleString()}</strong> credits{plan.role === 'SPARK' ? '' : ' / mo'}
+                                  {u.bonus > 0 && (
+                                    <span className="v3-usage-bonus">{plan.credits.toLocaleString()} + {u.bonus} free</span>
+                                  )}
                                 </div>
-                              ))}
-                            </div>
-                          )}
+                                <div className="v3-usage-title">{plan.role === 'SPARK' ? 'You can create' : 'Every month you can create'}</div>
+                                <div className="v3-usage-grid">
+                                  <div className="v3-usage-stat">
+                                    <span className="v3-usage-num">{u.videos}</span>
+                                    <span className="v3-usage-lbl">🎬 AI videos</span>
+                                  </div>
+                                  <span className="v3-usage-or">or</span>
+                                  <div className="v3-usage-stat">
+                                    <span className="v3-usage-num">{u.images}</span>
+                                    <span className="v3-usage-lbl">🖼️ AI images</span>
+                                  </div>
+                                </div>
+                                <div className="v3-usage-voice">+ 🎙️ {u.voice} of AI voiceover</div>
+                                {isMonthlyPro && (
+                                  <div className="v3-usage-value">
+                                    Just {perDayLabel}/day{savePct > 0 ? ` · ${savePct}% less per credit than Spark` : ''}
+                                  </div>
+                                )}
+                                <div className="v3-usage-note">
+                                  Up to — based on 5s Wan 2.5 videos (46 cr) and GPT Image 1.5 drafts (8 cr). Premium models use more credits.
+                                </div>
+                              </div>
+                            );
+                          })()}
                           <ul className="v3-feats">
                             {plan.features.map((feat, i) => {
                               const boldified = feat
@@ -1549,25 +1656,13 @@ export default function PricingPageClient() {
                               );
                             })}
                           </ul>
-                          {!isFree && plan.currency !== 'LOADING' && (
-                            <div className="v3-outcomes">
-                              <div className="v3-outcomes-title">With this plan you can create</div>
-                              {plan.outcomes.map((o, i) => (
-                                <div key={i} className="v3-outcome-row">
-                                  <span className="v3-outcome-icon">{o.icon}</span>
-                                  <span className="v3-outcome-label">{o.label}</span>
-                                  <span className="v3-outcome-count">/ mo</span>
-                                </div>
-                              ))}
-                            </div>
-                          )}
                           <button
                             className={btnClass()}
                             onClick={() => handleUpgrade(plan)}
                             disabled={loading !== null || isFree || isCurrent || isDowngradeBlocked}
                           >
                             {btnLabel()}
-                          </button>
+                          </button>                        
                         </motion.div>
                       );
                     })}
@@ -1748,7 +1843,9 @@ export default function PricingPageClient() {
               </thead>
               <tbody>
                 {[
-                  ['Monthly Credits', '50', '50', '200', '1,200', '2,600', '5,500'],
+                  ['Monthly Credits',          '50',    '50 + 50 free', '200 + 50 free', '1,200 + 50 free', '2,600 + 50 free', '5,500 + 50 free'],
+                  ['🎬 AI videos (up to)',      '1',     '2',            '5',            '27',           '57',           '120'],
+                  ['🖼️ AI images (up to)',      '6',     '12',           '31',           '156',          '331',          '693'],
                   ['🗓️ Content Engine',        '✗',     '✗',            '✗',            '✓',            '✓',            '✓'],
                   ['Planning days / mo',       '—',     '—',            '—',            '25',           '60',           '90'],
                   ['Active plans at once',     '—',     '—',            '—',            '1',            '3',            '10'],
