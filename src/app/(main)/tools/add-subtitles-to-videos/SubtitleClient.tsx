@@ -429,6 +429,7 @@ const [planLimits, setPlanLimits] = useState<{
   switch (role) {
     case 'BASIC':
       return ['144p', '240p', '360p', '480p', '720p'];
+    case 'STARTER_PLUS':
     case 'CREATOR_LITE':
       return ['144p', '240p', '360p', '480p', '720p', '1080p'];
     case 'CREATOR':
@@ -445,6 +446,7 @@ const getDefaultQuality = (role: string): string => {
   switch (role) {
     case 'BASIC':
       return '720p';
+    case 'STARTER_PLUS':
     case 'CREATOR_LITE':
       return '1080p';
     case 'CREATOR':
